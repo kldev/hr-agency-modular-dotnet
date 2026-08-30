@@ -1,0 +1,18 @@
+<Solution>
+    <Folder Name="/src/">
+        <Project Path="src/HrAgencySystem.Api/HrAgencySystem.Api.csproj" />
+        <Project Path="src/HrAgencySystem.Audit/HrAgencySystem.Audit.csproj" />
+        <Project Path="src/HrAgencySystem.Company/HrAgencySystem.Company.csproj" />
+        <Project Path="src/HrAgencySystem.Identity/HrAgencySystem.Identity.csproj" />
+        <Project Path="src/HrAgencySystem.JobDescription/HrAgencySystem.JobDescription.csproj" />
+        <Project Path="src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj" />
+        <Project Path="src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj" />
+        <Project Path="src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj" />
+        <Project Path="src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj" />
+        <Project Path="src/HrAgencySystem.Suggestion/HrAgencySystem.Suggestion.csproj" />
+    </Folder>
+    <Folder Name="/tests/">
+        <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
+        <Project Path="tests/HrAgencySystem.UnitTests/HrAgencySystem.UnitTests.csproj" />
+    </Folder>
+</Solution>

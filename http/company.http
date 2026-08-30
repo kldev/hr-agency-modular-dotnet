@@ -1,0 +1,38 @@
+@baseURL = http://localhost:5000
+@organizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
+
+### Create company
+POST {{baseURL}}/api/companies
+Content-Type: application/json
+
+{
+    "organizationId": "{{organizationId}}",
+    "name": "New company",
+    "countryCode": "pl",
+    "taxId": "PL8881001100",
+    "registrationNumber": "KRS100000"
+}
+
+### Create company without name
+POST {{baseURL}}/api/companies
+Content-Type: application/json
+
+{
+    "organizationId": "{{organizationId}}",
+    "name": " ",
+    "countryCode": "pl",
+    "taxId": "PL88{{$randomInt 1000 9999}}",
+    "registrationNumber": "KRS100000"
+}
+
+### Create company
+POST {{baseURL}}/api/companies
+Content-Type: application/json
+
+{
+    "organizationId": "{{organizationId}}",
+    "name": "New company{{$randomInt 1000 9999}}",
+    "countryCode": "pl",
+    "taxId": "PL88{{$randomInt 1000 9999}}",
+    "registrationNumber": "KRS{{$randomInt 1000 9999}}"
+}

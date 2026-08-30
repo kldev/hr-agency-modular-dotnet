@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Marten" Version="9.30.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11"/>
+        <PackageReference Include="Scalar.AspNetCore" Version="2.17.2"/>
+        <PackageReference Include="WolverineFx" Version="6.30.3"/>
+        <PackageReference Include="WolverineFx.Http" Version="6.30.3"/>
+        <PackageReference Include="WolverineFx.Marten" Version="6.30.3"/>
+        <PackageReference Include="WolverineFx.RuntimeCompilation" Version="6.30.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.Company\HrAgencySystem.Company.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.JobDescription\HrAgencySystem.JobDescription.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj"/>
+        <ProjectReference Include="..\HrAgencySystem.Suggestion\HrAgencySystem.Suggestion.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests"/>
+    </ItemGroup>
+
+</Project>

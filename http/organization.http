@@ -1,0 +1,48 @@
+@baseURL = http://localhost:5000/api/organization
+
+### Create organization
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "name": "HR Agency",
+    "slug": "hr-agency"
+}
+
+### Create organization without name
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "name": " ",
+    "slug": "hr-agency"
+}
+
+### Create random organization
+# @name createOrganization
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "name": "HR Agency{{$randomInt 1000 9999}}",
+    "slug": "hr-agency{{$randomInt 1000 9999}}"
+}
+
+###
+@organizationId = {{createOrganization.response.body.$.organizationId}}
+
+### Update organization slug
+PUT {{baseURL}}/{{organizationId}}/slug
+Content-Type: application/json
+
+{
+    "slug": "change-slug-{{$randomInt 1000 9999}}-{{$randomInt 1000 9999}}"
+}
+
+### Update organization slug
+PUT {{baseURL}}/5af9c6c8-32a5-463b-b8b2-d6bbd7f11c78/slug
+Content-Type: application/json
+
+{
+    "slug": "hr-agency"
+}
