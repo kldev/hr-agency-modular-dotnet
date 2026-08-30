@@ -1,5 +1,6 @@
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Organization.Application.Commands;
+using HrAgencySystem.Organization.Events;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
@@ -9,9 +10,7 @@ namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 public static class MapUpdateOrganizationSlug
 {
     internal record UpdateSlug(string Slug);
-
-    internal record UpdateSlugResponse(string Slug);
-
+    
     public static void Map(RouteGroupBuilder group)
     {
         
@@ -25,9 +24,9 @@ public static class MapUpdateOrganizationSlug
                     CancellationToken ct) =>
                 {
                     var command = new UpdateOrganizationSlug(request.Slug, organizationId);
-                    var result = await bus.InvokeAsync<HrAgencySystem.Organization.Domain.Organization>(command, ct);
+                    var result = await bus.InvokeAsync<OrganizationSlugUpdated>(command, ct);
 
-                    return TypedResults.Ok(new UpdateSlugResponse(result!.Slug.Value));
+                    return TypedResults.Ok(result);
                 }).WithSummary("Update organization slug")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);

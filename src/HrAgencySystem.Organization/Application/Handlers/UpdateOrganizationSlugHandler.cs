@@ -11,7 +11,7 @@ namespace HrAgencySystem.Organization.Application.Handlers;
 public static class UpdateOrganizationSlugHandler
 {
     [AggregateHandler]
-    public static async Task<(UpdatedAggregate, Wolverine.Marten.Events)> Handle(UpdateOrganizationSlug command,
+    public static async Task<(OrganizationSlugUpdated, Wolverine.Marten.Events)> Handle(UpdateOrganizationSlug command,
         Domain.Organization aggregate,
         ILogger logger, IOrganizationSlugReservationRepository repository, CancellationToken ct)
     {
@@ -30,6 +30,6 @@ public static class UpdateOrganizationSlugHandler
 
         var @event = new OrganizationSlugUpdated(slug!.Value, command.OrganizationId);
 
-        return (new UpdatedAggregate(), [@event]);
+        return (@event, [@event]);
     }
 }
