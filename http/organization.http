@@ -1,6 +1,7 @@
 @baseURL = http://localhost:5000/api/organization
 
 ### Create organization
+# @name hrAgencyCreate
 POST {{baseURL}}
 Content-Type: application/json
 
@@ -39,8 +40,11 @@ Content-Type: application/json
     "slug": "change-slug-{{$randomInt 1000 9999}}-{{$randomInt 1000 9999}}"
 }
 
+
+###
+@hrAgencyId = {{hrAgencyCreate.response.body.$.organizationId}}
 ### Update organization slug
-PUT {{baseURL}}/5af9c6c8-32a5-463b-b8b2-d6bbd7f11c78/slug
+PUT {{baseURL}}/{{hrAgencyId}}/slug
 Content-Type: application/json
 
 {

@@ -30,27 +30,7 @@ public sealed class Company
     {
         return new Company();
     }
-
-    // private Company(
-    //     CompanyId id,
-    //     OrganizationId organizationId,
-    //     CompanyName name,
-    //     CountryCode countryCode,
-    //     TaxId? taxId,
-    //     RegistrationNumber? registrationNumber,
-    //     DateTimeOffset now
-    //     )
-    // {
-    //     Id = id;
-    //     OrganizationId = organizationId;
-    //     Name = name;
-    //     CountryCode = countryCode;
-    //     TaxId = taxId;
-    //     RegistrationNumber = registrationNumber;
-    //     Status = CompanyStatus.Active;
-    //     CreatedAt = now;
-    // }
-
+    
     public void Apply(CompanyCreated @event)
     {
         Id = CompanyId.From(@event.CompanyId);

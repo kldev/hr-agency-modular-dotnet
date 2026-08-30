@@ -8,23 +8,28 @@ using Wolverine.Marten;
 
 namespace HrAgencySystem.Organization.Application.Handlers;
 
-
 public static class UpdateOrganizationSlugHandler
 {
     [AggregateHandler]
-    public static async Task<OrganizationSlugUpdated?> Handle(UpdateOrganizationSlug command, Eventstre organization, 
+    public static async Task<(UpdatedAggregate, Wolverine.Marten.Events)> Handle(UpdateOrganizationSlug command,
+        Domain.Organization aggregate,
         ILogger logger, IOrganizationSlugReservationRepository repository, CancellationToken ct)
     {
-        logger.LogInformation($"Updating organization slug {command.Slug} from {organization.Slug.Value}");
-        
+        if (aggregate == null) throw new NotFoundException("Not found " + command.OrganizationId);
+
+        logger.LogInformation($"Updating organization slug {command.Slug} from {aggregate.Slug.Value}");
+
         var (slug, error) = OrganizationSlug.TryCreate(command.Slug);
         if (error != null) throw new ValidationException(error);
 
-        if (organization.Slug.Value.Equals(command.Slug)) return null;
-        
+        if (aggregate.Slug.Value.Equals(command.Slug))
+            throw new BusinessRuleException("Cannot update organization with the same slug");
+
         if (await repository.Exists(slug!, ct))
             throw new BusinessRuleException(CreateOrganizationHandler.SlugAlreadyExitsMessage);
 
-        return new OrganizationSlugUpdated(slug!.Value, command.OrganizationId);
+        var @event = new OrganizationSlugUpdated(slug!.Value, command.OrganizationId);
+
+        return (new UpdatedAggregate(), [@event]);
     }
 }

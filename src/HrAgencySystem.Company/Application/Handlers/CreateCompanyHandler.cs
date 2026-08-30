@@ -47,7 +47,7 @@ public static class CreateCompanyHandler
             registrationNumber.Value,
             clock.UtcNow);
 
-        session.Events.StartStream<Domain.Company>(@event);
+        session.Events.StartStream<Domain.Company>(companyId.Value, @event);
 
         return @event;
     }

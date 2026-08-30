@@ -36,7 +36,7 @@ public static class CreateOrganizationHandler
             slug.Value,
             clock.UtcNow);
 
-        session.Events.StartStream<Domain.Organization>(@event);
+        session.Events.StartStream<Domain.Organization>(organizationId.Value, @event);
         
         return @event;
     }

@@ -36,6 +36,9 @@ public sealed class GlobalExceptionHandler(
             case BusinessRuleException:
                 return await WriteErrorAsync(httpContext, StatusCodes.Status400BadRequest, "Business rule",
                     exception.Message, exception);
+            case NotFoundException:
+                return await WriteErrorAsync(httpContext, StatusCodes.Status404NotFound, "Not found", exception.Message,
+                    exception);
             default:
                 logger.LogError(
                     exception,
