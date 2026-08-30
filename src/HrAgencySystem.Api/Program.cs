@@ -10,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Host.SetupWolverineForApplication();
     builder.Services.AddWolverineHttp();
     builder.Services.AddOpenApi();
-
 }
 
 var app = builder.Build();

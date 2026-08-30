@@ -1,5 +1,7 @@
+using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Company.Application.Commands;
 using HrAgencySystem.Company.Events;
+using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
@@ -24,7 +26,8 @@ internal static class MapCreateCompany
                 return TypedResults.Created(
                     $"/api/companies/{result.CompanyId}",
                     result);
-            });
+            }).WithSummary("Create company").Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);;
     }
 
     internal record CreateCompanyRequest(
