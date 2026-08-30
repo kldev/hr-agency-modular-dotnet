@@ -1,6 +1,5 @@
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
-using Wolverine.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -8,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.SetupApplicationModules();
     builder.Services.SetupMartenForApplication(builder.Configuration);
     builder.Host.SetupWolverineForApplication();
-    builder.Services.AddWolverineHttp();
+    //builder.Services.AddWolverineHttp();
     builder.Services.AddOpenApi();
 }
 
@@ -18,7 +17,7 @@ var app = builder.Build();
     app.MapApplicationEndpoints();
     app.MapOpenApi();
     app.MapAppScalar();
-    app.MapWolverineEndpoints();
+    //app.MapWolverineEndpoints();
 
     app.MapGet("/", () => "HR Agency API").ExcludeFromDescription();
 

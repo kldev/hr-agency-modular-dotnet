@@ -1,7 +1,10 @@
 using HrAgencySystem.Company.Application.Port;
+using HrAgencySystem.Company.Application.Query;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.Company.Infrastructure.Persistence;
+using HrAgencySystem.Company.Projections;
 using JasperFx.Events;
+using JasperFx.Events.Projections;
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +16,7 @@ public static class CompanyModule
         this IServiceCollection services)
     {
         services.AddScoped<ICompanyTaxIdReservationRepository, CompanyTaxIdReservationRepository>();
+        services.AddScoped<ICompaniesQueryRepository, CompaniesQueryRepository>();
     }
 
     public static void ConfigureMarten(
@@ -30,6 +34,12 @@ public static class CompanyModule
         options.Events.StreamIdentity =
             StreamIdentity.AsGuid;
 
+
         options.Events.AddEventType<CompanyCreated>();
+        options.Projections.Snapshot<CompanyProjection>(SnapshotLifecycle.Async);
+
+        options.Schema.For<CompanyProjection>().DatabaseSchemaName("company")
+            .Index(x => new { x.OrganizationId })
+            .Index(x => new { x.OrganizationId, x.Name, x.Id });
     }
 }

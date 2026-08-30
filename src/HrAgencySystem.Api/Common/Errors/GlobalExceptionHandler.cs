@@ -39,6 +39,9 @@ public sealed class GlobalExceptionHandler(
             case NotFoundException:
                 return await WriteErrorAsync(httpContext, StatusCodes.Status404NotFound, "Not found", exception.Message,
                     exception);
+            case BadHttpRequestException:
+                return await WriteErrorAsync(httpContext, StatusCodes.Status400BadRequest, "Invalid request", exception.Message,
+                    exception);
             default:
                 logger.LogError(
                     exception,

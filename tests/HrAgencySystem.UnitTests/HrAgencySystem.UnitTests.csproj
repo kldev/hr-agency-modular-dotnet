@@ -30,4 +30,8 @@
         <ProjectReference Include="..\..\src\HrAgencySystem.Suggestion\HrAgencySystem.Suggestion.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Organization\ValueObjects\" />
+    </ItemGroup>
+
 </Project>

@@ -10,5 +10,6 @@ public static class Endpoint
         var group = endpoints.MapGroup("/api/companies").WithTags("Company");
 
         MapCreateCompany.Map(group);
+        MapGetCompanies.Map(group);
     }
 }

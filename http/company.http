@@ -36,3 +36,24 @@ Content-Type: application/json
     "taxId": "PL88{{$randomInt 1000 9999}}",
     "registrationNumber": "KRS{{$randomInt 1000 9999}}"
 }
+
+
+### Create company
+POST {{baseURL}}/api/companies
+Content-Type: application/json
+
+{
+    "organizationId": "{{organizationId}}",
+    "name": "New company{{$randomInt 1000 9999}}",
+    "countryCode": "pl",
+    "taxId": "PL88{{$randomInt 1000 9999}}",
+    "registrationNumber": "KRS{{$randomInt 1000 9999}}"
+}
+
+
+
+### Get companies
+GET {{baseURL}}/api/companies?pageSize=501&organizationId={{organizationId}}
+Content-Type: application/json
+
+

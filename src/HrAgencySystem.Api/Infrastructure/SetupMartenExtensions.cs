@@ -2,6 +2,7 @@ using HrAgencySystem.Company;
 using HrAgencySystem.Company.Infrastructure;
 using HrAgencySystem.Organization;
 using JasperFx;
+using JasperFx.Events.Daemon;
 using Marten;
 using Wolverine;
 using Wolverine.Marten;
@@ -23,6 +24,7 @@ public static class SetupMartenExtensions
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
                 
             })
+            .AddAsyncDaemon(DaemonMode.HotCold)
             .IntegrateWithWolverine();
     }
 

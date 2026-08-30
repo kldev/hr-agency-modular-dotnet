@@ -11,23 +11,24 @@ internal static class MapCreateCompany
     public static void Map(
         RouteGroupBuilder endpoints)
     {
-        endpoints.MapPost(
-            "",
-            async (
-                CreateCompanyRequest request,
-                IMessageBus bus,
-                CancellationToken ct) =>
-            {
-                var result =
-                    await bus.InvokeAsync<CompanyCreated>(
-                        request.ToCommand(),
-                        ct);
-
-                return TypedResults.Created(
-                    $"/api/companies/{result.CompanyId}",
-                    result);
-            }).WithSummary("Create company").Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+        endpoints.MapPost("", Handler)
+            .WithSummary("Create company")
+            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);;
+    }
+    
+    private static async Task<IResult> Handler(CreateCompanyRequest request,
+        IMessageBus bus,
+        CancellationToken ct)
+    {
+        var result =
+            await bus.InvokeAsync<CompanyCreated>(
+                request.ToCommand(),
+                ct);
+
+        return TypedResults.Created(
+            $"/api/companies/{result.CompanyId}",
+            result);
     }
 
     internal record CreateCompanyRequest(
