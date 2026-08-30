@@ -7,6 +7,7 @@ using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Port;
 using JasperFx;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;
@@ -104,16 +105,24 @@ public class CreateCompanyTests(ApiPostgresTestContainer container, ITestOutputH
     [Fact]
     public async Task Post_company_with_duplicate_tax_id_returns_bad_request()
     {
+        //await using var factory = new ApiApplicationFactory("").bu;
+        
         var organizationId = Guid.NewGuid();
         var request =
             CreateCompanyRequest(organizationId);
+        
+       var responseFirst = await Client.PostAsJsonAsync("/api/companies", request);
+        
+        OutputHelper.WriteLine(await responseFirst.Content.ReadAsStringAsync());
 
-        await Client.PostAsJsonAsync("/api/companies", request);
-
+        
+        
+        Assert.Equal(HttpStatusCode.Created, responseFirst.StatusCode);
+        
         var response = await Client.PostAsJsonAsync("/api/companies", request);
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        
         var result = await response.ReadWithJson<ProblemDetails>(OutputHelper);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         Assert.NotNull(result);
         Assert.Equal(CreateCompanyHandler.TaxIdAlreadyExistsMessage, result.Detail);

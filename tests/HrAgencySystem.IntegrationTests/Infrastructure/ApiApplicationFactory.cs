@@ -1,20 +1,24 @@
+using HrAgencySystem.Api;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
-public class ApiApplicationFactory(string connectionString) : WebApplicationFactory<Program>
+public class ApiApplicationFactory(string connectionString) : WebApplicationFactory<IApiMarker>
 {
+    
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        Environment.SetEnvironmentVariable("Application:DisableChecker", "True");
+        
         builder.ConfigureAppConfiguration((_, configuration) =>
         {
             configuration.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:Postgres"] = connectionString
+                ["ConnectionStrings:Postgres"] = connectionString,
             });
-
+            
             builder.UseEnvironment("Testing");
         });
     }

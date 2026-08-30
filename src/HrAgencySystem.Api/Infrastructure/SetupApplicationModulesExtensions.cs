@@ -10,12 +10,12 @@ public static class SetupApplicationModulesExtensions
 {
     extension(IServiceCollection services)
     {
-        public void SetupApplicationModules()
+        public void SetupApplicationModules(IConfiguration configuration)
         {
             services.ConfigureJson();
             services.AddTransient<IClock, SystemClock>();
             services.AddCompanyModule();
-            services.AddOrganizationModule();
+            services.AddOrganizationModule(configuration);
         }
 
         private void ConfigureJson()

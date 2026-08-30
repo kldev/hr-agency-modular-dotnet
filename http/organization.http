@@ -1,5 +1,7 @@
 @baseURL = http://localhost:5000/api/organization
 
+@fixedOrganizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
+
 ### Create organization
 # @name hrAgencyCreate
 POST {{baseURL}}
@@ -7,7 +9,8 @@ Content-Type: application/json
 
 {
     "name": "HR Agency",
-    "slug": "hr-agency"
+    "slug": "hr-agency",
+    "fixedId": "{{fixedOrganizationId}}"
 }
 
 ### Create organization without name

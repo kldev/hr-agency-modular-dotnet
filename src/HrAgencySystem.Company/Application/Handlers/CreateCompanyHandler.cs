@@ -4,6 +4,7 @@ using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
@@ -15,19 +16,26 @@ public static class CreateCompanyHandler
     public const string TaxIdAlreadyExistsMessage =
         "A company with the specified tax ID already exists in this organization.";
 
+    public const string OrganizationCheckMessage = "Non existing organization.";
+
     public static async Task<CompanyCreated> Handle(
         CreateCompany command,
         IDocumentSession session,
         ICompanyTaxIdReservationRepository taxIdReservationRepository,
         IClock clock,
+        IOrganizationChecker checker,
         CancellationToken cancellationToken)
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
+        
         var (name, countryCode, taxId, registrationNumber) =
             CreateValueObjects(command);
-
+        
         if (await taxIdReservationRepository.ExitsAsync(organizationId, taxId, cancellationToken))
             throw new BusinessRuleException(TaxIdAlreadyExistsMessage);
+        
+        if (!await checker.Exists(organizationId.Value, cancellationToken))
+            throw new BusinessRuleException("Non existing organization.");
 
         var companyId = CompanyId.New();
 

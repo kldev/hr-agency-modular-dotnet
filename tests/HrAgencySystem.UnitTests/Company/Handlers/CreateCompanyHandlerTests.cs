@@ -4,6 +4,7 @@ using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using JasperFx.Events;
@@ -20,6 +21,9 @@ public class CreateCompanyHandlerTests : BaseTest
     
     private readonly IDocumentSession _documentSession =
         Substitute.For<IDocumentSession>();
+
+    private readonly IOrganizationChecker _checker =
+        Substitute.For<IOrganizationChecker>();
 
 
     [Fact]
@@ -45,6 +49,8 @@ public class CreateCompanyHandlerTests : BaseTest
 
         _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
             .ReturnsNullForAnyArgs();
+
+        _checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
         
         var clock = new FixedClock(now);
 
@@ -53,6 +59,7 @@ public class CreateCompanyHandlerTests : BaseTest
             _documentSession,
             _repository,
             clock,
+            _checker,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.CompanyId);
@@ -93,6 +100,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
+                _checker,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -136,6 +144,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
+                _checker,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -166,6 +175,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
+                _checker,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -196,6 +206,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
+                _checker,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -226,6 +237,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
+                _checker,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -238,5 +250,47 @@ public class CreateCompanyHandlerTests : BaseTest
                 Arg.Any<OrganizationId>(),
                 Arg.Any<TaxId>(),
                 Arg.Any<CancellationToken>());
+    }
+    
+    [Fact]
+    public async Task Handle_NonExistingOrganizationId_ThrowsBusinessRuleException()
+    {
+        var organizationId = Guid.NewGuid();
+        var now = new DateTimeOffset(
+            2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+
+        var command = new CreateCompany(
+            organizationId,
+            "  ACME Corporation  ",
+            "pl",
+            " PL123456789 ",
+            " REG-123 ");
+
+        _repository
+            .ExitsAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<TaxId>(),
+                Arg.Any<CancellationToken>())
+            .Returns(false);
+
+        _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
+            .ReturnsNullForAnyArgs();
+
+        _checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(false);
+        
+        var clock = new FixedClock(now);
+
+
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>( async () => await CreateCompanyHandler.Handle(
+            command,
+            _documentSession,
+            _repository,
+            clock,
+            _checker,
+            CancellationToken.None));
+
+
+        Assert.Equal(typeof(BusinessRuleException), exception.GetType());
+        Assert.Equal(CreateCompanyHandler.OrganizationCheckMessage, exception.Message);
     }
 }

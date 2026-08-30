@@ -1,4 +1,3 @@
-using HrAgencySystem.Company.Events;
 using HrAgencySystem.Organization.Application.Commands;
 using HrAgencySystem.Organization.Application.Port;
 using HrAgencySystem.Organization.Domain.ValueObjects;
@@ -7,7 +6,7 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
-using Wolverine.Marten;
+using Microsoft.Extensions.Configuration;
 
 namespace HrAgencySystem.Organization.Application.Handlers;
 
@@ -20,9 +19,13 @@ public static class CreateOrganizationHandler
         IDocumentSession session,
         IOrganizationSlugReservationRepository repository,
         IClock clock,
+        IConfiguration configuration,
         CancellationToken ct)
     {
-        var organizationId = OrganizationId.NewId();
+
+        var allowFixedId = configuration["AllowFixedId"] == "1"; 
+        
+        var organizationId = command.fixedId.HasValue && allowFixedId ? new OrganizationId(command.fixedId.Value)  : OrganizationId.NewId();
         var (name, slug) = CreateValueObjects(command);
 
         if (await repository.Exists(slug, ct))

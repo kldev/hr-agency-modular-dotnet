@@ -1,3 +1,3 @@
 namespace HrAgencySystem.Organization.Application.Commands;
 
-public sealed record CreateOrganization(string Name, string Slug);
+public sealed record CreateOrganization(string Name, string Slug, Guid? fixedId);
