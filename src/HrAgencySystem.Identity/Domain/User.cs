@@ -1,5 +1,6 @@
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Events;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Identity.Domain;
@@ -12,7 +13,7 @@ public sealed class User
 
     public UserId Id { get; private set; } = null!;
 
-    public UserOrganizationId OrganizationId { get; private set; } = null!;
+    public OrganizationId OrganizationId { get; private set; }
 
     public Email Email { get; private set; } = null!;
 
@@ -22,7 +23,7 @@ public sealed class User
 
     public OrganizationRole Role { get; private set; }
 
-    public PasswordHash PasswordHash { get; private set; } = null!;
+    public string PasswordHash { get; private set; } = null!;
 
     public DateTimeOffset CreatedAt { get; private set; }
 
@@ -34,7 +35,7 @@ public sealed class User
     public void Apply(UserCreated @event)
     {
         Id = UserId.From(@event.UserId);
-        OrganizationId = UserOrganizationId.From(@event.OrganizationId);
+        OrganizationId = OrganizationId.From(@event.OrganizationId);
 
         Email = Email.Create(@event.Email);
         FirstName = FirstName.Create(@event.FirstName);
@@ -42,7 +43,7 @@ public sealed class User
 
         Role = @event.Role;
 
-        PasswordHash = PasswordHash.Create(@event.PasswordHash);
+        PasswordHash = @event.PasswordHash;
 
         CreatedAt = @event.CreatedAt;
     }

@@ -16,7 +16,7 @@ public sealed class PlatformOwner
 
     public PlatformRole Role { get; private set; }
 
-    public PasswordHash PasswordHash { get; private set; } = null!;
+    public string PasswordHash { get; private set; } = null!;
 
     public DateTimeOffset CreatedAt { get; private set; }
 
@@ -33,7 +33,7 @@ public sealed class PlatformOwner
 
         Role = @event.Role;
 
-        PasswordHash = PasswordHash.Create(@event.PasswordHash);
+        PasswordHash = @event.PasswordHash;
 
         CreatedAt = @event.CreatedAt;
     }
