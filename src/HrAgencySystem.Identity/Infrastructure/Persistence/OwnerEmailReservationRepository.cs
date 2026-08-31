@@ -11,9 +11,9 @@ public sealed class OwnerEmailReservationRepository(IDocumentSession session) : 
         return session.Query<OwnerEmailReservation>().Where(z => z.Email == email.Value).AnyAsync(ct);
     }
 
-    public Task ReserveAsync(Email email)
+    public Task ReserveAsync(Email email, string passwordHash)
     {
-        var insert = new OwnerEmailReservation(Guid.NewGuid(), email.Value);
+        var insert = new OwnerEmailReservation(Guid.NewGuid(), email.Value, passwordHash);
         
         session.Insert(insert);
 

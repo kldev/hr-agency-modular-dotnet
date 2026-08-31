@@ -13,9 +13,9 @@ public sealed class UserEmailReservationRepository(
         return await session.Query<UserEmailReservation>().WithEmail(organizationId, email).AnyAsync(ct);
     }
 
-    public Task ReserveAsync(OrganizationId organizationId, Email email)
+    public Task ReserveAsync(OrganizationId organizationId, Email email, string passwordHash)
     {
-        var reservation = new UserEmailReservation(Guid.NewGuid(), organizationId.Value, email.Value);
+        var reservation = new UserEmailReservation(Guid.NewGuid(), organizationId.Value, email.Value, passwordHash);
         session.Insert(reservation);
         
         return Task.CompletedTask;

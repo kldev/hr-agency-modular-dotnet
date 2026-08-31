@@ -48,7 +48,7 @@ public static class CreateUserHandler
         
         var passwordHash = hasher.Hash(command.Password);
 
-        await repository.ReserveAsync(organizationId, email);
+        await repository.ReserveAsync(organizationId, email, passwordHash);
         
         var userId = UserId.New();
         

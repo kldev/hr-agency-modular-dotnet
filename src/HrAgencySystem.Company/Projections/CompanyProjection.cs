@@ -5,36 +5,27 @@ using JasperFx.Events;
 
 namespace HrAgencySystem.Company.Projections;
 
-public sealed class CompanyProjection
+public sealed record CompanyProjection( 
+    Guid Id, 
+    Guid OrganizationId, 
+    string Name, 
+    string CountryCode, 
+    string TaxId,
+    string RegistrationNumber,
+    CompanyStatus Status,
+    DateTimeOffset CreatedAt)
 {
-    public Guid Id { get; set; }
-
-    public Guid OrganizationId { get; set; }
-
-    public string Name { get; set; } = null!;
-
-    public string CountryCode { get; set; } = null!;
-
-    public string? TaxId { get; set; }
-
-    public string? RegistrationNumber { get; set; }
-
-    public CompanyStatus? Status { get; set; } = null!;
-
-    public DateTimeOffset CreatedAt { get; set; }
-
-    public static CompanyProjection Create(IEvent<CompanyCreated> @event)
+    public static CompanyProjection Create(CompanyCreated @event)
     {
-        return new CompanyProjection()
-        {
-            Id = @event.Id,
-            OrganizationId = @event.Data.OrganizationId,
-            Name = @event.Data.Name,
-            CountryCode = @event.Data.CountryCode,
-            TaxId = @event.Data.TaxId,
-            RegistrationNumber = @event.Data.RegistrationNumber,
-            Status = CompanyStatus.Active,
-            CreatedAt = @event.Data.CreatedAt
-        };
+        return new CompanyProjection(
+            @event.CompanyId,
+            @event.OrganizationId,
+            @event.Name,
+            @event.CountryCode,
+            @event.TaxId,
+            @event.RegistrationNumber,
+            CompanyStatus.Active,
+            @event.CreatedAt
+        );
     }
 }

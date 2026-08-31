@@ -6,5 +6,5 @@ namespace HrAgencySystem.Identity.Application.Port;
 public interface IUserEmailReservationRepository
 {
     Task<bool> ExistAsync(OrganizationId organizationId, Email email, CancellationToken ct);
-    Task ReserveAsync(OrganizationId organizationId, Email email);
+    Task ReserveAsync(OrganizationId organizationId, Email email, string passwordHash);
 }
