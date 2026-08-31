@@ -1,7 +1,6 @@
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Organization.Application.Commands;
 using HrAgencySystem.Organization.Events;
-using Marten;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
