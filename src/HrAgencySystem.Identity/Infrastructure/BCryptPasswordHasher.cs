@@ -1,6 +1,6 @@
 using HrAgencySystem.Identity.Application.Port;
 
-namespace HrAgencySystem.Identity.Adapter;
+namespace HrAgencySystem.Identity.Infrastructure;
 
 public class BCryptPasswordHasher : IPasswordHasher
 {

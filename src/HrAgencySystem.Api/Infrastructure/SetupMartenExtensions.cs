@@ -1,4 +1,5 @@
 using HrAgencySystem.Company;
+using HrAgencySystem.Identity;
 using HrAgencySystem.Organization;
 using JasperFx;
 using JasperFx.Events.Daemon;
@@ -22,6 +23,7 @@ public static class SetupMartenExtensions
 
                 CompanyModule.ConfigureMarten(options);
                 OrganizationModule.ConfigureMarten(options);
+                IdentityModule.ConfigureMarten(options);
 
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
                 
@@ -40,6 +42,10 @@ public static class SetupMartenExtensions
             options.Discovery.IncludeAssembly(
                 typeof(OrganizationModule)
                     .Assembly);
+            options.Discovery.IncludeAssembly(
+                typeof(IdentityModule)
+                    .Assembly);
+            
             options.Policies.AutoApplyTransactions();
         }).StartAsync();
     }

@@ -16,6 +16,7 @@ namespace HrAgencySystem.Identity.Application.Handlers;
 public static class CreateUserHandler
 {
     public const string OrganizationCheckMessage = "Non existing organization.";
+    public const string UserWithEmailMessage = "A user with this email already exists in the organization.";
     
     public static async Task<UserCreated> Handle(
         CreateUser command,
@@ -23,6 +24,7 @@ public static class CreateUserHandler
         IClock clock,
         IOrganizationChecker checker,
         IPasswordHasher hasher,
+        IUserEmailReservationRepository repository,
         CancellationToken ct)
     {
         var organizationId =
@@ -39,7 +41,12 @@ public static class CreateUserHandler
 
         PasswordPolicyValidator.Validate(command.Password);
 
+        if (await repository.ExistAsync(organizationId, email, ct))
+            throw new BusinessRuleException(UserWithEmailMessage);
+        
         var passwordHash = hasher.Hash(command.Password);
+
+        await repository.ReserveAsync(organizationId, email);
         
         var userId = UserId.New();
 

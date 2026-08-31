@@ -5,7 +5,9 @@ using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -22,6 +24,9 @@ public class CreateUserHandlerTests : BaseTest
 
     private readonly IPasswordHasher _hasher =
         Substitute.For<IPasswordHasher>();
+
+    private readonly IUserEmailReservationRepository _emailReservationRepository
+        = Substitute.For<IUserEmailReservationRepository>();
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsUserCreated()
@@ -56,6 +61,8 @@ public class CreateUserHandlerTests : BaseTest
             .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
+        _emailReservationRepository.ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(false);
+        
         var clock = new FixedClock(now);
 
         var result = await CreateUserHandler.Handle(
@@ -64,6 +71,7 @@ public class CreateUserHandlerTests : BaseTest
             clock,
             _checker,
             _hasher,
+            _emailReservationRepository,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.UserId);
@@ -128,6 +136,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -174,6 +183,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -216,6 +226,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -257,6 +268,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -299,6 +311,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -341,6 +354,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -383,6 +397,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -427,6 +442,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         Assert.NotEmpty(exception.Message);
@@ -469,6 +485,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 CancellationToken.None));
 
         _hasher
@@ -502,6 +519,9 @@ public class CreateUserHandlerTests : BaseTest
                 cts.Token)
             .Returns(false);
 
+        _emailReservationRepository
+            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(false);
+
         await Assert.ThrowsAsync<BusinessRuleException>(() =>
             CreateUserHandler.Handle(
                 command,
@@ -509,6 +529,7 @@ public class CreateUserHandlerTests : BaseTest
                 TestClock,
                 _checker,
                 _hasher,
+                _emailReservationRepository,
                 cts.Token));
 
         await _checker
@@ -516,5 +537,55 @@ public class CreateUserHandlerTests : BaseTest
             .Exists(
                 organizationId,
                 cts.Token);
+    }
+
+    [Fact]
+    public async Task Handle_ExistEmailInOrganization_ThrowsBusinessRuleException()
+    {
+        var organizationId = Guid.NewGuid();
+        var now = new DateTimeOffset(
+            2026, 8, 31, 10, 0, 0, TimeSpan.Zero);
+
+        const string password = "Password123!";
+        const string passwordHash = "hashed-password";
+
+        var command = new CreateUser(
+            organizationId,
+            "  john.doe@example.com  ",
+            "  John  ",
+            "  Doe  ",
+            OrganizationRole.Admin,
+            password);
+
+        _checker
+            .Exists(
+                Arg.Any<Guid>(),
+                Arg.Any<CancellationToken>())
+            .Returns(true);
+
+        _hasher
+            .Hash(password)
+            .Returns(passwordHash);
+
+        _documentSession
+            .Events
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>())
+            .ReturnsNullForAnyArgs();
+
+        _emailReservationRepository
+            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(true);
+
+        var clock = new FixedClock(now);
+
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(async () =>await CreateUserHandler.Handle(
+            command,
+            _documentSession,
+            clock,
+            _checker,
+            _hasher,
+            _emailReservationRepository,
+            CancellationToken.None));
+        
+        Assert.Equal(CreateUserHandler.UserWithEmailMessage, exception.Message);
     }
 }

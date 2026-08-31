@@ -74,7 +74,7 @@ public sealed class EmailTests
     [InlineData("invalid@")]
     [InlineData("@example.com")]
     [InlineData("invalid.example.com")]
-    [InlineData("invalid @example.com")]
+    
     public void Create_WithInvalidEmail_ThrowsInValidValueException(
         string value)
     {
@@ -111,5 +111,13 @@ public sealed class EmailTests
         var email = Email.Create("john.doe@example.com");
 
         Assert.Equal("john.doe@example.com", email.ToString());
+    }
+
+    [Fact]
+    public void EmailWithWhitespaceAndValid_ReturnsEmailValue()
+    {
+        var email = Email.Create("invalid @Example.com");
+        
+        Assert.Equal("invalid@example.com", email.ToString());
     }
 }

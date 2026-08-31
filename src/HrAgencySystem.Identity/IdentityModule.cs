@@ -1,6 +1,7 @@
-using HrAgencySystem.Identity.Adapter;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Events;
+using HrAgencySystem.Identity.Infrastructure;
+using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
 using JasperFx.Events;
 using JasperFx.Events.Projections;
@@ -20,14 +21,14 @@ public static class IdentityModule
     public static void ConfigureMarten(
         StoreOptions options)
     {
-        // options.Schema.For<UserEmailReservation>().DatabaseSchemaName("identity")
-        //     .Index(
-        //         x => new
-        //         {
-        //             x.OrganizationId,
-        //             x.Email
-        //         },
-        //         idx => { idx.IsUnique = true; });
+        options.Schema.For<UserEmailReservation>().DatabaseSchemaName("identity")
+            .Index(
+                x => new
+                {
+                    x.OrganizationId,
+                    x.Email
+                },
+                idx => { idx.IsUnique = true; });
 
         options.Events.StreamIdentity =
             StreamIdentity.AsGuid;

@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using HrAgencySystem.Company;
 using HrAgencySystem.Company.Infrastructure;
+using HrAgencySystem.Identity;
 using HrAgencySystem.Organization;
 using HrAgencySystem.SharedKernel.Time;
 
@@ -16,6 +17,7 @@ public static class SetupApplicationModulesExtensions
             services.AddTransient<IClock, SystemClock>();
             services.AddCompanyModule();
             services.AddOrganizationModule(configuration);
+            services.AddIdentityModule();
         }
 
         private void ConfigureJson()

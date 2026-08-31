@@ -46,7 +46,8 @@ public sealed record Email
         try
         {
             // ReSharper disable once ObjectCreationAsStatement
-            new MailAddress(normalized);
+           var email = new MailAddress(normalized);
+           normalized = email.Address;
         }
         catch (FormatException)
         {
