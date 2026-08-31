@@ -1,0 +1,43 @@
+@baseURL = http://localhost:5000/api/users
+
+@fixedOrganizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
+### create user
+# @name createuser
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.fake",
+    "firstName": "John",
+    "lastName": "Smith",
+    "password": "admin123",
+    "organizationId": "{{fixedOrganizationId}}",
+    "role": "Admin"
+}
+
+###
+@userId = {{createuser.response.body.$.id}}
+@randomVal = {{$randomInt 10000 99999}}
+
+### create random user
+# @name createRandom
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "email": "j.smith{{randomVal}}@hr-agency.fake",
+    "firstName": "John",
+    "lastName": "Smith{{randomVal}}",
+    "password": "admin{{randomVal}}",
+    "organizationId": "{{fixedOrganizationId}}",
+    "role": "Recruiter"
+}
+
+###
+@userId = {{createRandom.response.body.$.id}}
+
+### Get user
+GET {{baseURL}}/{{userId}}
+
+### Get user list
+GET {{baseURL}}

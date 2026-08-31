@@ -1,8 +1,8 @@
 using HrAgencySystem.SharedKernel.Port;
 
-namespace HrAgencySystem.Organization.Infrastructure;
+namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
-public sealed class TestOrganizationChecker : IOrganizationChecker
+public sealed class FakeOrganizationChecker : IOrganizationChecker
 {
     public Task<bool> Exists(
         Guid organizationId,

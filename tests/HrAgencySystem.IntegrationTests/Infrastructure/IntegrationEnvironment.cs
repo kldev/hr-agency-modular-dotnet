@@ -11,11 +11,11 @@ public sealed class IntegrationEnvironment : IAsyncLifetime
         .WithPassword("hr_agency")
         .Build();
 
-    public ApiApplicationFactory Factory { get; private set; } = null!;
+    private ApiApplicationFactory Factory { get; set; } = null!;
     public HttpClient Client { get; private set; } = null!;
     public DatabaseCleaner Cleaner { get; private set; } = null!;
 
-    public string ConnectionString =>
+    private string ConnectionString =>
         _postgres.GetConnectionString();
 
     public async Task InitializeAsync()

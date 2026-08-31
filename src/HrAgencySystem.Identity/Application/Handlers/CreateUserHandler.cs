@@ -4,12 +4,14 @@ using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Events;
+using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
+using Wolverine;
 
 namespace HrAgencySystem.Identity.Application.Handlers;
 
@@ -49,7 +51,7 @@ public static class CreateUserHandler
         await repository.ReserveAsync(organizationId, email);
         
         var userId = UserId.New();
-
+        
         var @event = new UserCreated(
             userId.Value,
             organizationId.Value,

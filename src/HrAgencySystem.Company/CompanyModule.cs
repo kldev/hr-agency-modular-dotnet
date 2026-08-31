@@ -12,6 +12,7 @@ namespace HrAgencySystem.Company;
 
 public static class CompanyModule
 {
+    private const string SchemaName = "company";
     public static void AddCompanyModule(
         this IServiceCollection services)
     {
@@ -22,7 +23,14 @@ public static class CompanyModule
     public static void ConfigureMarten(
         StoreOptions options)
     {
-        options.Schema.For<CompanyTaxIdReservation>().DatabaseSchemaName("company")
+        ConfigureTable(options);
+        ConfigureEvents(options);
+        ConfigureProjections(options);
+    }
+
+    private static void ConfigureTable(StoreOptions options)
+    {
+        options.Schema.For<CompanyTaxIdReservation>().DatabaseSchemaName(SchemaName)
             .Index(
                 x => new
                 {
@@ -30,15 +38,21 @@ public static class CompanyModule
                     x.TaxId
                 },
                 idx => { idx.IsUnique = true; });
+    }
 
+    private static void ConfigureEvents(StoreOptions options)
+    {
         options.Events.StreamIdentity =
             StreamIdentity.AsGuid;
 
-
         options.Events.AddEventType<CompanyCreated>();
+    }
+
+    private static void ConfigureProjections(StoreOptions options)
+    {
         options.Projections.Snapshot<CompanyProjection>(SnapshotLifecycle.Async);
 
-        options.Schema.For<CompanyProjection>().DatabaseSchemaName("company")
+        options.Schema.For<CompanyProjection>().DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })
             .Index(x => new { x.OrganizationId, x.Name, x.Id });
     }

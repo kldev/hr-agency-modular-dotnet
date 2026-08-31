@@ -8,5 +8,7 @@ public static class MapEndpoints
     {
         Endpoint.Map(app);
         Organization.Endpoint.Map(app);
+        Owner.Endpoint.Map(app);
+        User.Endpoint.Map(app);
     }
 }

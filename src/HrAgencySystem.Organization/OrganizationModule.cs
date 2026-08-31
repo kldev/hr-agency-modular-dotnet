@@ -14,35 +14,29 @@ public static class OrganizationModule
     public static void AddOrganizationModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IOrganizationSlugReservationRepository, OrganizationSlugReservationRepository>();
-        var disableCheck = configuration.GetValue<bool>("Application:DisableChecker");
-
-        SetupChecker(services, disableCheck);
+        services.AddScoped<IOrganizationChecker, OrganizationChecker>();
     }
-
-    private static void SetupChecker(IServiceCollection services, bool disableCheck)
-    {
-        if (disableCheck)
-        {
-            services.AddScoped<IOrganizationChecker, TestOrganizationChecker>();
-        }
-        else
-        { 
-            services.AddScoped<IOrganizationChecker, OrganizationChecker>();
-        }
-    }
-
+    
     public static void ConfigureMarten(
         StoreOptions options)
     {
-        options.Schema.For<OrganizationSlugReservation>().DatabaseSchemaName("org")
+        ConfigureTable(options);
+        ConfigureEvents(options);
+    }
+
+    private static void ConfigureTable(StoreOptions options)
+    {
+        options.Schema.For<OrganizationSlugReservation>().DatabaseSchemaName("organization")
             .Index(
                 x => new
                 {
                     x.Slug
                 },
                 idx => { idx.IsUnique = true; });
+    }
 
-
+    private static void ConfigureEvents(StoreOptions options)
+    {
         options.Events.AddEventType(
             typeof(OrganizationCreated));
     }

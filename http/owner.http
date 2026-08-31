@@ -1,0 +1,34 @@
+@baseURL = http://localhost:5000/api/owners
+
+### create owner
+# @name createOwner
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "email": "admin@hr-agency.fake",
+    "password": "admin123"
+}
+
+###
+@ownerId = {{createOwner.response.body.$.platformOwnerId}}
+@randomVal = {{$randomInt 10000 99999}}
+
+### create random owner
+# @name createRandom
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "email": "owner{{randomVal}}@hr-agency.fake",
+    "password": "admin{{randomVal}}"
+}
+
+###
+@ownerId = {{createRandom.response.body.$.platformOwnerId}}
+
+### Get Owner
+GET {{baseURL}}/{{ownerId}}
+
+### Get Owner list
+GET {{baseURL}}
