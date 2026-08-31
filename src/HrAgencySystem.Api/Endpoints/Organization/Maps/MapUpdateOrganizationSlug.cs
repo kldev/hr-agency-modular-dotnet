@@ -22,7 +22,6 @@ public static class MapUpdateOrganizationSlug
     private static async Task<IResult> Handler(
         IMessageBus bus,
         Guid organizationId,
-        IDocumentSession session,
         [FromBody] UpdateSlug request,
         CancellationToken ct)
     {

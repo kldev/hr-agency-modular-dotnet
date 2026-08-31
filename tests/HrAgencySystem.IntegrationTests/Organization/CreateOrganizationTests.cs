@@ -19,16 +19,7 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
     public CreateOrganizationTests(ApiPostgresTestContainer container,
         ITestOutputHelper outputHelper) : base(container, outputHelper)
     {
-        try
-        {
-            using var dataSource = NpgsqlDataSource.Create(container.ConnectionString);
-            var command = dataSource.CreateCommand("truncate table org.mt_doc_organizationslugreservation");
-            command.ExecuteNonQuery();
-        }
-        catch
-        {
-            // ignored
-        }
+        CleanOrganizationReservation();
     }
 
     private static CreateOrganization CreateOrganizationRequest(
