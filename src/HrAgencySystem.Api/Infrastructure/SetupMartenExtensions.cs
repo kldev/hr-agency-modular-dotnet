@@ -1,5 +1,4 @@
 using HrAgencySystem.Company;
-using HrAgencySystem.Company.Infrastructure;
 using HrAgencySystem.Organization;
 using JasperFx;
 using JasperFx.Events.Daemon;
@@ -15,7 +14,10 @@ public static class SetupMartenExtensions
     {
         services.AddMarten(options =>
             {
-                options.Connection(configuration.GetConnectionString("Postgres")!);
+                var connectionString = configuration.GetConnectionString("Postgres");
+                
+                options.Connection(connectionString!);
+                
                 options.Events.DatabaseSchemaName = "events";
 
                 CompanyModule.ConfigureMarten(options);

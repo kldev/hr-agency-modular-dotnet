@@ -11,7 +11,7 @@ internal static class MapCreateCompany
     public static void Map(
         RouteGroupBuilder endpoints)
     {
-        endpoints.MapPost("", Handler)
+        endpoints.MapPost("/api/companies", Handler)
             .WithSummary("Create company")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);;

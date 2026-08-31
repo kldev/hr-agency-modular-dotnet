@@ -7,9 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.SetupApplicationModules(builder.Configuration);
     builder.Services.SetupMartenForApplication(builder.Configuration);
     builder.Host.SetupWolverineForApplication();
-    //builder.Services.AddWolverineHttp();
     builder.Services.AddOpenApi();
-    
 }
 
 var app = builder.Build();
@@ -18,8 +16,6 @@ var app = builder.Build();
     app.MapApplicationEndpoints();
     app.MapOpenApi();
     app.MapAppScalar();
-    //app.MapWolverineEndpoints();
-
     app.MapGet("/", () => "HR Agency API").ExcludeFromDescription();
 
     app.Run();

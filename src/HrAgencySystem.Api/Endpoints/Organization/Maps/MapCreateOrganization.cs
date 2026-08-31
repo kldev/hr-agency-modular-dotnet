@@ -10,7 +10,7 @@ internal static class MapCreateOrganization
 {
     public static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("", Handler)
+        group.MapPost("/api/organization", Handler)
             .WithSummary("Create organization")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);

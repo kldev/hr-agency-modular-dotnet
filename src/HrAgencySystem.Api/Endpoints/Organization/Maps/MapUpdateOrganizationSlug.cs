@@ -13,7 +13,7 @@ public static class MapUpdateOrganizationSlug
 
     public static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("{organizationId}/slug", Handler)
+        group.MapPut("/api/organization/{organizationId}/slug", Handler)
             .WithSummary("Update organization slug")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
