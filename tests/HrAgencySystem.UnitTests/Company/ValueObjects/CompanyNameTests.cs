@@ -1,4 +1,5 @@
 using HrAgencySystem.Company.Domain.ValueObjects;
+using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.UnitTests.Company.ValueObjects;
 
@@ -17,27 +18,27 @@ public class CompanyNameTests
     }
 
     [Fact]
-    public void Create_WithWhitespaceOnly_ThrowsArgumentException()
+    public void Create_WithWhitespaceOnly_ThrowsInValidValueException()
     {
-        Assert.Throws<ArgumentException>(() => CompanyName.Create("   "));
+        Assert.Throws<InValidValueException>(() => CompanyName.Create("   "));
     }
 
     [Fact]
-    public void Create_WithEmptyValue_ThrowsArgumentException()
+    public void Create_WithEmptyValue_ThrowsInValidValueException()
     {
         var exception = Assert
-            .Throws<ArgumentException>(() => CompanyName.Create(string.Empty));
+            .Throws<InValidValueException>(() => CompanyName.Create(string.Empty));
         
         Assert.Contains(CompanyName.RequiredMessage, exception.Message);
     }
 
     [Fact]
-    public void Create_WithValueLongerThan250Characters_ThrowsArgumentException()
+    public void Create_WithValueLongerThan250Characters_ThrowsInValidValueException()
     {
         var value = new string('A', 251);
 
         var exception = Assert
-            .Throws<ArgumentException>(() => CompanyName.Create(value));
+            .Throws<InValidValueException>(() => CompanyName.Create(value));
         
         Assert.Contains(CompanyName.MaxLengthMessage, exception.Message);
     }

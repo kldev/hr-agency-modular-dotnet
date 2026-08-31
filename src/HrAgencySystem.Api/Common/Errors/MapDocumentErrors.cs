@@ -20,7 +20,7 @@ public static class MapDocumentErrors
 
     public static string Details(string name)
     {
-        return Maps.Single(x => x.Name.Contains(name)).Details ??
+        return Maps.SingleOrDefault(x => x.Name.Contains(name))?.Details ??
                "Data with provided request is already stored in database";
     }
 }

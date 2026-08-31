@@ -1,4 +1,5 @@
 using HrAgencySystem.Company.Domain.ValueObjects;
+using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.UnitTests.Company.ValueObjects;
 
@@ -20,10 +21,10 @@ public class RegistrationNumberTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]
-    public void Create_WithMissingValue_ThrowsArgumentException(string value)
+    public void Create_WithMissingValue_ThrowsInValidValueException(string value)
     {
         var exception = Assert
-            .Throws<ArgumentException>(() => RegistrationNumber.Create(value));
+            .Throws<InValidValueException>(() => RegistrationNumber.Create(value));
 
         Assert.Contains(
             RegistrationNumber.RequiredMessage,
@@ -31,12 +32,12 @@ public class RegistrationNumberTests
     }
 
     [Fact]
-    public void Create_WithMoreThan100Characters_ThrowsArgumentException()
+    public void Create_WithMoreThan100Characters_ThrowsInValidValueException()
     {
         var value = new string('A', 101);
 
         var exception = Assert
-            .Throws<ArgumentException>(() => RegistrationNumber.Create(value));
+            .Throws<InValidValueException>(() => RegistrationNumber.Create(value));
 
         Assert.Contains(
             RegistrationNumber.MaxLengthMessage,

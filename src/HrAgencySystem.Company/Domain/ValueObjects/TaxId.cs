@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.Exception;
+
 namespace HrAgencySystem.Company.Domain.ValueObjects;
 
 public sealed record TaxId
@@ -17,7 +19,7 @@ public sealed record TaxId
     {
         var (taxId, error) = TryCreate(value);
 
-        return error is not null ? throw new ArgumentException(error, nameof(value)) : taxId!;
+        return error is not null ? throw new InValidValueException(error) : taxId!;
     }
 
     public static (TaxId? taxId, string? error) TryCreate(

@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.Exception;
+
 namespace HrAgencySystem.Company.Domain.ValueObjects;
 
 public sealed record CountryCode
@@ -16,7 +18,7 @@ public sealed record CountryCode
     public static CountryCode Create(string value)
     {
         var (countryCode, error) = TryCreate(value);
-        return error is not null ? throw new ArgumentException(error) : countryCode!;
+        return error is not null ? throw new InValidValueException(error) : countryCode!;
     }
 
     public static (CountryCode? countryCode, string? error) TryCreate(string value)

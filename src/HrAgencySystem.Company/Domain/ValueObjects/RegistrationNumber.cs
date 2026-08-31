@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.Exception;
+
 namespace HrAgencySystem.Company.Domain.ValueObjects;
 
 public sealed record RegistrationNumber
@@ -18,7 +20,7 @@ public sealed record RegistrationNumber
     {
         var (registrationNumber, error) = TryCreate(value);
 
-        return error is not null ? throw new ArgumentException(error, nameof(value)) : registrationNumber!;
+        return error is not null ? throw new InValidValueException(error) : registrationNumber!;
     }
 
     public static (RegistrationNumber? registrationNumber, string? error) TryCreate(

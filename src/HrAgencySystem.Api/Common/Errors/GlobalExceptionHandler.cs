@@ -25,7 +25,7 @@ public sealed class GlobalExceptionHandler(
                 });
 
             case DocumentAlreadyExistsException document:
-                return await WriteErrorAsync(httpContext, StatusCodes.Status400BadRequest,
+                return await WriteErrorAsync(httpContext, StatusCodes.Status409Conflict,
                     MapDocumentErrors.Title(document.DocumentType.Name),
                     MapDocumentErrors.Details(document.DocumentType.Name), exception);
 

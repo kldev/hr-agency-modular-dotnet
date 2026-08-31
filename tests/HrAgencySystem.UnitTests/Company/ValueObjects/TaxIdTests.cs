@@ -1,4 +1,5 @@
 using HrAgencySystem.Company.Domain.ValueObjects;
+using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.UnitTests.Company.ValueObjects;
 
@@ -20,19 +21,19 @@ public class TaxIdTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]
-    public void Create_WithMissingValue_ThrowsArgumentException(string value)
+    public void Create_WithMissingValue_ThrowsInValidValueException(string value)
     {
         Assert
-            .Throws<ArgumentException>(() => TaxId.Create(value));
+            .Throws<InValidValueException>(() => TaxId.Create(value));
     }
 
     [Fact]
-    public void Create_WithMoreThan50Characters_ThrowsArgumentException()
+    public void Create_WithMoreThan50Characters_ThrowsInValidValueException()
     {
         var value = new string('A', 51);
 
         Assert
-            .Throws<ArgumentException>(() => TaxId.Create(value));
+            .Throws<InValidValueException>(() => TaxId.Create(value));
     }
 
     [Fact]

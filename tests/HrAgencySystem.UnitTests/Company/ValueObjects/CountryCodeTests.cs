@@ -1,4 +1,5 @@
 using HrAgencySystem.Company.Domain.ValueObjects;
+using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.UnitTests.Company.ValueObjects;
 
@@ -21,10 +22,10 @@ public class CountryCodeTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]
-    public void Create_WithMissingValue_ThrowsArgumentException(string value)
+    public void Create_WithMissingValue_ThrowsInValidValueException(string value)
     {
         var exception = Assert
-            .Throws<ArgumentException>(() => CountryCode.Create(value));
+            .Throws<InValidValueException>(() => CountryCode.Create(value));
         Assert.Equal(CountryCode.RequiredMessage, exception.Message);
     }
 
@@ -33,10 +34,10 @@ public class CountryCodeTests
     [InlineData("POL")]
     [InlineData("POLAND")]
     [InlineData("123")]
-    public void Create_WithInvalidLength_ThrowsArgumentException(string value)
+    public void Create_WithInvalidLength_ThrowsInValidValueException(string value)
     {
         var exception = Assert
-            .Throws<ArgumentException>(() => CountryCode.Create(value));
+            .Throws<InValidValueException>(() => CountryCode.Create(value));
         Assert.Equal(CountryCode.InvalidFormatMessage, exception.Message);
     }
 
@@ -45,10 +46,10 @@ public class CountryCodeTests
     [InlineData("1L")]
     [InlineData("12")]
     [InlineData("@#")]
-    public void Create_WithNonLetterCharacters_ThrowsArgumentException(string value)
+    public void Create_WithNonLetterCharacters_ThrowsInValidValueException(string value)
     {
         var exception = Assert
-            .Throws<ArgumentException>(() => CountryCode.Create(value));
+            .Throws<InValidValueException>(() => CountryCode.Create(value));
 
         Assert.Equal(CountryCode.OnlyCharactersAllowedMessage, exception.Message);
     }

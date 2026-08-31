@@ -7,7 +7,6 @@ using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
 using JasperFx;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;
@@ -105,8 +104,6 @@ public class CreateCompanyTests(ApiPostgresTestContainer container, ITestOutputH
     [Fact]
     public async Task Post_company_with_duplicate_tax_id_returns_bad_request()
     {
-        //await using var factory = new ApiApplicationFactory("").bu;
-        
         var organizationId = Guid.NewGuid();
         var request =
             CreateCompanyRequest(organizationId);
@@ -114,8 +111,6 @@ public class CreateCompanyTests(ApiPostgresTestContainer container, ITestOutputH
        var responseFirst = await Client.PostAsJsonAsync("/api/companies", request);
         
         OutputHelper.WriteLine(await responseFirst.Content.ReadAsStringAsync());
-
-        
         
         Assert.Equal(HttpStatusCode.Created, responseFirst.StatusCode);
         
@@ -166,12 +161,12 @@ public class CreateCompanyTests(ApiPostgresTestContainer container, ITestOutputH
 
         Assert.Contains(
             responses,
-            response => response.StatusCode == HttpStatusCode.BadRequest);
+            response => response.StatusCode == HttpStatusCode.Conflict);
 
-        var badRequest = responses.Single(x =>
-            x.StatusCode == HttpStatusCode.BadRequest);
+        var conflict = responses.Single(x =>
+            x.StatusCode == HttpStatusCode.Conflict);
 
-        var problem = await badRequest.Content
+        var problem = await conflict.Content
             .ReadFromJsonAsync<ProblemDetails>();
 
         Assert.NotNull(problem);

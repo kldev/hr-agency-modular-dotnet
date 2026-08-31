@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.Exception;
+
 namespace HrAgencySystem.Organization.Domain.ValueObjects;
 
 public sealed record OrganizationName
@@ -21,7 +23,7 @@ public sealed record OrganizationName
     {
         var (name, error) = TryCreate(value);
 
-        return error is not null ? throw new ArgumentException(error, nameof(value)) : name!;
+        return error is not null ? throw new InValidValueException(error) : name!;
     }
 
     public static (OrganizationName? name, string? error) TryCreate(

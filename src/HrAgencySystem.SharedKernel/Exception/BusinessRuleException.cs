@@ -1,3 +1,3 @@
 namespace HrAgencySystem.SharedKernel.Exception;
 
-public class BusinessRuleException(string message) : System.Exception(message);
+public sealed class BusinessRuleException(string message) : System.Exception(message);
