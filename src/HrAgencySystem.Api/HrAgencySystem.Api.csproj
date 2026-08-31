@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\HrAgencySystem.PlatformSeeder\HrAgencySystem.PlatformSeeder.csproj" />
         <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
         <ProjectReference Include="..\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj"/>
         <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj"/>

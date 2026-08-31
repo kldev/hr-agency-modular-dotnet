@@ -10,5 +10,15 @@ public static class MapEndpoints
         Organization.Endpoint.Map(app);
         Owner.Endpoint.Map(app);
         User.Endpoint.Map(app);
+
+        MapPlatformSeeder(app);
+    }
+
+    private static void MapPlatformSeeder(this WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            Platform.Endpoint.Map(app);
+        }
     }
 }

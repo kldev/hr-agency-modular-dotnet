@@ -9,7 +9,7 @@ internal static class MapGetCompany
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/companies/{companyId:guid}", Handler);
+        group.MapGet("/api/companies/{companyId:guid}", Handler).WithSummary("Get company");
     }
     
     private static async Task<IResult> Handler(IDocumentSession session, Guid companyId, [FromQuery]Guid organizationId, CancellationToken ct)

@@ -1,5 +1,6 @@
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
+using HrAgencySystem.PlatformSeeder;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -8,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.SetupMartenForApplication(builder.Configuration);
     builder.Host.SetupWolverineForApplication();
     builder.Services.AddOpenApi();
+    if (builder.Environment.IsDevelopment())
+    {
+        builder.Services.AddPlatformSeederModule();
+    }
 }
 
 var app = builder.Build();

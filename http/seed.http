@@ -1,0 +1,29 @@
+@baseURL = http://localhost:5000
+@organizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
+
+### seed
+GET {{baseURL}}/api/development/seed
+
+### Get companies
+GET {{baseURL}}/api/companies?pageSize=100&organizationId={{organizationId}}
+Content-Type: application/json
+
+### Get companies 101
+GET {{baseURL}}/api/companies?pageSize=100&page=2&organizationId={{organizationId}}
+Content-Type: application/json
+
+
+###
+# @name getFlex
+GET {{baseURL}}/api/organization/flex-jobs
+
+##
+@flexId = {{getFlex.response.body.$.organizationId}}
+
+### Get companies
+GET {{baseURL}}/api/companies?pageSize=100&organizationId={{flexId}}
+Content-Type: application/json
+
+### Get companies
+GET {{baseURL}}/api/companies?pageSize=100&page=10&organizationId={{flexId}}
+Content-Type: application/json

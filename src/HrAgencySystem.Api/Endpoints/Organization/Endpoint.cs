@@ -11,5 +11,7 @@ public static class Endpoint
 
         MapCreateOrganization.Map(group);
         MapUpdateOrganizationSlug.Map(group);
+        MapGetOrganizations.Map(group);
+        MapGetOrganizationBySlug.Map(group);
     }
 }

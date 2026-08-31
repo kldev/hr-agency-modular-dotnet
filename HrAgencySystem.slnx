@@ -10,6 +10,7 @@
         <Project Path="src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj" />
         <Project Path="src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj" />
         <Project Path="src/HrAgencySystem.Suggestion/HrAgencySystem.Suggestion.csproj" />
+        <Project Path="src\HrAgencySystem.PlatformSeeder\HrAgencySystem.PlatformSeeder.csproj" />
     </Folder>
     <Folder Name="/tests/">
         <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
