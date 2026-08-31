@@ -25,35 +25,38 @@ Content-Type: application/json
     "registrationNumber": "KRS100000"
 }
 
+###
+@randomVal = {{$randomInt 1000 9999}}
+
 ### Create company
+# @name createRandom
 POST {{baseURL}}/api/companies
 Content-Type: application/json
 
 {
     "organizationId": "{{organizationId}}",
-    "name": "New company{{$randomInt 1000 9999}}",
+    "name": "New company{{randomVal}}",
     "countryCode": "pl",
-    "taxId": "PL88{{$randomInt 1000 9999}}",
-    "registrationNumber": "KRS{{$randomInt 1000 9999}}"
+    "taxId": "PL88{{randomVal}}",
+    "registrationNumber": "KRS{{randomVal}}"
 }
 
-
-### Create company
-POST {{baseURL}}/api/companies
-Content-Type: application/json
-
-{
-    "organizationId": "{{organizationId}}",
-    "name": "New company{{$randomInt 1000 9999}}",
-    "countryCode": "pl",
-    "taxId": "PL88{{$randomInt 1000 9999}}",
-    "registrationNumber": "KRS{{$randomInt 1000 9999}}"
-}
-
+###
+@companyId = {{createRandom.response.body.$.companyId}}
+###
 
 
 ### Get companies
 GET {{baseURL}}/api/companies?pageSize=501&organizationId={{organizationId}}
 Content-Type: application/json
 
+
+### Get company
+GET {{baseURL}}/api/companies/{{companyId}}?organizationId={{organizationId}}
+Content-Type: application/json
+
+
+### Get company
+GET {{baseURL}}/api/companies/{{companyId}}?organizationId={{$guid}}
+Content-Type: application/json
 

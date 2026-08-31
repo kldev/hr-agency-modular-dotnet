@@ -11,5 +11,6 @@ public static class Endpoint
 
         MapCreateCompany.Map(group);
         MapGetCompanies.Map(group);
+        MapGetCompany.Map(group);
     }
 }

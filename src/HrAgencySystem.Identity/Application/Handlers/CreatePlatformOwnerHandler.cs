@@ -8,7 +8,7 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+
 
 namespace HrAgencySystem.Identity.Application.Handlers;
 

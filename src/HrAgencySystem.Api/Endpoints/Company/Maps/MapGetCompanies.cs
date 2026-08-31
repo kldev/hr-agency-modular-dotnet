@@ -4,7 +4,7 @@ namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
 internal static class MapGetCompanies
 {
-    public static void Map(
+    internal static void Map(
         RouteGroupBuilder endpoints)
     {
         endpoints.MapGet("/api/companies", Handler).WithSummary("Get Companies");

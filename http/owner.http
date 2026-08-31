@@ -10,6 +10,17 @@ Content-Type: application/json
     "password": "admin123"
 }
 
+
+### create owner no email
+# @name createOwner
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "email": "",
+    "password": "admin123"
+}
+
 ###
 @ownerId = {{createOwner.response.body.$.platformOwnerId}}
 @randomVal = {{$randomInt 10000 99999}}

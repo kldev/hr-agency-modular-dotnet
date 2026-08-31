@@ -8,7 +8,7 @@ namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
 internal static class MapCreateCompany
 {
-    public static void Map(
+    internal static void Map(
         RouteGroupBuilder endpoints)
     {
         endpoints.MapPost("/api/companies", Handler)
@@ -27,7 +27,7 @@ internal static class MapCreateCompany
                 ct);
 
         return TypedResults.Created(
-            $"/api/companies/{result.CompanyId}",
+            $"/api/companies/{result.CompanyId}?organizationId={result.OrganizationId}",
             result);
     }
 
