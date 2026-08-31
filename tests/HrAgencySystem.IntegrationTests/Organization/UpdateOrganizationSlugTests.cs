@@ -10,15 +10,16 @@ using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Organization;
 
-[Collection(ApiDatabaseCollection.Name)]
+[Collection(IntegrationCollection.Name)]
 public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
 {
+    private OrganizationTestClient _testClient => new (Client, OutputHelper);
     public UpdateOrganizationSlugTests(
-        ApiPostgresTestContainer container,
+        IntegrationEnvironment env,
         ITestOutputHelper outputHelper)
-        : base(container, outputHelper)
+        : base(env, outputHelper)
     {
-        CleanOrganizationReservation();
+       Cleaner.CleanOrganizationReservation().Wait();
     }
 
     private static MapUpdateOrganizationSlug.UpdateSlug UpdateSlugRequest(string slug = "new-slug")
@@ -29,7 +30,7 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
     [Fact]
     public async Task Put_valid_slug_updates_organization_slug()
     {
-        var organization = await CreateOrganizationAsync(
+        var organization = await _testClient.CreateAsync(
             slug: "old-slug");
 
         var request = UpdateSlugRequest("new-slug");
@@ -58,7 +59,7 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
     [Fact]
     public async Task Put_empty_slug_returns_bad_request()
     {
-        var organization = await CreateOrganizationAsync(
+        var organization = await _testClient.CreateAsync(
             slug: "old-slug");
 
         var request = UpdateSlugRequest(" ");
@@ -84,7 +85,7 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
     [Fact]
     public async Task Put_slug_exceeding_max_length_returns_bad_request()
     {
-        var organization = await CreateOrganizationAsync(
+        var organization = await _testClient.CreateAsync(
             slug: "old-slug");
 
         var request = UpdateSlugRequest(
@@ -131,10 +132,10 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
     [Fact]
     public async Task Put_duplicate_slug_returns_bad_request()
     {
-        var firstOrganization = await CreateOrganizationAsync(
+        var firstOrganization = await _testClient.CreateAsync(
             slug: "existing-slug");
 
-        var secondOrganization = await CreateOrganizationAsync(
+        var secondOrganization = await _testClient.CreateAsync(
             name: "Second Agency",
             slug: "second-slug");
 
@@ -153,7 +154,7 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
     [Fact]
     public async Task Put_slug_normalizes_slug()
     {
-        var organization = await CreateOrganizationAsync(
+        var organization = await _testClient.CreateAsync(
             slug: "old-slug");
 
         var request = UpdateSlugRequest(

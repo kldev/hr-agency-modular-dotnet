@@ -13,9 +13,9 @@ using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Company;
 
-[Collection(ApiDatabaseCollection.Name)]
-public class CreateCompanyTests(ApiPostgresTestContainer container, ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(container, outputHelper)
+[Collection(IntegrationCollection.Name)]
+public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)
+    : BaseIntegrationTest(env, outputHelper)
 {
     private static MapCreateCompany.CreateCompanyRequest CreateCompanyRequest(
         Guid? id,

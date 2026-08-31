@@ -13,13 +13,12 @@ using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Organization;
 
-[Collection(ApiDatabaseCollection.Name)]
+[Collection(IntegrationCollection.Name)]
 public sealed class CreateOrganizationTests : BaseIntegrationTest
 {
-    public CreateOrganizationTests(ApiPostgresTestContainer container,
-        ITestOutputHelper outputHelper) : base(container, outputHelper)
+    public CreateOrganizationTests(IntegrationEnvironment env, ITestOutputHelper outputHelper) : base(env, outputHelper) 
     {
-        CleanOrganizationReservation();
+        Cleaner.CleanOrganizationReservation().Wait();
     }
 
     private static CreateOrganization CreateOrganizationRequest(
