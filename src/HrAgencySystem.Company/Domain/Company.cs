@@ -1,6 +1,7 @@
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Tenant;
+using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Company.Domain;
 

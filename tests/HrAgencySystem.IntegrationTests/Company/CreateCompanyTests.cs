@@ -7,6 +7,7 @@ using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using JasperFx;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;

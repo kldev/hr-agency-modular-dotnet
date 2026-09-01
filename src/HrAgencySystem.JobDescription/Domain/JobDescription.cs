@@ -1,0 +1,127 @@
+using HrAgencySystem.JobDescription.Domain.ValueObjects;
+using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.SharedKernel.Tenant;
+using HrAgencySystem.SharedKernel.ValueObjects;
+
+namespace HrAgencySystem.JobDescription.Domain;
+
+public sealed class JobDescription
+{
+    private JobDescription()
+    {
+    }
+
+    public JobDescriptionId Id { get; private set; }
+
+    public OrganizationId OrganizationId { get; private set; }
+
+    public CompanyId CompanyId { get; private set; }
+
+    public JobTitle Title { get; private set; } = null!;
+
+    public JobSummary? Summary { get; private set; }
+
+    public JobDescriptionText? Description { get; private set; }
+
+    public IReadOnlyList<EntryText> Responsibilities { get; private set; } = [];
+
+    public IReadOnlyList<EntryText> Requirements { get; private set; } = [];
+
+    public IReadOnlyList<EntryText> Skills { get; private set; } = [];
+
+    public string? Location { get; private set; }
+
+    public CountryCode CountryCode { get; private set; } = null!;
+
+    public EmploymentType EmploymentType { get; private set; }
+
+    public WorkMode WorkMode { get; private set; }
+
+    public SalaryRange? SalaryRange { get; private set; }
+
+    public JobDescriptionStatus Status { get; private set; }
+
+    public Guid RecruiterId { get; private set; }
+
+    public DateTimeOffset CreatedAt { get; private set; }
+
+    public DateTimeOffset UpdatedAt { get; private set; }
+
+    public static JobDescription Empty()
+    {
+        return new JobDescription();
+    }
+
+    public void Apply(JobDescriptionCreated @event)
+    {
+        Id = JobDescriptionId.From(@event.JobDescriptionId);
+        OrganizationId = OrganizationId.From(@event.OrganizationId);
+        CompanyId = CompanyId.From(@event.CompanyId);
+
+        Title = @event.Title;
+        Summary = @event.Summary;
+        Description = @event.Description;
+
+        Responsibilities = @event.Responsibilities;
+        Requirements = @event.Requirements;
+        Skills = @event.Skills;
+
+        Location = @event.Location;
+        CountryCode = CountryCode.Create(@event.CountryCode);
+
+        EmploymentType = @event.EmploymentType;
+        WorkMode = @event.WorkMode;
+        SalaryRange = @event.SalaryRange;
+
+        Status = JobDescriptionStatus.Draft;
+
+        RecruiterId = @event.RecruiterId;
+
+        CreatedAt = @event.CreatedAt;
+        UpdatedAt = @event.CreatedAt;
+    }
+
+    public void Apply(JobDescriptionUpdated @event)
+    {
+        Title = @event.Title;
+        Summary = @event.Summary;
+        Description = @event.Description;
+
+        Responsibilities = @event.Responsibilities;
+        Requirements = @event.Requirements;
+        Skills = @event.Skills;
+
+        Location = @event.Location;
+        CountryCode = CountryCode.Create(@event.CountryCode);
+
+        EmploymentType = @event.EmploymentType;
+        WorkMode = @event.WorkMode;
+        SalaryRange = @event.SalaryRange;
+
+        UpdatedAt = @event.UpdatedAt;
+    }
+
+    public void Apply(JobDescriptionOpened @event)
+    {
+        Status = JobDescriptionStatus.Open;
+        UpdatedAt = @event.OccurredAt;
+    }
+
+    public void Apply(JobDescriptionPutOnHold @event)
+    {
+        Status = JobDescriptionStatus.OnHold;
+        UpdatedAt = @event.OccurredAt;
+    }
+
+    public void Apply(JobDescriptionClosed @event)
+    {
+        Status = JobDescriptionStatus.Closed;
+        UpdatedAt = @event.OccurredAt;
+    }
+
+    public void Apply(JobDescriptionCancelled @event)
+    {
+        Status = JobDescriptionStatus.Cancelled;
+        UpdatedAt = @event.OccurredAt;
+    }
+}

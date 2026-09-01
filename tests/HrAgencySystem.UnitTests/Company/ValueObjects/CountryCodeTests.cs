@@ -1,5 +1,6 @@
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.UnitTests.Company.ValueObjects;
 

@@ -7,6 +7,7 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 
 namespace HrAgencySystem.Company.Application.Handlers;

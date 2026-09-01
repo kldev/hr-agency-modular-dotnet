@@ -1,6 +1,5 @@
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
-using JasperFx.Events;
 
 
 namespace HrAgencySystem.Company.Projections;
