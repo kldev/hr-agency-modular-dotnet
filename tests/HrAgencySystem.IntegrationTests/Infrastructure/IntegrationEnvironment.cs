@@ -31,6 +31,8 @@ public sealed class IntegrationEnvironment : IAsyncLifetime
         Client = Factory.CreateClient();
     }
 
+    public HttpClient CreateClient() => Factory.CreateClient();
+    
     public async Task DisposeAsync()
     {
         Client.Dispose();

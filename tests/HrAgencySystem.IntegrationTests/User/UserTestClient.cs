@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using HrAgencySystem.Api.Endpoints.User.Maps;
 using HrAgencySystem.Identity.Application.Commands;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;
@@ -19,14 +20,14 @@ public sealed class UserTestClient(
         OrganizationRole role = OrganizationRole.Admin,
         string password = "Password123!")
     {
-        var request = new CreateUser(
-            organizationId,
+        var request = new CreateUserRequest(
             email,
             firstName,
             lastName,
             role,
             password);
 
+        client.WithOrganizationId(organizationId);
         var response = await client.PostAsJsonAsync(
             "/api/users",
             request);

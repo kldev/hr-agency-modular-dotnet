@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using HrAgencySystem.Api.Endpoints.User.Maps;
 using HrAgencySystem.Identity.Application.Commands;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;
@@ -21,9 +22,12 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
     [Fact]
     public async Task ShouldCreateUser()
     {
+        var organizationId = Guid.NewGuid();
+        Client.WithOrganizationId(organizationId);
+        
         // Arrange
-        var request = new CreateUser(
-            OrganizationId: Guid.NewGuid(),
+        var request = new CreateUserRequest(
+            
             Email: "user@test.com",
             FirstName: "John",
             LastName: "Doe",
@@ -42,7 +46,7 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
 
         Assert.NotNull(result);
         Assert.NotEmpty(result.Id.ToString());
-        Assert.Equal(request.OrganizationId, result.OrganizationId);
+        Assert.Equal(organizationId, result.OrganizationId);
         Assert.Equal(request.Email, result.Email);
         Assert.Equal(request.FirstName, result.FirstName);
         Assert.Equal(request.LastName, result.LastName);
@@ -53,10 +57,7 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
     public async Task ShouldNotCreateTwoUsersWithTheSameEmail()
     {
         // Arrange
-        var organizationId = Guid.NewGuid();
-
-        var request = new CreateUser(
-            OrganizationId: organizationId,
+        var request = new CreateUserRequest(
             Email: "user@test.com",
             FirstName: "John",
             LastName: "Doe",
@@ -86,18 +87,17 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
     public async Task ShouldAllowCreatingUsersWithDifferentEmails()
     {
         // Arrange
-        var organizationId = Guid.NewGuid();
-
-        var firstRequest = new CreateUser(
-            OrganizationId: organizationId,
+        var organizationIdA = Guid.NewGuid();
+        var organizationIdB = Guid.NewGuid();
+        
+        var firstRequest = new CreateUserRequest(
             Email: "user1@test.com",
             FirstName: "John",
             LastName: "Doe",
             Role: OrganizationRole.Sales,
             Password: "Password123!");
 
-        var secondRequest = new CreateUser(
-            OrganizationId: organizationId,
+        var secondRequest = new CreateUserRequest(
             Email: "user2@test.com",
             FirstName: "Jane",
             LastName: "Smith",
@@ -105,10 +105,12 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
             Password: "Password123!");
 
         // Act
+        Client.WithOrganizationId(organizationIdA);
         var firstResponse = await Client.PostAsJsonAsync(
             "/api/users",
             firstRequest);
 
+        Client.WithOrganizationId(organizationIdB);
         var secondResponse = await Client.PostAsJsonAsync(
             "/api/users",
             secondRequest);
@@ -124,8 +126,8 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
         Assert.NotNull(secondUser);
         Assert.NotEqual(firstUser.Id, secondUser.Id);
 
-        Assert.Equal(firstRequest.OrganizationId, firstUser.OrganizationId);
-        Assert.Equal(secondRequest.OrganizationId, secondUser.OrganizationId);
+        Assert.Equal(organizationIdA, firstUser.OrganizationId);
+        Assert.Equal(organizationIdB, secondUser.OrganizationId);
 
         Assert.Equal(firstRequest.Email, firstUser.Email);
         Assert.Equal(secondRequest.Email, secondUser.Email);

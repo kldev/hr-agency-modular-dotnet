@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Identity.Projections;
 using Marten;
@@ -15,10 +16,10 @@ internal static class MapGetUser
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 
-    private static async Task<IResult> Handler(IDocumentSession session, Guid userId, CancellationToken ct)
+    private static async Task<IResult> Handler(AuthenticatedUser user, IDocumentSession session, Guid userId, CancellationToken ct)
     {
         var result = await session.Query<UserProjection>()
-            .Where(z => z.Id == userId).SingleOrDefaultAsync(ct);
+            .Where(z => z.Id == userId && z.OrganizationId == user.OrganizationId).SingleOrDefaultAsync(ct);
 
         if (result == null)
             return TypedResults.NotFound(new ProblemDetails()

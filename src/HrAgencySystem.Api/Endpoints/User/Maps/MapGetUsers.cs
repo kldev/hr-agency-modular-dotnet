@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Identity.Projections;
 using Marten;
 
@@ -10,9 +11,9 @@ internal static class MapGetUsers
         group.MapGet("/api/users", Handler);
     }
 
-    private static async Task<IResult> Handler(IDocumentSession session, CancellationToken ct)
+    private static async Task<IResult> Handler(AuthenticatedUser user, IDocumentSession session, CancellationToken ct)
     {
-        var result = await session.Query<UserProjection>().ToListAsync(ct);
+        var result = await session.Query<UserProjection>().Where(z=>z.OrganizationId == user.OrganizationId).ToListAsync(ct);
         return TypedResults.Ok(result);
     }
 }
