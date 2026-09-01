@@ -103,5 +103,39 @@ public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
         Assert.Equal(secondRequest.Email, secondOwner.Email);
         
     }
+
+    [Fact]
+    public async Task ShouldReturn403ForAuthenticatedUserWithOrganizationsRoles()
+    {
+        Client.AsOrganizationRoles();
+
+        var request = new CreatePlatformOwner(
+            Email: "owner@test.com",
+            Password: "Password123!");
+
+        // Act
+        var response = await Client.PostAsJsonAsync(
+            "/api/owners",
+            request);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+    }
     
+    [Fact]
+    public async Task WithOwnerRoleShouldCreateOwner()
+    {
+        Client.AsOwner();
+
+        var request = new CreatePlatformOwner(
+            Email: "otherOwner@test.com",
+            Password: "Password123!");
+
+        // Act
+        var response = await Client.PostAsJsonAsync(
+            "/api/owners",
+            request);
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+    }
+
 }

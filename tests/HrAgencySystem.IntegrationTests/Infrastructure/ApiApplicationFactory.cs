@@ -19,6 +19,7 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
         builder.ConfigureServices(services =>
         {
             services.Replace(ServiceDescriptor.Scoped<IOrganizationChecker, FakeOrganizationChecker>());
+            ConfigureAuthentication(services);
         });
         
         builder.ConfigureAppConfiguration((_, configuration) =>
@@ -30,5 +31,18 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
             });
             builder.UseEnvironment("Testing");
         });
+        
+        
+    }
+
+    private void ConfigureAuthentication(IServiceCollection services)
+    {
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationScheme;
+                options.DefaultChallengeScheme = TestAuthHandler.AuthenticationScheme;
+            })
+            .AddScheme<TestAuthHandlerOptions, TestAuthHandler>(
+                TestAuthHandler.AuthenticationScheme, opt => {});
     }
 }

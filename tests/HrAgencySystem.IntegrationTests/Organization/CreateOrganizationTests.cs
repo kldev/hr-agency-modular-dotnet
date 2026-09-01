@@ -19,6 +19,7 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
     public CreateOrganizationTests(IntegrationEnvironment env, ITestOutputHelper outputHelper) : base(env, outputHelper) 
     {
         Cleaner.CleanOrganizationReservation().Wait();
+        Client.AsOwner();
     }
 
     private static CreateOrganization CreateOrganizationRequest(
