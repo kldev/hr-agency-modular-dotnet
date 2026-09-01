@@ -17,7 +17,7 @@ public static class TestAuthenticationExtensions
 
     public static void AsOrganizationRoles(this HttpClient client)
     {
-        client.SetTestRoles(nameof(OrganizationRole.Admin), nameof(OrganizationRole.Recruiter));
+        client.SetTestRoles(nameof(OrganizationRole.Admin));
     }
 
     public static void SetTestRoles(

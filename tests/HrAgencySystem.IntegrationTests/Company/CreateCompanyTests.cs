@@ -14,18 +14,21 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Company;
 
 [Collection(IntegrationCollection.Name)]
-public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(env, outputHelper)
+public class CreateCompanyTests : BaseIntegrationTest
 {
+    public CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper outputHelper) : base(env, outputHelper)
+    {
+        Cleaner.CleanCompanyTaxIds().Wait();
+    }
+
     private static MapCreateCompany.CreateCompanyRequest CreateCompanyRequest(
-        Guid? id,
         string name = "Acme z.o.o",
         string countryCode = "pl",
         string taxId = "TX101-101",
         string registrationNumber = "KRS-200"
     )
     {
-        return new MapCreateCompany.CreateCompanyRequest(id ?? Guid.NewGuid(), name, countryCode, taxId,
+        return new MapCreateCompany.CreateCompanyRequest(name, countryCode, taxId,
             registrationNumber);
     }
 
@@ -33,9 +36,11 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     [Fact]
     public async Task Post_valid_company_creates_company()
     {
-        var organizationId = Guid.NewGuid();
+        Guid organizationId = Guid.NewGuid();
+        Client.WithOrganizationId(organizationId);
+        
         var request =
-            CreateCompanyRequest(organizationId);
+            CreateCompanyRequest();
 
         var response = await Client.PostAsJsonAsync("/api/companies", request);
 
@@ -52,9 +57,8 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     [Fact]
     public async Task Post_company_without_name_returns_bad_request()
     {
-        var organizationId = Guid.NewGuid();
         var request =
-            CreateCompanyRequest(organizationId, " ");
+            CreateCompanyRequest( " ");
 
         var response = await Client.PostAsJsonAsync("/api/companies", request);
 
@@ -70,9 +74,8 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     [Fact]
     public async Task Post_company_with_invalid_fields_returns_all_validation_errors()
     {
-        var organizationId = Guid.NewGuid();
         var request =
-            CreateCompanyRequest(organizationId, " ", "wrong country", " ", "");
+            CreateCompanyRequest(" ", "wrong country", " ", "");
 
         var response = await Client.PostAsJsonAsync("/api/companies", request);
 
@@ -104,9 +107,8 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     [Fact]
     public async Task Post_company_with_duplicate_tax_id_returns_bad_request()
     {
-        var organizationId = Guid.NewGuid();
         var request =
-            CreateCompanyRequest(organizationId);
+            CreateCompanyRequest();
         
        var responseFirst = await Client.PostAsJsonAsync("/api/companies", request);
         
@@ -130,8 +132,11 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
         var organizationIdA = Guid.NewGuid();
         var organizationIdB = Guid.NewGuid();
 
-        var responseA = await Client.PostAsJsonAsync("/api/companies", CreateCompanyRequest(organizationIdA));
-        var responseB = await Client.PostAsJsonAsync("/api/companies", CreateCompanyRequest(organizationIdB));
+        Client.WithOrganizationId(organizationIdA);
+        var responseA = await Client.PostAsJsonAsync("/api/companies", CreateCompanyRequest());
+        
+        Client.WithOrganizationId(organizationIdB);
+        var responseB = await Client.PostAsJsonAsync("/api/companies", CreateCompanyRequest());
 
         Assert.Equal(HttpStatusCode.Created, responseA.StatusCode);
         Assert.Equal(HttpStatusCode.Created, responseB.StatusCode);
@@ -142,8 +147,10 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     public async Task Post_concurrent_calls_with_same_tax_id_allow_only_one_company()
     {
         var organizationId = Guid.NewGuid();
+        Client.WithOrganizationId(organizationId);
+        
         var request =
-            CreateCompanyRequest(organizationId);
+            CreateCompanyRequest();
 
         var tasks = new[]
         {

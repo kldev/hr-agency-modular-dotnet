@@ -14,6 +14,7 @@ public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
     public CreateOwnerEndpointTests(IntegrationEnvironment env, ITestOutputHelper outputHelper) : base(env, outputHelper) 
     {
         Cleaner.CleanOwnerEmailReservation().Wait();
+        Client.AsOwner();
     }
     
     [Fact]

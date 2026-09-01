@@ -1,6 +1,4 @@
 @baseURL = http://localhost:5000
-@organizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
-
 
 ### Login Platform User
 # @name login
@@ -22,7 +20,6 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "organizationId": "{{organizationId}}",
     "name": "New company",
     "countryCode": "pl",
     "taxId": "PL8881001100",
@@ -35,7 +32,6 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "organizationId": "{{organizationId}}",
     "name": " ",
     "countryCode": "pl",
     "taxId": "PL88{{$randomInt 1000 9999}}",
@@ -52,7 +48,6 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "organizationId": "{{organizationId}}",
     "name": "New company{{randomVal}}",
     "countryCode": "pl",
     "taxId": "PL88{{randomVal}}",
@@ -65,19 +60,19 @@ Authorization: Bearer {{token}}
 
 
 ### Get companies
-GET {{baseURL}}/api/companies?pageSize=501&organizationId={{organizationId}}
+GET {{baseURL}}/api/companies?pageSize=501
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 
 ### Get company
-GET {{baseURL}}/api/companies/{{companyId}}?organizationId={{organizationId}}
+GET {{baseURL}}/api/companies/{{companyId}}
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 
 ### Get company
-GET {{baseURL}}/api/companies/{{companyId}}?organizationId={{$guid}}
+GET {{baseURL}}/api/companies/{{companyId}}
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

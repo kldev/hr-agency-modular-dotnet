@@ -68,6 +68,6 @@ public class TestAuthHandlerOptions : AuthenticationSchemeOptions
 {
     public Guid Id { get; } = Guid.NewGuid();
     public static string Email => "test@example.com";
-    public string[] Roles { get; } = [nameof(OrganizationRole.Admin), nameof(PlatformRole.Owner)];
+    public string[] Roles { get; } = [nameof(OrganizationRole.Admin)];
     public Guid OrganizationId { get; } = Guid.NewGuid();
 }

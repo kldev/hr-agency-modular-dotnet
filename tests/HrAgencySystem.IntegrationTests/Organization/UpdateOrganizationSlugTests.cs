@@ -20,6 +20,7 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
         : base(env, outputHelper)
     {
        Cleaner.CleanOrganizationReservation().Wait();
+       Client.AsOwner();
     }
 
     private static MapUpdateOrganizationSlug.UpdateSlug UpdateSlugRequest(string slug = "new-slug")

@@ -1,5 +1,7 @@
 using System.Net;
+using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Company.Projections;
+using HrAgencySystem.SharedKernel.Port;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +14,10 @@ internal static class MapGetCompany
         group.MapGet("/api/companies/{companyId:guid}", Handler).WithSummary("Get company");
     }
     
-    private static async Task<IResult> Handler(IDocumentSession session, Guid companyId, [FromQuery]Guid organizationId, CancellationToken ct)
+    private static async Task<IResult> Handler(AuthenticatedUser user, IDocumentSession session, Guid companyId, CancellationToken ct)
     {
         var result = await session.Query<CompanyProjection>()
-            .Where(z => z.Id == companyId && z.OrganizationId == organizationId)
+            .Where(z => z.Id == companyId && z.OrganizationId == user.OrganizationId)
             .FirstOrDefaultAsync(ct);
 
         if (result == null)

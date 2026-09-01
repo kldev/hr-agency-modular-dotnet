@@ -1,6 +1,8 @@
+using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Company.Application.Commands;
 using HrAgencySystem.Company.Events;
+using HrAgencySystem.SharedKernel.Tenant;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
@@ -17,30 +19,29 @@ internal static class MapCreateCompany
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);;
     }
     
-    private static async Task<IResult> Handler(CreateCompanyRequest request,
+    private static async Task<IResult> Handler(AuthenticatedUser user, CreateCompanyRequest request,
         IMessageBus bus,
         CancellationToken ct)
     {
         var result =
             await bus.InvokeAsync<CompanyCreated>(
-                request.ToCommand(),
+                request.ToCommand(user.GetOrganization),
                 ct);
 
         return TypedResults.Created(
-            $"/api/companies/{result.CompanyId}?organizationId={result.OrganizationId}",
+            $"/api/companies/{result.CompanyId}",
             result);
     }
 
     internal record CreateCompanyRequest(
-        Guid OrganizationId,
         string Name,
         string CountryCode,
         string TaxId,
         string RegistrationNumber)
     {
-        public CreateCompany ToCommand()
+        public CreateCompany ToCommand(OrganizationId  organizationId)
         {
-            return new CreateCompany(OrganizationId, Name, CountryCode, TaxId, RegistrationNumber);
+            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber);
         }
     }
 }

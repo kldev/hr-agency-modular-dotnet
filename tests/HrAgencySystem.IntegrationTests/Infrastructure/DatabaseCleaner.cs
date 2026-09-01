@@ -1,3 +1,4 @@
+using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
 using Npgsql;
@@ -25,6 +26,11 @@ public sealed class DatabaseCleaner(string connectionString)
     public async Task CleanOrganizationReservation()
     {
         await CleanTable<OrganizationSlugReservation>("organization");
+    }
+
+    public async Task CleanCompanyTaxIds()
+    {
+        await CleanTable<CompanyTaxIdReservation>("company");
     }
 
     private async Task TruncateTable(string sql)

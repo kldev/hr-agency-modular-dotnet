@@ -1,4 +1,6 @@
+using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Company.Application.Port;
+using HrAgencySystem.SharedKernel.Port;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
@@ -9,11 +11,10 @@ internal static class MapGetCompanies
     {
         endpoints.MapGet("/api/companies", Handler).WithSummary("Get Companies");
     }
-    private static async Task<IResult> Handler(ICompaniesQueryRepository repository,
+    private static async Task<IResult> Handler(AuthenticatedUser user, ICompaniesQueryRepository repository,
         string? search,
-        Guid organizationId,
         int page = 1, int pageSize = 100)
     {
-        return TypedResults.Ok(await repository.GetCompanies(search ?? "", organizationId, page, pageSize));
+        return TypedResults.Ok(await repository.GetCompanies(search ?? "", user.OrganizationId, page, pageSize));
     }
 }
