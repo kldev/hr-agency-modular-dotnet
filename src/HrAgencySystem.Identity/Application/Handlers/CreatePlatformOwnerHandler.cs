@@ -34,10 +34,10 @@ public class CreatePlatformOwnerHandler
             throw new BusinessRuleException(EmailAlreadyUsed);
         }
 
-        var passwordHash = hasher.Hash(command.Password);
-        await repository.ReserveAsync(email!, passwordHash);
-        
         var ownerId = PlatformOwnerId.New();
+        
+        var passwordHash = hasher.Hash(command.Password);
+        await repository.ReserveAsync(email!, passwordHash, ownerId);
         
         var @event = new PlatformOwnerCreated(
             ownerId.Value,

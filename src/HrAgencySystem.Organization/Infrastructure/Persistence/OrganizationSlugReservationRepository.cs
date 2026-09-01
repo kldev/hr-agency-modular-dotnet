@@ -25,4 +25,12 @@ public class OrganizationSlugReservationRepository(IDocumentSession session) : I
 
         return Task.CompletedTask;
     }
+
+    public async Task<OrganizationId?> FindBySlug(OrganizationSlug slug, CancellationToken ct)
+    {
+        var organizationId = await session.Query<OrganizationSlugReservation>().Where(z => z.Slug == slug.Value)
+            .Select(z => z.OrganizationId).FirstOrDefaultAsync(ct);
+
+        return organizationId == Guid.Empty ? null : new OrganizationId(organizationId);
+    }
 }

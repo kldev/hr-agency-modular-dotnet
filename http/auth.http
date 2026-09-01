@@ -1,0 +1,23 @@
+@baseURL = http://localhost:5000
+@slug = hr-agency
+
+### Login Owner
+POST {{baseURL}}/api/owner/login
+Content-Type: application/json
+
+{
+    "email": "admin@hr-agency.com",
+    "password": "pass123"
+}
+
+
+
+### Login Platform User
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}

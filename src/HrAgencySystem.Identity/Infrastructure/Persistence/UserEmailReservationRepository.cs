@@ -1,4 +1,5 @@
 using HrAgencySystem.Identity.Application.Port;
+using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
@@ -13,9 +14,9 @@ public sealed class UserEmailReservationRepository(
         return await session.Query<UserEmailReservation>().WithEmail(organizationId, email).AnyAsync(ct);
     }
 
-    public Task ReserveAsync(OrganizationId organizationId, Email email, string passwordHash)
+    public Task ReserveAsync(OrganizationId organizationId, Email email, UserId userId, string passwordHash)
     {
-        var reservation = new UserEmailReservation(Guid.NewGuid(), organizationId.Value, email.Value, passwordHash);
+        var reservation = new UserEmailReservation(Guid.NewGuid(), userId.Value, organizationId.Value, email.Value, passwordHash);
         session.Insert(reservation);
         
         return Task.CompletedTask;

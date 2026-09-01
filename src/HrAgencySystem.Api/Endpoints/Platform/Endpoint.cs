@@ -6,7 +6,7 @@ internal static class Endpoint
 {
     internal static void Map(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapGet("/api/development/seed", Handler).ExcludeFromDescription();
+        endpoints.MapGet("/api/development/seed", Handler).ExcludeFromDescription().AllowAnonymous();
     }
 
     private static async Task<IResult> Handler(IPlatformSeeder seeder)

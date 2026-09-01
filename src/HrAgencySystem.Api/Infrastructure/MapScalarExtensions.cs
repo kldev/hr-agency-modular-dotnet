@@ -6,6 +6,7 @@ public static class MapScalarExtensions
 {
     public static void MapAppScalar(this WebApplication app)
     {
-        app.MapScalarApiReference("/docs", options => { options.Title = "HR Agency Platform API"; });
+        app.MapScalarApiReference("/docs", options => { options.Title = "HR Agency Platform API"; })
+            .AllowAnonymous();
     }
 }

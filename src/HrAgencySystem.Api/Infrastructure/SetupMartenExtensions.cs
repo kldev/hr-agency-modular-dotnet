@@ -2,6 +2,7 @@ using HrAgencySystem.Company;
 using HrAgencySystem.Identity;
 using HrAgencySystem.Organization;
 using JasperFx;
+using JasperFx.Events;
 using JasperFx.Events.Daemon;
 using Marten;
 using Wolverine;
@@ -20,6 +21,8 @@ public static class SetupMartenExtensions
                 options.Connection(connectionString!);
                 
                 options.Events.DatabaseSchemaName = "events";
+                options.Events.StreamIdentity =
+                    StreamIdentity.AsGuid;
 
                 CompanyModule.ConfigureMarten(options);
                 OrganizationModule.ConfigureMarten(options);

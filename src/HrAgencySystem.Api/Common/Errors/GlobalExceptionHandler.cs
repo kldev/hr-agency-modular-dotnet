@@ -17,6 +17,9 @@ public sealed class GlobalExceptionHandler(
     {
         switch (exception)
         {
+            case AuthorizationException:
+                return await WriteErrorAsync(httpContext, StatusCodes.Status401Unauthorized, "Authentication failed",
+                    exception.Message, exception);
             case ValidationException validationException:
                 httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 return await service.TryWriteAsync(new ProblemDetailsContext

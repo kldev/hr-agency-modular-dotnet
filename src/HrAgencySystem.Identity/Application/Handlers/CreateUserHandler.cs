@@ -46,11 +46,11 @@ public static class CreateUserHandler
         if (await repository.ExistAsync(organizationId, email, ct))
             throw new BusinessRuleException(UserWithEmailMessage);
         
+        var userId = UserId.New();
+        
         var passwordHash = hasher.Hash(command.Password);
 
-        await repository.ReserveAsync(organizationId, email, passwordHash);
-        
-        var userId = UserId.New();
+        await repository.ReserveAsync(organizationId, email, userId, passwordHash);
         
         var @event = new UserCreated(
             userId.Value,

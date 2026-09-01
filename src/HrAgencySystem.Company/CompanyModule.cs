@@ -42,9 +42,6 @@ public static class CompanyModule
 
     private static void ConfigureEvents(StoreOptions options)
     {
-        options.Events.StreamIdentity =
-            StreamIdentity.AsGuid;
-
         options.Events.AddEventType<CompanyCreated>();
     }
 

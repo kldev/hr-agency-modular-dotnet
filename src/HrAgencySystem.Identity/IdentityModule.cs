@@ -1,9 +1,9 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Infrastructure;
+using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
-using JasperFx.Events;
 using JasperFx.Events.Projections;
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +19,9 @@ public static class IdentityModule
         services.AddTransient<IPasswordHasher, BCryptPasswordHasher>();
         services.AddScoped<IUserEmailReservationRepository, UserEmailReservationRepository>();
         services.AddScoped<IOwnerEmailReservationRepository, OwnerEmailReservationRepository>();
+        services.AddTransient<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
+        services.AddOptions<JwtConfig>(JwtConfig.Section);
     }
     
     public static void ConfigureMarten(
@@ -31,9 +34,6 @@ public static class IdentityModule
 
     private static void ConfigureEvents(StoreOptions options)
     {
-        options.Events.StreamIdentity =
-            StreamIdentity.AsGuid;
-        
         options.Events.AddEventType<UserCreated>();
         options.Events.AddEventType<PlatformOwnerCreated>();
     }

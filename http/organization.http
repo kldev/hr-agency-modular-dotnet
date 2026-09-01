@@ -1,11 +1,26 @@
 @baseURL = http://localhost:5000/api/organization
+@baseLogin = http://localhost:5000
 
 @fixedOrganizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
+
+### Login Owner
+# @name login
+POST {{baseLogin}}/api/owner/login
+Content-Type: application/json
+
+{
+    "email": "admin@hr-agency.com",
+    "password": "pass123"
+}
+
+###
+@token = {{login.response.body.$.token}}
 
 ### Create organization
 # @name hrAgencyCreate
 POST {{baseURL}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "name": "HR Agency",
@@ -16,6 +31,7 @@ Content-Type: application/json
 ### Create organization without name
 POST {{baseURL}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "name": " ",
@@ -26,6 +42,7 @@ Content-Type: application/json
 # @name createOrganization
 POST {{baseURL}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "name": "HR Agency{{$randomInt 1000 9999}}",
@@ -37,6 +54,7 @@ Content-Type: application/json
 
 ### Update organization slug
 PUT {{baseURL}}/{{organizationId}}/slug
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -48,8 +66,13 @@ Content-Type: application/json
 @hrAgencyId = {{hrAgencyCreate.response.body.$.organizationId}}
 ### Update organization slug
 PUT {{baseURL}}/{{hrAgencyId}}/slug
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
     "slug": "hr-agency"
 }
+
+### Get 
+GET {{baseURL}}
+Authorization: Bearer {{token}}

@@ -1,10 +1,27 @@
 @baseURL = http://localhost:5000/api/users
+@baseLogin = http://localhost:5000
 
 @fixedOrganizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
+
+### Login Platform User
+# @name login
+POST {{baseLogin}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+###
+@token = {{login.response.body.$.token}}
+
 ### create user
 # @name createuser
 POST {{baseURL}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "email": "j.smith@hr-agency.fake",
@@ -23,6 +40,7 @@ Content-Type: application/json
 # @name createRandom
 POST {{baseURL}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "email": "j.smith{{randomVal}}@hr-agency.fake",

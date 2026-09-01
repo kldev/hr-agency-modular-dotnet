@@ -6,7 +6,8 @@ public static class Endpoint
 {
     public static void Map(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("").WithSummary("Owner").WithTags("Owner");
+        var group = endpoints.MapGroup("").WithTags("Owner")
+            .WithSummary("Owner").WithOwnerRole();
         
         MapCreateOwner.Map(group);
         MapGetOwner.Map(group);
