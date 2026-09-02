@@ -290,7 +290,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 10, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionOpened(
+        var @event = new JobDescriptionOpened(jobDescription.Id.Value,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -312,7 +312,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 11, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionPutOnHold(
+        var @event = new JobDescriptionPutOnHold(jobDescription.Id.Value,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -334,7 +334,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 12, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionClosed(
+        var @event = new JobDescriptionClosed(jobDescription.Id.Value,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -356,7 +356,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 13, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionCancelled(
+        var @event = new JobDescriptionCancelled(jobDescription.Id.Value,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -379,7 +379,7 @@ public class JobDescriptionTests
 
         var occurredAt = createdAt.AddHours(2);
 
-        var @event = new JobDescriptionOpened(
+        var @event = new JobDescriptionOpened(jobDescription.Id.Value,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -401,7 +401,7 @@ public class JobDescriptionTests
         var openedAt = jobDescription.CreatedAt.AddHours(1);
 
         jobDescription.Apply(
-            new JobDescriptionOpened(
+            new JobDescriptionOpened(jobDescription.Id.Value,
                 openedAt));
 
         var updatedAt = openedAt.AddHours(1);
