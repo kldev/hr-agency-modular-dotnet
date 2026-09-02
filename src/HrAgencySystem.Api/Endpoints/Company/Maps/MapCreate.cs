@@ -8,7 +8,7 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
-internal static class MapCreateCompany
+internal static class MapCreate
 {
     internal static void Map(
         RouteGroupBuilder endpoints)
@@ -19,7 +19,7 @@ internal static class MapCreateCompany
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);;
     }
     
-    private static async Task<IResult> Handler(AuthenticatedUser user, CreateCompanyRequest request,
+    private static async Task<IResult> Handler(AppUserAuthenticated user, CreateCompanyRequest request,
         IMessageBus bus,
         CancellationToken ct)
     {

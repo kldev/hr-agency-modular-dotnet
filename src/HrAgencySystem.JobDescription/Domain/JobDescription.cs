@@ -46,10 +46,19 @@ public sealed class JobDescription
     public DateTimeOffset CreatedAt { get; private set; }
 
     public DateTimeOffset UpdatedAt { get; private set; }
+    
+    public Guid CreatedBy { get; set; }
 
+    public Guid? ModifiedBy { get; set; } = null;
+    
     public static JobDescription Empty()
     {
         return new JobDescription();
+    }
+
+    public static JobDescription EmptyWithOrganizationId(OrganizationId organizationId)
+    {
+        return new JobDescription { OrganizationId = organizationId };
     }
 
     public void Apply(JobDescriptionCreated @event)
@@ -77,6 +86,7 @@ public sealed class JobDescription
 
         RecruiterId = @event.Recruiter.Id;
 
+        CreatedBy = @event.CreatedBy.Id;
         CreatedAt = @event.CreatedAt;
         UpdatedAt = @event.CreatedAt;
     }
@@ -99,29 +109,34 @@ public sealed class JobDescription
         SalaryRange = @event.SalaryRange;
 
         UpdatedAt = @event.UpdatedAt;
+        ModifiedBy = @event.ModifiedBy.Id;
     }
 
     public void Apply(JobDescriptionOpened @event)
     {
         Status = JobDescriptionStatus.Open;
         UpdatedAt = @event.OccurredAt;
+        ModifiedBy = @event.ModifiedBy.Id;
     }
 
     public void Apply(JobDescriptionPutOnHold @event)
     {
         Status = JobDescriptionStatus.OnHold;
         UpdatedAt = @event.OccurredAt;
+        ModifiedBy = @event.ModifiedBy.Id;
     }
 
     public void Apply(JobDescriptionClosed @event)
     {
         Status = JobDescriptionStatus.Closed;
         UpdatedAt = @event.OccurredAt;
+        ModifiedBy = @event.ModifiedBy.Id;
     }
 
     public void Apply(JobDescriptionCancelled @event)
     {
         Status = JobDescriptionStatus.Cancelled;
         UpdatedAt = @event.OccurredAt;
+        ModifiedBy = @event.ModifiedBy.Id;
     }
 }

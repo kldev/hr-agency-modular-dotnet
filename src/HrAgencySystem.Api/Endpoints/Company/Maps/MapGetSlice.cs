@@ -4,14 +4,14 @@ using HrAgencySystem.SharedKernel.Port;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
-internal static class MapGetCompanies
+internal static class MapGetSlice
 {
     internal static void Map(
         RouteGroupBuilder endpoints)
     {
         endpoints.MapGet("/api/companies", Handler).WithSummary("Get Companies");
     }
-    private static async Task<IResult> Handler(AuthenticatedUser user, ICompaniesQueryRepository repository,
+    private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository,
         string? search,
         int page = 1, int pageSize = 100)
     {

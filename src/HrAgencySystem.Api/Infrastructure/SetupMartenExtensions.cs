@@ -1,5 +1,6 @@
 using HrAgencySystem.Company;
 using HrAgencySystem.Identity;
+using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
 using JasperFx;
 using JasperFx.Events;
@@ -47,6 +48,9 @@ public static class SetupMartenExtensions
                     .Assembly);
             options.Discovery.IncludeAssembly(
                 typeof(IdentityModule)
+                    .Assembly);
+            options.Discovery.IncludeAssembly(
+                typeof(JobDescriptionModule)
                     .Assembly);
             
             options.Policies.AutoApplyTransactions();

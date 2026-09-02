@@ -4,7 +4,6 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 namespace HrAgencySystem.JobDescription.Application.Commands;
 
 public sealed record CreateJobDescription(
-    Guid Id, 
     Guid OrganizationId,
     Guid CompanyId,
     string Title,
@@ -20,5 +19,6 @@ public sealed record CreateJobDescription(
     CurrencyCode  CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    Guid RecruiterId
+    Guid RecruiterId,
+    Guid CreatedBy
     ) : IJobDescription;

@@ -3,7 +3,7 @@ using Marten;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 
-internal static class MapGetOrganizations
+internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {

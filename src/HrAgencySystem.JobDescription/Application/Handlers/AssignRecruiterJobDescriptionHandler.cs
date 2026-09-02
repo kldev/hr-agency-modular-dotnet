@@ -2,6 +2,7 @@ using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
@@ -25,7 +26,16 @@ public static class AssignRecruiterJobDescriptionHandler
             throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
         }
 
-        var @event = new JobDescriptionRecruiterAssigned(recruiter, clock.UtcNow);
+        var modifiedBy = await snapshotService.GetUserAsync(command.ModifiedBy, ct);
+        if (modifiedBy == null)
+        {
+            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+        }
+
+        if (aggregate.OrganizationId.Value != command.OrganizationId)
+            throw new BusinessRuleException(OrganizationId.OrganizationNotMatchMessage);
+
+        var @event = new JobDescriptionRecruiterAssigned(recruiter, modifiedBy, clock.UtcNow);
 
         return (@event, [@event]);
     }

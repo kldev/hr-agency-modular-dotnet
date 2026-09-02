@@ -22,7 +22,7 @@ internal sealed record CreateUserRequest(
     }
 }
 
-internal static class MapCreateUser
+internal static class MapCreate
 {
     internal static void Map(RouteGroupBuilder group)
     {
@@ -31,7 +31,7 @@ internal static class MapCreateUser
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest);;
     }
 
-    private static async Task<IResult> Handler(AuthenticatedUser user, IMessageBus bus, CreateUserRequest request)
+    private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreateUserRequest request)
     {
         var result = await bus.InvokeAsync<UserCreated>(request.ToCommand(user.GetOrganization));
         

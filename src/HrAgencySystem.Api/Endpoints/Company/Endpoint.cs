@@ -1,5 +1,3 @@
-using HrAgencySystem.Api.Endpoints.Company.Maps;
-
 namespace HrAgencySystem.Api.Endpoints.Company;
 
 public static class Endpoint
@@ -9,8 +7,9 @@ public static class Endpoint
     {
         var group = endpoints.MapGroup("").WithTags("Company");
 
-        MapCreateCompany.Map(group);
-        MapGetCompanies.Map(group);
-        MapGetCompany.Map(group);
+        Maps.MapCreate.Map(group);
+        Maps.MapGetSlice.Map(group);
+        Maps.MapGet.Map(group);
+        Maps.MapGetByTaxId.Map(group);
     }
 }

@@ -3,6 +3,7 @@ namespace HrAgencySystem.SharedKernel.Tenant;
 public readonly record struct OrganizationId(Guid Value)
 {
     public const string OrganizationCheckMessage = "Non existing organization.";
+    public const string OrganizationNotMatchMessage = "Organization not match.";
     
     public static OrganizationId From(Guid value)
     {

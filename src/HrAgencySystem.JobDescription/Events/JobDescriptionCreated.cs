@@ -20,4 +20,5 @@ public sealed record JobDescriptionCreated(
     WorkMode WorkMode,
     SalaryRange SalaryRange,
     UserSnapshot Recruiter,
+    UserSnapshot CreatedBy,
     DateTimeOffset CreatedAt);

@@ -4,7 +4,7 @@ using Marten;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 
-internal static class MapGetOrganizationBySlug
+internal static class MapGetBySlug
 {
     internal static void Map(RouteGroupBuilder group)
     {

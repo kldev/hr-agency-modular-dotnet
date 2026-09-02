@@ -24,6 +24,10 @@ public sealed record JobDescriptionProjection(
     JobDescriptionStatus Status,
     Guid RecruiterId,
     UserSnapshot Recruiter,
+    Guid CreatedById,
+    UserSnapshot CreatedBy,
+    Guid? ModifiedById,
+    UserSnapshot? ModifiedBy,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt)
 {
@@ -48,6 +52,8 @@ public sealed record JobDescriptionProjection(
             JobDescriptionStatus.Draft,
             @event.Recruiter.Id,
             @event.Recruiter,
+            @event.CreatedBy.Id,
+            @event.CreatedBy, null, null,
             @event.CreatedAt,
             @event.CreatedAt);
     }
@@ -68,7 +74,9 @@ public sealed record JobDescriptionProjection(
             EmploymentType = @event.EmploymentType,
             WorkMode = @event.WorkMode,
             SalaryRange = @event.SalaryRange,
-            UpdatedAt = @event.UpdatedAt
+            UpdatedAt = @event.UpdatedAt,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedBy = @event.ModifiedBy
         };
     }
 
@@ -78,7 +86,9 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.Open,
-            UpdatedAt = @event.OccurredAt
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedBy = @event.ModifiedBy
         };
     }
 
@@ -88,7 +98,9 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.OnHold,
-            UpdatedAt = @event.OccurredAt
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedBy = @event.ModifiedBy
         };
     }
 
@@ -98,7 +110,9 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.Closed,
-            UpdatedAt = @event.OccurredAt
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedBy = @event.ModifiedBy
         };
     }
 
@@ -108,7 +122,9 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.Cancelled,
-            UpdatedAt = @event.OccurredAt
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedBy = @event.ModifiedBy
         };
     }
     
@@ -119,7 +135,9 @@ public sealed record JobDescriptionProjection(
         {
             RecruiterId = @event.Recruiter.Id,
             Recruiter = @event.Recruiter,
-            UpdatedAt = @event.OccurredAt
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedBy = @event.ModifiedBy
         };
     }
 }

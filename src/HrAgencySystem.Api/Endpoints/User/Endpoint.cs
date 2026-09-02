@@ -1,5 +1,3 @@
-using HrAgencySystem.Api.Endpoints.User.Maps;
-
 namespace HrAgencySystem.Api.Endpoints.User;
 
 public static class Endpoint
@@ -8,8 +6,8 @@ public static class Endpoint
     {
         var group = endpoints.MapGroup("").WithSummary("Users").WithTags("Users");
         
-        MapCreateUser.Map(group);
-        MapGetUser.Map(group);
-        MapGetUsers.Map(group);
+        Maps.MapCreate.Map(group);
+        Maps.MapGet.Map(group);
+        Maps.MapGetAll.Map(group);
     }
 }

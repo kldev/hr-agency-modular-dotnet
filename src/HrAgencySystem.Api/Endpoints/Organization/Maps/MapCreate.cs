@@ -6,7 +6,7 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 
-internal static class MapCreateOrganization
+internal static class MapCreate
 {
     public static void Map(RouteGroupBuilder group)
     {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.User.Maps;
 
-internal static class MapGetUser
+internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {
@@ -16,7 +16,7 @@ internal static class MapGetUser
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 
-    private static async Task<IResult> Handler(AuthenticatedUser user, IDocumentSession session, Guid userId, CancellationToken ct)
+    private static async Task<IResult> Handler(AppUserAuthenticated user, IDocumentSession session, Guid userId, CancellationToken ct)
     {
         var result = await session.Query<UserProjection>()
             .Where(z => z.Id == userId && z.OrganizationId == user.OrganizationId).SingleOrDefaultAsync(ct);

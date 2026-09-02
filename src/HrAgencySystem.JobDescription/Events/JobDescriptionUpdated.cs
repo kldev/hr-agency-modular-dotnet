@@ -1,5 +1,6 @@
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
+using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.JobDescription.Events;
 
@@ -15,4 +16,5 @@ public sealed record JobDescriptionUpdated(
     EmploymentType EmploymentType,
     WorkMode WorkMode,
     SalaryRange SalaryRange,
+    UserSnapshot ModifiedBy,
     DateTimeOffset UpdatedAt);

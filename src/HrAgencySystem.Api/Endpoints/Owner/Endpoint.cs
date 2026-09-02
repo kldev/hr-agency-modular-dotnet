@@ -1,4 +1,4 @@
-using HrAgencySystem.Api.Endpoints.Owner.Maps;
+
 
 namespace HrAgencySystem.Api.Endpoints.Owner;
 
@@ -9,8 +9,8 @@ public static class Endpoint
         var group = endpoints.MapGroup("").WithTags("Owner")
             .WithSummary("Owner").WithOwnerRole();
         
-        MapCreateOwner.Map(group);
-        MapGetOwner.Map(group);
-        MapGetOwners.Map(group);
+        Maps.MapCreate.Map(group);
+        Maps.MapGet.Map(group);
+        Maps.MapGetAll.Map(group);
     }
 }

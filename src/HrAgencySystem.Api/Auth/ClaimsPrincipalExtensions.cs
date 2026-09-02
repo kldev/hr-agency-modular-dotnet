@@ -6,7 +6,7 @@ namespace HrAgencySystem.Api.Auth;
 
 public static class ClaimsPrincipalExtensions
 {
-    public static AuthenticatedUser GetAuthenticatedUser(
+    public static AppUserAuthenticated GetAuthenticatedUser(
         this ClaimsPrincipal principal)
     {
         var id = principal.FindFirst(AppClaims.UserId)?.Value;
@@ -22,14 +22,14 @@ public static class ClaimsPrincipalExtensions
         if (string.IsNullOrWhiteSpace(email))
             throw new InvalidOperationException("Authenticated user email claim is missing.");
 
-        return new AuthenticatedUser(
+        return new AppUserAuthenticated(
             userId,
             email,
             orgId,
             principal.GetOrganizationRole());
     }
 
-    public static AuthenticatedOwner GetOwner(this ClaimsPrincipal principal)
+    public static OwnerAuthenticated GetOwner(this ClaimsPrincipal principal)
     {
         var id = principal.FindFirst(AppClaims.UserId)?.Value;
         var email = principal.FindFirst(AppClaims.Email)?.Value;
@@ -40,7 +40,7 @@ public static class ClaimsPrincipalExtensions
         if (string.IsNullOrWhiteSpace(email))
             throw new InvalidOperationException("Authenticated user email claim is missing.");
 
-        return new AuthenticatedOwner(
+        return new OwnerAuthenticated(
             email, principal.GetPlatformRole());
     }
 

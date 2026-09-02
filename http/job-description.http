@@ -1,0 +1,104 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+### 
+
+@token = {{login.response.body.$.token}}
+
+
+### Get companies
+# @name getCompanies
+GET {{baseURL}}/api/companies?pageSize=1&page=1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+###
+
+@companyId = {{getCompanies.response.body.content[0].id}}
+###
+
+### Get users
+# @name getUsers
+GET {{baseURL}}/api/users?pageSize=1&page=1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+###
+
+@userId = {{getUsers.response.body.$[0].id}}
+###
+
+
+### create job description
+# @name create
+
+POST {{baseURL}}/api/job-description
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "companyId": "{{companyId}}",
+  "title": "Java Backend Developer",
+  "summary": "Senior",
+  "description": "We are looking for an experienced Java Backend Developer to join our engineering team.",
+  "responsibilities": [
+        "Design and develop backend applications",
+        "Develop and maintain REST APIs",
+        "Write unit and integration tests",
+        "Participate in code reviews",
+        "Cooperate with frontend developers",
+        "Monitor and improve application performance"
+  ],
+  "requirements": [
+     "At least 3 years of experience with Java",
+    "Practical experience with Spring Boot",
+    "Good knowledge of relational databases",
+    "Experience with REST APIs",
+    "Ability to work in a team",
+    "Good English"
+  ],
+  "skills": [
+    "Java 21",
+    "Spring Boot",
+    "PostgreSQL",
+    "REST API",
+    "Docker",
+    "Git"
+  ],
+  "location": "Opole",
+  "countryCode": "PL",
+  "employmentType": "FullTime",
+  "workMode": "OnSite",
+  "currencyCode": "PLN",
+  "salaryMin": 12000,
+  "salaryMax": 15000,
+  "recruiterId": "{{userId}}"
+}
+
+###
+@jdId = {{create.response.body.$.jobDescriptionId}}
+###
+
+###
+PUT {{baseURL}}/api/job-description/{{jdId}}/OnHold
+Authorization: Bearer {{token}}
+
+###
+PUT {{baseURL}}/api/job-description/{{jdId}}/Open
+Authorization: Bearer {{token}}
+
+###
+PUT {{baseURL}}/api/job-description/{{jdId}}/Closed
+Authorization: Bearer {{token}}

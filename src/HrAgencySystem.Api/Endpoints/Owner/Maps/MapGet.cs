@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.Owner.Maps;
 
-internal static class MapGetOwner
+internal static class MapGet
 {
     public static void Map(RouteGroupBuilder group)
     {

@@ -6,7 +6,7 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 
-public static class MapUpdateOrganizationSlug
+public static class MapUpdateSlug
 {
     internal record UpdateSlug(string Slug);
 

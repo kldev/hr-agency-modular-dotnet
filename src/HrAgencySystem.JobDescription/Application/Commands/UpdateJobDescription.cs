@@ -6,6 +6,7 @@ namespace HrAgencySystem.JobDescription.Application.Commands;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed record UpdateJobDescription(
     Guid JobDescriptionId,
+    Guid OrganizationId,
     string Title,
     string? Summary,
     string Description,
@@ -18,4 +19,5 @@ public sealed record UpdateJobDescription(
     WorkMode WorkMode,
     CurrencyCode  CurrencyCode,
     decimal SalaryMin,
-    decimal SalaryMax) : IJobDescription;
+    decimal SalaryMax,
+    Guid ModifiedBy) : IJobDescription;

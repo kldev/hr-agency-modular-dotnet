@@ -1,13 +1,11 @@
 using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.JobDescription.Domain;
-using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 
 namespace HrAgencySystem.JobDescription.Application.Handlers;
@@ -33,6 +31,10 @@ public static class CreateJobDescriptionHandler
         var recruiter = await userSnapshotService.GetUserAsync(command.RecruiterId, ct);
         if (recruiter == null)
             throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+
+        var createdBy = await userSnapshotService.GetUserAsync(command.CreatedBy, ct);
+        if (createdBy == null)
+            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
         
         var jobDescriptionId = JobDescriptionId.New();
         var @event = new JobDescriptionCreated(
@@ -51,6 +53,7 @@ public static class CreateJobDescriptionHandler
                 command.WorkMode,
                 salaryRange,
                 recruiter!,
+                createdBy,
                 clock.UtcNow);
 
         session.Events.StartStream<Domain.JobDescription>(jobDescriptionId.Value, @event);

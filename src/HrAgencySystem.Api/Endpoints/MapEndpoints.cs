@@ -9,6 +9,7 @@ public static class MapEndpoints
         Organization.Endpoint.Map(app);
         Owner.Endpoint.Map(app);
         User.Endpoint.Map(app);
+        JobDescription.Endpoint.Map(app);
 
         MapPlatformSeeder(app);
     }
