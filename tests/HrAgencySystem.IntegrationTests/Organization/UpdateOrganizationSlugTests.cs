@@ -23,9 +23,9 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
        Client.AsOwner();
     }
 
-    private static MapUpdateOrganizationSlug.UpdateSlug UpdateSlugRequest(string slug = "new-slug")
+    private static MapUpdateSlug.UpdateSlug UpdateSlugRequest(string slug = "new-slug")
     {
-        return new MapUpdateOrganizationSlug.UpdateSlug(slug);
+        return new MapUpdateSlug.UpdateSlug(slug);
     }
 
     [Fact]

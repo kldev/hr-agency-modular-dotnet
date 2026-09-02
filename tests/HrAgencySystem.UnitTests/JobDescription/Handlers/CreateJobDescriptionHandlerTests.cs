@@ -31,13 +31,12 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
         var recruiter = GetRecruiter;
-        var commandId = Guid.NewGuid();
+        
 
         var now = new DateTimeOffset(
             2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
         var command = new CreateJobDescription(
-            commandId,
             organizationId,
             companyId,
             "  Senior .NET Developer  ",
@@ -62,7 +61,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             CurrencyCode.PLN,
             15000m,
             22000m,
-            recruiter.Id);
+            recruiter.Id, recruiter.Id);
 
         _checker
             .Exists(
@@ -143,7 +142,6 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         var command = new CreateJobDescription(
             Guid.NewGuid(),
             Guid.NewGuid(),
-            Guid.NewGuid(),
             "",
             new string('A', JobSummary.MaxLength + 1),
             "",
@@ -166,7 +164,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             CurrencyCode.EUR,
             -1m,
             -2m,
-            Guid.NewGuid());
+            Guid.NewGuid(), GetRecruiter.Id);
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateJobDescriptionHandler.Handle(
@@ -664,7 +662,6 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         decimal salaryMax = 22000m)
     {
         return new CreateJobDescription(
-            Guid.NewGuid(),
             organizationId ?? Guid.NewGuid(),
             companyId ?? Guid.NewGuid(),
             title,
@@ -690,7 +687,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             currencyCode,
             salaryMin,
             salaryMax,
-            recruiterId ?? Guid.NewGuid());
+            recruiterId ?? Guid.NewGuid(), Guid.NewGuid());
     }
     
     private static UserSnapshot GetRecruiter =>

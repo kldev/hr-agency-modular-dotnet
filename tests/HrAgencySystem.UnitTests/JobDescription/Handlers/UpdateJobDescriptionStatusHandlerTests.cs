@@ -2,6 +2,7 @@ using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.JobDescription.Application.Handlers;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using D = HrAgencySystem.JobDescription.Domain;
 using NSubstitute;
@@ -12,6 +13,11 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
 {
     private readonly IClock _clock = Substitute.For<IClock>();
 
+    private readonly IUserSnapshotService _snapshotService =
+        Substitute.For<IUserSnapshotService>();
+
+    private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
+    
     [Fact]
     public async Task Should_close_job_description()
     {
@@ -21,9 +27,13 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
 
         var command = new UpdateJobDescriptionStatus(
             jobDescriptionId,
-            D.JobDescriptionStatus.Closed);
+            D.JobDescriptionStatus.Closed,
+            Guid.NewGuid(), Guid.NewGuid());
 
         var aggregate = D.JobDescription.Empty();
+
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
 
@@ -31,7 +41,9 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
         var (result, events) = await UpdateJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _clock);
+            _snapshotService,
+            _clock,
+            CancellationToken.None);
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -52,17 +64,22 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
 
         var command = new UpdateJobDescriptionStatus(
             jobDescriptionId,
-            D.JobDescriptionStatus.Cancelled);
+            D.JobDescriptionStatus.Cancelled,
+            Guid.NewGuid(), Guid.NewGuid());
 
         var aggregate = D.JobDescription.Empty();
 
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(ModifiedBy);
+        
         _clock.UtcNow.Returns(now);
 
         // Act
         var (result, events) = await UpdateJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _clock);
+            _snapshotService,
+            _clock, CancellationToken.None);
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -83,9 +100,13 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
 
         var command = new UpdateJobDescriptionStatus(
             jobDescriptionId,
-            D.JobDescriptionStatus.OnHold);
+            D.JobDescriptionStatus.OnHold,
+            Guid.NewGuid(), Guid.NewGuid());
 
         var aggregate = D.JobDescription.Empty();
+        
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
 
@@ -93,7 +114,9 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
         var (result, events) = await UpdateJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _clock);
+            _snapshotService,
+            _clock,
+            CancellationToken.None);
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -114,9 +137,13 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
 
         var command = new UpdateJobDescriptionStatus(
             jobDescriptionId,
-            D.JobDescriptionStatus.Open);
+            D.JobDescriptionStatus.Open,
+            Guid.NewGuid(), Guid.NewGuid());
 
         var aggregate = D.JobDescription.Empty();
+        
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
 
@@ -124,7 +151,8 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
         var (result, events) = await UpdateJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _clock);
+            _snapshotService,
+            _clock, CancellationToken.None);
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -143,15 +171,22 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
         // Arrange
         var aggregate = D.JobDescription.Empty();
 
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(ModifiedBy);
+        
         var command = new UpdateJobDescriptionStatus(
             aggregate.Id.Value,
-            aggregate.Status);
+            aggregate.Status,
+            Guid.NewGuid(),
+            Guid.NewGuid());
 
         // Act
         var (result, events) = await UpdateJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _clock);
+            _snapshotService,
+            _clock,
+            CancellationToken.None);
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -168,14 +203,16 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
 
         var command = new UpdateJobDescriptionStatus(
             jobDescriptionId,
-            D.JobDescriptionStatus.Closed);
+            D.JobDescriptionStatus.Closed,
+            Guid.NewGuid(), Guid.NewGuid());
 
         // Act
         var exception = await Assert.ThrowsAsync<NotFoundException>(
             async () => await UpdateJobDescriptionStatusHandler.Handle(
                 command,
                 null!,
-                _clock));
+                _snapshotService,
+                _clock, CancellationToken.None));
 
         // Assert
         Assert.Contains("Not found", exception.Message);
@@ -192,14 +229,18 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
 
         var command = new UpdateJobDescriptionStatus(
             aggregate.Id.Value,
-            invalidStatus);
+            invalidStatus, Guid.NewGuid(), Guid.NewGuid());
 
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(ModifiedBy);
+        
         // Act
         var exception = await Assert.ThrowsAsync<BusinessRuleException>(
             async () => await UpdateJobDescriptionStatusHandler.Handle(
                 command,
                 aggregate,
-                _clock));
+                _snapshotService,
+                _clock, CancellationToken.None));
 
         // Assert
         Assert.Equal(

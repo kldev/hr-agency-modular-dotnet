@@ -3,13 +3,20 @@ using HrAgencySystem.JobDescription.Application.Handlers;
 using D = HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using NSubstitute;
 
 namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
 
 public class UpdateJobDescriptionHandlerTests : BaseTest
 {
+    private readonly IUserSnapshotService _snapshotService =
+        Substitute.For<IUserSnapshotService>();
+    private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
+    
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobDescriptionUpdated()
     {
@@ -46,14 +53,17 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             salaryMin: 15000m,
             salaryMax: 22000m);
 
-        var aggregate = D.JobDescription.Empty();
+        var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(command.OrganizationId));
 
         var clock = new FixedClock(now);
 
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+        
         var (result, events) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            clock);
+            _snapshotService,
+            clock, CancellationToken.None);
 
         Assert.Equal(
             "Senior .NET Developer",
@@ -123,7 +133,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 null!,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             "Not found " + jobDescriptionId,
@@ -134,6 +145,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
     public async Task Handle_WithInvalidData_ThrowsValidationExceptionWithAllErrors()
     {
         var command = new UpdateJobDescription(
+            Guid.NewGuid(),
             Guid.NewGuid(),
             "",
             new string('A', JobSummary.MaxLength + 1),
@@ -156,7 +168,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             D.WorkMode.Remote,
             CurrencyCode.EUR,
             -1m,
-            -2m);
+            -2m, Guid.NewGuid());
 
         var aggregate = D.JobDescription.Empty();
 
@@ -164,7 +176,10 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock,
+                CancellationToken.None
+                ));
 
         Assert.Equal(
             [
@@ -196,7 +211,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [JobTitle.RequiredMessage],
@@ -215,7 +231,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [JobTitle.MaxLengthMessage],
@@ -234,7 +251,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [JobSummary.MaxLengthMessage],
@@ -253,7 +271,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [JobDescriptionText.RequiredMessage],
@@ -272,7 +291,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [JobDescriptionText.MaxLengthMessage],
@@ -295,7 +315,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [EntryText.RequiredMessage],
@@ -318,7 +339,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [EntryText.MaxLengthMessage],
@@ -341,7 +363,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [EntryText.RequiredMessage],
@@ -360,7 +383,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [JobLocation.MaxLengthMessage],
@@ -380,7 +404,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [SalaryRange.NegativeSalaryMessage],
@@ -400,7 +425,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [SalaryRange.NegativeSalaryMessage],
@@ -420,7 +446,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [SalaryRange.MinimumExceedsMaximumMessage],
@@ -439,7 +466,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                TestClock));
+                _snapshotService,
+                TestClock, CancellationToken.None));
 
         Assert.Equal(
             [CountryCode.InvalidFormatMessage],
@@ -453,12 +481,15 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             employmentType: D.EmploymentType.PartTime,
             workMode: D.WorkMode.Remote);
 
-        var aggregate = D.JobDescription.Empty();
+        var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(command.OrganizationId));
 
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+        
         var (result, events) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            TestClock);
+            _snapshotService,
+            TestClock, CancellationToken.None);
 
         Assert.Equal(
             D.EmploymentType.PartTime,
@@ -480,12 +511,15 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             salaryMin: 5000m,
             salaryMax: 8000m);
 
-        var aggregate = D.JobDescription.Empty();
+        var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(command.OrganizationId));
+        
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
         var (result, _) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            TestClock);
+            _snapshotService,
+            TestClock, CancellationToken.None);
 
         Assert.Equal(
             CurrencyCode.EUR,
@@ -503,14 +537,17 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         var command = CreateValidCommand();
 
-        var aggregate = D.JobDescription.Empty();
+        var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(command.OrganizationId));
 
         var clock = new FixedClock(now);
+
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
         var (result, _) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            clock);
+            _snapshotService,
+            clock, CancellationToken.None);
 
         Assert.Equal(now, result.UpdatedAt);
     }
@@ -533,6 +570,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
     {
         return new UpdateJobDescription(
             jobDescriptionId ?? Guid.NewGuid(),
+            Guid.NewGuid(),
             title,
             summary,
             description,
@@ -555,6 +593,6 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             workMode,
             currencyCode,
             salaryMin,
-            salaryMax);
+            salaryMax, Guid.NewGuid());
     }
 }

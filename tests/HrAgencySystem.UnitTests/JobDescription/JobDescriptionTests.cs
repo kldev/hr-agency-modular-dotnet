@@ -10,6 +10,9 @@ namespace HrAgencySystem.UnitTests.JobDescription;
 
 public class JobDescriptionTests
 {
+    private static UserSnapshot User { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
+    private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Other", "Other", "other@test.io");
+    
     [Fact]
     public void Empty_ReturnsEmptyJobDescription()
     {
@@ -66,6 +69,7 @@ public class JobDescriptionTests
             WorkMode.Hybrid,
             salaryRange,
             recruiter,
+            User,
             occurredAt);
 
         var jobDescription = D.JobDescription.Empty();
@@ -191,6 +195,7 @@ public class JobDescriptionTests
             EmploymentType.Contract,
             WorkMode.Remote,
             salaryRange,
+            User,
             updatedAt);
 
         var originalId = jobDescription.Id;
@@ -290,7 +295,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 10, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionOpened(jobDescription.Id.Value,
+        var @event = new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -302,6 +307,8 @@ public class JobDescriptionTests
         Assert.Equal(
             occurredAt,
             jobDescription.UpdatedAt);
+
+        Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
     [Fact]
@@ -312,7 +319,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 11, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionPutOnHold(jobDescription.Id.Value,
+        var @event = new JobDescriptionPutOnHold(jobDescription.Id.Value, ModifiedBy,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -324,6 +331,8 @@ public class JobDescriptionTests
         Assert.Equal(
             occurredAt,
             jobDescription.UpdatedAt);
+        
+        Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
     [Fact]
@@ -334,7 +343,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 12, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionClosed(jobDescription.Id.Value,
+        var @event = new JobDescriptionClosed(jobDescription.Id.Value, ModifiedBy,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -346,6 +355,8 @@ public class JobDescriptionTests
         Assert.Equal(
             occurredAt,
             jobDescription.UpdatedAt);
+        
+        Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
     [Fact]
@@ -356,7 +367,7 @@ public class JobDescriptionTests
         var occurredAt = new DateTimeOffset(
             2026, 9, 2, 13, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionCancelled(jobDescription.Id.Value,
+        var @event = new JobDescriptionCancelled(jobDescription.Id.Value, ModifiedBy,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -368,6 +379,8 @@ public class JobDescriptionTests
         Assert.Equal(
             occurredAt,
             jobDescription.UpdatedAt);
+        
+        Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
     [Fact]
@@ -379,7 +392,7 @@ public class JobDescriptionTests
 
         var occurredAt = createdAt.AddHours(2);
 
-        var @event = new JobDescriptionOpened(jobDescription.Id.Value,
+        var @event = new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy,
             occurredAt);
 
         jobDescription.Apply(@event);
@@ -391,6 +404,8 @@ public class JobDescriptionTests
         Assert.Equal(
             occurredAt,
             jobDescription.UpdatedAt);
+        
+        Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
     [Fact]
@@ -401,7 +416,7 @@ public class JobDescriptionTests
         var openedAt = jobDescription.CreatedAt.AddHours(1);
 
         jobDescription.Apply(
-            new JobDescriptionOpened(jobDescription.Id.Value,
+            new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy,
                 openedAt));
 
         var updatedAt = openedAt.AddHours(1);
@@ -421,6 +436,7 @@ public class JobDescriptionTests
                 10000m,
                 15000m,
                 CurrencyCode.PLN),
+            ModifiedBy,
             updatedAt);
 
         jobDescription.Apply(@event);
@@ -432,6 +448,8 @@ public class JobDescriptionTests
         Assert.Equal(
             updatedAt,
             jobDescription.UpdatedAt);
+        
+        Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
     private static UserSnapshot GetRecruiter =>
@@ -468,6 +486,7 @@ public class JobDescriptionTests
                 22000m,
                 CurrencyCode.PLN),
             recruiter,
+            User,
             new DateTimeOffset(
                 2026, 9, 1, 10, 0, 0, TimeSpan.Zero));
 

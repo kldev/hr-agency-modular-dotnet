@@ -22,14 +22,14 @@ public class CreateCompanyTests : BaseIntegrationTest
         Cleaner.CleanCompanyTaxIds().Wait();
     }
 
-    private static MapCreateCompany.CreateCompanyRequest CreateCompanyRequest(
+    private static MapCreate.CreateCompanyRequest CreateCompanyRequest(
         string name = "Acme z.o.o",
         string countryCode = "pl",
         string taxId = "TX101-101",
         string registrationNumber = "KRS-200"
     )
     {
-        return new MapCreateCompany.CreateCompanyRequest(name, countryCode, taxId,
+        return new MapCreate.CreateCompanyRequest(name, countryCode, taxId,
             registrationNumber);
     }
 
