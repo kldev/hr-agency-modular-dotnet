@@ -1,6 +1,7 @@
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.SharedKernel.Snapshots;
 
 
 namespace HrAgencySystem.JobDescription.Projections;
@@ -22,6 +23,7 @@ public sealed record JobDescriptionProjection(
     SalaryRange SalaryRange,
     JobDescriptionStatus Status,
     Guid RecruiterId,
+    UserSnapshot Recruiter,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt)
 {
@@ -44,7 +46,8 @@ public sealed record JobDescriptionProjection(
             @event.WorkMode,
             @event.SalaryRange,
             JobDescriptionStatus.Draft,
-            @event.RecruiterId,
+            @event.Recruiter.Id,
+            @event.Recruiter,
             @event.CreatedAt,
             @event.CreatedAt);
     }
@@ -105,6 +108,17 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.Cancelled,
+            UpdatedAt = @event.OccurredAt
+        };
+    }
+    
+    public JobDescriptionProjection Apply(
+        JobDescriptionRecruiterAssigned @event)
+    {
+        return this with
+        {
+            RecruiterId = @event.Recruiter.Id,
+            Recruiter = @event.Recruiter,
             UpdatedAt = @event.OccurredAt
         };
     }

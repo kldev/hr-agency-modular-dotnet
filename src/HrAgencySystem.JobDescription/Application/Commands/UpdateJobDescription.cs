@@ -3,10 +3,9 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.JobDescription.Application.Commands;
 
-public sealed record CreateJobDescription(
-    Guid Id, 
-    Guid OrganizationId,
-    Guid CompanyId,
+// ReSharper disable once ClassNeverInstantiated.Global
+public sealed record UpdateJobDescription(
+    Guid JobDescriptionId,
     string Title,
     string? Summary,
     string Description,
@@ -19,6 +18,4 @@ public sealed record CreateJobDescription(
     WorkMode WorkMode,
     CurrencyCode  CurrencyCode,
     decimal SalaryMin,
-    decimal SalaryMax,
-    Guid RecruiterId
-    ) : IJobDescription;
+    decimal SalaryMax) : IJobDescription;

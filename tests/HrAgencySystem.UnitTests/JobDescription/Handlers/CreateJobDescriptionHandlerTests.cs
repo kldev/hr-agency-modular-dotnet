@@ -5,6 +5,7 @@ using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -21,12 +22,15 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     private readonly IOrganizationChecker _checker =
         Substitute.For<IOrganizationChecker>();
 
+    private readonly IUserSnapshotService _snapshotService
+        = Substitute.For<IUserSnapshotService>();
+
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobDescriptionCreated()
     {
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
-        var recruiterId = Guid.NewGuid();
+        var recruiter = GetRecruiter;
         var commandId = Guid.NewGuid();
 
         var now = new DateTimeOffset(
@@ -58,7 +62,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             CurrencyCode.PLN,
             15000m,
             22000m,
-            recruiterId);
+            recruiter.Id);
 
         _checker
             .Exists(
@@ -66,13 +70,17 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 Arg.Any<CancellationToken>())
             .Returns(true);
 
-        var clock = new FixedClock(now);
+        _snapshotService.GetUserAsync(recruiter.Id, Arg.Any<CancellationToken>())
+            .Returns(recruiter);
 
+        var clock = new FixedClock(now);
+        
         var result = await CreateJobDescriptionHandler.Handle(
             command,
             _documentSession,
             clock,
             _checker,
+            _snapshotService,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.JobDescriptionId);
@@ -112,7 +120,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         Assert.Equal(CurrencyCode.PLN, result.SalaryRange.Currency);
         Assert.Equal(15000m, result.SalaryRange.Min);
         Assert.Equal(22000m, result.SalaryRange.Max);
-        Assert.Equal(recruiterId, result.RecruiterId);
+        Assert.Equal(recruiter.Id, result.Recruiter.Id);
         Assert.Equal(now, result.CreatedAt);
 
         await _checker
@@ -166,6 +174,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -210,6 +219,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -235,6 +245,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -260,6 +271,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -285,6 +297,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -310,6 +323,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -339,6 +353,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -368,6 +383,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -397,6 +413,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -422,6 +439,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -448,6 +466,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -474,6 +493,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -500,6 +520,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -525,6 +546,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -558,6 +580,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 _documentSession,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -576,6 +599,51 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 Arg.Any<Guid>(),
                 Arg.Any<object>());
     }
+    
+    [Fact]
+    public async Task Handle_WithNonExistingUser_ThrowsBusinessRuleException()
+    {
+        var recruiterId = Guid.NewGuid();
+
+        var command = CreateValidCommand(
+            recruiterId: recruiterId);
+
+        _checker
+            .Exists(
+                Arg.Any<Guid>(),
+                Arg.Any<CancellationToken>())
+            .Returns(true);
+
+        _snapshotService.GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
+            .Returns((UserSnapshot?)null);
+        
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            CreateJobDescriptionHandler.Handle(
+                command,
+                _documentSession,
+                TestClock,
+                _checker,
+                _snapshotService,
+                CancellationToken.None));
+
+        Assert.Equal(
+            IUserSnapshotService.NotFoundMessage,
+            exception.Message);
+
+        await _snapshotService
+            .Received(1)
+            .GetUserAsync(
+                recruiterId,
+                Arg.Any<CancellationToken>());
+
+        _documentSession.Events
+            .DidNotReceive()
+            .StartStream<HrAgencySystem.JobDescription.Domain.JobDescription>(
+                Arg.Any<Guid>(),
+                Arg.Any<object>());
+    }
+    
+    
 
     private static CreateJobDescription CreateValidCommand(
         Guid? organizationId = null,
@@ -624,4 +692,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             salaryMax,
             recruiterId ?? Guid.NewGuid());
     }
+    
+    private static UserSnapshot GetRecruiter =>
+        new (Guid.NewGuid(), "Alice", "Wells", "alice-wells@hr-agency.com");
 }

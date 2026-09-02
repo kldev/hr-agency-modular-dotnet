@@ -1,6 +1,6 @@
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
-using HrAgencySystem.SharedKernel.ValueObjects;
+using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.JobDescription.Events;
 
@@ -19,5 +19,5 @@ public sealed record JobDescriptionCreated(
     EmploymentType EmploymentType,
     WorkMode WorkMode,
     SalaryRange SalaryRange,
-    Guid RecruiterId,
+    UserSnapshot Recruiter,
     DateTimeOffset CreatedAt);

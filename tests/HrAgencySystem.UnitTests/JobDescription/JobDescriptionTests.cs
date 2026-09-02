@@ -1,6 +1,7 @@
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using D = HrAgencySystem.JobDescription.Domain;
@@ -31,7 +32,7 @@ public class JobDescriptionTests
         var jobDescriptionId = Guid.NewGuid();
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
-        var recruiterId = Guid.NewGuid();
+        var recruiter = GetRecruiter; 
         var occurredAt = new DateTimeOffset(
             2026, 9, 1, 10, 0, 0, TimeSpan.Zero);
 
@@ -64,7 +65,7 @@ public class JobDescriptionTests
             EmploymentType.FullTime,
             WorkMode.Hybrid,
             salaryRange,
-            recruiterId,
+            recruiter,
             occurredAt);
 
         var jobDescription = D.JobDescription.Empty();
@@ -145,7 +146,7 @@ public class JobDescriptionTests
             jobDescription.Status);
 
         Assert.Equal(
-            recruiterId,
+            recruiter.Id,
             jobDescription.RecruiterId);
 
         Assert.Equal(
@@ -433,8 +434,13 @@ public class JobDescriptionTests
             jobDescription.UpdatedAt);
     }
 
+    private static UserSnapshot GetRecruiter =>
+        new (Guid.NewGuid(), "Alice", "Wells", "alice-wells@hr-agency.com");
+    
     private static D.JobDescription CreateJobDescription()
     {
+        var recruiter = GetRecruiter;
+        
         var @event = new JobDescriptionCreated(
             Guid.NewGuid(),
             Guid.NewGuid(),
@@ -461,7 +467,7 @@ public class JobDescriptionTests
                 15000m,
                 22000m,
                 CurrencyCode.PLN),
-            Guid.NewGuid(),
+            recruiter,
             new DateTimeOffset(
                 2026, 9, 1, 10, 0, 0, TimeSpan.Zero));
 

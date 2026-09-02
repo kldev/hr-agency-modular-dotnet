@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Marten" Version="9.30.0"/>
         <PackageReference Include="WolverineFx" Version="6.31.0" />
+        <PackageReference Include="WolverineFx.Marten" Version="6.31.0" />
     </ItemGroup>
 
     <ItemGroup>

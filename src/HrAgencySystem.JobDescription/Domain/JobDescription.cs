@@ -19,9 +19,9 @@ public sealed class JobDescription
 
     public JobTitle Title { get; private set; } = null!;
 
-    public JobSummary Summary { get; private set; }
+    public JobSummary Summary { get; private set; } = null!;
 
-    public JobDescriptionText Description { get; private set; }
+    public JobDescriptionText Description { get; private set; } = null!;
 
     public IReadOnlyList<EntryText> Responsibilities { get; private set; } = [];
 
@@ -29,7 +29,7 @@ public sealed class JobDescription
 
     public IReadOnlyList<EntryText> Skills { get; private set; } = [];
 
-    public JobLocation Location { get; private set; }
+    public JobLocation Location { get; private set; } = null!;
 
     public CountryCode CountryCode { get; private set; } = null!;
 
@@ -75,7 +75,7 @@ public sealed class JobDescription
 
         Status = JobDescriptionStatus.Draft;
 
-        RecruiterId = @event.RecruiterId;
+        RecruiterId = @event.Recruiter.Id;
 
         CreatedAt = @event.CreatedAt;
         UpdatedAt = @event.CreatedAt;

@@ -3,7 +3,9 @@ using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Infrastructure;
 using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
+using HrAgencySystem.Identity.Infrastructure.Snapshots;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.SharedKernel.Snapshots;
 using JasperFx.Events.Projections;
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,7 @@ public static class IdentityModule
         services.AddTransient<IPasswordHasher, BCryptPasswordHasher>();
         services.AddScoped<IUserEmailReservationRepository, UserEmailReservationRepository>();
         services.AddScoped<IOwnerEmailReservationRepository, OwnerEmailReservationRepository>();
+        services.AddScoped<IUserSnapshotService, UserSnapshotService>();
         services.AddTransient<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddOptions<JwtConfig>(JwtConfig.Section);
