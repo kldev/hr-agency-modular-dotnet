@@ -14,13 +14,13 @@ public sealed class StatusChangeHistoryProjection : IProjection
         JobDescriptionCreated @event)
     {
         operations.Store(
-            new StatusChangeHistoryProjectionDocument
+            new JdStatusChangeHistory
             {
                 Id = @event.JobDescriptionId,
                 JobDescriptionId = @event.JobDescriptionId,
                 CurrentStatus = JobDescriptionStatus.Draft,
                 CurrentStatusStartedAt = @event.CreatedAt,
-                OrganizationId = @event.OrganizationId
+                OrgId = @event.OrganizationId
             });
     }
 
@@ -76,7 +76,7 @@ public sealed class StatusChangeHistoryProjection : IProjection
         DateTimeOffset changedAt, CancellationToken ct)
     {
 
-        var document = await operations.Query<StatusChangeHistoryProjectionDocument>()
+        var document = await operations.Query<JdStatusChangeHistory>()
             .Where(z => z.Id == jobDescriptionId)
             .FirstOrDefaultAsync(ct);
 
@@ -99,9 +99,9 @@ public sealed class StatusChangeHistoryProjection : IProjection
         document.CurrentStatus = newStatus;
         document.CurrentStatusStartedAt = changedAt;
 
-        operations.Patch<StatusChangeHistoryProjectionDocument>(jobDescriptionId).Set(z => z.Changes, document.Changes);
-        operations.Patch<StatusChangeHistoryProjectionDocument>(jobDescriptionId).Set(z => z.CurrentStatus, newStatus);
-        operations.Patch<StatusChangeHistoryProjectionDocument>(jobDescriptionId).Set(z => z.CurrentStatusStartedAt, changedAt);
+        operations.Patch<JdStatusChangeHistory>(jobDescriptionId).Set(z => z.Changes, document.Changes);
+        operations.Patch<JdStatusChangeHistory>(jobDescriptionId).Set(z => z.CurrentStatus, newStatus);
+        operations.Patch<JdStatusChangeHistory>(jobDescriptionId).Set(z => z.CurrentStatusStartedAt, changedAt);
     }
 
     public async Task ApplyAsync(IDocumentOperations operations, IReadOnlyList<IEvent> events, CancellationToken cancellation)
@@ -129,13 +129,13 @@ public sealed class StatusChangeHistoryProjection : IProjection
     }
 }
 
-public sealed class StatusChangeHistoryProjectionDocument
+public sealed class JdStatusChangeHistory
 {
     public Guid Id { get; init; }
 
     public Guid JobDescriptionId { get; init; }
     
-    public Guid OrganizationId { get; init; }
+    public Guid OrgId { get; init; }
 
     public JobDescriptionStatus CurrentStatus { get; set; }
 

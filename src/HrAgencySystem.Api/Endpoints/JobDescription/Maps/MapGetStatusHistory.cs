@@ -14,8 +14,8 @@ internal static class MapGetStatusHistory
     private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user, Guid? jobDescriptionId,
         CancellationToken ct)
     {
-        var query = session.Query<StatusChangeHistoryProjectionDocument>()
-            .Where(z => z.OrganizationId == user.OrganizationId);
+        var query = session.Query<JdStatusChangeHistory>()
+            .Where(z => z.OrgId == user.OrganizationId);
 
         if (jobDescriptionId.HasValue && jobDescriptionId != Guid.Empty)
         {

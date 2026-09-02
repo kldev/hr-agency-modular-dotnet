@@ -17,7 +17,7 @@ internal static class MapGet
     private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user, Guid jobDescriptionId, CancellationToken ct)
     {
         var result = await session.Query<JobDescriptionProjection>()
-            .Where(z => z.Id == jobDescriptionId && z.OrganizationId == user.OrganizationId).FirstOrDefaultAsync(ct);
+            .Where(z => z.Id == jobDescriptionId && z.OrgId == user.OrganizationId).FirstOrDefaultAsync(ct);
 
         if (result == null)
         {

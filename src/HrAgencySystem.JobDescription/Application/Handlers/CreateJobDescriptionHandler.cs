@@ -51,7 +51,9 @@ public static class CreateJobDescriptionHandler
                 countryCode.Value,
                 command.EmploymentType,
                 command.WorkMode,
-                salaryRange,
+                salaryRange.Currency,
+                salaryRange.Min,
+                salaryRange.Max,
                 recruiter!,
                 createdBy,
                 clock.UtcNow);

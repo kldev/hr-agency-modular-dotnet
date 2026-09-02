@@ -80,7 +80,7 @@ public sealed class JobDescription
 
         EmploymentType = @event.EmploymentType;
         WorkMode = @event.WorkMode;
-        SalaryRange = @event.SalaryRange;
+        SalaryRange = SalaryRange.Create(@event.SalaryMin, @event.SalaryMax, @event.CurrencyCode);
 
         Status = JobDescriptionStatus.Draft;
 
@@ -106,7 +106,7 @@ public sealed class JobDescription
 
         EmploymentType = @event.EmploymentType;
         WorkMode = @event.WorkMode;
-        SalaryRange = @event.SalaryRange;
+        SalaryRange = SalaryRange.Create(@event.SalaryMin, @event.SalaryMax, @event.CurrencyCode);
 
         UpdatedAt = @event.UpdatedAt;
         ModifiedBy = @event.ModifiedBy.Id;

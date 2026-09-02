@@ -14,7 +14,7 @@ internal static class MapGetSlice
     private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user, CancellationToken ct)
     {
         var result = await session.Query<JobDescriptionProjection>()
-            .Where(z => z.OrganizationId == user.OrganizationId).ToListAsync(ct);
+            .Where(z => z.OrgId == user.OrganizationId).ToListAsync(ct);
         
         return TypedResults.Ok(result);
     }

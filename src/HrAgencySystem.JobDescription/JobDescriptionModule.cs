@@ -39,27 +39,26 @@ public static class JobDescriptionModule
         options.Projections.Snapshot<JobDescriptionProjection>(
             SnapshotLifecycle.Async);
 
-        options.Schema.For<JobDescriptionProjection>().DatabaseSchemaName(SchemaName)
-            .Index(x => new { x.OrganizationId })
-            .Index(x => new { x.OrganizationId, x.Title, x.Id });
+        options.Schema
+            .For<JobDescriptionProjection>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(x => new { OrganizationId = x.OrgId })
+            .Index(x => new { OrganizationId = x.OrgId, x.CompanyId })
+            .Index(x => new { OrganizationId = x.OrgId, x.Status })
+            .Index(x => new { OrganizationId = x.OrgId, x.RecruiterId })
+            .Index(x => new { OrganizationId = x.OrgId, x.Title, x.Id });
+
         
         options.Projections.Add(new StatusChangeHistoryProjection(),
             ProjectionLifecycle.Async);
 
         options.Schema
-            .For<StatusChangeHistoryProjectionDocument>()
+            .For<JdStatusChangeHistory>()
             .DatabaseSchemaName(SchemaName)
-            .Index(z=> new { z.OrganizationId })
-            .Index(z=> new { z.OrganizationId, z.JobDescriptionId });
+            .Index(z=> new { OrganizationId = z.OrgId })
+            .Index(z=> new { OrganizationId = z.OrgId, JobDescriptionId = z.JobDescriptionId });
         
         
-        options.Schema
-            .For<JobDescriptionProjection>()
-            .DatabaseSchemaName(SchemaName)
-            .Index(x => new { x.OrganizationId })
-            .Index(x => new { x.OrganizationId, x.CompanyId })
-            .Index(x => new { x.OrganizationId, x.Status })
-            .Index(x => new { x.OrganizationId, x.RecruiterId })
-            .Index(x => new { x.OrganizationId, x.Title, x.Id });
+ 
     }
 }

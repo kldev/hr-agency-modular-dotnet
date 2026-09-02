@@ -1,6 +1,7 @@
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.JobDescription.Events;
 
@@ -15,6 +16,8 @@ public sealed record JobDescriptionUpdated(
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    SalaryRange SalaryRange,
+    CurrencyCode CurrencyCode,
+    decimal SalaryMin,
+    decimal SalaryMax,
     UserSnapshot ModifiedBy,
     DateTimeOffset UpdatedAt);

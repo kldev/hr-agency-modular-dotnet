@@ -38,7 +38,9 @@ public static class UpdateJobDescriptionHandler
             countryCode.Value,
             command.EmploymentType,
             command.WorkMode,
-            salaryRange,
+            salaryRange.Currency,
+            salaryRange.Min,
+            salaryRange.Max,
             modifiedBy,
             clock.UtcNow
         );

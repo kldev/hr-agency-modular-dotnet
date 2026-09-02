@@ -67,7 +67,9 @@ public class JobDescriptionTests
             "PL",
             EmploymentType.FullTime,
             WorkMode.Hybrid,
-            salaryRange,
+            salaryRange.Currency,
+            salaryRange.Min,
+            salaryRange.Max,
             recruiter,
             User,
             occurredAt);
@@ -194,7 +196,9 @@ public class JobDescriptionTests
             "DE",
             EmploymentType.Contract,
             WorkMode.Remote,
-            salaryRange,
+            salaryRange.Currency,
+            salaryRange.Min,
+            salaryRange.Max,
             User,
             updatedAt);
 
@@ -420,6 +424,10 @@ public class JobDescriptionTests
                 openedAt));
 
         var updatedAt = openedAt.AddHours(1);
+        var salaryRange = SalaryRange.Create(
+            10000m,
+            15000m,
+            CurrencyCode.PLN);
 
         var @event = new JobDescriptionUpdated(
             "Updated title",
@@ -432,10 +440,9 @@ public class JobDescriptionTests
             "PL",
             EmploymentType.FullTime,
             WorkMode.Hybrid,
-            SalaryRange.Create(
-                10000m,
-                15000m,
-                CurrencyCode.PLN),
+            salaryRange.Currency,
+            salaryRange.Min,
+            salaryRange.Max,
             ModifiedBy,
             updatedAt);
 
@@ -458,6 +465,10 @@ public class JobDescriptionTests
     private static D.JobDescription CreateJobDescription()
     {
         var recruiter = GetRecruiter;
+        var salaryRange = SalaryRange.Create(
+            15000m,
+            22000m,
+            CurrencyCode.PLN);
         
         var @event = new JobDescriptionCreated(
             Guid.NewGuid(),
@@ -481,10 +492,10 @@ public class JobDescriptionTests
             "PL",
             EmploymentType.FullTime,
             WorkMode.Hybrid,
-            SalaryRange.Create(
-                15000m,
-                22000m,
-                CurrencyCode.PLN),
+            
+            salaryRange.Currency,
+            salaryRange.Min,
+            salaryRange.Max,
             recruiter,
             User,
             new DateTimeOffset(

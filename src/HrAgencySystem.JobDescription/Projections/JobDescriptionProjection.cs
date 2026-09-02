@@ -2,13 +2,14 @@ using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.ValueObjects;
 
 
 namespace HrAgencySystem.JobDescription.Projections;
 
 public sealed record JobDescriptionProjection(
     Guid Id,
-    Guid OrganizationId,
+    Guid OrgId,
     Guid CompanyId,
     string Title,
     string Summary,
@@ -20,7 +21,9 @@ public sealed record JobDescriptionProjection(
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    SalaryRange SalaryRange,
+    CurrencyCode CurrencyCode,
+    decimal SalaryMin,
+    decimal SalaryMax,
     JobDescriptionStatus Status,
     Guid RecruiterId,
     UserSnapshot Recruiter,
@@ -48,7 +51,9 @@ public sealed record JobDescriptionProjection(
             @event.CountryCode,
             @event.EmploymentType,
             @event.WorkMode,
-            @event.SalaryRange,
+            @event.CurrencyCode,
+            @event.SalaryMin,
+            @event.SalaryMax,
             JobDescriptionStatus.Draft,
             @event.Recruiter.Id,
             @event.Recruiter,
@@ -73,7 +78,9 @@ public sealed record JobDescriptionProjection(
             CountryCode = @event.CountryCode,
             EmploymentType = @event.EmploymentType,
             WorkMode = @event.WorkMode,
-            SalaryRange = @event.SalaryRange,
+            CurrencyCode = @event.CurrencyCode,
+            SalaryMin = @event.SalaryMin,
+            SalaryMax = @event.SalaryMax,
             UpdatedAt = @event.UpdatedAt,
             ModifiedById = @event.ModifiedBy.Id,
             ModifiedBy = @event.ModifiedBy

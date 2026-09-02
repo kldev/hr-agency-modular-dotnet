@@ -116,9 +116,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         Assert.Equal("PL", result.CountryCode);
         Assert.Equal(EmploymentType.FullTime, result.EmploymentType);
         Assert.Equal(WorkMode.Hybrid, result.WorkMode);
-        Assert.Equal(CurrencyCode.PLN, result.SalaryRange.Currency);
-        Assert.Equal(15000m, result.SalaryRange.Min);
-        Assert.Equal(22000m, result.SalaryRange.Max);
+        Assert.Equal(CurrencyCode.PLN, result.CurrencyCode);
+        Assert.Equal(15000m, result.SalaryMin);
+        Assert.Equal(22000m, result.SalaryMax);
         Assert.Equal(recruiter.Id, result.Recruiter.Id);
         Assert.Equal(now, result.CreatedAt);
 

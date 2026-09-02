@@ -105,15 +105,15 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         Assert.Equal(
             CurrencyCode.PLN,
-            result.SalaryRange.Currency);
+            result.CurrencyCode);
 
         Assert.Equal(
             15000m,
-            result.SalaryRange.Min);
+            result.SalaryMin);
 
         Assert.Equal(
             22000m,
-            result.SalaryRange.Max);
+            result.SalaryMax);
 
         Assert.Equal(now, result.UpdatedAt);
 
@@ -523,10 +523,10 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         Assert.Equal(
             CurrencyCode.EUR,
-            result.SalaryRange.Currency);
+            result.CurrencyCode);
 
-        Assert.Equal(5000m, result.SalaryRange.Min);
-        Assert.Equal(8000m, result.SalaryRange.Max);
+        Assert.Equal(5000m, result.SalaryMin);
+        Assert.Equal(8000m, result.SalaryMax);
     }
 
     [Fact]

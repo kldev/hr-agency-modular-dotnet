@@ -14,9 +14,11 @@ internal static class MapGetAll
     private static async Task<IResult> Handler(AppUserAuthenticated user, IDocumentSession session,CancellationToken ct, string? search,
         int page = 1, int pageSize = 100)
     {
+        var normalizePage = page < 1 ? 1 : page;
+        var normalizePageSize = Math.Clamp(pageSize, 20, 500);
         var result = await session.Query<UserProjection>()
             .Where(z=>z.OrganizationId == user.OrganizationId)
-            .Take(pageSize).Skip(page).ToListAsync(ct);
+            .Take(pageSize).Skip((normalizePage-1)*normalizePageSize).ToListAsync(ct);
         return TypedResults.Ok(result);
     }
 }
