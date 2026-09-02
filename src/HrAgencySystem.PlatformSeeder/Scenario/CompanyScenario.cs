@@ -1,5 +1,6 @@
 using Bogus;
 using HrAgencySystem.Company.Application.Commands;
+using HrAgencySystem.Company.Events;
 using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder.Scenario;
@@ -28,7 +29,7 @@ internal sealed class CompanyScenario(IMessageBus bus)
         new("HU", "HU", "VAT")
     ];
 
-    internal async Task Create(Guid organizationId, int seedCount = 101)
+    internal async Task<IReadOnlyList<Guid>> Create(Guid organizationId, int seedCount = 101)
     {
         var faker = new Faker();
 
@@ -46,10 +47,15 @@ internal sealed class CompanyScenario(IMessageBus bus)
                     GenerateRegistrationNumber(faker, country));
             });
 
+        var list = new List<Guid>();
+        
         foreach (var company in companies)
         {
-            await bus.InvokeAsync(company);
+           var result = await bus.InvokeAsync<CompanyCreated>(company);
+           list.Add(result.CompanyId);
         }
+
+        return list;
     }
 
     private static string GenerateCompanyName(

@@ -13,7 +13,7 @@ internal class UserScenario(IMessageBus bus)
             .Where(role => role != OrganizationRole.System)
             .ToArray();
 
-    internal async Task Create(
+    internal async Task<IReadOnlyList<Guid>> Create(
         OrganizationScenario.OrganizationData data,
         int seedCount = 10)
     {
@@ -61,9 +61,14 @@ internal class UserScenario(IMessageBus bus)
                 userPassword));
         }
 
+        var ids = new List<Guid>();
+        
         foreach (var user in users)
         {
-            await bus.InvokeAsync<UserCreated>(user);
+            var result = await bus.InvokeAsync<UserCreated>(user);
+            ids.Add(result.UserId);
         }
+
+        return ids;
     }
 }
