@@ -16,9 +16,7 @@ public static class CreateCompanyHandler
 {
     public const string TaxIdAlreadyExistsMessage =
         "A company with the specified tax ID already exists in this organization.";
-
-    public const string OrganizationCheckMessage = "Non existing organization.";
-
+    
     public static async Task<CompanyCreated> Handle(
         CreateCompany command,
         IDocumentSession session,
@@ -34,9 +32,9 @@ public static class CreateCompanyHandler
         
         if (await taxIdReservationRepository.ExitsAsync(organizationId, taxId, cancellationToken))
             throw new BusinessRuleException(TaxIdAlreadyExistsMessage);
-        
+
         if (!await checker.Exists(organizationId.Value, cancellationToken))
-            throw new BusinessRuleException("Non existing organization.");
+            throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
 
         var companyId = CompanyId.New();
 

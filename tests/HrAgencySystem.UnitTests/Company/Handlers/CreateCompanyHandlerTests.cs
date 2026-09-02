@@ -7,7 +7,6 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using JasperFx.Events;
 using Marten;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -291,6 +290,6 @@ public class CreateCompanyHandlerTests : BaseTest
 
 
         Assert.Equal(typeof(BusinessRuleException), exception.GetType());
-        Assert.Equal(CreateCompanyHandler.OrganizationCheckMessage, exception.Message);
+        Assert.Equal(OrganizationId.OrganizationCheckMessage, exception.Message);
     }
 }

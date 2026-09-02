@@ -1,15 +1,14 @@
 using HrAgencySystem.JobDescription.Domain;
-using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.JobDescription.Events;
+namespace HrAgencySystem.JobDescription.Application.Commands;
 
-public sealed record JobDescriptionCreated(
-    Guid JobDescriptionId,
+public sealed record CreateJobDescription(
+    Guid Id, 
     Guid OrganizationId,
     Guid CompanyId,
     string Title,
-    string Summary,
+    string? Summary,
     string Description,
     IReadOnlyList<string> Responsibilities,
     IReadOnlyList<string> Requirements,
@@ -18,6 +17,8 @@ public sealed record JobDescriptionCreated(
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    SalaryRange SalaryRange,
-    Guid RecruiterId,
-    DateTimeOffset CreatedAt);
+    CurrencyCode  CurrencyCode,
+    decimal SalaryMin,
+    decimal SalaryMax,
+    Guid RecruiterId
+    );

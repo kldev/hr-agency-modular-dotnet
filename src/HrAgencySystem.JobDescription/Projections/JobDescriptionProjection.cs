@@ -10,8 +10,8 @@ public sealed record JobDescriptionProjection(
     Guid OrganizationId,
     Guid CompanyId,
     string Title,
-    string? Summary,
-    string? Description,
+    string Summary,
+    string Description,
     IReadOnlyList<string> Responsibilities,
     IReadOnlyList<string> Requirements,
     IReadOnlyList<string> Skills,
@@ -19,7 +19,7 @@ public sealed record JobDescriptionProjection(
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    SalaryRange? SalaryRange,
+    SalaryRange SalaryRange,
     JobDescriptionStatus Status,
     Guid RecruiterId,
     DateTimeOffset CreatedAt,
@@ -32,12 +32,12 @@ public sealed record JobDescriptionProjection(
             @event.JobDescriptionId,
             @event.OrganizationId,
             @event.CompanyId,
-            @event.Title.Value,
-            @event.Summary?.Value,
-            @event.Description?.Value,
-            @event.Responsibilities.Select(x => x.Value).ToList(),
-            @event.Requirements.Select(x => x.Value).ToList(),
-            @event.Skills.Select(x => x.Value).ToList(),
+            @event.Title,
+            @event.Summary,
+            @event.Description,
+            @event.Responsibilities,
+            @event.Requirements,
+            @event.Skills,
             @event.Location,
             @event.CountryCode,
             @event.EmploymentType,
@@ -54,24 +54,12 @@ public sealed record JobDescriptionProjection(
     {
         return this with
         {
-            Title = @event.Title.Value,
-            Summary = @event.Summary?.Value,
-            Description = @event.Description?.Value,
-            Responsibilities =
-            [
-                .. @event.Responsibilities
-                    .Select(x => x.Value)
-            ],
-            Requirements =
-            [
-                .. @event.Requirements
-                    .Select(x => x.Value)
-            ],
-            Skills =
-            [
-                .. @event.Skills
-                    .Select(x => x.Value)
-            ],
+            Title = @event.Title,
+            Summary = @event.Summary,
+            Description = @event.Description,
+            Responsibilities = @event.Responsibilities,
+            Requirements = @event.Requirements,
+            Skills = @event.Skills,
             Location = @event.Location,
             CountryCode = @event.CountryCode,
             EmploymentType = @event.EmploymentType,

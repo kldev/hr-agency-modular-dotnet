@@ -19,9 +19,9 @@ public sealed class JobDescription
 
     public JobTitle Title { get; private set; } = null!;
 
-    public JobSummary? Summary { get; private set; }
+    public JobSummary Summary { get; private set; }
 
-    public JobDescriptionText? Description { get; private set; }
+    public JobDescriptionText Description { get; private set; }
 
     public IReadOnlyList<EntryText> Responsibilities { get; private set; } = [];
 
@@ -29,7 +29,7 @@ public sealed class JobDescription
 
     public IReadOnlyList<EntryText> Skills { get; private set; } = [];
 
-    public string? Location { get; private set; }
+    public JobLocation Location { get; private set; }
 
     public CountryCode CountryCode { get; private set; } = null!;
 
@@ -37,7 +37,7 @@ public sealed class JobDescription
 
     public WorkMode WorkMode { get; private set; }
 
-    public SalaryRange? SalaryRange { get; private set; }
+    public SalaryRange SalaryRange { get; private set; }
 
     public JobDescriptionStatus Status { get; private set; }
 
@@ -58,15 +58,15 @@ public sealed class JobDescription
         OrganizationId = OrganizationId.From(@event.OrganizationId);
         CompanyId = CompanyId.From(@event.CompanyId);
 
-        Title = @event.Title;
-        Summary = @event.Summary;
-        Description = @event.Description;
+        Title = JobTitle.Create(@event.Title);
+        Summary = JobSummary.Create(@event.Summary);
+        Description = JobDescriptionText.Create(@event.Description);
 
-        Responsibilities = @event.Responsibilities;
-        Requirements = @event.Requirements;
-        Skills = @event.Skills;
+        Responsibilities = EntryText.Create(@event.Responsibilities);
+        Requirements = EntryText.Create(@event.Requirements);
+        Skills = EntryText.Create(@event.Skills);
 
-        Location = @event.Location;
+        Location = JobLocation.Create(@event.Location);
         CountryCode = CountryCode.Create(@event.CountryCode);
 
         EmploymentType = @event.EmploymentType;
@@ -83,15 +83,15 @@ public sealed class JobDescription
 
     public void Apply(JobDescriptionUpdated @event)
     {
-        Title = @event.Title;
-        Summary = @event.Summary;
-        Description = @event.Description;
+        Title = JobTitle.Create(@event.Title);
+        Summary = JobSummary.Create(@event.Summary);
+        Description = JobDescriptionText.Create(@event.Description);
 
-        Responsibilities = @event.Responsibilities;
-        Requirements = @event.Requirements;
-        Skills = @event.Skills;
+        Responsibilities = EntryText.Create(@event.Responsibilities);
+        Requirements = EntryText.Create(@event.Requirements);
+        Skills = EntryText.Create(@event.Skills);
 
-        Location = @event.Location;
+        Location = JobLocation.Create(@event.Location);
         CountryCode = CountryCode.Create(@event.CountryCode);
 
         EmploymentType = @event.EmploymentType;

@@ -26,6 +26,11 @@ public sealed record EntryText
             : entryText!;
     }
 
+    public static List<EntryText> Create(IReadOnlyList<string> values)
+    {
+        return [.. values.Select(Create)];
+    }
+
     public static (EntryText? entryText, string? error) TryCreate(
         string value)
     {

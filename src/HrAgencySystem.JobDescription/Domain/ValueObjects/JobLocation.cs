@@ -2,41 +2,41 @@ using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.JobDescription.Domain.ValueObjects;
 
-public sealed record JobSummary
+public sealed record JobLocation
 {
-    public const int MaxLength = 4000;
+    public const int MaxLength = 300;
 
     public const string MaxLengthMessage =
-        "Job summary cannot exceed 4000 characters.";
+        "Job location cannot exceed 300 characters.";
 
-    private JobSummary(string value)
+    private JobLocation(string value)
     {
         Value = value;
     }
 
     public string Value { get; }
 
-    public static JobSummary Create(string value)
+    public static JobLocation Create(string value)
     {
-        var (summary, error) = TryCreate(value);
+        var (location, error) = TryCreate(value);
 
         return error is not null
             ? throw new InValidValueException(error)
-            : summary!;
+            : location!;
     }
 
-    public static (JobSummary? summary, string? error) TryCreate(
+    public static (JobLocation? summary, string? error) TryCreate(
         string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return (new JobSummary(string.Empty), null);
+            return (new JobLocation(string.Empty), null);
 
         var normalized = value.Trim();
 
         if (normalized.Length > MaxLength)
             return (null, MaxLengthMessage);
 
-        return (new JobSummary(normalized), null);
+        return (new JobLocation(normalized), null);
     }
 
     public override string ToString()
