@@ -39,6 +39,10 @@ public static class JobDescriptionModule
         options.Projections.Snapshot<JobDescriptionProjection>(
             SnapshotLifecycle.Async);
 
+        options.Schema.For<JobDescriptionProjection>().DatabaseSchemaName(SchemaName)
+            .Index(x => new { x.OrganizationId })
+            .Index(x => new { x.OrganizationId, x.Title, x.Id });
+        
         options.Projections.Add(new StatusChangeHistoryProjection(),
             ProjectionLifecycle.Async);
 

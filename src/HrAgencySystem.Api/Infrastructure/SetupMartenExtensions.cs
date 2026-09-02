@@ -28,6 +28,7 @@ public static class SetupMartenExtensions
                 CompanyModule.ConfigureMarten(options);
                 OrganizationModule.ConfigureMarten(options);
                 IdentityModule.ConfigureMarten(options);
+                JobDescriptionModule.ConfigureMarten(options);
 
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
                 
