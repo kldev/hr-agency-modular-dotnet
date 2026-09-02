@@ -29,7 +29,7 @@ internal sealed class CompanyScenario(IMessageBus bus)
         new("HU", "HU", "VAT")
     ];
 
-    internal async Task<IReadOnlyList<Guid>> Create(Guid organizationId, int seedCount = 101)
+    internal async Task<IReadOnlyList<Guid>> Create(Guid organizationId, IReadOnlyList<Guid> userIds, int seedCount = 101)
     {
         var faker = new Faker();
 
@@ -38,13 +38,15 @@ internal sealed class CompanyScenario(IMessageBus bus)
             .Select(index =>
             {
                 var country = faker.PickRandom(Countries);
+                var userId = userIds[index % userIds.Count];
 
                 return new CreateCompany(
                     organizationId,
                     GenerateCompanyName(country, index),
                     country.Code,
                     GenerateTaxId(faker, country),
-                    GenerateRegistrationNumber(faker, country));
+                    GenerateRegistrationNumber(faker, country),
+                    userId);
             });
 
         var list = new List<Guid>();

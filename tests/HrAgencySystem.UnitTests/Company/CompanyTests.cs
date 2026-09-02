@@ -1,4 +1,5 @@
 using HrAgencySystem.Company.Events;
+using HrAgencySystem.SharedKernel.Snapshots;
 using D = HrAgencySystem.Company.Domain;
 
 namespace HrAgencySystem.UnitTests.Company;
@@ -12,6 +13,8 @@ public class CompanyTests
         var organizationId = Guid.NewGuid();
         var createdAt = new DateTimeOffset(
             2026, 8, 30, 12, 0, 0, TimeSpan.Zero);
+
+        var user = new UserSnapshot(Guid.NewGuid(), "Test", "Tester", "test@test.io");
         
         var @event = new CompanyCreated(
             companyId,
@@ -20,6 +23,7 @@ public class CompanyTests
             "PL",
             "PL123456789",
             "KRS-123456",
+            user,
             createdAt);
 
         var company = D.Company.Empty();

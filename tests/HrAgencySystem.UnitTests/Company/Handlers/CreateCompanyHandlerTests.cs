@@ -5,6 +5,7 @@ using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
@@ -24,6 +25,17 @@ public class CreateCompanyHandlerTests : BaseTest
     private readonly IOrganizationChecker _checker =
         Substitute.For<IOrganizationChecker>();
 
+    private readonly IUserSnapshotService _snapshotService
+        = Substitute.For<IUserSnapshotService>();
+
+    private static readonly Guid SalesId = Guid.NewGuid();
+
+    private static UserSnapshot Sales { get; } =
+        new(
+            SalesId,
+            "Alice",
+            "Wells",
+            "alice-wells@hr-agency.com");
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsCompanyCreated()
@@ -37,7 +49,7 @@ public class CreateCompanyHandlerTests : BaseTest
             "  ACME Corporation  ",
             "pl",
             " PL123456789 ",
-            " REG-123 ");
+            " REG-123 ", SalesId);
 
         _repository
             .ExitsAsync(
@@ -49,6 +61,8 @@ public class CreateCompanyHandlerTests : BaseTest
         _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Sales);
+        
         _checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
         
         var clock = new FixedClock(now);
@@ -59,6 +73,7 @@ public class CreateCompanyHandlerTests : BaseTest
             _repository,
             clock,
             _checker,
+            _snapshotService,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.CompanyId);
@@ -91,7 +106,7 @@ public class CreateCompanyHandlerTests : BaseTest
             "",
             "POL",
             "",
-            new string('A', 101));
+            new string('A', 101), SalesId);
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -100,6 +115,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -135,7 +151,7 @@ public class CreateCompanyHandlerTests : BaseTest
             "",
             "PL",
             "PL123456789",
-            "REG-123");
+            "REG-123", SalesId);
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -144,6 +160,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -166,7 +183,7 @@ public class CreateCompanyHandlerTests : BaseTest
             "ACME",
             "POL",
             "PL123456789",
-            "REG-123");
+            "REG-123", SalesId);
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -175,6 +192,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -197,7 +215,7 @@ public class CreateCompanyHandlerTests : BaseTest
             "ACME",
             "PL",
             "",
-            "REG-123");
+            "REG-123", SalesId);
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -206,6 +224,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -228,7 +247,7 @@ public class CreateCompanyHandlerTests : BaseTest
             "ACME",
             "PL",
             "PL123456789",
-            new string('A', 101));
+            new string('A', 101), SalesId);
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -237,6 +256,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -263,7 +283,7 @@ public class CreateCompanyHandlerTests : BaseTest
             "  ACME Corporation  ",
             "pl",
             " PL123456789 ",
-            " REG-123 ");
+            " REG-123 ", SalesId);
 
         _repository
             .ExitsAsync(
@@ -286,6 +306,7 @@ public class CreateCompanyHandlerTests : BaseTest
             _repository,
             clock,
             _checker,
+            _snapshotService,
             CancellationToken.None));
 
 

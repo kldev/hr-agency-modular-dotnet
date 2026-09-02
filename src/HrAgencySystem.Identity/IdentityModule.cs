@@ -3,6 +3,7 @@ using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Infrastructure;
 using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
+using HrAgencySystem.Identity.Infrastructure.Query;
 using HrAgencySystem.Identity.Infrastructure.Snapshots;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -25,6 +26,7 @@ public static class IdentityModule
         services.AddTransient<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddOptions<JwtConfig>(JwtConfig.Section);
+        services.AddScoped<IUserSuggestionRepository, UserSuggestionRepository>();
     }
     
     public static void ConfigureMarten(
@@ -47,7 +49,8 @@ public static class IdentityModule
         
         options.Schema.For<UserProjection>().DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })
-            .Index(x => new { x.OrganizationId, x.Email, x.Id });
+            .Index(x => new { x.OrganizationId, x.Email, x.Id })
+            .Index(z=> new { z.OrganizationId, z.CreatedAt});
 
         options.Projections.Snapshot<OwnerProjection>(SnapshotLifecycle.Async);
         options.Schema.For<OwnerProjection>().DatabaseSchemaName(SchemaName)

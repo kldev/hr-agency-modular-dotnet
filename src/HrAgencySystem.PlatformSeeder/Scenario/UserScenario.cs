@@ -33,7 +33,7 @@ internal class UserScenario(IMessageBus bus)
                 "John",
                 "Smith",
                 OrganizationRole.Admin,
-                userPassword),
+                userPassword, Guid.Empty),
 
             new(
                 data.OrganizationId,
@@ -41,7 +41,7 @@ internal class UserScenario(IMessageBus bus)
                 "Katy",
                 "Wells",
                 OrganizationRole.Recruiter,
-                userPassword)
+                userPassword, Guid.Empty)
         };
 
         var faker = new Faker();
@@ -58,7 +58,7 @@ internal class UserScenario(IMessageBus bus)
                 firstName,
                 lastName,
                 role,
-                userPassword));
+                userPassword, Guid.Empty));
         }
 
         var ids = new List<Guid>();

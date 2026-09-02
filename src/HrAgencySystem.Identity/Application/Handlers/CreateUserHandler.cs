@@ -7,6 +7,7 @@ using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -27,6 +28,7 @@ public static class CreateUserHandler
         IOrganizationChecker checker,
         IPasswordHasher hasher,
         IUserEmailReservationRepository repository,
+        IUserSnapshotService snapshotService,
         CancellationToken ct)
     {
         var organizationId =
@@ -42,6 +44,18 @@ public static class CreateUserHandler
             ) = CreateValueObjects(command);
 
         PasswordPolicyValidator.Validate(command.Password);
+
+        UserSnapshot? user;
+        if (command.CreatedBy == Guid.Empty)
+        {
+            user = new UserSnapshot(Guid.NewGuid(), "System", "", "system");
+        }
+        else
+        {
+            user = await snapshotService.GetUserAsync(command.CreatedBy, ct);
+            if (user is null)
+                throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+        }
 
         if (await repository.ExistAsync(organizationId, email, ct))
             throw new BusinessRuleException(UserWithEmailMessage);
@@ -60,6 +74,7 @@ public static class CreateUserHandler
             lastName.Value,
             command.Role,
             passwordHash,
+            user!,
             clock.UtcNow);
 
         session.Events.StartStream<User>(

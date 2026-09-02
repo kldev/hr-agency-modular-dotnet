@@ -5,6 +5,7 @@ using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -23,6 +24,7 @@ public static class CreateCompanyHandler
         ICompanyTaxIdReservationRepository taxIdReservationRepository,
         IClock clock,
         IOrganizationChecker checker,
+        IUserSnapshotService snapshotService,
         CancellationToken cancellationToken)
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
@@ -36,6 +38,10 @@ public static class CreateCompanyHandler
         if (!await checker.Exists(organizationId.Value, cancellationToken))
             throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
 
+        var createdBy = await snapshotService.GetUserAsync(command.CreatedBy, cancellationToken);
+        if (createdBy == null)
+            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+        
         var companyId = CompanyId.New();
 
         // The unique constraint protects against concurrent requests.
@@ -52,6 +58,7 @@ public static class CreateCompanyHandler
             countryCode.Value,
             taxId.Value,
             registrationNumber.Value,
+            createdBy,
             clock.UtcNow);
 
         session.Events.StartStream<Domain.Company>(companyId.Value, @event);

@@ -8,4 +8,5 @@ public sealed record CreateUser(
     string FirstName,
     string LastName,
     OrganizationRole Role,
-    string Password);
+    string Password,
+    Guid CreatedBy);

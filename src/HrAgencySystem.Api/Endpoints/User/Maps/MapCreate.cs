@@ -16,9 +16,9 @@ internal sealed record CreateUserRequest(
     OrganizationRole Role,
     string Password)
 {
-    internal CreateUser ToCommand(OrganizationId organizationId)
+    internal CreateUser ToCommand(OrganizationId organizationId, Guid createdBy)
     {
-        return new CreateUser(organizationId.Value, Email, FirstName, LastName, Role, Password);
+        return new CreateUser(organizationId.Value, Email, FirstName, LastName, Role, Password, createdBy);
     }
 }
 
@@ -33,7 +33,7 @@ internal static class MapCreate
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreateUserRequest request)
     {
-        var result = await bus.InvokeAsync<UserCreated>(request.ToCommand(user.GetOrganization));
+        var result = await bus.InvokeAsync<UserCreated>(request.ToCommand(user.GetOrganization, user.UserId));
         
         return TypedResults.Created($"/api/users/{result.UserId}", UserProjection.Create(result));
     }

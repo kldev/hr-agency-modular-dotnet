@@ -25,7 +25,7 @@ internal static class MapCreate
     {
         var result =
             await bus.InvokeAsync<CompanyCreated>(
-                request.ToCommand(user.GetOrganization),
+                request.ToCommand(user.GetOrganization, user.UserId),
                 ct);
 
         return TypedResults.Created(
@@ -39,9 +39,9 @@ internal static class MapCreate
         string TaxId,
         string RegistrationNumber)
     {
-        public CreateCompany ToCommand(OrganizationId  organizationId)
+        public CreateCompany ToCommand(OrganizationId  organizationId, Guid createdBy)
         {
-            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber);
+            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber, createdBy);
         }
     }
 }

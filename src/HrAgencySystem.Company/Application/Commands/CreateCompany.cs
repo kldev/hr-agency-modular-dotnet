@@ -8,5 +8,6 @@ public sealed record CreateCompany(
     string Name,
     string CountryCode,
     string TaxId,
-    string RegistrationNumber
+    string RegistrationNumber,
+    Guid CreatedBy
 ) : ICommand;

@@ -5,6 +5,7 @@ using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -28,6 +29,18 @@ public class CreateUserHandlerTests : BaseTest
     private readonly IUserEmailReservationRepository _emailReservationRepository
         = Substitute.For<IUserEmailReservationRepository>();
 
+    private readonly IUserSnapshotService _snapshotService
+        = Substitute.For<IUserSnapshotService>();
+    
+    private static readonly Guid AdminId = Guid.NewGuid();
+
+    private static UserSnapshot Admin { get; } =
+        new(
+            AdminId,
+            "Alice",
+            "Wells",
+            "alice-wells@hr-agency.com");
+
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsUserCreated()
     {
@@ -44,7 +57,7 @@ public class CreateUserHandlerTests : BaseTest
             "  John  ",
             "  Doe  ",
             OrganizationRole.Admin,
-            password);
+            password, Guid.NewGuid());
 
         _checker
             .Exists(
@@ -55,6 +68,8 @@ public class CreateUserHandlerTests : BaseTest
         _hasher
             .Hash(password)
             .Returns(passwordHash);
+        
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _documentSession
             .Events
@@ -72,6 +87,7 @@ public class CreateUserHandlerTests : BaseTest
             _checker,
             _hasher,
             _emailReservationRepository,
+            _snapshotService,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.UserId);
@@ -120,7 +136,7 @@ public class CreateUserHandlerTests : BaseTest
             "",
             "",
             OrganizationRole.Recruiter,
-            "Password123!"
+            "Password123!", Guid.NewGuid()
             );
 
         _checker
@@ -137,6 +153,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -167,7 +184,7 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!"
+            "Password123!", Guid.NewGuid()
             );
 
         _checker
@@ -184,6 +201,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -210,7 +228,7 @@ public class CreateUserHandlerTests : BaseTest
             "",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!"
+            "Password123!",Guid.NewGuid()
             );
 
         _checker
@@ -227,6 +245,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -253,7 +272,7 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "",
             OrganizationRole.Recruiter,
-            "Password123!");
+            "Password123!", Guid.NewGuid());
 
         _checker
             .Exists(
@@ -269,6 +288,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -295,7 +315,7 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!"
+            "Password123!", Guid.NewGuid()
             );
 
         _checker
@@ -312,6 +332,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -338,7 +359,7 @@ public class CreateUserHandlerTests : BaseTest
             new string('A', 101),
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!"
+            "Password123!", Guid.NewGuid()
             );
 
         _checker
@@ -355,6 +376,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -381,7 +403,7 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             new string('A', 101),
             OrganizationRole.Recruiter,
-            "Password123!"
+            "Password123!", Guid.NewGuid()
             );
 
         _checker
@@ -398,6 +420,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -424,7 +447,7 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "123"
+            "123", Guid.NewGuid()
             );
 
         _checker
@@ -443,6 +466,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         Assert.NotEmpty(exception.Message);
@@ -469,7 +493,7 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!"
+            "Password123!", Guid.NewGuid()
             );
 
         _checker
@@ -486,6 +510,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 CancellationToken.None));
 
         _hasher
@@ -511,7 +536,7 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!");
+            "Password123!", Guid.NewGuid());
 
         _checker
             .Exists(
@@ -530,6 +555,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
+                _snapshotService,
                 cts.Token));
 
         await _checker
@@ -555,13 +581,15 @@ public class CreateUserHandlerTests : BaseTest
             "  John  ",
             "  Doe  ",
             OrganizationRole.Admin,
-            password);
+            password, Guid.NewGuid());
 
         _checker
             .Exists(
                 Arg.Any<Guid>(),
                 Arg.Any<CancellationToken>())
             .Returns(true);
+
+        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _hasher
             .Hash(password)
@@ -584,6 +612,7 @@ public class CreateUserHandlerTests : BaseTest
             _checker,
             _hasher,
             _emailReservationRepository,
+            _snapshotService,
             CancellationToken.None));
         
         Assert.Equal(CreateUserHandler.UserWithEmailMessage, exception.Message);

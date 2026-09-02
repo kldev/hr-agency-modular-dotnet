@@ -26,6 +26,8 @@ public sealed class Company
     public CompanyStatus Status { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
+    
+    public Guid CreatedById { get; private set; }
 
     public static Company Empty()
     {
@@ -44,5 +46,6 @@ public sealed class Company
 
         Status = CompanyStatus.Active;
         CreatedAt = @event.CreatedAt;
+        CreatedById = @event.CreatedBy.Id;
     }
 }

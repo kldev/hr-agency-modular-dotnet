@@ -27,7 +27,6 @@
         <ProjectReference Include="..\..\src\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj"/>
         <ProjectReference Include="..\..\src\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj"/>
         <ProjectReference Include="..\..\src\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Suggestion\HrAgencySystem.Suggestion.csproj"/>
     </ItemGroup>
 
 </Project>

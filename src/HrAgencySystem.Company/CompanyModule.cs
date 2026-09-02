@@ -54,6 +54,7 @@ public static class CompanyModule
 
         options.Schema.For<CompanyProjection>().DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })
-            .Index(x => new { x.OrganizationId, x.Name, x.Id });
+            .Index(x => new { x.OrganizationId, x.Name, x.Id })
+            .Index(x => new { x.OrganizationId, x.CreatedId });
     }
 }

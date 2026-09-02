@@ -1,5 +1,7 @@
+using HrAgencySystem.Company.Application.Model;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
+using HrAgencySystem.SharedKernel.Snapshots;
 
 
 namespace HrAgencySystem.Company.Projections;
@@ -12,6 +14,8 @@ public sealed record CompanyProjection(
     string TaxId,
     string RegistrationNumber,
     CompanyStatus Status,
+    Guid CreatedId,
+    UserSnapshot CreatedBy,
     DateTimeOffset CreatedAt)
 {
     public static CompanyProjection Create(CompanyCreated @event)
@@ -24,7 +28,11 @@ public sealed record CompanyProjection(
             @event.TaxId,
             @event.RegistrationNumber,
             CompanyStatus.Active,
+            @event.CreatedBy.Id,
+            @event.CreatedBy,
             @event.CreatedAt
         );
     }
+
+    public CompanySuggestion ToSuggestion() => new (Id, Name, TaxId, CountryCode);
 }

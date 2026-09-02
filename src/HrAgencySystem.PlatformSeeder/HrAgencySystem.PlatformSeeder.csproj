@@ -15,7 +15,6 @@
       <ProjectReference Include="..\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj" />
       <ProjectReference Include="..\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
       <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.Suggestion\HrAgencySystem.Suggestion.csproj" />
     </ItemGroup>
 
     <ItemGroup>
