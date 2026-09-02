@@ -46,7 +46,9 @@ public static class JobDescriptionModule
             .Index(x => new { OrganizationId = x.OrgId, x.CompanyId })
             .Index(x => new { OrganizationId = x.OrgId, x.Status })
             .Index(x => new { OrganizationId = x.OrgId, x.RecruiterId })
-            .Index(x => new { OrganizationId = x.OrgId, x.Title, x.Id });
+            .Index(x => new { OrganizationId = x.OrgId, x.Title, x.Id })
+            .Index(x => new { OrganizationId = x.OrgId, x.Company.Name })
+            .Index(x => new { OrganizationId = x.OrgId, x.Company.TaxId });
 
         
         options.Projections.Add(new StatusChangeHistoryProjection(),

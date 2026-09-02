@@ -31,6 +31,7 @@ public sealed record JobDescriptionProjection(
     UserSnapshot CreatedBy,
     Guid? ModifiedById,
     UserSnapshot? ModifiedBy,
+    CompanySnapshot Company,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt)
 {
@@ -59,6 +60,7 @@ public sealed record JobDescriptionProjection(
             @event.Recruiter,
             @event.CreatedBy.Id,
             @event.CreatedBy, null, null,
+            @event.Company,
             @event.CreatedAt,
             @event.CreatedAt);
     }

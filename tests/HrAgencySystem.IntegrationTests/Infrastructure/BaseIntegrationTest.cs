@@ -1,3 +1,4 @@
+using HrAgencySystem.IntegrationTests.JobDescription;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
@@ -18,5 +19,7 @@ public abstract class BaseIntegrationTest
     
     protected DatabaseCleaner Cleaner => _environment.Cleaner;
     protected ITestOutputHelper OutputHelper => _output;
+    protected JobDescriptionTestClient JobDescriptionClient =>
+        new(Client.AsOrganizationRoles());
     
 }

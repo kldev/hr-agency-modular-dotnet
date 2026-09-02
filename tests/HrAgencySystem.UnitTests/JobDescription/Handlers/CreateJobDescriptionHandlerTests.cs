@@ -17,21 +17,31 @@ namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
 public class CreateJobDescriptionHandlerTests : BaseTest
 {
     private readonly IDocumentSession _documentSession =
-        Substitute.For<IDocumentSession>();
-
+            Substitute.For<IDocumentSession>();
+    
     private readonly IOrganizationChecker _checker =
         Substitute.For<IOrganizationChecker>();
 
-    private readonly IUserSnapshotService _snapshotService
-        = Substitute.For<IUserSnapshotService>();
+    private readonly IUserSnapshotService _snapshotService =
+        Substitute.For<IUserSnapshotService>();
+
+    private readonly ICompanySnapshotService _companySnapshot =
+        Substitute.For<ICompanySnapshotService>();
+
+    private static readonly Guid RecruiterId = Guid.NewGuid();
+
+    private static UserSnapshot Recruiter { get; } =
+        new(
+            RecruiterId,
+            "Alice",
+            "Wells",
+            "alice-wells@hr-agency.com");
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobDescriptionCreated()
     {
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
-        var recruiter = GetRecruiter;
-        
 
         var now = new DateTimeOffset(
             2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
@@ -61,26 +71,23 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             CurrencyCode.PLN,
             15000m,
             22000m,
-            recruiter.Id, recruiter.Id);
+            RecruiterId,
+            RecruiterId);
 
         _checker
-            .Exists(
-                organizationId,
-                Arg.Any<CancellationToken>())
+            .Exists(organizationId, Arg.Any<CancellationToken>())
             .Returns(true);
 
-        _snapshotService.GetUserAsync(recruiter.Id, Arg.Any<CancellationToken>())
-            .Returns(recruiter);
+        _snapshotService
+            .GetUserAsync(RecruiterId, Arg.Any<CancellationToken>())
+            .Returns(Recruiter);
 
-        var clock = new FixedClock(now);
-        
-        var result = await CreateJobDescriptionHandler.Handle(
+        _companySnapshot.GetCompanyAsync(companyId, Arg.Any<CancellationToken>())
+            .Returns(new CompanySnapshot(companyId, "Company A", "TX-100-101"));
+
+        var result = await Handle(
             command,
-            _documentSession,
-            clock,
-            _checker,
-            _snapshotService,
-            CancellationToken.None);
+            new FixedClock(now));
 
         Assert.NotEqual(Guid.Empty, result.JobDescriptionId);
         Assert.Equal(organizationId, result.OrganizationId);
@@ -119,7 +126,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         Assert.Equal(CurrencyCode.PLN, result.CurrencyCode);
         Assert.Equal(15000m, result.SalaryMin);
         Assert.Equal(22000m, result.SalaryMax);
-        Assert.Equal(recruiter.Id, result.Recruiter.Id);
+        Assert.Equal(RecruiterId, result.Recruiter.Id);
         Assert.Equal(now, result.CreatedAt);
 
         await _checker
@@ -132,8 +139,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             .Received(1)
             .StartStream<HrAgencySystem.JobDescription.Domain.JobDescription>(
                 result.JobDescriptionId,
-                Arg.Is<JobDescriptionCreated>(
-                    x => x.JobDescriptionId == result.JobDescriptionId));
+                Arg.Is<JobDescriptionCreated>(x => x.JobDescriptionId == result.JobDescriptionId));
     }
 
     [Fact]
@@ -164,16 +170,10 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             CurrencyCode.EUR,
             -1m,
             -2m,
-            Guid.NewGuid(), GetRecruiter.Id);
+            Guid.NewGuid(),
+            RecruiterId);
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
         Assert.Equal(
             [
@@ -192,370 +192,137 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             ],
             exception.Errors);
 
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
-
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<HrAgencySystem.JobDescription.Domain.JobDescription>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        await AssertNoOrganizationCheck();
+        AssertNoStream();
     }
 
     [Fact]
     public async Task Handle_WithInvalidTitle_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            title: "");
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [JobTitle.RequiredMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(title: ""),
+            JobTitle.RequiredMessage);
     }
 
     [Fact]
     public async Task Handle_WithTitleExceedingMaximumLength_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            title: new string('A', JobTitle.MaxLength + 1));
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [JobTitle.MaxLengthMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                title: new string('A', JobTitle.MaxLength + 1)),
+            JobTitle.MaxLengthMessage);
     }
 
     [Fact]
     public async Task Handle_WithSummaryExceedingMaximumLength_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            summary: new string('A', JobSummary.MaxLength + 1));
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [JobSummary.MaxLengthMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                summary: new string('A', JobSummary.MaxLength + 1)),
+            JobSummary.MaxLengthMessage);
     }
 
     [Fact]
     public async Task Handle_WithDescriptionMissing_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            description: "");
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [JobDescriptionText.RequiredMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(description: ""),
+            JobDescriptionText.RequiredMessage);
     }
 
     [Fact]
     public async Task Handle_WithDescriptionExceedingMaximumLength_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            description: new string('A', JobDescriptionText.MaxLength + 1));
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [JobDescriptionText.MaxLengthMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                description: new string('A', JobDescriptionText.MaxLength + 1)),
+            JobDescriptionText.MaxLengthMessage);
     }
 
     [Fact]
     public async Task Handle_WithInvalidResponsibility_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            responsibilities:
-            [
-                "Valid responsibility",
-                ""
-            ]);
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [EntryText.RequiredMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                responsibilities:
+                [
+                    "Valid responsibility",
+                    ""
+                ]),
+            EntryText.RequiredMessage);
     }
 
     [Fact]
     public async Task Handle_WithInvalidRequirement_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            requirements:
-            [
-                "Valid requirement",
-                new string('A', EntryText.MaxLength + 1)
-            ]);
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [EntryText.MaxLengthMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                requirements:
+                [
+                    "Valid requirement",
+                    new string('A', EntryText.MaxLength + 1)
+                ]),
+            EntryText.MaxLengthMessage);
     }
 
     [Fact]
     public async Task Handle_WithInvalidSkill_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            skills:
-            [
-                "C#",
-                ""
-            ]);
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [EntryText.RequiredMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                skills:
+                [
+                    "C#",
+                    ""
+                ]),
+            EntryText.RequiredMessage);
     }
 
     [Fact]
     public async Task Handle_WithInvalidLocation_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            location: new string('A', JobLocation.MaxLength + 1));
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [JobLocation.MaxLengthMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                location: new string('A', JobLocation.MaxLength + 1)),
+            JobLocation.MaxLengthMessage);
     }
 
     [Fact]
     public async Task Handle_WithNegativeMinimumSalary_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            salaryMin: -1m,
-            salaryMax: 10000m);
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [SalaryRange.NegativeSalaryMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                salaryMin: -1m,
+                salaryMax: 10000m),
+            SalaryRange.NegativeSalaryMessage);
     }
 
     [Fact]
     public async Task Handle_WithNegativeMaximumSalary_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            salaryMin: 1000m,
-            salaryMax: -1m);
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [SalaryRange.NegativeSalaryMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                salaryMin: 1000m,
+                salaryMax: -1m),
+            SalaryRange.NegativeSalaryMessage);
     }
 
     [Fact]
     public async Task Handle_WithMinimumSalaryGreaterThanMaximum_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            salaryMin: 20000m,
-            salaryMax: 10000m);
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [SalaryRange.MinimumExceedsMaximumMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(
+                salaryMin: 20000m,
+                salaryMax: 10000m),
+            SalaryRange.MinimumExceedsMaximumMessage);
     }
 
     [Fact]
     public async Task Handle_WithInvalidCountryCode_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            countryCode: "POL");
-
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
-
-        Assert.Equal(
-            [CountryCode.InvalidFormatMessage],
-            exception.Errors);
-
-        await _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await AssertValidationError(
+            CreateValidCommand(countryCode: "POL"),
+            CountryCode.InvalidFormatMessage);
     }
 
     [Fact]
@@ -563,23 +330,12 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         var organizationId = Guid.NewGuid();
 
-        var command = CreateValidCommand(
-            organizationId: organizationId);
-
         _checker
-            .Exists(
-                organizationId,
-                Arg.Any<CancellationToken>())
+            .Exists(organizationId, Arg.Any<CancellationToken>())
             .Returns(false);
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
+        var exception = await AssertBusinessRuleError(
+            CreateValidCommand(organizationId: organizationId));
 
         Assert.Equal(
             OrganizationId.OrganizationCheckMessage,
@@ -591,38 +347,24 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 organizationId,
                 Arg.Any<CancellationToken>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<HrAgencySystem.JobDescription.Domain.JobDescription>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        AssertNoStream();
     }
-    
+
     [Fact]
     public async Task Handle_WithNonExistingUser_ThrowsBusinessRuleException()
     {
         var recruiterId = Guid.NewGuid();
 
-        var command = CreateValidCommand(
-            recruiterId: recruiterId);
-
         _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
+            .Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(true);
 
-        _snapshotService.GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
+        _snapshotService
+            .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
             .Returns((UserSnapshot?)null);
-        
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            CreateJobDescriptionHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _snapshotService,
-                CancellationToken.None));
+
+        var exception = await AssertBusinessRuleError(
+            CreateValidCommand(recruiterId: recruiterId));
 
         Assert.Equal(
             IUserSnapshotService.NotFoundMessage,
@@ -634,14 +376,60 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 recruiterId,
                 Arg.Any<CancellationToken>());
 
+        AssertNoStream();
+    }
+
+    private async Task AssertValidationError(
+        CreateJobDescription command,
+        string expectedError)
+    {
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
+
+        Assert.Equal(
+            [expectedError],
+            exception.Errors);
+
+        await AssertNoOrganizationCheck();
+        AssertNoStream();
+    }
+
+    private async Task<BusinessRuleException> AssertBusinessRuleError(
+        CreateJobDescription command)
+    {
+        return await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command));
+    }
+
+    private async Task<JobDescriptionCreated> Handle(
+        CreateJobDescription command,
+        IClock? clock = null)
+    {
+        return await CreateJobDescriptionHandler.Handle(
+            command,
+            _documentSession,
+            clock ?? TestClock,
+            _checker,
+            _snapshotService,
+            _companySnapshot,
+            CancellationToken.None);
+    }
+
+    private async Task AssertNoOrganizationCheck()
+    {
+        await _checker
+            .DidNotReceive()
+            .Exists(
+                Arg.Any<Guid>(),
+                Arg.Any<CancellationToken>());
+    }
+
+    private void AssertNoStream()
+    {
         _documentSession.Events
             .DidNotReceive()
             .StartStream<HrAgencySystem.JobDescription.Domain.JobDescription>(
                 Arg.Any<Guid>(),
                 Arg.Any<object>());
     }
-    
-    
 
     private static CreateJobDescription CreateValidCommand(
         Guid? organizationId = null,
@@ -649,7 +437,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         Guid? recruiterId = null,
         string title = "Senior .NET Developer",
         string? summary = "Senior developer position",
-        string description = "We are looking for an experienced .NET developer.",
+        string description =
+            "We are looking for an experienced .NET developer.",
         IReadOnlyList<string>? responsibilities = null,
         IReadOnlyList<string>? requirements = null,
         IReadOnlyList<string>? skills = null,
@@ -687,9 +476,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             currencyCode,
             salaryMin,
             salaryMax,
-            recruiterId ?? Guid.NewGuid(), Guid.NewGuid());
+            recruiterId ?? RecruiterId,
+            RecruiterId);
     }
-    
-    private static UserSnapshot GetRecruiter =>
-        new (Guid.NewGuid(), "Alice", "Wells", "alice-wells@hr-agency.com");
+
 }
+

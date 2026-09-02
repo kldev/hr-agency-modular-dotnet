@@ -1,6 +1,7 @@
 using HrAgencySystem.Api;
-using HrAgencySystem.Organization.Infrastructure;
+using HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Snapshots;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -13,12 +14,13 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        Environment.SetEnvironmentVariable("Application:DisableChecker", "True");
         Environment.SetEnvironmentVariable("ConnectionStrings__Postgres", connectionString);
 
         builder.ConfigureServices(services =>
         {
             services.Replace(ServiceDescriptor.Scoped<IOrganizationChecker, FakeOrganizationChecker>());
+            services.Replace(ServiceDescriptor.Scoped<IUserSnapshotService, FakeUserSnapshot>());
+            services.Replace(ServiceDescriptor.Scoped<ICompanySnapshotService, FakeCompanySnapshot>());
             ConfigureAuthentication(services);
         });
         

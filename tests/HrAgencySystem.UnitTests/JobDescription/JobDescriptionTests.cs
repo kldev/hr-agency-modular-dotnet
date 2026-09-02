@@ -12,6 +12,10 @@ public class JobDescriptionTests
 {
     private static UserSnapshot User { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
     private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Other", "Other", "other@test.io");
+    private static UserSnapshot Recruiter { get; } =
+        new (Guid.NewGuid(), "Alice", "Wells", "alice-wells@hr-agency.com");
+    
+    private static CompanySnapshot Company { get; } = new (Guid.NewGuid(), "Company A", "TX100");
     
     [Fact]
     public void Empty_ReturnsEmptyJobDescription()
@@ -35,7 +39,7 @@ public class JobDescriptionTests
         var jobDescriptionId = Guid.NewGuid();
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
-        var recruiter = GetRecruiter; 
+        var recruiter = Recruiter; 
         var occurredAt = new DateTimeOffset(
             2026, 9, 1, 10, 0, 0, TimeSpan.Zero);
 
@@ -72,6 +76,7 @@ public class JobDescriptionTests
             salaryRange.Max,
             recruiter,
             User,
+            Company,
             occurredAt);
 
         var jobDescription = D.JobDescription.Empty();
@@ -459,12 +464,11 @@ public class JobDescriptionTests
         Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
-    private static UserSnapshot GetRecruiter =>
-        new (Guid.NewGuid(), "Alice", "Wells", "alice-wells@hr-agency.com");
+
     
     private static D.JobDescription CreateJobDescription()
     {
-        var recruiter = GetRecruiter;
+        var recruiter = Recruiter;
         var salaryRange = SalaryRange.Create(
             15000m,
             22000m,
@@ -498,6 +502,7 @@ public class JobDescriptionTests
             salaryRange.Max,
             recruiter,
             User,
+            Company,
             new DateTimeOffset(
                 2026, 9, 1, 10, 0, 0, TimeSpan.Zero));
 

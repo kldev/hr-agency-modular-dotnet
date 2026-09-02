@@ -1,5 +1,4 @@
 using HrAgencySystem.JobDescription.Domain;
-using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
@@ -24,4 +23,5 @@ public sealed record JobDescriptionCreated(
     decimal SalaryMax,
     UserSnapshot Recruiter,
     UserSnapshot CreatedBy,
+    CompanySnapshot Company,
     DateTimeOffset CreatedAt);

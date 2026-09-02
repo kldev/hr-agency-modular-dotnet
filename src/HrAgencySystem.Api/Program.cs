@@ -8,7 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.SetupApplicationModules(builder.Configuration);
     builder.Services.SetupMartenForApplication(builder.Configuration);
     builder.Host.SetupWolverineForApplication();
-    builder.Services.AddOpenApi();
+    builder.Services.AddOpenApi("v1", options =>
+    {
+        options.AddDocumentTransformer((document, context, cancellationToken) =>
+        {
+            document.Info.Title = "HR Agency System";
+            document.Info.Version = "v1";
+
+            return Task.CompletedTask;
+        });
+    });
     builder.Services.SetupAppAuthorization(builder.Configuration);
     if (builder.Environment.IsDevelopment())
     {

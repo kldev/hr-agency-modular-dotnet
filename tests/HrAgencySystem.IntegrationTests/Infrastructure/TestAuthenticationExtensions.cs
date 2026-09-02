@@ -15,9 +15,10 @@ public static class TestAuthenticationExtensions
         return client;
     }
 
-    public static void AsOrganizationRoles(this HttpClient client)
+    public static HttpClient AsOrganizationRoles(this HttpClient client)
     {
         client.SetTestRoles(nameof(OrganizationRole.Admin));
+        return client;
     }
 
     public static void SetTestRoles(

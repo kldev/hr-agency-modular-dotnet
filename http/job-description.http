@@ -102,3 +102,16 @@ Authorization: Bearer {{token}}
 ###
 PUT {{baseURL}}/api/job-description/{{jdId}}/Closed
 Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/job-description/status?jobDescriptionId={{jdId}}
+Authorization: Bearer {{token}}
+
+
+###
+GET {{baseURL}}/api/job-description
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/job-description/{{jdId}}
+Authorization: Bearer {{token}}

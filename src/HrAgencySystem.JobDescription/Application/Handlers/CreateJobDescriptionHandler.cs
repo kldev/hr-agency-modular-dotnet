@@ -18,6 +18,7 @@ public static class CreateJobDescriptionHandler
         IClock clock,
         IOrganizationChecker checker,
         IUserSnapshotService userSnapshotService,
+        ICompanySnapshotService companySnapshotService,
         CancellationToken ct)
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
@@ -35,6 +36,10 @@ public static class CreateJobDescriptionHandler
         var createdBy = await userSnapshotService.GetUserAsync(command.CreatedBy, ct);
         if (createdBy == null)
             throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+        
+        var company = await companySnapshotService.GetCompanyAsync(command.CompanyId, ct);
+        if (company == null)
+            throw new BusinessRuleException(ICompanySnapshotService.NotFoundMessage);
         
         var jobDescriptionId = JobDescriptionId.New();
         var @event = new JobDescriptionCreated(
@@ -56,6 +61,7 @@ public static class CreateJobDescriptionHandler
                 salaryRange.Max,
                 recruiter!,
                 createdBy,
+                company,
                 clock.UtcNow);
 
         session.Events.StartStream<Domain.JobDescription>(jobDescriptionId.Value, @event);

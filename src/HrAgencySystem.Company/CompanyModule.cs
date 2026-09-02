@@ -2,7 +2,9 @@ using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Application.Query;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.Company.Infrastructure.Persistence;
+using HrAgencySystem.Company.Infrastructure.Snapshots;
 using HrAgencySystem.Company.Projections;
+using HrAgencySystem.SharedKernel.Snapshots;
 using JasperFx.Events;
 using JasperFx.Events.Projections;
 using Marten;
@@ -18,6 +20,7 @@ public static class CompanyModule
     {
         services.AddScoped<ICompanyTaxIdReservationRepository, CompanyTaxIdReservationRepository>();
         services.AddScoped<ICompaniesQueryRepository, CompaniesQueryRepository>();
+        services.AddScoped<ICompanySnapshotService, CompanySnapshotService>();
     }
 
     public static void ConfigureMarten(
