@@ -3,7 +3,7 @@ using HrAgencySystem.Identity.Projections;
 
 namespace HrAgencySystem.Identity.Infrastructure.Query;
 
-internal static class UserSuggestionsExtensions
+internal static class UserProjectionExtensions
 {
     public static IQueryable<UserProjection> WithOrganizationId(this IQueryable<UserProjection> query,
         Guid organizationId)

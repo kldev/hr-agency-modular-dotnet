@@ -20,4 +20,11 @@ public static class SliceExtensions
             [.. items.Take(normalizedPageSize)],
             items.Count > normalizedPageSize);
     }
+
+    public static async Task<SliceResponse<T>> ToSlice<T>(
+        this IQueryable<T> query,
+        IPagedQuery pageQuery, CancellationToken ct = default) where T : notnull
+    {
+        return await query.ToSlice(pageQuery.Page, pageQuery.PageSize, ct);
+    }
 }

@@ -1,4 +1,6 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.JobDescription.Application.Port;
+using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Projections;
 using Marten;
 
@@ -10,11 +12,18 @@ internal static class MapGetSlice
     {
         group.MapGet("/api/job-description", Handler).WithSummary("Get job descriptions");
     }
-    
-    private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user, CancellationToken ct)
+
+    private static async Task<IResult> Handler(IJobDescriptionQueryRepository repository,
+        AppUserAuthenticated user,
+        string? search,
+        Guid? companyId,
+        Guid? recruiterId,
+        JobDescriptionStatus[]? status,
+        int page = 1, int pageSize = 100,
+        CancellationToken ct = default)
     {
-        var result = await session.Query<JobDescriptionProjection>()
-            .Where(z => z.OrgId == user.OrganizationId).ToListAsync(ct);
+        var query = new JobDescriptionQuery(search ?? "", companyId, recruiterId, status ?? [], page, pageSize);
+        var result = await repository.GetJobDescriptions(user.OrganizationId, query, ct);
         
         return TypedResults.Ok(result);
     }

@@ -1,8 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
-using HrAgencySystem.Identity.Projections;
-using Marten;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.User.Maps;

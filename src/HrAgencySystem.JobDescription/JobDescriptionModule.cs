@@ -1,5 +1,6 @@
+using HrAgencySystem.JobDescription.Application.Port;
 using HrAgencySystem.JobDescription.Events;
-
+using HrAgencySystem.JobDescription.Infrastructure.Query;
 using HrAgencySystem.JobDescription.Projections;
 using JasperFx.Events.Projections;
 using Marten;
@@ -14,7 +15,7 @@ public static class JobDescriptionModule
     public static void AddJobDescriptionModule(
         this IServiceCollection services)
     {
-       // services.AddScoped<IJobDescriptionsQueryRepository, JobDescriptionsQueryRepository>();
+       services.AddScoped<IJobDescriptionQueryRepository, JobDescriptionQueryRepository>();
     }
 
     public static void ConfigureMarten(
@@ -60,7 +61,5 @@ public static class JobDescriptionModule
             .Index(z=> new { OrganizationId = z.OrgId })
             .Index(z=> new { OrganizationId = z.OrgId, JobDescriptionId = z.JobDescriptionId });
         
-        
- 
     }
 }
