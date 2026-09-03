@@ -1,5 +1,7 @@
+using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
+using HrAgencySystem.Recruitment.Infrastructure.Query;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Port;
 using JasperFx.Events.Projections;
@@ -16,7 +18,7 @@ public static class RecruitmentModule
         this IServiceCollection services)
     {
         services.AddScoped<ISeeder, TagSeeder>();
-        //services.AddScoped<IRecruitmentQueryRepository, RecruitmentQueryRepository>();
+        services.AddScoped<IJobPostQueryRepository,JobPostQueryRepository>();
     }
 
     public static void ConfigureMarten(
@@ -74,19 +76,20 @@ public static class RecruitmentModule
             .DatabaseSchemaName(SchemaName)
             .Index(x => new { OrganizationId = x.OrgId });
         
-        options.Projections.Snapshot<JobPostingProjection>(
+        options.Projections.Snapshot<JobPostProjection>(
             SnapshotLifecycle.Async);
 
         options.Schema
-            .For<JobPostingProjection>()
+            .For<JobPostProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { OrganizationId = x.OrganizationId })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.CompanyId })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.Status })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.LanguageCode })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.RecruiterId })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.Title, x.Id })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.Company.Name })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.Company.TaxId });
+            .Index(x => new { OrganizationId = x.OrgId })
+            .Index(x => new { OrganizationId = x.OrgId, x.CompanyId })
+            .Index(x => new { OrganizationId = x.OrgId, x.Status })
+            .Index(x => new { OrganizationId = x.OrgId, x.LanguageCode })
+            .Index(x => new { OrganizationId = x.OrgId, x.RecruiterId })
+            .Index(x => new { OrganizationId = x.OrgId, x.Title, x.Id })
+            .Index(x => new { OrganizationId = x.OrgId, x.Company.Name })
+            .Index(x => new { OrganizationId = x.OrgId, x.Company.TaxId })
+            .Index(x => new { OrganizationId = x.OrgId, x.SearchText });
     }
 }

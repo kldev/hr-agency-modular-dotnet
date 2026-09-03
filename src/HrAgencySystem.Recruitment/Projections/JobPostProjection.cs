@@ -5,10 +5,10 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Projections;
 
-public sealed record JobPostingProjection(
+public sealed record JobPostProjection(
     Guid Id,
     Guid JobDescriptionId,
-    Guid OrganizationId,
+    Guid OrgId,
     Guid CompanyId,
     string Title,
     string Summary,
@@ -34,12 +34,13 @@ public sealed record JobPostingProjection(
     CompanySnapshot Company,
     IReadOnlyList<ChannelPost> Posts,
     DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt)
+    DateTimeOffset UpdatedAt,
+    string SearchText)
 {
-    public static JobPostingProjection Create(
+    public static JobPostProjection Create(
         JobPostCreated @event)
     {
-        return new JobPostingProjection(
+        return new JobPostProjection(
             @event.JobPostingId,
             @event.JobDescriptionId,
             @event.OrganizationId,
@@ -68,12 +69,19 @@ public sealed record JobPostingProjection(
             @event.Company,
             [],
             @event.CreatedAt,
-            @event.CreatedAt);
+            @event.CreatedAt,
+            string.Join(",",@event.Responsibilities)
+            + string.Join(",",@event.Requirements)
+            + string.Join(",",@event.Skills));
     }
 
-    public JobPostingProjection Apply(
+    public JobPostProjection Apply(
         JobPostUpdated @event)
     {
+        var searchText = string.Join(",", @event.Responsibilities)
+                         + string.Join(",", @event.Requirements)
+                         + string.Join(",", @event.Skills);
+        
         return this with
         {
             Title = @event.Title,
@@ -91,11 +99,12 @@ public sealed record JobPostingProjection(
             SalaryMax = @event.SalaryMax,
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
-            ModifiedBy = @event.Author
+            ModifiedBy = @event.Author,
+            SearchText = searchText
         };
     }
 
-    public JobPostingProjection Apply(
+    public JobPostProjection Apply(
         JobPostToChannel @event)
     {
         var posts = Posts
@@ -114,7 +123,7 @@ public sealed record JobPostingProjection(
         };
     }
 
-    public JobPostingProjection Apply(
+    public JobPostProjection Apply(
         JobPostPublished @event)
     {
         return this with
@@ -126,7 +135,7 @@ public sealed record JobPostingProjection(
         };
     }
 
-    public JobPostingProjection Apply(
+    public JobPostProjection Apply(
         JobPostClosed @event)
     {
         return this with
@@ -138,7 +147,7 @@ public sealed record JobPostingProjection(
         };
     }
 
-    public JobPostingProjection Apply(
+    public JobPostProjection Apply(
         JobPostArchived @event)
     {
         return this with

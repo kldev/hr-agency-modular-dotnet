@@ -218,11 +218,6 @@ Authorization: Bearer {{token}}
 
 
 
-### create job post
-POST {{baseURL}}/api/recruitment/job-posting
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
 ### Vytvoření pracovní nabídky
 
 POST {{baseURL}}/api/recruitment/job-posting
@@ -268,3 +263,28 @@ Authorization: Bearer {{token}}
   "salaryMax": 15000,
   "recruiterId": "{{userId}}"
 }
+
+### get job posts
+
+GET {{baseURL}}/api/recruitment/job-posting?lang=de&lang=fr
+Authorization: Bearer {{token}}
+
+### get job posts
+
+GET {{baseURL}}/api/recruitment/job-posting?search=Reinger
+Authorization: Bearer {{token}}
+
+### get job posts
+
+GET {{baseURL}}/api/recruitment/job-posting?search=zkušeného
+Authorization: Bearer {{token}}
+
+### get job posts
+
+GET {{baseURL}}/api/recruitment/job-posting?search=Spring
+Authorization: Bearer {{token}}
+
+### get job posts
+
+GET {{baseURL}}/api/recruitment/job-posting?search=pracy w zespole
+Authorization: Bearer {{token}}
