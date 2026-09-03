@@ -1,6 +1,6 @@
 namespace HrAgencySystem.Recruitment.Domain.Posting;
 
-public enum JobPostingChannel
+public enum PostingChannelType
 {
     /**
  * Company's own career page.

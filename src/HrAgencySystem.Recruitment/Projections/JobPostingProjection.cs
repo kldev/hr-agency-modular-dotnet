@@ -24,7 +24,7 @@ public sealed record JobPostingProjection(
     CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    JobPostingStatus Status,
+    JobPostStatus Status,
     Guid RecruiterId,
     UserSnapshot Recruiter,
     Guid CreatedById,
@@ -32,7 +32,7 @@ public sealed record JobPostingProjection(
     Guid? ModifiedById,
     UserSnapshot? ModifiedBy,
     CompanySnapshot Company,
-    IReadOnlyList<JobPost> Posts,
+    IReadOnlyList<ChannelPost> Posts,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt)
 {
@@ -58,7 +58,7 @@ public sealed record JobPostingProjection(
             @event.CurrencyCode,
             @event.SalaryMin,
             @event.SalaryMax,
-            JobPostingStatus.Draft,
+            JobPostStatus.Draft,
             @event.Recruiter.Id,
             @event.Recruiter,
             @event.CreatedBy.Id,
@@ -99,14 +99,14 @@ public sealed record JobPostingProjection(
         JobPostToChannel @event)
     {
         var posts = Posts
-            .Append(new JobPost(
-                @event.Channel,
+            .Append(new ChannelPost(
+                @event.ChannelType,
                 @event.OccurredAt))
             .ToArray();
 
         return this with
         {
-            Status = JobPostingStatus.Published,
+            Status = JobPostStatus.Published,
             Posts = posts,
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
@@ -119,7 +119,7 @@ public sealed record JobPostingProjection(
     {
         return this with
         {
-            Status = JobPostingStatus.Published,
+            Status = JobPostStatus.Published,
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author
@@ -131,7 +131,7 @@ public sealed record JobPostingProjection(
     {
         return this with
         {
-            Status = JobPostingStatus.Closed,
+            Status = JobPostStatus.Closed,
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author
@@ -143,7 +143,7 @@ public sealed record JobPostingProjection(
     {
         return this with
         {
-            Status = JobPostingStatus.Archived,
+            Status = JobPostStatus.Archived,
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author

@@ -20,7 +20,7 @@ public sealed class JobApplication
 
     public JobApplicationId Id { get; private set; } = default!;
     public OrganizationId OrganizationId { get; private set; }
-    public JobPostingId JobPostingId { get; private set; } = default!;
+    public JobPostId JobPostId { get; private set; } = default!;
     public CandidateId CandidateId { get; private set; } = default!;
 
     public JobApplicationStatus Status { get; private set; }
@@ -40,7 +40,7 @@ public sealed class JobApplication
     {
         Id = JobApplicationId.From(@event.JobApplicationId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
-        JobPostingId = JobPostingId.From(@event.JobPostingId);
+        JobPostId = JobPostId.From(@event.JobPostingId);
         CandidateId = CandidateId.From(@event.CandidateId);
         Status = JobApplicationStatus.Applied;
         Source = @event.Source;

@@ -14,5 +14,8 @@
     <ItemGroup>
         <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="HrAgencySystem.UnitTests"/>
+    </ItemGroup>
 
 </Project>

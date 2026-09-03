@@ -83,7 +83,7 @@ public static class RecruitmentModule
             .Index(x => new { OrganizationId = x.OrganizationId })
             .Index(x => new { OrganizationId = x.OrganizationId, x.CompanyId })
             .Index(x => new { OrganizationId = x.OrganizationId, x.Status })
-            .Index(x => new { OrganizationId = x.OrganizationId, x.LangugageCode })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.LanguageCode })
             .Index(x => new { OrganizationId = x.OrganizationId, x.RecruiterId })
             .Index(x => new { OrganizationId = x.OrganizationId, x.Title, x.Id })
             .Index(x => new { OrganizationId = x.OrganizationId, x.Company.Name })

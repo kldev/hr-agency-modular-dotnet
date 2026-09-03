@@ -1,6 +1,6 @@
 namespace HrAgencySystem.Recruitment.Domain.Posting;
 
-public enum JobPostingStatus
+public enum JobPostStatus
 {
     /**
     * Posting is being prepared and is not publicly visible.

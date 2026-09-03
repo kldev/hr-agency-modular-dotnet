@@ -1,6 +1,6 @@
 namespace HrAgencySystem.Recruitment.Domain.Posting;
 
-public enum JobPostingPublicationStatus
+public enum JobPostPublicationStatus
 {
     Pending,
     Published,

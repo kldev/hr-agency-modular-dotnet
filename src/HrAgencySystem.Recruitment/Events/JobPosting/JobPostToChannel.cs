@@ -5,6 +5,6 @@ namespace HrAgencySystem.Recruitment.Events.JobPosting;
 
 public sealed record JobPostToChannel(
     Guid JobPostId,
-    JobPostingChannel Channel,
+    PostingChannelType ChannelType,
     DateTimeOffset OccurredAt,
     UserSnapshot Author) : IJobPostEvent;

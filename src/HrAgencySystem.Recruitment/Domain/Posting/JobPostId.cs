@@ -1,13 +1,13 @@
 namespace HrAgencySystem.Recruitment.Domain.Posting;
 
-public readonly record struct JobPostingId(Guid Value)
+public readonly record struct JobPostId(Guid Value)
 {
-    public static JobPostingId New()
+    public static JobPostId New()
     {
         return new(Guid.NewGuid());
     }
 
-    public static JobPostingId From(Guid value)
+    public static JobPostId From(Guid value)
     {
         return new(value);
     }
