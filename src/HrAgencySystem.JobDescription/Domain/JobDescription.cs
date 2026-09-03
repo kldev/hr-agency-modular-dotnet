@@ -37,7 +37,7 @@ public sealed class JobDescription
 
     public WorkMode WorkMode { get; private set; }
 
-    public SalaryRange SalaryRange { get; private set; }
+    public SalaryRange SalaryRange { get; private set; } = null!;
 
     public JobDescriptionStatus Status { get; private set; }
 

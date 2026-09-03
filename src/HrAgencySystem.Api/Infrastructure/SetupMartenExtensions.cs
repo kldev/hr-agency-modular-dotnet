@@ -2,6 +2,7 @@ using HrAgencySystem.Company;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
+using HrAgencySystem.Recruitment;
 using JasperFx;
 using JasperFx.Events;
 using JasperFx.Events.Daemon;
@@ -29,6 +30,7 @@ public static class SetupMartenExtensions
                 OrganizationModule.ConfigureMarten(options);
                 IdentityModule.ConfigureMarten(options);
                 JobDescriptionModule.ConfigureMarten(options);
+                RecruitmentModule.ConfigureMarten(options);
 
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
                 
@@ -52,6 +54,10 @@ public static class SetupMartenExtensions
                     .Assembly);
             options.Discovery.IncludeAssembly(
                 typeof(JobDescriptionModule)
+                    .Assembly);
+            
+            options.Discovery.IncludeAssembly(
+                typeof(RecruitmentModule)
                     .Assembly);
             
             options.Policies.AutoApplyTransactions();

@@ -18,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    await app.SeedAsync();
+    
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseExceptionHandler();
