@@ -16,7 +16,7 @@ public record AppUserAuthenticated(Guid UserId, string Email, Guid OrganizationI
     public OrganizationId GetOrganization => new (OrganizationId);
 }
 
-public sealed record OwnerAuthenticated(string Email, PlatformRole Role)
+public sealed record OwnerAuthenticated(Guid Id, string Email, PlatformRole Role)
 {
     public static ValueTask<OwnerAuthenticated?> BindAsync(
         HttpContext context)

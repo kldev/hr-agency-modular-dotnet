@@ -1,4 +1,5 @@
 using HrAgencySystem.JobDescription.Domain;
+using HrAgencySystem.SharedKernel.Commands;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.JobDescription.Application.Commands;
@@ -20,4 +21,4 @@ public sealed record UpdateJobDescription(
     CurrencyCode  CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    Guid ModifiedBy) : IJobDescription;
+    Guid ModifiedBy) : IJobDescription, IUpdateCommand;

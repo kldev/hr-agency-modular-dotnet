@@ -17,8 +17,8 @@ public static class CreateJobDescriptionHandler
         IDocumentSession session,
         IClock clock,
         IOrganizationChecker checker,
-        IUserSnapshotService userSnapshotService,
-        ICompanySnapshotService companySnapshotService,
+        IUserSnapshotRepository userSnapshotRepository,
+        ICompanySnapshotRepository companySnapshotRepository,
         CancellationToken ct)
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
@@ -29,17 +29,17 @@ public static class CreateJobDescriptionHandler
         if (!await checker.Exists(organizationId.Value, ct))
             throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
 
-        var recruiter = await userSnapshotService.GetUserAsync(command.RecruiterId, ct);
+        var recruiter = await userSnapshotRepository.GetUserAsync(command.RecruiterId, ct);
         if (recruiter == null)
-            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
 
-        var createdBy = await userSnapshotService.GetUserAsync(command.CreatedBy, ct);
+        var createdBy = await userSnapshotRepository.GetUserAsync(command.CreatedBy, ct);
         if (createdBy == null)
-            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
         
-        var company = await companySnapshotService.GetCompanyAsync(command.CompanyId, ct);
+        var company = await companySnapshotRepository.GetCompanyAsync(command.CompanyId, ct);
         if (company == null)
-            throw new BusinessRuleException(ICompanySnapshotService.NotFoundMessage);
+            throw new BusinessRuleException(ICompanySnapshotRepository.NotFoundMessage);
         
         var jobDescriptionId = JobDescriptionId.New();
         var @event = new JobDescriptionCreated(

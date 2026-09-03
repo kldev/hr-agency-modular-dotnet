@@ -7,13 +7,8 @@ namespace HrAgencySystem.IntegrationTests.User;
 [Collection(IntegrationCollection.Name)]
 public sealed class GetUsersTests(
     IntegrationEnvironment environment,
-    ITestOutputHelper output)
+    ITestOutputHelper output) : BaseIntegrationTest(environment, output)
 {
-    private readonly HttpClient _client = environment.CreateClient();
-    private readonly UserTestClient _users = new(
-        environment.CreateClient(),
-        output);
-
     [Fact]
     public async Task Should_return_users_from_authenticated_user_organization()
     {
@@ -21,29 +16,29 @@ public sealed class GetUsersTests(
         var organizationId = Guid.NewGuid();
         var otherOrganizationId = Guid.NewGuid();
 
-        var firstUser = await _users.CreateAsync(
+        var firstUser = await UserClient.CreateAsync(
             organizationId,
             "first@test.com");
 
-        var secondUser = await _users.CreateAsync(
+        var secondUser = await UserClient.CreateAsync(
             organizationId,
             "second@test.com");
 
-        await _users.CreateAsync(
+        await UserClient.CreateAsync(
             otherOrganizationId,
             "other@test.com");
 
-        _client.WithOrganizationId(organizationId);
+        Client.WithOrganizationId(organizationId);
 
         await Eventually.AssertAsync(
             async () =>
             {
-                var response = await _client.GetAsync("/api/users");
+                var response = await Client.GetAsync("/api/users");
 
                 response.EnsureSuccessStatusCode();
 
-                var users = await response.ReadWithJson<List<UserProjection>>(output);
-
+                var users = (await response.ReadWithJson<List<UserProjection>>(output))!;
+                
                 Assert.Contains(users, x => x.Id == firstUser.Id);
                 Assert.Contains(users, x => x.Id == secondUser.Id);
                 Assert.DoesNotContain(users, x => x.Email == "other@test.com");
@@ -56,10 +51,10 @@ public sealed class GetUsersTests(
         // Arrange
         var organizationId = Guid.NewGuid();
 
-        _client.WithOrganizationId(organizationId);
+        Client.WithOrganizationId(organizationId);
 
         // Act
-        var response = await _client.GetAsync("/api/users");
+        var response = await Client.GetAsync("/api/users");
 
         // Assert
         response.EnsureSuccessStatusCode();

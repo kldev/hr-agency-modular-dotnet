@@ -13,7 +13,7 @@ namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
 
 public sealed class AssignRecruiterJobDescriptionHandlerTests
 {
-    private readonly IUserSnapshotService _snapshotService = Substitute.For<IUserSnapshotService>();
+    private readonly IUserSnapshotRepository _snapshotRepository = Substitute.For<IUserSnapshotRepository>();
     private readonly IClock _clock = Substitute.For<IClock>();
     
     [Fact]
@@ -46,11 +46,11 @@ public sealed class AssignRecruiterJobDescriptionHandlerTests
             "Loon",
             "greg.loon@example.com");
 
-        _snapshotService
+        _snapshotRepository
             .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
             .Returns(recruiter);
         
-        _snapshotService
+        _snapshotRepository
             .GetUserAsync(modifiedId, Arg.Any<CancellationToken>())
             .Returns(modifyBy);
 
@@ -60,7 +60,7 @@ public sealed class AssignRecruiterJobDescriptionHandlerTests
         var (result, events) = await AssignRecruiterJobDescriptionHandler.Handle(
             command,
             aggregate,
-            _snapshotService,
+            _snapshotRepository,
             _clock,
             CancellationToken.None);
 
@@ -88,13 +88,13 @@ public sealed class AssignRecruiterJobDescriptionHandlerTests
             .ThrowsAsync<NotFoundException>( async () => await AssignRecruiterJobDescriptionHandler.Handle(
                 command,
                 null!,
-                _snapshotService,
+                _snapshotRepository,
                 _clock,
                 CancellationToken.None));
         
         Assert.Contains("Not found", exception.Message);
 
-        await _snapshotService
+        await _snapshotRepository
             .DidNotReceive()
             .GetUserAsync(
                 Arg.Any<Guid>(),
@@ -113,19 +113,19 @@ public sealed class AssignRecruiterJobDescriptionHandlerTests
             Guid.NewGuid(),
             recruiterId, modifiedId, organizationId);
 
-        _snapshotService
+        _snapshotRepository
             .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
             .Returns((UserSnapshot?)null);
 
         // Act
         Task<(JobDescriptionRecruiterAssigned, Events)> Act() =>
-            AssignRecruiterJobDescriptionHandler.Handle(command, D.JobDescription.Empty(), _snapshotService, _clock,
+            AssignRecruiterJobDescriptionHandler.Handle(command, D.JobDescription.Empty(), _snapshotRepository, _clock,
                 CancellationToken.None);
 
         // Assert
         var exception = await Assert
             .ThrowsAsync<BusinessRuleException>(async () => await Act());
 
-        Assert.Equal(IUserSnapshotService.NotFoundMessage, exception.Message);
+        Assert.Equal(IUserSnapshotRepository.NotFoundMessage, exception.Message);
     }
 }

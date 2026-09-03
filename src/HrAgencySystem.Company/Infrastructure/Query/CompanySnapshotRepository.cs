@@ -2,10 +2,10 @@ using HrAgencySystem.Company.Projections;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Marten;
 
-namespace HrAgencySystem.Company.Infrastructure.Snapshots;
+namespace HrAgencySystem.Company.Infrastructure.Query;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class CompanySnapshotService(IDocumentSession session) : ICompanySnapshotService
+public class CompanySnapshotRepository(IDocumentSession session) : ICompanySnapshotRepository
 {
     public async Task<CompanySnapshot?> GetCompanyAsync(Guid companyId, CancellationToken ct)
     {

@@ -29,7 +29,7 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         return new CreateOrganization(
             name,
             slug,
-            null);
+            Guid.NewGuid());
     }
     
     [Fact]

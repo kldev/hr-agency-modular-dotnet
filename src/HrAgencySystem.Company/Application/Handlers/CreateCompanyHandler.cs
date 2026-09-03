@@ -24,7 +24,7 @@ public static class CreateCompanyHandler
         ICompanyTaxIdReservationRepository taxIdReservationRepository,
         IClock clock,
         IOrganizationChecker checker,
-        IUserSnapshotService snapshotService,
+        IUserSnapshotRepository snapshotRepository,
         CancellationToken cancellationToken)
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
@@ -38,9 +38,9 @@ public static class CreateCompanyHandler
         if (!await checker.Exists(organizationId.Value, cancellationToken))
             throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
 
-        var createdBy = await snapshotService.GetUserAsync(command.CreatedBy, cancellationToken);
+        var createdBy = await snapshotRepository.GetUserAsync(command.CreatedBy, cancellationToken);
         if (createdBy == null)
-            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
         
         var companyId = CompanyId.New();
 

@@ -19,13 +19,9 @@ public static class CreateOrganizationHandler
         IDocumentSession session,
         IOrganizationSlugReservationRepository repository,
         IClock clock,
-        IConfiguration configuration,
         CancellationToken ct)
     {
-
-        var allowFixedId = configuration["AllowFixedId"] == "1"; 
-        
-        var organizationId = command.fixedId.HasValue && allowFixedId ? new OrganizationId(command.fixedId.Value)  : OrganizationId.NewId();
+        var organizationId = OrganizationId.NewId();
         var (name, slug) = CreateValueObjects(command);
 
         if (await repository.Exists(slug, ct))
@@ -53,10 +49,7 @@ public static class CreateOrganizationHandler
         if (errorSlug != null) errors.Add(errorSlug);
         if (errorName != null) errors.Add(errorName);
 
-        if (errors.Count > 0)
-            throw new ValidationException(errors);
-
-        return new OrganizationData(name!, slug!);
+        return errors.Count > 0 ? throw new ValidationException(errors) : new OrganizationData(name!, slug!);
     }
 
     private sealed record OrganizationData(

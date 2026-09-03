@@ -40,7 +40,7 @@ public static class ClaimsPrincipalExtensions
         if (string.IsNullOrWhiteSpace(email))
             throw new InvalidOperationException("Authenticated user email claim is missing.");
 
-        return new OwnerAuthenticated(
+        return new OwnerAuthenticated(userId,
             email, principal.GetPlatformRole());
     }
 

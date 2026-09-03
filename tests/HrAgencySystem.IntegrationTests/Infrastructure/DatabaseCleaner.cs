@@ -1,5 +1,6 @@
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
+using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
 using Npgsql;
 
@@ -22,6 +23,13 @@ public sealed class DatabaseCleaner(string connectionString)
     {
         await CleanTable<UserEmailReservation>("identity");
     }
+    
+    public async Task CleanUsers()
+    {
+        await CleanTable<UserEmailReservation>("identity");
+        await CleanTable<UserProjection>("identity");
+    }
+    
 
     public async Task CleanOrganizationReservation()
     {

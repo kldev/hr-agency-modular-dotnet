@@ -17,6 +17,7 @@ public sealed class UserSuggestionRepository(IDocumentSession session) : IUserSu
             .WithRoles(roles)
             .OrderByDescending(z => z.CreatedBy)
             .Take(25)
-            .Select(z => z.ToSuggestion()).ToListAsync(ct);
+            .Select(z => new UserSuggestion(z.Id, z.FullName, z.Email))
+            .ToListAsync(ct);
     }
 }

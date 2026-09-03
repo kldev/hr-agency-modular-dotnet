@@ -13,8 +13,8 @@ namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
 
 public class UpdateJobDescriptionHandlerTests : BaseTest
 {
-    private readonly IUserSnapshotService _snapshotService =
-        Substitute.For<IUserSnapshotService>();
+    private readonly IUserSnapshotRepository _snapshotRepository =
+        Substitute.For<IUserSnapshotRepository>();
     private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
     
     [Fact]
@@ -57,12 +57,12 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         var clock = new FixedClock(now);
 
-        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
         
         var (result, events) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            _snapshotService,
+            _snapshotRepository,
             clock, CancellationToken.None);
 
         Assert.Equal(
@@ -133,7 +133,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 null!,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -176,7 +176,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock,
                 CancellationToken.None
                 ));
@@ -211,7 +211,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -231,7 +231,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -251,7 +251,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -271,7 +271,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -291,7 +291,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -315,7 +315,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -339,7 +339,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -363,7 +363,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -383,7 +383,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -404,7 +404,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -425,7 +425,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -446,7 +446,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -466,7 +466,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             UpdateJobDescriptionHandler.Handle(
                 command,
                 aggregate,
-                _snapshotService,
+                _snapshotRepository,
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
@@ -483,12 +483,12 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(command.OrganizationId));
 
-        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
         
         var (result, events) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            _snapshotService,
+            _snapshotRepository,
             TestClock, CancellationToken.None);
 
         Assert.Equal(
@@ -513,12 +513,12 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(command.OrganizationId));
         
-        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
         var (result, _) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            _snapshotService,
+            _snapshotRepository,
             TestClock, CancellationToken.None);
 
         Assert.Equal(
@@ -541,12 +541,12 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         var clock = new FixedClock(now);
 
-        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
         var (result, _) = await UpdateJobDescriptionHandler.Handle(
             command,
             aggregate,
-            _snapshotService,
+            _snapshotRepository,
             clock, CancellationToken.None);
 
         Assert.Equal(now, result.UpdatedAt);

@@ -13,7 +13,7 @@ public static class UpdateJobDescriptionHandler
     public static async Task<(JobDescriptionUpdated, Wolverine.Marten.Events)> Handle(
         UpdateJobDescription command,
         Domain.JobDescription aggregate,
-        IUserSnapshotService snapshotService,
+        IUserSnapshotRepository snapshotRepository,
         IClock clock,
         CancellationToken ct)
     {
@@ -23,9 +23,9 @@ public static class UpdateJobDescriptionHandler
             location, responsibilities,
             requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
 
-        var modifiedBy = await snapshotService.GetUserAsync(command.ModifiedBy, ct);
+        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
         if (modifiedBy == null)
-            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
 
         var @event = new JobDescriptionUpdated(
             title.Value,

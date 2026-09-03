@@ -10,12 +10,13 @@ public sealed class CompanySuggestionRepository(IDocumentSession session) : ICom
     public async Task<IReadOnlyList<CompanySuggestion>> GetCompanySuggestions(Guid organizationId, string search,
         string countryCode, CancellationToken ct)
     {
-        return await session.Query<CompanyProjection>()
+        var result = await session.Query<CompanyProjection>()
             .WithOrganizationId(organizationId)
             .WithSearch(search)
             .WithCountryCode(countryCode)
             .OrderByDescending(z => z.CreatedBy)
-            .Take(25)
-            .Select(z => z.ToSuggestion()).ToListAsync(ct);
+            .Take(25).ToListAsync(ct);
+
+        return [.. result.Select(z => z.ToSuggestion()).ToList()];
     }
 }

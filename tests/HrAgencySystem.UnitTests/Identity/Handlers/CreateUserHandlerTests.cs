@@ -29,8 +29,8 @@ public class CreateUserHandlerTests : BaseTest
     private readonly IUserEmailReservationRepository _emailReservationRepository
         = Substitute.For<IUserEmailReservationRepository>();
 
-    private readonly IUserSnapshotService _snapshotService
-        = Substitute.For<IUserSnapshotService>();
+    private readonly IUserSnapshotRepository _snapshotRepository
+        = Substitute.For<IUserSnapshotRepository>();
     
     private static readonly Guid AdminId = Guid.NewGuid();
 
@@ -69,7 +69,7 @@ public class CreateUserHandlerTests : BaseTest
             .Hash(password)
             .Returns(passwordHash);
         
-        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
+        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _documentSession
             .Events
@@ -87,7 +87,7 @@ public class CreateUserHandlerTests : BaseTest
             _checker,
             _hasher,
             _emailReservationRepository,
-            _snapshotService,
+            _snapshotRepository,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.UserId);
@@ -153,7 +153,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -201,7 +201,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -245,7 +245,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -288,7 +288,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -332,7 +332,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -376,7 +376,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -420,7 +420,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Contains(
@@ -466,7 +466,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.NotEmpty(exception.Message);
@@ -510,7 +510,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         _hasher
@@ -555,7 +555,7 @@ public class CreateUserHandlerTests : BaseTest
                 _checker,
                 _hasher,
                 _emailReservationRepository,
-                _snapshotService,
+                _snapshotRepository,
                 cts.Token));
 
         await _checker
@@ -589,7 +589,7 @@ public class CreateUserHandlerTests : BaseTest
                 Arg.Any<CancellationToken>())
             .Returns(true);
 
-        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
+        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _hasher
             .Hash(password)
@@ -612,7 +612,7 @@ public class CreateUserHandlerTests : BaseTest
             _checker,
             _hasher,
             _emailReservationRepository,
-            _snapshotService,
+            _snapshotRepository,
             CancellationToken.None));
         
         Assert.Equal(CreateUserHandler.UserWithEmailMessage, exception.Message);

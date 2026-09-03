@@ -2,9 +2,9 @@ using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Marten;
 
-namespace HrAgencySystem.Identity.Infrastructure.Snapshots;
+namespace HrAgencySystem.Identity.Infrastructure.Query;
 
-public sealed class UserSnapshotService(IDocumentSession session) : IUserSnapshotService
+public sealed class UserSnapshotRepository(IDocumentSession session) : IUserSnapshotRepository
 {
     public async Task<UserSnapshot?> GetUserAsync(Guid userId, CancellationToken ct)
     {

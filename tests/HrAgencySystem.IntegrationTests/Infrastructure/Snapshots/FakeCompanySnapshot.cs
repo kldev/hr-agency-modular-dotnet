@@ -2,7 +2,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
-public sealed class FakeCompanySnapshot : ICompanySnapshotService
+public sealed class FakeCompanySnapshot : ICompanySnapshotRepository
 {
     public Task<CompanySnapshot?> GetCompanyAsync(Guid companyId, CancellationToken ct)
     {

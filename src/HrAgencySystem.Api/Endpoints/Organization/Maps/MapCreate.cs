@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Organization.Application.Commands;
 using HrAgencySystem.Organization.Events;
@@ -16,13 +17,18 @@ internal static class MapCreate
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 
-    private static async Task<IResult> Handler(CreateOrganization command,
+    private static async Task<IResult> Handler(OwnerAuthenticated owner, CreateOrganizationRequest request,
         IMessageBus bus,
         CancellationToken ct)
     {
-        var result = await bus.InvokeAsync<OrganizationCreated>(command, ct);
+        var result = await bus.InvokeAsync<OrganizationCreated>(request.ToCommand(owner.Id), ct);
 
         return TypedResults.Created(
             $"/api/organization/{result.OrganizationId}", result);
     }
+}
+
+internal sealed record CreateOrganizationRequest(string Name, string Slug)
+{
+    public CreateOrganization ToCommand(Guid createdBy) => new (Name, Slug, createdBy);
 }

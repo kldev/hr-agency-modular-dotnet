@@ -2,7 +2,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
-public class FakeUserSnapshot : IUserSnapshotService
+public class FakeUserSnapshot : IUserSnapshotRepository
 {
     public Task<UserSnapshot?> GetUserAsync(Guid userId, CancellationToken ct)
     {

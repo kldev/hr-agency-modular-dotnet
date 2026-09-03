@@ -17,7 +17,7 @@ public sealed class OrganizationTestClient(
         var request = new CreateOrganization(
             name,
             slug,
-            null);
+            Guid.NewGuid());
 
         var response = await client.PostAsJsonAsync(
             "/api/organization",

@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.Commands;
+
 namespace HrAgencySystem.Organization.Application.Commands;
 
-public sealed record CreateOrganization(string Name, string Slug, Guid? fixedId);
+public sealed record CreateOrganization(string Name, string Slug, Guid CreatedBy): ICreateCommand;

@@ -22,7 +22,7 @@ internal class UserScenario(IMessageBus bus)
                 nameof(seedCount),
                 "Seed count must be at least 2.");
 
-        var domain = $"@{data.slug}.com";
+        var domain = $"@{data.Slug}.com";
         const string userPassword = "test123";
 
         var users = new List<CreateUser>

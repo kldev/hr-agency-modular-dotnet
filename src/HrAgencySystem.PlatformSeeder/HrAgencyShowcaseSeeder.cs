@@ -5,39 +5,30 @@ namespace HrAgencySystem.PlatformSeeder;
 
 public sealed class HrAgencyShowcaseSeeder(IMessageBus bus) : IPlatformSeeder
 {
-    public  async Task Seed()
+    public async Task Seed()
     {
-        try
-        {
-            await new OwnerScenario(bus).Create();
-            var result = await new OrganizationScenario(bus).Create();
-            var usersIds =await new UserScenario(bus).Create(result, 20);
-            var companyIds = await new CompanyScenario(bus).Create(result.OrganizationId, usersIds);
-            
-
-            await Task.Delay(5000);
-            await new ProductionJobDescriptionScenario(bus).Create(result.OrganizationId, usersIds, companyIds);
-            await new TechnicalJobDescriptionScenario(bus).Create(result.OrganizationId, usersIds, companyIds);
-        }
-        catch
-        {
-            // ignore    
-        }
-
-        await SeedFlexJobs();
+        var owner = await new OwnerScenario(bus).Create();
 
 
+        await SeedAgency(owner.PlatformOwnerId, new SeedConfig());
+        await SeedAgency(owner.PlatformOwnerId, new SeedConfig("Flex Jobs", "flex-jobs", 50, 999));
     }
 
-    private async Task SeedFlexJobs()
+    private async Task SeedAgency(Guid ownerId, SeedConfig config)
     {
-        var organizationData = await new OrganizationScenario(bus).Create("Flex Jobs", "flex-jobs");
-        var usersIds = await new UserScenario(bus).Create(organizationData, 50);
-        var companyIds =await new CompanyScenario(bus).Create(organizationData.OrganizationId, usersIds,999 );
-        
-        await Task.Delay(5000);
+        var organizationData = await new OrganizationScenario(bus).Create(ownerId, config.Name, config.Slug);
+        var usersIds = await new UserScenario(bus).Create(organizationData, config.UsersCount);
+        //await Task.Delay(5000);
+        var companyIds =
+            await new CompanyScenario(bus).Create(organizationData.OrganizationId, usersIds, config.CompaniesCount);
+        //await Task.Delay(5000);
         await new ProductionJobDescriptionScenario(bus).Create(organizationData.OrganizationId, usersIds, companyIds);
         await new TechnicalJobDescriptionScenario(bus).Create(organizationData.OrganizationId, usersIds, companyIds);
     }
-    
+
+    private sealed record SeedConfig(
+        string Name = "Hr Agency",
+        string Slug = "hr-agency",
+        int UsersCount = 20,
+        int CompaniesCount = 101);
 }

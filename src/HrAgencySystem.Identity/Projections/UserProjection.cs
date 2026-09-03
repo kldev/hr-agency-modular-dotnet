@@ -27,7 +27,5 @@ public sealed record UserProjection(Guid Id, Guid OrganizationId,
             @event.CreatedAt);
     }
 
-    public UserSuggestion ToSuggestion() =>
-        new (Id, $"{FirstName} {LastName}", Email);
-
+    public string FullName => $"{FirstName} {LastName}";
 }

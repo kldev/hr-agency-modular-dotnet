@@ -15,10 +15,10 @@ internal static class UserSuggestionsExtensions
     {
         if (string.IsNullOrWhiteSpace(search)) return query;
 
-        var querySearch = $"%{search}%".ToLower();
-        return query.Where(u => u.Email.ToLower().Contains(querySearch) 
-                                || u.FirstName.Contains(querySearch) 
-                                || u.LastName.Contains(querySearch));
+        var querySearch = search.Trim();
+        return query.Where(u => u.Email.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
+                                || u.FirstName.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
+                                || u.LastName.Contains(querySearch, StringComparison.OrdinalIgnoreCase));
     }
 
     public static IQueryable<UserProjection> WithRoles(this IQueryable<UserProjection> query, IReadOnlyList<OrganizationRole> roles)

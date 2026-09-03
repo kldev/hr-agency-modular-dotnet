@@ -1,4 +1,4 @@
-using HrAgencySystem.SharedKernel.Messaging;
+using HrAgencySystem.SharedKernel.Commands;
 
 namespace HrAgencySystem.Company.Application.Commands;
 
@@ -10,4 +10,4 @@ public sealed record CreateCompany(
     string TaxId,
     string RegistrationNumber,
     Guid CreatedBy
-) : ICommand;
+) : ICreateCommand;

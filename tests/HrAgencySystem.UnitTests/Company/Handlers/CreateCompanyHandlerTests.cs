@@ -25,8 +25,8 @@ public class CreateCompanyHandlerTests : BaseTest
     private readonly IOrganizationChecker _checker =
         Substitute.For<IOrganizationChecker>();
 
-    private readonly IUserSnapshotService _snapshotService
-        = Substitute.For<IUserSnapshotService>();
+    private readonly IUserSnapshotRepository _snapshotRepository
+        = Substitute.For<IUserSnapshotRepository>();
 
     private static readonly Guid SalesId = Guid.NewGuid();
 
@@ -61,7 +61,7 @@ public class CreateCompanyHandlerTests : BaseTest
         _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
-        _snapshotService.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Sales);
+        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Sales);
         
         _checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
         
@@ -73,7 +73,7 @@ public class CreateCompanyHandlerTests : BaseTest
             _repository,
             clock,
             _checker,
-            _snapshotService,
+            _snapshotRepository,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.CompanyId);
@@ -115,7 +115,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -160,7 +160,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -192,7 +192,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -224,7 +224,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -256,7 +256,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _checker,
-                _snapshotService,
+                _snapshotRepository,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -306,7 +306,7 @@ public class CreateCompanyHandlerTests : BaseTest
             _repository,
             clock,
             _checker,
-            _snapshotService,
+            _snapshotRepository,
             CancellationToken.None));
 
 

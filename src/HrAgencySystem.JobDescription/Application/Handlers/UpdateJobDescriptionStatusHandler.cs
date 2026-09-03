@@ -15,16 +15,16 @@ public static class UpdateJobDescriptionStatusHandler
     public static async Task<(UpdateJobDescriptionStatusResult, Wolverine.Marten.Events)> Handle(
         UpdateJobDescriptionStatus command,
         Domain.JobDescription aggregate,
-        IUserSnapshotService snapshotService,
+        IUserSnapshotRepository snapshotRepository,
         IClock clock,
         CancellationToken ct)
     {
         if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
         var result = new UpdateJobDescriptionStatusResult(aggregate.Id.Value, command.Status);
 
-        var modifiedBy = await snapshotService.GetUserAsync(command.ModifiedBy, ct);
+        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
         if (modifiedBy == null)
-            throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
         
         if (aggregate.Status == command.Status)
         {

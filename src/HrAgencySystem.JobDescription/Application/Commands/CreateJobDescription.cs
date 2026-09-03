@@ -1,4 +1,5 @@
 using HrAgencySystem.JobDescription.Domain;
+using HrAgencySystem.SharedKernel.Commands;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.JobDescription.Application.Commands;
@@ -21,4 +22,4 @@ public sealed record CreateJobDescription(
     decimal SalaryMax,
     Guid RecruiterId,
     Guid CreatedBy
-    ) : IJobDescription;
+    ) : IJobDescription, ICreateCommand;

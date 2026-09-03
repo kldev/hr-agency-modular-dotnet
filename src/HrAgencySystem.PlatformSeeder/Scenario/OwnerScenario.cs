@@ -6,9 +6,9 @@ namespace HrAgencySystem.PlatformSeeder.Scenario;
 
 internal sealed class OwnerScenario(IMessageBus bus)
 {
-    internal async Task Create()
+    internal async Task<PlatformOwnerCreated> Create()
     {
         var command = new CreatePlatformOwner("admin@hr-agency.com", "pass123");
-        await bus.InvokeAsync<PlatformOwnerCreated>(command);
+        return await bus.InvokeAsync<PlatformOwnerCreated>(command);
     }
 }

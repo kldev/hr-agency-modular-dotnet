@@ -22,11 +22,11 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     private readonly IOrganizationChecker _checker =
         Substitute.For<IOrganizationChecker>();
 
-    private readonly IUserSnapshotService _snapshotService =
-        Substitute.For<IUserSnapshotService>();
+    private readonly IUserSnapshotRepository _snapshotRepository =
+        Substitute.For<IUserSnapshotRepository>();
 
-    private readonly ICompanySnapshotService _companySnapshot =
-        Substitute.For<ICompanySnapshotService>();
+    private readonly ICompanySnapshotRepository _companySnapshot =
+        Substitute.For<ICompanySnapshotRepository>();
 
     private static readonly Guid RecruiterId = Guid.NewGuid();
 
@@ -78,7 +78,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             .Exists(organizationId, Arg.Any<CancellationToken>())
             .Returns(true);
 
-        _snapshotService
+        _snapshotRepository
             .GetUserAsync(RecruiterId, Arg.Any<CancellationToken>())
             .Returns(Recruiter);
 
@@ -359,7 +359,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             .Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(true);
 
-        _snapshotService
+        _snapshotRepository
             .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
             .Returns((UserSnapshot?)null);
 
@@ -367,10 +367,10 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             CreateValidCommand(recruiterId: recruiterId));
 
         Assert.Equal(
-            IUserSnapshotService.NotFoundMessage,
+            IUserSnapshotRepository.NotFoundMessage,
             exception.Message);
 
-        await _snapshotService
+        await _snapshotRepository
             .Received(1)
             .GetUserAsync(
                 recruiterId,
@@ -408,7 +408,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             _documentSession,
             clock ?? TestClock,
             _checker,
-            _snapshotService,
+            _snapshotRepository,
             _companySnapshot,
             CancellationToken.None);
     }

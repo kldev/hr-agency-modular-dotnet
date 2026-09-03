@@ -19,8 +19,8 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
         builder.ConfigureServices(services =>
         {
             services.Replace(ServiceDescriptor.Scoped<IOrganizationChecker, FakeOrganizationChecker>());
-            services.Replace(ServiceDescriptor.Scoped<IUserSnapshotService, FakeUserSnapshot>());
-            services.Replace(ServiceDescriptor.Scoped<ICompanySnapshotService, FakeCompanySnapshot>());
+            services.Replace(ServiceDescriptor.Scoped<IUserSnapshotRepository, FakeUserSnapshot>());
+            services.Replace(ServiceDescriptor.Scoped<ICompanySnapshotRepository, FakeCompanySnapshot>());
             ConfigureAuthentication(services);
         });
         

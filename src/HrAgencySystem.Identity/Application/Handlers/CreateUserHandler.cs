@@ -28,7 +28,7 @@ public static class CreateUserHandler
         IOrganizationChecker checker,
         IPasswordHasher hasher,
         IUserEmailReservationRepository repository,
-        IUserSnapshotService snapshotService,
+        IUserSnapshotRepository snapshotRepository,
         CancellationToken ct)
     {
         var organizationId =
@@ -52,9 +52,9 @@ public static class CreateUserHandler
         }
         else
         {
-            user = await snapshotService.GetUserAsync(command.CreatedBy, ct);
+            user = await snapshotRepository.GetUserAsync(command.CreatedBy, ct);
             if (user is null)
-                throw new BusinessRuleException(IUserSnapshotService.NotFoundMessage);
+                throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
         }
 
         if (await repository.ExistAsync(organizationId, email, ct))
