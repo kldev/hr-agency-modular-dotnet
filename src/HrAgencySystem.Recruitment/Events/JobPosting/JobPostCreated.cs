@@ -1,10 +1,10 @@
-using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.JobDescription.Events;
+namespace HrAgencySystem.Recruitment.Events.JobPosting;
 
-public sealed record JobDescriptionCreated(
+public sealed record JobPostCreated(
+    Guid JobPostingId,
     Guid JobDescriptionId,
     Guid OrganizationId,
     Guid CompanyId,
@@ -24,4 +24,7 @@ public sealed record JobDescriptionCreated(
     UserSnapshot Recruiter,
     UserSnapshot CreatedBy,
     CompanySnapshot Company,
-    DateTimeOffset CreatedAt) : IJobDescription;
+    string LanguageCode,
+    string OrgSlug,
+    string PostingSlug,
+    DateTimeOffset CreatedAt);

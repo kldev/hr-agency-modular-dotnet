@@ -1,11 +1,11 @@
+using HrAgencySystem.Recruitment.Application.JobPosting.Create;
 using HrAgencySystem.SharedKernel.Commands;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.JobDescription.Application.Commands;
+namespace HrAgencySystem.Recruitment.Application.JobPosting.Update;
 
-public sealed record CreateJobDescription(
-    Guid OrganizationId,
-    Guid CompanyId,
+public sealed record UpdateJobPost(
+    Guid JobPostingId,
     string Title,
     string? Summary,
     string Description,
@@ -14,11 +14,10 @@ public sealed record CreateJobDescription(
     IReadOnlyList<string> Skills,
     string Location,
     string CountryCode,
+    LanguageCode LanguageCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    Guid RecruiterId,
-    Guid CreatedBy
-    ) : IJobDescription, ICreateCommand;
+    Guid ModifiedBy) : IJobPostData, IUpdateCommand;

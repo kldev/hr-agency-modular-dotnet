@@ -100,11 +100,11 @@ public class JobDescriptionTests
             jobDescription.Title);
 
         Assert.Equal(
-            JobSummary.Create("Senior developer position"),
+            LongText.Create("Senior developer position"),
             jobDescription.Summary);
 
         Assert.Equal(
-            JobDescriptionText.Create(
+            LongText.Create(
                 "We are looking for an experienced .NET developer."),
             jobDescription.Description);
 
@@ -237,11 +237,11 @@ public class JobDescriptionTests
             jobDescription.Title);
 
         Assert.Equal(
-            JobSummary.Create("Lead developer position"),
+            LongText.Create("Lead developer position"),
             jobDescription.Summary);
 
         Assert.Equal(
-            JobDescriptionText.Create("Updated job description."),
+            LongText.Create("Updated job description."),
             jobDescription.Description);
 
         Assert.Equal(

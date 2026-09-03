@@ -1,10 +1,7 @@
 using System.Net.Mail;
-
-namespace HrAgencySystem.SharedKernel.ValueObjects;
-
 using HrAgencySystem.SharedKernel.Exception;
 
-
+namespace HrAgencySystem.SharedKernel.ValueObjects;
 
 public sealed record Email
 {

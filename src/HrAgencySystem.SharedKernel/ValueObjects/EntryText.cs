@@ -1,6 +1,6 @@
 using HrAgencySystem.SharedKernel.Exception;
 
-namespace HrAgencySystem.JobDescription.Domain.ValueObjects;
+namespace HrAgencySystem.SharedKernel.ValueObjects;
 
 public sealed record EntryText
 {

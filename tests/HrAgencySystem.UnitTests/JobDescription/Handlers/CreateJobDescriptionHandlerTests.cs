@@ -149,7 +149,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             Guid.NewGuid(),
             Guid.NewGuid(),
             "",
-            new string('A', JobSummary.MaxLength + 1),
+            new string('A', LongText.MaxLength + 1),
             "",
             [
                 "",
@@ -178,8 +178,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         Assert.Equal(
             [
                 JobTitle.RequiredMessage,
-                JobSummary.MaxLengthMessage,
-                JobDescriptionText.RequiredMessage,
+                LongText.MaxLengthMessage,
+                LongText.FieldIsRequired("Job description"),
                 JobLocation.MaxLengthMessage,
                 EntryText.RequiredMessage,
                 EntryText.MaxLengthMessage,
@@ -218,8 +218,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         await AssertValidationError(
             CreateValidCommand(
-                summary: new string('A', JobSummary.MaxLength + 1)),
-            JobSummary.MaxLengthMessage);
+                summary: new string('A', LongText.MaxLength + 1)),
+            LongText.MaxLengthMessage);
     }
 
     [Fact]
@@ -227,7 +227,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         await AssertValidationError(
             CreateValidCommand(description: ""),
-            JobDescriptionText.RequiredMessage);
+            LongText.FieldIsRequired("Job description"));
     }
 
     [Fact]
@@ -235,8 +235,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         await AssertValidationError(
             CreateValidCommand(
-                description: new string('A', JobDescriptionText.MaxLength + 1)),
-            JobDescriptionText.MaxLengthMessage);
+                description: new string('A', LongText.MaxLength + 1)),
+            LongText.MaxLengthMessage);
     }
 
     [Fact]

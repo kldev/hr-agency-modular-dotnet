@@ -1,30 +1,25 @@
-using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Commands;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.Recruitment.Events.JobPosting;
+namespace HrAgencySystem.Recruitment.Application.JobPosting.Create;
 
-public sealed record JobPostingCreated(
-    Guid JobPostingId,
+public sealed record CreateJobPost(
     Guid JobDescriptionId,
     Guid OrganizationId,
     Guid CompanyId,
     string Title,
-    string Summary,
+    string? Summary,
     string Description,
     IReadOnlyList<string> Responsibilities,
     IReadOnlyList<string> Requirements,
     IReadOnlyList<string> Skills,
     string Location,
     string CountryCode,
+    LanguageCode LanguageCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
     CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    UserSnapshot Recruiter,
-    UserSnapshot CreatedBy,
-    CompanySnapshot Company,
-    string LanguageCode,
-    string OrgSlug,
-    string PostingSlug,
-    DateTimeOffset CreatedAt);
+    Guid RecruiterId,
+    Guid CreatedBy) : IJobPostData, ICreateCommand;

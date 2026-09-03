@@ -1,22 +1,23 @@
 using HrAgencySystem.SharedKernel.Exception;
 
-namespace HrAgencySystem.SharedKernel.ValueObjects;
+namespace HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
 
-public class TextSummary
+public sealed record PostTitle
 {
-    public const int MaxLength = 5000;
-    
-    public const string MaxLengthMessage =
-        "Note cannot exceed 5000 characters.";
+    public const int MaxLength = 250;
 
-    private TextSummary(string value)
+    public const string RequiredMessage = "Post title is required.";
+    public const string MaxLengthMessage =
+        "Post title cannot exceed 250 characters.";
+
+    private PostTitle(string value)
     {
         Value = value;
     }
 
     public string Value { get; }
 
-    public static TextSummary Create(string value)
+    public static PostTitle Create(string value)
     {
         var (title, error) = TryCreate(value);
 
@@ -25,18 +26,18 @@ public class TextSummary
             : title!;
     }
 
-    public static (TextSummary? title, string? error) TryCreate(
+    public static (PostTitle? title, string? error) TryCreate(
         string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return (new TextSummary(string.Empty), null);
+            return (null, RequiredMessage);
 
         var normalized = value.Trim();
 
         if (normalized.Length > MaxLength)
             return (null, MaxLengthMessage);
 
-        return (new TextSummary(normalized), null);
+        return (new PostTitle(normalized), null);
     }
 
     public override string ToString()

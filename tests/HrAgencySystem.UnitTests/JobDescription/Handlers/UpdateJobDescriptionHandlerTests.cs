@@ -148,7 +148,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             Guid.NewGuid(),
             Guid.NewGuid(),
             "",
-            new string('A', JobSummary.MaxLength + 1),
+            new string('A', LongText.MaxLength + 1),
             "",
             [
                 "",
@@ -184,8 +184,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
         Assert.Equal(
             [
                 JobTitle.RequiredMessage,
-                JobSummary.MaxLengthMessage,
-                JobDescriptionText.RequiredMessage,
+                LongText.MaxLengthMessage,
+                LongText.FieldIsRequired("Job description"),
                 JobLocation.MaxLengthMessage,
                 EntryText.RequiredMessage,
                 EntryText.MaxLengthMessage,
@@ -243,7 +243,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
     public async Task Handle_WithSummaryExceedingMaximumLength_ThrowsValidationException()
     {
         var command = CreateValidCommand(
-            summary: new string('A', JobSummary.MaxLength + 1));
+            summary: new string('A', LongText.MaxLength + 1));
 
         var aggregate = D.JobDescription.Empty();
 
@@ -255,7 +255,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
-            [JobSummary.MaxLengthMessage],
+            [LongText.MaxLengthMessage],
             exception.Errors);
     }
 
@@ -275,7 +275,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
-            [JobDescriptionText.RequiredMessage],
+            [LongText.FieldIsRequired("Job description")],
             exception.Errors);
     }
 
@@ -283,7 +283,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
     public async Task Handle_WithDescriptionExceedingMaximumLength_ThrowsValidationException()
     {
         var command = CreateValidCommand(
-            description: new string('A', JobDescriptionText.MaxLength + 1));
+            description: new string('A', LongText.MaxLength + 1));
 
         var aggregate = D.JobDescription.Empty();
 
@@ -295,7 +295,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
                 TestClock, CancellationToken.None));
 
         Assert.Equal(
-            [JobDescriptionText.MaxLengthMessage],
+            [LongText.MaxLengthMessage],
             exception.Errors);
     }
 

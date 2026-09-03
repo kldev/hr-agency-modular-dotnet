@@ -19,9 +19,9 @@ public sealed class JobDescription
 
     public JobTitle Title { get; private set; } = null!;
 
-    public JobSummary Summary { get; private set; } = null!;
+    public LongText Summary { get; private set; } = null!;
 
-    public JobDescriptionText Description { get; private set; } = null!;
+    public LongText Description { get; private set; } = null!;
 
     public IReadOnlyList<EntryText> Responsibilities { get; private set; } = [];
 
@@ -68,8 +68,8 @@ public sealed class JobDescription
         CompanyId = CompanyId.From(@event.CompanyId);
 
         Title = JobTitle.Create(@event.Title);
-        Summary = JobSummary.Create(@event.Summary);
-        Description = JobDescriptionText.Create(@event.Description);
+        Summary = LongText.Create(@event.Summary);
+        Description = LongText.Create(@event.Description);
 
         Responsibilities = EntryText.Create(@event.Responsibilities);
         Requirements = EntryText.Create(@event.Requirements);
@@ -94,8 +94,8 @@ public sealed class JobDescription
     public void Apply(JobDescriptionUpdated @event)
     {
         Title = JobTitle.Create(@event.Title);
-        Summary = JobSummary.Create(@event.Summary);
-        Description = JobDescriptionText.Create(@event.Description);
+        Summary = LongText.Create(@event.Summary);
+        Description = LongText.Create(@event.Description);
 
         Responsibilities = EntryText.Create(@event.Responsibilities);
         Requirements = EntryText.Create(@event.Requirements);

@@ -1,7 +1,6 @@
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.JobDescription.Domain.ValueObjects;
+namespace HrAgencySystem.SharedKernel.ValueObjects;
 
 public sealed record SalaryRange
 {

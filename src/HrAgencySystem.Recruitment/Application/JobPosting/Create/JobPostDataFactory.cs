@@ -1,17 +1,16 @@
-using HrAgencySystem.JobDescription.Application.Commands;
-using HrAgencySystem.JobDescription.Domain.ValueObjects;
+using HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.JobDescription.Application.Handlers;
+namespace HrAgencySystem.Recruitment.Application.JobPosting.Create;
 
-internal static class JobDescriptionDataFactory
+internal static class JobPostDataFactory
 {
-    internal static JdData Create(IJobDescription command)
+    internal static JdData Create(IJobPostData command)
     {
         var errors = new List<string>();
 
-        var (title, error) = JobTitle.TryCreate(command.Title);
+        var (title, error) = PostTitle.TryCreate(command.Title);
         if (error != null) {
             errors.Add(error);
         }
@@ -31,7 +30,7 @@ internal static class JobDescriptionDataFactory
         if (errorLocation != null) {
             errors.Add(errorLocation);
         }
-
+        
         var (responsibilities, errorsResponsibilities) = TryCreateEntries(command.Responsibilities);
         var (requirements, errorsRequirements) = TryCreateEntries(command.Requirements);
         var (skills, errorsSkills) = TryCreateEntries(command.Skills);
@@ -63,7 +62,8 @@ internal static class JobDescriptionDataFactory
             requirements,
             skills,
             salary!,
-            countryCode!
+            countryCode!,
+            command.LanguageCode
         );
     }
 
@@ -86,7 +86,7 @@ internal static class JobDescriptionDataFactory
     }
     
     internal sealed record JdData(
-        JobTitle Title,
+        PostTitle Title,
         LongText Summary,
         LongText Description,
         JobLocation JobLocation,
@@ -94,6 +94,7 @@ internal static class JobDescriptionDataFactory
         IReadOnlyList<EntryText> Requirements,
         IReadOnlyList<EntryText> Skills,
         SalaryRange SalaryRange,
-        CountryCode  CountryCode
+        CountryCode  CountryCode,
+        LanguageCode LanguageCode
     );
 }
