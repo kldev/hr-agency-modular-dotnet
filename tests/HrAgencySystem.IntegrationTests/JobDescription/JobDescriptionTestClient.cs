@@ -12,6 +12,11 @@ public sealed class JobDescriptionTestClient(
     HttpClient client)
 {
 
+    internal void WithOrganizationId(Guid organizationId)
+    {
+        client.WithOrganizationId(organizationId);
+    }
+    
     internal async Task<JobDescriptionProjection> GetSingle(Guid jobDescriptionId)
     {
         var response = await client.GetAsync($"/api/job-description/{jobDescriptionId}");

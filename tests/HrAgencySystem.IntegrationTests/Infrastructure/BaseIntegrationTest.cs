@@ -14,6 +14,9 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         _environment = environment;
         OutputHelper = output;
         Client.AsOrganizationRoles();
+        JobDescriptionClient = new(environment.CreateClient().AsOrganizationRoles());
+        UserClient = new(environment.CreateClient().AsOrganizationRoles(), OutputHelper);
+        CompanyClient = new(_environment.CreateClient().AsOrganizationRoles());
     }
 
     protected HttpClient Client => _environment.Client;
@@ -21,15 +24,10 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     protected DatabaseCleaner Cleaner => _environment.Cleaner;
     protected ITestOutputHelper OutputHelper { get; }
 
-    protected JobDescriptionTestClient JobDescriptionClient =>
-        new(_environment.CreateClient().AsOrganizationRoles());
+    protected JobDescriptionTestClient JobDescriptionClient { get; }
+    protected UserTestClient UserClient { get; }
+    protected CompanyTestClient CompanyClient { get; }
     
-    protected UserTestClient UserClient =>
-        new(_environment.CreateClient().AsOrganizationRoles(), OutputHelper);
-    
-    protected CompanyTestClient CompanyClient =>
-        new(_environment.CreateClient().AsOrganizationRoles());
-
     public async  Task InitializeAsync()
     {
         await BeforeEachAsync();

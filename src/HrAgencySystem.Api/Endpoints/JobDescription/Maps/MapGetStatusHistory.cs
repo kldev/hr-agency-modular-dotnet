@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.JobDescription.Projections;
 using Marten;
@@ -11,7 +13,8 @@ internal static class MapGetStatusHistory
         group.MapGet("/api/job-description/status", Handler).WithSummary("Get job description status history");
     }
 
-    private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user, Guid? jobDescriptionId,
+    private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user,
+        Guid? jobDescriptionId,
         CancellationToken ct)
     {
         var query = session.Query<JdStatusChangeHistory>()

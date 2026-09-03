@@ -29,7 +29,6 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
             configuration.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["ConnectionStrings:Postgres"] = connectionString,
-                ["AllowFixedId"] = "0",
             });
             builder.UseEnvironment("Testing");
         });

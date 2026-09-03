@@ -1,3 +1,5 @@
+using Xunit.Abstractions;
+
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
 public static class Eventually
@@ -5,7 +7,8 @@ public static class Eventually
     public static async Task AssertAsync(
         Func<Task> assertion,
         TimeSpan? timeout = null,
-        TimeSpan? interval = null)
+        TimeSpan? interval = null,
+        ITestOutputHelper? output = null)
     {
         var timeoutValue = timeout ?? TimeSpan.FromSeconds(5);
         var intervalValue = interval ?? TimeSpan.FromMilliseconds(100);
@@ -23,6 +26,7 @@ public static class Eventually
             catch (Exception exception)
             {
                 lastException = exception;
+                output?.WriteLine(exception.ToString());
             }
 
             await Task.Delay(intervalValue);
