@@ -115,3 +115,11 @@ Authorization: Bearer {{token}}
 ###
 GET {{baseURL}}/api/job-description/{{jdId}}
 Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/job-description?status=Open&status=Closed
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/job-description?search=&companyId=&recruiterId=&page=1&pageSize=100
+Authorization: Bearer {{token}}

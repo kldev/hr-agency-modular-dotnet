@@ -5,6 +5,7 @@ using HrAgencySystem.JobDescription.Application.Result;
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.JobDescription.Projections;
+using HrAgencySystem.SharedKernel.Web;
 
 namespace HrAgencySystem.IntegrationTests.JobDescription;
 
@@ -76,5 +77,13 @@ public sealed class JobDescriptionTestClient(
         }
 
         return await client.GetAsync(url);
+    }
+
+    internal async Task<SliceResponse<JobDescriptionProjection>> GetSlice(string url)
+    {
+        var response = await client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+
+        return (await response.ReadWithJson<SliceResponse<JobDescriptionProjection>>())!;
     }
 }
