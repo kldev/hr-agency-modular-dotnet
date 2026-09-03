@@ -47,8 +47,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             ],
             location: "  Opole  ",
             countryCode: "pl",
-            employmentType: D.EmploymentType.FullTime,
-            workMode: D.WorkMode.Hybrid,
+            employmentType: EmploymentType.FullTime,
+            workMode: WorkMode.Hybrid,
             currencyCode: CurrencyCode.PLN,
             salaryMin: 15000m,
             salaryMax: 22000m);
@@ -100,8 +100,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
 
         Assert.Equal("Opole", result.Location);
         Assert.Equal("PL", result.CountryCode);
-        Assert.Equal(D.EmploymentType.FullTime, result.EmploymentType);
-        Assert.Equal(D.WorkMode.Hybrid, result.WorkMode);
+        Assert.Equal(EmploymentType.FullTime, result.EmploymentType);
+        Assert.Equal(WorkMode.Hybrid, result.WorkMode);
 
         Assert.Equal(
             CurrencyCode.PLN,
@@ -164,8 +164,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             ],
             new string('A', JobLocation.MaxLength + 1),
             "POL",
-            D.EmploymentType.FullTime,
-            D.WorkMode.Remote,
+            EmploymentType.FullTime,
+            WorkMode.Remote,
             CurrencyCode.EUR,
             -1m,
             -2m, Guid.NewGuid());
@@ -478,8 +478,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
     public async Task Handle_WithDifferentEmploymentTypeAndWorkMode_ReturnsUpdatedValues()
     {
         var command = CreateValidCommand(
-            employmentType: D.EmploymentType.PartTime,
-            workMode: D.WorkMode.Remote);
+            employmentType: EmploymentType.PartTime,
+            workMode: WorkMode.Remote);
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(command.OrganizationId));
 
@@ -492,11 +492,11 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
             TestClock, CancellationToken.None);
 
         Assert.Equal(
-            D.EmploymentType.PartTime,
+            EmploymentType.PartTime,
             result.EmploymentType);
 
         Assert.Equal(
-            D.WorkMode.Remote,
+            WorkMode.Remote,
             result.WorkMode);
 
         Assert.Single(events);
@@ -562,8 +562,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
         IReadOnlyList<string>? skills = null,
         string location = "Opole",
         string countryCode = "PL",
-        D.EmploymentType employmentType = D.EmploymentType.FullTime,
-        D.WorkMode workMode = D.WorkMode.Hybrid,
+        EmploymentType employmentType = EmploymentType.FullTime,
+        WorkMode workMode = WorkMode.Hybrid,
         CurrencyCode currencyCode = CurrencyCode.PLN,
         decimal salaryMin = 15000m,
         decimal salaryMax = 22000m)

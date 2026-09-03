@@ -1,4 +1,4 @@
-namespace HrAgencySystem.JobDescription.Domain;
+namespace HrAgencySystem.SharedKernel.ValueObjects;
 
 public enum EmploymentType {
     FullTime,
