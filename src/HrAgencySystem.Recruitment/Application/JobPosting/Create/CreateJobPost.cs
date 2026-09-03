@@ -6,7 +6,6 @@ namespace HrAgencySystem.Recruitment.Application.JobPosting.Create;
 public sealed record CreateJobPost(
     Guid JobDescriptionId,
     Guid OrganizationId,
-    Guid CompanyId,
     string Title,
     string? Summary,
     string Description,

@@ -37,7 +37,7 @@ Content-Type: application/json
 
 ###
 
-@userId = {{getUsers.response.body.$[0].id}}
+@userId = {{getUsers.response.body.content[0].id}}
 ###
 
 
@@ -121,5 +121,150 @@ GET {{baseURL}}/api/job-description?status=Open&status=Closed
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseURL}}/api/job-description?search=&companyId=&recruiterId=&page=1&pageSize=100
+GET {{baseURL}}/api/job-description?search=&companyId=00000000-0000-0000-0000-000000000000&recruiterId=00000000-0000-0000-0000-000000000000&page=1
 Authorization: Bearer {{token}}
+
+
+### create job post
+POST {{baseURL}}/api/recruitment/job-posting
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "jobDescriptionId": "{{jdId}}",
+  "title": "Java Backend Developer",
+  "summary": "Senior",
+  "description": "We are looking for an experienced Java Backend Developer to join our engineering team.",
+  "responsibilities": [
+        "Design and develop backend applications",
+        "Develop and maintain REST APIs",
+        "Write unit and integration tests",
+        "Participate in code reviews",
+        "Cooperate with frontend developers",
+        "Monitor and improve application performance"
+  ],
+  "requirements": [
+     "At least 3 years of experience with Java",
+    "Practical experience with Spring Boot",
+    "Good knowledge of relational databases",
+    "Experience with REST APIs",
+    "Ability to work in a team",
+    "Good English"
+  ],
+  "skills": [
+    "Java 21",
+    "Spring Boot",
+    "PostgreSQL",
+    "REST API",
+    "Docker",
+    "Git"
+  ],
+  "location": "Opole",
+  "countryCode": "PL",
+  "languageCode": "PL",
+  "employmentType": "FullTime",
+  "workMode": "OnSite",
+  "currencyCode": "PLN",
+  "salaryMin": 12000,
+  "salaryMax": 15000,
+  "recruiterId": "{{userId}}"
+}
+
+### create job post
+
+POST {{baseURL}}/api/recruitment/job-posting
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "jobDescriptionId": "{{jdId}}",
+  "title": "Java Backend Developer",
+  "summary": "Senior",
+  "description": "Poszukujemy doświadczonego programisty Java Backend, który dołączy do naszego zespołu inżynierskiego.",
+  "responsibilities": [
+    "Projektowanie i rozwijanie aplikacji backendowych",
+    "Tworzenie i utrzymywanie API REST",
+    "Pisanie testów jednostkowych i integracyjnych",
+    "Udział w przeglądach kodu",
+    "Współpraca z programistami frontendowymi",
+    "Monitorowanie i poprawa wydajności aplikacji"
+  ],
+  "requirements": [
+    "Co najmniej 3 lata doświadczenia w pracy z Javą",
+    "Praktyczne doświadczenie ze Spring Boot",
+    "Dobra znajomość relacyjnych baz danych",
+    "Doświadczenie w pracy z REST API",
+    "Umiejętność pracy w zespole",
+    "Dobra znajomość języka angielskiego"
+  ],
+  "skills": [
+    "Java 21",
+    "Spring Boot",
+    "PostgreSQL",
+    "REST API",
+    "Docker",
+    "Git"
+    ],
+  "location": "Opole",
+  "countryCode": "PL",
+  "languageCode": "EN",
+  "employmentType": "FullTime",
+  "workMode": "OnSite",
+  "currencyCode": "PLN",
+  "salaryMin": 12000,
+  "salaryMax": 15000,
+  "recruiterId": "{{userId}}"
+}
+
+
+
+### create job post
+POST {{baseURL}}/api/recruitment/job-posting
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Vytvoření pracovní nabídky
+
+POST {{baseURL}}/api/recruitment/job-posting
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "jobDescriptionId": "{{jdId}}",
+  "title": "Java Backend Developer",
+  "summary": "Senior",
+  "description": "Hledáme zkušeného Java Backend Developera, který se připojí k našemu vývojovému týmu.",
+  "responsibilities": [
+    "Navrhovat a vyvíjet backendové aplikace",
+    "Vyvíjet a udržovat REST API",
+    "Psát unit a integrační testy",
+    "Účastnit se code review",
+    "Spolupracovat s frontendovými vývojáři",
+    "Monitorovat a zlepšovat výkon aplikací"
+  ],
+  "requirements": [
+    "Minimálně 3 roky zkušeností s Javou",
+    "Praktické zkušenosti se Spring Boot",
+    "Dobrá znalost relačních databází",
+    "Zkušenosti s REST API",
+    "Schopnost pracovat v týmu",
+    "Dobrá znalost angličtiny"
+  ],
+  "skills": [
+    "Java 21",
+    "Spring Boot",
+    "PostgreSQL",
+    "REST API",
+    "Docker",
+    "Git"
+  ],
+  "location": "Opole",
+  "countryCode": "PL",
+  "languageCode": "CZ",
+  "employmentType": "FullTime",
+  "workMode": "OnSite",
+  "currencyCode": "PLN",
+  "salaryMin": 12000,
+  "salaryMax": 15000,
+  "recruiterId": "{{userId}}"
+}

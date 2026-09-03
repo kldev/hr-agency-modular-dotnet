@@ -1,5 +1,6 @@
 using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.JobDescription.Domain;
+using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
 
@@ -7,18 +8,18 @@ namespace HrAgencySystem.PlatformSeeder.Scenario;
 
 internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
 {
-    public async Task Create(
+    public async Task<Guid> Create(
         Guid organizationId,
         IReadOnlyList<Guid> userIds,
         IReadOnlyList<Guid> companyIds)
     {
         if (companyIds.Count == 0 || userIds.Count == 0)
-            return;
+            return Guid.Empty;
 
         var companyIndex = 0;
         var userIndex = 0;
 
-        await Create(
+       var firstJobDescriptionId= await Create(
             userIds[userIndex++ % userIds.Count],
             new CreateJobDescription(
                 organizationId,
@@ -325,16 +326,18 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                 userIds[6 % userIds.Count]
             )
         );
+
+        return firstJobDescriptionId;
     }
 
-    private async Task Create(
+    private async Task<Guid> Create(
         Guid userId,
         CreateJobDescription request)
     {
-        await bus.InvokeAsync(
+        return (await bus.InvokeAsync<JobDescriptionCreated>(
             request with
             { 
                 RecruiterId = userId
-            });
+            })).JobDescriptionId;
     }
 }

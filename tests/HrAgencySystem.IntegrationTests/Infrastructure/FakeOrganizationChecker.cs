@@ -10,4 +10,9 @@ public sealed class FakeOrganizationChecker : IOrganizationChecker
     {
         return Task.FromResult(true);
     }
+
+    public Task<string?> GetSlug(Guid organizationId, CancellationToken ct)
+    {
+        return Task.FromResult((string?)"hr-agency");
+    }
 }
