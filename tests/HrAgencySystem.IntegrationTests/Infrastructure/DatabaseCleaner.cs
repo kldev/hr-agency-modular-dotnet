@@ -1,6 +1,8 @@
 using HrAgencySystem.Company.Infrastructure.Persistence;
+using HrAgencySystem.Company.Projections;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.JobDescription.Projections;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
 using Npgsql;
 
@@ -29,7 +31,12 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<UserEmailReservation>("identity");
         await CleanTable<UserProjection>("identity");
     }
-    
+
+    public async Task CleanCompany()
+    {
+        await CleanTable<CompanyTaxIdReservation>("company");
+        await CleanTable<CompanyProjection>("company");
+    }
 
     public async Task CleanOrganizationReservation()
     {
@@ -39,6 +46,12 @@ public sealed class DatabaseCleaner(string connectionString)
     public async Task CleanCompanyTaxIds()
     {
         await CleanTable<CompanyTaxIdReservation>("company");
+    }
+
+    public async Task CleanJobDescriptions()
+    {
+        await CleanTable<JobDescriptionProjection>("job_description");
+        await CleanTable<JdStatusChangeHistory>("job_description");
     }
 
     private async Task TruncateTable(string sql)

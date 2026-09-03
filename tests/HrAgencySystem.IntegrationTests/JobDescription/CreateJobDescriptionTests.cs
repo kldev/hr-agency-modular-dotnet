@@ -9,8 +9,8 @@ namespace HrAgencySystem.IntegrationTests.JobDescription;
 [Collection(IntegrationCollection.Name)]
 public sealed class CreateJobDescriptionTests(
     IntegrationEnvironment env,
-    ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(env, outputHelper)
+    ITestOutputHelper output)
+    : BaseIntegrationTest(env, output)
 {
     [Fact]
     public async Task ShouldCreateJobDescription()
@@ -29,12 +29,10 @@ public sealed class CreateJobDescriptionTests(
             request);
 
         // Assert
-        var result = await response.ReadWithJson<JobDescriptionCreated>(outputHelper);
+        var result = await response.ReadWithJson<JobDescriptionCreated>(OutputHelper);
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(response.Headers.Location);
-
-       
-
+        
         Assert.NotNull(result);
         Assert.NotEqual(Guid.Empty, result.JobDescriptionId);
     }
@@ -45,8 +43,7 @@ public sealed class CreateJobDescriptionTests(
         // Arrange
         Client
             .WithOrganizationId(Guid.NewGuid());
-            
-
+        
         var request = JobDescriptionTestData.CreateRequest() with
         {
             Title = JobDescriptionTestData.InvalidTitle

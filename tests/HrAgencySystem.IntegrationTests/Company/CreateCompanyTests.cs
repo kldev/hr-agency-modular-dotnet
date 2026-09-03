@@ -15,11 +15,12 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Company;
 
 [Collection(IntegrationCollection.Name)]
-public class CreateCompanyTests : BaseIntegrationTest
+public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)
+    : BaseIntegrationTest(env, outputHelper)
 {
-    public CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper outputHelper) : base(env, outputHelper)
+    protected override async Task BeforeEachAsync()
     {
-        Cleaner.CleanCompanyTaxIds().Wait();
+        await Cleaner.CleanCompanyTaxIds();
     }
 
     private static MapCreate.CreateCompanyRequest CreateCompanyRequest(

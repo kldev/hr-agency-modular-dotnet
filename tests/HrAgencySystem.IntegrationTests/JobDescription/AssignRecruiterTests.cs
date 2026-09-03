@@ -9,8 +9,8 @@ namespace HrAgencySystem.IntegrationTests.JobDescription;
 [Collection(IntegrationCollection.Name)]
 public sealed class AssignRecruiterTests(
     IntegrationEnvironment env,
-    ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(env, outputHelper)
+    ITestOutputHelper output)
+    : BaseIntegrationTest(env, output)
 {
     [Fact]
     public async Task ShouldAssignRecruiter()
@@ -24,10 +24,8 @@ public sealed class AssignRecruiterTests(
         var createResponse = await Client.PostAsJsonAsync(
             "/api/job-description",
             createRequest);
-
-   
-
-        var created = await createResponse.ReadWithJson<JobDescriptionCreated>(outputHelper);
+        
+        var created = await createResponse.ReadWithJson<JobDescriptionCreated>(OutputHelper);
         createResponse.EnsureSuccessStatusCode();
         var recruiterId = Guid.NewGuid();
 

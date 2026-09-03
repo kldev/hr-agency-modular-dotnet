@@ -21,6 +21,7 @@ internal static class CompanySuggestionExtensions
 
     public static IQueryable<CompanyProjection> WithCountryCode(this IQueryable<CompanyProjection> query, string countryCode)
     {
-        return string.IsNullOrWhiteSpace(countryCode) ? query : query.Where(z => z.CountryCode == countryCode);
+        return string.IsNullOrWhiteSpace(countryCode) ? query : 
+            query.Where(z => z.CountryCode.Contains( countryCode, StringComparison.OrdinalIgnoreCase));
     }
 }

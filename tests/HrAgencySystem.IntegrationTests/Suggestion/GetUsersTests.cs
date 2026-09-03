@@ -6,15 +6,15 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Suggestion;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class GetUsersTests : BaseIntegrationTest
+public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutputHelper output)
+    : BaseIntegrationTest(environment, output)
 {
-    public GetUsersTests(IntegrationEnvironment environment, ITestOutputHelper output)
-    : base(environment, output)
-    {
-        Cleaner.CleanUsers().Wait();
-        SetupUsers().Wait();
+    protected override async Task BeforeEachAsync()
+    { 
+        await Cleaner.CleanUsers();
+        await SetupUsers();
     }
-    
+
     private readonly Guid OrganizationId = Guid.NewGuid();
     private readonly Guid OtherOrganizationId = Guid.NewGuid();
 
