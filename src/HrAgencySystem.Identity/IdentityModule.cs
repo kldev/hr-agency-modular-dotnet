@@ -26,6 +26,7 @@ public static class IdentityModule
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddOptions<JwtConfig>(JwtConfig.Section);
         services.AddScoped<IUserSuggestionRepository, UserSuggestionRepository>();
+        services.AddScoped<IUserQueryRepository, UserQueryRepository>();
     }
     
     public static void ConfigureMarten(
@@ -49,7 +50,8 @@ public static class IdentityModule
         options.Schema.For<UserProjection>().DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })
             .Index(x => new { x.OrganizationId, x.Email, x.Id })
-            .Index(z=> new { z.OrganizationId, z.CreatedAt});
+            .Index(z=> new { z.OrganizationId, z.CreatedAt})
+            .Index(z=> new { z.OrganizationId, z.Role});
 
         options.Projections.Snapshot<OwnerProjection>(SnapshotLifecycle.Async);
         options.Schema.For<OwnerProjection>().DatabaseSchemaName(SchemaName)

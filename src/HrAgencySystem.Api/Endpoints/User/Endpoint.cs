@@ -8,6 +8,6 @@ public static class Endpoint
         
         Maps.MapCreate.Map(group);
         Maps.MapGet.Map(group);
-        Maps.MapGetAll.Map(group);
+        Maps.MapGetSlice.Map(group);
     }
 }

@@ -1,5 +1,6 @@
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.SharedKernel.Web;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.User;
@@ -37,7 +38,7 @@ public sealed class GetUsersTests(
 
                 response.EnsureSuccessStatusCode();
 
-                var users = (await response.ReadWithJson<List<UserProjection>>(output))!;
+                var users = (await response.ReadWithJson<SliceResponse<UserProjection>>(output))!.Content;
                 
                 Assert.Contains(users, x => x.Id == firstUser.Id);
                 Assert.Contains(users, x => x.Id == secondUser.Id);
@@ -59,8 +60,8 @@ public sealed class GetUsersTests(
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var result = await response.ReadWithJson<List<UserProjection>>(
-            output);
+        var result = (await response.ReadWithJson<SliceResponse<UserProjection>>(
+            output))!.Content;
 
         Assert.NotNull(result);
         Assert.Empty(result);

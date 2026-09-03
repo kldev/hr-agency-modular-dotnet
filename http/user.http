@@ -1,8 +1,6 @@
 @baseURL = http://localhost:5000/api/users
 @baseLogin = http://localhost:5000
 
-@fixedOrganizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
-
 ### Login Platform User
 # @name login
 POST {{baseLogin}}/api/auth/login
@@ -27,8 +25,7 @@ Authorization: Bearer {{token}}
     "email": "j.smith@hr-agency.fake",
     "firstName": "John",
     "lastName": "Smith",
-    "password": "admin123",
-    "organizationId": "{{fixedOrganizationId}}",
+    "password": "admin123",    
     "role": "Admin"
 }
 
@@ -46,8 +43,7 @@ Authorization: Bearer {{token}}
     "email": "j.smith{{randomVal}}@hr-agency.fake",
     "firstName": "John",
     "lastName": "Smith{{randomVal}}",
-    "password": "admin{{randomVal}}",
-    "organizationId": "{{fixedOrganizationId}}",
+    "password": "admin{{randomVal}}",    
     "role": "Recruiter"
 }
 
@@ -56,6 +52,12 @@ Authorization: Bearer {{token}}
 
 ### Get user
 GET {{baseURL}}/{{userId}}
+Authorization: Bearer {{token}}
 
 ### Get user list
 GET {{baseURL}}
+Authorization: Bearer {{token}}
+
+### Get user list
+GET {{baseURL}}?pageSize=2&page=2
+Authorization: Bearer {{token}}

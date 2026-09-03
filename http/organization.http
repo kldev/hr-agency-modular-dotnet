@@ -1,8 +1,6 @@
 @baseURL = http://localhost:5000/api/organization
 @baseLogin = http://localhost:5000
 
-@fixedOrganizationId = 1ea044bf-48cc-4ed3-9174-cc0f5b8a0583
-
 ### Login Owner
 # @name login
 POST {{baseLogin}}/api/owner/login
@@ -24,8 +22,7 @@ Authorization: Bearer {{token}}
 
 {
     "name": "HR Agency",
-    "slug": "hr-agency",
-    "fixedId": "{{fixedOrganizationId}}"
+    "slug": "hr-agency"    
 }
 
 ### Create organization without name
@@ -63,7 +60,7 @@ Content-Type: application/json
 
 
 ###
-@hrAgencyId = {{hrAgencyCreate.response.body.$.organizationId}}
+@hrAgencyId = {{createOrganization.response.body.$.organizationId}}
 ### Update organization slug
 PUT {{baseURL}}/{{hrAgencyId}}/slug
 Authorization: Bearer {{token}}
