@@ -42,6 +42,7 @@ public static class RecruitmentModule
 
     private static void ConfigureEvents(StoreOptions options)
     {
+        // Job Application
         options.Events.AddEventType<Events.JobApplication.JobApplicationCreated>();
         options.Events.AddEventType<Events.JobApplication.JobApplicationAssessmentStarted>();
         options.Events.AddEventType<Events.JobApplication.JobApplicationHired>();
@@ -50,6 +51,17 @@ public static class RecruitmentModule
         options.Events.AddEventType<Events.JobApplication.JobApplicationRejected>();
         options.Events.AddEventType<Events.JobApplication.JobApplicationScreeningStarted>();
         options.Events.AddEventType<Events.JobApplication.JobApplicationWithdrawn>();
+        
+        // Job Posting
+        options.Events.AddEventType<Events.JobPosting.JobPostCreated>();
+        options.Events.AddEventType<Events.JobPosting.JobPostUpdated>();
+        options.Events.AddEventType<Events.JobPosting.JobPostToChannel>();
+        options.Events.AddEventType<Events.JobPosting.JobPostPublished>();
+        options.Events.AddEventType<Events.JobPosting.JobPostClosed>();
+        options.Events.AddEventType<Events.JobPosting.JobPostArchived>();
+        
+        // Candidate
+        options.Events.AddEventType<Events.Candidate.CandidateCreated>();
     }
 
     private static void ConfigureProjections(StoreOptions options)
@@ -61,5 +73,20 @@ public static class RecruitmentModule
             .For<JobApplicationProjection>()
             .DatabaseSchemaName(SchemaName)
             .Index(x => new { OrganizationId = x.OrgId });
+        
+        options.Projections.Snapshot<JobPostingProjection>(
+            SnapshotLifecycle.Async);
+
+        options.Schema
+            .For<JobPostingProjection>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(x => new { OrganizationId = x.OrganizationId })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.CompanyId })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.Status })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.LangugageCode })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.RecruiterId })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.Title, x.Id })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.Company.Name })
+            .Index(x => new { OrganizationId = x.OrganizationId, x.Company.TaxId });
     }
 }

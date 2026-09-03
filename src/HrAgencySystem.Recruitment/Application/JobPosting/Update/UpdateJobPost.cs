@@ -14,7 +14,7 @@ public sealed record UpdateJobPost(
     IReadOnlyList<string> Skills,
     string Location,
     string CountryCode,
-    LanguageCode LanguageCode,
+    string LanguageCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
     CurrencyCode CurrencyCode,

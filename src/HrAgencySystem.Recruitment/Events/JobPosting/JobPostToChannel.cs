@@ -7,5 +7,4 @@ public sealed record JobPostToChannel(
     Guid JobPostId,
     JobPostingChannel Channel,
     DateTimeOffset OccurredAt,
-    Guid AuthorId,
     UserSnapshot Author) : IJobPostEvent;

@@ -15,7 +15,7 @@ public interface IJobPostData
     EmploymentType EmploymentType { get; }
     WorkMode WorkMode { get; }
     
-    LanguageCode LanguageCode { get; }
+    string LanguageCode { get; }
     CurrencyCode CurrencyCode { get; }
     
     decimal SalaryMin { get; }

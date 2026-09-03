@@ -1,0 +1,152 @@
+using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.ValueObjects;
+
+namespace HrAgencySystem.Recruitment.Projections;
+
+public sealed record JobPostingProjection(
+    Guid Id,
+    Guid JobDescriptionId,
+    Guid OrganizationId,
+    Guid CompanyId,
+    string Title,
+    string Summary,
+    string Description,
+    IReadOnlyList<string> Responsibilities,
+    IReadOnlyList<string> Requirements,
+    IReadOnlyList<string> Skills,
+    string Location,
+    string LanguageCode,
+    string CountryCode,
+    EmploymentType EmploymentType,
+    WorkMode WorkMode,
+    CurrencyCode CurrencyCode,
+    decimal SalaryMin,
+    decimal SalaryMax,
+    JobPostingStatus Status,
+    Guid RecruiterId,
+    UserSnapshot Recruiter,
+    Guid CreatedById,
+    UserSnapshot CreatedBy,
+    Guid? ModifiedById,
+    UserSnapshot? ModifiedBy,
+    CompanySnapshot Company,
+    IReadOnlyList<JobPost> Posts,
+    DateTimeOffset CreatedAt,
+    DateTimeOffset UpdatedAt)
+{
+    public static JobPostingProjection Create(
+        JobPostCreated @event)
+    {
+        return new JobPostingProjection(
+            @event.JobPostingId,
+            @event.JobDescriptionId,
+            @event.OrganizationId,
+            @event.CompanyId,
+            @event.Title,
+            @event.Summary,
+            @event.Description,
+            @event.Responsibilities,
+            @event.Requirements,
+            @event.Skills,
+            @event.Location,
+            @event.LanguageCode,
+            @event.CountryCode,
+            @event.EmploymentType,
+            @event.WorkMode,
+            @event.CurrencyCode,
+            @event.SalaryMin,
+            @event.SalaryMax,
+            JobPostingStatus.Draft,
+            @event.Recruiter.Id,
+            @event.Recruiter,
+            @event.CreatedBy.Id,
+            @event.CreatedBy,
+            null,
+            null,
+            @event.Company,
+            [],
+            @event.CreatedAt,
+            @event.CreatedAt);
+    }
+
+    public JobPostingProjection Apply(
+        JobPostUpdated @event)
+    {
+        return this with
+        {
+            Title = @event.Title,
+            Summary = @event.Summary ?? "",
+            Description = @event.Description,
+            Responsibilities = @event.Responsibilities,
+            Requirements = @event.Requirements,
+            Skills = @event.Skills,
+            Location = @event.Location,
+            CountryCode = @event.CountryCode,
+            EmploymentType = @event.EmploymentType,
+            WorkMode = @event.WorkMode,
+            CurrencyCode = @event.CurrencyCode,
+            SalaryMin = @event.SalaryMin,
+            SalaryMax = @event.SalaryMax,
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.Author.Id,
+            ModifiedBy = @event.Author
+        };
+    }
+
+    public JobPostingProjection Apply(
+        JobPostToChannel @event)
+    {
+        var posts = Posts
+            .Append(new JobPost(
+                @event.Channel,
+                @event.OccurredAt))
+            .ToArray();
+
+        return this with
+        {
+            Status = JobPostingStatus.Published,
+            Posts = posts,
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.Author.Id,
+            ModifiedBy = @event.Author
+        };
+    }
+
+    public JobPostingProjection Apply(
+        JobPostPublished @event)
+    {
+        return this with
+        {
+            Status = JobPostingStatus.Published,
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.Author.Id,
+            ModifiedBy = @event.Author
+        };
+    }
+
+    public JobPostingProjection Apply(
+        JobPostClosed @event)
+    {
+        return this with
+        {
+            Status = JobPostingStatus.Closed,
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.Author.Id,
+            ModifiedBy = @event.Author
+        };
+    }
+
+    public JobPostingProjection Apply(
+        JobPostArchived @event)
+    {
+        return this with
+        {
+            Status = JobPostingStatus.Archived,
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.Author.Id,
+            ModifiedBy = @event.Author
+        };
+    }
+}

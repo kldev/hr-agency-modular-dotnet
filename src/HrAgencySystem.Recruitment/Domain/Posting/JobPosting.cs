@@ -62,6 +62,9 @@ public sealed class JobPosting
     public Guid CreatedBy { get; set; }
 
     public Guid? ModifiedBy { get; set; } = null;
+    
+    private readonly List<JobPost> _posts = [];
+    public IReadOnlyList<JobPost> Posts => _posts;
 
     public void Apply(JobPostCreated @event)
     {
@@ -94,6 +97,71 @@ public sealed class JobPosting
         CreatedAt = @event.CreatedAt;
         UpdatedAt = @event.CreatedAt;
     }
+
+    public void Apply(JobPostUpdated @event)
+    {
+        Title = PostTitle.Create(@event.Title);
+        Summary = LongText.Create(@event.Summary ?? "");
+        Description = LongText.Create(@event.Description);
+
+        Responsibilities = EntryText.Create(@event.Responsibilities);
+        Requirements = EntryText.Create(@event.Requirements);
+        Skills = EntryText.Create(@event.Skills);
+
+        Location = JobLocation.Create(@event.Location);
+        CountryCode = CountryCode.Create(@event.CountryCode);
+        LanguageCode = LanguageCode.Create(@event.LanguageCode);
+
+        EmploymentType = @event.EmploymentType;
+        WorkMode = @event.WorkMode;
+        SalaryRange = SalaryRange.Create(@event.SalaryMin, @event.SalaryMax, @event.CurrencyCode);
+
+        ApplyCommon(@event);
+    }
+
+    public void Apply(JobPostArchived @event)
+    {
+        Status = JobPostingStatus.Archived;
+        ApplyCommon(@event);
+    }
     
+    public void Apply(JobPostClosed @event)
+    {
+        Status = JobPostingStatus.Closed;
+        ApplyCommon(@event);
+    }
     
+    public void Apply(JobPostToChannel @event)
+    {
+        RequireNotFinal();
+        Status = JobPostingStatus.Published;
+        _posts.Add(new JobPost(@event.Channel, @event.OccurredAt));
+        
+        ApplyCommon(@event);
+    }
+    
+    public void Apply(JobPostPublished @event)
+    {
+        Status = JobPostingStatus.Published;
+        ApplyCommon(@event);
+    }
+    
+    private void RequireNotFinal()
+    {
+        if (Status is
+            JobPostingStatus.Closed or
+            JobPostingStatus.Archived)
+        {
+            throw new InvalidOperationException(
+                $"Application is already in final status: {Status}.");
+        }
+    }
+
+    private void ApplyCommon(IJobPostEvent @event)
+    {
+        UpdatedAt = @event.OccurredAt;
+        ModifiedBy = @event.Author.Id;
+    }
+
+
 }

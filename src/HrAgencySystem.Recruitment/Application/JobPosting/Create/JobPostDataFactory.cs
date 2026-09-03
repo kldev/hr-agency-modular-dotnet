@@ -50,6 +50,11 @@ internal static class JobPostDataFactory
             errors.Add(errorCountryCode);
         }
         
+        var (languageCode, errorLanguageCode) = LanguageCode.TryCreate(command.LanguageCode);
+        if (errorLanguageCode != null) {
+            errors.Add(errorLanguageCode);
+        }
+        
         if (errors.Count > 0)
             throw new ValidationException(errors);
 
@@ -63,7 +68,7 @@ internal static class JobPostDataFactory
             skills,
             salary!,
             countryCode!,
-            command.LanguageCode
+            languageCode!
         );
     }
 
