@@ -41,4 +41,9 @@ internal static class JobDescriptionProjectionExtensions
     {
         return statuses.Count == 0 ? query : query.Where(u => statuses.Contains(u.Status));
     }
+    
+    internal static IQueryable<JobDescriptionProjection> WithJobDescriptionId(this IQueryable<JobDescriptionProjection> query, Guid jobDescriptionId)
+    {
+        return query.Where(q => q.Id == jobDescriptionId);
+    }
 }

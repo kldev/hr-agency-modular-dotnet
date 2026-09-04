@@ -1,5 +1,6 @@
-using System.Net;
+using HrAgencySystem.Api.Common.Response;
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Projections;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
@@ -12,22 +13,17 @@ internal static class MapGet
     {
         group.MapGet("/api/companies/{companyId:guid}", Handler).WithSummary("Get company");
     }
-    
-    private static async Task<IResult> Handler(AppUserAuthenticated user, IDocumentSession session, Guid companyId, CancellationToken ct)
+
+    private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository, Guid companyId,
+        CancellationToken ct)
     {
-        var result = await session.Query<CompanyProjection>()
-            .Where(z => z.Id == companyId && z.OrganizationId == user.OrganizationId)
-            .FirstOrDefaultAsync(ct);
+        var result = await repository.GetCompany(user.OrganizationId, companyId, "", ct);
 
         if (result == null)
         {
-            return TypedResults.NotFound(new ProblemDetails()
-            {
-                Title = "Not found",
-                Detail = $"Company with id {companyId} not found", Status = (int)HttpStatusCode.NotFound
-            });
+            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Company", companyId));
         }
-
+        
         return TypedResults.Ok(result);
     }
 }

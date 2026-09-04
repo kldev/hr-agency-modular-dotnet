@@ -25,4 +25,10 @@ internal static class UserProjectionExtensions
     {
         return roles.Count == 0 ? query : query.Where(u => roles.Contains(u.Role));
     }
+    
+    public static IQueryable<UserProjection> WithUserId(this IQueryable<UserProjection> query,
+        Guid userId)
+    {
+        return query.Where(u => u.Id == userId);
+    }
 }

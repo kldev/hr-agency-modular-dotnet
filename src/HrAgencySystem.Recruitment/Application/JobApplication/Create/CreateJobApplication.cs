@@ -6,5 +6,4 @@ public sealed record CreateJobApplication(
     Guid JobPostId,
     string Email,
     string PhoneNumber,
-    CandidateSource Source,
-    DateTimeOffset CreatedAt);
+    CandidateSource Source);

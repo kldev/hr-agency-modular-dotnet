@@ -9,4 +9,5 @@ public sealed record CandidateCreated(Guid Id,
     string PhoneNumber, 
     CandidateSource Source, 
     DateTimeOffset CreatedAt,
-    UserSnapshot? CreatedBy);
+    UserSnapshot? CreatedBy,
+    Guid? CompanyId);

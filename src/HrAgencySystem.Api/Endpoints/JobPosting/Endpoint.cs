@@ -10,5 +10,6 @@ internal static class Endpoint
         Maps.MapUpdate.Map(group);
         Maps.MapChangeRecruiter.Map(group);
         Maps.MapGet.Map(group);
+        Maps.MapApplyTo.Map(group);
     }
 }

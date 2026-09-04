@@ -15,17 +15,19 @@ public sealed class CompaniesQueryRepository(IQuerySession session)
         int pageSize = 10)
     {
         var query = session.Query<CompanyProjection>()
-            .Where(c => c.OrganizationId == organizationId);
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            query = query.Where(c => c.Name.Contains(search));
-        }
-
-        query = query
+            .WithOrganizationId(organizationId)
+            .WithSearch(search)
             .OrderBy(c => c.Name)
             .ThenBy(c => c.Id);
 
         return query.ToSlice(page, pageSize);
+    }
+
+    public async Task<CompanyProjection?> GetCompany(Guid organizationId, Guid? companyId, string taxId, CancellationToken ct)
+    {
+        return await session.Query<CompanyProjection>()
+            .WithOrganizationId(organizationId)
+            .WithCompanyId(companyId)
+            .WithTax(taxId).SingleOrDefaultAsync(ct);
     }
 }

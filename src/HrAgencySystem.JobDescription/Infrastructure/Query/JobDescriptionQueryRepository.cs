@@ -17,4 +17,12 @@ public class JobDescriptionQueryRepository(IDocumentSession session) : IJobDescr
             .WithStatuses(query.Statuses)
             .ToSlice(query, ct);
     }
+
+    public async Task<JobDescriptionProjection?> GetJobDescription(Guid organizationId, Guid jobDescriptionId, CancellationToken ct)
+    {
+        return await session.Query<JobDescriptionProjection>()
+            .WithOrganizationId(organizationId)
+            .WithJobDescriptionId(jobDescriptionId)
+            .SingleOrDefaultAsync(ct);
+    }
 }

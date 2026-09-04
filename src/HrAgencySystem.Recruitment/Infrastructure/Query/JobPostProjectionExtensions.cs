@@ -50,4 +50,9 @@ internal static class JobPostProjectionExtensions
         
         return upperCaseLanguages.Count == 0 ? query : query.Where(u => upperCaseLanguages.Contains(u.LanguageCode));
     }
+    
+    internal static IQueryable<JobPostProjection> WithPostId(this IQueryable<JobPostProjection> query, Guid postId)
+    {
+        return query.Where(q => q.Id == postId);
+    }
 }

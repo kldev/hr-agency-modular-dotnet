@@ -27,6 +27,14 @@ public class JobPostQueryRepository(IDocumentSession session) : IJobPostQueryRep
     public async Task<JobPostInfo> GetJobPostInfo(Guid jobPostId, CancellationToken ct)
     {
         var result = await session.Query<JobPostProjection>().Where(z => z.Id == jobPostId).SingleOrDefaultAsync(ct);
-        return result is null ? throw new NotFoundException("Job post not found") : new JobPostInfo(result.Id, result.OrgId);
+        return result is null ? throw new NotFoundException("Job post not found") : new JobPostInfo(result.Id, result.OrgId, result.CompanyId);
+    }
+
+    public async Task<JobPostProjection?> GetJobPost(Guid organizationId, Guid jobPostId, CancellationToken ct)
+    {
+        return await session.Query<JobPostProjection>()
+            .WithOrganizationId(organizationId)
+            .WithPostId(jobPostId)
+            .SingleOrDefaultAsync(ct);
     }
 }

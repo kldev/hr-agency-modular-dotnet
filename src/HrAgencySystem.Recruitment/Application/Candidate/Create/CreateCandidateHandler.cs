@@ -42,7 +42,8 @@ public static class CreateCandidateHandler
             phone.Value,
             command.Source, 
             clock.UtcNow, 
-            createdBy);
+            createdBy,
+            command.CompanyId);
 
         return @event;
     }

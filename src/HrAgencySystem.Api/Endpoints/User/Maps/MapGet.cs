@@ -1,5 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common.Response;
 using HrAgencySystem.Identity.Projections;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
@@ -22,11 +23,9 @@ internal static class MapGet
             .Where(z => z.Id == userId && z.OrganizationId == user.OrganizationId).SingleOrDefaultAsync(ct);
 
         if (result == null)
-            return TypedResults.NotFound(new ProblemDetails()
-            {
-                Title = "User not found",
-                Status = StatusCodes.Status404NotFound, Detail = $"User with {userId} id not found"
-            });
+        {
+            return TypedResults.NotFound(DomainObjectNotFound.NotFound("User", userId));
+        }
 
         return TypedResults.Ok(result);
     }

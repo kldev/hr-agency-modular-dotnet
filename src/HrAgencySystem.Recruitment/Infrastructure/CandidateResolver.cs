@@ -32,7 +32,7 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session)
     {
         var email = Email.Create(command.Email);
         var projection = await session.Query<CandidateProjection>()
-            .Where(z => z.OrganizationId == command.OrganizationId && z.Email == email.Value).FirstOrDefaultAsync(ct);
+            .Where(z => z.OrgId == command.OrganizationId && z.Email == email.Value).FirstOrDefaultAsync(ct);
 
         return projection != null
             ? new CandidateInfo(projection.Id, email, CandidatePhoneNumber.Create(projection.PhoneNumber))

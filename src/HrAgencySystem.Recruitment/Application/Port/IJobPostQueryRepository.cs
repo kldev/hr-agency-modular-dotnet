@@ -10,9 +10,10 @@ public interface IJobPostQueryRepository
 {
     Task<SliceResponse<JobPostResponse>> GetJobPosts(Guid organizationId, JobPostQuery query, CancellationToken ct);
     Task<JobPostInfo> GetJobPostInfo(Guid jobPostId, CancellationToken ct);
+    Task<JobPostProjection?>  GetJobPost(Guid organizationId, Guid jobPostId, CancellationToken ct);
 }
 
-public sealed record JobPostInfo(Guid Id, Guid OrganizationId);
+public sealed record JobPostInfo(Guid Id, Guid OrganizationId, Guid CompanyId);
 
 public sealed record JobPostQuery(string Search, 
     Guid? CompanyId, 

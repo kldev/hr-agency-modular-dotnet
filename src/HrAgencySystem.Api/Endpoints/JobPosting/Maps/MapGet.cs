@@ -1,5 +1,7 @@
 using System.Net;
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common.Response;
+using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Projections;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
@@ -13,18 +15,13 @@ internal static class MapGet
         group.MapGet("/api/recruitment/job-posting/{jobPostId:guid}", Handler).WithSummary("Get job post");
     }
 
-    private static async Task<IResult> Handler(IQuerySession session, AppUserAuthenticated user, Guid jobPostId, CancellationToken ct)
+    private static async Task<IResult> Handler(IJobPostQueryRepository repository, AppUserAuthenticated user, Guid jobPostId, CancellationToken ct)
     {
-        var result = await session.Query<JobPostProjection>()
-            .Where(z => z.Id == jobPostId && z.OrgId == user.OrganizationId).FirstOrDefaultAsync(ct);
+        var result = await repository.GetJobPost(user.OrganizationId, jobPostId, ct);
 
         if (result == null)
         {
-            return TypedResults.NotFound(new ProblemDetails()
-            {
-                Title = "Not found",
-                Detail = $"Job post with id {jobPostId} not found", Status = (int)HttpStatusCode.NotFound
-            });
+            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Job post", jobPostId));
         }
         
         return TypedResults.Ok(result);

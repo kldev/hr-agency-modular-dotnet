@@ -21,6 +21,7 @@ public static class RecruitmentModule
         services.AddScoped<IJobPostQueryRepository,JobPostQueryRepository>();
         services.AddScoped<ITagSuggestionRepository, TagSuggestionRepository>();
         services.AddScoped<ICandidateEmailReservationRepository, CandidateEmailReservationRepository>();
+        services.AddScoped<ICandidateQueryRepository, CandidateQueryRepository>();
     }
 
     public static void ConfigureMarten(
@@ -104,10 +105,10 @@ public static class RecruitmentModule
         options.Schema
             .For<CandidateProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { x.OrganizationId })
-            .Index(x => new { x.OrganizationId, x.Email })
-            .Index(x => new { x.OrganizationId, x.PhoneNumber })
-            .Index(x => new { x.OrganizationId, x.CreatedAt });
+            .Index(x => new { OrganizationId = x.OrgId })
+            .Index(x => new { OrganizationId = x.OrgId, x.Email })
+            .Index(x => new { OrganizationId = x.OrgId, x.PhoneNumber })
+            .Index(x => new { OrganizationId = x.OrgId, x.CreatedAt });
         
     }
 }

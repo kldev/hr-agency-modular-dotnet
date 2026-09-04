@@ -9,7 +9,7 @@ public sealed record CandidateProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid Id,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    Guid OrganizationId,
+    Guid OrgId,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string Email,
     // ReSharper disable once NotAccessedPositionalProperty.Global
@@ -28,8 +28,10 @@ public sealed record CandidateProjection(
     UserSnapshot? ModifiedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid? ModifyById,
-    IReadOnlyList<Tag> Tags
-)
+    IReadOnlyList<Tag> Tags,
+    IReadOnlyList<Guid> TagsIds,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
+    IReadOnlyList<Guid> CompanyIds)
 {
     public static CandidateProjection Create(
         CandidateCreated @event)
@@ -45,7 +47,9 @@ public sealed record CandidateProjection(
             @event.CreatedBy?.Id,
             null,
             null,
-            []);
+            [],
+            [], 
+            @event.CompanyId.HasValue ? [@event.CompanyId.Value] : []);
     }
 
     public CandidateProjection Apply(CandidateTagged @event)
@@ -53,23 +57,27 @@ public sealed record CandidateProjection(
         var tags = Tags
             .Append(@event.Tag)
             .ToArray();
+        var tagIds = TagsIds.Append(@event.Tag.Id).ToArray();
         
         return this with
         {
             ModifiedBy = @event.Author,
             ModifyById = @event.Author.Id,
-            Tags = tags
+            Tags = tags,
+            TagsIds = tagIds
         };
     }
 
     public CandidateProjection Apply(CandidateTagRemoved @event)
     {
         var tags = Tags.Where(z => z.Id != @event.Tag.Id).ToArray();
+        var tagIds = tags.Select(t => t.Id).ToArray();
         return this with
         {
             ModifiedBy = @event.Author,
             ModifyById = @event.Author.Id,
-            Tags = tags
+            Tags = tags,
+            TagsIds = tagIds
         };
     }
 }

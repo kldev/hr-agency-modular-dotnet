@@ -17,4 +17,12 @@ public class UserQueryRepository(IDocumentSession session) : IUserQueryRepositor
 
         return await query.ToSlice(page, pageSize, ct);
     }
+
+    public async Task<UserProjection?> GetUser(Guid organizationId, Guid userId, CancellationToken ct)
+    {
+        return await session.Query<UserProjection>()
+            .WithOrganizationId(organizationId)
+            .WithUserId(userId)
+            .SingleOrDefaultAsync(ct);
+    }
 }

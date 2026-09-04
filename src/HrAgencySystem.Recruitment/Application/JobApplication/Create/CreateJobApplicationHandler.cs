@@ -16,12 +16,25 @@ public static class CreateJobApplicationHandler
     {
         var post = await queryRepository.GetJobPostInfo(command.JobPostId, ct);
         var candidateCommand =
-            new CreateCandidate(post.OrganizationId, command.Email, command.Source, command.PhoneNumber, null);
+            new CreateCandidate(post.OrganizationId,
+                command.Email,
+                command.Source,
+                command.PhoneNumber, 
+                null, 
+                null, 
+                null, 
+                post.CompanyId);
         var candidate = await resolver.FindOrCreate(candidateCommand, ct);
 
         var jobApplicationId = JobApplicationId.New();
-        var @event = new JobApplicationCreated(jobApplicationId.Value,
-            post.OrganizationId, post.Id, candidate.CandidateId, command.Source, clock.UtcNow, candidate.Email.Value);
+        var @event = new JobApplicationCreated(
+            jobApplicationId.Value,
+            post.OrganizationId, 
+            post.Id, 
+            candidate.CandidateId, 
+            command.Source, 
+            clock.UtcNow, 
+            candidate.Email.Value);
 
         return @event;
     }
