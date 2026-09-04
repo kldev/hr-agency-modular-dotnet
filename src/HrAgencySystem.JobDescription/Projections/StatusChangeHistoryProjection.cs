@@ -7,66 +7,69 @@ using Marten.Patching;
 
 namespace HrAgencySystem.JobDescription.Projections;
 
-public sealed class StatusChangeHistoryProjection : IProjection
+public partial class StatusChangeHistoryProjection : EventProjection
 {
-    private void Project(
-        IDocumentOperations operations,
-        JobDescriptionCreated @event)
-    {
-        operations.Store(
-            new JdStatusChangeHistory
-            {
-                Id = @event.JobDescriptionId,
-                JobDescriptionId = @event.JobDescriptionId,
-                CurrentStatus = JobDescriptionStatus.Draft,
-                CurrentStatusStartedAt = @event.CreatedAt,
-                OrgId = @event.OrganizationId
-            });
-    }
+    // ReSharper disable once MemberCanBePrivate.Global
+    public JdStatusChangeHistory Create(
+        IEvent<JobDescriptionCreated> @event) =>
+        new()
+        {
+            Id = @event.Data.JobDescriptionId,
+            JobDescriptionId = @event.Data.JobDescriptionId,
+            CurrentStatus = JobDescriptionStatus.Draft,
+            CurrentStatusStartedAt = @event.Data.CreatedAt,
+            OrgId = @event.Data.OrganizationId
+        };
 
-    private async Task Project(
-        IDocumentOperations operations,
-        JobDescriptionOpened @event, CancellationToken ct)
+
+
+    // ReSharper disable once MemberCanBePrivate.Global
+    public async Task Project(
+        IEvent<JobDescriptionOpened> @event, IDocumentOperations ops, CancellationToken ct)
     {
         await ChangeStatus(
-            operations,
-            @event.JobDescriptionId,
+            ops,
+            @event.Data.JobDescriptionId,
             JobDescriptionStatus.Open,
-            @event.OccurredAt, ct);
+            @event.Data.OccurredAt, ct);
     }
 
-    private async Task Project(
+    // ReSharper disable once MemberCanBePrivate.Global
+    public async Task Project(
+        IEvent<JobDescriptionPutOnHold> @event,
         IDocumentOperations operations,
-        JobDescriptionPutOnHold @event, 
         CancellationToken ct)
     {
         await ChangeStatus(
             operations,
-            @event.JobDescriptionId,
+            @event.Data.JobDescriptionId,
             JobDescriptionStatus.OnHold,
-            @event.OccurredAt, ct);
+            @event.Data.OccurredAt, ct);
     }
 
-    private async Task Project(
+    // ReSharper disable once MemberCanBePrivate.Global
+    public async Task Project(
+        IEvent<JobDescriptionClosed> @event, 
         IDocumentOperations operations,
-        JobDescriptionClosed @event, CancellationToken ct)
+        CancellationToken ct)
     {
         await ChangeStatus(
             operations,
-            @event.JobDescriptionId,
+            @event.Data.JobDescriptionId,
             JobDescriptionStatus.Closed,
-            @event.OccurredAt, ct);
+            @event.Data.OccurredAt, ct);
     }
 
-    private async Task Project(
-        IDocumentOperations operations,
-        JobDescriptionCancelled @event,  CancellationToken ct)
+    // ReSharper disable once MemberCanBePrivate.Global
+    public async Task Project(
+        IEvent<JobDescriptionCancelled> @event,  
+        IDocumentOperations operations,CancellationToken ct)
     {
         await ChangeStatus(
             operations,
-            @event.JobDescriptionId,
+            @event.Data.JobDescriptionId,
             JobDescriptionStatus.Cancelled,
-            @event.OccurredAt, ct);
+            @event.Data.OccurredAt, ct);
     }
 
     private static async Task ChangeStatus(
@@ -76,10 +79,8 @@ public sealed class StatusChangeHistoryProjection : IProjection
         DateTimeOffset changedAt, CancellationToken ct)
     {
 
-        var document = await operations.Query<JdStatusChangeHistory>()
-            .Where(z => z.Id == jobDescriptionId)
-            .FirstOrDefaultAsync(ct);
-
+        var document = await operations.LoadAsync<JdStatusChangeHistory>(jobDescriptionId, ct);
+        
         if (document is null)
         {
             throw new InvalidOperationException(
@@ -102,30 +103,6 @@ public sealed class StatusChangeHistoryProjection : IProjection
         operations.Patch<JdStatusChangeHistory>(jobDescriptionId).Set(z => z.Changes, document.Changes);
         operations.Patch<JdStatusChangeHistory>(jobDescriptionId).Set(z => z.CurrentStatus, newStatus);
         operations.Patch<JdStatusChangeHistory>(jobDescriptionId).Set(z => z.CurrentStatusStartedAt, changedAt);
-    }
-
-    public async Task ApplyAsync(IDocumentOperations operations, IReadOnlyList<IEvent> events, CancellationToken cancellation)
-    {
-        foreach (var @event in events)
-        {
-            switch (@event.Data)
-            {
-                case JobDescriptionCreated created: Project(operations, created);
-                    break;
-                case JobDescriptionClosed closed:
-                    await Project(operations, closed, cancellation);
-                    break;
-                case JobDescriptionCancelled cancelled:
-                    await Project(operations, cancelled, cancellation);
-                    break;
-                case JobDescriptionPutOnHold  putOnHold:
-                    await Project(operations, putOnHold, cancellation);
-                    break;
-                case JobDescriptionOpened opened:
-                    await Project(operations, opened, cancellation);
-                    break;
-            }
-        }
     }
 }
 

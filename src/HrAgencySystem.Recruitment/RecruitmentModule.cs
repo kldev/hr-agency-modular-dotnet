@@ -42,6 +42,9 @@ public static class RecruitmentModule
                 x => new { x.Id, x.OrgId },
                 idx => { idx.IsUnique = true; })
             .Index(z => new { z.OrgId, z.JobApplicationId });
+
+        options.Schema.For<CandidateEmailReservation>().DatabaseSchemaName(SchemaName)
+            .Index(x => new { x.Email, x.OrganizationId }, idx => { idx.IsUnique = true; });
     }
 
     private static void ConfigureEvents(StoreOptions options)
