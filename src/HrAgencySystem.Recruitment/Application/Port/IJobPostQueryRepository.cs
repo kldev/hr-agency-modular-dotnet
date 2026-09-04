@@ -8,8 +8,11 @@ namespace HrAgencySystem.Recruitment.Application.Port;
 
 public interface IJobPostQueryRepository
 {
-    Task<SliceResponse<JobPostResponse>> GetJobDescriptions(Guid organizationId, JobPostQuery query, CancellationToken ct);
+    Task<SliceResponse<JobPostResponse>> GetJobPosts(Guid organizationId, JobPostQuery query, CancellationToken ct);
+    Task<JobPostInfo> GetJobPostInfo(Guid jobPostId, CancellationToken ct);
 }
+
+public sealed record JobPostInfo(Guid Id, Guid OrganizationId);
 
 public sealed record JobPostQuery(string Search, 
     Guid? CompanyId, 

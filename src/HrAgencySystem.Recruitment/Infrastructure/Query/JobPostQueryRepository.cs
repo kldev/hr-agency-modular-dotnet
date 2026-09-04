@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Web;
 using Marten;
 
@@ -7,7 +8,7 @@ namespace HrAgencySystem.Recruitment.Infrastructure.Query;
 
 public class JobPostQueryRepository(IDocumentSession session) : IJobPostQueryRepository
 {
-    public async Task<SliceResponse<JobPostResponse>> GetJobDescriptions(Guid organizationId, JobPostQuery query, CancellationToken ct)
+    public async Task<SliceResponse<JobPostResponse>> GetJobPosts(Guid organizationId, JobPostQuery query, CancellationToken ct)
     {
         var result = await session.Query<JobPostProjection>()
             .WithOrganizationId(organizationId)
@@ -21,5 +22,11 @@ public class JobPostQueryRepository(IDocumentSession session) : IJobPostQueryRep
         var response = 
             result.Content.Select(JobPostResponse.From).ToList();
         return new SliceResponse<JobPostResponse>(response, result.HasMore);
+    }
+
+    public async Task<JobPostInfo> GetJobPostInfo(Guid jobPostId, CancellationToken ct)
+    {
+        var result = await session.Query<JobPostProjection>().Where(z => z.Id == jobPostId).SingleOrDefaultAsync(ct);
+        return result is null ? throw new NotFoundException("Job post not found") : new JobPostInfo(result.Id, result.OrgId);
     }
 }

@@ -21,26 +21,18 @@ public static class CreateJobDescriptionHandler
         ICompanySnapshotRepository companySnapshotRepository,
         CancellationToken ct)
     {
-        var organizationId = OrganizationId.From(command.OrganizationId);
         var (title, summary, description,
             location, responsibilities,
             requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
 
-        if (!await checker.Exists(organizationId.Value, ct))
-            throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
+        var organizationId = await ValidateOrganization(command, checker, ct);
 
-        var recruiter = await userSnapshotRepository.GetUserAsync(command.RecruiterId, ct);
-        if (recruiter == null)
-            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
+        var recruiter = await GetRecruiter(command, userSnapshotRepository, ct);
 
-        var createdBy = await userSnapshotRepository.GetUserAsync(command.CreatedBy, ct);
-        if (createdBy == null)
-            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        
-        var company = await companySnapshotRepository.GetCompanyAsync(command.CompanyId, ct);
-        if (company == null)
-            throw new BusinessRuleException(ICompanySnapshotRepository.NotFoundMessage);
-        
+        var createdBy = await GetCreatedBy(command, userSnapshotRepository, ct);
+
+        var company = await GetCompany(command, companySnapshotRepository, ct);
+
         var jobDescriptionId = JobDescriptionId.New();
         var @event = new JobDescriptionCreated(
                 jobDescriptionId.Value,
@@ -67,5 +59,35 @@ public static class CreateJobDescriptionHandler
         session.Events.StartStream<Domain.JobDescription>(jobDescriptionId.Value, @event);
 
         return @event;
+    }
+
+    private static async Task<CompanySnapshot> GetCompany(CreateJobDescription command, ICompanySnapshotRepository companySnapshotRepository,
+        CancellationToken ct)
+    {
+        var company = await companySnapshotRepository.GetCompanyAsync(command.CompanyId, ct);
+        return company ?? throw new BusinessRuleException(ICompanySnapshotRepository.NotFoundMessage);
+    }
+
+    private static async Task<UserSnapshot> GetCreatedBy(CreateJobDescription command, IUserSnapshotRepository userSnapshotRepository,
+        CancellationToken ct)
+    {
+        var createdBy = await userSnapshotRepository.GetUserAsync(command.CreatedBy, ct);
+        return createdBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
+    }
+
+    private static async Task<UserSnapshot> GetRecruiter(CreateJobDescription command, IUserSnapshotRepository userSnapshotRepository,
+        CancellationToken ct)
+    {
+        var recruiter = await userSnapshotRepository.GetUserAsync(command.RecruiterId, ct);
+        return recruiter ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
+    }
+
+    private static async Task<OrganizationId> ValidateOrganization(CreateJobDescription command, IOrganizationChecker checker,
+        CancellationToken ct)
+    {
+        var organizationId = OrganizationId.From(command.OrganizationId);
+        if (!await checker.Exists(organizationId.Value, ct))
+            throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
+        return organizationId;
     }
 }

@@ -14,7 +14,7 @@ namespace HrAgencySystem.Identity.Application.Handlers;
 
 public class CreatePlatformOwnerHandler
 {
-    public const string EmailAlreadyUsed = "Email already used";
+    private const string EmailAlreadyUsed = "Email already used";
     
     public static async Task<PlatformOwnerCreated> Handle(
         CreatePlatformOwner command,
@@ -24,15 +24,11 @@ public class CreatePlatformOwnerHandler
         IOwnerEmailReservationRepository repository,
         CancellationToken ct)
     {
-        var (email, error) = Email.TryCreate(command.Email);
-        if (error != null) throw new ValidationException(error);
-        
+        var email = GetEmail(command);
+
         PasswordPolicyValidator.Validate(command.Password);
 
-        if (await repository.ExistAsync(email!, ct))
-        {
-            throw new BusinessRuleException(EmailAlreadyUsed);
-        }
+        await ValidateEmailReservation(repository, ct, email);
 
         var ownerId = PlatformOwnerId.New();
         
@@ -41,7 +37,7 @@ public class CreatePlatformOwnerHandler
         
         var @event = new PlatformOwnerCreated(
             ownerId.Value,
-            email!.Value,
+            email.Value,
             PlatformRole.Owner,
             passwordHash,
             clock.UtcNow);
@@ -49,5 +45,20 @@ public class CreatePlatformOwnerHandler
         session.Events.StartStream<PlatformOwner>(ownerId.Value, @event);
         
         return @event;
+    }
+
+    private static Email GetEmail(CreatePlatformOwner command)
+    {
+        var (email, error) = Email.TryCreate(command.Email);
+        return error != null ? throw new ValidationException(error) : email!;
+    }
+
+    private static async Task ValidateEmailReservation(IOwnerEmailReservationRepository repository, CancellationToken ct,
+        Email? email)
+    {
+        if (await repository.ExistAsync(email!, ct))
+        {
+            throw new BusinessRuleException(EmailAlreadyUsed);
+        }
     }
 }

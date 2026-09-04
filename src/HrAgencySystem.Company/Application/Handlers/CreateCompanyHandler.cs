@@ -32,16 +32,12 @@ public static class CreateCompanyHandler
         var (name, countryCode, taxId, registrationNumber) =
             CreateValueObjects(command);
         
-        if (await taxIdReservationRepository.ExitsAsync(organizationId, taxId, cancellationToken))
-            throw new BusinessRuleException(TaxIdAlreadyExistsMessage);
+        await ValidateTaxReservation(taxIdReservationRepository, cancellationToken, organizationId, taxId);
 
-        if (!await checker.Exists(organizationId.Value, cancellationToken))
-            throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
+        await ValidateOrganization(checker, cancellationToken, organizationId);
 
-        var createdBy = await snapshotRepository.GetUserAsync(command.CreatedBy, cancellationToken);
-        if (createdBy == null)
-            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        
+        var createdBy = await GetCreatedBy(command, snapshotRepository, cancellationToken);
+
         var companyId = CompanyId.New();
 
         // The unique constraint protects against concurrent requests.
@@ -64,6 +60,27 @@ public static class CreateCompanyHandler
         session.Events.StartStream<Domain.Company>(companyId.Value, @event);
 
         return @event;
+    }
+
+    private static async Task<UserSnapshot> GetCreatedBy(CreateCompany command, IUserSnapshotRepository snapshotRepository,
+        CancellationToken cancellationToken)
+    {
+        var createdBy = await snapshotRepository.GetUserAsync(command.CreatedBy, cancellationToken);
+        return createdBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
+    }
+
+    private static async Task ValidateOrganization(IOrganizationChecker checker, CancellationToken cancellationToken,
+        OrganizationId organizationId)
+    {
+        if (!await checker.Exists(organizationId.Value, cancellationToken))
+            throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
+    }
+
+    private static async Task ValidateTaxReservation(ICompanyTaxIdReservationRepository taxIdReservationRepository,
+        CancellationToken cancellationToken, OrganizationId organizationId, TaxId taxId)
+    {
+        if (await taxIdReservationRepository.ExitsAsync(organizationId, taxId, cancellationToken))
+            throw new BusinessRuleException(TaxIdAlreadyExistsMessage);
     }
 
     private static CompanyData CreateValueObjects(CreateCompany command)

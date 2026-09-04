@@ -20,6 +20,7 @@ public static class RecruitmentModule
         services.AddScoped<ISeeder, TagSeeder>();
         services.AddScoped<IJobPostQueryRepository,JobPostQueryRepository>();
         services.AddScoped<ITagSuggestionRepository, TagSuggestionRepository>();
+        services.AddScoped<ICandidateEmailReservationRepository, CandidateEmailReservationRepository>();
     }
 
     public static void ConfigureMarten(
@@ -75,7 +76,7 @@ public static class RecruitmentModule
     {
         options.Projections.Snapshot<JobApplicationProjection>(
             SnapshotLifecycle.Async);
-
+        
         options.Schema
             .For<JobApplicationProjection>()
             .DatabaseSchemaName(SchemaName)
@@ -96,5 +97,17 @@ public static class RecruitmentModule
             .Index(x => new { OrganizationId = x.OrgId, x.Company.Name })
             .Index(x => new { OrganizationId = x.OrgId, x.Company.TaxId })
             .Index(x => new { OrganizationId = x.OrgId, x.SearchText });
+        
+        options.Projections.Snapshot<CandidateProjection>(
+            SnapshotLifecycle.Async);
+        
+        options.Schema
+            .For<CandidateProjection>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(x => new { x.OrganizationId })
+            .Index(x => new { x.OrganizationId, x.Email })
+            .Index(x => new { x.OrganizationId, x.PhoneNumber })
+            .Index(x => new { x.OrganizationId, x.CreatedAt });
+        
     }
 }

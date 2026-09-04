@@ -22,10 +22,8 @@ public static class UpdateJobDescriptionStatusHandler
         if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
         var result = new UpdateJobDescriptionStatusResult(aggregate.Id.Value, command.Status);
 
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
-        if (modifiedBy == null)
-            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        
+        var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);
+
         if (aggregate.Status == command.Status)
         {
             return (result, []);
@@ -45,8 +43,16 @@ public static class UpdateJobDescriptionStatusHandler
             case JobDescriptionStatus.Open:
                 var @openEvent = new JobDescriptionOpened(aggregate.Id.Value, modifiedBy, clock.UtcNow);
                 return (result, [@openEvent]);
+            case JobDescriptionStatus.Draft:
             default:
                 throw new BusinessRuleException("Invalid status change: " + command.Status);
         }
+    }
+
+    private static async Task<UserSnapshot> GetModifiedBy(UpdateJobDescriptionStatus command, IUserSnapshotRepository snapshotRepository,
+        CancellationToken ct)
+    {
+        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
+        return modifiedBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

@@ -19,28 +19,38 @@ public static class AssignRecruiterJobDescriptionHandler
         CancellationToken ct)
     {
         if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
-
-               
-        if (command.RecruiterId == Guid.Empty)
-            throw new InValidValueException("Recruiter id has invalid value");
         
-        var recruiter = await snapshotRepository.GetUserAsync(command.RecruiterId, ct);
-        if (recruiter == null)
-        {
-            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        }
+        var recruiter = await GetRecruiter(command, snapshotRepository, ct);
 
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
-        if (modifiedBy == null)
-        {
-            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        }
+        var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);
 
-        if (aggregate.OrganizationId.Value != command.OrganizationId)
-            throw new BusinessRuleException(OrganizationId.OrganizationNotMatchMessage);
+        ValidateOrganization(command, aggregate);
 
         var @event = new JobDescriptionRecruiterAssigned(recruiter, modifiedBy, clock.UtcNow);
 
         return (@event, [@event]);
+    }
+
+    private static void ValidateOrganization(AssignRecruiterJobDescription command, Domain.JobDescription aggregate)
+    {
+        if (aggregate.OrganizationId.Value != command.OrganizationId)
+            throw new BusinessRuleException(OrganizationId.OrganizationNotMatchMessage);
+    }
+
+    private static async Task<UserSnapshot> GetModifiedBy(AssignRecruiterJobDescription command,
+        IUserSnapshotRepository snapshotRepository, CancellationToken ct)
+    {
+        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
+        return modifiedBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
+    }
+
+    private static async Task<UserSnapshot> GetRecruiter(AssignRecruiterJobDescription command,
+        IUserSnapshotRepository snapshotRepository, CancellationToken ct)
+    {
+        if (command.RecruiterId == Guid.Empty)
+            throw new InValidValueException("Recruiter id has invalid value");
+        
+        var recruiter = await snapshotRepository.GetUserAsync(command.RecruiterId, ct);
+        return recruiter ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

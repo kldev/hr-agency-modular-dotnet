@@ -2,4 +2,9 @@ using HrAgencySystem.Recruitment.Domain.Candidate;
 
 namespace HrAgencySystem.Recruitment.Application.Candidate.Create;
 
-public sealed record CreateCandidate(string Email, CandidateSource Source, string PhoneNumber, DateTimeOffset CreatedAt);
+// ReSharper disable once ClassNeverInstantiated.Global
+public sealed record CreateCandidate(Guid OrganizationId, 
+    string Email, 
+    CandidateSource Source, 
+    string PhoneNumber, 
+    Guid? CreatedBy); // can be created from application form or by user

@@ -22,7 +22,7 @@ internal static class MapGetSlice
         CancellationToken ct = default)
     {
         var query = new JobPostQuery(search ?? "", companyId, recruiterId, status ?? [], lang ?? [], page, pageSize);
-        var result = await repository.GetJobDescriptions(user.OrganizationId, query, ct);
+        var result = await repository.GetJobPosts(user.OrganizationId, query, ct);
         
         return TypedResults.Ok(result);
     }

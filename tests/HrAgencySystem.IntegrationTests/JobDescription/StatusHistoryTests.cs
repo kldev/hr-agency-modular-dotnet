@@ -74,8 +74,6 @@ public sealed class StatusHistoryTests(
         await JobDescriptionClient.ChangeStatusAsync(
             SecondJobDescriptionId,
             JobDescriptionStatus.Open);
-
-        await WaitForProjection();
         
         await Eventually.AssertAsync(async () =>
         {

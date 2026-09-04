@@ -23,12 +23,9 @@ public static class UpdateJobDescriptionHandler
             location, responsibilities,
             requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
 
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
-        if (modifiedBy == null)
-            throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        
-        if (aggregate.OrganizationId.Value != command.OrganizationId)
-            throw new BusinessRuleException("Invalid organization id");
+        var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);
+
+        ValidateOrganization(command, aggregate);
 
         var @event = new JobDescriptionUpdated(
             title.Value,
@@ -49,5 +46,18 @@ public static class UpdateJobDescriptionHandler
         );
         
         return (@event, [@event]);
+    }
+
+    private static void ValidateOrganization(UpdateJobDescription command, Domain.JobDescription aggregate)
+    {
+        if (aggregate.OrganizationId.Value != command.OrganizationId)
+            throw new BusinessRuleException("Invalid organization id");
+    }
+
+    private static async Task<UserSnapshot> GetModifiedBy(UpdateJobDescription command, IUserSnapshotRepository snapshotRepository,
+        CancellationToken ct)
+    {
+        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
+        return modifiedBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

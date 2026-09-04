@@ -18,7 +18,6 @@ namespace HrAgencySystem.Identity.Application.Handlers;
 
 public static class CreateUserHandler
 {
-    public const string OrganizationCheckMessage = "Non existing organization.";
     public const string UserWithEmailMessage = "A user with this email already exists in the organization.";
     
     public static async Task<UserCreated> Handle(
@@ -31,11 +30,7 @@ public static class CreateUserHandler
         IUserSnapshotRepository snapshotRepository,
         CancellationToken ct)
     {
-        var organizationId =
-            OrganizationId.From(command.OrganizationId);
-
-        if (!await checker.Exists(command.OrganizationId, ct))
-            throw new BusinessRuleException(OrganizationCheckMessage);
+        var organizationId = await GetOrganization(command, checker, ct);
 
         var (
             email,
@@ -45,20 +40,9 @@ public static class CreateUserHandler
 
         PasswordPolicyValidator.Validate(command.Password);
 
-        UserSnapshot? user;
-        if (command.CreatedBy == Guid.Empty)
-        {
-            user = new UserSnapshot(Guid.NewGuid(), "System", "", "system");
-        }
-        else
-        {
-            user = await snapshotRepository.GetUserAsync(command.CreatedBy, ct);
-            if (user is null)
-                throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        }
+        var user = await GetCreatedBy(command, snapshotRepository, ct);
 
-        if (await repository.ExistAsync(organizationId, email, ct))
-            throw new BusinessRuleException(UserWithEmailMessage);
+        await ValidateEmailReservation(repository, ct, organizationId, email);
         
         var userId = UserId.New();
         
@@ -82,6 +66,41 @@ public static class CreateUserHandler
             @event);
 
         return @event;
+    }
+
+    private static async Task ValidateEmailReservation(IUserEmailReservationRepository repository, CancellationToken ct,
+        OrganizationId organizationId, Email email)
+    {
+        if (await repository.ExistAsync(organizationId, email, ct))
+            throw new BusinessRuleException(UserWithEmailMessage);
+    }
+
+    private static async Task<UserSnapshot?> GetCreatedBy(CreateUser command, IUserSnapshotRepository snapshotRepository,
+        CancellationToken ct)
+    {
+        UserSnapshot? user;
+        if (command.CreatedBy == Guid.Empty)
+        {
+            user = new UserSnapshot(Guid.NewGuid(), "System", "", "system");
+        }
+        else
+        {
+            user = await snapshotRepository.GetUserAsync(command.CreatedBy, ct);
+            if (user is null)
+                throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
+        }
+
+        return user;
+    }
+
+    private static async Task<OrganizationId> GetOrganization(CreateUser command, IOrganizationChecker checker, CancellationToken ct)
+    {
+        var organizationId =
+            OrganizationId.From(command.OrganizationId);
+
+        if (!await checker.Exists(command.OrganizationId, ct))
+            throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
+        return organizationId;
     }
 
     private static UserData CreateValueObjects(
