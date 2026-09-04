@@ -68,7 +68,7 @@ public sealed class JobPost
 
     public void Apply(JobPostCreated @event)
     {
-        Id = JobPostId.From(@event.JobPostingId);
+        Id = JobPostId.From(@event.JobPostId);
         DescriptionId = JobDescriptionId.From(@event.JobDescriptionId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
         CompanyId = CompanyId.From(@event.CompanyId);

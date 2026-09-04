@@ -41,7 +41,7 @@ public sealed record JobPostProjection(
         JobPostCreated @event)
     {
         return new JobPostProjection(
-            @event.JobPostingId,
+            @event.JobPostId,
             @event.JobDescriptionId,
             @event.OrganizationId,
             @event.CompanyId,

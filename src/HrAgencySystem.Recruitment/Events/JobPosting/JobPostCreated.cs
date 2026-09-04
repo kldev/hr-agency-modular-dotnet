@@ -4,7 +4,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 namespace HrAgencySystem.Recruitment.Events.JobPosting;
 
 public sealed record JobPostCreated(
-    Guid JobPostingId,
+    Guid JobPostId,
     Guid JobDescriptionId,
     Guid OrganizationId,
     Guid CompanyId,

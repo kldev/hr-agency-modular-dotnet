@@ -195,7 +195,7 @@ public sealed class JobPostTests
     {
         post.Apply(
             new JobPostCreated(
-                JobPostingId: jobPostingId,
+                JobPostId: jobPostingId,
                 JobDescriptionId: jobDescriptionId,
                 OrganizationId: organizationId,
                 CompanyId: companyId,

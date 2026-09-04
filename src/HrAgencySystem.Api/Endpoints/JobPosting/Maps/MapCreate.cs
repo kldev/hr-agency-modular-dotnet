@@ -17,7 +17,7 @@ internal static class MapCreate
     {
         var result = await bus.InvokeAsync<JobPostCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
 
-        return TypedResults.Created($"/api/recruitment/job-posting/{result.JobPostingId}", result);
+        return TypedResults.Created($"/api/recruitment/job-posting/{result.JobPostId}", result);
     }
 }
 
