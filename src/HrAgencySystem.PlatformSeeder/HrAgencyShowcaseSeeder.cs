@@ -24,6 +24,7 @@ public sealed class HrAgencyShowcaseSeeder(IMessageBus bus) : IPlatformSeeder
         var javaJobId = await new TechnicalJobDescriptionScenario(bus).Create(organizationData.OrganizationId, usersIds, companyIds);
         
         await new JobPostScenario(bus).Create(javaJobId, organizationData.OrganizationId, usersIds.First());
+        await new ModernWebDeveloperScenario(bus).Create(organizationData.OrganizationId, usersIds, companyIds);
     }
 
     private sealed record SeedConfig(
