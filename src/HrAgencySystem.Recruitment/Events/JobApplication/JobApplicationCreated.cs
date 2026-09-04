@@ -8,5 +8,6 @@ public sealed record JobApplicationCreated(
     Guid JobPostingId,
     Guid CandidateId,
     CandidateSource Source,
+    Guid CompanyId,
     DateTimeOffset CreatedAt,
     string Email);

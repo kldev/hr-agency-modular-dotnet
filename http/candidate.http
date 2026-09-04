@@ -1,0 +1,78 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+###
+@token = {{login.response.body.$.token}}
+
+###
+
+### posting 
+# @name postOne
+GET {{baseURL}}/api/recruitment/job-posting?search=Spring
+Authorization: Bearer {{token}}
+
+
+###
+@jobPostId = {{postOne.response.body.$.content[0].id}}
+###
+
+### posting 
+# @name postTwo
+GET {{baseURL}}/api/recruitment/job-posting?search=NextJS
+Authorization: Bearer {{token}}
+
+###
+@jobPostId = {{postTwo.response.body.$.content[0].id}}
+###
+
+### posting 
+# @name postThree
+GET {{baseURL}}/api/recruitment/job-posting?search=NextJS
+Authorization: Bearer {{token}}
+
+###
+@jobPostId = {{postThree.response.body.$.content[0].id}}
+###
+
+
+### Apply 
+# @name apply
+POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId}}/apply
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "email": "fox.mulder@test.io",
+    "phoneNumber": "",
+    "source": "NoFluffJobs"
+}
+
+###
+@companyId = {{apply.response.body.$.companyId}}
+###
+
+### Apply 
+POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId}}/apply
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "email": "fox.mulder@test.io",
+    "phoneNumber": "",
+    "source": "RecruitmentAgency"
+}
+
+
+###
+GET {{baseURL}}/api/recruitment/candidates?companyId={{companyId}}
+Authorization: Bearer {{token}}

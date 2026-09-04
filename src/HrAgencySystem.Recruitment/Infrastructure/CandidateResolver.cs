@@ -1,4 +1,6 @@
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
+using HrAgencySystem.Recruitment.Application.Candidate.UpdateApplication;
+using HrAgencySystem.Recruitment.Application.JobApplication.Create;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidate;
 using HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
@@ -12,10 +14,19 @@ namespace HrAgencySystem.Recruitment.Infrastructure;
 
 public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session): ICandidateResolver
 {
-    public async Task<CandidateInfo> FindOrCreate(CreateCandidate command, CancellationToken ct)
+    public async Task<CandidateInfo> FindOrCreate(CreateCandidate command, JobPostInfo? info, CancellationToken ct)
     {
         var existing = await GetExisting(command, ct);
-        if (existing is not null) return existing!;
+        if (existing is not null)
+        {
+            if (info != null)
+            {
+                await bus.InvokeAsync<CandidateApplicationUpdated>(
+                    new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
+            }
+
+            return existing!;
+        }
         
         return await CreateNew(command, ct);
     }

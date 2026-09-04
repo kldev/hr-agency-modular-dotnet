@@ -11,7 +11,7 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates
-        group.MapGet("", Handler)
+        group.MapGet("{candidateId:guid}", Handler)
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);;
     }

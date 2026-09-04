@@ -1,3 +1,4 @@
+using System.Text.Json;
 using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Domain.Candidate;
 using HrAgencySystem.Recruitment.Events.Candidate;
@@ -78,6 +79,18 @@ public sealed record CandidateProjection(
             ModifyById = @event.Author.Id,
             Tags = tags,
             TagsIds = tagIds
+        };
+    }
+
+    public CandidateProjection Apply(CandidateApplicationUpdated @event)
+    {
+        
+        if (CompanyIds.Contains(@event.CompanyId)) return this;
+        var companyIds = CompanyIds.Append(@event.CompanyId).ToArray();
+
+        return this with
+        {
+            CompanyIds = companyIds
         };
     }
 }

@@ -3,6 +3,7 @@ using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.JobApplication;
 using HrAgencySystem.Recruitment.Events.JobApplication;
 using HrAgencySystem.SharedKernel.Time;
+using Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplication.Create;
 
@@ -11,6 +12,7 @@ public static class CreateJobApplicationHandler
     public static async Task<JobApplicationCreated> Handle(CreateJobApplication command,
         ICandidateResolver resolver,
         IJobPostQueryRepository queryRepository,
+        IDocumentSession session,
         IClock clock,
         CancellationToken ct)
     {
@@ -24,7 +26,7 @@ public static class CreateJobApplicationHandler
                 null, 
                 null, 
                 post.CompanyId);
-        var candidate = await resolver.FindOrCreate(candidateCommand, ct);
+        var candidate = await resolver.FindOrCreate(candidateCommand, post, ct);
 
         var jobApplicationId = JobApplicationId.New();
         var @event = new JobApplicationCreated(
@@ -33,8 +35,11 @@ public static class CreateJobApplicationHandler
             post.Id, 
             candidate.CandidateId, 
             command.Source, 
+            post.CompanyId,
             clock.UtcNow, 
             candidate.Email.Value);
+
+        session.Events.StartStream<Domain.JobApplication.JobApplication>(jobApplicationId.Value, @event);
 
         return @event;
     }

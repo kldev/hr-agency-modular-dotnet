@@ -8,6 +8,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using Marten;
 
 namespace HrAgencySystem.Recruitment.Application.Candidate.Create;
 
@@ -18,6 +19,7 @@ public static class CreateCandidateHandler
         IOrganizationChecker checker, 
         ICandidateEmailReservationRepository repository, 
         IUserSnapshotRepository snapshotRepository,
+        IDocumentSession session,
         IClock clock, 
         CancellationToken ct)
     {
@@ -45,6 +47,8 @@ public static class CreateCandidateHandler
             createdBy,
             command.CompanyId);
 
+        session.Events.StartStream<Domain.Candidate.Candidate>(candidateId.Value, @event);
+        
         return @event;
     }
 

@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
+using HrAgencySystem.Recruitment.Infrastructure;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Query;
 using HrAgencySystem.Recruitment.Projections;
@@ -22,6 +23,7 @@ public static class RecruitmentModule
         services.AddScoped<ITagSuggestionRepository, TagSuggestionRepository>();
         services.AddScoped<ICandidateEmailReservationRepository, CandidateEmailReservationRepository>();
         services.AddScoped<ICandidateQueryRepository, CandidateQueryRepository>();
+        services.AddScoped<ICandidateResolver, CandidateResolver> ();
     }
 
     public static void ConfigureMarten(
@@ -71,6 +73,10 @@ public static class RecruitmentModule
         
         // Candidate
         options.Events.AddEventType<Events.Candidate.CandidateCreated>();
+        options.Events.AddEventType<Events.Candidate.CandidateApplicationUpdated>();
+        options.Events.AddEventType<Events.Candidate.CandidateTagged>();
+        options.Events.AddEventType<Events.Candidate.CandidateTagRemoved>();
+        
     }
 
     private static void ConfigureProjections(StoreOptions options)
