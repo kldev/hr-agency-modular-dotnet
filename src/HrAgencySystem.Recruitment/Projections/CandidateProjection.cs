@@ -55,6 +55,8 @@ public sealed record CandidateProjection(
 
     public CandidateProjection Apply(CandidateTagged @event)
     {
+        if (TagsIds.Contains(@event.Tag.Id)) return this;
+        
         var tags = Tags
             .Append(@event.Tag)
             .ToArray();
@@ -75,8 +77,8 @@ public sealed record CandidateProjection(
         var tagIds = tags.Select(t => t.Id).ToArray();
         return this with
         {
-            ModifiedBy = @event.Author,
-            ModifyById = @event.Author.Id,
+            ModifiedBy = @event.RemovedBy,
+            ModifyById = @event.RemovedBy.Id,
             Tags = tags,
             TagsIds = tagIds
         };

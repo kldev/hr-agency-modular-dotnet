@@ -117,3 +117,55 @@ Authorization: Bearer {{token}}
 ###
 GET {{baseURL}}/api/recruitment/candidates/{{candidateId}}
 Authorization: Bearer {{token}}
+
+
+###
+# Get Tags
+# @name getTagId1
+GET {{baseURL}}/api/suggestion/tags?search=Azure Functions
+Authorization: Bearer {{token}}
+
+###
+@tagId1 = {{getTagId1.response.body.$.[0].id}}
+###
+
+###
+# Get Tags
+# @name getTagId2
+GET {{baseURL}}/api/suggestion/tags?search=React
+Authorization: Bearer {{token}}
+
+###
+@tagId2 = {{getTagId2.response.body.$.[0].id}}
+###
+
+
+### Tag candidate
+
+PUT {{baseURL}}/api/recruitment/candidates/{{candidateId}}/tag
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "tagId": "{{tagId1}}"
+}
+
+### Tag candidate
+
+PUT {{baseURL}}/api/recruitment/candidates/{{candidateId}}/tag
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "tagId": "{{tagId2}}"
+}
+
+### Remove Tag candidate
+
+DELETE  {{baseURL}}/api/recruitment/candidates/{{candidateId}}/tag/{{tagId2}}
+Authorization: Bearer {{token}}
+
+
+###
+GET {{baseURL}}/api/recruitment/candidates?tag={{tagId2}}&tag={{tagId1}}
+Authorization: Bearer {{token}}

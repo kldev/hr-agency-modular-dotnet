@@ -11,5 +11,7 @@ internal static class Endpoint
         Maps.MapGet.Map(group);
         Maps.MapCreate.Map(group);
         Maps.MapGetSlice.Map(group);
+        Maps.MapTag.Map(group);
+        Maps.MapRemoveTag.Map(group);
     }
 }

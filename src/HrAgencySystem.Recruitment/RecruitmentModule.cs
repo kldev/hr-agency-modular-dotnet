@@ -24,6 +24,7 @@ public static class RecruitmentModule
         services.AddScoped<ICandidateEmailReservationRepository, CandidateEmailReservationRepository>();
         services.AddScoped<ICandidateQueryRepository, CandidateQueryRepository>();
         services.AddScoped<ICandidateResolver, CandidateResolver> ();
+        services.AddScoped<ITagRepository, TagRepository>();
     }
 
     public static void ConfigureMarten(
