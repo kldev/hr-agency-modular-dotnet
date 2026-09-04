@@ -23,7 +23,7 @@ Authorization: Bearer {{token}}
 
 
 ###
-@jobPostId = {{postOne.response.body.$.content[0].id}}
+@jobPostId1 = {{postOne.response.body.$.content[0].id}}
 ###
 
 ### posting 
@@ -32,7 +32,7 @@ GET {{baseURL}}/api/recruitment/job-posting?search=NextJS
 Authorization: Bearer {{token}}
 
 ###
-@jobPostId = {{postTwo.response.body.$.content[0].id}}
+@jobPostId2 = {{postTwo.response.body.$.content[0].id}}
 ###
 
 ### posting 
@@ -41,13 +41,13 @@ GET {{baseURL}}/api/recruitment/job-posting?search=NextJS
 Authorization: Bearer {{token}}
 
 ###
-@jobPostId = {{postThree.response.body.$.content[0].id}}
+@jobPostId3 = {{postThree.response.body.$.content[0].id}}
 ###
 
 
 ### Apply 
 # @name apply
-POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId}}/apply
+POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId1}}/apply
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -57,12 +57,38 @@ Authorization: Bearer {{token}}
     "source": "NoFluffJobs"
 }
 
+### Apply 
+# @name apply
+POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId2}}/apply
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "email": "fox.mulder@test.io",
+    "phoneNumber": "",
+    "source": "NoFluffJobs"
+}
+
+### Apply 
+# @name apply
+POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId3}}/apply
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "email": "fox.mulder@test.io",
+    "phoneNumber": "",
+    "source": "NoFluffJobs"
+}
+
+
 ###
 @companyId = {{apply.response.body.$.companyId}}
+@candidateId = {{apply.response.body.$.candidateId}}
 ###
 
 ### Apply 
-POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId}}/apply
+POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId1}}/apply
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -72,7 +98,22 @@ Authorization: Bearer {{token}}
     "source": "RecruitmentAgency"
 }
 
+### Apply 
+POST {{baseURL}}/api/recruitment/job-posting/{{jobPostId1}}/apply
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "email": "jerry.seinfeld@test.io",
+    "phoneNumber": "",
+    "source": "RecruitmentAgency"
+}
+
 
 ###
 GET {{baseURL}}/api/recruitment/candidates?companyId={{companyId}}
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/recruitment/candidates/{{candidateId}}
 Authorization: Bearer {{token}}

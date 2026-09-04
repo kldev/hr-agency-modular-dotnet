@@ -71,7 +71,7 @@ public sealed record JobPostProjection(
             [],
             @event.CreatedAt,
             @event.CreatedAt,
-            @event.PostingSlug,
+            @event.OrgSlug + "/" + @event.PostingSlug,
             string.Join(",",@event.Responsibilities)
             + string.Join(",",@event.Requirements)
             + string.Join(",",@event.Skills));

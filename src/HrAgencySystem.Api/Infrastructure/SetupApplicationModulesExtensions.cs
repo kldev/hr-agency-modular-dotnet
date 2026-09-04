@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Company;
 using HrAgencySystem.Company.Infrastructure;
 using HrAgencySystem.Identity;
@@ -15,6 +16,10 @@ public static class SetupApplicationModulesExtensions
     {
         public void SetupApplicationModules(IConfiguration configuration)
         {
+            services.AddOptions<ApplicationConfig>();
+            services.Configure<ApplicationConfig>(
+                configuration.GetSection(ApplicationConfig.Section));
+            
             services.ConfigureJson();
             services.AddTransient<IClock, SystemClock>();
             services.AddCompanyModule();
