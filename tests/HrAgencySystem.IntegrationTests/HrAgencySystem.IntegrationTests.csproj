@@ -31,8 +31,4 @@
         <ProjectReference Include="..\..\src\HrAgencySystem.Api\HrAgencySystem.Api.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="JobPosting\" />
-    </ItemGroup>
-
 </Project>

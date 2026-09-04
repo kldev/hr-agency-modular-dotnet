@@ -1,15 +1,15 @@
-using HrAgencySystem.Api.Endpoints.JobDescription.Maps;
+using HrAgencySystem.Api.Endpoints.JobPosting.Maps;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.IntegrationTests.JobDescription;
+namespace HrAgencySystem.IntegrationTests.JobPosting;
 
-internal static class JobDescriptionTestData
+internal static class JobPostingTestData
 {
-    public static CreateJobDescriptionRequest CreateRequest(
-        Guid? companyId = null,
+    public static CreatePostRequest CreateRequest(
+        Guid? jobDescriptionId = null,
         Guid? recruiterId = null) =>
         new(
-            CompanyId: companyId ?? Guid.NewGuid(),
+            JobDescriptionId: jobDescriptionId ?? Guid.NewGuid(),
             Title: "Senior .NET Developer",
             Summary: "Senior .NET Developer position",
             Description: "We are looking for an experienced .NET Developer.",
@@ -34,18 +34,20 @@ internal static class JobDescriptionTestData
             ],
             Location: "Opole",
             CountryCode: "PL",
+            LanguageCode: "PL",
             EmploymentType: EmploymentType.FullTime,
             WorkMode: WorkMode.Hybrid,
             CurrencyCode: CurrencyCode.PLN,
             SalaryMin: 15_000,
             SalaryMax: 22_000,
             RecruiterId: recruiterId ?? Guid.NewGuid());
+    
 
-    public static UpdateJobDescriptionRequest UpdateRequest() =>
+    public static UpdateJobPostRequest UpdateRequest() =>
         new(
             Title: "Senior Backend .NET Developer",
-            Summary: "Updated job description",
-            Description: "Updated description for the position.",
+            Summary: "Updated senior backend developer position",
+            Description: "We are looking for an experienced backend .NET developer.",
             Responsibilities:
             [
                 "Develop backend applications",
@@ -68,15 +70,13 @@ internal static class JobDescriptionTestData
             ],
             Location: "Wrocław",
             CountryCode: "PL",
+            LanguageCode: "PL",
             EmploymentType: EmploymentType.FullTime,
             WorkMode: WorkMode.Remote,
             CurrencyCode: CurrencyCode.PLN,
             SalaryMin: 18_000,
             SalaryMax: 25_000);
 
-    public static AssignRecruiter CreateAssignRecruiterRequest(
-        Guid? recruiterId = null) =>
-        new(recruiterId ?? Guid.NewGuid());
 
     public static string InvalidTitle =>
         string.Empty;
