@@ -126,6 +126,7 @@ Authorization: Bearer {{token}}
 
 
 ### create job post
+# @name createPost
 POST {{baseURL}}/api/recruitment/job-posting
 Content-Type: application/json
 Authorization: Bearer {{token}}
@@ -169,6 +170,9 @@ Authorization: Bearer {{token}}
   "salaryMax": 15000,
   "recruiterId": "{{userId}}"
 }
+
+###
+@postId = {{createPost.response.body.$.jobPostId}}
 
 ### create job post
 
@@ -214,6 +218,50 @@ Authorization: Bearer {{token}}
   "salaryMin": 12000,
   "salaryMax": 15000,
   "recruiterId": "{{userId}}"
+}
+
+### update job post
+
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Java Backend Developer",
+  "summary": "Senior",
+  "description": "Poszukujemy doświadczonego programisty Java Backend, który dołączy do naszego zespołu inżynierskiego.",
+  "responsibilities": [
+    "Projektowanie i rozwijanie aplikacji backendowych",
+    "Tworzenie i utrzymywanie API REST",
+    "Pisanie testów jednostkowych i integracyjnych",
+    "Udział w przeglądach kodu",
+    "Współpraca z programistami frontendowymi",
+    "Monitorowanie i poprawa wydajności aplikacji"
+  ],
+  "requirements": [
+    "Co najmniej 3 lata doświadczenia w pracy z Javą",
+    "Praktyczne doświadczenie ze Spring Boot",
+    "Dobra znajomość relacyjnych baz danych",
+    "Doświadczenie w pracy z REST API",
+    "Umiejętność pracy w zespole",
+    "Dobra znajomość języka angielskiego"
+  ],
+  "skills": [
+    "Java 25",
+    "Spring Boot 4",
+    "PostgreSQL",
+    "REST API",
+    "Docker",
+    "Git"
+    ],
+  "location": "Opole",
+  "countryCode": "PL",
+  "languageCode": "EN",
+  "employmentType": "FullTime",
+  "workMode": "OnSite",
+  "currencyCode": "PLN",
+  "salaryMin": 12000,
+  "salaryMax": 14000
 }
 
 

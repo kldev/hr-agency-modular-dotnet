@@ -16,7 +16,11 @@ public sealed class JobPost
     
     public static JobPost WithOrganization(Guid organizationId)
     {
-        return new JobPost();
+        var post = new JobPost
+        {
+            OrganizationId = new OrganizationId(organizationId)
+        };
+        return post;
     }
     
     public JobPostId Id { get; private set; }

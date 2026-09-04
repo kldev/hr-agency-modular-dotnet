@@ -1,4 +1,3 @@
-using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.SharedKernel.Commands;
 using HrAgencySystem.SharedKernel.ValueObjects;
 

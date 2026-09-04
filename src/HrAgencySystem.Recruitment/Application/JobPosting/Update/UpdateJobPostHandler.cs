@@ -1,27 +1,30 @@
-using HrAgencySystem.JobDescription.Application.Commands;
-using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.Recruitment.Application.JobPosting.Create;
+using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Events.JobPosting;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
-namespace HrAgencySystem.JobDescription.Application.Handlers;
+namespace HrAgencySystem.Recruitment.Application.JobPosting.Update;
 
-public static class UpdateJobDescriptionHandler
+public static class UpdateJobPostHandler
 {
     [AggregateHandler]
-    public static async Task<(JobDescriptionUpdated, Wolverine.Marten.Events)> Handle(
-        UpdateJobDescription command,
-        Domain.JobDescription aggregate,
+    public static async Task<(JobPostUpdated, Wolverine.Marten.Events)> Handle(
+        UpdateJobPost command,
+        JobPost aggregate,
         IUserSnapshotRepository snapshotRepository,
         IClock clock,
         CancellationToken ct)
     {
-        if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
-        
         var (title, summary, description,
             location, responsibilities,
-            requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
+            requirements, 
+            skills, 
+            salaryRange, 
+            countryCode, 
+            languageCode) = JobPostDataFactory.Create(command);
 
         var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
         if (modifiedBy == null)
@@ -29,8 +32,9 @@ public static class UpdateJobDescriptionHandler
         
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException("Invalid organization id");
-
-        var @event = new JobDescriptionUpdated(
+        
+        var @event = new JobPostUpdated(
+            command.JobPostId,
             title.Value,
             summary.Value,
             description.Value,
@@ -39,15 +43,16 @@ public static class UpdateJobDescriptionHandler
             [.. skills.Select(x => x.Value)],
             location.Value,
             countryCode.Value,
+            languageCode.Value,
             command.EmploymentType,
             command.WorkMode,
             salaryRange.Currency,
             salaryRange.Min,
             salaryRange.Max,
             modifiedBy,
-            clock.UtcNow
-        );
-        
+            clock.UtcNow);
+
         return (@event, [@event]);
     }
+    
 }

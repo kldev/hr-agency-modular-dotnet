@@ -5,7 +5,8 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 namespace HrAgencySystem.Recruitment.Application.JobPosting.Update;
 
 public sealed record UpdateJobPost(
-    Guid JobPostingId,
+    Guid JobPostId,
+    Guid OrganizationId,
     string Title,
     string? Summary,
     string Description,

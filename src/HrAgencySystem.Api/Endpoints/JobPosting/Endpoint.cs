@@ -7,5 +7,6 @@ internal static class Endpoint
         var group = endpoints.MapGroup("").RequireAuthorization().WithTags("Recruitment - Job Posting");
         Maps.MapCreate.Map(group);
         Maps.MapGetSlice.Map(group);
+        Maps.MapUpdate.Map(group);
     }
 }

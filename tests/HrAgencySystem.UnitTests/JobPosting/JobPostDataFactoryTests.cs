@@ -12,7 +12,8 @@ public sealed class JobPostDataFactoryTests
     public void Create_should_return_job_post_data_when_all_data_is_valid()
     {
         var command = new UpdateJobPost(
-            JobPostingId: Guid.NewGuid(),
+            JobPostId: Guid.NewGuid(),
+            OrganizationId: Guid.NewGuid(),
             Title: "Senior .NET Developer",
             Summary: "Senior .NET developer position.",
             Description: "Development of recruitment platform.",
@@ -96,7 +97,8 @@ public sealed class JobPostDataFactoryTests
     public void Create_should_throw_validation_exception_when_all_data_is_invalid()
     {
         var command = new UpdateJobPost(
-            JobPostingId: Guid.NewGuid(),
+            JobPostId: Guid.NewGuid(),
+            OrganizationId: Guid.NewGuid(),
             Title: "",
             Summary: new string('x', 5001),
             Description: new string('x', 5001),
