@@ -1,7 +1,5 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Company.Application.Port;
-using HrAgencySystem.Identity.Application.Port;
-using HrAgencySystem.Identity.Domain;
 
 namespace HrAgencySystem.Api.Endpoints.Suggestion.Maps;
 

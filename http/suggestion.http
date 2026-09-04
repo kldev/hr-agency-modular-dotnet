@@ -1,0 +1,56 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+###
+@token = {{login.response.body.$.token}}
+
+###
+
+### GET Users
+GET {{baseURL}}/api/suggestion/users
+Authorization: Bearer {{token}}
+
+### GET Users
+GET {{baseURL}}/api/suggestion/users?roles=Recruiter
+Authorization: Bearer {{token}}
+
+###
+# Get companies
+GET {{baseURL}}/api/suggestion/companies?countryCode=de
+Authorization: Bearer {{token}}
+
+
+###
+# Get Tags
+GET {{baseURL}}/api/suggestion/tags
+Authorization: Bearer {{token}}
+
+###
+# Get Tags
+GET {{baseURL}}/api/suggestion/tags?search=jav
+Authorization: Bearer {{token}}
+
+###
+# Get Tags
+GET {{baseURL}}/api/suggestion/tags?search=azure
+Authorization: Bearer {{token}}
+
+###
+# Get Tags
+GET {{baseURL}}/api/suggestion/tags?category=Language
+Authorization: Bearer {{token}}
+
+###
+# Get Tags
+GET {{baseURL}}/api/suggestion/tags?category=DrivingLicense
+Authorization: Bearer {{token}}

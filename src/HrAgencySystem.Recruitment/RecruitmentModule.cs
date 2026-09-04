@@ -19,6 +19,7 @@ public static class RecruitmentModule
     {
         services.AddScoped<ISeeder, TagSeeder>();
         services.AddScoped<IJobPostQueryRepository,JobPostQueryRepository>();
+        services.AddScoped<ITagSuggestionRepository, TagSuggestionRepository>();
     }
 
     public static void ConfigureMarten(
@@ -33,7 +34,8 @@ public static class RecruitmentModule
     {
         options.Schema.For<Tag>().DatabaseSchemaName(SchemaName)
             .Index(z => z.Category)
-            .Index(z => new { z.Category, z.Code }, idx => { idx.IsUnique = true; });
+            .Index(z => new { z.Category, z.Code }, idx => { idx.IsUnique = true; })
+            .Index(z => z.Name);
 
         options.Schema.For<JobApplicationNote>().DatabaseSchemaName(SchemaName)
             .Index(
