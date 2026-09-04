@@ -31,7 +31,11 @@ public sealed class GlobalExceptionHandler(
                 return await WriteErrorAsync(httpContext, StatusCodes.Status409Conflict,
                     MapDocumentErrors.Title(document.DocumentType.Name),
                     MapDocumentErrors.Details(document.DocumentType.Name), exception);
-
+            
+            case InValidValueException:
+                return await WriteErrorAsync(httpContext, StatusCodes.Status400BadRequest, "Invalid value",
+                    exception.Message, exception);
+            
             case ArgumentException:
                 return await WriteErrorAsync(httpContext, StatusCodes.Status400BadRequest, "Argument exception",
                     exception.Message, exception);

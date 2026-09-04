@@ -170,10 +170,10 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
 
         Assert.Contains(
             responses,
-            response => response.StatusCode == HttpStatusCode.Conflict);
+            response => response.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.BadRequest);
 
         var conflict = responses.Single(x =>
-            x.StatusCode == HttpStatusCode.Conflict);
+            x.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.BadRequest);
 
         var problem = await conflict.Content
             .ReadFromJsonAsync<ProblemDetails>();

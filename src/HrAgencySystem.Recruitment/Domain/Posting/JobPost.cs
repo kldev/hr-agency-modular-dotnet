@@ -149,6 +149,12 @@ public sealed class JobPost
         Status = JobPostStatus.Published;
         ApplyCommon(@event);
     }
+
+    public void Apply(JobPostRecruiterChanged @event)
+    {
+        RecruiterId = @event.Recruiter.Id;
+        ApplyCommon(@event);
+    }
     
     private void RequireNotFinal()
     {

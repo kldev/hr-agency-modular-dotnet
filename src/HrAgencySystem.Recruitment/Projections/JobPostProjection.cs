@@ -35,6 +35,7 @@ public sealed record JobPostProjection(
     IReadOnlyList<ChannelPost> Posts,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt,
+    string PostingSlug,
     string SearchText)
 {
     public static JobPostProjection Create(
@@ -70,6 +71,7 @@ public sealed record JobPostProjection(
             [],
             @event.CreatedAt,
             @event.CreatedAt,
+            @event.PostingSlug,
             string.Join(",",@event.Responsibilities)
             + string.Join(",",@event.Requirements)
             + string.Join(",",@event.Skills));
@@ -153,6 +155,19 @@ public sealed record JobPostProjection(
         return this with
         {
             Status = JobPostStatus.Archived,
+            UpdatedAt = @event.OccurredAt,
+            ModifiedById = @event.Author.Id,
+            ModifiedBy = @event.Author
+        };
+    }
+    
+    public JobPostProjection Apply(
+        JobPostRecruiterChanged @event)
+    {
+        return this with
+        {
+            RecruiterId = @event.Recruiter.Id,
+            Recruiter = @event.Recruiter,
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author

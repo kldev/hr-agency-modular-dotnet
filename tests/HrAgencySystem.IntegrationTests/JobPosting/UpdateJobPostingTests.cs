@@ -15,12 +15,14 @@ public sealed class UpdateJobPostingTests(
     [Fact]
     public async Task ShouldUpdateJobPosting()
     {
+        var organizationId = Guid.NewGuid();
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
+        JobPostingClient
+            .WithOrganizationId(organizationId);
+        Client.WithOrganizationId(organizationId);
 
         var createRequest = JobPostingTestData.CreateRequest();
-
+        
         var created = await JobPostingClient.CreateAsync(
             createRequest);
 

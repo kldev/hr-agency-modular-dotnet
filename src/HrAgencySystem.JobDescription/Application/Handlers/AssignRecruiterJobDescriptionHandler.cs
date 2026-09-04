@@ -20,6 +20,10 @@ public static class AssignRecruiterJobDescriptionHandler
     {
         if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
 
+               
+        if (command.RecruiterId == Guid.Empty)
+            throw new InValidValueException("Recruiter id has invalid value");
+        
         var recruiter = await snapshotRepository.GetUserAsync(command.RecruiterId, ct);
         if (recruiter == null)
         {

@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Api.Endpoints.JobDescription.Maps;
 using HrAgencySystem.SharedKernel.ValueObjects;
 

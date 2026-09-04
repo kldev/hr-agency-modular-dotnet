@@ -17,8 +17,11 @@ public sealed class UpdateJobDescriptionTests(
     public async Task ShouldUpdateJobDescription()
     {
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
+        var organizationId = Guid.NewGuid();
+        JobDescriptionClient
+            .WithOrganizationId(organizationId);
+        
+        Client.WithOrganizationId(organizationId);
 
         var createRequest = JobDescriptionTestData.CreateRequest();
 

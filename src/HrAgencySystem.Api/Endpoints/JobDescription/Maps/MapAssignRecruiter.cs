@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.JobDescription.Events;
 using Wolverine;
@@ -22,5 +23,3 @@ internal static class MapAssignRecruiter
     }
 }
 
-// ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record AssignRecruiter(Guid RecruiterId);

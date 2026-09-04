@@ -75,6 +75,8 @@ public sealed class StatusHistoryTests(
             SecondJobDescriptionId,
             JobDescriptionStatus.Open);
 
+        await WaitForProjection();
+        
         await Eventually.AssertAsync(async () =>
         {
             var history = await GetStatusHistory();
@@ -209,6 +211,7 @@ public sealed class StatusHistoryTests(
             FirstJobDescriptionId,
             JobDescriptionStatus.Closed);
 
+        await WaitForProjection();
         await Eventually.AssertAsync(
             async () =>
             {
