@@ -3,7 +3,7 @@ using Npgsql;
 using Weasel.Postgresql;
 using Weasel.Postgresql.Tables;
 
-namespace HrAgencySystem.Recruitment.Feeds.Table;
+namespace HrAgencySystem.Recruitment.Feeds.Persistence;
 
 public  sealed class FeedMigration(NpgsqlDataSource ds) : ISeeder
 {

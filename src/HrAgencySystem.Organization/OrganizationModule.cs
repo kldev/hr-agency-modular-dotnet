@@ -3,6 +3,7 @@ using HrAgencySystem.Organization.Events;
 using HrAgencySystem.Organization.Infrastructure;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Services;
 using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ public static class OrganizationModule
     {
         services.AddScoped<IOrganizationSlugReservationRepository, OrganizationSlugReservationRepository>();
         services.AddScoped<IOrganizationChecker, OrganizationChecker>();
+        services.AddScoped<IOrganizationService, OrganizationService>();
     }
     
     public static void ConfigureMarten(

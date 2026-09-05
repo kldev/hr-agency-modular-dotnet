@@ -1,7 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using HrAgencySystem.Identity.Application.Commands;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Projections;
 using Microsoft.Extensions.Options;

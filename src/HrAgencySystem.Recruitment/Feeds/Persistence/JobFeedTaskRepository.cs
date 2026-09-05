@@ -3,7 +3,7 @@ using HrAgencySystem.Recruitment.Feeds.Port;
 using Npgsql;
 using Weasel.Postgresql;
 
-namespace HrAgencySystem.Recruitment.Feeds.Repository;
+namespace HrAgencySystem.Recruitment.Feeds.Persistence;
 
 internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskRepository
 {
@@ -49,7 +49,8 @@ internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskReposito
     
     private const string MarkCompletedSql = """
                                          UPDATE jobs.job_feed_tasks
-                                               SET status = 'COMPLETED'
+                                               SET status = 'COMPLETED',
+                                                   completed_at = now()
                                                WHERE id = :id AND status = 'PROCESSING'
                                          """;
     

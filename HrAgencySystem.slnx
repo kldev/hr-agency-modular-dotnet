@@ -3,6 +3,7 @@
         <Project Path="src/HrAgencySystem.Api/HrAgencySystem.Api.csproj" />
         <Project Path="src/HrAgencySystem.Audit/HrAgencySystem.Audit.csproj" />
         <Project Path="src/HrAgencySystem.Company/HrAgencySystem.Company.csproj" />
+        <Project Path="src/HrAgencySystem.Files/HrAgencySystem.Files.csproj" />
         <Project Path="src/HrAgencySystem.Identity/HrAgencySystem.Identity.csproj" />
         <Project Path="src/HrAgencySystem.JobDescription/HrAgencySystem.JobDescription.csproj" />
         <Project Path="src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj" />

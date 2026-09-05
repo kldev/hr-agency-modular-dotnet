@@ -2,7 +2,7 @@ using HrAgencySystem.Recruitment.Feeds.Model;
 
 namespace HrAgencySystem.Recruitment.Feeds.Port;
 
-internal interface IJobFeedTaskBatchFetcher
+internal interface IJobFeedTaskQueue
 {
     Task<IReadOnlyList<JobFeedTask>> Fetch(
         int batchSize,

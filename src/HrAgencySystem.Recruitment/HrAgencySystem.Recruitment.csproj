@@ -7,12 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AWSSDK.S3" />
         <PackageReference Include="Marten" />
         <PackageReference Include="WolverineFx" />
         <PackageReference Include="WolverineFx.Marten" />
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
         <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
     </ItemGroup>
     <ItemGroup>

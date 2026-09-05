@@ -1,11 +1,15 @@
+using HrAgencySystem.Files;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Events.JobPostings;
+using HrAgencySystem.Recruitment.Feeds.Application.GenerateJobFeed;
+using HrAgencySystem.Recruitment.Feeds.Application.GetJobFeed;
+using HrAgencySystem.Recruitment.Feeds.Application.ScheduleFeedTasks;
+using HrAgencySystem.Recruitment.Feeds.Persistence;
 using HrAgencySystem.Recruitment.Feeds.Port;
-using HrAgencySystem.Recruitment.Feeds.Repository;
-using HrAgencySystem.Recruitment.Feeds.Table;
+using HrAgencySystem.Recruitment.Feeds.Worker;
 using HrAgencySystem.Recruitment.Infrastructure;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Query;
@@ -13,6 +17,7 @@ using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Port;
 using JasperFx.Events.Projections;
 using Marten;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HrAgencySystem.Recruitment;
@@ -34,7 +39,14 @@ public static class RecruitmentModule
         services.AddScoped<IJobApplicationQueryRepository, JobApplicationQueryRepository>();
         services.AddScoped<ISeeder, FeedMigration>();
         services.AddScoped<IJobFeedTaskRepository, JobFeedTaskRepository>();
-        services.AddScoped<IJobFeedTaskBatchFetcher, JobFeedTaskBatchFetcher>();
+        services.AddScoped<IJobFeedTaskQueue, JobFeedTaskQueue>();
+        services.AddScoped<IJobFeedScheduler, JobFeedScheduler>();
+        services.AddScoped<IJobFeedProcessor, JobFeedProcessor>();
+        services.AddScoped<IJobFeedGenerator, JobFeedGenerator>();
+        services.AddScoped<IJobFeedReader, JobFeedReader>();
+        
+        services.AddHostedService<JobFeedSchedulerWorker>();
+        services.AddHostedService<JobFeedGenerationWorker>();
     }
 
     public static void ConfigureMarten(

@@ -14,6 +14,7 @@ public static class MapEndpoints
         JobPosting.Endpoint.Map(app);
         Candidate.Endpoint.Map(app);
         JobApplication.Endpoint.Map(app);
+        Public.Endpoint.Map(app);
 
         MapPlatformSeeder(app);
     }

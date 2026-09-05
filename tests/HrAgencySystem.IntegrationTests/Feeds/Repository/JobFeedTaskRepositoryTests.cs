@@ -1,8 +1,7 @@
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Recruitment.Feeds.Model;
+using HrAgencySystem.Recruitment.Feeds.Persistence;
 using HrAgencySystem.Recruitment.Feeds.Port;
-using HrAgencySystem.Recruitment.Feeds.Repository;
-using HrAgencySystem.Recruitment.Feeds.Table;
 using Npgsql;
 
 namespace HrAgencySystem.IntegrationTests.Feeds.Repository;
@@ -13,7 +12,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
 {
     private NpgsqlDataSource _dataSource = null!;
     private IJobFeedTaskRepository _repository = null!;
-    private IJobFeedTaskBatchFetcher _batchFetcher = null!;
+    private IJobFeedTaskQueue _queue = null!;
     
     private async Task CleanDatabase()
     {
@@ -39,7 +38,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         
 
         _repository = new JobFeedTaskRepository(_dataSource);
-        _batchFetcher = new JobFeedTaskBatchFetcher(_dataSource);
+        _queue = new JobFeedTaskQueue(_dataSource);
     }
 
     public Task DisposeAsync()
@@ -151,7 +150,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
             CancellationToken.None);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -183,7 +182,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
             CancellationToken.None);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 2,
             CancellationToken.None);
 
@@ -208,7 +207,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         await SetCreatedAt(third.Id, DateTimeOffset.UtcNow.AddMinutes(-1));
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -234,7 +233,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
             JobFeedTaskStatus.Processing);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -253,7 +252,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         await _repository.Save(task, CancellationToken.None);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -281,7 +280,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         await _repository.Save(task, CancellationToken.None);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -305,7 +304,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         await _repository.Save(task, CancellationToken.None);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -329,7 +328,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         await SetCompleted(completed.Id);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -348,7 +347,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         await _repository.Save(task, CancellationToken.None);
 
         // First worker claims task.
-        var firstResult = await _batchFetcher.Fetch(
+        var firstResult = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -356,7 +355,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
 
         // Act
         // Second worker tries to fetch pending tasks.
-        var secondResult = await _batchFetcher.Fetch(
+        var secondResult = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -368,7 +367,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
     public async Task Fetch_ShouldReturnEmpty_WhenThereAreNoPendingTasks()
     {
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -385,7 +384,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
             CancellationToken.None);
 
         // Act
-        var result = await _batchFetcher.Fetch(
+        var result = await _queue.Fetch(
             batchSize: 0,
             CancellationToken.None);
 
@@ -401,7 +400,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
 
         await _repository.Save(task, CancellationToken.None);
 
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -429,7 +428,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         await _repository.Save(task, CancellationToken.None);
 
         // First fetch: attempts = 1
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -440,7 +439,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
             CancellationToken.None);
 
         // Fetch again: attempts = 3, status = PROCESSING
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -491,7 +490,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
 
         await _repository.Save(task, CancellationToken.None);
 
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -515,7 +514,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
 
         await _repository.Save(task, CancellationToken.None);
 
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -532,7 +531,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         Assert.Equal("Temporary failure", beforeComplete.ErrorMessage);
 
         // Fetch again so task becomes PROCESSING.
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -558,7 +557,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
 
         await _repository.Save(task, CancellationToken.None);
 
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -589,7 +588,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
 
         await _repository.Save(task, CancellationToken.None);
 
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 
@@ -598,7 +597,7 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
             "First failure",
             CancellationToken.None);
 
-        await _batchFetcher.Fetch(
+        await _queue.Fetch(
             batchSize: 10,
             CancellationToken.None);
 

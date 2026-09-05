@@ -1,12 +1,10 @@
 using HrAgencySystem.Recruitment.Feeds.Model;
 using HrAgencySystem.Recruitment.Feeds.Port;
-
-namespace HrAgencySystem.Recruitment.Feeds.Repository;
 using Npgsql;
 
+namespace HrAgencySystem.Recruitment.Feeds.Persistence;
 
-
-internal sealed class JobFeedTaskBatchFetcher(NpgsqlDataSource dataSource) : IJobFeedTaskBatchFetcher
+internal sealed class JobFeedTaskQueue(NpgsqlDataSource dataSource) : IJobFeedTaskQueue
 {
     private const string Sql = """
                                UPDATE jobs.job_feed_tasks

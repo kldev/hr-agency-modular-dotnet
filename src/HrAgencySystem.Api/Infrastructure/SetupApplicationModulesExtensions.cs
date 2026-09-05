@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Company;
 using HrAgencySystem.Company.Infrastructure;
+using HrAgencySystem.Files;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
@@ -27,6 +28,7 @@ public static class SetupApplicationModulesExtensions
             services.AddIdentityModule();
             services.AddJobDescriptionModule();
             services.AddRecruitmentModule();
+            services.AddFilesModule(configuration);
         }
 
         private void ConfigureJson()
