@@ -4,7 +4,7 @@ using HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.UnitTests.JobPosting;
+namespace HrAgencySystem.UnitTests.JobPostings;
 
 public sealed class JobPostDataFactoryTests
 {

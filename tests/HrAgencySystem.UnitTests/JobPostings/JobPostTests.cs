@@ -4,7 +4,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using D = HrAgencySystem.Recruitment.Domain.Posting;
 
-namespace HrAgencySystem.UnitTests.JobPosting;
+namespace HrAgencySystem.UnitTests.JobPostings;
 
 public sealed class JobPostTests
 {

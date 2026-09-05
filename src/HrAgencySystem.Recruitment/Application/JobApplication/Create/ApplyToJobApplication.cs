@@ -9,4 +9,8 @@ public sealed record ApplyToJobApplication(
     string Phone,
     CandidateSource Source,
     string? FirstName = null,
-    string? LastName = null);
+    string? LastName = null)
+{
+    public string ToFullName()
+        => $"{FirstName} {LastName}".Trim();
+}

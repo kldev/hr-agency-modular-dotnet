@@ -4,10 +4,10 @@ using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
-using D = HrAgencySystem.JobDescription.Domain;
 using NSubstitute;
+using D = HrAgencySystem.JobDescription.Domain;
 
-namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
+namespace HrAgencySystem.UnitTests.JobDescriptions.Handlers;
 
 public sealed class UpdateJobDescriptionStatusHandlerTests
 {

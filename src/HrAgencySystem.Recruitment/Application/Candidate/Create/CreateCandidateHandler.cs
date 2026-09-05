@@ -86,7 +86,7 @@ public static class CreateCandidateHandler
         CreateCandidate command)
     {
         var (email, error) = Email.TryCreate(command.Email);
-        var (phone, phoneError) = CandidatePhoneNumber.TryCreate(command.PhoneNumber);
+        var (phone, phoneError) = CandidatePhoneNumber.TryCreate(command.Phone);
         var errors = new List<string>();
         if (error != null) errors.Add(error);
         if (phoneError != null) errors.Add(phoneError);

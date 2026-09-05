@@ -40,7 +40,7 @@ public sealed class JobApplication
     {
         Id = JobApplicationId.From(@event.JobApplicationId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
-        JobPostId = JobPostId.From(@event.JobPostingId);
+        JobPostId = JobPostId.From(@event.JobPostId);
         CandidateId = CandidateId.From(@event.CandidateInfo.CandidateId);
         Status = JobApplicationStatus.Applied;
         Source = @event.Source;

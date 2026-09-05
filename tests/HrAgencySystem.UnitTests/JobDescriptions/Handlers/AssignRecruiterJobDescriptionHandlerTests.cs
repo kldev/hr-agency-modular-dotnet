@@ -5,11 +5,11 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using D = HrAgencySystem.JobDescription.Domain;
 using NSubstitute;
 using Wolverine.Marten;
+using D = HrAgencySystem.JobDescription.Domain;
 
-namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
+namespace HrAgencySystem.UnitTests.JobDescriptions.Handlers;
 
 public sealed class AssignRecruiterJobDescriptionHandlerTests
 {

@@ -6,7 +6,7 @@ using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using D = HrAgencySystem.JobDescription.Domain;
 
-namespace HrAgencySystem.UnitTests.JobDescription;
+namespace HrAgencySystem.UnitTests.JobDescriptions;
 
 public class JobDescriptionTests
 {

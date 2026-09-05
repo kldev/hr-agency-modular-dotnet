@@ -1,6 +1,5 @@
 using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.JobDescription.Application.Handlers;
-using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Exception;
@@ -12,7 +11,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
 
-namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
+namespace HrAgencySystem.UnitTests.JobDescriptions.Handlers;
 
 public class CreateJobDescriptionHandlerTests : BaseTest
 {

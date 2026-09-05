@@ -12,7 +12,7 @@ using Marten;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 
-namespace HrAgencySystem.UnitTests.Company.Handlers;
+namespace HrAgencySystem.UnitTests.Companies.Handlers;
 
 public class CreateCompanyHandlerTests : BaseTest
 {

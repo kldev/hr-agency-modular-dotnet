@@ -7,7 +7,7 @@ public sealed record CreateCandidate(
     Guid OrganizationId,
     string Email,
     CandidateSource Source,
-    string PhoneNumber,
+    string Phone,
     string? FirstName = null,
     string? LastName = null,
     Guid? CreatedBy = null,

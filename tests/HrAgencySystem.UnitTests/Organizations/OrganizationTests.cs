@@ -1,6 +1,6 @@
 using HrAgencySystem.Organization.Events;
 using D = HrAgencySystem.Organization.Domain;
-namespace HrAgencySystem.UnitTests.Organization;
+namespace HrAgencySystem.UnitTests.Organizations;
 
 public class OrganizationTests
 {

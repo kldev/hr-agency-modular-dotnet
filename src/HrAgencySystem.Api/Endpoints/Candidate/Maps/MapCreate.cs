@@ -19,7 +19,7 @@ internal static class MapCreate
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreateCandidateRequest request, CancellationToken ct)
     {
         var result = await bus.InvokeAsync<CandidateCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
-        return TypedResults.Created($"/api/recruitment/candidates/{result.Id}", result);
+        return TypedResults.Created($"/api/recruitment/candidates/{result.CandidateId}", result);
     }
 }
 

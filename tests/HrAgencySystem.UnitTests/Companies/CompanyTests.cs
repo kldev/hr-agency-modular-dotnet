@@ -2,7 +2,7 @@ using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
 using D = HrAgencySystem.Company.Domain;
 
-namespace HrAgencySystem.UnitTests.Company;
+namespace HrAgencySystem.UnitTests.Companies;
 
 public class CompanyTests
 {

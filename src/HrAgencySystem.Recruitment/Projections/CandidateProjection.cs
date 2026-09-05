@@ -41,10 +41,10 @@ public sealed record CandidateProjection(
     public static CandidateProjection Create(
         CandidateCreated @event)
     {
-        return new CandidateProjection(@event.Id,
+        return new CandidateProjection(@event.CandidateId,
             @event.OrganizationId,
             @event.Email,
-            @event.PhoneNumber,
+            @event.Phone,
             @event.FirstName,
             @event.LastName,
             @event.Source,

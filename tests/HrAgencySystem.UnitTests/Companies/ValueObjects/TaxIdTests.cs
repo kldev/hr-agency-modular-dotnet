@@ -1,7 +1,7 @@
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 
-namespace HrAgencySystem.UnitTests.Company.ValueObjects;
+namespace HrAgencySystem.UnitTests.Companies.ValueObjects;
 
 public class TaxIdTests
 {

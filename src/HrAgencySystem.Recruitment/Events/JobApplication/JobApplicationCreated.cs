@@ -7,7 +7,7 @@ namespace HrAgencySystem.Recruitment.Events.JobApplication;
 public sealed record JobApplicationCreated(
     Guid JobApplicationId,
     Guid OrganizationId,
-    Guid JobPostingId,
+    Guid JobPostId,
     string JobPostTitle,
     CandidateSource Source,
     CompanySnapshot Company,

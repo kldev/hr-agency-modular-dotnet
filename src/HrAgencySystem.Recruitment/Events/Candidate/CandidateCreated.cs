@@ -3,10 +3,10 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Recruitment.Events.Candidate;
 
-public sealed record CandidateCreated(Guid Id, 
+public sealed record CandidateCreated(Guid CandidateId, 
     Guid OrganizationId, 
     string Email, 
-    string PhoneNumber, 
+    string Phone, 
     CandidateSource Source, 
     DateTimeOffset CreatedAt,
     UserSnapshot? CreatedBy,

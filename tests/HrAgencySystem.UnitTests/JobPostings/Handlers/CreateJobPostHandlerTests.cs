@@ -10,7 +10,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
 
-namespace HrAgencySystem.UnitTests.JobPosting.Handlers;
+namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
 public class CreateJobPostHandlerTests : BaseTest
 {

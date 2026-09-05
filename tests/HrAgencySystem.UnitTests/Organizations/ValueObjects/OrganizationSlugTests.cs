@@ -1,7 +1,7 @@
 using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 
-namespace HrAgencySystem.UnitTests.Organization.ValueObjects;
+namespace HrAgencySystem.UnitTests.Organizations.ValueObjects;
 
 public sealed class OrganizationSlugTests
 {

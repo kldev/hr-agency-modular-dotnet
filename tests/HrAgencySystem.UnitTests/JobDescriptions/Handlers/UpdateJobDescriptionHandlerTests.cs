@@ -1,6 +1,5 @@
 using HrAgencySystem.JobDescription.Application.Commands;
 using HrAgencySystem.JobDescription.Application.Handlers;
-using D = HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -8,8 +7,9 @@ using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using NSubstitute;
+using D = HrAgencySystem.JobDescription.Domain;
 
-namespace HrAgencySystem.UnitTests.JobDescription.Handlers;
+namespace HrAgencySystem.UnitTests.JobDescriptions.Handlers;
 
 public class UpdateJobDescriptionHandlerTests : BaseTest
 {

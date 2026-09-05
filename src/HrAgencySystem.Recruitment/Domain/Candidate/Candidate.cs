@@ -24,11 +24,11 @@ public sealed class Candidate
 
     public void Apply(CandidateCreated @event)
     {
-        Id = CandidateId.From(@event.Id);
+        Id = CandidateId.From(@event.CandidateId);
         Email = Email.Create(@event.Email);
         Source = @event.Source;
         Status = CandidateStatus.Active;
-        PhoneNumber = CandidatePhoneNumber.Create(@event.PhoneNumber);
+        PhoneNumber = CandidatePhoneNumber.Create(@event.Phone);
         FirstName = FirstName.Create(@event.FirstName, false);
         LastName = LastName.Create(@event.LastName, false);
     }

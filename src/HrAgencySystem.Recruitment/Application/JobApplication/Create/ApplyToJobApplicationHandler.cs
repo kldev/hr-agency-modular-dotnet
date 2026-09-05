@@ -75,7 +75,11 @@ public static class ApplyToJobApplicationHandler
         var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName ?? "", false);
         var (lastName, lastNameError) = LastName.TryCreate(command.LastName ?? "", false);
         var (phoneNumber, phoneNumberError) = CandidatePhoneNumber.TryCreate(command.Phone);
-        return emailError != null ? throw new ValidationException(emailError) : (email!, firstName!, lastName!, phoneNumber!);
+
+        var errors = new List<string>();
+        if (emailError != null) errors.Add(emailError);
+        if (phoneNumberError != null) errors.Add(phoneNumberError);
+
+        return errors.Count > 0 ? throw new ValidationException(errors) : (email!, firstName!, lastName!, phoneNumber!);
     }
-    
 }

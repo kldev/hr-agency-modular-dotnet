@@ -1,4 +1,3 @@
-using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.Recruitment.Application.JobPosting.Update;
 using HrAgencySystem.Recruitment.Domain.Posting;
 using HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
@@ -8,7 +7,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using NSubstitute;
 
-namespace HrAgencySystem.UnitTests.JobPosting.Handlers;
+namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
 public class UpdateJobPostHandlerTests : BaseTest
 {

@@ -38,8 +38,8 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session,
 
         logger.LogInformation($"Candidate {command.Email} created successfully");
         
-        return new CandidateInfo(result.Id, result.Email,
-            result.PhoneNumber, result.FirstName, result.LastName);
+        return new CandidateInfo(result.CandidateId, result.Email,
+            result.Phone, result.FirstName, result.LastName);
     }
 
     private async Task<CandidateInfo?> GetExisting(CreateCandidate command, CancellationToken ct)
