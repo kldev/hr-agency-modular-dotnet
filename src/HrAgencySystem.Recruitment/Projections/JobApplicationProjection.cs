@@ -2,7 +2,7 @@ using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates;
-using HrAgencySystem.Recruitment.Events.JobApplication;
+using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Recruitment.Projections;

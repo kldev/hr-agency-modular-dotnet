@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Recruitment.Application.JobPosting.PostToChannel;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.JobPosting.Maps;

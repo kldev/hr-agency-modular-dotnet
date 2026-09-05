@@ -2,7 +2,7 @@ using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.Candidate.UpdateApplication;
 using HrAgencySystem.Recruitment.Application.JobApplication.Create;
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Events.Candidate;
+using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
@@ -14,27 +14,24 @@ namespace HrAgencySystem.Recruitment.Infrastructure;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session, ILogger<ICandidateResolver> logger): ICandidateResolver
 {
-    public async Task<CandidateInfo> FindOrCreate(CreateCandidate command, JobPostInfo? info, CancellationToken ct)
+    public async Task<CandidateInfo> FindOrCreate(CreateCandidate command, JobPostInfo info, CancellationToken ct)
     {
         var existing = await GetExisting(command, ct);
         if (existing is null) return await CreateNew(command, ct);
-        if (info != null)
-        {
-            logger.LogInformation($"Candidate {command.Email} already in database. Update");
-            await bus.InvokeAsync<CandidateApplicationUpdated>(
-                new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
-        }
 
+        logger.CandidateNotInDatabase(command.Email);
+        await bus.InvokeAsync<CandidateApplicationUpdated>(
+            new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
+        
         return existing!;
-
     }
 
     private async Task<CandidateInfo> CreateNew(CreateCandidate command, CancellationToken ct)
     {
-        logger.LogInformation($"Candidate {command.Email} not in database. Create new");
+        logger.CandidateNotInDatabase(command.Email);
         var result = await bus.InvokeAsync<CandidateCreated>(command, ct);
 
-        logger.LogInformation($"Candidate {command.Email} created successfully");
+        logger.CandidateCreatedSuccessfully(result.Email);
         
         return new CandidateInfo(result.CandidateId, result.Email,
             result.Phone, result.FirstName, result.LastName);
@@ -51,5 +48,24 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session,
                 projection.FirstName ?? "", projection.LastName ?? "")
             : null;
     }
+}
+
+internal static partial class CandidateLogs
+{
+    [LoggerMessage(
+        EventId = 1,
+        Level = LogLevel.Information,
+        Message = "Candidate {email} created successfully")]
+    public static partial void CandidateCreatedSuccessfully(
+        this ILogger logger,
+        string email);
+    
+    [LoggerMessage(
+        EventId = 1,
+        Level = LogLevel.Information,
+        Message = "Candidate {email} not in database. Create new")]
+    public static partial void CandidateNotInDatabase(
+        this ILogger logger,
+        string email);
 }
 

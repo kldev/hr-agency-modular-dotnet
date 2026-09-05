@@ -1,6 +1,6 @@
 using HrAgencySystem.Recruitment.Application.JobPosting.Create;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;

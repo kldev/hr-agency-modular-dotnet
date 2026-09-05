@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Recruitment.Application.JobApplication.RemoveApplicationTag;
-using HrAgencySystem.Recruitment.Events.JobApplication;
+using HrAgencySystem.Recruitment.Events.Applications;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.JobApplication.Maps;

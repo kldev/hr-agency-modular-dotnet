@@ -1,7 +1,7 @@
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.SharedKernel.Snapshots;
 
-namespace HrAgencySystem.Recruitment.Events.Candidate;
+namespace HrAgencySystem.Recruitment.Events.Candidates;
 
 public sealed record CandidateCreated(Guid CandidateId, 
     Guid OrganizationId, 

@@ -1,7 +1,7 @@
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
-using HrAgencySystem.Recruitment.Events.Candidate;
+using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -82,8 +82,8 @@ public class CreateCandidateHandlerTests : BaseTest
                     x => x.Value == OrganizationId),
                 Arg.Is<Email>(
                     x => x.Value == "john.doe@example.com"),
-                new CandidateId(result.CandidateId),
-                Arg.Any<CancellationToken>());
+                new CandidateId(result.CandidateId)
+                );
 
         AssertNoCreatedByLookup();
 
@@ -388,8 +388,8 @@ public class CreateCandidateHandlerTests : BaseTest
                 .ReserveAsync(
                     Arg.Any<OrganizationId>(),
                     Arg.Any<Email>(),
-                    new CandidateId(result.CandidateId),
-                    Arg.Any<CancellationToken>());
+                    new CandidateId(result.CandidateId)
+                    );
 
             await _userSnapshotRepository
                 .GetUserAsync(
@@ -459,8 +459,8 @@ public class CreateCandidateHandlerTests : BaseTest
             .ReserveAsync(
                 Arg.Any<OrganizationId>(),
                 Arg.Any<Email>(),
-                Arg.Any<CandidateId>(),
-                Arg.Any<CancellationToken>());
+                Arg.Any<CandidateId>()
+                );
     }
 
     private void AssertNoCreatedByLookup()

@@ -1,6 +1,6 @@
 using HrAgencySystem.Recruitment.Application.JobPosting.PostToChannel;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using Marten;
 using Wolverine;
 

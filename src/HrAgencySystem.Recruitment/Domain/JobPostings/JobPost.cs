@@ -1,5 +1,5 @@
 using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
@@ -63,9 +63,9 @@ public sealed class JobPost
 
     public DateTimeOffset UpdatedAt { get; private set; }
     
-    public Guid CreatedBy { get; set; }
+    public Guid CreatedBy { get; private set; }
 
-    public Guid? ModifiedBy { get; set; } = null;
+    public Guid? ModifiedBy { get; private set; }
     
     public IReadOnlyList<ChannelPost> Posts { get; private set; } = [];
 

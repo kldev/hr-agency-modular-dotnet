@@ -1,5 +1,8 @@
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
+using HrAgencySystem.Recruitment.Events.Applications;
+using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Feeds.Port;
 using HrAgencySystem.Recruitment.Feeds.Repository;
 using HrAgencySystem.Recruitment.Feeds.Table;
@@ -62,30 +65,30 @@ public static class RecruitmentModule
     private static void ConfigureEvents(StoreOptions options)
     {
         // Job Application
-        options.Events.AddEventType<Events.JobApplication.JobApplicationCreated>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationAssessmentStarted>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationHired>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationInterviewScheduled>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationOfferMade>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationRejected>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationScreeningStarted>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationWithdrawn>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationTagged>();
-        options.Events.AddEventType<Events.JobApplication.JobApplicationTagRemoved>();
+        options.Events.AddEventType<JobApplicationCreated>();
+        options.Events.AddEventType<JobApplicationAssessmentStarted>();
+        options.Events.AddEventType<JobApplicationHired>();
+        options.Events.AddEventType<JobApplicationInterviewScheduled>();
+        options.Events.AddEventType<JobApplicationOfferMade>();
+        options.Events.AddEventType<JobApplicationRejected>();
+        options.Events.AddEventType<JobApplicationScreeningStarted>();
+        options.Events.AddEventType<JobApplicationWithdrawn>();
+        options.Events.AddEventType<JobApplicationTagged>();
+        options.Events.AddEventType<JobApplicationTagRemoved>();
         
         // Job Posting
-        options.Events.AddEventType<Events.JobPosting.JobPostCreated>();
-        options.Events.AddEventType<Events.JobPosting.JobPostUpdated>();
-        options.Events.AddEventType<Events.JobPosting.JobPostedToChannel>();
-        options.Events.AddEventType<Events.JobPosting.JobPostPublished>();
-        options.Events.AddEventType<Events.JobPosting.JobPostClosed>();
-        options.Events.AddEventType<Events.JobPosting.JobPostArchived>();
+        options.Events.AddEventType<JobPostCreated>();
+        options.Events.AddEventType<JobPostUpdated>();
+        options.Events.AddEventType<JobPostedToChannel>();
+        options.Events.AddEventType<JobPostPublished>();
+        options.Events.AddEventType<JobPostClosed>();
+        options.Events.AddEventType<JobPostArchived>();
         
         // Candidate
-        options.Events.AddEventType<Events.Candidate.CandidateCreated>();
-        options.Events.AddEventType<Events.Candidate.CandidateApplicationUpdated>();
-        options.Events.AddEventType<Events.Candidate.CandidateTagged>();
-        options.Events.AddEventType<Events.Candidate.CandidateTagRemoved>();
+        options.Events.AddEventType<CandidateCreated>();
+        options.Events.AddEventType<CandidateApplicationUpdated>();
+        options.Events.AddEventType<CandidateTagged>();
+        options.Events.AddEventType<CandidateTagRemoved>();
         
     }
 

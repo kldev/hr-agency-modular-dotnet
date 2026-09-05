@@ -1,5 +1,5 @@
 using HrAgencySystem.Recruitment.Domain.JobPostings;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -7,6 +7,7 @@ using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobPosting.ChangeRecruiter;
 
+// ReSharper disable once UnusedType.Global
 public static class ChangeJobPostRecruiterHandler
 {
     [AggregateHandler]

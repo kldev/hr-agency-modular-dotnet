@@ -40,5 +40,5 @@ public enum JobApplicationStatus
     /**
      * Candidate has withdrawn their application.
      */
-    Withdrawn,
+    Withdrawn
 }

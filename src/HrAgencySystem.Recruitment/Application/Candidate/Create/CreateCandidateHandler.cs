@@ -1,7 +1,7 @@
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
-using HrAgencySystem.Recruitment.Events.Candidate;
+using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -33,7 +33,7 @@ public static class CreateCandidateHandler
 
         await ValidateEmailReservation(repository, ct, organizationId, email);
 
-        await repository.ReserveAsync(organizationId, email!, candidateId, ct);
+        await repository.ReserveAsync(organizationId, email!, candidateId);
 
         var createdBy = await GetCreatedBy(command, snapshotRepository, ct);
 

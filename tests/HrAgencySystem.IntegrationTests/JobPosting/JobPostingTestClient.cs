@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.JobPosting.Maps;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Projections;
 
 namespace HrAgencySystem.IntegrationTests.JobPosting;

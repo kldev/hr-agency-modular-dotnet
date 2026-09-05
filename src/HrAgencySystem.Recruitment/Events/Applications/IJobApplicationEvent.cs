@@ -1,6 +1,6 @@
 using HrAgencySystem.SharedKernel.Snapshots;
 
-namespace HrAgencySystem.Recruitment.Events.JobApplication;
+namespace HrAgencySystem.Recruitment.Events.Applications;
 
 public interface IJobApplicationEvent
 {

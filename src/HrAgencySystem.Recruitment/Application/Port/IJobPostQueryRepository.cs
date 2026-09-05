@@ -23,35 +23,64 @@ public sealed record JobPostQuery(string Search,
 int Page, int PageSize) : IPagedQuery;
 
 public sealed record JobPostResponse(
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid Id,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid JobDescriptionId,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid OrgId,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid CompanyId,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     string Title,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     string Summary,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     string Description,
     string JobUrl,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     IReadOnlyList<string> Responsibilities,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     IReadOnlyList<string> Requirements,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     IReadOnlyList<string> Skills,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     string Location,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     string LanguageCode,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     string CountryCode,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     EmploymentType EmploymentType,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     WorkMode WorkMode,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     CurrencyCode CurrencyCode,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     decimal SalaryMin,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     decimal SalaryMax,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     JobPostStatus Status,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid RecruiterId,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     UserSnapshot Recruiter,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid CreatedById,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     UserSnapshot CreatedBy,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid? ModifiedById,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     UserSnapshot? ModifiedBy,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     CompanySnapshot Company,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     IReadOnlyList<ChannelPost> Posts,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset CreatedAt,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset UpdatedAt
 )
 {

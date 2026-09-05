@@ -1,7 +1,7 @@
 using HrAgencySystem.Recruitment.Application.Service;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -70,7 +70,7 @@ public static class CreateJobPostHandler
                 salaryRange.Currency,
                 salaryRange.Min,
                 salaryRange.Max,
-                recruiter!,
+                recruiter,
                 createdBy,
                 company,
                 languageCode.Value,

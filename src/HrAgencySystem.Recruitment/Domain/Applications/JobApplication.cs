@@ -1,6 +1,6 @@
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
-using HrAgencySystem.Recruitment.Events.JobApplication;
+using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -13,7 +13,7 @@ public sealed class JobApplication
     {
     }
 
-    public JobApplication Empty()
+    public static JobApplication Empty()
     {
         return new JobApplication();
     }

@@ -2,7 +2,7 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Recruitment.Application.JobApplication.TagApplication;
-using HrAgencySystem.Recruitment.Events.JobApplication;
+using HrAgencySystem.Recruitment.Events.Applications;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 

@@ -1,5 +1,5 @@
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Events.Candidate;
+using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -7,9 +7,11 @@ using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.Candidate.RemoveCandidateTag;
 
+// ReSharper disable once UnusedType.Global
 public static class RemoveCandidateTagHandler
 {
     [AggregateHandler]
+    // ReSharper disable once UnusedMember.Global
     public static async Task<(CandidateTagRemoved, Wolverine.Marten.Events)> Handle(
         RemoveCandidateTag command, 
         Domain.Candidates.Candidate aggregate,

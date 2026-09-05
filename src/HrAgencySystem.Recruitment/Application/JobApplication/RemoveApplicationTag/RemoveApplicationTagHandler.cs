@@ -1,5 +1,5 @@
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Events.JobApplication;
+using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -7,6 +7,7 @@ using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplication.RemoveApplicationTag;
 
+// ReSharper disable once UnusedType.Global
 public static class RemoveApplicationTagHandler
 {
     [AggregateHandler]

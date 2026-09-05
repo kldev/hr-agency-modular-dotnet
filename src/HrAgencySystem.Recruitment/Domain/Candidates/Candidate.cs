@@ -1,5 +1,5 @@
 using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
-using HrAgencySystem.Recruitment.Events.Candidate;
+using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Domain.Candidates;

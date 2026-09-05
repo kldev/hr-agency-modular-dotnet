@@ -4,12 +4,12 @@ public readonly record struct JobPostId(Guid Value)
 {
     public static JobPostId New()
     {
-        return new(Guid.NewGuid());
+        return new JobPostId(Guid.NewGuid());
     }
 
     public static JobPostId From(Guid value)
     {
-        return new(value);
+        return new JobPostId(value);
     }
 
     public override string ToString()

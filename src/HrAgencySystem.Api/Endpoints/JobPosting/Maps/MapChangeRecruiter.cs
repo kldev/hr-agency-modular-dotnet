@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Recruitment.Application.JobPosting.ChangeRecruiter;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.JobPosting.Maps;

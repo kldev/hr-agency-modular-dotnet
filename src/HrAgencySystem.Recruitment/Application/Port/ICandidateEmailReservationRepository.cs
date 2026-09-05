@@ -10,5 +10,5 @@ public interface ICandidateEmailReservationRepository
         "The candidate with the specified email already exists in this organization.";
     
     Task<bool> ExistsAsync(OrganizationId organizationId, Email email, CancellationToken ct);
-    Task ReserveAsync(OrganizationId organizationId, Email email, CandidateId id, CancellationToken ct);
+    Task ReserveAsync(OrganizationId organizationId, Email email, CandidateId id);
 }

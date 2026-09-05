@@ -1,5 +1,5 @@
 using HrAgencySystem.Recruitment.Domain.JobPostings;
-using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -8,6 +8,7 @@ using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobPosting.PostToChannel;
 
+// ReSharper disable once UnusedType.Global
 public static class PostToChannelHandler
 {
     [AggregateHandler]

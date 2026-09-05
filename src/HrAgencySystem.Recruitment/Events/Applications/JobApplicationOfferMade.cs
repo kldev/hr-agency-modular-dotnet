@@ -1,8 +1,8 @@
 using HrAgencySystem.SharedKernel.Snapshots;
 
-namespace HrAgencySystem.Recruitment.Events.JobApplication;
+namespace HrAgencySystem.Recruitment.Events.Applications;
 
-public sealed record JobApplicationRejected(
+public sealed record JobApplicationOfferMade(
     Guid JobApplicationId,
     DateTimeOffset OccurredAt,
     Guid AuthorId,

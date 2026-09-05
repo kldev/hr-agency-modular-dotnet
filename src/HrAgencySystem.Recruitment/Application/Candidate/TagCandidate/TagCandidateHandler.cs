@@ -1,11 +1,12 @@
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Events.Candidate;
+using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 namespace HrAgencySystem.Recruitment.Application.Candidate.TagCandidate;
 
+// ReSharper disable once UnusedType.Global
 public static class TagCandidateHandler
 {
     [AggregateHandler]
@@ -17,10 +18,11 @@ public static class TagCandidateHandler
         IClock clock,
         CancellationToken ct)
     {
+        
         var tag = await tagRepository.GetTag(command.TagId, ct);
         var user = await GetCreatedBy(snapshotRepository, command.CreatedBy, ct);
 
-        var @event = new CandidateTagged(command.CandidateId, tag, user, clock.UtcNow);
+        var @event = new CandidateTagged(aggregate.Id.Value, tag, user, clock.UtcNow);
         
         return (@event, [@event]);
     }
