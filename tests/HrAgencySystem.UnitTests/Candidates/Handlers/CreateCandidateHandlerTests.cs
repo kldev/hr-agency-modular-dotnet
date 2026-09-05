@@ -1,6 +1,6 @@
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidate;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
@@ -10,7 +10,6 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
-using D = HrAgencySystem.Recruitment.Domain.Candidate;
 
 namespace HrAgencySystem.UnitTests.Candidates.Handlers;
 
@@ -90,7 +89,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
         _documentSession.Events
             .Received(1)
-            .StartStream<D.Candidate>(
+            .StartStream<Candidate>(
                 result.CandidateId,
                 Arg.Is<CandidateCreated>(
                     x =>
@@ -137,7 +136,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
         _documentSession.Events
             .Received(1)
-            .StartStream<D.Candidate>(
+            .StartStream<Candidate>(
                 result.CandidateId,
                 Arg.Is<CandidateCreated>(
                     x =>
@@ -173,7 +172,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
         _documentSession.Events
             .Received(1)
-            .StartStream<D.Candidate>(
+            .StartStream<Candidate>(
                 result.CandidateId,
                 Arg.Any<CandidateCreated>());
     }
@@ -199,7 +198,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
         _documentSession.Events
             .Received(1)
-            .StartStream<D.Candidate>(
+            .StartStream<Candidate>(
                 result.CandidateId,
                 Arg.Any<CandidateCreated>());
     }
@@ -342,7 +341,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
         _documentSession.Events
             .Received(1)
-            .StartStream<D.Candidate>(
+            .StartStream<Candidate>(
                 result.CandidateId,
                 Arg.Is<CandidateCreated>(
                     x =>
@@ -477,7 +476,7 @@ public class CreateCandidateHandlerTests : BaseTest
     {
         _documentSession.Events
             .DidNotReceive()
-            .StartStream<D.Candidate>(
+            .StartStream<Candidate>(
                 Arg.Any<Guid>(),
                 Arg.Any<object>());
     }

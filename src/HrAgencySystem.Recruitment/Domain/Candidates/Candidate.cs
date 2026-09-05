@@ -1,8 +1,8 @@
-using HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
+using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
 using HrAgencySystem.Recruitment.Events.Candidate;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.Recruitment.Domain.Candidate;
+namespace HrAgencySystem.Recruitment.Domain.Candidates;
 
 public sealed class Candidate
 {
@@ -14,8 +14,8 @@ public sealed class Candidate
     public CandidateSource Source { get; private set; }
     public CandidateStatus Status { get; private set; }
     
-    public FirstName  FirstName { get; private set; }
-    public LastName LastName { get;private set; }
+    public FirstName  FirstName { get; private set; } = null!;
+    public LastName LastName { get; private set; } = null!;
     
     public static Candidate Empty()
     {

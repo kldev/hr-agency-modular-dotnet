@@ -1,6 +1,6 @@
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidate;
-using HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
+using HrAgencySystem.Recruitment.Domain.Candidates;
+using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
 using HrAgencySystem.Recruitment.Events.Candidate;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
@@ -49,7 +49,7 @@ public static class CreateCandidateHandler
             firstName.Value,
             lastName.Value);
 
-        session.Events.StartStream<Domain.Candidate.Candidate>(candidateId.Value, @event);
+        session.Events.StartStream<Domain.Candidates.Candidate>(candidateId.Value, @event);
         
         return @event;
     }

@@ -1,4 +1,4 @@
-namespace HrAgencySystem.Recruitment.Domain.Interview;
+namespace HrAgencySystem.Recruitment.Domain.Interviews;
 
 public enum InterviewStatus
 {

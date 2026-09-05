@@ -1,4 +1,4 @@
-namespace HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
+namespace HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 
 public readonly record struct CompanyId(Guid Value)
 {

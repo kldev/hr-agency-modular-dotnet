@@ -4,7 +4,6 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
-using D = HrAgencySystem.Recruitment.Domain.JobApplication;
 namespace HrAgencySystem.Recruitment.Application.JobApplication.TagApplication;
 
 public static class TagApplicationHandler
@@ -12,7 +11,7 @@ public static class TagApplicationHandler
     [AggregateHandler]
     public static async Task<(JobApplicationTagged, Wolverine.Marten.Events)> Handle(
         TagApplication command, 
-        D.JobApplication aggregate,
+        Domain.Applications.JobApplication aggregate,
         ITagRepository tagRepository,
         IUserSnapshotRepository snapshotRepository,
         IClock clock,

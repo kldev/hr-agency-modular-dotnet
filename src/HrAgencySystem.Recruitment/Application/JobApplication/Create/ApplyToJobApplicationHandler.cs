@@ -1,8 +1,8 @@
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
-using HrAgencySystem.Recruitment.Domain.JobApplication;
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.Applications;
+using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobApplication;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -56,7 +56,7 @@ public static class ApplyToJobApplicationHandler
             lastName.Value,
             clock.UtcNow);
 
-        session.Events.StartStream<Domain.JobApplication.JobApplication>(jobApplicationId.Value, @event);
+        session.Events.StartStream<Domain.Applications.JobApplication>(jobApplicationId.Value, @event);
 
         return @event;
     }

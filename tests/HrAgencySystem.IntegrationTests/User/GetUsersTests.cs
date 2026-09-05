@@ -38,7 +38,7 @@ public sealed class GetUsersTests(
 
                 response.EnsureSuccessStatusCode();
 
-                var users = (await response.ReadWithJson<SliceResponse<UserProjection>>(output))!.Content;
+                var users = (await response.ReadWithJson<SliceResponse<UserProjection>>(OutputHelper))!.Content;
                 
                 Assert.Contains(users, x => x.Id == firstUser.Id);
                 Assert.Contains(users, x => x.Id == secondUser.Id);
@@ -61,7 +61,7 @@ public sealed class GetUsersTests(
         response.EnsureSuccessStatusCode();
 
         var result = (await response.ReadWithJson<SliceResponse<UserProjection>>(
-            output))!.Content;
+            OutputHelper))!.Content;
 
         Assert.NotNull(result);
         Assert.Empty(result);

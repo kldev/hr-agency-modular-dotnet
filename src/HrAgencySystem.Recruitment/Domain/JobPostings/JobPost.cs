@@ -1,9 +1,9 @@
-using HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
+using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 using HrAgencySystem.Recruitment.Events.JobPosting;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.Recruitment.Domain.Posting;
+namespace HrAgencySystem.Recruitment.Domain.JobPostings;
 
 public sealed class JobPost
 {

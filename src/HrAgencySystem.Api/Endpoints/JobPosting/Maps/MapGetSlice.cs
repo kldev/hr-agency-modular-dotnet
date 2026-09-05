@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.SharedKernel.Web;
 using Microsoft.Extensions.Options;
 

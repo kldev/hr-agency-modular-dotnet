@@ -1,5 +1,5 @@
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Recruitment.Events.JobApplication;

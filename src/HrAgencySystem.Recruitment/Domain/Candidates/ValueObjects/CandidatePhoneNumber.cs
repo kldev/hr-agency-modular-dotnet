@@ -1,6 +1,6 @@
 using HrAgencySystem.SharedKernel.Exception;
 
-namespace HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
+namespace HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
 
 public sealed record CandidatePhoneNumber
 {

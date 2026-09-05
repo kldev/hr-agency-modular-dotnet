@@ -1,6 +1,6 @@
 using HrAgencySystem.Recruitment.Application.Service;
-using HrAgencySystem.Recruitment.Domain.Posting;
-using HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
+using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 using HrAgencySystem.Recruitment.Events.JobPosting;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;

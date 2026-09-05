@@ -1,4 +1,4 @@
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Projections;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Query;

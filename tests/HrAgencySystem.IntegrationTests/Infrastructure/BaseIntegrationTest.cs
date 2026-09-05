@@ -15,10 +15,10 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         _environment = environment;
         OutputHelper = output;
         Client.AsOrganizationRoles();
-        JobDescriptionClient = new(environment.CreateClient().AsOrganizationRoles());
-        UserClient = new(environment.CreateClient().AsOrganizationRoles(), OutputHelper);
-        CompanyClient = new(_environment.CreateClient().AsOrganizationRoles());
-        JobPostingClient = new(_environment.CreateClient().AsOrganizationRoles());
+        JobDescriptionClient = new JobDescriptionTestClient(environment.CreateClient().AsOrganizationRoles());
+        UserClient = new UserTestClient(environment.CreateClient().AsOrganizationRoles(), OutputHelper);
+        CompanyClient = new CompanyTestClient(_environment.CreateClient().AsOrganizationRoles());
+        JobPostingClient = new JobPostingTestClient(_environment.CreateClient().AsOrganizationRoles());
     }
 
     protected HttpClient Client => _environment.Client;

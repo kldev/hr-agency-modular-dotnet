@@ -2,8 +2,6 @@ using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.Candidate.UpdateApplication;
 using HrAgencySystem.Recruitment.Application.JobApplication.Create;
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidate;
-using HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
 using HrAgencySystem.Recruitment.Events.Candidate;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.ValueObjects;

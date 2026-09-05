@@ -1,4 +1,4 @@
-namespace HrAgencySystem.Recruitment.Domain.Candidate;
+namespace HrAgencySystem.Recruitment.Domain.Candidates;
 
 public enum CandidateStatus
 {

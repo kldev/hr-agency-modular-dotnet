@@ -1,5 +1,4 @@
 using HrAgencySystem.Recruitment.Application.JobPosting.Create;
-using HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
 

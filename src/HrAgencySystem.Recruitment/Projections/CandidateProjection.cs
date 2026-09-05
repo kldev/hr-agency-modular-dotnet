@@ -1,6 +1,6 @@
 using System.Text.Json;
 using HrAgencySystem.Recruitment.Documents;
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidate;
 using HrAgencySystem.SharedKernel.Snapshots;
 

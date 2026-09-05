@@ -1,4 +1,4 @@
-namespace HrAgencySystem.Recruitment.Domain.Posting;
+namespace HrAgencySystem.Recruitment.Domain.JobPostings;
 
 public readonly record struct JobPostId(Guid Value)
 {

@@ -10,8 +10,8 @@ namespace HrAgencySystem.IntegrationTests.JobPosting;
 [Collection(IntegrationCollection.Name)]
 public sealed class ChangeJobPostingRecruiterTests(
     IntegrationEnvironment env,
-    ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(env, outputHelper)
+    ITestOutputHelper output)
+    : BaseIntegrationTest(env, output)
 {
     [Fact]
     public async Task ShouldChangeJobPostingRecruiter()
@@ -41,7 +41,7 @@ public sealed class ChangeJobPostingRecruiterTests(
             request);
 
         // Assert
-        var result = await response.ReadWithJson<JobPostRecruiterChanged>(outputHelper);
+        var result = await response.ReadWithJson<JobPostRecruiterChanged>(OutputHelper);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
   

@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 
 namespace HrAgencySystem.Api.Endpoints.Candidate.Maps;
 

@@ -1,15 +1,16 @@
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.JobApplication.Create;
 using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidate;
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.Applications;
+using HrAgencySystem.Recruitment.Domain.Candidates;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobApplication;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
 using NSubstitute;
-using D = HrAgencySystem.Recruitment.Domain.JobApplication;
+
 
 namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
@@ -97,7 +98,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
 
         _documentSession.Events
             .Received(1)
-            .StartStream<D.JobApplication>(
+            .StartStream<JobApplication>(
                 result.JobApplicationId,
                 Arg.Is<JobApplicationCreated>(
                     x => x.JobApplicationId == result.JobApplicationId));
@@ -211,7 +212,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
 
         _documentSession.Events
             .Received(1)
-            .StartStream<D.JobApplication>(
+            .StartStream<JobApplication>(
                 result.JobApplicationId,
                 Arg.Is<JobApplicationCreated>(
                     x =>
@@ -300,7 +301,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     {
         _documentSession.Events
             .DidNotReceive()
-            .StartStream<D.JobApplication>(
+            .StartStream<JobApplication>(
                 Arg.Any<Guid>(),
                 Arg.Any<object>());
     }

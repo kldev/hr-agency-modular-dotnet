@@ -1,8 +1,7 @@
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPosting;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using D = HrAgencySystem.Recruitment.Domain.Posting;
 
 namespace HrAgencySystem.UnitTests.JobPostings;
 
@@ -25,7 +24,7 @@ public sealed class JobPostTests
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
 
-        var posting = D.JobPost.Empty();
+        var posting = JobPost.Empty();
 
         // Create
         ApplyCreated(
@@ -114,7 +113,7 @@ public sealed class JobPostTests
     [Fact]
     public void Apply_to_channel_should_not_be_allowed_for_final_status()
     {
-        var posting = D.JobPost.Empty();
+        var posting = JobPost.Empty();
 
         var createdAt = DateTimeOffset.UtcNow;
 
@@ -150,7 +149,7 @@ public sealed class JobPostTests
     [Fact]
     public void Apply_to_channel_should_not_be_allowed_for_archived_status()
     {
-        var posting = D.JobPost.Empty();
+        var posting = JobPost.Empty();
 
         var createdAt = DateTimeOffset.UtcNow;
 
@@ -184,7 +183,7 @@ public sealed class JobPostTests
     }
 
     private static void ApplyCreated(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         Guid jobPostingId,
         Guid jobDescriptionId,
         Guid organizationId,
@@ -248,7 +247,7 @@ public sealed class JobPostTests
     }
 
     private static void AssertCreatedState(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         Guid jobPostingId,
         Guid jobDescriptionId,
         Guid organizationId,
@@ -343,7 +342,7 @@ public sealed class JobPostTests
     }
 
     private static void ApplyUpdated(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         DateTimeOffset occurredAt,
         Guid modifierId)
     {
@@ -385,7 +384,7 @@ public sealed class JobPostTests
     }
 
     private static void AssertUpdatedState(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         Guid modifierId,
         DateTimeOffset occurredAt)
     {
@@ -447,7 +446,7 @@ public sealed class JobPostTests
     }
 
     private static void ApplyPublished(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         DateTimeOffset occurredAt,
         Guid authorId)
     {
@@ -463,7 +462,7 @@ public sealed class JobPostTests
     }
 
     private static void ApplyToChannel(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         DateTimeOffset occurredAt,
         Guid authorId,
         PostingChannelType channelType)
@@ -481,7 +480,7 @@ public sealed class JobPostTests
     }
 
     private static void ApplyClosed(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         DateTimeOffset occurredAt,
         Guid authorId)
     {
@@ -497,7 +496,7 @@ public sealed class JobPostTests
     }
 
     private static void ApplyArchived(
-        Recruitment.Domain.Posting.JobPost post,
+        JobPost post,
         DateTimeOffset occurredAt,
         Guid authorId)
     {

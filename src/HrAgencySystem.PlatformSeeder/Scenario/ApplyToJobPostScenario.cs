@@ -1,6 +1,6 @@
 using Bogus;
 using HrAgencySystem.Recruitment.Application.JobApplication.Create;
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.JobApplication;
 using HrAgencySystem.Recruitment.Events.JobPosting;
 using Marten;

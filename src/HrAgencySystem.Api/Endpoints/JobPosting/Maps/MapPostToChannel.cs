@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Recruitment.Application.JobPosting.PostToChannel;
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPosting;
 using Wolverine;
 

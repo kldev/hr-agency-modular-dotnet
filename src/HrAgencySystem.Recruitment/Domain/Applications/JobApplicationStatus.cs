@@ -1,4 +1,4 @@
-namespace HrAgencySystem.Recruitment.Domain.JobApplication;
+namespace HrAgencySystem.Recruitment.Domain.Applications;
 
 public enum JobApplicationStatus
 {

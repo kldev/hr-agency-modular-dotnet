@@ -1,4 +1,4 @@
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Projections;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Query;

@@ -1,11 +1,11 @@
-using HrAgencySystem.Recruitment.Domain.Candidate;
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.Candidates;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobApplication;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.Recruitment.Domain.JobApplication;
+namespace HrAgencySystem.Recruitment.Domain.Applications;
 
 public sealed class JobApplication
 {

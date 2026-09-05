@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidate;
 using Wolverine;
 

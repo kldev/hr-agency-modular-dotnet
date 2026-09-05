@@ -1,6 +1,6 @@
 using HrAgencySystem.SharedKernel.Exception;
 
-namespace HrAgencySystem.Recruitment.Domain.Posting.ValueObjects;
+namespace HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 
 public sealed record PostTitle
 {

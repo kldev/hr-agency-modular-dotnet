@@ -6,14 +6,13 @@ using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplication.RemoveApplicationTag;
-using D = Domain.JobApplication;
 
 public static class RemoveApplicationTagHandler
 {
     [AggregateHandler]
     public static async Task<(JobApplicationTagRemoved, Wolverine.Marten.Events)> Handle(
         RemoveApplicationTag command, 
-        D.JobApplication aggregate,
+        Domain.Applications.JobApplication aggregate,
         ITagRepository tagRepository,
         IUserSnapshotRepository snapshotRepository,
         IClock clock,

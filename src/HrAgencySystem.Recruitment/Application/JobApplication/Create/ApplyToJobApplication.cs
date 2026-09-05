@@ -1,4 +1,4 @@
-using HrAgencySystem.Recruitment.Domain.Candidate;
+using HrAgencySystem.Recruitment.Domain.Candidates;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplication.Create;
 

@@ -18,10 +18,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
     {
         if (companyIds.Count == 0 || userIds.Count == 0)
             return [];
-
-        var companyIndex = 0;
-        var userIndex = 0;
-
+        
         var jobDescriptions = new[]
         {
             await CreateCSharpDeveloper(

@@ -2,7 +2,6 @@ using HrAgencySystem.Recruitment.Events.Candidate;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Microsoft.Extensions.Logging;
 using Wolverine.Marten;
-using D = HrAgencySystem.Recruitment.Domain.Candidate;
 
 namespace HrAgencySystem.Recruitment.Application.Candidate.UpdateApplication;
 
@@ -10,7 +9,7 @@ public static class UpdateApplicationHandler
 {
     [AggregateHandler]
     public static async Task<(CandidateApplicationUpdated, Wolverine.Marten.Events)> 
-        Handle(UpdateApplication command, D.Candidate aggregate,
+        Handle(UpdateApplication command, Domain.Candidates.Candidate aggregate,
             ICompanySnapshotRepository snapshotRepository,
             ILogger logger,
         CancellationToken ct)

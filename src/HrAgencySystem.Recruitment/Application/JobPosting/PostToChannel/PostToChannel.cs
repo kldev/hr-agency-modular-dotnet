@@ -1,4 +1,4 @@
-using HrAgencySystem.Recruitment.Domain.Posting;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.SharedKernel.Commands;
 
 namespace HrAgencySystem.Recruitment.Application.JobPosting.PostToChannel;
