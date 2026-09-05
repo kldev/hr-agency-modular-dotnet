@@ -15,6 +15,7 @@ public sealed class CandidateQueryRepository(IQuerySession session) : ICandidate
             .WithTags(query.Tags)
             .WithStatus(query.Status)
             .WithSources(query.Sources)
+            .WithSearch(query.Search)
             .ToSlice(query, ct);
     }
 

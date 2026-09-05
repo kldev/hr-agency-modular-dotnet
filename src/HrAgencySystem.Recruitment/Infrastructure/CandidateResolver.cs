@@ -17,26 +17,23 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session)
     public async Task<CandidateInfo> FindOrCreate(CreateCandidate command, JobPostInfo? info, CancellationToken ct)
     {
         var existing = await GetExisting(command, ct);
-        if (existing is not null)
+        if (existing is null) return await CreateNew(command, ct);
+        if (info != null)
         {
-            if (info != null)
-            {
-                await bus.InvokeAsync<CandidateApplicationUpdated>(
-                    new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
-            }
-
-            return existing!;
+            await bus.InvokeAsync<CandidateApplicationUpdated>(
+                new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
         }
-        
-        return await CreateNew(command, ct);
+
+        return existing!;
+
     }
 
     private async Task<CandidateInfo> CreateNew(CreateCandidate command, CancellationToken ct)
     {
         var result = await bus.InvokeAsync<CandidateCreated>(command, ct);
 
-        return new CandidateInfo(result.Id, Email.Create(result.Email),
-            CandidatePhoneNumber.Create(result.PhoneNumber));
+        return new CandidateInfo(result.Id, result.Email,
+            result.PhoneNumber, result.FirstName, result.LastName);
     }
 
     private async Task<CandidateInfo?> GetExisting(CreateCandidate command, CancellationToken ct)
@@ -46,7 +43,8 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session)
             .Where(z => z.OrgId == command.OrganizationId && z.Email == email.Value).FirstOrDefaultAsync(ct);
 
         return projection != null
-            ? new CandidateInfo(projection.Id, email, CandidatePhoneNumber.Create(projection.PhoneNumber))
+            ? new CandidateInfo(projection.Id, email.Value, projection.PhoneNumber,
+                projection.FirstName ?? "", projection.LastName ?? "")
             : null;
     }
 }

@@ -25,6 +25,7 @@ public static class RecruitmentModule
         services.AddScoped<ICandidateQueryRepository, CandidateQueryRepository>();
         services.AddScoped<ICandidateResolver, CandidateResolver> ();
         services.AddScoped<ITagRepository, TagRepository>();
+        services.AddScoped<IJobApplicationQueryRepository, JobApplicationQueryRepository>();
     }
 
     public static void ConfigureMarten(
@@ -63,6 +64,8 @@ public static class RecruitmentModule
         options.Events.AddEventType<Events.JobApplication.JobApplicationRejected>();
         options.Events.AddEventType<Events.JobApplication.JobApplicationScreeningStarted>();
         options.Events.AddEventType<Events.JobApplication.JobApplicationWithdrawn>();
+        options.Events.AddEventType<Events.JobApplication.JobApplicationTagged>();
+        options.Events.AddEventType<Events.JobApplication.JobApplicationTagRemoved>();
         
         // Job Posting
         options.Events.AddEventType<Events.JobPosting.JobPostCreated>();
@@ -84,11 +87,18 @@ public static class RecruitmentModule
     {
         options.Projections.Snapshot<JobApplicationProjection>(
             SnapshotLifecycle.Async);
-        
+
         options.Schema
             .For<JobApplicationProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { OrganizationId = x.OrgId });
+            .Index(x => new { OrganizationId = x.OrgId })
+            .Index(x => new { OrganizationId = x.OrgId, x.CompanyId })
+            .Index(x => new { OrganizationId = x.OrgId, x.TagsIds })
+            .Index(x => new { OrganizationId = x.OrgId, x.ApplicantEmail })
+            .Index(x => new { OrganizationId = x.OrgId, x.ApplicantPhone })
+            .Index(x => new { OrganizationId = x.OrgId, x.ApplicantFullName })
+            .Index(x => new { OrganizationId = x.OrgId, x.JobPostTitle })
+            .Index(x => new { OrganizationId = x.OrgId, x.Source });;
         
         options.Projections.Snapshot<JobPostProjection>(
             SnapshotLifecycle.Async);

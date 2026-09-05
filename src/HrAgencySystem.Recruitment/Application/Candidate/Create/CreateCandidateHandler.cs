@@ -23,7 +23,7 @@ public static class CreateCandidateHandler
         IClock clock, 
         CancellationToken ct)
     {
-        var (email, phone) = CreateValueObjects(command);
+        var (email, phone, firstName, lastName) = CreateValueObjects(command);
         
         var organizationId = OrganizationId.From(command.OrganizationId);
 
@@ -45,7 +45,9 @@ public static class CreateCandidateHandler
             command.Source, 
             clock.UtcNow, 
             createdBy,
-            command.CompanyId);
+            command.CompanyId,
+            firstName.Value,
+            lastName.Value);
 
         session.Events.StartStream<Domain.Candidate.Candidate>(candidateId.Value, @event);
         
@@ -80,7 +82,8 @@ public static class CreateCandidateHandler
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
     }
 
-    private static (Email email, CandidatePhoneNumber phone) CreateValueObjects(CreateCandidate command)
+    private static (Email email, CandidatePhoneNumber phone, FirstName firstName, LastName lastName) CreateValueObjects(
+        CreateCandidate command)
     {
         var (email, error) = Email.TryCreate(command.Email);
         var (phone, phoneError) = CandidatePhoneNumber.TryCreate(command.PhoneNumber);
@@ -88,6 +91,9 @@ public static class CreateCandidateHandler
         if (error != null) errors.Add(error);
         if (phoneError != null) errors.Add(phoneError);
 
-        return errors.Count > 0 ? throw new ValidationException(errors) : (email!, phone!);
+        var (firstName, _) = FirstName.TryCreate(command.FirstName ?? "", false);
+        var (lastName, _) = LastName.TryCreate(command.LastName ?? "", false);
+        
+        return errors.Count > 0 ? throw new ValidationException(errors) : (email!, phone!, firstName!, lastName!);
     }
 }

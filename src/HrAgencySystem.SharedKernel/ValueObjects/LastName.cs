@@ -17,9 +17,9 @@ public sealed record LastName
 
     public string Value { get; }
 
-    public static LastName Create(string value)
+    public static LastName Create(string value, bool  isRequired = true)
     {
-        var (lastName, error) = TryCreate(value);
+        var (lastName, error) = TryCreate(value, isRequired);
 
         return error is not null
             ? throw new InValidValueException(error)
@@ -27,11 +27,14 @@ public sealed record LastName
     }
 
     public static (LastName? lastName, string? error) TryCreate(
-        string value)
+        string value, bool isRequired = true)
     {
-        if (string.IsNullOrWhiteSpace(value))
-            return (null, RequiredMessage);
 
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return isRequired ? (null, RequiredMessage) : (new LastName(""), null);
+        }
+        
         var normalized = value.Trim();
 
         if (normalized.Length > MaxLength)

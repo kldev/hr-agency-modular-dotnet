@@ -16,6 +16,10 @@ public sealed record CandidateProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string PhoneNumber,
     // ReSharper disable once NotAccessedPositionalProperty.Global
+    string FirstName,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
+    string LastName,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     CandidateSource Source,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     CandidateStatus Status,
@@ -41,6 +45,8 @@ public sealed record CandidateProjection(
             @event.OrganizationId,
             @event.Email,
             @event.PhoneNumber,
+            @event.FirstName,
+            @event.LastName,
             @event.Source,
             CandidateStatus.Active,
             @event.CreatedAt,

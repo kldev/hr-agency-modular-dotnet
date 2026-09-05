@@ -22,11 +22,11 @@ internal static class MapApplyTo
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record ApplyToPostRequest(string Email, string PhoneNumber, CandidateSource Source = CandidateSource.Direct)
+internal sealed record ApplyToPostRequest(string Email, string PhoneNumber, CandidateSource Source = CandidateSource.Direct, string FirstName = "", string LastName = "")
 {
     public CreateJobApplication ToCommand(Guid jobPostId)
     {
-        return new CreateJobApplication(jobPostId, Email, PhoneNumber, Source);
+        return new CreateJobApplication(jobPostId, Email, PhoneNumber, Source, FirstName, LastName);
     }
 }
  

@@ -10,4 +10,7 @@ public sealed record CandidateCreated(Guid Id,
     CandidateSource Source, 
     DateTimeOffset CreatedAt,
     UserSnapshot? CreatedBy,
-    Guid? CompanyId);
+    Guid? CompanyId,
+    string FirstName,
+    string LastName
+    );

@@ -5,9 +5,9 @@ namespace HrAgencySystem.Recruitment.Infrastructure.Query;
 
 internal static class CandidateProjectionExtensions
 {
-    internal static IQueryable<CandidateProjection> WithCandidateId(this IQueryable<CandidateProjection> query, Guid postId)
+    internal static IQueryable<CandidateProjection> WithCandidateId(this IQueryable<CandidateProjection> query, Guid candidateId)
     {
-        return query.Where(q => q.Id == postId);
+        return query.Where(q => q.Id == candidateId);
     }
 
     internal static IQueryable<CandidateProjection> WithOrganizationId(this IQueryable<CandidateProjection> query,
@@ -43,5 +43,15 @@ internal static class CandidateProjectionExtensions
             return query;
 
         return tags.Aggregate(query, (current, tag) => current.Where(q => q.TagsIds.Contains(tag)));
+    }
+    
+    internal static IQueryable<CandidateProjection> WithSearch(this IQueryable<CandidateProjection> query, string search)
+    {
+        return  string.IsNullOrWhiteSpace(search) ? query : query.Where(q => 
+            q.Email.Contains(search, StringComparison.OrdinalIgnoreCase)
+            || q.FirstName.Contains(search, StringComparison.OrdinalIgnoreCase)
+            || q.LastName.Contains(search, StringComparison.OrdinalIgnoreCase)
+            || q.PhoneNumber.Contains(search, StringComparison.OrdinalIgnoreCase)
+            );
     }
 }

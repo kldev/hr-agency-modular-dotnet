@@ -1,6 +1,7 @@
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
 using HrAgencySystem.PlatformSeeder;
+using JasperFx;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -14,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
     {
         builder.Services.AddPlatformSeederModule();
     }
+    
+    builder.Host.ApplyJasperFxExtensions();
 }
 
 var app = builder.Build();
@@ -28,5 +31,5 @@ var app = builder.Build();
     app.MapAppScalar();
     app.MapGet("/", () => "HR Agency API").ExcludeFromDescription().AllowAnonymous();
 
-    app.Run();
+    await app.RunJasperFxCommands(args);
 }

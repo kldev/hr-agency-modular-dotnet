@@ -54,7 +54,9 @@ Authorization: Bearer {{token}}
 {
     "email": "fox.mulder@test.io",
     "phoneNumber": "",
-    "source": "NoFluffJobs"
+    "source": "NoFluffJobs",
+    "firstName": "Fox",
+    "lastName": "Mulder"
 }
 
 ### Apply 
@@ -83,8 +85,8 @@ Authorization: Bearer {{token}}
 
 
 ###
-@companyId = {{apply.response.body.$.companyId}}
-@candidateId = {{apply.response.body.$.candidateId}}
+@companyId = {{apply.response.body.$.company.id}}
+@candidateId = {{apply.response.body.$.candidateInfo.candidateId}}
 ###
 
 ### Apply 
@@ -168,4 +170,15 @@ Authorization: Bearer {{token}}
 
 ###
 GET {{baseURL}}/api/recruitment/candidates?tag={{tagId2}}&tag={{tagId1}}
+Authorization: Bearer {{token}}
+
+
+###
+# Get 
+GET {{baseURL}}/api/recruitment/job-applications?tag={{tagId1}}
+Authorization: Bearer {{token}}
+
+###
+# Get 
+GET {{baseURL}}/api/recruitment/job-applications
 Authorization: Bearer {{token}}

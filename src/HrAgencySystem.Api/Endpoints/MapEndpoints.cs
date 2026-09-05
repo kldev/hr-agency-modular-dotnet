@@ -13,6 +13,7 @@ public static class MapEndpoints
         Suggestion.Endpoint.Map(app);
         JobPosting.Endpoint.Map(app);
         Candidate.Endpoint.Map(app);
+        JobApplication.Endpoint.Map(app);
 
         MapPlatformSeeder(app);
     }

@@ -13,6 +13,10 @@ public sealed class Candidate
     public CandidatePhoneNumber PhoneNumber { get; private set; } = null!;
     public CandidateSource Source { get; private set; }
     public CandidateStatus Status { get; private set; }
+    
+    public FirstName  FirstName { get; private set; }
+    public LastName LastName { get;private set; }
+    
     public static Candidate Empty()
     {
         return new Candidate();
@@ -25,5 +29,7 @@ public sealed class Candidate
         Source = @event.Source;
         Status = CandidateStatus.Active;
         PhoneNumber = CandidatePhoneNumber.Create(@event.PhoneNumber);
+        FirstName = FirstName.Create(@event.FirstName, false);
+        LastName = LastName.Create(@event.LastName, false);
     }
 }

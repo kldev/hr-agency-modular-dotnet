@@ -41,12 +41,12 @@ public sealed class JobApplication
         Id = JobApplicationId.From(@event.JobApplicationId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
         JobPostId = JobPostId.From(@event.JobPostingId);
-        CandidateId = CandidateId.From(@event.CandidateId);
+        CandidateId = CandidateId.From(@event.CandidateInfo.CandidateId);
         Status = JobApplicationStatus.Applied;
         Source = @event.Source;
         CreatedAt = @event.CreatedAt;
         UpdatedAt = @event.CreatedAt;
-        Email = Email.Create(@event.Email);
+        Email = Email.Create(@event.CandidateInfo.Email);
     }
 
     public void Apply(JobApplicationScreeningStarted @event)
