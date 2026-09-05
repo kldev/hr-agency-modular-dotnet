@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
@@ -10,6 +11,7 @@ namespace HrAgencySystem.Recruitment.Application.Candidate.TagCandidate;
 public static class TagCandidateHandler
 {
     [AggregateHandler]
+    // ReSharper disable once UnusedMember.Global
     public static async Task<(CandidateTagged, Wolverine.Marten.Events)> Handle(
         TagCandidate command, 
         Domain.Candidates.Candidate aggregate,
@@ -18,6 +20,8 @@ public static class TagCandidateHandler
         IClock clock,
         CancellationToken ct)
     {
+        if (aggregate.OrganizationId.Value != command.OrganizationId)
+            throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
         
         var tag = await tagRepository.GetTag(command.TagId, ct);
         var user = await GetCreatedBy(snapshotRepository, command.CreatedBy, ct);

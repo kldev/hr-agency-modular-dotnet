@@ -55,7 +55,7 @@ public sealed class JobPost
     
     public JobPostStatus Status { get; private set; }
 
-    public LanguageCode LanguageCode { get; set; } = null!;
+    public LanguageCode LanguageCode { get; private set; } = null!;
     
     public Guid RecruiterId { get; private set; }
 

@@ -7,7 +7,7 @@ namespace HrAgencySystem.Recruitment.Feeds.Repository;
 
 internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskRepository
 {
-    private const string SELECT_BATCH_SQL = """
+    private const string SelectBatchSql = """
                                               select id,
                                                     organization_id,
                                                     status,
@@ -23,7 +23,7 @@ internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskReposito
                                                    FOR UPDATE SKIP LOCKED
                                              """;
 
-    private const string INSERT_SQL = """
+    private const string InsertSql = """
                                       INSERT INTO jobs.job_feed_tasks (
                                           id,
                                           organization_id,
@@ -34,11 +34,30 @@ internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskReposito
                                       VALUES (:id, :orgId, 'PENDING', 0, now())
                                       ON CONFLICT DO NOTHING
                                       """;
+
+    private const string MarkFailedSql = """
+                                         UPDATE jobs.job_feed_tasks
+                                         SET status =  CASE 
+                                                               WHEN attempts + 1 >= 3 THEN 'FAILED'
+                                                               WHEN status = 'PROCESSING' THEN 'PENDING'
+                                                               ELSE status
+                                         END,
+                                                   attempts = attempts + 1,
+                                                   error_message = :error
+                                               WHERE id = :id AND status = 'PROCESSING'
+                                         """;
+    
+    private const string MarkCompletedSql = """
+                                         UPDATE jobs.job_feed_tasks
+                                               SET status = 'COMPLETED'
+                                               WHERE id = :id AND status = 'PROCESSING'
+                                         """;
+    
     
     public async Task Save(JobFeedTask task, CancellationToken ct)
     {
         await using var conn = await ds.OpenConnectionAsync(ct);
-        var cmd = conn.CreateCommand(INSERT_SQL);
+        var cmd = conn.CreateCommand(InsertSql);
         cmd.AddNamedParameter("id", task.Id);
         cmd.AddNamedParameter("orgId",task.OrganizationId);
         await cmd.ExecuteNonQueryAsync(ct);
@@ -48,7 +67,7 @@ internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskReposito
     public async Task<IReadOnlyList<JobFeedTask>> FindPendingForUpdate(int batchSize, CancellationToken ct)
     {
         await using var conn = await ds.OpenConnectionAsync(ct);
-        var cmd = conn.CreateCommand(SELECT_BATCH_SQL);
+        var cmd = conn.CreateCommand(SelectBatchSql);
         cmd.AddNamedParameter("batchSize", batchSize);
 
         var cmb = new CommandBuilder(cmd);
@@ -72,10 +91,27 @@ internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskReposito
         await using var conn = await ds.OpenConnectionAsync(ct);
         foreach (var task in tasks)
         {
-            var cmd = ds.CreateCommand(INSERT_SQL);
+            var cmd = ds.CreateCommand(InsertSql);
             cmd.AddNamedParameter("id", task.Id);
             cmd.AddNamedParameter("orgId",task.OrganizationId);
             await cmd.ExecuteNonQueryAsync(ct);
         }
+    }
+
+    public async Task MarkFailed(Guid id, string errorMessage, CancellationToken ct)
+    {
+        await using var conn = await ds.OpenConnectionAsync(ct);
+        var cmd = conn.CreateCommand(MarkFailedSql);
+        cmd.AddNamedParameter("id", id);
+        cmd.AddNamedParameter("error",errorMessage);
+        await cmd.ExecuteNonQueryAsync(ct);
+    }
+
+    public async Task MarkCompleted(Guid id, CancellationToken ct)
+    {
+        await using var conn = await ds.OpenConnectionAsync(ct);
+        var cmd = conn.CreateCommand(MarkCompletedSql);
+        cmd.AddNamedParameter("id", id);
+        await cmd.ExecuteNonQueryAsync(ct);
     }
 }

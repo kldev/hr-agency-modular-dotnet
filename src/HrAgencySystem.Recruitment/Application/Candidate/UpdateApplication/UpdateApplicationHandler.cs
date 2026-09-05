@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Time;
 using Microsoft.Extensions.Logging;
 using Wolverine.Marten;
 
@@ -14,12 +15,13 @@ public static class UpdateApplicationHandler
         Handle(UpdateApplication command, Domain.Candidates.Candidate aggregate,
             ICompanySnapshotRepository snapshotRepository,
             ILogger logger,
+            IClock clock,
         CancellationToken ct)
     {
         logger.HandlingUpdateApplication(command.CompanyId);
         var company = await snapshotRepository.GetCompanyAsync(command.CompanyId, ct);
         if (company is null) throw new BusinessRuleException(ICompanySnapshotRepository.NotFoundMessage);
-        var @event = new CandidateApplicationUpdated(aggregate.Id.Value, command.JobPostId, command.CompanyId);
+        var @event = new CandidateApplicationUpdated(aggregate.Id.Value, command.JobPostId, command.CompanyId, clock.UtcNow);
         
         return (@event, [@event]);
     }

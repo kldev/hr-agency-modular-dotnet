@@ -107,7 +107,7 @@ public static class RecruitmentModule
             .Index(x => new { OrganizationId = x.OrgId, x.ApplicantPhone })
             .Index(x => new { OrganizationId = x.OrgId, x.ApplicantFullName })
             .Index(x => new { OrganizationId = x.OrgId, x.JobPostTitle })
-            .Index(x => new { OrganizationId = x.OrgId, x.Source });;
+            .Index(x => new { OrganizationId = x.OrgId, x.Source });
         
         options.Projections.Snapshot<JobPostProjection>(
             SnapshotLifecycle.Async);

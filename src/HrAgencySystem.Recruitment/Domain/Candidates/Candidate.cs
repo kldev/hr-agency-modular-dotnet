@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
 using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Domain.Candidates;
@@ -9,6 +10,8 @@ public sealed class Candidate
     private Candidate(){}
     
     public CandidateId Id { get; private set; }
+    
+    public OrganizationId OrganizationId { get; private set; }
     public Email Email { get; private set; } = null!;
     public CandidatePhoneNumber PhoneNumber { get; private set; } = null!;
     public CandidateSource Source { get; private set; }
@@ -25,6 +28,7 @@ public sealed class Candidate
     public void Apply(CandidateCreated @event)
     {
         Id = CandidateId.From(@event.CandidateId);
+        OrganizationId = OrganizationId.From(@event.OrganizationId);
         Email = Email.Create(@event.Email);
         Source = @event.Source;
         Status = CandidateStatus.Active;

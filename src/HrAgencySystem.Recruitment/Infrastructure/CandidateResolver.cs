@@ -1,6 +1,5 @@
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.Candidate.UpdateApplication;
-using HrAgencySystem.Recruitment.Application.JobApplication.Create;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Projections;
@@ -23,7 +22,7 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session,
         await bus.InvokeAsync<CandidateApplicationUpdated>(
             new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
         
-        return existing!;
+        return existing;
     }
 
     private async Task<CandidateInfo> CreateNew(CreateCandidate command, CancellationToken ct)

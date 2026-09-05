@@ -31,7 +31,7 @@ public static class CreateCandidateHandler
 
         var candidateId = CandidateId.New();
 
-        await ValidateEmailReservation(repository, ct, organizationId, email);
+        await ValidateEmailReservation(repository, organizationId, email, ct);
 
         await repository.ReserveAsync(organizationId, email!, candidateId);
 
@@ -67,9 +67,9 @@ public static class CreateCandidateHandler
     }
 
     private static async Task ValidateEmailReservation(ICandidateEmailReservationRepository repository,
-        CancellationToken ct, OrganizationId organizationId, Email email)
+        OrganizationId organizationId, Email email, CancellationToken ct)
     {
-        var reserved = await repository.ExistsAsync(organizationId, email!, ct);
+        var reserved = await repository.ExistsAsync(organizationId, email, ct);
         if (reserved)
             throw new BusinessRuleException(ICandidateEmailReservationRepository.EmailAlreadyExistsMessage);
     }

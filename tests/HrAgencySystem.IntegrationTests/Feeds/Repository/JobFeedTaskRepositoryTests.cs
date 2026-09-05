@@ -392,6 +392,241 @@ public sealed class JobFeedTaskRepositoryTests(PostgresFixture postgres) : IAsyn
         // Assert
         Assert.Empty(result);
     }
+    
+    [Fact]
+    public async Task MarkFailed_ShouldSetStatusToPending_WhenAttemptsAreBelowLimit()
+    {
+        // Arrange
+        var task = CreateTask();
+
+        await _repository.Save(task, CancellationToken.None);
+
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        // Act
+        await _repository.MarkFailed(
+            task.Id,
+            "Feed processing failed",
+            CancellationToken.None);
+
+        // Assert
+        var stored = await GetTask(task.Id);
+
+        Assert.NotNull(stored);
+        Assert.Equal(JobFeedTaskStatus.Pending, stored.Status);
+        Assert.Equal(2, stored.Attempts);
+        Assert.Equal("Feed processing failed", stored.ErrorMessage);
+    }
+    
+    [Fact]
+    public async Task MarkFailed_ShouldSetStatusToFailed_WhenAttemptsReachLimit()
+    {
+        // Arrange
+        var task = CreateTask();
+
+        await _repository.Save(task, CancellationToken.None);
+
+        // First fetch: attempts = 1
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        // First failure: attempts = 2, status = PENDING
+        await _repository.MarkFailed(
+            task.Id,
+            "First failure",
+            CancellationToken.None);
+
+        // Fetch again: attempts = 3, status = PROCESSING
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        // Act
+        // Failure increments attempts to 4 and should result in FAILED.
+        await _repository.MarkFailed(
+            task.Id,
+            "Final failure",
+            CancellationToken.None);
+
+        // Assert
+        var stored = await GetTask(task.Id);
+
+        Assert.NotNull(stored);
+        Assert.Equal(JobFeedTaskStatus.Failed, stored.Status);
+        Assert.Equal(4, stored.Attempts);
+        Assert.Equal("Final failure", stored.ErrorMessage);
+    }
+    
+    [Fact]
+    public async Task MarkFailed_ShouldKeepStatusPending_WhenTaskIsNotProcessing()
+    {
+        // Arrange
+        var task = CreateTask();
+
+        await _repository.Save(task, CancellationToken.None);
+
+        // Act
+        await _repository.MarkFailed(
+            task.Id,
+            "Unexpected failure",
+            CancellationToken.None);
+
+        // Assert
+        var stored = await GetTask(task.Id);
+
+        Assert.NotNull(stored);
+        Assert.Equal(JobFeedTaskStatus.Pending, stored.Status);
+        Assert.Equal(0, stored.Attempts);
+        Assert.NotEqual("Unexpected failure", stored.ErrorMessage);
+    }
+    
+    [Fact]
+    public async Task MarkCompleted_ShouldSetStatusToCompleted()
+    {
+        // Arrange
+        var task = CreateTask();
+
+        await _repository.Save(task, CancellationToken.None);
+
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        // Act
+        await _repository.MarkCompleted(
+            task.Id,
+            CancellationToken.None);
+
+        // Assert
+        var stored = await GetTask(task.Id);
+
+        Assert.NotNull(stored);
+        Assert.Equal(JobFeedTaskStatus.Completed, stored.Status);
+    }
+    
+    [Fact]
+    public async Task MarkCompleted_ShouldNotChangeAttemptsOrErrorMessage()
+    {
+        // Arrange
+        var task = CreateTask();
+
+        await _repository.Save(task, CancellationToken.None);
+
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        await _repository.MarkFailed(
+            task.Id,
+            "Temporary failure",
+            CancellationToken.None);
+
+        var beforeComplete = await GetTask(task.Id);
+
+        Assert.NotNull(beforeComplete);
+        Assert.Equal(JobFeedTaskStatus.Pending, beforeComplete.Status);
+        Assert.Equal(2, beforeComplete.Attempts);
+        Assert.Equal("Temporary failure", beforeComplete.ErrorMessage);
+
+        // Fetch again so task becomes PROCESSING.
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        // Act
+        await _repository.MarkCompleted(
+            task.Id,
+            CancellationToken.None);
+
+        // Assert
+        var stored = await GetTask(task.Id);
+
+        Assert.NotNull(stored);
+        Assert.Equal(JobFeedTaskStatus.Completed, stored.Status);
+        Assert.Equal(3, stored.Attempts);
+        Assert.Equal("Temporary failure", stored.ErrorMessage);
+    }
+    
+    [Fact]
+    public async Task MarkFailed_ShouldNotChangeCompletedStatus()
+    {
+        // Arrange
+        var task = CreateTask();
+
+        await _repository.Save(task, CancellationToken.None);
+
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        await _repository.MarkCompleted(
+            task.Id,
+            CancellationToken.None);
+
+        // Act
+        await _repository.MarkFailed(
+            task.Id,
+            "Late failure",
+            CancellationToken.None);
+
+        // Assert
+        var stored = await GetTask(task.Id);
+
+        Assert.NotNull(stored);
+        Assert.Equal(JobFeedTaskStatus.Completed, stored.Status);
+        Assert.Equal(1, stored.Attempts);
+        Assert.NotEqual("Late failure", stored.ErrorMessage);
+    }
+    
+    [Fact]
+    public async Task MarkFailed_ShouldNotRevertFailedTaskToPending()
+    {
+        // Arrange
+        var task = CreateTask();
+
+        await _repository.Save(task, CancellationToken.None);
+
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        await _repository.MarkFailed(
+            task.Id,
+            "First failure",
+            CancellationToken.None);
+
+        await _batchFetcher.Fetch(
+            batchSize: 10,
+            CancellationToken.None);
+
+        await _repository.MarkFailed(
+            task.Id,
+            "Final failure",
+            CancellationToken.None);
+
+        var failed = await GetTask(task.Id);
+
+        Assert.NotNull(failed);
+        Assert.Equal(JobFeedTaskStatus.Failed, failed.Status);
+
+        // Act
+        await _repository.MarkFailed(
+            task.Id,
+            "Another failure",
+            CancellationToken.None);
+
+        // Assert
+        var stored = await GetTask(task.Id);
+
+        Assert.NotNull(stored);
+        Assert.Equal(JobFeedTaskStatus.Failed, stored.Status);
+        Assert.Equal(4, stored.Attempts);
+        Assert.NotEqual("Another failure", stored.ErrorMessage);
+    }
+    
 
     private JobFeedTask CreateTask()
     {
