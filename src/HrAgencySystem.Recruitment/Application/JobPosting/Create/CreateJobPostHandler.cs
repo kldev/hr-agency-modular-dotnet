@@ -49,7 +49,7 @@ public static class CreateJobPostHandler
 
         var jobPostId = JobPostId.New();
 
-        var jobPostSlug = new JobPostingSlugGenerator().Generate(
+        var jobPostSlug = JobPostingSlugGenerator.Generate(
             company.Name, title.Value, location.Value, jobPostId.Value);
         
         var @event = new JobPostCreated(

@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace HrAgencySystem.Recruitment.Application.Service;
 
-public sealed class JobPostingSlugGenerator
+internal static partial class JobPostingSlugGenerator
 {
-    public string Generate(
+    public static string Generate(
         string? companyName,
         string? title,
         string? location,
@@ -16,11 +16,10 @@ public sealed class JobPostingSlugGenerator
             "-",
             new[] { companyName, title, location }
                 .Where(value => !string.IsNullOrWhiteSpace(value))
-                .Select(Slugify));
+                .Select(Slugify!));
 
         var suffix = postingId
-            .ToString("N")
-            .Substring(0, 4);
+            .ToString("N")[..4];
 
         return $"{baseSlug}-{suffix}";
     }
@@ -34,20 +33,15 @@ public sealed class JobPostingSlugGenerator
 
         var builder = new StringBuilder();
 
-        foreach (var character in normalized)
+        foreach (var character in from character in normalized let category = CharUnicodeInfo.GetUnicodeCategory(character) where category != UnicodeCategory.NonSpacingMark select character)
         {
-            var category = CharUnicodeInfo.GetUnicodeCategory(character);
-
-            if (category == UnicodeCategory.NonSpacingMark)
-                continue;
-
             builder.Append(character);
         }
 
-        return Regex.Replace(
-                builder.ToString(),
-                "[^a-z0-9]+",
-                "-")
+        return MyRegex().Replace(builder.ToString(), "-")
             .Trim('-');
     }
+
+    [GeneratedRegex("[^a-z0-9]+")]
+    private static partial Regex MyRegex();
 }
