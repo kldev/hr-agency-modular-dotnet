@@ -17,6 +17,7 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="HrAgencySystem.UnitTests"/>
+        <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests"/>
     </ItemGroup>
 
 </Project>

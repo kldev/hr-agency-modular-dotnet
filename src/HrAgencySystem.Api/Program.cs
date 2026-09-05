@@ -6,6 +6,7 @@ using JasperFx;
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddGlobalExceptionHandler();
+    builder.Services.AddDataSource();
     builder.Services.SetupApplicationModules(builder.Configuration);
     builder.Services.SetupMartenForApplication(builder.Configuration);
     builder.Host.SetupWolverineForApplication();

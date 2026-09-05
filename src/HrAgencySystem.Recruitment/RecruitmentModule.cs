@@ -1,5 +1,8 @@
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
+using HrAgencySystem.Recruitment.Feeds.Port;
+using HrAgencySystem.Recruitment.Feeds.Repository;
+using HrAgencySystem.Recruitment.Feeds.Table;
 using HrAgencySystem.Recruitment.Infrastructure;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Query;
@@ -26,6 +29,9 @@ public static class RecruitmentModule
         services.AddScoped<ICandidateResolver, CandidateResolver> ();
         services.AddScoped<ITagRepository, TagRepository>();
         services.AddScoped<IJobApplicationQueryRepository, JobApplicationQueryRepository>();
+        services.AddScoped<ISeeder, FeedMigration>();
+        services.AddScoped<IJobFeedTaskRepository, JobFeedTaskRepository>();
+        services.AddScoped<IJobFeedTaskBatchFetcher, JobFeedTaskBatchFetcher>();
     }
 
     public static void ConfigureMarten(

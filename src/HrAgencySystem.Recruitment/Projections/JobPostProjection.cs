@@ -27,13 +27,17 @@ public sealed record JobPostProjection(
     JobPostStatus Status,
     Guid RecruiterId,
     UserSnapshot Recruiter,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid CreatedById,
     UserSnapshot CreatedBy,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid? ModifiedById,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     UserSnapshot? ModifiedBy,
     CompanySnapshot Company,
     IReadOnlyList<ChannelPost> Posts,
     DateTimeOffset CreatedAt,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset UpdatedAt,
     string PostingSlug,
     string SearchText)
