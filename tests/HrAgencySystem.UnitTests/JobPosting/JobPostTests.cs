@@ -469,7 +469,7 @@ public sealed class JobPostTests
         PostingChannelType channelType)
     {
         post.Apply(
-            new JobPostToChannel(
+            new JobPostedToChannel(
                 JobPostId: post.Id.Value,
                 ChannelType: channelType,
                 OccurredAt: occurredAt,

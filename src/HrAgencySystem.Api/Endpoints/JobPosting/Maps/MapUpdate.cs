@@ -11,7 +11,8 @@ internal static class MapUpdate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/recruitment/job-posting/{jobPostId}", Handler).WithSummary("Update job post");
+        // PUT /api/recruitment/job-posting/{id}
+        group.MapPut("{jobPostId}", Handler).WithSummary("Update job post");
     }
     
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobPostId,

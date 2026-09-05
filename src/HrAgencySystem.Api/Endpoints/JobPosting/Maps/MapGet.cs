@@ -14,7 +14,8 @@ internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/recruitment/job-posting/{jobPostId:guid}", Handler).WithSummary("Get job post");
+        // GET/api/recruitment/job-posting/{{id}
+        group.MapGet("{jobPostId:guid}", Handler).WithSummary("Get job post");
     }
 
     private static async Task<IResult> Handler(IJobPostQueryRepository repository, IOptions<ApplicationConfig> config, AppUserAuthenticated user, Guid jobPostId, CancellationToken ct)

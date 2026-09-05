@@ -1,0 +1,62 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+### 
+
+@token = {{login.response.body.$.token}}
+
+
+###
+# @name post1
+GET {{baseURL}}/api/recruitment/job-posting?search=pracy w zespole
+Authorization: Bearer {{token}}
+
+###
+@postId1 = {{post1.response.body.$.content[0].id}}
+###
+
+
+###
+# post to channel 
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId1}}/channel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "channel": "PracujPl"
+}
+
+###
+# post to channel 
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId1}}/channel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "channel": "Linkedin"
+}
+
+
+###
+# post to channel 
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId1}}/channel
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "channel": "NotKnow"
+}
+
+###
+GET {{baseURL}}/api/recruitment/job-posting?status=Published
+Authorization: Bearer {{token}}

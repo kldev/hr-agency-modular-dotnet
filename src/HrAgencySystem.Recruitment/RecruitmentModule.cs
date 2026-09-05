@@ -76,7 +76,7 @@ public static class RecruitmentModule
         // Job Posting
         options.Events.AddEventType<Events.JobPosting.JobPostCreated>();
         options.Events.AddEventType<Events.JobPosting.JobPostUpdated>();
-        options.Events.AddEventType<Events.JobPosting.JobPostToChannel>();
+        options.Events.AddEventType<Events.JobPosting.JobPostedToChannel>();
         options.Events.AddEventType<Events.JobPosting.JobPostPublished>();
         options.Events.AddEventType<Events.JobPosting.JobPostClosed>();
         options.Events.AddEventType<Events.JobPosting.JobPostArchived>();

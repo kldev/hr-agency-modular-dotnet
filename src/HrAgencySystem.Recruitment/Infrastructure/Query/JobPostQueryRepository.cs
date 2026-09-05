@@ -4,22 +4,28 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Web;
 using Marten;
 
+
 namespace HrAgencySystem.Recruitment.Infrastructure.Query;
 
 public class JobPostQueryRepository(IDocumentSession session) : IJobPostQueryRepository
 {
-    public async Task<SliceResponse<JobPostResponse>> GetJobPosts(Guid organizationId, JobPostQuery query, CancellationToken ct)
+    public async Task<SliceResponse<JobPostResponse>> GetJobPosts(Guid organizationId, JobPostQuery query,
+        CancellationToken ct)
     {
-        var result = await session.Query<JobPostProjection>()
+        var sqlQuery = session.Query<JobPostProjection>()
             .WithOrganizationId(organizationId)
             .WithCompanyId(query.CompanyId)
             .WithRecruiterId(query.RecruiterId)
             .WithSearch(query.Search)
             .WithStatuses(query.Statuses)
-            .WithLanguages(query.Languages)
-            .ToSlice(query, ct);
+            .WithLanguages(query.Languages);
 
-        var response = 
+
+    //    throw new BusinessRuleException(sqlQuery.ToCommand().CommandText);
+        
+        var result = await sqlQuery.ToSlice(query, ct);
+
+        var response =
             result.Content.Select(JobPostResponse.From).ToList();
         return new SliceResponse<JobPostResponse>(response, result.HasMore);
     }

@@ -67,8 +67,7 @@ public sealed class JobPost
 
     public Guid? ModifiedBy { get; set; } = null;
     
-    private readonly List<ChannelPost> _posts = [];
-    public IReadOnlyList<ChannelPost> Posts => _posts;
+    public IReadOnlyList<ChannelPost> Posts { get; private set; } = [];
 
     public void Apply(JobPostCreated @event)
     {
@@ -100,6 +99,8 @@ public sealed class JobPost
         CreatedBy = @event.CreatedBy.Id;
         CreatedAt = @event.CreatedAt;
         UpdatedAt = @event.CreatedAt;
+        Posts = new List<ChannelPost>();
+
     }
 
     public void Apply(JobPostUpdated @event)
@@ -135,11 +136,16 @@ public sealed class JobPost
         ApplyCommon(@event);
     }
     
-    public void Apply(JobPostToChannel @event)
+    public void Apply(JobPostedToChannel @event)
     {
         RequireNotFinal();
         Status = JobPostStatus.Published;
-        _posts.Add(new ChannelPost(@event.ChannelType, @event.OccurredAt));
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        Posts ??= new List<ChannelPost>();
+        
+        var posts = Posts.Append(new ChannelPost(@event.ChannelType, @event.OccurredAt));
+        Posts = [.. posts];
         
         ApplyCommon(@event);
     }

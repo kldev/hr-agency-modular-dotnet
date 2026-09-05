@@ -11,7 +11,8 @@ internal static class MapGetSlice
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/recruitment/job-posting", Handler).WithSummary("Get job posts");
+        // GET /api/recruitment/job-posting
+        group.MapGet("", Handler).WithSummary("Get job posts");
     }
 
     private static async Task<IResult> Handler(IJobPostQueryRepository repository, IOptions<ApplicationConfig> config,
@@ -29,7 +30,7 @@ internal static class MapGetSlice
         var query = new JobPostQuery(search ?? "", companyId, recruiterId, status ?? [], lang ?? [], page, pageSize);
         var result = await repository.GetJobPosts(user.OrganizationId, query, ct);
 
-        var content = result.Content.Select(z => z with { JobUrl = $"{appUrl}/{z.JobUrl}" }).ToList();
+        var content = result.Content.Select(z => z with { JobUrl = $"{appUrl}/p/{z.JobUrl}" }).ToList();
 
         return Results.Ok(result with { Content = content });
 

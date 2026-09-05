@@ -1,9 +1,10 @@
 using HrAgencySystem.PlatformSeeder.Scenario;
+using Marten;
 using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder;
 
-public sealed class HrAgencyShowcaseSeeder(IMessageBus bus) : IPlatformSeeder
+public sealed class HrAgencyShowcaseSeeder(IMessageBus bus, IQuerySession session) : IPlatformSeeder
 {
     public async Task Seed()
     {
@@ -25,6 +26,8 @@ public sealed class HrAgencyShowcaseSeeder(IMessageBus bus) : IPlatformSeeder
         
         await new JobPostScenario(bus).Create(javaJobId, organizationData.OrganizationId, usersIds.First());
         await new ModernWebDeveloperScenario(bus).Create(organizationData.OrganizationId, usersIds, companyIds);
+        await Task.Delay(5000);
+        await new PostJobToRandomChannelScenario(bus, session).Execute(usersIds);
     }
 
     private sealed record SeedConfig(

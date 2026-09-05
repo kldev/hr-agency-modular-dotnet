@@ -31,11 +31,11 @@ internal static class JobPostProjectionExtensions
         if (string.IsNullOrWhiteSpace(search)) return query;
         var querySearch = search.Trim();
 
-        return query.Where(q => q.Title.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
+        return query.Where(q => (q.Title.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
                                 || q.Description.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
                                 || q.Company.Name.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
                                 || q.Company.TaxId.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
-                                || q.SearchText.Contains(querySearch, StringComparison.OrdinalIgnoreCase));
+                                || q.SearchText.Contains(querySearch, StringComparison.OrdinalIgnoreCase)));
     }
     
     internal static IQueryable<JobPostProjection> WithStatuses(this IQueryable<JobPostProjection> query, IReadOnlyList<JobPostStatus> statuses)

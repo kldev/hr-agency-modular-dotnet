@@ -10,7 +10,8 @@ internal static class MapChangeRecruiter
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/recruitment/job-posting/{jobPostId:guid}/change-recruiter", Handler).WithSummary("Change recruiter");
+        // PUT /api/recruitment/job-posting/{jobPostId:guid}/change-recruiter
+        group.MapPut("/{jobPostId:guid}/change-recruiter", Handler).WithSummary("Change recruiter");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobPostId, AssignRecruiter request,

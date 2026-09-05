@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Domain.Posting;
 using HrAgencySystem.Recruitment.Events.JobPosting;
+using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
@@ -111,14 +112,17 @@ public sealed record JobPostProjection(
     }
 
     public JobPostProjection Apply(
-        JobPostToChannel @event)
+        JobPostedToChannel @event)
     {
+        
         var posts = Posts
             .Append(new ChannelPost(
                 @event.ChannelType,
                 @event.OccurredAt))
             .ToArray();
 
+      //  throw new BusinessRuleException("Posts count: " + posts.Length);
+        
         return this with
         {
             Status = JobPostStatus.Published,

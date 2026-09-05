@@ -10,7 +10,8 @@ internal static class MapApplyTo
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/api/recruitment/job-posting/{jobPostId}/apply", Handler).WithSummary("Create candidate application to job post");
+        // POST /api/recruitment/job-posting/{jobPostId}/apply
+        group.MapPost("/{jobPostId}/apply", Handler).WithSummary("Create candidate application to job post");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, Guid jobPostId, ApplyToPostRequest request,

@@ -336,3 +336,8 @@ Authorization: Bearer {{token}}
 
 GET {{baseURL}}/api/recruitment/job-posting?search=pracy w zespole
 Authorization: Bearer {{token}}
+
+### get job posts
+
+GET {{baseURL}}/api/recruitment/job-posting?status=Published
+Authorization: Bearer {{token}}

@@ -3,7 +3,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Recruitment.Events.JobPosting;
 
-public sealed record JobPostToChannel(
+public sealed record JobPostedToChannel(
     Guid JobPostId,
     PostingChannelType ChannelType,
     DateTimeOffset OccurredAt,
