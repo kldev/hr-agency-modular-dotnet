@@ -13,6 +13,7 @@ using Wolverine;
 
 namespace HrAgencySystem.Recruitment.Infrastructure;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session, ILogger<ICandidateResolver> logger): ICandidateResolver
 {
     public async Task<CandidateInfo> FindOrCreate(CreateCandidate command, JobPostInfo? info, CancellationToken ct)

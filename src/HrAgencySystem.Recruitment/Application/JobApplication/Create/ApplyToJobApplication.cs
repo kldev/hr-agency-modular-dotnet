@@ -2,7 +2,7 @@ using HrAgencySystem.Recruitment.Domain.Candidate;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplication.Create;
 
-public sealed record CreateJobApplication(
+public sealed record ApplyToJobApplication(
     Guid JobPostId,
     Guid EventId,
     string Email,

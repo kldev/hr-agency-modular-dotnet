@@ -11,7 +11,7 @@ internal static class MapPostToChannel
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/recruitment/job-posting/{id}/channel 
-        group.MapPut("{jobPostId:guid}/channel", Handler);
+        group.MapPut("{jobPostId:guid}/channel", Handler).WithSummary("Job posted to channel");
     }
 
     private static async Task<IResult> Handler(

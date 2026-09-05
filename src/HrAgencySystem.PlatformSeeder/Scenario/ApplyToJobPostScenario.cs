@@ -110,13 +110,13 @@ public sealed class ApplyToJobPostScenario(
         await ExecuteInParallel(commands);
     }
 
-    private static IEnumerable<CreateJobApplication> CreateApplications(
+    private static IEnumerable<ApplyToJobApplication> CreateApplications(
         CandidateSeed candidate,
         IReadOnlyList<Guid> jobs)
     {
         for (var i = 0; i < ApplicationsPerCandidate; i++)
         {
-            yield return new CreateJobApplication(
+            yield return new ApplyToJobApplication(
                 JobPostId: jobs[Random.Shared.Next(jobs.Count)],
                 EventId: Guid.NewGuid(),
                 Email: candidate.Email,
@@ -127,7 +127,7 @@ public sealed class ApplyToJobPostScenario(
         }
     }
 
-    private static IEnumerable<CreateJobApplication> CreateApplications(
+    private static IEnumerable<ApplyToJobApplication> CreateApplications(
         Faker faker,
         IReadOnlyList<Guid> jobs)
     {
@@ -144,7 +144,7 @@ public sealed class ApplyToJobPostScenario(
 
         for (var i = 0; i < ApplicationsPerCandidate; i++)
         {
-            yield return new CreateJobApplication(
+            yield return new ApplyToJobApplication(
                 JobPostId: jobs[Random.Shared.Next(jobs.Count)], 
                 Guid.NewGuid(),
                 Email: email,
@@ -156,7 +156,7 @@ public sealed class ApplyToJobPostScenario(
     }
 
     private async Task ExecuteInParallel(
-        IEnumerable<CreateJobApplication> commands)
+        IEnumerable<ApplyToJobApplication> commands)
     {
         await Parallel.ForEachAsync(
             commands,
@@ -171,7 +171,7 @@ public sealed class ApplyToJobPostScenario(
             });
     }
 
-    private async Task ApplyToJobPost(CreateJobApplication command)
+    private async Task ApplyToJobPost(ApplyToJobApplication command)
     {
         try
         {

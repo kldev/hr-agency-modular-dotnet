@@ -35,14 +35,82 @@ Authorization: Bearer {{token}}
 ###
 @appId1 = {{app1.response.body.$.content[0].id}}
 @candidateId1 = {{app1.response.body.$.content[0].candidateId}}
+@companyId1 = {{app1.response.body.$.content[0].companyId}}
 ###
-
 
 ###
 GET {{baseURL}}/api/recruitment/candidates/{{candidateId1}}
 Authorization: Bearer {{token}}
 
 ###
-# @name app2
 GET {{baseURL}}/api/recruitment/job-applications?pageSize=500&source=DirectSourcing
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/recruitment/job-applications?pageSize=20&companyId={{companyId1}}
+Authorization: Bearer {{token}}
+
+
+###
+# Get Tags
+# @name getTagId1
+GET {{baseURL}}/api/suggestion/tags?search=Typescript
+Authorization: Bearer {{token}}
+
+###
+@tagId1 = {{getTagId1.response.body.$.[0].id}}
+###
+
+###
+# Get Tags
+# @name getTagId2
+GET {{baseURL}}/api/suggestion/tags?search=React
+Authorization: Bearer {{token}}
+
+###
+@tagId2 = {{getTagId2.response.body.$.[0].id}}
+###
+
+
+### Tag application
+
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/tag
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "tagId": "{{tagId1}}"
+}
+
+### Tag application
+
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/tag
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "tagId": "{{tagId2}}"
+}
+
+
+### Remove tag application
+
+DELETE {{baseURL}}/api/recruitment/job-applications/{{appId1}}/tag/{{tagId2}}
+Authorization: Bearer {{token}}
+
+
+### Get application
+
+GET {{baseURL}}/api/recruitment/job-applications/{{appId1}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+###
+GET {{baseURL}}/api/recruitment/job-applications?tag={{tagId1}}
+Authorization: Bearer {{token}}
+
+
+###
+GET {{baseURL}}/api/recruitment/job-applications?tag={{tagId1}}&tag={{tagId2}}
 Authorization: Bearer {{token}}

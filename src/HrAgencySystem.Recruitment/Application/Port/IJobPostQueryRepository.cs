@@ -13,7 +13,7 @@ public interface IJobPostQueryRepository
     Task<JobPostProjection?>  GetJobPost(Guid organizationId, Guid jobPostId, CancellationToken ct);
 }
 
-public sealed record JobPostInfo(Guid Id, Guid OrganizationId, Guid CompanyId, string JobTitle);
+public sealed record JobPostInfo(Guid Id, Guid OrganizationId, Guid CompanyId, string JobTitle, JobPostStatus Status);
 
 public sealed record JobPostQuery(string Search, 
     Guid? CompanyId, 

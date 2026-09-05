@@ -2,6 +2,7 @@ using HrAgencySystem.Recruitment.Application.Candidate.Create;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
 using HrAgencySystem.Recruitment.Domain.JobApplication;
+using HrAgencySystem.Recruitment.Domain.Posting;
 using HrAgencySystem.Recruitment.Events.JobApplication;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -11,9 +12,9 @@ using Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplication.Create;
 
-public static class CreateJobApplicationHandler
+public static class ApplyToJobApplicationHandler
 {
-    public static async Task<JobApplicationCreated> Handle(CreateJobApplication command,
+    public static async Task<JobApplicationCreated> Handle(ApplyToJobApplication command,
         ICandidateResolver resolver,
         IJobPostQueryRepository queryRepository,
         ICompanySnapshotRepository companySnapshot,
@@ -23,6 +24,10 @@ public static class CreateJobApplicationHandler
     {
         var (email, firstName, lastName, phoneNumber) = GetValueObjects(command);
         var post = await queryRepository.GetJobPostInfo(command.JobPostId, ct);
+
+        if (post.Status != JobPostStatus.Published)
+            throw new BusinessRuleException("Applications are only allowed for published job posts.");
+        
         var candidateCommand =
             new CreateCandidate(post.OrganizationId,
                 command.Email,
@@ -64,7 +69,7 @@ public static class CreateJobApplicationHandler
     }
 
     private static (Email email, FirstName firstName, LastName lastName, CandidatePhoneNumber phoneNumber)
-        GetValueObjects(CreateJobApplication command)
+        GetValueObjects(ApplyToJobApplication command)
     {
         var (email, emailError) = Email.TryCreate(command.Email);
         var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName ?? "", false);

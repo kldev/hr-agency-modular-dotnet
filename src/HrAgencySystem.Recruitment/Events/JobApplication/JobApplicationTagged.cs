@@ -3,4 +3,4 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Recruitment.Events.JobApplication;
 
-public sealed record JobApplicationTagged(Guid JobApplicationId, Guid CandidateId, Tag Tag, UserSnapshot Author, DateTimeOffset CreatedAt);
+public sealed record JobApplicationTagged(Guid JobApplicationId, Tag Tag, UserSnapshot Author, DateTimeOffset CreatedAt);
