@@ -1,4 +1,5 @@
 using HrAgencySystem.PlatformSeeder;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.Platform;
 
@@ -9,11 +10,27 @@ internal static class Endpoint
         endpoints.MapGet("/api/development/seed", Handler)
             .ExcludeFromDescription()
             .AllowAnonymous().WithRequestTimeout(TimeSpan.FromMinutes(5));
+        
+        endpoints.MapGet("/api/development/seed/{type}", HandlerApplicants)
+            .ExcludeFromDescription()
+            .AllowAnonymous().WithRequestTimeout(TimeSpan.FromMinutes(5));
     }
 
     private static async Task<IResult> Handler(IPlatformSeeder seeder)
     {
         await seeder.Seed();
         return TypedResults.Text("Seed completed");
+    }
+    
+    private static async Task<IResult> HandlerApplicants(IPlatformSeeder seeder,
+        [FromQuery] int count = 100, string type = "random")
+    {
+        if (type == "show")
+        {
+            await seeder.SeedShowcase();
+            return TypedResults.Text("Seed showcase applicants completed");    
+        }
+        await seeder.SeedApplicants(count);
+        return TypedResults.Text("Seed applicants completed");
     }
 }

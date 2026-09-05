@@ -27,7 +27,7 @@ public static class CreateJobApplicationHandler
             new CreateCandidate(post.OrganizationId,
                 command.Email,
                 command.Source,
-                command.PhoneNumber, 
+                command.Phone, 
                 command.FirstName, 
                 command.LastName, 
                 null, 
@@ -69,7 +69,7 @@ public static class CreateJobApplicationHandler
         var (email, emailError) = Email.TryCreate(command.Email);
         var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName ?? "", false);
         var (lastName, lastNameError) = LastName.TryCreate(command.LastName ?? "", false);
-        var (phoneNumber, phoneNumberError) = CandidatePhoneNumber.TryCreate(command.PhoneNumber);
+        var (phoneNumber, phoneNumberError) = CandidatePhoneNumber.TryCreate(command.Phone);
         return emailError != null ? throw new ValidationException(emailError) : (email!, firstName!, lastName!, phoneNumber!);
     }
     

@@ -8,6 +8,9 @@ namespace HrAgencySystem.PlatformSeeder.Scenario;
 
 internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
 {
+    private static readonly Random Random = new();
+
+    
     public async Task<IReadOnlyList<Guid>> Create(
         Guid organizationId,
         IReadOnlyList<Guid> userIds,
@@ -23,21 +26,21 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
         {
             await CreateCSharpDeveloper(
                 organizationId,
-                companyIds[companyIndex++ % companyIds.Count],
-                userIds[userIndex++ % userIds.Count]),
+                companyIds[Random.Next(0, companyIds.Count)],
+                userIds[Random.Next(0, userIds.Count)]),
 
             await CreateNextJsDeveloper(
                 organizationId,
-                companyIds[companyIndex++ % companyIds.Count],
-                userIds[userIndex++ % userIds.Count]),
+                companyIds[Random.Next(0, companyIds.Count)],
+                userIds[Random.Next(0, userIds.Count)]),
 
             await CreateNodeJsDeveloper(
                 organizationId,
-                companyIds[companyIndex++ % companyIds.Count],
-                userIds[userIndex++ % userIds.Count])
+                companyIds[Random.Next(0, companyIds.Count)],
+                userIds[Random.Next(0, userIds.Count)]),
         };
 
-        await Task.Delay(TimeSpan.FromSeconds(30));
+        await Task.Delay(TimeSpan.FromSeconds(5));
 
         var jobPostIds = new List<Guid>();
 
@@ -73,7 +76,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 organizationId,
                 companyId,
                 "C# Developer",
-                null,
+                $"Company {companyId}",
                 "We are looking for an experienced C# Developer to join our engineering team and build modern backend applications using .NET.",
                 [
                     "Design and develop backend applications using C# and .NET",

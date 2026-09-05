@@ -8,11 +8,12 @@ using HrAgencySystem.Recruitment.Events.Candidate;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
+using Microsoft.Extensions.Logging;
 using Wolverine;
 
 namespace HrAgencySystem.Recruitment.Infrastructure;
 
-public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session): ICandidateResolver
+public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session, ILogger<ICandidateResolver> logger): ICandidateResolver
 {
     public async Task<CandidateInfo> FindOrCreate(CreateCandidate command, JobPostInfo? info, CancellationToken ct)
     {
@@ -20,6 +21,7 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session)
         if (existing is null) return await CreateNew(command, ct);
         if (info != null)
         {
+            logger.LogInformation($"Candidate {command.Email} already in database. Update");
             await bus.InvokeAsync<CandidateApplicationUpdated>(
                 new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
         }
@@ -30,8 +32,11 @@ public sealed class CandidateResolver(IMessageBus bus, IDocumentSession session)
 
     private async Task<CandidateInfo> CreateNew(CreateCandidate command, CancellationToken ct)
     {
+        logger.LogInformation($"Candidate {command.Email} not in database. Create new");
         var result = await bus.InvokeAsync<CandidateCreated>(command, ct);
 
+        logger.LogInformation($"Candidate {command.Email} created successfully");
+        
         return new CandidateInfo(result.Id, result.Email,
             result.PhoneNumber, result.FirstName, result.LastName);
     }

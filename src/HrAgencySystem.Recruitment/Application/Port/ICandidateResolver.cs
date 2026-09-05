@@ -1,6 +1,4 @@
 using HrAgencySystem.Recruitment.Application.Candidate.Create;
-using HrAgencySystem.Recruitment.Domain.Candidate.ValueObjects;
-using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Application.Port;
 

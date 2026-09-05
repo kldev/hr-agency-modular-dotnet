@@ -1,0 +1,48 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+###
+@token = {{login.response.body.$.token}}
+
+###
+
+###
+# @name app1
+GET {{baseURL}}/api/recruitment/job-applications?search=Joe
+Authorization: Bearer {{token}}
+
+
+###
+# @name app1
+GET {{baseURL}}/api/recruitment/job-applications?search=Monica
+Authorization: Bearer {{token}}
+
+###
+# @name app1
+GET {{baseURL}}/api/recruitment/job-applications?search=Rachel
+Authorization: Bearer {{token}}
+
+###
+@appId1 = {{app1.response.body.$.content[0].id}}
+@candidateId1 = {{app1.response.body.$.content[0].candidateId}}
+###
+
+
+###
+GET {{baseURL}}/api/recruitment/candidates/{{candidateId1}}
+Authorization: Bearer {{token}}
+
+###
+# @name app2
+GET {{baseURL}}/api/recruitment/job-applications?pageSize=500&source=DirectSourcing
+Authorization: Bearer {{token}}

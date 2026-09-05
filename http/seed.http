@@ -2,3 +2,10 @@
 
 ### seed
 GET {{baseURL}}/api/development/seed
+
+
+### seed
+GET {{baseURL}}/api/development/seed/random
+
+### seed
+GET {{baseURL}}/api/development/seed/show

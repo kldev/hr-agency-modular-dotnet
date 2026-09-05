@@ -4,8 +4,9 @@ namespace HrAgencySystem.Recruitment.Application.JobApplication.Create;
 
 public sealed record CreateJobApplication(
     Guid JobPostId,
+    Guid EventId,
     string Email,
-    string PhoneNumber,
+    string Phone,
     CandidateSource Source,
     string? FirstName = null,
     string? LastName = null);
