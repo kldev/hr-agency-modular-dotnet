@@ -9,10 +9,10 @@
     <ItemGroup>
         <PackageReference Include="Marten" />
         <PackageReference Include="WolverineFx" />
+        <PackageReference Include="WolverineFx.Marten" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\HrAgencySystem.Company\HrAgencySystem.Company.csproj"/>
         <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
     </ItemGroup>
 
