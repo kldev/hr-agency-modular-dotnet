@@ -43,6 +43,15 @@ public sealed record JobPostProjection(
     string PostingSlug,
     string SearchText)
 {
+
+    public JobPostProjection UpdatePostSlug(string appUrl)
+    {
+        return this with
+        {
+            PostingSlug = appUrl + "/" + PostingSlug
+        };
+    }
+    
     public static JobPostProjection Create(
         JobPostCreated @event)
     {

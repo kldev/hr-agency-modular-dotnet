@@ -63,10 +63,7 @@ public sealed class JobFeedXmlItem
     
     [XmlElement("createdAt")]
     public DateTimeOffset CreatedAt { get; set; }
-
-    [XmlElement("updatedAt")]
-    public DateTimeOffset UpdatedAt { get; set; }
-
+    
     [XmlElement("applyUrl")]
     public string PostingSlug { get; set; } = string.Empty;
 

@@ -60,9 +60,6 @@ public sealed class JobJson
     [JsonPropertyName("createdAt")]
     public DateTimeOffset CreatedAt { get; set; }
 
-    [JsonPropertyName("updatedAt")]
-    public DateTimeOffset UpdatedAt { get; set; }
-
     [JsonPropertyName("applyUrl")]
     public string PostingSlug { get; set; } = string.Empty;
 
@@ -92,8 +89,7 @@ public sealed class JobJson
             SalaryMax = projection.SalaryMax,
 
             CreatedAt = projection.CreatedAt,
-            UpdatedAt = projection.UpdatedAt,
-
+            
             PostingSlug = projection.PostingSlug
         };
     }

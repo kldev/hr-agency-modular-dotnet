@@ -11,6 +11,7 @@
         <PackageReference Include="Marten" />
         <PackageReference Include="WolverineFx" />
         <PackageReference Include="WolverineFx.Marten" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
     </ItemGroup>
 
     <ItemGroup>

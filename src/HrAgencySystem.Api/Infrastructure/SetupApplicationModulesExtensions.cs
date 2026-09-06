@@ -27,7 +27,7 @@ public static class SetupApplicationModulesExtensions
             services.AddOrganizationModule(configuration);
             services.AddIdentityModule();
             services.AddJobDescriptionModule();
-            services.AddRecruitmentModule();
+            services.AddRecruitmentModule(configuration);
             services.AddFilesModule(configuration);
         }
 

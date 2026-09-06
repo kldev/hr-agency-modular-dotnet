@@ -25,12 +25,12 @@ internal static class MapGetSlice
         int page = 1, int pageSize = 100,
         CancellationToken ct = default)
     {
-        var appUrl = config.Value.AppUrl;
+        var appUrl = config.Value.FedUrl;
 
         var query = new JobPostQuery(search ?? "", companyId, recruiterId, status ?? [], lang ?? [], page, pageSize);
         var result = await repository.GetJobPosts(user.OrganizationId, query, ct);
 
-        var content = result.Content.Select(z => z with { JobUrl = $"{appUrl}/p/{z.JobUrl}" }).ToList();
+        var content = result.Content.Select(z => z with { JobUrl = $"{appUrl}/{z.JobUrl}" }).ToList();
 
         return Results.Ok(result with { Content = content });
 
