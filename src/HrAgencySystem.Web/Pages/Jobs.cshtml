@@ -1,0 +1,460 @@
+@page "/{slug}/jobs.html"
+@model HrAgencySystem.Web.Pages.Jobs
+
+@{
+Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/jobs.css">
+    
+    <title>@Model.OrganizationName | Careers</title>
+
+    <style>
+     
+    </style>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+
+        <a href="/@Model.Slug/jobs.html" class="brand">
+
+            <div class="brand-logo">
+                HR
+            </div>
+
+            <div>
+                <div class="brand-name">
+                    @Model.OrganizationName
+                </div>
+
+                <div class="brand-description">
+                    Job offers
+                </div>
+            </div>
+
+        </a>
+
+        <span class="header-status">
+            Current job openings
+        </span>
+
+    </div>
+</header>
+
+
+<main>
+
+    <section class="hero">
+        <div class="container hero-inner">
+
+            <div class="hero-content">
+
+                <span class="eyebrow">
+                    Careers
+                </span>
+
+                <h1 class="hero-title">
+                    Find your next job
+                </h1>
+
+                <p class="hero-description">
+                    Browse our current job openings and find the position
+                    that best matches your experience.
+                </p>
+
+                <div class="search-wrapper">
+                    <div class="search-box">
+
+                        <svg class="search-icon"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="m20 20-4-4"></path>
+                        </svg>
+
+                        <input id="search"
+                               type="search"
+                               placeholder="Search by job title..."
+                               class="search-input">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <section class="container jobs-section">
+
+        <div class="section-header">
+
+            <div>
+                <h2 class="section-title">
+                    Current job openings
+                </h2>
+
+                <p id="resultCount" class="result-count">
+                    Loading job offers...
+                </p>
+            </div>
+
+            <div id="loading" class="loading">
+                Loading...
+            </div>
+
+        </div>
+
+
+        <div id="error" class="error hidden">
+
+            <p class="error-title">
+                Failed to load job offers.
+            </p>
+
+            <p class="error-description">
+                Please try again in a moment.
+            </p>
+
+        </div>
+
+
+        <div id="empty" class="empty hidden">
+
+            <div class="empty-icon">
+
+                <svg viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     aria-hidden="true">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                </svg>
+
+            </div>
+
+            <h3 class="empty-title">
+                No current job openings
+            </h3>
+
+            <p class="empty-description">
+                There are currently no active job openings.
+            </p>
+
+        </div>
+
+
+        <div id="jobs" class="jobs-grid"></div>
+
+    </section>
+
+</main>
+
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+
+        © 2026
+
+        <span>
+            @Model.OrganizationName
+        </span>
+
+    </div>
+</footer>
+
+
+<script>
+    const organizationSlug =
+        @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Slug));
+
+    const jobsContainer = document.getElementById('jobs');
+    const resultCount = document.getElementById('resultCount');
+    const loading = document.getElementById('loading');
+    const error = document.getElementById('error');
+    const empty = document.getElementById('empty');
+    const search = document.getElementById('search');
+
+    let jobs = [];
+
+
+    async function loadJobs() {
+        try {
+            const response = await fetch(
+                `/${encodeURIComponent(organizationSlug)}/jobs.json`
+            );
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            jobs = Array.isArray(data)
+                ? data
+                : data.jobs ?? [];
+
+            loading.classList.add('hidden');
+
+            renderJobs();
+
+        } catch (e) {
+            console.error('Failed to load job feed', e);
+
+            loading.classList.add('hidden');
+            error.classList.remove('hidden');
+
+            resultCount.textContent = 'Failed to load job offers';
+        }
+    }
+
+
+    function renderJobs() {
+        const query = search.value.trim().toLowerCase();
+
+        const filteredJobs = jobs.filter(job =>
+            !query ||
+            job.title?.toLowerCase().includes(query) ||
+            job.summary?.toLowerCase().includes(query) ||
+            job.location?.toLowerCase().includes(query) ||
+            job.skills?.some(skill =>
+                skill.toLowerCase().includes(query)
+            )
+        );
+
+        jobsContainer.innerHTML = '';
+
+        if (filteredJobs.length === 0) {
+            empty.classList.remove('hidden');
+
+            resultCount.textContent =
+                query
+                    ? 'No job openings match your search criteria'
+                    : 'No current job openings';
+
+            return;
+        }
+
+        empty.classList.add('hidden');
+
+        resultCount.textContent =
+            `${filteredJobs.length} ${
+                filteredJobs.length === 1
+                    ? 'job opening'
+                    : 'job openings'
+            }`;
+
+        filteredJobs.forEach(job => {
+            jobsContainer.appendChild(createJobCard(job));
+        });
+    }
+
+
+    function createJobCard(job) {
+        const card = document.createElement('article');
+
+        card.className = 'job-card';
+
+
+        const location = job.location
+            ? `
+                <span class="job-meta-item">
+                    📍 ${escapeHtml(job.location)}
+                </span>
+            `
+            : '';
+
+
+        const salary =
+            job.salaryMin != null || job.salaryMax != null
+                ? `
+                    <div class="salary">
+
+                        <div class="salary-label">
+                            Salary
+                        </div>
+
+                        <div class="salary-value">
+                            ${formatSalary(job)}
+                        </div>
+
+                    </div>
+                `
+                : '';
+
+
+        const skills =
+            Array.isArray(job.skills) && job.skills.length
+                ? `
+                    <div class="skills">
+
+                        ${job.skills.slice(0, 5).map(skill => `
+                            <span class="skill">
+                                ${escapeHtml(skill)}
+                            </span>
+                        `).join('')}
+
+                    </div>
+                `
+                : '';
+
+
+        /*
+         * applyUrl is provided by the public JSON feed.
+         *
+         * Example:
+         *
+         * "applyUrl": "software-developer"
+         *
+         * The final application URL is built from the organization
+         * slug and the posting slug.
+         */
+
+        const applyUrl = job.applyUrl;
+
+
+        card.innerHTML = `
+            <div class="job-card-content">
+
+                <div class="job-header">
+
+                    <div>
+
+                        <h3 class="job-title">
+                            ${escapeHtml(job.title ?? '')}
+                        </h3>
+
+                        ${
+            job.summary
+                ? `
+                                    <p class="job-summary">
+                                        ${escapeHtml(job.summary)}
+                                    </p>
+                                `
+                : ''
+        }
+
+                    </div>
+
+                    <span class="job-status">
+                        Active
+                    </span>
+
+                </div>
+
+
+                <div class="job-meta">
+
+                    ${
+            location
+                ? location
+                : ''
+        }
+
+                    ${
+            job.employmentType
+                ? `
+                                <span class="job-meta-item">
+                                    ${escapeHtml(job.employmentType)}
+                                </span>
+                            `
+                : ''
+        }
+
+                    ${
+            job.workMode
+                ? `
+                                <span class="job-meta-item">
+                                    ${escapeHtml(job.workMode)}
+                                </span>
+                            `
+                : ''
+        }
+
+                </div>
+
+
+                ${salary}
+
+                ${skills}
+
+            </div>
+
+
+            <div class="job-footer">
+
+                <a href="${applyUrl}" class="apply-link">
+
+                    View job and apply
+
+                    <svg class="apply-icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         aria-hidden="true">
+                        <path d="M5 12h14"></path>
+                        <path d="m12 5 7 7-7 7"></path>
+                    </svg>
+
+                </a>
+
+            </div>
+        `;
+
+        return card;
+    }
+
+
+    function formatSalary(job) {
+        const min = job.salaryMin != null
+            ? new Intl.NumberFormat('en-US').format(job.salaryMin)
+            : null;
+
+        const max = job.salaryMax != null
+            ? new Intl.NumberFormat('en-US').format(job.salaryMax)
+            : null;
+
+        const currency = job.currencyCode
+            ? ` ${escapeHtml(job.currencyCode)}`
+            : '';
+
+
+        if (min && max) {
+            return `${min} – ${max}${currency}`;
+        }
+
+        return `${min ?? max}${currency}`;
+    }
+
+
+    function escapeHtml(value) {
+        return String(value)
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+    }
+
+
+    search.addEventListener('input', renderJobs);
+
+    loadJobs();
+</script>
+
+</body>
+</html>

@@ -15,15 +15,27 @@ namespace HrAgencySystem.Company;
 public static class CompanyModule
 {
     private const string SchemaName = "company";
-    public static void AddCompanyModule(
-        this IServiceCollection services)
+    extension(IServiceCollection services)
     {
-        services.AddScoped<ICompanyTaxIdReservationRepository, CompanyTaxIdReservationRepository>();
-        services.AddScoped<ICompaniesQueryRepository, CompaniesQueryRepository>();
-        services.AddScoped<ICompanySnapshotRepository, CompanySnapshotRepository>();
-        services.AddScoped<ICompanySuggestionRepository, CompanySuggestionRepository>();
+        public void AddCompanyModule()
+        {
+            services.AddScoped<ICompanyTaxIdReservationRepository, CompanyTaxIdReservationRepository>();
+            services.AddScoped<ICompaniesQueryRepository, CompaniesQueryRepository>();
+            services.AddScoped<ICompanySnapshotRepository, CompanySnapshotRepository>();
+            services.AddScoped<ICompanySuggestionRepository, CompanySuggestionRepository>();
+        }
     }
 
+    public static void AddCompanyMinimalModule(this IServiceCollection services)
+    {
+        services.AddScoped<ICompanySnapshotRepository, CompanySnapshotRepository>();
+    }
+
+    public static void ConfigureMartenMinimal(StoreOptions options)
+    {
+        ConfigureProjections(options);
+    }
+    
     public static void ConfigureMarten(
         StoreOptions options)
     {
@@ -49,9 +61,12 @@ public static class CompanyModule
         options.Events.AddEventType<CompanyCreated>();
     }
 
-    private static void ConfigureProjections(StoreOptions options)
+    private static void ConfigureProjections(StoreOptions options, bool skipSnapshots = false)
     {
-        options.Projections.Snapshot<CompanyProjection>(SnapshotLifecycle.Async);
+        if (!skipSnapshots)
+        {
+            options.Projections.Snapshot<CompanyProjection>(SnapshotLifecycle.Async);
+        }
 
         options.Schema.For<CompanyProjection>().DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })

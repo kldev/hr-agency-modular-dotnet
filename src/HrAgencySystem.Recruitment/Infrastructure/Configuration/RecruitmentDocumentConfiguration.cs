@@ -16,6 +16,11 @@ internal static class RecruitmentDocumentConfiguration
             ConfigureJobApplicationNote(options);
             ConfigureCandidateEmailReservation(options);
         }
+
+        public void ConfigureRecruitmentDocumentsMinimal()
+        {
+            ConfigureCandidateEmailReservation(options);
+        }
     }
 
     private static void ConfigureTag(StoreOptions options)

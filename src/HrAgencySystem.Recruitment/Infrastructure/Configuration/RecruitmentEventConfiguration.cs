@@ -15,6 +15,13 @@ internal static class RecruitmentEventConfiguration
             ConfigureJobPostEvents(options);
             ConfigureCandidateEvents(options);
         }
+
+        public void ConfigureRecruitmentEventsMinimal()
+        {
+            options.Events.AddEventType<JobApplicationCreated>();
+            options.Events.AddEventType<CandidateCreated>();
+            options.Events.AddEventType<CandidateApplicationUpdated>();
+        }
     }
 
     private static void ConfigureJobApplicationEvents(StoreOptions options)

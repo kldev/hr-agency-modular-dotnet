@@ -18,7 +18,7 @@ public static class RecruitmentServiceCollectionExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddRecruitmentServices(IConfiguration configuration)
+        public void AddRecruitmentServices(IConfiguration configuration)
         {
             var section = configuration.GetSection(RecruitmentConfig.Section);
 
@@ -48,8 +48,14 @@ public static class RecruitmentServiceCollectionExtensions
 
             services.AddHostedService<JobFeedSchedulerWorker>();
             services.AddHostedService<JobFeedGenerationWorker>();
-
-            return services;
+            
+        }
+        
+        public void AddRecruitmentServicesMinimal()
+        {
+            services.AddScoped<ICandidateResolver, CandidateResolver>();
+            services.AddScoped<ICandidateEmailReservationRepository, CandidateEmailReservationRepository>();
+            services.AddScoped<IJobPostQueryRepository, JobPostQueryRepository>();
         }
     }
 }

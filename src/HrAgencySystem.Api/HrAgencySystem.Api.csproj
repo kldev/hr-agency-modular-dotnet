@@ -14,7 +14,6 @@
         <PackageReference Include="Marten"/>
         <PackageReference Include="WolverineFx"/>
         <PackageReference Include="WolverineFx.Marten"/>
-        <PackageReference Include="WolverineFx.Http" />
         <PackageReference Include="WolverineFx.RuntimeCompilation" />
     </ItemGroup>
 

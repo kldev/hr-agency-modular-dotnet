@@ -1,0 +1,72 @@
+﻿@page
+@{
+    ViewData["Title"] = "Unexpected Error";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Unexpected Error | Careers</title>
+
+    <link rel="stylesheet" href="~/error.css" asp-append-version="true">
+</head>
+
+<body>
+
+<main class="error-main">
+
+    <div class="error-container">
+
+        <div class="error-card">
+
+            <div class="error-icon" aria-hidden="true">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+
+                    <path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+            </div>
+
+            <p class="error-label">
+                Something went wrong
+            </p>
+
+            <h1 class="error-title">
+                Unexpected error
+            </h1>
+
+            <p class="error-description">
+                We’re sorry, but something unexpected happened while processing your request.
+                Please try again in a moment.
+            </p>
+            
+        </div>
+
+        <p class="error-help">
+            If the problem continues, please try again later.
+        </p>
+
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        © 2026 HR Agency
+    </div>
+</footer>
+
+</body>
+</html>

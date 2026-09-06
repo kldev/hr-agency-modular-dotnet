@@ -16,6 +16,12 @@ internal static class RecruitmentProjectionConfiguration
             ConfigureJobPostProjection(options);
             ConfigureCandidateProjection(options);
         }
+
+        public void ConfigureRecruitmentProjectionsMinimal()
+        {
+            ConfigureJobPostProjection(options, true);
+            ConfigureCandidateProjection(options, true);
+        }
     }
 
     private static void ConfigureJobApplicationProjection(
@@ -38,10 +44,13 @@ internal static class RecruitmentProjectionConfiguration
     }
 
     private static void ConfigureJobPostProjection(
-        StoreOptions options)
+        StoreOptions options, bool skipSnapshots = false)
     {
-        options.Projections.Snapshot<JobPostProjection>(
-            SnapshotLifecycle.Async);
+        if (!skipSnapshots)
+        {
+            options.Projections.Snapshot<JobPostProjection>(
+                SnapshotLifecycle.Async);
+        }
 
         options.Schema
             .For<JobPostProjection>()
@@ -58,10 +67,13 @@ internal static class RecruitmentProjectionConfiguration
     }
 
     private static void ConfigureCandidateProjection(
-        StoreOptions options)
+        StoreOptions options, bool skipSnapshots = false)
     {
-        options.Projections.Snapshot<CandidateProjection>(
-            SnapshotLifecycle.Async);
+        if (!skipSnapshots)
+        {
+            options.Projections.Snapshot<CandidateProjection>(
+                SnapshotLifecycle.Async);
+        }
 
         options.Schema
             .For<CandidateProjection>()

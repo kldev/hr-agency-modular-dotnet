@@ -27,7 +27,7 @@ internal sealed record ApplyToPostRequest(string Email, string PhoneNumber, Cand
 {
     public ApplyToJobApplication ToCommand(Guid jobPostId)
     {
-        return new ApplyToJobApplication(jobPostId,  Guid.NewGuid(), Email, PhoneNumber, Source, FirstName, LastName);
+        return new ApplyToJobApplication(jobPostId,  Email, PhoneNumber, Source, FirstName, LastName);
     }
 }
  

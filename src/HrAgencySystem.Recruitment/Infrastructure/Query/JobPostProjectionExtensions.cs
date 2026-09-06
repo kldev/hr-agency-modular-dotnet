@@ -11,6 +11,11 @@ internal static class JobPostProjectionExtensions
         {
             return query.Where(q => q.OrgId == organizationId);
         }
+        //
+        internal IQueryable<JobPostProjection> WitPostSlug(string postSlug)
+        {
+            return query.Where(q => q.PostingSlug.Equals(postSlug, StringComparison.OrdinalIgnoreCase));
+        }
 
         internal IQueryable<JobPostProjection> WithCompanyId(Guid? companyId)
         {

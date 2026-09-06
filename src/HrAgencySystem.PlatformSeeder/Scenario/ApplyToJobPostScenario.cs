@@ -118,7 +118,6 @@ public sealed class ApplyToJobPostScenario(
         {
             yield return new ApplyToJobApplication(
                 JobPostId: jobs[Random.Shared.Next(jobs.Count)],
-                EventId: Guid.NewGuid(),
                 Email: candidate.Email,
                 Phone: candidate.Phone,
                 Source: RandomSource(),
@@ -146,7 +145,6 @@ public sealed class ApplyToJobPostScenario(
         {
             yield return new ApplyToJobApplication(
                 JobPostId: jobs[Random.Shared.Next(jobs.Count)], 
-                Guid.NewGuid(),
                 Email: email,
                 Phone: phone,
                 Source: RandomSource(),

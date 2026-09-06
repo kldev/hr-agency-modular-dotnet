@@ -25,7 +25,7 @@ public static class OrganizationModule
         ConfigureTable(options);
         ConfigureEvents(options);
     }
-
+    
     private static void ConfigureTable(StoreOptions options)
     {
         options.Schema.For<OrganizationSlugReservation>().DatabaseSchemaName("organization")

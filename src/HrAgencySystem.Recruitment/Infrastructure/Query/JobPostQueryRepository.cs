@@ -44,4 +44,12 @@ public class JobPostQueryRepository(IDocumentSession session) : IJobPostQueryRep
             .WithPostId(jobPostId)
             .SingleOrDefaultAsync(ct);
     }
+
+    public async Task<JobPostProjection?> GetJobPost(Guid organizationId, string postSlug, CancellationToken ct)
+    {
+        return await session.Query<JobPostProjection>()
+            .WithOrganizationId(organizationId)
+            .WitPostSlug(postSlug)
+            .SingleOrDefaultAsync(ct);
+    }
 }

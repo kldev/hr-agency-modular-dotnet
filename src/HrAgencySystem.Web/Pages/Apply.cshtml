@@ -1,0 +1,183 @@
+@page "/{slug}/{postslug}"
+@model HrAgencySystem.Web.Pages.Apply
+
+@{
+    Layout = null;
+    ViewData["Title"] = $"Apply – {Model.Job.Title}";
+}
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/apply.css" asp-append-version="true" />
+</head>
+
+<body>
+    <main class="apply-page">
+
+        <section class="job-header">
+            <div class="page-container">
+                <div class="job-header__content">
+                    <a class="back-link" href="/@Model.Slug/jobs.html">
+                        <span aria-hidden="true">←</span>
+                        Back to job posting
+                    </a>
+
+                    <h1 class="job-title">
+                        @Model.Job.Title
+                    </h1>
+
+                    <div class="job-meta">
+                        @if (!string.IsNullOrWhiteSpace(Model.Job.Location))
+                        {
+                            <span class="job-meta__item">
+                                <span aria-hidden="true">📍</span>
+                                @Model.Job.Location
+                            </span>
+                        }
+
+                        
+                        <span class="job-meta__item">
+                            <span aria-hidden="true">💼</span>
+                            @Model.Job.EmploymentType
+                        </span>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="page-container">
+            <div class="apply-layout">
+
+                <article class="job-content">
+                    <section class="content-section">
+                        <h2>Job description</h2>
+
+                        <div class="content-text">
+                            @Html.Raw(Model.Job.Description)
+                        </div>
+                    </section>
+
+                    @if (Model.Job.Requirements.Any())
+                    {
+                        <section class="content-section">
+                            <h2>Requirements</h2>
+
+                            <ul class="job-list">
+                                @foreach (var requirement in Model.Job.Requirements)
+                                {
+                                    <li>@requirement</li>
+                                }
+                            </ul>
+                        </section>
+                    }
+
+                    @if (Model.Job.Responsibilities.Any())
+                    {
+                        <section class="content-section">
+                            <h2>Responsibilities</h2>
+
+                            <ul class="job-list">
+                                @foreach (var responsibility in Model.Job.Responsibilities)
+                                {
+                                    <li>@responsibility</li>
+                                }
+                            </ul>
+                        </section>
+                    }
+                </article>
+
+                <aside class="application-card">
+                    <div class="application-card__header">
+                        <h2>Apply for this position</h2>
+                        <p>
+                            Fill out the form to submit your application.
+                        </p>
+                    </div>
+
+                    <form method="post" class="application-form"     
+                          asp-route-slug="@RouteData.Values["slug"]"
+                          asp-route-postslug="@RouteData.Values["postslug"]">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly"
+                             class="validation-summary">
+                        </div>
+
+                        <div class="form-field">
+                            <label asp-for="FirstName">
+                                First name
+                            </label>
+
+                            <input asp-for="FirstName"
+                                   autocomplete="given-name"
+                                   placeholder="Enter your first name" />
+
+                            <span asp-validation-for="FirstName"
+                                  class="field-validation">
+                            </span>
+                        </div>
+
+                        <div class="form-field">
+                            <label asp-for="LastName">
+                                Last name
+                            </label>
+
+                            <input asp-for="LastName"
+                                   autocomplete="family-name"
+                                   placeholder="Enter your last name" />
+
+                            <span asp-validation-for="LastName"
+                                  class="field-validation">
+                            </span>
+                        </div>
+
+                        <div class="form-field">
+                            <label asp-for="Email">
+                                Email address
+                            </label>
+
+                            <input asp-for="Email"
+                                   type="email"
+                                   autocomplete="email"
+                                   placeholder="np. jan@example.com" />
+
+                            <span asp-validation-for="Email"
+                                  class="field-validation">
+                            </span>
+                        </div>
+                        
+                        <div class="form-field">
+                            <label asp-for="Phone">
+                                Phone
+                            </label>
+
+                            <input asp-for="Phone"
+                                   autocomplete="phone-number"
+                                   placeholder="Enter your phone number" />
+
+                            <span asp-validation-for="Phone"
+                                  class="field-validation">
+                            </span>
+                        </div>
+
+                        <button type="submit" class="submit-button">
+                            Submit application
+                        </button>
+
+                        <p class="form-note">
+                            By submitting this form, you consent to the processing of your personal data for recruitment purposes.
+                        </p>
+                    </form>
+                </aside>
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>

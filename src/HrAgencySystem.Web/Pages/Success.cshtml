@@ -1,0 +1,94 @@
+@page "/{slug}/success.html"
+@model HrAgencySystem.Web.Pages.Success
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Application Submitted | Careers</title>
+
+    <link rel="stylesheet" href="~/success.css" asp-append-version="true">
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="header-container">
+
+        <a href="/@Model.Slug/jobs.html" class="brand">
+        <div class="brand">
+            <div class="brand-logo" aria-hidden="true">
+                HR
+            </div>
+
+            <div class="brand-content">
+                <div class="brand-name">
+                    HR Agency
+                </div>
+
+                <div class="brand-section">
+                    Careers
+                </div>
+            </div>
+        </div>
+        </a>
+
+    </div>
+</header>
+
+<main class="success-main">
+
+    <div class="success-container">
+
+        <div class="success-card">
+
+            <div class="success-icon" aria-hidden="true">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+
+                    <path d="m5 12 4 4L19 6"/>
+                </svg>
+            </div>
+
+            <p class="success-label">
+                Application Submitted
+            </p>
+
+            <h1 class="success-title">
+                Thank you for applying!
+            </h1>
+
+            <p class="success-description">
+                We have received your application and will forward it to our recruitment team.
+                We will contact you if we would like to discuss the next steps.
+            </p>
+
+        </div>
+
+        <p class="success-close-message">
+            You can safely close this page.
+        </p>
+
+    </div>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-container">
+        © 2026 HR Agency
+    </div>
+</footer>
+
+</body>
+</html>
