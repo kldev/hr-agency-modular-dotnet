@@ -26,6 +26,9 @@ public static class CreateOrganizationHandler
 
         if (await repository.Exists(slug, ct))
             throw new BusinessRuleException(SlugAlreadyExitsMessage);
+        
+        if (command.EmailDomains.Count == 0)
+            throw new BusinessRuleException("No email domains specified");
 
         await repository.Reserve(organizationId, slug);
 
@@ -33,6 +36,7 @@ public static class CreateOrganizationHandler
             organizationId.Value,
             name.Value,
             slug.Value,
+            command.EmailDomains,
             clock.UtcNow);
 
         session.Events.StartStream<Domain.Organization>(organizationId.Value, @event);

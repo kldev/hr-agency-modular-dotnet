@@ -77,9 +77,6 @@ public partial class Apply(IMessageBus bus, IOrganizationService service, IJobPo
             logger.LogError(ex, ex.Message);
             return RedirectToPage("/Error");
         }
-        
-        // todo:
-        return Page();
     }
     
     private async Task<JobPostProjection?> GetJobAsync(

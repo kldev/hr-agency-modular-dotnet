@@ -315,7 +315,6 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     {
         return new ApplyToJobApplication(
             JobPostId,
-            EventId,
             email,
             phone,
             source,

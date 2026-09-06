@@ -3,6 +3,7 @@ using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Microsoft.Extensions.Logging;
 
@@ -15,11 +16,12 @@ public static class LoginUserHandler
         IPasswordHasher hasher,
         IAccountRepository repository,
         IJwtTokenService tokenService,
+        IOrganizationService organizationService,
         CancellationToken ct)
     {
 
         var email = Email.Create(command.Email);
-        var reservation = await GetEmailReservation(command, repository, email, ct);
+        var reservation = await GetEmailReservation(command, repository, email, organizationService, ct);
 
         ValidatePassword(command, hasher, reservation);
 
@@ -38,9 +40,17 @@ public static class LoginUserHandler
             throw new AuthorizationException("Invalid login or password");
     }
 
-    private static async Task<UserEmailReservation> GetEmailReservation(LoginUser command, IAccountRepository repository, Email email, CancellationToken ct)
+    private static async Task<UserEmailReservation> GetEmailReservation(LoginUser command, IAccountRepository repository, Email email, IOrganizationService organizationService, CancellationToken ct)
     {
-        var reservation = await repository.FindUserByEmail(email, command.Slug, ct);
+        var slug = command.Slug;
+        if (string.IsNullOrEmpty(command.Slug))
+        {
+            var domain = email.Value.Split("@", StringSplitOptions.RemoveEmptyEntries)[1];
+            var organization = await organizationService.GetByEmailDomainAsync(domain, ct);
+            slug = organization?.Slug ?? "";
+        }
+        
+        var reservation = await repository.FindUserByEmail(email, slug, ct);
 
         return reservation ?? throw new AuthorizationException("Invalid login or password");
     }

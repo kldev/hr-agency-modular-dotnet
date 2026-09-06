@@ -15,6 +15,7 @@ public class OrganizationTests
             organizationId,
             "Acme Sp. z o.o.",
             "acme",
+            ["acme.com"],
             createdAt);
 
 

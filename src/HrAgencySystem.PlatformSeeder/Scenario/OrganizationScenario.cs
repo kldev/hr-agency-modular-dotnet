@@ -10,7 +10,8 @@ internal class OrganizationScenario(IMessageBus bus)
 
     internal async Task<OrganizationData> Create(Guid ownerId, string name = "HR Agency", string slug = "hr-agency")
     {
-        var command = new CreateOrganization(name, slug, ownerId);
+        var emailDomains = new List<string>() { slug + ".com", slug + ".com.pl", slug + ".eu"  };
+        var command = new CreateOrganization(name, slug, ownerId, emailDomains);
         var result = await bus.InvokeAsync<OrganizationCreated>(command);
         
         return new OrganizationData(result.OrganizationId, result.Slug);

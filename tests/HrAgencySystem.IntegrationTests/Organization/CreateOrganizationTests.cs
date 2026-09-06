@@ -29,9 +29,9 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         return new CreateOrganization(
             name,
             slug,
-            Guid.NewGuid());
+            Guid.NewGuid(), [slug + ".com"]);
     }
-    
+
     [Fact]
     public async Task Post_valid_organization_creates_organization()
     {
@@ -262,4 +262,23 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
                 break;
         }
     }
+    
+    [Fact]
+    public async Task CreateOrganizationWithoutEmailDomainsReturnBadRequest()
+    {
+        var request = new CreateOrganization("Name", "Slug", Guid.NewGuid(),[]);
+
+        var response = await Client.PostAsJsonAsync(
+            "/api/organization",
+            request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var result = await response.ReadWithJson<ProblemDetails>();
+
+        Assert.NotNull(result);
+        
+        Assert.Equal("No email domains specified", result.Detail);
+    }
+
 }

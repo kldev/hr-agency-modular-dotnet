@@ -28,7 +28,7 @@ internal static class MapCreate
     }
 }
 
-internal sealed record CreateOrganizationRequest(string Name, string Slug)
+internal sealed record CreateOrganizationRequest(string Name, string Slug, IReadOnlyList<string> EmailDomains)
 {
-    public CreateOrganization ToCommand(Guid createdBy) => new (Name, Slug, createdBy);
+    public CreateOrganization ToCommand(Guid createdBy) => new (Name, Slug, createdBy, EmailDomains);
 }

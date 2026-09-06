@@ -4,4 +4,5 @@ public sealed record OrganizationCreated(
     Guid OrganizationId,
     string Name,
     string Slug,
+    IReadOnlyList<string> EmailDomains,
     DateTimeOffset CreatedAt);

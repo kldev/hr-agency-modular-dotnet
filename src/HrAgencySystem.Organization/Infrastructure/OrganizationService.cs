@@ -22,4 +22,12 @@ public class OrganizationService(IQuerySession session) : IOrganizationService
             .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
             .FirstOrDefaultAsync(ct);
     }
+
+    public async Task<OrganizationInfo?> GetByEmailDomainAsync(string emailDomain, CancellationToken ct)
+    {
+        return await session.Query<OrganizationCreated>()
+            .Where(z => z.EmailDomains.Contains(emailDomain, StringComparer.OrdinalIgnoreCase))
+            .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
+            .FirstOrDefaultAsync(ct);
+    }
 }
