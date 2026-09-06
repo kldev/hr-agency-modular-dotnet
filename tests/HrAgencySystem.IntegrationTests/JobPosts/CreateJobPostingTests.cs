@@ -4,7 +4,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.JobPosting;
+namespace HrAgencySystem.IntegrationTests.JobPosts;
 
 [Collection(IntegrationCollection.Name)]
 public sealed class CreateJobPostingTests(

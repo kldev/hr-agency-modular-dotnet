@@ -1,13 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.User.Maps;
-using HrAgencySystem.Identity.Application.Commands;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.User;
+namespace HrAgencySystem.IntegrationTests.Users;
 
 [Collection(IntegrationCollection.Name)]
 public sealed class CreateUserEndpointTests : BaseIntegrationTest

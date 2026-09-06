@@ -2,7 +2,7 @@ using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Api.Endpoints.JobDescription.Maps;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.IntegrationTests.JobDescription;
+namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
 internal static class JobDescriptionTestData
 {

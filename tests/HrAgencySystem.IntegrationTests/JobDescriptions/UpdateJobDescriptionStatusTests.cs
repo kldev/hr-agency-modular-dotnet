@@ -2,7 +2,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.JobDescription.Domain;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.JobDescription;
+namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
 [Collection(IntegrationCollection.Name)]
 public sealed class UpdateJobDescriptionStatusTests(

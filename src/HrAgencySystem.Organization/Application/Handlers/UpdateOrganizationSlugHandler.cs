@@ -15,7 +15,7 @@ public static class UpdateOrganizationSlugHandler
         Domain.Organization aggregate,
         ILogger logger, IOrganizationSlugReservationRepository repository, CancellationToken ct)
     {
-        if (aggregate == null) throw new NotFoundException("Not found " + command.OrganizationId);
+        if (aggregate == null) throw new NotFoundException("Organization", command.OrganizationId);
 
         logger.LogInformation($"Updating organization slug {command.Slug} from {aggregate.Slug.Value}");
 

@@ -1,7 +1,8 @@
+using HrAgencySystem.IntegrationTests.Companies;
 using HrAgencySystem.IntegrationTests.Company;
-using HrAgencySystem.IntegrationTests.JobDescription;
-using HrAgencySystem.IntegrationTests.JobPosting;
-using HrAgencySystem.IntegrationTests.User;
+using HrAgencySystem.IntegrationTests.JobDescriptions;
+using HrAgencySystem.IntegrationTests.JobPosts;
+using HrAgencySystem.IntegrationTests.Users;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;

@@ -18,7 +18,7 @@ internal static class MapTags
         {
             return TypedResults.BadRequest(new ProblemDetails()
             {
-                Title = "No search or category parameter was provided.",
+                Title = "No search or category parameter were provided.",
                 Status = StatusCodes.Status400BadRequest, Detail = $""
             });
         }

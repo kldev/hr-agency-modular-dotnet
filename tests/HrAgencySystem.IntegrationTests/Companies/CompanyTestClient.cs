@@ -3,7 +3,7 @@ using HrAgencySystem.Api.Endpoints.Company.Maps;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 
-namespace HrAgencySystem.IntegrationTests.Company;
+namespace HrAgencySystem.IntegrationTests.Companies;
 
 public sealed class CompanyTestClient(HttpClient client)
 {

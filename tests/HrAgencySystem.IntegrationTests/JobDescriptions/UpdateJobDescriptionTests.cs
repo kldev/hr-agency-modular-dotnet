@@ -2,10 +2,9 @@ using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.JobDescription.Events;
-using HrAgencySystem.JobDescription.Projections;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.JobDescription;
+namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
 [Collection(IntegrationCollection.Name)]
 public sealed class UpdateJobDescriptionTests(

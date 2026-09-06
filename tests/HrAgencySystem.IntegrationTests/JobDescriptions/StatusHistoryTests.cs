@@ -3,7 +3,7 @@ using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Projections;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.JobDescription;
+namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
 [Collection(IntegrationCollection.Name)]
 public sealed class StatusHistoryTests(

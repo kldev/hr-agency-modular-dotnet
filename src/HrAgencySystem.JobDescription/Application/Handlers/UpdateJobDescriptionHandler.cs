@@ -17,7 +17,7 @@ public static class UpdateJobDescriptionHandler
         IClock clock,
         CancellationToken ct)
     {
-        if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
+        if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
         
         var (title, summary, description,
             location, responsibilities,

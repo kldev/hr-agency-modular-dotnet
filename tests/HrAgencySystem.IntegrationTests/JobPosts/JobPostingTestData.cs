@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Endpoints.JobPosting.Maps;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.IntegrationTests.JobPosting;
+namespace HrAgencySystem.IntegrationTests.JobPosts;
 
 internal static class JobPostingTestData
 {

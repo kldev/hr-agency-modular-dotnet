@@ -4,7 +4,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Projections;
 
-namespace HrAgencySystem.IntegrationTests.JobPosting;
+namespace HrAgencySystem.IntegrationTests.JobPosts;
 
 public sealed class JobPostingTestClient(
     HttpClient client)

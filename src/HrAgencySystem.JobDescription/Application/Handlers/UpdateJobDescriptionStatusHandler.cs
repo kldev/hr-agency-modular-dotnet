@@ -19,7 +19,7 @@ public static class UpdateJobDescriptionStatusHandler
         IClock clock,
         CancellationToken ct)
     {
-        if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
+        if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
         var result = new UpdateJobDescriptionStatusResult(aggregate.Id.Value, command.Status);
 
         var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);

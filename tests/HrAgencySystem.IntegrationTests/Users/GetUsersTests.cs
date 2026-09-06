@@ -3,7 +3,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.SharedKernel.Web;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.User;
+namespace HrAgencySystem.IntegrationTests.Users;
 
 [Collection(IntegrationCollection.Name)]
 public sealed class GetUsersTests(

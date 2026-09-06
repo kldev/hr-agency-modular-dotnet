@@ -18,7 +18,7 @@ public static class AssignRecruiterJobDescriptionHandler
         IClock clock,
         CancellationToken ct)
     {
-        if (aggregate == null) throw new NotFoundException("Not found " + command.JobDescriptionId);
+        if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
         
         var recruiter = await GetRecruiter(command, snapshotRepository, ct);
 

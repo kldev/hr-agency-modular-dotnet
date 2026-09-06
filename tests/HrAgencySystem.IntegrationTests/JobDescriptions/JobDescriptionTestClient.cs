@@ -7,7 +7,7 @@ using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.JobDescription.Projections;
 using HrAgencySystem.SharedKernel.Web;
 
-namespace HrAgencySystem.IntegrationTests.JobDescription;
+namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
 public sealed class JobDescriptionTestClient(
     HttpClient client)
