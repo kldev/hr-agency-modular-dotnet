@@ -11,7 +11,7 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         // POST /api/recruitment/job-posting
-        group.MapPost("", Handler).WithSummary("Creates a new job post");
+        group.MapPost("", Handler).WithSummary("Create job post");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreatePostRequest request, CancellationToken ct)

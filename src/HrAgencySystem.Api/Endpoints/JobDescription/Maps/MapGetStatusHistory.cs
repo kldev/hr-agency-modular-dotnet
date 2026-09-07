@@ -1,5 +1,3 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.JobDescription.Projections;
 using Marten;
@@ -10,7 +8,7 @@ internal static class MapGetStatusHistory
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/job-description/status", Handler).WithSummary("Get job description status history");
+        group.MapGet("/api/job-description/status", Handler).WithSummary("Get statuses history");
     }
 
     private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user,

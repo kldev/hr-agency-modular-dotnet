@@ -152,7 +152,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "status": "Screening"    
+    "status": "Screening",
+    "note": "test 1"
 }
 
 ###
@@ -162,7 +163,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "status": "Assessment"
+    "status": "Assessment",
+    "note": "test 2"
 }
 
 ###
@@ -207,3 +209,17 @@ Content-Type: application/json
     "status": "Hired",
     "note": "Candidate has all required skills. Offer was accepted"    
 }
+
+###
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Withdrawn",
+    "note": "Candidate decided not proceed with employment"    
+}
+
+###
+GET {{baseURL}}/api/recruitment/job-applications/{{appId1}}/notes
+Authorization: Bearer {{token}}

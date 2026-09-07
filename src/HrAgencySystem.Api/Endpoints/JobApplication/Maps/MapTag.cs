@@ -13,7 +13,7 @@ internal static class MapTag
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/recruitment/job-applications/{id}/tag
-        group.MapPut("{applicationId:guid}/tag", Handler).WithSummary("Tag job application")
+        group.MapPut("{applicationId:guid}/tag", Handler).WithSummary("Tag application")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }

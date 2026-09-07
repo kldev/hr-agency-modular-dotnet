@@ -11,7 +11,7 @@ internal static class MapChangeStatus
     // PUT /api/recruitment/job-applications/{id}/status
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("{jobApplicationId}/status", Handler).WithSummary("Change job application status");
+        group.MapPut("{jobApplicationId}/status", Handler).WithSummary("Change status");
     }
 
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobApplicationId,

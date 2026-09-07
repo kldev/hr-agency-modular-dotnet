@@ -10,7 +10,7 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/recruitment/job-applications
-        group.MapGet("", Handler).WithSummary("Get job applications");
+        group.MapGet("", Handler).WithSummary("Get applications");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,

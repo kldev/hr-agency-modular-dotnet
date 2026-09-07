@@ -1,10 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
-using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Recruitment.Application.Candidate.RemoveCandidateTag;
-using HrAgencySystem.Recruitment.Application.Candidate.TagCandidate;
 using HrAgencySystem.Recruitment.Events.Candidates;
-using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Candidate.Maps;
@@ -14,7 +11,7 @@ internal static class MapRemoveTag
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates/{id}/tag
-        group.MapDelete("{candidateId:guid}/tag/{tagId:guid}", Handler).WithSummary("Delete candidate tag")
+        group.MapDelete("{candidateId:guid}/tag/{tagId:guid}", Handler).WithSummary("Remove tag")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest);
     }
 

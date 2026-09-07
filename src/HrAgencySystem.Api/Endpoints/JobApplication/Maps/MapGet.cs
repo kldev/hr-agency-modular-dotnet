@@ -8,11 +8,10 @@ namespace HrAgencySystem.Api.Endpoints.JobApplication.Maps;
 
 internal static class MapGet
 {
-    // GET /api/recruitment/job-applications/{id}
     internal static void Map(RouteGroupBuilder group)
     {
-        // api/recruitment/candidates
-        group.MapGet("{jobApplicationId:guid}", Handler).WithSummary("Gets a  Job Application")
+        // GET /api/recruitment/job-applications/{id}
+        group.MapGet("{jobApplicationId:guid}", Handler).WithSummary("Get application")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }

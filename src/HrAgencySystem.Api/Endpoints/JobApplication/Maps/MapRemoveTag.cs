@@ -11,7 +11,7 @@ internal static class MapRemoveTag
     internal static void Map(RouteGroupBuilder group)
     {
         // /api/recruitment/job-applications/{id}/tag
-        group.MapDelete("{applicationId:guid}/tag/{tagId:guid}", Handler).WithSummary("Remove tag from job application")
+        group.MapDelete("{applicationId:guid}/tag/{tagId:guid}", Handler).WithSummary("Remove tag")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest);
     }
 

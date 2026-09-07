@@ -8,7 +8,7 @@ internal static class MapTags
 {
     internal static void Map(this RouteGroupBuilder group)
     {
-        group.MapGet("/api/suggestion/tags", Handler).WithSummary("Search tags (returns 25 result)");
+        group.MapGet("/api/suggestion/tags", Handler).WithSummary("Get tags (limit 25)");
     }
     
     private static async Task<IResult> Handler(ITagSuggestionRepository repository, string? search, TagCategory? category,

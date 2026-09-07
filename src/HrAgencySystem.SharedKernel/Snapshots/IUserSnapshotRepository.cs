@@ -1,3 +1,5 @@
+using JasperFx.Blocks;
+
 namespace HrAgencySystem.SharedKernel.Snapshots;
 
 
@@ -13,4 +15,7 @@ public sealed record UserSnapshot(
     Guid Id,
     string FirstName,
     string LastName,
-    string Email);
+    string Email)
+{
+    public string Fullname => $"{FirstName} {LastName}".Trim();
+}
