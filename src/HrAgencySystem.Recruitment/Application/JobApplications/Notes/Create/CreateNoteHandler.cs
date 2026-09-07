@@ -4,6 +4,7 @@ using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
@@ -25,24 +26,27 @@ public static class CreateNoteHandler
         var (shortNote, error) = ShortNote.TryCreate(command.Text);
         if (error != null) throw new ValidationException(error);
 
-        var @event = new JobApplicationNoteAdded(application.JobApplicationId, application.CandidateId, clock.UtcNow, shortNote!.Value, user);
+        var @event = new JobApplicationNoteAdded(application.JobApplicationId, application.CandidateId, clock.UtcNow,
+            shortNote!.Value, user);
 
-        var createNote = new CreateNoteDocument(application.JobApplicationId, application.OrganizationId, application.CandidateId,
+        var createNote = new CreateNoteDocument(application.JobApplicationId, application.OrganizationId,
+            application.CandidateId,
             shortNote!);
 
         await noteRepository.CreateNoteAsync(createNote, user);
-        
+
         return @event;
 
     }
-    
-    private static async Task<JobApplicationInfo> GetApplication(IJobApplicationInfoQueryRepository repository, Guid jobApplicationId, Guid organizationId,
+
+    private static async Task<JobApplicationInfo> GetApplication(IJobApplicationInfoQueryRepository repository,
+        Guid jobApplicationId, Guid organizationId,
         CancellationToken ct)
     {
-        var application = await repository.GetAsync(organizationId,  jobApplicationId, ct);
+        var application = await repository.GetAsync(jobApplicationId, OrganizationId.From(organizationId), ct);
         return application ?? throw new NotFoundException("Job application", jobApplicationId);
     }
-    
+
     private static async Task<UserSnapshot> GetCreatedBy(IUserSnapshotRepository repository, Guid createdById,
         CancellationToken ct)
     {

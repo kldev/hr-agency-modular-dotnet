@@ -13,8 +13,6 @@ public sealed class ApplyToJobPostScenario(
     IQuerySession session)
 {
     private const int ApplicationsPerCandidate = 5;
-    private const int MaxConcurrency = 20;
-
     public async Task Execute(int count = 500)
     {
         var jobs = await GetJobs();
@@ -94,7 +92,7 @@ public sealed class ApplyToJobPostScenario(
         var commands = candidates
             .SelectMany(candidate => CreateApplications(candidate, jobs));
 
-        await ExecuteInParallel(commands);
+        await ExecuteInSequence(commands);
     }
 
     private async Task CreateRandomCandidates(
@@ -107,7 +105,7 @@ public sealed class ApplyToJobPostScenario(
             .Range(0, count)
             .SelectMany(_ => CreateApplications(faker, jobs));
 
-        await ExecuteInParallel(commands);
+        await ExecuteInSequence(commands);
     }
 
     private static IEnumerable<ApplyToJobApplication> CreateApplications(
@@ -136,7 +134,7 @@ public sealed class ApplyToJobPostScenario(
 
         var email = faker.Internet.Email(
             firstName,
-            lastName,
+            lastName + Random.Shared.Next(1000, 99999),
             uniqueSuffix: index.ToString());
 
         var phone = faker.Phone.PhoneNumber();
@@ -153,20 +151,13 @@ public sealed class ApplyToJobPostScenario(
         }
     }
 
-    private async Task ExecuteInParallel(
+    private async Task ExecuteInSequence(
         IEnumerable<ApplyToJobApplication> commands)
     {
-        await Parallel.ForEachAsync(
-            commands,
-            new ParallelOptions
-            {
-                MaxDegreeOfParallelism = MaxConcurrency
-            },
-            async (command, ct) =>
-            {
-                await ApplyToJobPost(command);
-                await Task.Delay(300, ct);
-            });
+        foreach (var command in commands)
+        {
+            await ApplyToJobPost(command);
+        }
     }
 
     private async Task ApplyToJobPost(ApplyToJobApplication command)

@@ -240,5 +240,5 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "text": "Will calling later"
+    "note": "Will calling later"
 }

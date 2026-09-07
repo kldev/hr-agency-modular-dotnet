@@ -54,7 +54,7 @@ internal class UserScenario(IMessageBus bus)
 
             users.Add(new CreateUser(
                 data.OrganizationId,
-                $"{firstName.ToLowerInvariant()}.{lastName.ToLowerInvariant()}{i}{domain}",
+                $"{firstName.ToLowerInvariant()}.{lastName.ToLowerInvariant()}{i}{Random.Shared.Next(1000, 99999)}{domain}",
                 firstName,
                 lastName,
                 role,

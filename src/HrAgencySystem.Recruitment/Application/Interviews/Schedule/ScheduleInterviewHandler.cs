@@ -67,7 +67,7 @@ public static class ScheduleInterviewHandler
     private static async Task<JobApplicationInfo> GetApplication(IJobApplicationInfoQueryRepository repository, Guid jobApplicationId, Guid organizationId,
         CancellationToken ct)
     {
-        var application = await repository.GetAsync(organizationId,  jobApplicationId, ct);
+        var application = await repository.GetAsync(jobApplicationId, OrganizationId.From(organizationId),ct);
         return application ?? throw new NotFoundException("Job application", jobApplicationId);
     }
     

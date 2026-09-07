@@ -45,21 +45,23 @@ public sealed class CandidateResolver(
     {
         var email = Email.Create(command.Email);
         var projection = await session.Query<CandidateProjection>()
-            .Where(z => z.OrgId == command.OrganizationId && z.Email == email.Value).FirstOrDefaultAsync(ct);
+            .Where(z => z.OrgId == command.OrganizationId && z.Email == email.Value)
+            .Select(z => new CandidateInfo(z.Id, z.Email, z.PhoneNumber, z.FirstName, z.LastName)).FirstOrDefaultAsync(ct);
 
         if (projection != null)
         {
-            return new CandidateInfo(projection.Id, email.Value, projection.PhoneNumber,
-                projection.FirstName ?? "", projection.LastName ?? "");
+            return projection;
         }
 
         var @event = await session.Query<CandidateCreated>()
-            .Where(z => z.Email == email.Value && z.OrganizationId == command.OrganizationId).FirstOrDefaultAsync(ct);
+            .Where(z => z.Email == email.Value && z.OrganizationId == command.OrganizationId)
+            .Select(z => new CandidateInfo(z.CandidateId, z.Email, z.Phone, z.FirstName, z.LastName))
+            .FirstOrDefaultAsync(ct);
 
-        return @event != null
-            ? new CandidateInfo(@event.CandidateId, @event.Email, @event.Phone, @event.FirstName,
-                @event.LastName)
-            : null;
+        if( @event != null)
+            logger.CandidateFoundInEvents(@event.Email);
+        
+        return @event;
     }
 }
 
@@ -86,6 +88,14 @@ internal static partial class CandidateLogs
         Level = LogLevel.Information,
         Message = "Candidate {email} found database. ")]
     public static partial void CandidateFoundInDatabase(
+        this ILogger logger,
+        string email);
+    
+    [LoggerMessage(
+        EventId = 1,
+        Level = LogLevel.Information,
+        Message = "Candidate {email} found in events. ")]
+    public static partial void CandidateFoundInEvents(
         this ILogger logger,
         string email);
 }

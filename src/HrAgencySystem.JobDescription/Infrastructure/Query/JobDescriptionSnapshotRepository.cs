@@ -11,10 +11,15 @@ public sealed class JobDescriptionSnapshotRepository(IDocumentSession session) :
     {
         var result = await session.Query<JobDescriptionCreated>()
             .Where(z => z.JobDescriptionId == jobDescriptionId && z.OrganizationId == organizationId)
+            .Select(z => new JobDescriptionSnapshot(z.JobDescriptionId, z.Title, z.CompanyId))
             .FirstOrDefaultAsync(ct);
 
-        return result != null
-            ? new JobDescriptionSnapshot(result.JobDescriptionId, result.Title, result.CompanyId)
-            : null;
+
+        if (result != null) return result;
+
+        return await session.Query<JobDescriptionCreated>()
+            .Where(z => z.JobDescriptionId == jobDescriptionId && z.OrganizationId == organizationId)
+            .Select(z => new JobDescriptionSnapshot(z.JobDescriptionId, z.Title, z.CompanyId))
+            .FirstOrDefaultAsync(ct);
     }
 }

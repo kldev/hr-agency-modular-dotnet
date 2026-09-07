@@ -1,0 +1,23 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+###
+@token = {{login.response.body.$.token}}
+
+###
+
+
+### get interviews
+GET {{baseURL}}/api/interviews
+Authorization: Bearer {{token}}
+

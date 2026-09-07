@@ -1,8 +1,10 @@
+using HrAgencySystem.SharedKernel.Tenant;
+
 namespace HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 
 public interface IJobApplicationInfoQueryRepository
 {
-    Task<JobApplicationInfo?> GetAsync(Guid jobApplicationId, Guid organizationId, CancellationToken ct);   
+    Task<JobApplicationInfo?> GetAsync(Guid jobApplicationId, OrganizationId organizationId, CancellationToken ct);   
 }
 
 public sealed record JobApplicationInfo(Guid JobApplicationId, Guid OrganizationId, Guid CandidateId, Guid CompanyId);
