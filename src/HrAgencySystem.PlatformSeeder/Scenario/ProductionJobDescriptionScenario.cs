@@ -1,4 +1,4 @@
-using HrAgencySystem.JobDescription.Application.Commands;
+using HrAgencySystem.JobDescription.Application.Create;
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;

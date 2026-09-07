@@ -1,0 +1,24 @@
+using HrAgencySystem.SharedKernel.Commands;
+using HrAgencySystem.SharedKernel.ValueObjects;
+
+namespace HrAgencySystem.JobDescription.Application.Create;
+
+public sealed record CreateJobDescription(
+    Guid OrganizationId,
+    Guid CompanyId,
+    string Title,
+    string? Summary,
+    string Description,
+    IReadOnlyList<string> Responsibilities,
+    IReadOnlyList<string> Requirements,
+    IReadOnlyList<string> Skills,
+    string Location,
+    string CountryCode,
+    EmploymentType EmploymentType,
+    WorkMode WorkMode,
+    CurrencyCode  CurrencyCode,
+    decimal SalaryMin,
+    decimal SalaryMax,
+    Guid RecruiterId,
+    Guid CreatedBy
+    ) : IJobDescription, ICreateCommand;

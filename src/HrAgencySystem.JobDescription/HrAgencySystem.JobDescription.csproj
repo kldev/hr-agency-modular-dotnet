@@ -16,4 +16,8 @@
         <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Application\Handlers\" />
+    </ItemGroup>
+
 </Project>

@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Recruitment.Application.JobApplication.ChangeStatus;
+using HrAgencySystem.Recruitment.Application.JobApplications.ChangeStatus;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using Wolverine;
 

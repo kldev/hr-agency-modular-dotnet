@@ -1,4 +1,4 @@
-using HrAgencySystem.JobDescription.Application.Commands;
+using HrAgencySystem.JobDescription.Application.Create;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.Recruitment.Application.JobPosting.Create;
 using HrAgencySystem.SharedKernel.ValueObjects;

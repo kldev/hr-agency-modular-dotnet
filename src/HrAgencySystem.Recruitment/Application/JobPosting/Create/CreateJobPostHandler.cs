@@ -1,4 +1,3 @@
-using HrAgencySystem.Recruitment.Application.Service;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 using HrAgencySystem.Recruitment.Events.JobPostings;

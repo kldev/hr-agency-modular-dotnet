@@ -1,4 +1,4 @@
-using HrAgencySystem.Recruitment.Application.Candidate.Create;
+using HrAgencySystem.Recruitment.Application.Candidates.Create;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidates;

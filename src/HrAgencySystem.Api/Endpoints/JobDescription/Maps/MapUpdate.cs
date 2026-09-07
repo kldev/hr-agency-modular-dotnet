@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.JobDescription.Application.Commands;
+using HrAgencySystem.JobDescription.Application.Update;
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.ValueObjects;

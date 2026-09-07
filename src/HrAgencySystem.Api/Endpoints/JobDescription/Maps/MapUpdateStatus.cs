@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.JobDescription.Application.Commands;
+using HrAgencySystem.JobDescription.Application.ChangeStatus;
 using HrAgencySystem.JobDescription.Application.Result;
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
@@ -18,7 +18,7 @@ internal static class MapUpdateStatus
         IMessageBus bus, CancellationToken ct)
     {
         var result = await bus.InvokeAsync<UpdateJobDescriptionStatusResult>(
-            new UpdateJobDescriptionStatus(jobDescriptionId, status,  user.UserId, user.OrganizationId), ct);
+            new ChangeJobDescriptionStatus(jobDescriptionId, status,  user.UserId, user.OrganizationId), ct);
 
         return TypedResults.Ok(result);
     }

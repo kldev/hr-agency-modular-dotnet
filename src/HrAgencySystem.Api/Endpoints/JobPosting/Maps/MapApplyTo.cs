@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Recruitment.Application.JobApplication.Create;
+using HrAgencySystem.Recruitment.Application.JobApplications.Create;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Applications;
 using Wolverine;

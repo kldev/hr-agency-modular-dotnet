@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
-using HrAgencySystem.Recruitment.Application.Candidate.RemoveCandidateTag;
+using HrAgencySystem.Recruitment.Application.Candidates.RemoveCandidateTag;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using Wolverine;
 

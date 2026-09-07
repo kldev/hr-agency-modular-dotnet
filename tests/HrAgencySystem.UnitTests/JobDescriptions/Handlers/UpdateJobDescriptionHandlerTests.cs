@@ -1,5 +1,4 @@
-using HrAgencySystem.JobDescription.Application.Commands;
-using HrAgencySystem.JobDescription.Application.Handlers;
+using HrAgencySystem.JobDescription.Application.Update;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;

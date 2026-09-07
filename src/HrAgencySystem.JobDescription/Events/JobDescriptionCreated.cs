@@ -1,4 +1,4 @@
-using HrAgencySystem.JobDescription.Application.Commands;
+using HrAgencySystem.JobDescription.Application.Create;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
 

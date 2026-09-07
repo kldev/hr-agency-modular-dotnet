@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
-using HrAgencySystem.Recruitment.Application.JobApplication.Notes.Delete;
+using HrAgencySystem.Recruitment.Application.JobApplications.Notes.Delete;
 using HrAgencySystem.Recruitment.Events.Applications;
 using Wolverine;
 

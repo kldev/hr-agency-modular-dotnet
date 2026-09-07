@@ -1,9 +1,8 @@
-using HrAgencySystem.Recruitment.Application.Candidate.Create;
-using HrAgencySystem.Recruitment.Application.Candidate.UpdateApplication;
+using HrAgencySystem.Recruitment.Application.Candidates.Create;
+using HrAgencySystem.Recruitment.Application.Candidates.UpdateApplication;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Projections;
-using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using Microsoft.Extensions.Logging;

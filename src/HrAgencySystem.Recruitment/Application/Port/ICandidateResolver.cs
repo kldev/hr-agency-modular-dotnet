@@ -1,4 +1,4 @@
-using HrAgencySystem.Recruitment.Application.Candidate.Create;
+using HrAgencySystem.Recruitment.Application.Candidates.Create;
 
 namespace HrAgencySystem.Recruitment.Application.Port;
 

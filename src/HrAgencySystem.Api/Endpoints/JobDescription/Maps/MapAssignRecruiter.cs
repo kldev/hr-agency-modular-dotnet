@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Request;
-using HrAgencySystem.JobDescription.Application.Commands;
+using HrAgencySystem.JobDescription.Application.AssignRecruiter;
 using HrAgencySystem.JobDescription.Events;
 using Wolverine;
 
@@ -17,7 +17,7 @@ internal static class MapAssignRecruiter
         IMessageBus bus, CancellationToken ct)
     {
         var result = await bus.InvokeAsync<JobDescriptionRecruiterAssigned>(
-            new AssignRecruiterJobDescription(jobDescriptionId, request.RecruiterId,  user.UserId, user.OrganizationId), ct);
+            new AssignJobDescriptionRecruiter(jobDescriptionId, request.RecruiterId,  user.UserId, user.OrganizationId), ct);
 
         return TypedResults.Ok(result);
     }
