@@ -16,7 +16,7 @@ public static class ChangeJobApplicationStatusHandler
     [AggregateHandler]
     public static async Task<(ChangeJobApplicationStatusResult, Wolverine.Marten.Events)> Handle(
         ChangeJobApplicationStatus command,
-        Domain.Applications.JobApplication aggregate,
+        JobApplication aggregate,
         IUserSnapshotRepository snapshotRepository,
         INoteRepository noteRepository,
         IClock clock,
@@ -54,14 +54,14 @@ public static class ChangeJobApplicationStatusHandler
         return (result, [..events]);
     }
 
-    private static void ValidatePolicy(Domain.Applications.JobApplication aggregate, JobApplicationStatus newStatus)
+    private static void ValidatePolicy(JobApplication aggregate, JobApplicationStatus newStatus)
     {
         var changeAllowed = JobApplicationStatusChangePolicy.Allow(aggregate.Status, newStatus);
         if (!changeAllowed)
             throw new BusinessRuleException($"Not allowed to change job application status form {aggregate.Status} to {newStatus}");
     }
 
-    private static async Task<JobApplicationNoteAdded> CreateApplicationNoteAddedEvent(ChangeJobApplicationStatus command, Domain.Applications.JobApplication aggregate,
+    private static async Task<JobApplicationNoteAdded> CreateApplicationNoteAddedEvent(ChangeJobApplicationStatus command, JobApplication aggregate,
         INoteRepository noteRepository, UserSnapshot user, DateTimeOffset now)
     {
         var (shortNote, error) = ShortNote.TryCreate(command.Note);
