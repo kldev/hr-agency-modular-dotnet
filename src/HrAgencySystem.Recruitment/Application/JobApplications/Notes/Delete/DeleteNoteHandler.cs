@@ -1,3 +1,4 @@
+using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Events.Applications;

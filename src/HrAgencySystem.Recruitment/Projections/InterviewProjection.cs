@@ -5,7 +5,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 namespace HrAgencySystem.Recruitment.Projections;
 
 public sealed record InterviewProjection(
-    Guid InterviewId,
+    Guid Id,
     Guid OrgId,
     Guid ApplicationId,
     Guid CandidateId,
@@ -72,7 +72,7 @@ public sealed record InterviewProjection(
         return this with
         {
             Interviewer = @event.NewInterviewer,
-            InterviewId = @event.NewInterviewer.Id,
+            Id = @event.NewInterviewer.Id,
             ModifiedBy = @event.Author,
             ModifiedByUserId = @event.Author.Id,
             ModifiedAt = @event.OccurredAt

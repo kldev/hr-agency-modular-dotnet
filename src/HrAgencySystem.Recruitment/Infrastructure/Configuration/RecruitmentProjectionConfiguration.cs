@@ -98,7 +98,7 @@ internal static class RecruitmentProjectionConfiguration
             .DatabaseSchemaName(SchemaName)
             .Index(x => new { OrganizationId = x.OrgId })
             .Index(x => new { OrganizationId = x.OrgId, x.ScheduleAt })
-            .Index(x => new { OrganizationId = x.OrgId, x.InterviewId })
+            .Index(x => new { OrganizationId = x.OrgId, InterviewId = x.Id })
             .Index(x => new { OrganizationId = x.OrgId, x.ApplicationId })
             .Index(x => new { OrganizationId = x.OrgId, x.CreatedByUserId })
             .Index(x => new { OrganizationId = x.OrgId, x.CreatedAt });

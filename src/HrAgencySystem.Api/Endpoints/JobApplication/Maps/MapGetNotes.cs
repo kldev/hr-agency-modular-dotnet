@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
-using HrAgencySystem.Recruitment.Application.Port;
+using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 
 namespace HrAgencySystem.Api.Endpoints.JobApplication.Maps;
 
@@ -16,7 +16,7 @@ internal static class MapGetNotes
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,
-        INoteRepository repository,
+        INoteQueryRepository repository,
         Guid jobApplicationId, CancellationToken ct)
     {
         var result = await repository.GetNotes(user.OrganizationId, jobApplicationId, ct);

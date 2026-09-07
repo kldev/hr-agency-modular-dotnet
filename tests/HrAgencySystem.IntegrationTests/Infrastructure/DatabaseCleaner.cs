@@ -4,6 +4,7 @@ using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.JobDescription.Projections;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
+using HrAgencySystem.Recruitment.Projections;
 using Npgsql;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
@@ -54,6 +55,11 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<JdStatusChangeHistory>("job_description");
     }
 
+    public async Task CleanInterviews()
+    {
+        await CleanTable<InterviewProjection>("recruitment");
+    }
+    
     private async Task TruncateTable(string sql)
     {
         try
