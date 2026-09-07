@@ -215,7 +215,7 @@ public sealed class UpdateJobDescriptionStatusHandlerTests
                 _clock, CancellationToken.None));
 
         // Assert
-        Assert.Contains("Not found", exception.Message);
+        Assert.Contains("not found", exception.Message);
         Assert.Contains(jobDescriptionId.ToString(), exception.Message);
     }
 

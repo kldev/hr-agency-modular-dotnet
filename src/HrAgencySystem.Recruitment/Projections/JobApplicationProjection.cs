@@ -148,7 +148,7 @@ public sealed record JobApplicationProjection(
     {
         return projection with
         {
-            ModifiedById = @event.AuthorId,
+            ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author,
             UpdatedAt = @event.OccurredAt
         };

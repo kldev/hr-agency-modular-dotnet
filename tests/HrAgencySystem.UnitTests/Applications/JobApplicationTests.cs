@@ -17,7 +17,7 @@ public sealed class JobApplicationTests
     private static readonly Guid TestCandidateId = Guid.NewGuid();
     private static readonly Guid TestUserId = Guid.NewGuid();
     private static readonly Guid TestInterviewId = Guid.NewGuid();
-    private static readonly UserSnapshot TestUser = new(Guid.NewGuid(), "F", "L", "fl@test.pl");
+    private static readonly UserSnapshot TestUser = new(TestUserId, "F", "L", "fl@test.pl");
 
     private const string EmailAddress = "candidate@example.com";
 
@@ -97,7 +97,6 @@ public sealed class JobApplicationTests
         application.Apply(
             CreateScreeningStarted(
                 occurredAt,
-                TestUserId,
                 author));
 
         Assert.Equal(
@@ -131,7 +130,6 @@ public sealed class JobApplicationTests
         application.Apply(
             CreateAssessmentStarted(
                 occurredAt,
-                TestUserId,
                 author));
 
         Assert.Equal(
@@ -165,8 +163,11 @@ public sealed class JobApplicationTests
         var exception = Assert.Throws<InvalidOperationException>(
             () => application.Apply(CreateAssessmentStarted()));
 
-        Assert.Equal(
-            $"Cannot change application status from {currentStatus}.",
+        Assert.Contains(
+            $"{currentStatus}",
+            exception.Message);
+        Assert.Contains(
+            "Not allowed to change job application status",
             exception.Message);
     }
 
@@ -185,7 +186,6 @@ public sealed class JobApplicationTests
             CreateInterviewScheduled(
                 TestInterviewId,
                 occurredAt,
-                TestUserId,
                 author));
 
         Assert.Equal(
@@ -223,8 +223,11 @@ public sealed class JobApplicationTests
         var exception = Assert.Throws<InvalidOperationException>(
             () => application.Apply(CreateInterviewScheduled()));
 
-        Assert.Equal(
-            $"Cannot change application status from {currentStatus}.",
+        Assert.Contains(
+            $"{currentStatus}",
+            exception.Message);
+        Assert.Contains(
+            "Not allowed to change job application status",
             exception.Message);
     }
 
@@ -242,7 +245,6 @@ public sealed class JobApplicationTests
         application.Apply(
             CreateOfferMade(
                 occurredAt,
-                TestUserId,
                 author));
 
         Assert.Equal(
@@ -277,8 +279,11 @@ public sealed class JobApplicationTests
         var exception = Assert.Throws<InvalidOperationException>(
             () => application.Apply(CreateOfferMade()));
 
-        Assert.Equal(
-            $"Cannot change application status from {currentStatus}.",
+        Assert.Contains(
+            $"{currentStatus}",
+            exception.Message);
+        Assert.Contains(
+            "Not allowed to change job application status",
             exception.Message);
     }
 
@@ -293,7 +298,6 @@ public sealed class JobApplicationTests
         application.Apply(
             CreateHired(
                 occurredAt,
-                TestUserId,
                 author));
 
         Assert.Equal(
@@ -350,7 +354,6 @@ public sealed class JobApplicationTests
         application.Apply(
             CreateRejected(
                 occurredAt,
-                TestUserId,
                 author));
 
         Assert.Equal(
@@ -382,8 +385,11 @@ public sealed class JobApplicationTests
         var exception = Assert.Throws<InvalidOperationException>(
             () => application.Apply(CreateRejected()));
 
-        Assert.Equal(
-            $"Application is already in final status: {currentStatus}.",
+        Assert.Contains(
+            $"{currentStatus}",
+            exception.Message);
+        Assert.Contains(
+            "Not allowed to change job application status",
             exception.Message);
     }
 
@@ -404,7 +410,6 @@ public sealed class JobApplicationTests
         application.Apply(
             CreateWithdrawn(
                 occurredAt,
-                TestUserId,
                 author));
 
         Assert.Equal(
@@ -436,8 +441,11 @@ public sealed class JobApplicationTests
         var exception = Assert.Throws<InvalidOperationException>(
             () => application.Apply(CreateWithdrawn()));
 
-        Assert.Equal(
-            $"Application is already in final status: {currentStatus}.",
+        Assert.Contains(
+            "Not allowed to change job application",
+            exception.Message);
+        Assert.Contains(
+            currentStatus.ToString(),
             exception.Message);
     }
 
@@ -514,72 +522,58 @@ public sealed class JobApplicationTests
 
     private static JobApplicationScreeningStarted CreateScreeningStarted(
         DateTimeOffset? occurredAt = null,
-        Guid? authorId = null,
         UserSnapshot? author = null)
     {
         return new JobApplicationScreeningStarted(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            authorId ?? Guid.NewGuid(),
             author ?? TestUser);
     }
 
     private static JobApplicationAssessmentStarted CreateAssessmentStarted(
         DateTimeOffset? occurredAt = null,
-        Guid? authorId = null,
         UserSnapshot? author = null)
     {
         return new JobApplicationAssessmentStarted(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            authorId ?? Guid.NewGuid(),
             author ?? TestUser);
     }
 
     private static JobApplicationInterviewScheduled CreateInterviewScheduled(
         Guid? interviewId = null,
         DateTimeOffset? occurredAt = null,
-        Guid? authorId = null,
         UserSnapshot? author = null)
     {
         return new JobApplicationInterviewScheduled(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            authorId ?? Guid.NewGuid(),
             author ?? TestUser, interviewId ?? Guid.NewGuid());
     }
 
     private static JobApplicationOfferMade CreateOfferMade(
         DateTimeOffset? occurredAt = null,
-        Guid? authorId = null,
         UserSnapshot? author = null)
     {
         return new JobApplicationOfferMade(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            authorId ?? Guid.NewGuid(),
             author ?? TestUser);
     }
 
     private static JobApplicationHired CreateHired(
         DateTimeOffset? occurredAt = null,
-        Guid? authorId = null,
         UserSnapshot? author = null)
     {
         return new JobApplicationHired(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            authorId ?? Guid.NewGuid(),
             author ?? TestUser);
     }
 
     private static JobApplicationRejected CreateRejected(
         DateTimeOffset? occurredAt = null,
-        Guid? authorId = null,
         UserSnapshot? author = null)
     {
         return new JobApplicationRejected(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            authorId ?? Guid.NewGuid(),
             author ?? TestUser);
     }
 
     private static JobApplicationWithdrawn CreateWithdrawn(
         DateTimeOffset? occurredAt = null,
-        Guid? authorId = null,
         UserSnapshot? author = null)
     {
         return new JobApplicationWithdrawn(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            authorId ?? Guid.NewGuid(),
             author ?? TestUser);
     }
 

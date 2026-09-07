@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.JobApplication.Maps;
 
-public class MapGet
+internal static class MapGet
 {
     // GET /api/recruitment/job-applications/{id}
     internal static void Map(RouteGroupBuilder group)

@@ -9,6 +9,7 @@ public sealed record JobApplicationNote
         Guid id,
         Guid jobApplicationId,
         Guid organizationId,
+        Guid candidateId,
         string note,
         Guid createdById,
         UserSnapshot createdBy,
@@ -17,6 +18,7 @@ public sealed record JobApplicationNote
     {
         Id = id;
         JobApplicationId = jobApplicationId;
+        CandidateId = candidateId;
         Note = note;
         CreatedById = createdById;
         CreatedBy = createdBy;
@@ -29,13 +31,15 @@ public sealed record JobApplicationNote
 
     public Guid JobApplicationId { get; }
     
+    public Guid CandidateId { get; }
+    
     public Guid OrgId { get; }
 
     public string Note { get; private set; }
 
     public Guid CreatedById { get; }
     public UserSnapshot CreatedBy { get; }
-    public DateTimeOffset? CreatedAt { get; private set; }
+    public DateTimeOffset CreatedAt { get; }
     
     public Guid? ModifyById { get; private set; }
     public UserSnapshot? ModifyBy { get; private set; }
@@ -46,6 +50,7 @@ public sealed record JobApplicationNote
     public static JobApplicationNote Create(
         Guid jobApplicationId,
         Guid organizationId,
+        Guid  candidateId,
         ShortNote note,
         Guid createdById,
         UserSnapshot createdBy,
@@ -58,6 +63,7 @@ public sealed record JobApplicationNote
             Guid.NewGuid(),
             jobApplicationId,
             organizationId,
+            candidateId,
             note.Value,
             createdById,
             createdBy,

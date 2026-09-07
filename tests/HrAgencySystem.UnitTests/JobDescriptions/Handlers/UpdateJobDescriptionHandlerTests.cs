@@ -136,8 +136,8 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
                 _snapshotRepository,
                 TestClock, CancellationToken.None));
 
-        Assert.Equal(
-            "Not found " + jobDescriptionId,
+        Assert.Contains(
+            "not found",
             exception.Message);
     }
 

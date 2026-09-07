@@ -45,6 +45,7 @@ public static class RecruitmentServiceCollectionExtensions
             services.AddScoped<IJobFeedProcessor, JobFeedProcessor>();
             services.AddScoped<IJobFeedGenerator, JobFeedGenerator>();
             services.AddScoped<IJobFeedReader, JobFeedReader>();
+            services.AddScoped<INoteRepository, NoteRepository>();
 
             services.AddHostedService<JobFeedSchedulerWorker>();
             services.AddHostedService<JobFeedGenerationWorker>();

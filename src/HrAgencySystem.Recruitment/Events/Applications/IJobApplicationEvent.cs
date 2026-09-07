@@ -6,6 +6,5 @@ public interface IJobApplicationEvent
 {
     Guid JobApplicationId { get; }
     DateTimeOffset OccurredAt { get; }
-    Guid AuthorId { get; }
     UserSnapshot Author { get; }
 }

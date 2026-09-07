@@ -51,16 +51,14 @@ public sealed class JobApplication
 
     public void Apply(JobApplicationScreeningStarted @event)
     {
-        RequireStatus(JobApplicationStatus.Applied);
+        CheckStatusChangeAllowed(JobApplicationStatus.Screening);
         Status = JobApplicationStatus.Screening;
         ApplyCommon(@event);
     }
 
     public void Apply(JobApplicationAssessmentStarted @event)
     {
-        RequireStatus(
-            JobApplicationStatus.Screening,
-            JobApplicationStatus.Interview);
+        CheckStatusChangeAllowed(JobApplicationStatus.Assessment);
         
         Status = JobApplicationStatus.Assessment;
         ApplyCommon(@event);
@@ -68,9 +66,7 @@ public sealed class JobApplication
     
     public void Apply(JobApplicationInterviewScheduled @event)
     {
-        RequireStatus(
-            JobApplicationStatus.Screening,
-            JobApplicationStatus.Assessment);
+        CheckStatusChangeAllowed(JobApplicationStatus.Interview);
 
         Status = JobApplicationStatus.Interview;
         LatestInterviewId = @event.InterviewId;
@@ -79,9 +75,7 @@ public sealed class JobApplication
 
     public void Apply(JobApplicationOfferMade @event)
     {
-        RequireStatus(
-            JobApplicationStatus.Interview,
-            JobApplicationStatus.Assessment);
+        CheckStatusChangeAllowed(JobApplicationStatus.Offer);
 
         Status = JobApplicationStatus.Offer;
         ApplyCommon(@event);
@@ -89,6 +83,7 @@ public sealed class JobApplication
 
     public void Apply(JobApplicationHired @event)
     {
+        CheckStatusChangeAllowed(JobApplicationStatus.Hired);
         Status = JobApplicationStatus.Hired;
      
         ApplyCommon(@event);
@@ -96,7 +91,7 @@ public sealed class JobApplication
 
     public void Apply(JobApplicationRejected @event)
     {
-        RequireNotFinal();
+        CheckStatusChangeAllowed(JobApplicationStatus.Rejected);
 
         Status = JobApplicationStatus.Rejected;
         ApplyCommon(@event);
@@ -104,38 +99,26 @@ public sealed class JobApplication
 
     public void Apply(JobApplicationWithdrawn @event)
     {
-        RequireNotFinal();
+        CheckStatusChangeAllowed(JobApplicationStatus.Withdrawn);
 
         Status = JobApplicationStatus.Withdrawn;
         
         ApplyCommon(@event);
     }
 
-    private void RequireStatus(params JobApplicationStatus[] allowedStatuses)
+    private void CheckStatusChangeAllowed(JobApplicationStatus newStatus)
     {
-        if (allowedStatuses.Contains(Status))
-            return;
-
-        throw new InvalidOperationException(
-            $"Cannot change application status from {Status}.");
-    }
-
-    private void RequireNotFinal()
-    {
-        if (Status is
-            JobApplicationStatus.Hired or
-            JobApplicationStatus.Rejected or
-            JobApplicationStatus.Withdrawn)
+        if (!JobApplicationStatusChangePolicy.Allow(Status, newStatus))
         {
-            throw new InvalidOperationException(
-                $"Application is already in final status: {Status}.");
+            throw new InvalidOperationException($"Not allowed to change job application status form {Status} to {newStatus}");
         }
+            
     }
-
+    
     private void ApplyCommon(IJobApplicationEvent @event)
     {
         UpdatedAt = @event.OccurredAt;
-        LastModifiedByUserId = @event.AuthorId;
+        LastModifiedByUserId = @event.Author.Id;
         LastModifiedByUser = @event.Author;
     }
 }

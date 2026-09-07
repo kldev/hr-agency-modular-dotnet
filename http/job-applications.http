@@ -114,3 +114,96 @@ Authorization: Bearer {{token}}
 ###
 GET {{baseURL}}/api/recruitment/job-applications?tag={{tagId1}}&tag={{tagId2}}
 Authorization: Bearer {{token}}
+
+
+###
+# @name post1
+GET {{baseURL}}/api/recruitment/job-posting?search=JAVA
+Authorization: Bearer {{token}}
+
+###
+@postId1 = {{post1.response.body.$.content[0].id}}
+###
+
+
+### POST new application
+# @name applyRandom
+POST {{baseURL}}/api/recruitment/job-posting/{{postId1}}/apply
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "Email": "email{{$randomInt 9999 99999}}@fake.io",
+    "Source": "Direct",
+    "PhoneNumber": ""
+}
+
+###
+
+@appId1 = {{applyRandom.response.body.$.jobApplicationId}}
+@candidateId1 = {{applyRandom.response.body.$.candidateInfo.candidateId}}
+@companyId1 = {{applyRandom.response.body.$.company.id}}
+
+###
+
+###
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Screening"    
+}
+
+###
+
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Assessment"
+}
+
+###
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Rejected",
+    "note": "Does not know english language"
+}
+
+###
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Interview",
+    "interviewId": "{{$guid}}"   
+}
+
+
+
+###
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Offer",
+    "note": "Candidate was offered 1999 PLN"    
+}
+
+
+###
+PUT {{baseURL}}/api/recruitment/job-applications/{{appId1}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Hired",
+    "note": "Candidate has all required skills. Offer was accepted"    
+}

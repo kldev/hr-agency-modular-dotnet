@@ -92,7 +92,7 @@ public sealed class AssignRecruiterJobDescriptionHandlerTests
                 _clock,
                 CancellationToken.None));
         
-        Assert.Contains("Not found", exception.Message);
+        Assert.Contains("not found", exception.Message);
 
         await _snapshotRepository
             .DidNotReceive()

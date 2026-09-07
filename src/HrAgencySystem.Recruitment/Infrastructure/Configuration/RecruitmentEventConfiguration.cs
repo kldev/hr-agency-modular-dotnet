@@ -36,6 +36,7 @@ internal static class RecruitmentEventConfiguration
         options.Events.AddEventType<JobApplicationWithdrawn>();
         options.Events.AddEventType<JobApplicationTagged>();
         options.Events.AddEventType<JobApplicationTagRemoved>();
+        options.Events.AddEventType<JobApplicationStatusChanged>();
     }
 
     private static void ConfigureJobPostEvents(StoreOptions options)

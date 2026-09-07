@@ -42,3 +42,14 @@ public enum JobApplicationStatus
      */
     Withdrawn
 }
+
+public enum JobApplicationUpdateStatus
+{
+    Screening,
+    Interview,
+    Assessment,
+    Offer,
+    Hired,
+    Rejected,
+    Withdrawn
+}
