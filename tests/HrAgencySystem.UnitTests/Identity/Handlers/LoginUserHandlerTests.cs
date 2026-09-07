@@ -108,12 +108,12 @@ public sealed class LoginUserHandlerTests
             exception.Message);
 
         _hasher.DidNotReceiveWithAnyArgs().Matches(default!, default!);
-        _repository.DidNotReceive().GetUser(
+        await _repository.DidNotReceive().GetUser(
             Arg.Any<UserId>(),
             Arg.Any<CancellationToken>());
 
         _tokenService.DidNotReceiveWithAnyArgs()
-            .GenerateUserToken(default!);
+            .GenerateUserToken(null!);
     }
 
     [Fact]
@@ -156,12 +156,12 @@ public sealed class LoginUserHandlerTests
             "Invalid login or password",
             exception.Message);
 
-        _repository.DidNotReceive().GetUser(
+        await _repository.DidNotReceive().GetUser(
             Arg.Any<UserId>(),
             Arg.Any<CancellationToken>());
 
         _tokenService.DidNotReceiveWithAnyArgs()
-            .GenerateUserToken(default!);
+            .GenerateUserToken(null!);
     }
 
     [Fact]

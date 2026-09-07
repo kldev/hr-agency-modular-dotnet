@@ -16,7 +16,7 @@ public sealed class UserTestClient(
         string email = "user@test.com",
         string firstName = "John",
         string lastName = "Doe",
-        OrganizationRole role = OrganizationRole.Admin,
+        OrganizationRoleApi role = OrganizationRoleApi.Admin,
         string password = "Password123!")
     {
         var request = new CreateUserRequest(

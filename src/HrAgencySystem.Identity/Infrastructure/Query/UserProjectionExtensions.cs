@@ -5,13 +5,13 @@ namespace HrAgencySystem.Identity.Infrastructure.Query;
 
 internal static class UserProjectionExtensions
 {
-    public static IQueryable<UserProjection> WithOrganizationId(this IQueryable<UserProjection> query,
+    internal static IQueryable<UserProjection> WithOrganizationId(this IQueryable<UserProjection> query,
         Guid organizationId)
     {
         return query.Where(u => u.OrganizationId == organizationId);
     }
 
-    public static IQueryable<UserProjection> WithSearch(this IQueryable<UserProjection> query, string search)
+    internal static IQueryable<UserProjection> WithSearch(this IQueryable<UserProjection> query, string search)
     {
         if (string.IsNullOrWhiteSpace(search)) return query;
 
@@ -21,14 +21,19 @@ internal static class UserProjectionExtensions
                                 || u.LastName.Contains(querySearch, StringComparison.OrdinalIgnoreCase));
     }
 
-    public static IQueryable<UserProjection> WithRoles(this IQueryable<UserProjection> query, IReadOnlyList<OrganizationRole> roles)
+    internal static IQueryable<UserProjection> WithRoles(this IQueryable<UserProjection> query, IReadOnlyList<OrganizationRole> roles)
     {
         return roles.Count == 0 ? query : query.Where(u => roles.Contains(u.Role));
     }
     
-    public static IQueryable<UserProjection> WithUserId(this IQueryable<UserProjection> query,
+    internal static IQueryable<UserProjection> WithUserId(this IQueryable<UserProjection> query,
         Guid userId)
     {
         return query.Where(u => u.Id == userId);
+    }
+
+    internal static IQueryable<UserProjection> WithoutSystemRole(this IQueryable<UserProjection> query)
+    {
+        return query.Where(q => q.Role != OrganizationRole.System);
     }
 }

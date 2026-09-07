@@ -30,7 +30,7 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
             Email: "user@test.com",
             FirstName: "John",
             LastName: "Doe",
-            Role: OrganizationRole.Interviewer,
+            Role: OrganizationRoleApi.Interviewer,
             Password: "Password123!");
 
         // Act
@@ -49,7 +49,7 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
         Assert.Equal(request.Email, result.Email);
         Assert.Equal(request.FirstName, result.FirstName);
         Assert.Equal(request.LastName, result.LastName);
-        Assert.Equal(request.Role, result.Role);
+        Assert.Equal(request.Role.ToDomainRole(), result.Role);
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
             Email: "user@test.com",
             FirstName: "John",
             LastName: "Doe",
-            Role: OrganizationRole.HiringManager,
+            Role: OrganizationRoleApi.HiringManager,
             Password: "Password123!");
 
         // Act
@@ -93,14 +93,14 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
             Email: "user1@test.com",
             FirstName: "John",
             LastName: "Doe",
-            Role: OrganizationRole.Sales,
+            Role: OrganizationRoleApi.Sales,
             Password: "Password123!");
 
         var secondRequest = new CreateUserRequest(
             Email: "user2@test.com",
             FirstName: "Jane",
             LastName: "Smith",
-            Role: OrganizationRole.Sales,
+            Role: OrganizationRoleApi.Sales,
             Password: "Password123!");
 
         // Act
@@ -137,7 +137,7 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
         Assert.Equal(firstRequest.LastName, firstUser.LastName);
         Assert.Equal(secondRequest.LastName, secondUser.LastName);
 
-        Assert.Equal(firstRequest.Role, firstUser.Role);
-        Assert.Equal(secondRequest.Role, secondUser.Role);
+        Assert.Equal(firstRequest.Role.ToDomainRole(), firstUser.Role);
+        Assert.Equal(secondRequest.Role.ToDomainRole(), secondUser.Role);
     }
 }

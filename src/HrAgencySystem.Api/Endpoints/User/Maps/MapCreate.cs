@@ -13,12 +13,12 @@ internal sealed record CreateUserRequest(
     string Email,
     string FirstName,
     string LastName,
-    OrganizationRole Role,
+    OrganizationRoleApi Role,
     string Password)
 {
     internal CreateUser ToCommand(OrganizationId organizationId, Guid createdBy)
     {
-        return new CreateUser(organizationId.Value, Email, FirstName, LastName, Role, Password, createdBy);
+        return new CreateUser(organizationId.Value, Email, FirstName, LastName, Role.ToDomainRole(), Password, createdBy);
     }
 }
 

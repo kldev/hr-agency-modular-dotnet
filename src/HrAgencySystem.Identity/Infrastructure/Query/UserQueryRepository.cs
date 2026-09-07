@@ -13,7 +13,8 @@ public class UserQueryRepository(IDocumentSession session) : IUserQueryRepositor
         var query = session.Query<UserProjection>()
             .WithOrganizationId(organizationId)
             .WithSearch(search)
-            .WithRoles(roles);
+            .WithRoles(roles)
+            .WithoutSystemRole();
 
         return await query.ToSlice(page, pageSize, ct);
     }
@@ -23,6 +24,7 @@ public class UserQueryRepository(IDocumentSession session) : IUserQueryRepositor
         return await session.Query<UserProjection>()
             .WithOrganizationId(organizationId)
             .WithUserId(userId)
+            .WithoutSystemRole()
             .SingleOrDefaultAsync(ct);
     }
 }

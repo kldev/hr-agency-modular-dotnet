@@ -30,11 +30,11 @@ public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutpu
 
         await UserClient.CreateAsync(
             OrganizationId,
-            "sales@test.com", role: OrganizationRole.Sales, firstName: "Tom", lastName: "Moore");
+            "sales@test.com", role: OrganizationRoleApi.Sales, firstName: "Tom", lastName: "Moore");
 
         await UserClient.CreateAsync(
             OrganizationId,
-            "recruiter@test.com", role: OrganizationRole.Recruiter);
+            "recruiter@test.com", role: OrganizationRoleApi.Recruiter);
 
         await UserClient.CreateAsync(
             OtherOrganizationId,
