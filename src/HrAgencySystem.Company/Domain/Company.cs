@@ -28,6 +28,8 @@ public sealed class Company
     public DateTimeOffset CreatedAt { get; private set; }
     
     public Guid CreatedById { get; private set; }
+    
+    public Industry Industry { get; private set; }
 
     public static Company Empty()
     {
@@ -47,5 +49,6 @@ public sealed class Company
         Status = CompanyStatus.Active;
         CreatedAt = @event.CreatedAt;
         CreatedById = @event.CreatedBy.Id;
+        Industry = Industry.Other;
     }
 }

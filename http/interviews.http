@@ -18,6 +18,6 @@ Content-Type: application/json
 
 
 ### get interviews
-GET {{baseURL}}/api/interviews
+GET {{baseURL}}/api/interviews?pageSize=500
 Authorization: Bearer {{token}}
 

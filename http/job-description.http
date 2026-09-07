@@ -133,7 +133,7 @@ Authorization: Bearer {{token}}
 
 {
   "jobDescriptionId": "{{jdId}}",
-  "title": "Java Backend Developer",
+  "title": "Post Manual Developer",
   "summary": "Senior",
   "description": "We are looking for an experienced Java Backend Developer to join our engineering team.",
   "responsibilities": [
@@ -319,7 +319,7 @@ Authorization: Bearer {{token}}
 
 ### get job posts
 
-GET {{baseURL}}/api/recruitment/job-posting?search=Reinger
+GET {{baseURL}}/api/recruitment/job-posting?search=manual
 Authorization: Bearer {{token}}
 
 ### get job posts
@@ -341,3 +341,40 @@ Authorization: Bearer {{token}}
 
 GET {{baseURL}}/api/recruitment/job-posting?status=Published
 Authorization: Bearer {{token}}
+
+
+###
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Published"
+}
+
+###
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Draft"
+}
+
+###
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Archived"
+}
+
+###
+PUT {{baseURL}}/api/recruitment/job-posting/{{postId}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "status": "Closed"
+}

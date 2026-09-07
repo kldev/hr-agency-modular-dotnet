@@ -16,6 +16,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
+        <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />
         <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
     </ItemGroup>
     <ItemGroup>

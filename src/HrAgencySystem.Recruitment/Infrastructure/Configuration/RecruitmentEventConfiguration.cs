@@ -1,3 +1,4 @@
+using HrAgencySystem.Recruitment.Contracts.IntegrationEvents;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Events.Interviews;
@@ -59,6 +60,7 @@ internal static class RecruitmentEventConfiguration
         options.Events.AddEventType<JobPostPublished>();
         options.Events.AddEventType<JobPostClosed>();
         options.Events.AddEventType<JobPostArchived>();
+        options.Events.AddEventType<JobPostStatusChanged>();
     }
 
     private static void ConfigureCandidateEvents(StoreOptions options)

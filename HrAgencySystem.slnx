@@ -7,6 +7,7 @@
         <Project Path="src/HrAgencySystem.Identity/HrAgencySystem.Identity.csproj" />
         <Project Path="src/HrAgencySystem.JobDescription/HrAgencySystem.JobDescription.csproj" />
         <Project Path="src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj" />
+        <Project Path="src/HrAgencySystem.Recruitment.Contracts/HrAgencySystem.Recruitment.Contracts.csproj" />
         <Project Path="src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj" />
         <Project Path="src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj" />
         <Project Path="src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj" />

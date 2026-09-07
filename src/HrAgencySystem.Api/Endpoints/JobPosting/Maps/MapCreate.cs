@@ -1,5 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Recruitment.Application.JobPosting.Create;
+using HrAgencySystem.Recruitment.Contracts.IntegrationEvents;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
@@ -18,6 +19,9 @@ internal static class MapCreate
     {
         var result = await bus.InvokeAsync<JobPostCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
 
+        var integrationEvent = new JobPostCreatedIntegrationEvent(result.CompanyId, result.JobPostId);
+        await bus.PublishAsync(integrationEvent);
+        
         return TypedResults.Created($"/api/recruitment/job-posting/{result.JobPostId}", result);
     }
 }

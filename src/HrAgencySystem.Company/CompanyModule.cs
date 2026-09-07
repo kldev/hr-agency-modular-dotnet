@@ -4,6 +4,7 @@ using HrAgencySystem.Company.Events;
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Company.Infrastructure.Query;
 using HrAgencySystem.Company.Projections;
+using HrAgencySystem.Recruitment.Contracts.IntegrationEvents;
 using HrAgencySystem.SharedKernel.Snapshots;
 using JasperFx.Events;
 using JasperFx.Events.Projections;
@@ -59,6 +60,8 @@ public static class CompanyModule
     private static void ConfigureEvents(StoreOptions options)
     {
         options.Events.AddEventType<CompanyCreated>();
+        options.Events.AddEventType<CompanyJobPostCreated>();
+        options.Events.AddEventType<CompanyJobPostActiveChanged>();
     }
 
     private static void ConfigureProjections(StoreOptions options, bool skipSnapshots = false)

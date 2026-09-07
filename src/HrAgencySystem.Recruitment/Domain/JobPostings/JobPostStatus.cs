@@ -22,3 +22,18 @@ public enum JobPostStatus
      */
     Archived
 }
+
+public enum JobPostStatusApi
+{
+   Published,
+   Closed,
+   Archived
+}
+
+public static class  JobPostStatusApiExtensions{
+
+    extension(JobPostStatusApi value)
+    {
+        public JobPostStatus ToDomain() => Enum.Parse<JobPostStatus>(value.ToString());
+    }
+}

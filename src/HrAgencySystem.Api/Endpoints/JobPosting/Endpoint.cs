@@ -12,5 +12,6 @@ internal static class Endpoint
         Maps.MapGet.Map(group);
         Maps.MapApplyTo.Map(group);
         Maps.MapPostToChannel.Map(group);
+        Maps.MapChangeStatus.Map(group);
     }
 }

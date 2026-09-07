@@ -138,7 +138,6 @@ public sealed class JobPost
     
     public void Apply(JobPostedToChannel @event)
     {
-        RequireNotFinal();
         Status = JobPostStatus.Published;
 
         // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
@@ -162,17 +161,6 @@ public sealed class JobPost
         ApplyCommon(@event);
     }
     
-    private void RequireNotFinal()
-    {
-        if (Status is
-            JobPostStatus.Closed or
-            JobPostStatus.Archived)
-        {
-            throw new InvalidOperationException(
-                $"Application is already in final status: {Status}.");
-        }
-    }
-
     private void ApplyCommon(IJobPostEvent @event)
     {
         UpdatedAt = @event.OccurredAt;

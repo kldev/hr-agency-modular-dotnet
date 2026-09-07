@@ -13,9 +13,9 @@ public static class PostToChannelHandler
 {
     [AggregateHandler]
     public static async Task<(JobPostedToChannel, Wolverine.Marten.Events)> Handle(
-        PostToChannel command, JobPost aggregate, 
+        PostToChannel command, JobPost aggregate,
         IUserSnapshotRepository snapshotRepository,
-        IOrganizationChecker checker, 
+        IOrganizationChecker checker,
         IClock clock,
         CancellationToken ct)
     {
@@ -23,8 +23,20 @@ public static class PostToChannelHandler
         var user = await GetModifiedBy(snapshotRepository, command.ModifiedBy, ct);
 
         var @event = new JobPostedToChannel(command.JobPostId, command.Channel, clock.UtcNow, user);
+        var events = new List<IJobPostEvent> { @event };
 
-        return (@event, [@event]);
+        if (JobPostStatusChangePolicy.IsFinal(aggregate.Status))
+            throw new BusinessRuleException(
+                "Job post in final status. Change status to published before posting to channel.");
+
+        if (aggregate.Status == JobPostStatus.Published ||
+            !JobPostStatusChangePolicy.Allow(aggregate.Status, JobPostStatus.Published)) return (@event, [.. events]);
+
+        var changeStatusChange = new JobPostStatusChanged(aggregate.Id.Value, aggregate.CompanyId.Value,
+            aggregate.OrganizationId.Value, aggregate.Status, JobPostStatus.Published, clock.UtcNow, user);
+        @events.Add(changeStatusChange);
+
+        return (@event, [.. events]);
     }
 
     private static async Task ValidateOrganization(PostToChannel command, IOrganizationChecker checker,
