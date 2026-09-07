@@ -1,5 +1,5 @@
 using System.Net.Http.Json;
-using HrAgencySystem.Identity.Application.Commands;
+using HrAgencySystem.Identity.Application.Owners.Create;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using Xunit.Abstractions;

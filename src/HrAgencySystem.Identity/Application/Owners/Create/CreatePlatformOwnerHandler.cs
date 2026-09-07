@@ -1,4 +1,3 @@
-using HrAgencySystem.Identity.Application.Commands;
 using HrAgencySystem.Identity.Application.Policy;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
@@ -9,9 +8,9 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 
+namespace HrAgencySystem.Identity.Application.Owners.Create;
 
-namespace HrAgencySystem.Identity.Application.Handlers;
-
+// ReSharper disable once UnusedType.Global
 public class CreatePlatformOwnerHandler
 {
     private const string EmailAlreadyUsed = "Email already used";

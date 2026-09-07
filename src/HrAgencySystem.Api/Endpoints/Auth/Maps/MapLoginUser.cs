@@ -1,4 +1,4 @@
-using HrAgencySystem.Identity.Application.Commands;
+using HrAgencySystem.Identity.Application.Users.Login;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Auth.Maps;

@@ -1,10 +1,8 @@
-using HrAgencySystem.Identity.Application.Commands;
 using HrAgencySystem.Identity.Application.Policy;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Events;
-using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -12,9 +10,8 @@ using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
-using Wolverine;
 
-namespace HrAgencySystem.Identity.Application.Handlers;
+namespace HrAgencySystem.Identity.Application.Users.Create;
 
 public static class CreateUserHandler
 {

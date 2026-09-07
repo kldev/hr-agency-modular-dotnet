@@ -1,6 +1,4 @@
-using HrAgencySystem.Identity.Domain;
-
-namespace HrAgencySystem.Identity.Application.Commands;
+namespace HrAgencySystem.Identity.Application.Users.Login;
 
 public sealed record LoginUser(string Email, string Password, string Slug);
 

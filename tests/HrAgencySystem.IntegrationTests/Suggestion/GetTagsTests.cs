@@ -1,5 +1,4 @@
 using System.Net;
-using HrAgencySystem.Identity.Application.Model;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Recruitment.Documents;
 using Microsoft.AspNetCore.Mvc;

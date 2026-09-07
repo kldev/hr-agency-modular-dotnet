@@ -1,5 +1,5 @@
 using Bogus;
-using HrAgencySystem.Identity.Application.Commands;
+using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;
 using Wolverine;

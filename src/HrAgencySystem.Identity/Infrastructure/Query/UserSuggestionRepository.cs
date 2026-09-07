@@ -1,4 +1,3 @@
-using HrAgencySystem.Identity.Application.Model;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;

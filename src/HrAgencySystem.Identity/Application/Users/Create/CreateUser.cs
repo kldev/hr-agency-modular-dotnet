@@ -1,6 +1,6 @@
 using HrAgencySystem.Identity.Domain;
 
-namespace HrAgencySystem.Identity.Application.Commands;
+namespace HrAgencySystem.Identity.Application.Users.Create;
 
 public sealed record CreateUser(
     Guid OrganizationId,

@@ -1,4 +1,4 @@
-using HrAgencySystem.Identity.Application.Model;
+using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using Xunit.Abstractions;

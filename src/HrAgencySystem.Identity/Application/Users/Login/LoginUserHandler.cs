@@ -1,4 +1,3 @@
-using HrAgencySystem.Identity.Application.Commands;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
@@ -7,7 +6,7 @@ using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Microsoft.Extensions.Logging;
 
-namespace HrAgencySystem.Identity.Application.Handlers;
+namespace HrAgencySystem.Identity.Application.Users.Login;
 
 public static class LoginUserHandler
 {

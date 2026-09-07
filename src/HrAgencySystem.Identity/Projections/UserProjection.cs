@@ -1,4 +1,3 @@
-using HrAgencySystem.Identity.Application.Model;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -10,6 +9,7 @@ public sealed record UserProjection(Guid Id, Guid OrganizationId,
     string FirstName,
     string LastName,
     OrganizationRole Role,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid CreatedById,
     UserSnapshot CreatedBy,
     DateTimeOffset CreatedAt)
