@@ -15,6 +15,7 @@ internal static class RecruitmentProjectionConfiguration
             ConfigureJobApplicationProjection(options);
             ConfigureJobPostProjection(options);
             ConfigureCandidateProjection(options);
+            ConfigureInterviewProjection(options);
         }
 
         public void ConfigureRecruitmentProjectionsMinimal()
@@ -81,6 +82,25 @@ internal static class RecruitmentProjectionConfiguration
             .Index(x => new { OrganizationId = x.OrgId })
             .Index(x => new { OrganizationId = x.OrgId, x.Email })
             .Index(x => new { OrganizationId = x.OrgId, x.PhoneNumber })
+            .Index(x => new { OrganizationId = x.OrgId, x.CreatedAt });
+    }
+
+    private static void ConfigureInterviewProjection(
+        StoreOptions options)
+    {
+
+        options.Projections.Snapshot<InterviewProjection>(
+            SnapshotLifecycle.Async);
+
+
+        options.Schema
+            .For<InterviewProjection>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(x => new { OrganizationId = x.OrgId })
+            .Index(x => new { OrganizationId = x.OrgId, x.ScheduleAt })
+            .Index(x => new { OrganizationId = x.OrgId, x.InterviewId })
+            .Index(x => new { OrganizationId = x.OrgId, x.ApplicationId })
+            .Index(x => new { OrganizationId = x.OrgId, x.CreatedByUserId })
             .Index(x => new { OrganizationId = x.OrgId, x.CreatedAt });
     }
 }

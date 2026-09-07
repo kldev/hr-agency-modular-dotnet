@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.Recruitment.Events.Interviews;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using Marten;
 
@@ -14,6 +15,7 @@ internal static class RecruitmentEventConfiguration
             ConfigureJobApplicationEvents(options);
             ConfigureJobPostEvents(options);
             ConfigureCandidateEvents(options);
+            ConfigureInterviewsEvents(options);
         }
 
         public void ConfigureRecruitmentEventsMinimal()
@@ -22,6 +24,14 @@ internal static class RecruitmentEventConfiguration
             options.Events.AddEventType<CandidateCreated>();
             options.Events.AddEventType<CandidateApplicationUpdated>();
         }
+    }
+
+    private static void ConfigureInterviewsEvents(StoreOptions options)
+    {
+        options.Events.AddEventType<InterviewCreated>();
+        options.Events.AddEventType<InterviewerChanged>();
+        options.Events.AddEventType<InterviewStatusChanged>();
+        options.Events.AddEventType<InterviewFormatChanged>();
     }
 
     private static void ConfigureJobApplicationEvents(StoreOptions options)

@@ -13,6 +13,18 @@ internal static class SetupOpenApi
                 document.Info.Title = "HR Agency System";
                 document.Info.Version = "v1";
 
+                document.Info.Description = """
+                                            REST API for managing recruitment agency operations.
+
+                                            The API provides functionality for:
+                                            - organization and user management
+                                            - sales opportunities and activities
+                                            - companies and contacts
+                                            - job descriptions and job postings
+                                            - candidates and job applications
+                                            - schedule interviews
+                                            """;
+                
                 document.Components ??= new OpenApiComponents();
 
                 document.Components.SecuritySchemes ??=

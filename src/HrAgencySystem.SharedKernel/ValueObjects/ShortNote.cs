@@ -17,9 +17,9 @@ public class ShortNote
 
     public string Value { get; }
 
-    public static ShortNote Create(string value)
+    public static ShortNote Create(string value, bool isRequired = true)
     {
-        var (title, error) = TryCreate(value);
+        var (title, error) = TryCreate(value, isRequired);
 
         return error is not null
             ? throw new InValidValueException(error)
@@ -27,10 +27,11 @@ public class ShortNote
     }
 
     public static (ShortNote? title, string? error) TryCreate(
-        string value)
+        string value, bool isRequired = true)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return (null, RequiredMessage);
+            return isRequired ? (null, RequiredMessage) 
+                : (new ShortNote(""), null);
 
         var normalized = value.Trim();
 
