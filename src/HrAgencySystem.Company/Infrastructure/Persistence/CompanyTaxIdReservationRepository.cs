@@ -23,14 +23,12 @@ public sealed class CompanyTaxIdReservationRepository(
         CompanyId companyId,
         CancellationToken cancellationToken = default)
     {
-        var reservation = new CompanyTaxIdReservation
-        {
-            Id = Guid.NewGuid(),
-            OrganizationId = organizationId.Value,
-            TaxId = taxId.Value,
-            CompanyId = companyId.Value
-        };
-
+        var reservation = new CompanyTaxIdReservation(
+            Guid.NewGuid(),
+            organizationId.Value,
+            taxId.Value,
+            companyId.Value);
+        
         session.Insert(reservation);
 
         return Task.CompletedTask;

@@ -3,56 +3,25 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Documents;
 
-public sealed record JobApplicationNote
+public sealed record JobApplicationNote( 
+    Guid Id,
+    Guid JobApplicationId,
+    Guid OrgId,
+    Guid CandidateId,
+    string Note,
+    Guid CreatedById,
+    UserSnapshot CreatedBy,
+    bool IsDeleted,
+    DateTimeOffset CreatedAt,
+    Guid? ModifyById,
+    UserSnapshot? ModifyBy,
+    DateTimeOffset? ModifyAt)
 {
-    private JobApplicationNote(
-        Guid id,
-        Guid jobApplicationId,
-        Guid organizationId,
-        Guid candidateId,
-        string note,
-        Guid createdById,
-        UserSnapshot createdBy,
-        bool isDeleted,
-        DateTimeOffset createdAt)
-    {
-        Id = id;
-        JobApplicationId = jobApplicationId;
-        CandidateId = candidateId;
-        Note = note;
-        CreatedById = createdById;
-        CreatedBy = createdBy;
-        IsDeleted = isDeleted;
-        CreatedAt = createdAt;
-        OrgId = organizationId;
-    }
-
-    public Guid Id { get; }
-
-    public Guid JobApplicationId { get; }
-    
-    public Guid CandidateId { get; }
-    
-    public Guid OrgId { get; }
-
-    public string Note { get; private set; }
-
-    public Guid CreatedById { get; }
-    public UserSnapshot CreatedBy { get; }
-    public DateTimeOffset CreatedAt { get; }
-    
-    public Guid? ModifyById { get; private set; }
-    public UserSnapshot? ModifyBy { get; private set; }
-    public DateTimeOffset? ModifyAt { get; private set; }
-
-    public bool IsDeleted { get; set; }
-
     public static JobApplicationNote Create(
         Guid jobApplicationId,
         Guid organizationId,
-        Guid  candidateId,
+        Guid candidateId,
         ShortNote note,
-        Guid createdById,
         UserSnapshot createdBy,
         DateTimeOffset createdAt)
 
@@ -65,16 +34,25 @@ public sealed record JobApplicationNote
             organizationId,
             candidateId,
             note.Value,
-            createdById,
+            createdBy.Id,
             createdBy,
-            false, createdAt);
+            false, 
+            createdAt,
+            null,
+            null,
+            null);
     }
 
-    public JobApplicationNote Delete()
+    public JobApplicationNote Delete( 
+        UserSnapshot deleteBy,
+        DateTimeOffset deleteAt)
     {
         return this with
         {
-            IsDeleted = true
+            IsDeleted = true,
+            ModifyAt = deleteAt,
+            ModifyBy = deleteBy,
+            ModifyById = deleteBy.Id
         };
     }
 

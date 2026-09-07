@@ -7,18 +7,18 @@ using Marten;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Persistence;
 
-public class NoteRepository(IDocumentSession session, IUserSnapshotRepository snapshotRepository, IClock clock) : INoteRepository
+public class NoteRepository(IDocumentSession session, IClock clock) : INoteRepository
 {
-    public async Task CreateNoteAsync(CreateNote note, CancellationToken ct)
+    public Task CreateNoteAsync(CreateNoteDocument note, UserSnapshot user)
     {
-        var user = await GetCreatedBy(snapshotRepository, note.AuthorId, ct);
-        
         var noteDocument = JobApplicationNote.Create(note.JobApplicationId,
             note.OrganizationId,
             note.CandidateId, note.Text,
-            user.Id, user, clock.UtcNow);
-        
+            user, clock.UtcNow);
+
         session.Insert(noteDocument);
+
+        return Task.CompletedTask;
     }
 
     public async Task<IReadOnlyList<ApplicationNoteItem>> GetNotes(Guid organizationId, Guid applicationId, CancellationToken ct)
@@ -28,17 +28,10 @@ public class NoteRepository(IDocumentSession session, IUserSnapshotRepository sn
             .Where(z => z.JobApplicationId == applicationId)
             .Where(z => z.IsDeleted == false)
             .OrderByDescending(z=>z.CreatedAt)
-            .Select(z => new ApplicationNoteItem(z.Id, z.Note, z.CreatedBy.Fullname, z.CreatedBy.Email, z.CreatedAt))
+            .Select(z => new ApplicationNoteItem(z.Id, z.Note, z.CreatedBy.Fullname, z.CreatedBy.Email, z.JobApplicationId, z.CreatedAt))
             .ToListAsync<ApplicationNoteItem>(ct);
 
         return result;
-        // return [.. result.OrderByDescending(z => z.CreatedAt)];
     }
-
-    private static async Task<UserSnapshot> GetCreatedBy(IUserSnapshotRepository repository, Guid createById,
-        CancellationToken ct)
-    {
-        var user = await repository.GetUserAsync(createById, ct);
-        return user ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
+    
 }

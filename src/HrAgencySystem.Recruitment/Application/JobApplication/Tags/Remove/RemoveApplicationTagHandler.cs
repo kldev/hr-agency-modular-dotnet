@@ -6,14 +6,14 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
-namespace HrAgencySystem.Recruitment.Application.JobApplication.RemoveApplicationTag;
+namespace HrAgencySystem.Recruitment.Application.JobApplication.Tags.Remove;
 
 // ReSharper disable once UnusedType.Global
 public static class RemoveApplicationTagHandler
 {
     [AggregateHandler]
     public static async Task<(JobApplicationTagRemoved, Wolverine.Marten.Events)> Handle(
-        RemoveApplicationTag command, 
+        Tags.Remove.RemoveApplicationTag command, 
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Global
         Domain.Applications.JobApplication aggregate,
         ITagRepository tagRepository,

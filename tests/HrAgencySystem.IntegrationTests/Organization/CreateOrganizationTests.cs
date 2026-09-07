@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.Organization.Application.Commands;
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.Organization.Events;
 using HrAgencySystem.SharedKernel.Exception;

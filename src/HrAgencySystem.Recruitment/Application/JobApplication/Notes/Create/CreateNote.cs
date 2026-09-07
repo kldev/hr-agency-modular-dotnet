@@ -1,6 +1,4 @@
 namespace HrAgencySystem.Recruitment.Application.JobApplication.Notes.Create;
 
-public class CreateNote
-{
-    
-}
+// ReSharper disable once ClassNeverInstantiated.Global
+public sealed record CreateNote(Guid JobApplicationId, Guid OrganizationId, string Text, Guid AddedBy);

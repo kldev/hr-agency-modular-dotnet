@@ -22,5 +22,8 @@
         <InternalsVisibleTo Include="HrAgencySystem.UnitTests"/>
         <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests"/>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Application\JobApplication\Tags\" />
+    </ItemGroup>
 
 </Project>

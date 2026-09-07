@@ -1,4 +1,4 @@
-using HrAgencySystem.Organization.Application.Commands;
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Application.Port;
 using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.Organization.Events;
@@ -6,7 +6,7 @@ using HrAgencySystem.SharedKernel.Exception;
 using Microsoft.Extensions.Logging;
 using Wolverine.Marten;
 
-namespace HrAgencySystem.Organization.Application.Handlers;
+namespace HrAgencySystem.Organization.Application.UpdateSlug;
 
 public static class UpdateOrganizationSlugHandler
 {

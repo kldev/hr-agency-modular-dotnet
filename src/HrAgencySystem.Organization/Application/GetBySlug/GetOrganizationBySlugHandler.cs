@@ -3,7 +3,7 @@ using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 
-namespace HrAgencySystem.Organization.Application.Handlers;
+namespace HrAgencySystem.Organization.Application.GetBySlug;
 
 public static class GetOrganizationBySlugHandler
 {

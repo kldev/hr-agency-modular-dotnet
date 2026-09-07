@@ -1,5 +1,4 @@
-using HrAgencySystem.Company.Application.Model;
-using HrAgencySystem.Company.Application.Port;
+using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.Company.Projections;
 using Marten;
 

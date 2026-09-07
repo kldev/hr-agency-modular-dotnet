@@ -1,6 +1,4 @@
-using HrAgencySystem.Company.Application.Model;
-
-namespace HrAgencySystem.Company.Application.Port;
+namespace HrAgencySystem.Company.Application.Suggestion;
 
 public interface ICompanySuggestionRepository
 {

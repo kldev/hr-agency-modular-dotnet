@@ -9,7 +9,9 @@ public class CompanySnapshotRepository(IDocumentSession session) : ICompanySnaps
 {
     public async Task<CompanySnapshot?> GetCompanyAsync(Guid companyId, CancellationToken ct)
     {
-        return await session.Query<CompanyProjection>().Where(z => z.Id == companyId)
-            .Select(z => new CompanySnapshot(z.Id, z.Name, z.TaxId)).FirstOrDefaultAsync(ct);
+        return await session.Query<CompanyProjection>()
+            .WithCompanyId(companyId)
+            .Select(z => new CompanySnapshot(z.Id, z.Name, z.TaxId))
+            .FirstOrDefaultAsync(ct);
     }
 }

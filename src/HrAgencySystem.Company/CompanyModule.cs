@@ -1,5 +1,5 @@
 using HrAgencySystem.Company.Application.Port;
-using HrAgencySystem.Company.Application.Query;
+using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Company.Infrastructure.Query;

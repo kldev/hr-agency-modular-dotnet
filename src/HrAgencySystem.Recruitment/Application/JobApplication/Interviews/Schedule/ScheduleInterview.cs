@@ -1,9 +1,11 @@
 using HrAgencySystem.SharedKernel.Commands;
+using HrAgencySystem.SharedKernel.Tenant;
 
-namespace HrAgencySystem.Recruitment.Application.JobApplication.ScheduleInterview;
+namespace HrAgencySystem.Recruitment.Application.JobApplication.Interviews.Schedule;
 
-public sealed record ScheduleInterviewWithCandidate(
+public sealed record ScheduleInterview(
     Guid JobApplicationId,
+    OrganizationId OrganizationId,
     DateTime ScheduledAt,
     Guid ModifiedBy,
     string ScheduledTimezone = "Europe/Warsaw") : IUpdateCommand

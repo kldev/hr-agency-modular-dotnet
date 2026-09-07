@@ -1,4 +1,4 @@
-using HrAgencySystem.Organization.Application.Commands;
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Events;
 using Wolverine;
 

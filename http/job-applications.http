@@ -221,5 +221,24 @@ Content-Type: application/json
 }
 
 ###
+# @name getNote
 GET {{baseURL}}/api/recruitment/job-applications/{{appId1}}/notes
 Authorization: Bearer {{token}}
+
+###
+@noteId = {{getNote.response.body.$.[0].id}}
+@appNoteId = {{getNote.response.body.$.[0].jobApplicationId}}
+###
+
+###
+DELETE {{baseURL}}/api/recruitment/job-applications/{{appNoteId}}/note/{{noteId}}
+Authorization: Bearer {{token}}
+
+###
+POST {{baseURL}}/api/recruitment/job-applications/{{appNoteId}}/note
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "text": "Will calling later"
+}

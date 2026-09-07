@@ -8,8 +8,9 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine.Marten;
 
-namespace HrAgencySystem.Recruitment.Application.JobApplication.ChangeJobApplicationStatus;
+namespace HrAgencySystem.Recruitment.Application.JobApplication.ChangeStatus;
 
+// ReSharper disable once UnusedType.Global
 public static class ChangeJobApplicationStatusHandler
 {
     [AggregateHandler]
@@ -34,9 +35,7 @@ public static class ChangeJobApplicationStatusHandler
 
         var newStatus = Enum.Parse<JobApplicationStatus>(command.Status.ToString());
 
-        var changeAllowed = JobApplicationStatusChangePolicy.Allow(aggregate.Status, newStatus);
-        if (!changeAllowed)
-            throw new BusinessRuleException($"Not allowed to change job application status form {aggregate.Status} to {newStatus}");
+        ValidatePolicy(aggregate, newStatus);
 
         var @event = new JobApplicationStatusChanged(aggregate.Id.Value, aggregate.CandidateId.Value, now, oldStatus,
             newStatus, user);
@@ -49,18 +48,32 @@ public static class ChangeJobApplicationStatusHandler
 
         if (string.IsNullOrEmpty(command.Note)) return (result, [.. events]);
 
-        var (shortNote, error) = ShortNote.TryCreate(command.Note);
-        if (error != null) throw new ValidationException(error);
-
-        var saveNote = new CreateNote(command.JobApplicationId, command.OrganizationId, aggregate.CandidateId.Value,
-            shortNote!, user.Id);
-        await noteRepository.CreateNoteAsync(saveNote, ct);
-        
-        var noteAddedEvent = new JobApplicationNoteAdded(aggregate.Id.Value, aggregate.CandidateId.Value, now,
-            command.Note, user);
+        var noteAddedEvent = await CreateApplicationNoteAddedEvent(command, aggregate, noteRepository, user, now);
         events.Add(noteAddedEvent);
 
         return (result, [..events]);
+    }
+
+    private static void ValidatePolicy(Domain.Applications.JobApplication aggregate, JobApplicationStatus newStatus)
+    {
+        var changeAllowed = JobApplicationStatusChangePolicy.Allow(aggregate.Status, newStatus);
+        if (!changeAllowed)
+            throw new BusinessRuleException($"Not allowed to change job application status form {aggregate.Status} to {newStatus}");
+    }
+
+    private static async Task<JobApplicationNoteAdded> CreateApplicationNoteAddedEvent(ChangeJobApplicationStatus command, Domain.Applications.JobApplication aggregate,
+        INoteRepository noteRepository, UserSnapshot user, DateTimeOffset now)
+    {
+        var (shortNote, error) = ShortNote.TryCreate(command.Note);
+        if (error != null) throw new ValidationException(error);
+
+        var saveNote = new CreateNoteDocument(command.JobApplicationId, command.OrganizationId, aggregate.CandidateId.Value,
+            shortNote!);
+        await noteRepository.CreateNoteAsync(saveNote, user);
+        
+        var noteAddedEvent = new JobApplicationNoteAdded(aggregate.Id.Value, aggregate.CandidateId.Value, now,
+            command.Note, user);
+        return noteAddedEvent;
     }
 
     private static async Task<UserSnapshot> GetModifiedBy(IUserSnapshotRepository repository, Guid modifiedById,

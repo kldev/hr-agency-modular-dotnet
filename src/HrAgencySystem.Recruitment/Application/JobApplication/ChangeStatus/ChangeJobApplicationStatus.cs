@@ -1,7 +1,7 @@
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.SharedKernel.Commands;
 
-namespace HrAgencySystem.Recruitment.Application.JobApplication.ChangeJobApplicationStatus;
+namespace HrAgencySystem.Recruitment.Application.JobApplication.ChangeStatus;
 
 public sealed record ChangeJobApplicationStatus(  
     Guid JobApplicationId,

@@ -1,4 +1,3 @@
-using HrAgencySystem.Company.Application.Commands;
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
@@ -11,7 +10,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 
-namespace HrAgencySystem.Company.Application.Handlers;
+namespace HrAgencySystem.Company.Application.Create;
 
 public static class CreateCompanyHandler
 {

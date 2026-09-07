@@ -5,7 +5,8 @@ using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
-namespace HrAgencySystem.Recruitment.Application.JobApplication.TagApplication;
+
+namespace HrAgencySystem.Recruitment.Application.JobApplication.Tags.Add;
 
 // ReSharper disable once UnusedType.Global
 public static class TagApplicationHandler
@@ -13,7 +14,7 @@ public static class TagApplicationHandler
     [AggregateHandler]
     // ReSharper disable once UnusedMember.Global
     public static async Task<(JobApplicationTagged, Wolverine.Marten.Events)> Handle(
-        TagApplication command, 
+        Tags.Add.TagApplication command, 
         // ReSharper disable once UnusedParameter.Global
         Domain.Applications.JobApplication aggregate,
         ITagRepository tagRepository,

@@ -3,12 +3,12 @@ using HrAgencySystem.Company.Projections;
 using HrAgencySystem.SharedKernel.Web;
 using Marten;
 
-namespace HrAgencySystem.Company.Application.Query;
+namespace HrAgencySystem.Company.Infrastructure.Query;
 
 public sealed class CompaniesQueryRepository(IQuerySession session)
     : ICompaniesQueryRepository
 {
-    public Task<SliceResponse<CompanyProjection>> GetCompanies(
+    public async Task<SliceResponse<CompanyProjection>> GetCompanies(
         string search,
         Guid organizationId,
         int page = 1,
@@ -20,13 +20,13 @@ public sealed class CompaniesQueryRepository(IQuerySession session)
             .OrderBy(c => c.Name)
             .ThenBy(c => c.Id);
 
-        return query.ToSlice(page, pageSize);
+        return await query.ToSlice(page, pageSize);
     }
 
     public async Task<CompanyProjection?> GetCompany(Guid organizationId, Guid? companyId, string taxId, CancellationToken ct)
     {
-        return await session.Query<CompanyProjection>()
-            .WithOrganizationId(organizationId)
+        return await session.Query<CompanyProjection>().
+            WithOrganizationId(organizationId)
             .WithCompanyId(companyId)
             .WithTax(taxId).SingleOrDefaultAsync(ct);
     }

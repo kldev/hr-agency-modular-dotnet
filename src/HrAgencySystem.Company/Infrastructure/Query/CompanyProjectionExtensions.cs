@@ -1,6 +1,6 @@
 using HrAgencySystem.Company.Projections;
 
-namespace HrAgencySystem.Company.Application.Query;
+namespace HrAgencySystem.Company.Infrastructure.Query;
 
 internal static class CompanyProjectionExtensions
 {
@@ -35,5 +35,13 @@ internal static class CompanyProjectionExtensions
                 q.Name.Contains(search.Trim(), StringComparison.OrdinalIgnoreCase) ||
                 q.TaxId.Contains(search, StringComparison.OrdinalIgnoreCase));
 
+    }
+
+    internal static IQueryable<CompanyProjection> WithCountryCode(this IQueryable<CompanyProjection> query,
+        string? countryCode)
+    {
+        return string.IsNullOrWhiteSpace(countryCode)
+            ? query
+            : query.Where(q => q.CountryCode.Contains(countryCode, StringComparison.OrdinalIgnoreCase));
     }
 }

@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
-using HrAgencySystem.Company.Application.Commands;
+using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Tenant;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
-using HrAgencySystem.Organization.Application.Commands;
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Events;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;

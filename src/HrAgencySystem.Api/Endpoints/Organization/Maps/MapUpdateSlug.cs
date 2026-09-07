@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Common.Errors;
-using HrAgencySystem.Organization.Application.Commands;
+using HrAgencySystem.Organization.Application.UpdateSlug;
 using HrAgencySystem.Organization.Events;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;

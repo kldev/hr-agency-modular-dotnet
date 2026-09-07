@@ -1,4 +1,3 @@
-using HrAgencySystem.Organization.Application.Commands;
 using HrAgencySystem.Organization.Application.Port;
 using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.Organization.Events;
@@ -6,9 +5,8 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
-using Microsoft.Extensions.Configuration;
 
-namespace HrAgencySystem.Organization.Application.Handlers;
+namespace HrAgencySystem.Organization.Application.Create;
 
 public static class CreateOrganizationHandler
 {

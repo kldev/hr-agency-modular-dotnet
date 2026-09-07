@@ -1,4 +1,4 @@
-using HrAgencySystem.Company.Application.Model;
+using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using Xunit.Abstractions;
 

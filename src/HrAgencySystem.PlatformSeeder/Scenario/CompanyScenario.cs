@@ -1,5 +1,5 @@
 using Bogus;
-using HrAgencySystem.Company.Application.Commands;
+using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Events;
 using Wolverine;
 

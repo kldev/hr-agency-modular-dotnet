@@ -1,4 +1,4 @@
-using HrAgencySystem.Company.Application.Model;
+using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Snapshots;

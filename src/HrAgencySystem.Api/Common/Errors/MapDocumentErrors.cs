@@ -1,4 +1,4 @@
-using HrAgencySystem.Company.Application.Handlers;
+using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Infrastructure.Persistence;
 
 namespace HrAgencySystem.Api.Common.Errors;

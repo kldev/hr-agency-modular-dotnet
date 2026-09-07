@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Api.Endpoints.Company.Maps;
-using HrAgencySystem.Company.Application.Handlers;
+using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.IntegrationTests.Infrastructure;

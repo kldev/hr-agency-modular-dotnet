@@ -1,6 +1,6 @@
 using System.Net.Http.Json;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.Organization.Application.Commands;
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Events;
 using Xunit.Abstractions;
 
