@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Application.Port;
+using HrAgencySystem.Recruitment.Application.Suggestion;
 using HrAgencySystem.Recruitment.Documents;
 using Marten;
 

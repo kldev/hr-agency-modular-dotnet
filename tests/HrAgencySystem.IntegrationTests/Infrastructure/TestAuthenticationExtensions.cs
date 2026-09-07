@@ -9,6 +9,13 @@ public static class TestAuthenticationExtensions
         client.DefaultRequestHeaders.Remove("X-Test-OrganizationId");
         client.DefaultRequestHeaders.Add("X-Test-OrganizationId", organizationId.ToString());
     }
+    
+    public static void WithUserId(this HttpClient client, Guid userId)
+    {
+        client.DefaultRequestHeaders.Remove("X-Test-User-Id");
+        client.DefaultRequestHeaders.Add("X-Test-User-Id", userId.ToString());
+    }
+    
     public static HttpClient AsOwner(this HttpClient client)
     {
         client.SetTestRoles(nameof(PlatformRole.Owner));

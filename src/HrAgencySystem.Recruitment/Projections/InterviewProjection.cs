@@ -45,37 +45,39 @@ public sealed record InterviewProjection(
         );
     }
     
+    private static InterviewProjection ApplyCommon(
+        InterviewProjection projection,
+        IInterviewEvent @event)
+    {
+        return projection with
+        {
+            ModifiedByUserId = @event.Author.Id,
+            ModifiedBy = @event.Author,
+            ModifiedAt = @event.OccurredAt
+        };
+    }
+    
     public InterviewProjection Apply(InterviewFormatChanged @event)
     {
-        return this with
+        return ApplyCommon(this, @event) with
         {
             Format = @event.NewFormat,
-            ModifiedBy = @event.Author,
-            ModifiedByUserId = @event.Author.Id,
-            ModifiedAt = @event.OccurredAt
         };
     }
     
     public InterviewProjection Apply(InterviewStatusChanged @event)
     {
-        return this with
+        return ApplyCommon(this, @event) with
         {
             Status = @event.NewStatus,
-            ModifiedBy = @event.Author,
-            ModifiedByUserId = @event.Author.Id,
-            ModifiedAt = @event.OccurredAt
         };
     }
     
     public InterviewProjection Apply(InterviewerChanged @event)
     {
-        return this with
+        return ApplyCommon(this, @event) with
         {
             Interviewer = @event.NewInterviewer,
-            Id = @event.NewInterviewer.Id,
-            ModifiedBy = @event.Author,
-            ModifiedByUserId = @event.Author.Id,
-            ModifiedAt = @event.OccurredAt
         };
     }
 }

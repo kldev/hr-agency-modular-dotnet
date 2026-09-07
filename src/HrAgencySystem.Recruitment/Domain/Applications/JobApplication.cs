@@ -66,6 +66,13 @@ public sealed class JobApplication
     
     public void Apply(JobApplicationInterviewScheduled @event)
     {
+        if (Status == JobApplicationStatus.Interview)
+        {
+            LatestInterviewId = @event.InterviewId;
+            ApplyCommon(@event);
+            return;
+        }
+        
         CheckStatusChangeAllowed(JobApplicationStatus.Interview);
 
         Status = JobApplicationStatus.Interview;
@@ -105,6 +112,13 @@ public sealed class JobApplication
         
         ApplyCommon(@event);
     }
+    
+    public void Apply(JobApplicationReactivated @event)
+    {
+        Status = JobApplicationStatus.Screening;
+        ApplyCommon(@event);
+    }
+
 
     private void CheckStatusChangeAllowed(JobApplicationStatus newStatus)
     {

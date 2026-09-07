@@ -2,6 +2,7 @@ using System.Net;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Api.Common.Response;
+using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Projections;
 using Marten;

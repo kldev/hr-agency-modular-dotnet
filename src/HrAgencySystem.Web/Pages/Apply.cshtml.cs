@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using HrAgencySystem.Recruitment.Application.JobApplications.Create;
+using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Applications;

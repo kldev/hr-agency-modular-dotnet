@@ -6,7 +6,6 @@ namespace HrAgencySystem.Recruitment.Application.Port;
 public interface INoteRepository
 {
     Task CreateNoteAsync(CreateNoteDocument noteDocument, UserSnapshot user);
-    
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global

@@ -8,5 +8,7 @@ internal static class Endpoint
             .RequireAuthorization().WithTags("Recruitment - Interviews");
         
         Maps.MapGetSlice.Map(group);
+        Maps.MapGet.Map(group);
+        Maps.MapSchedule.Map(group);
     }
 }

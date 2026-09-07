@@ -14,9 +14,7 @@ public static class JobApplicationStatusChangePolicy
         {
             return false;
         }
-
-
-
+        
         return (currentStatus, newStatus) switch
         {
             (JobApplicationStatus.Applied, JobApplicationStatus.Screening) => true,

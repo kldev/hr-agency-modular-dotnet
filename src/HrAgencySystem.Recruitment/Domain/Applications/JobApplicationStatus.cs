@@ -40,7 +40,9 @@ public enum JobApplicationStatus
     /**
      * Candidate has withdrawn their application.
      */
-    Withdrawn
+    Withdrawn,
+    
+    // TODO: candidate change his mind, back to pipeline
 }
 
 public enum JobApplicationUpdateStatus
@@ -51,5 +53,6 @@ public enum JobApplicationUpdateStatus
     Offer,
     Hired,
     Rejected,
-    Withdrawn
+    Withdrawn,
+    // TODO: candidate change his mind, back to pipeline
 }

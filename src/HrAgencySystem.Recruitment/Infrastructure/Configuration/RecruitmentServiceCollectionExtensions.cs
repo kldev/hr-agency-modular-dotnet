@@ -1,6 +1,10 @@
+using HrAgencySystem.Recruitment.Application.Candidates.Queries;
 using HrAgencySystem.Recruitment.Application.Interviews.Queries;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
+using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Queries;
+using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
+using HrAgencySystem.Recruitment.Application.Suggestion;
 using HrAgencySystem.Recruitment.Config;
 using HrAgencySystem.Recruitment.Feeds.Application.GenerateJobFeed;
 using HrAgencySystem.Recruitment.Feeds.Application.GetJobFeed;
@@ -50,6 +54,7 @@ public static class RecruitmentServiceCollectionExtensions
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<INoteQueryRepository, NoteQueryRepository>();
             services.AddScoped<IInterviewsQueryRepository, InterviewsQueryRepository>();
+            services.AddScoped<IJobApplicationInfoQueryRepository, JobApplicationInfoQueryRepository>();
 
             services.AddHostedService<JobFeedSchedulerWorker>();
             services.AddHostedService<JobFeedGenerationWorker>();

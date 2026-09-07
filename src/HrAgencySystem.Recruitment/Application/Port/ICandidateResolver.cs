@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Application.Candidates.Create;
+using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 
 namespace HrAgencySystem.Recruitment.Application.Port;
 

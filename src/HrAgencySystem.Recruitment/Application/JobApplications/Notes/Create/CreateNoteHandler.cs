@@ -15,7 +15,7 @@ public static class CreateNoteHandler
     public static async Task<JobApplicationNoteAdded> Handle(CreateNote command,
         IUserSnapshotRepository userRepository,
         IClock clock,
-        IJobApplicationQueryRepository queryRepository,
+        IJobApplicationInfoQueryRepository queryRepository,
         INoteRepository noteRepository,
         CancellationToken ct)
     {
@@ -25,9 +25,9 @@ public static class CreateNoteHandler
         var (shortNote, error) = ShortNote.TryCreate(command.Text);
         if (error != null) throw new ValidationException(error);
 
-        var @event = new JobApplicationNoteAdded(application.Id, application.CandidateId, clock.UtcNow, shortNote!.Value, user);
+        var @event = new JobApplicationNoteAdded(application.JobApplicationId, application.CandidateId, clock.UtcNow, shortNote!.Value, user);
 
-        var createNote = new CreateNoteDocument(application.Id, application.OrgId, application.CandidateId,
+        var createNote = new CreateNoteDocument(application.JobApplicationId, application.OrganizationId, application.CandidateId,
             shortNote!);
 
         await noteRepository.CreateNoteAsync(createNote, user);
@@ -36,10 +36,10 @@ public static class CreateNoteHandler
 
     }
     
-    private static async Task<JobApplicationProjection> GetApplication(IJobApplicationQueryRepository repository, Guid jobApplicationId, Guid organizationId,
+    private static async Task<JobApplicationInfo> GetApplication(IJobApplicationInfoQueryRepository repository, Guid jobApplicationId, Guid organizationId,
         CancellationToken ct)
     {
-        var application = await repository.GetJobApplication(organizationId,  jobApplicationId, ct);
+        var application = await repository.GetAsync(organizationId,  jobApplicationId, ct);
         return application ?? throw new NotFoundException("Job application", jobApplicationId);
     }
     

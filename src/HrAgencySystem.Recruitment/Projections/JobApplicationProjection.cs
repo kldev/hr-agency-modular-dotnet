@@ -142,6 +142,17 @@ public sealed record JobApplicationProjection(
         };
     }
     
+    public static JobApplicationProjection Apply(
+        JobApplicationProjection projection,
+        JobApplicationReactivated @event)
+    {
+        return ApplyCommon(projection, @event) with
+        {
+            Status = JobApplicationStatus.Screening
+        };
+    }
+
+    
     private static JobApplicationProjection ApplyCommon(
         JobApplicationProjection projection,
         IJobApplicationEvent @event)

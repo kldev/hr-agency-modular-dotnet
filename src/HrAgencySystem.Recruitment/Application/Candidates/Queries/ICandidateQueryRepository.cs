@@ -2,7 +2,7 @@ using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Web;
 
-namespace HrAgencySystem.Recruitment.Application.Port;
+namespace HrAgencySystem.Recruitment.Application.Candidates.Queries;
 
 public interface ICandidateQueryRepository
 {

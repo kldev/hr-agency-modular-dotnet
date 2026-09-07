@@ -21,6 +21,7 @@ internal class TestAuthHandler(
     {
         var claims = BuildDefaultClaims(Options);
 
+        UseUserId(claims);
         UseTestOrganizationId(claims);
         UseTestRoles(claims);
         
@@ -29,6 +30,16 @@ internal class TestAuthHandler(
         var ticket = new AuthenticationTicket(principal, AuthenticationScheme);
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
+    }
+    
+    private void UseUserId(List<Claim> claims)
+    {
+        var testUserId = Request.Headers["X-Test-User-Id"];
+        if (!Guid.TryParse(testUserId, out var userId)) return;
+        claims.RemoveAll(x => x.Type == AppClaims.UserId);
+        claims.Add(new Claim(
+            AppClaims.UserId,
+            userId.ToString()));
     }
 
     private void UseTestOrganizationId(List<Claim> claims)

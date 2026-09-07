@@ -1,3 +1,4 @@
+using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Exception;
