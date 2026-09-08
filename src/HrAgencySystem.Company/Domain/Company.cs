@@ -31,6 +31,8 @@ public sealed class Company
     
     public Industry Industry { get; private set; }
 
+    public WebSite WebSite { get; private set; } = null!;
+
     public static Company Empty()
     {
         return new Company();
@@ -49,6 +51,16 @@ public sealed class Company
         Status = CompanyStatus.Active;
         CreatedAt = @event.CreatedAt;
         CreatedById = @event.CreatedBy.Id;
-        Industry = Industry.Other;
+        Industry = @event.Industry;
+        WebSite = WebSite.Create(@event.Website);
+    }
+
+    public void Apply(CompanyUpdated @event)
+    {
+        Name = CompanyName.Create(@event.Name);
+        CountryCode = CountryCode.Create(@event.CountryCode);
+        RegistrationNumber = RegistrationNumber.Create(@event.RegistrationNumber);
+        Industry = @event.Industry;
+        WebSite = WebSite.Create(@event.Website);
     }
 }

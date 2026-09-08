@@ -28,7 +28,7 @@ public static class CreateCompanyHandler
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
         
-        var (name, countryCode, taxId, registrationNumber) =
+        var (name, registrationNumber, webSite, countryCode, taxId ) =
             CreateValueObjects(command);
         
         await ValidateTaxReservation(taxIdReservationRepository, cancellationToken, organizationId, taxId);
@@ -53,6 +53,8 @@ public static class CreateCompanyHandler
             countryCode.Value,
             taxId.Value,
             registrationNumber.Value,
+            command.Industry,
+            webSite.Value,
             createdBy,
             clock.UtcNow);
 
@@ -82,41 +84,31 @@ public static class CreateCompanyHandler
             throw new BusinessRuleException(TaxIdAlreadyExistsMessage);
     }
 
-    private static CompanyData CreateValueObjects(CreateCompany command)
+    private static CreateCompanyData CreateValueObjects(CreateCompany command)
     {
-        var errors = new List<string>();
-
-        var (name, nameError) = CompanyName.TryCreate(command.Name);
-        if (nameError is not null)
-            errors.Add(nameError);
-
-        var (countryCode, countryError) =
-            CountryCode.TryCreate(command.CountryCode);
-        if (countryError is not null)
-            errors.Add(countryError);
+        var (data, errors) = CompanyDataFactory.CreateCompanyData(command, true);
 
         var (taxId, taxIdError) = TaxId.TryCreate(command.TaxId);
         if (taxIdError is not null)
             errors.Add(taxIdError);
 
-        var (registrationNumber, registrationNumberError) =
-            RegistrationNumber.TryCreate(command.RegistrationNumber);
-        if (registrationNumberError is not null)
-            errors.Add(registrationNumberError);
-
         if (errors.Count > 0)
             throw new ValidationException(errors);
 
-        return new CompanyData(
-            name!,
-            countryCode!,
-            taxId!,
-            registrationNumber!);
+        return new CreateCompanyData(
+            data.Name,
+            data.RegistrationNumber,
+            data.WebSite,
+            data.CountryCode,
+            taxId!
+        );
     }
 
-    private sealed record CompanyData(
+    private record CreateCompanyData(
         CompanyName Name,
+        RegistrationNumber RegistrationNumber,
+        WebSite WebSite,
         CountryCode CountryCode,
-        TaxId TaxId,
-        RegistrationNumber RegistrationNumber);
+        TaxId TaxId
+    );
 }

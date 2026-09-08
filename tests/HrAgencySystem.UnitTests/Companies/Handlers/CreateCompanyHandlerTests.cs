@@ -7,6 +7,7 @@ using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -119,10 +120,11 @@ public class CreateCompanyHandlerTests : BaseTest
 
         Assert.Equal(
             [
-                "Company name is required.",
-                "Country code must be ISO 3166-1 alpha-2.",
-                "Tax ID is required.",
-                "Registration number cannot exceed 100 characters."
+                CompanyName.RequiredMessage,
+                RegistrationNumber.MaxLengthMessage,
+                CountryCode.InvalidFormatMessage,
+                TaxId.RequiredMessage
+                
             ],
             exception.Errors);
 

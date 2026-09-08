@@ -1,6 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Company.Application.Create;
+using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Tenant;
 using Microsoft.AspNetCore.Mvc;
@@ -38,11 +39,13 @@ internal static class MapCreate
         string Name,
         string CountryCode,
         string TaxId,
-        string RegistrationNumber)
+        string RegistrationNumber,
+        string Website,
+        Industry Industry)
     {
         public CreateCompany ToCommand(OrganizationId  organizationId, Guid createdBy)
         {
-            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber, createdBy);
+            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber, createdBy, Industry, Website);
         }
     }
 }

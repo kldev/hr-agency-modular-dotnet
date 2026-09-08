@@ -23,6 +23,8 @@ public class CompanyTests
             "PL",
             "PL123456789",
             "KRS-123456",
+            D.Industry.Agriculture,
+            "acme.com",
             user,
             createdAt);
 

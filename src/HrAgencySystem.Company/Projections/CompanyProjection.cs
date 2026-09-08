@@ -1,7 +1,6 @@
 using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
-using HrAgencySystem.Recruitment.Contracts.IntegrationEvents;
 using HrAgencySystem.SharedKernel.Snapshots;
 
 
@@ -17,14 +16,19 @@ public sealed record CompanyProjection(
     string RegistrationNumber,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     CompanyStatus Status,
-    string Website,
     // ReSharper disable once NotAccessedPositionalProperty.Global
+    string Website,
+    Industry Industry,    
     Guid CreatedId,
     UserSnapshot CreatedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset CreatedAt,
+    Guid? ModifiedById,
+    UserSnapshot?  ModifiedBy,
+    DateTimeOffset? ModifiedAt,
+    
     int JobsPostCount,
-    int ActiveJobsCount,
+    int ActiveJobsPostCount,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     int ApplicantsCount)
 {
@@ -38,18 +42,20 @@ public sealed record CompanyProjection(
             @event.TaxId,
             @event.RegistrationNumber,
             CompanyStatus.Active,
-            "",
+            @event.Website,
+            @event.Industry,
             @event.CreatedBy.Id,
             @event.CreatedBy,
             @event.CreatedAt,
+            null,
+            null,
+            null,
             0,
             0,
             0
         );
     }
-
-    public CompanySuggestion ToSuggestion() => new(Id, Name, TaxId, CountryCode);
-
+    
     public CompanyProjection Apply(CompanyJobPostCreated @event)
     {
         return this with
@@ -62,7 +68,24 @@ public sealed record CompanyProjection(
     {
         return this with
         {
-            ActiveJobsCount = ActiveJobsCount + @event.ChangeBy
+            ActiveJobsPostCount = ActiveJobsPostCount + @event.ChangeBy
         };
     }
+
+    public CompanyProjection Apply(CompanyUpdated @event)
+    {
+        return this with
+        {
+            Name   = @event.Name,
+            Industry = @event.Industry,
+            Website = @event.Website,
+            RegistrationNumber = @event.RegistrationNumber,
+            CountryCode = @event.CountryCode,
+            ModifiedBy = @event.ModifiedBy,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedAt = @event.ModifiedAt
+        };
+    }
+    
+    public CompanySuggestion ToSuggestion() => new (Id, Name, TaxId, CountryCode);
 }

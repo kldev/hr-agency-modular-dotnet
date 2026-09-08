@@ -51,12 +51,50 @@ Authorization: Bearer {{token}}
     "name": "New company{{randomVal}}",
     "countryCode": "pl",
     "taxId": "PL88{{randomVal}}",
-    "registrationNumber": "KRS{{randomVal}}"
+    "registrationNumber": "KRS{{randomVal}}",
+    "industry": "Robotics",
+    "website": "robots-are-fun.com"
 }
 
 ###
 @companyId = {{createRandom.response.body.$.companyId}}
 ###
+
+### Update company
+PUT {{baseURL}}/api/companies/{{companyId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "New company{{randomVal}}",
+    "countryCode": "pl",    
+    "registrationNumber": "KRS{{randomVal}}",
+    "industry": "ECommerce",
+    "website": "https://shop-with-us.com.fake"
+}
+
+### Update company
+PUT {{baseURL}}/api/companies/{{companyId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "New company{{randomVal}}",
+    "countryCode": "pl",    
+    "registrationNumber": "KRS{{randomVal}}",
+    "industry": "Woodworking",
+    "website": "https://woods-with-us.com.fake"
+}
+
+###
+@companyId = {{createRandom.response.body.$.companyId}}
+###
+
+
+### Get company
+GET {{baseURL}}/api/companies/{{companyId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
 
 
 ### Get companies

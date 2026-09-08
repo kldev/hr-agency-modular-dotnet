@@ -147,7 +147,7 @@ public sealed class JobPostTests
     }
 
     [Fact]
-    public void Apply_to_channel_should_not_be_allowed_for_archived_status()
+    public void Apply_to_channel_should_change_status_to_published()
     {
         var posting = JobPost.Empty();
 
@@ -172,14 +172,15 @@ public sealed class JobPostTests
             JobPostStatus.Archived,
             posting.Status);
 
-        Assert.Throws<InvalidOperationException>(() =>
-            ApplyToChannel(
-                posting,
-                createdAt.AddHours(2),
-                Guid.NewGuid(),
-                PostingChannelType.Linkedin));
 
-        Assert.Empty(posting.Posts);
+        ApplyToChannel(
+            posting,
+            createdAt.AddHours(2),
+            Guid.NewGuid(),
+            PostingChannelType.Linkedin);
+
+        Assert.Single(posting.Posts);
+        Assert.Equal(JobPostStatus.Published, posting.Status);
     }
 
     private static void ApplyCreated(

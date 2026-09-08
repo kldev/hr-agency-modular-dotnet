@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.Company.Maps;
+using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 
@@ -24,7 +25,7 @@ public sealed class CompanyTestClient(HttpClient client)
         if (string.IsNullOrWhiteSpace(registrationNumber))
             registrationNumber  = "REG"  + _random.Next(9999);
         
-        var request = new MapCreate.CreateCompanyRequest(name, countryCode, taxId, registrationNumber);
+        var request = new MapCreate.CreateCompanyRequest(name, countryCode, taxId, registrationNumber, "", Industry.Accounting);
         client.WithOrganizationId(organizationId);
         var response = await client.PostAsJsonAsync(
             "/api/companies", 

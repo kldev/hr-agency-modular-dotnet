@@ -1,6 +1,7 @@
 using Bogus;
 using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Documents;
+using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
 using Marten;
 using Wolverine;
@@ -40,15 +41,20 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
             .Select(index =>
             {
                 var country = faker.PickRandom(Countries);
+                var name = GenerateCompanyName(country, index);
                 var userId = userIds[index % userIds.Count];
+                var website = "https://"+name.Replace(" ", "-").Replace(",", "").ToLower() +faker.Internet.DomainName() + ".com";
 
                 return new CreateCompany(
                     organizationId,
-                    GenerateCompanyName(country, index),
+                    name,
                     country.Code,
                     GenerateTaxId(faker, country),
                     GenerateRegistrationNumber(faker, country),
-                    userId);
+                    userId,
+                    GetRandomIndustry(),
+                    website
+                    );
             });
 
         var list = new List<Guid>();
@@ -61,6 +67,11 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
         }
 
         return list;
+    }
+
+    private Industry GetRandomIndustry()
+    {
+        return Enum.GetValues<Industry>()[Random.Shared.Next(0, Enum.GetValues<Industry>().Length)];
     }
 
     private async Task AddCompanyContacts(Faker faker, Guid organizationId, Guid companyId, string companyName)

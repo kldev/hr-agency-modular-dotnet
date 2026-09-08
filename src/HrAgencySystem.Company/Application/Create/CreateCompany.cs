@@ -1,3 +1,4 @@
+using HrAgencySystem.Company.Domain;
 using HrAgencySystem.SharedKernel.Commands;
 
 namespace HrAgencySystem.Company.Application.Create;
@@ -9,5 +10,7 @@ public sealed record CreateCompany(
     string CountryCode,
     string TaxId,
     string RegistrationNumber,
-    Guid CreatedBy
-) : ICreateCommand;
+    Guid CreatedBy,
+    Industry Industry = Industry.Other,
+    string WebSite = ""
+) : ICreateCommand, ICompanyData;

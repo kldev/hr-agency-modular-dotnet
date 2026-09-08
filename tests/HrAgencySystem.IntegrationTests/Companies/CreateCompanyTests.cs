@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Api.Endpoints.Company.Maps;
 using HrAgencySystem.Company.Application.Create;
+using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.IntegrationTests.Infrastructure;
@@ -31,7 +32,7 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     )
     {
         return new MapCreate.CreateCompanyRequest(name, countryCode, taxId,
-            registrationNumber);
+            registrationNumber, "", Industry.Other);
     }
 
 
