@@ -427,8 +427,8 @@ public class CreateCandidateHandlerTests : BaseTest
             email,
             source,
             phone,
-            firstName,
-            lastName,
+            firstName ?? "",
+            lastName ?? "",
             createdBy,
             companyId ?? CompanyId);
     }

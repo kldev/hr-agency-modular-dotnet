@@ -32,7 +32,7 @@ public static class OrganizationModule
 
     private static void ConfigureProjections(StoreOptions options)
     {
-        options.Projections.Add<OrganizationProjection>(ProjectionLifecycle.Async);
+        options.Projections.Snapshot<OrganizationProjection>(SnapshotLifecycle.Inline);
     }
 
     private static void ConfigureTable(StoreOptions options)

@@ -51,7 +51,6 @@ public sealed class SalesOpportunity
     {
         Title = OpportunityTitle.Create(@event.Title);
         Description = LongText.Create(@event.Description);
-        Stage = SalesOpportunityStage.New;
         ExpectedValue = @event.ExpectedValue;
         ExpectedCloseDate = @event.ExpectedCloseDate;
     }

@@ -34,8 +34,8 @@ public static class ApplyToJobApplicationHandler
                 command.Email,
                 command.Source,
                 command.Phone, 
-                command.FirstName, 
-                command.LastName, 
+                command.FirstName ?? "", 
+                command.LastName ?? "", 
                 null, 
                 post.CompanyId);
         var candidate = await resolver.FindOrCreate(candidateCommand, post, ct);

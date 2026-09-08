@@ -14,8 +14,6 @@ public class CandidateGetSliceTests(
     private readonly Guid _organizationId = Guid.NewGuid();
     private readonly Guid _authorId = Guid.NewGuid();
     private readonly string _note = "Has been without work for 6 months.";
-    private readonly string _updatedNote = "Has been without work for 6 months. Lets help him. Nothing new";
-
     
     [Fact]
     public async Task ShouldReturnEmptyCandidateSlice()

@@ -25,7 +25,7 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
     {
         client.WithUserId(createdByUserId ?? Guid.NewGuid());
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
-
+        
 
         var command = new CreateCandidateRequest(
             Email ?? "email@fake.com",
@@ -36,6 +36,7 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
             Note ??""
             );
 
+        output.WriteLine($"Create candidate with email {Email}");
         var response = await client.PostAsJsonAsync(
             BaseUrl,
             command);

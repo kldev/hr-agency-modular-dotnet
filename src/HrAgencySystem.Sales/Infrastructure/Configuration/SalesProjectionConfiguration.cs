@@ -14,6 +14,7 @@ internal static class  SalesProjectionConfiguration
         {
             ConfigureActivityProjection(options);
             ConfigureOpportunityProjection(options);
+            ConfigureSalesPipelineStageSummaryProjection(options);
         }
     }
 
@@ -45,6 +46,17 @@ internal static class  SalesProjectionConfiguration
             .Index(x => new { x.OrgId, x.CreatedAt })
             .Index(x => new { x.OrgId, x.CompanyId })
             .Index(x => new { x.OrgId, x.Stage })
-            .Index(x => new { x.OrgId, x.SalesOwnerId });
+            .Index(x => new { x.OrgId, x.SalesOwnerId })
+            .Index(x => new { x.OrgId, x.Stage, x.CurrencyCode, x.ExpectedValue });
+    }
+    
+    private static void ConfigureSalesPipelineStageSummaryProjection(StoreOptions options)
+    {
+        options.Projections.Add<SalesPipelineProjection>(ProjectionLifecycle.Async);
+
+        options.Schema.For<SalesPipelineStageSummary>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(x => new { x.OrganizationId })
+            .Index(x => new { x.OrganizationId, x.Stage });
     }
 }
