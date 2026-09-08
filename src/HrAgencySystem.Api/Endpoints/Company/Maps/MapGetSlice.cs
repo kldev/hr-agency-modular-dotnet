@@ -9,7 +9,8 @@ internal static class MapGetSlice
     internal static void Map(
         RouteGroupBuilder endpoints)
     {
-        endpoints.MapGet("/api/companies", Handler).WithSummary("Get companies");
+        // GET /api/companies
+        endpoints.MapGet("", Handler).WithSummary("Get companies");
     }
     private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository,
         string? search,

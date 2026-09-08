@@ -2,7 +2,7 @@ using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.SharedKernel.ValueObjects;
 
-public class ShortNote
+public sealed record ShortNote
 {
     public const int MaxLength = 500;
 

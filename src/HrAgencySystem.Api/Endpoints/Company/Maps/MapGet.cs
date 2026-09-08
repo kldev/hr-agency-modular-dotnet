@@ -11,7 +11,8 @@ internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/companies/{companyId:guid}", Handler).WithSummary("Get company");
+        // GET /api/companies/{companyId:guid}
+        group.MapGet("{companyId:guid}", Handler).WithSummary("Get company");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository, Guid companyId,

@@ -1,0 +1,36 @@
+using HrAgencySystem.Company.Documents;
+using HrAgencySystem.Company.Infrastructure.Persistence;
+using Marten;
+
+namespace HrAgencySystem.Company.Infrastructure.Configuration;
+
+internal static class CompanyDocumentsConfiguration
+{
+    private const string SchemaName = "company";
+    
+    extension(StoreOptions options)
+    {
+        public void ConfigureDocuments()
+        {
+            ConfigureReservation(options);
+            ConfigureContacts(options);
+        }
+    }
+    
+    private static void ConfigureReservation(StoreOptions options)
+    {
+        options.Schema.For<CompanyTaxIdReservation>().DatabaseSchemaName(SchemaName)
+            .Index(x => new { x.OrganizationId, x.TaxId },
+                idx => { idx.IsUnique = true; });
+    }
+    
+    private static void ConfigureContacts(StoreOptions options)
+    {
+        options.Schema.For<CompanyContact>().DatabaseSchemaName(SchemaName)
+            .Index(x => new { x.OrganizationId, x.CompanyId })
+            .Index(x => new { x.OrganizationId, x.Email }, idx => { idx.IsUnique = true;})
+            .Index(x => new { x.OrganizationId, x.FirstName })
+            .Index(x => new { x.OrganizationId, x.LastName })
+            .Index(x => new { x.OrganizationId, x.CreatedAt });
+    }
+}

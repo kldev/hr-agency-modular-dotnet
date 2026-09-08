@@ -8,7 +8,8 @@ internal static class MapGetByTaxId
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/companies/find-by-tax/{taxId}", Handler).WithSummary("Get company by tax");
+        // /api/companies/find-by-tax/{taxId}
+        group.MapGet("find-by-tax/{taxId}", Handler).WithSummary("Get company by tax");
     }
     
     private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository, string taxId, CancellationToken ct)
