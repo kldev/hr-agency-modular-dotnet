@@ -6,16 +6,18 @@ public static class MapEndpoints
     {
         Auth.Endpoint.Map(app);
         Company.Endpoint.Map(app);
-        Organization.Endpoint.Map(app);
+        CompanyContacts.Endpoint.Map(app);
         Owner.Endpoint.Map(app);
         User.Endpoint.Map(app);
         JobDescription.Endpoint.Map(app);
-        Suggestion.Endpoint.Map(app);
         JobPosting.Endpoint.Map(app);
         Candidate.Endpoint.Map(app);
         JobApplication.Endpoint.Map(app);
         Public.Endpoint.Map(app);
         Interviews.Endpoint.Map(app);
+        Suggestion.Endpoint.Map(app);
+        Organization.Endpoint.Map(app);
+      
         
         MapPlatformSeeder(app);
     }

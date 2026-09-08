@@ -1,0 +1,71 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+###
+@token = {{login.response.body.$.token}}
+
+###
+
+### Get companies
+# @name getCompanies
+GET {{baseURL}}/api/companies?pageSize=1&page=1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
+###
+
+@companyId = {{getCompanies.response.body.content[0].id}}
+###
+
+
+### Create contact
+# @name createContact
+POST {{baseURL}}/api/company-contacts/{{companyId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "firstName": "Andrzej",
+    "lastName": "Byczkowski",
+    "email": "a-byczkowiski@company.domain.co",
+    "phone": "(123) 123-123-123",
+    "jobTitle": "Regional Manager"
+}
+
+###
+@contactId = {{createContact.response.body.$.id}}
+###
+
+
+### Update contact
+PUT {{baseURL}}/api/company-contacts/{{contactId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "firstName": "Andrew",
+    "lastName": "Byczkowski",
+    "email": "a-byczkowiski@cbetter-jobs.co",
+    "phone": "(123) 123-123-222",
+    "jobTitle": "Changed Title"
+}
+
+
+### Get Contacts
+GET {{baseURL}}/api/company-contacts/{{companyId}}
+Authorization: Bearer {{token}}
+
+### Get Contacts
+GET {{baseURL}}/api/suggestion/company-contacts?search=Byczkowski
+Authorization: Bearer {{token}}
