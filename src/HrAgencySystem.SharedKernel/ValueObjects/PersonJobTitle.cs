@@ -20,7 +20,7 @@ public sealed record PersonJobTitle
 
     public static PersonJobTitle Create(string value, bool isRequired = false)
     {
-        var (jobTitle, error) = TryCreate(value, false);
+        var (jobTitle, error) = TryCreate(value, isRequired);
 
         return error is not null
             ? throw new InValidValueException(error)
