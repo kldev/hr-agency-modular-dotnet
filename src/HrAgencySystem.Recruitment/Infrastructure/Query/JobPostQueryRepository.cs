@@ -19,7 +19,8 @@ public class JobPostQueryRepository(IDocumentSession session) : IJobPostQueryRep
             .WithRecruiterId(query.RecruiterId)
             .WithSearch(query.Search)
             .WithStatuses(query.Statuses)
-            .WithLanguages(query.Languages);
+            .WithLanguages(query.Languages)
+            .OrderByDescending(z=>z.CreatedAt);
 
 
     //    throw new BusinessRuleException(sqlQuery.ToCommand().CommandText);

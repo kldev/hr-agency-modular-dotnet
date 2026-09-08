@@ -17,7 +17,7 @@ public sealed class CompaniesQueryRepository(IQuerySession session)
         var query = session.Query<CompanyProjection>()
             .WithOrganizationId(organizationId)
             .WithSearch(search)
-            .OrderBy(c => c.Name)
+            .OrderByDescending(c => c.CreatedAt)
             .ThenBy(c => c.Id);
 
         return await query.ToSlice(page, pageSize);

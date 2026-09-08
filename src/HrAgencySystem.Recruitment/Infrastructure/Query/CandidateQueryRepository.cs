@@ -17,6 +17,7 @@ public sealed class CandidateQueryRepository(IQuerySession session) : ICandidate
             .WithStatus(query.Status)
             .WithSources(query.Sources)
             .WithSearch(query.Search)
+            .OrderByDescending(z=>z.CreatedAt)
             .ToSlice(query, ct);
     }
 

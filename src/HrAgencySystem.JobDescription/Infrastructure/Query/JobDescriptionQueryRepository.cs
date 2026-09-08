@@ -15,6 +15,7 @@ public class JobDescriptionQueryRepository(IDocumentSession session) : IJobDescr
             .WithRecruiterId(query.RecruiterId)
             .WithSearch(query.Search)
             .WithStatuses(query.Statuses)
+            .OrderByDescending(z=>z.CreatedAt)
             .ToSlice(query, ct);
     }
 

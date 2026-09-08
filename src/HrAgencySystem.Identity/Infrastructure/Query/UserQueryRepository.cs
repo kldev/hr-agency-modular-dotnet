@@ -14,7 +14,8 @@ public class UserQueryRepository(IDocumentSession session) : IUserQueryRepositor
             .WithOrganizationId(organizationId)
             .WithSearch(search)
             .WithRoles(roles)
-            .WithoutSystemRole();
+            .WithoutSystemRole()
+            .OrderByDescending(z=>z.CreatedAt);
 
         return await query.ToSlice(page, pageSize, ct);
     }

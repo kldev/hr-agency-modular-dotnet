@@ -5,6 +5,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.SharedKernel.Web;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Candidates;
@@ -76,7 +77,7 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
         
         return result!;
     }
-
+    
     internal async Task<CandidateProjection?> GetAsync(
         Guid organizationId,
         Guid candidateId)
@@ -92,5 +93,28 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
         response.EnsureSuccessStatusCode();
 
         return await response.ReadWithJson<CandidateProjection>();
+    }
+
+    internal async Task<SliceResponse<CandidateProjection>> GetSliceAsync ( 
+        Guid organizationId,
+        int? page,
+        int? pageSize)
+    {
+        var sliceUrl = $"{BaseUrl}";
+        var query = new List<string>();
+        
+        query.Add($"page={page ?? 1}");
+        query.Add($"pageSize={pageSize ?? 100}");
+        
+        client.WithOrganizationId(organizationId);
+        sliceUrl += $"?{string.Join("&", query)}";
+
+        var response = await client.GetAsync(
+            $"{sliceUrl}");
+
+        
+        response.EnsureSuccessStatusCode();
+
+        return (await response.ReadWithJson<SliceResponse<CandidateProjection>>())!;
     }
 }
