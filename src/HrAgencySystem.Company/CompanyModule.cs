@@ -1,7 +1,4 @@
-using HrAgencySystem.Company.Application.Port;
-using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.Company.Infrastructure.Configuration;
-using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Company.Infrastructure.Query;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Marten;

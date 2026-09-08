@@ -9,4 +9,5 @@ public sealed record CreateCompanyContact(
     string FirstName,
     string LastName,
     string JobTitle,
+    string Phone,
     Guid CreatedBy) : ICreateCommand, IContactData;

@@ -10,4 +10,5 @@ public sealed record UpdateCompanyContact(
     string FirstName,
     string LastName,
     string JobTitle,
+    string Phone,
     Guid ModifiedBy) : IUpdateCommand, IContactData;

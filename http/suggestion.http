@@ -54,3 +54,13 @@ Authorization: Bearer {{token}}
 # Get Tags
 GET {{baseURL}}/api/suggestion/tags?category=DrivingLicense
 Authorization: Bearer {{token}}
+
+###
+# Get Contacts
+GET {{baseURL}}/api/suggestion/company-contacts
+Authorization: Bearer {{token}}
+
+###
+# Get Contacts
+GET {{baseURL}}/api/suggestion/company-contacts?search=joe
+Authorization: Bearer {{token}}

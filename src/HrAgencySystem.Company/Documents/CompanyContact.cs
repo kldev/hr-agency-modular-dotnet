@@ -1,5 +1,3 @@
-using HrAgencySystem.Company.Domain;
-
 namespace HrAgencySystem.Company.Documents;
 
 public sealed record CompanyContact(
@@ -10,4 +8,6 @@ public sealed record CompanyContact(
     string FirstName, 
     string LastName, 
     string JobTitle,
+    string Phone,
+    string CompanyName,
     DateTimeOffset CreatedAt);

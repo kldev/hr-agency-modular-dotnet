@@ -8,5 +8,6 @@ internal static class Endpoint
         Maps.MapCompanies.Map(group);
         Maps.MapUsers.Map(group);
         Maps.MapTags.Map(group);
+        Maps.MapCompanyContacts.Map(group);
     }
 }

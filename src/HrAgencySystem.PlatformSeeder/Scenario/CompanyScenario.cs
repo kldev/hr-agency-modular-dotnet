@@ -1,11 +1,13 @@
 using Bogus;
 using HrAgencySystem.Company.Application.Create;
+using HrAgencySystem.Company.Documents;
 using HrAgencySystem.Company.Events;
+using Marten;
 using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder.Scenario;
 
-internal sealed class CompanyScenario(IMessageBus bus)
+internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
 {
     private static readonly CountryDefinition[] Countries =
     [
@@ -50,15 +52,46 @@ internal sealed class CompanyScenario(IMessageBus bus)
             });
 
         var list = new List<Guid>();
-        
+
         foreach (var company in companies)
         {
-           var result = await bus.InvokeAsync<CompanyCreated>(company);
-           list.Add(result.CompanyId);
+            var result = await bus.InvokeAsync<CompanyCreated>(company);
+            list.Add(result.CompanyId);
+            await AddCompanyContacts(faker, organizationId, result.CompanyId, result.Name);
         }
 
         return list;
     }
+
+    private async Task AddCompanyContacts(Faker faker, Guid organizationId, Guid companyId, string companyName)
+    {
+        var contacts = new List<CompanyContact>();
+        for (var i = 0; i < 5; i++)
+        {
+            var firstName = faker.Name.FirstName();
+            var lastName = faker.Name.LastName() + Random.Shared.Next(9999);
+            var email = faker.Internet.Email(firstName, lastName,  provider: faker.Internet.DomainName() + ".co");
+            var jobTitle = faker.Name.JobTitle();
+            var phone = faker.Phone.PhoneNumber();
+            
+            var contact = new CompanyContact(
+                Guid.NewGuid(), 
+                organizationId, 
+                companyId, 
+                email, 
+                firstName, 
+                lastName, 
+                jobTitle, 
+                phone,  
+                companyName,
+                DateTimeOffset.Now);
+            contacts.Add(contact);
+        }
+        session.Insert([..contacts]);
+        await session.SaveChangesAsync();
+
+    }
+    
 
     private static string GenerateCompanyName(
         CountryDefinition country,

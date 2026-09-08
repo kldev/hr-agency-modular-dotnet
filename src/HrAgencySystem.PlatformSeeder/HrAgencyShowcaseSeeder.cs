@@ -12,7 +12,7 @@ namespace HrAgencySystem.PlatformSeeder;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class HrAgencyShowcaseSeeder(
     IMessageBus bus,
-    IQuerySession session,
+    IDocumentSession session,
     ILogger<HrAgencyShowcaseSeeder> logger) : IPlatformSeeder
 {
     private const int ProjectionDelayMs = 5_000;
@@ -317,7 +317,7 @@ public sealed class HrAgencyShowcaseSeeder(
         OrganizationScenario.OrganizationData organization,
         IReadOnlyList<Guid> userIds)
     {
-        return await new CompanyScenario(bus)
+        return await new CompanyScenario(bus,session)
             .Create(
                 organization.OrganizationId,
                 userIds,

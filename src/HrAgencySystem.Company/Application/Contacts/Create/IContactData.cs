@@ -6,4 +6,5 @@ public interface IContactData
     string FirstName { get; }
     string LastName { get; }
     string JobTitle { get; }
+    string Phone { get; }
 }

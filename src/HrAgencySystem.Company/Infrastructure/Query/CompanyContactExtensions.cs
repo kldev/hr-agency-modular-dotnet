@@ -11,11 +11,20 @@ internal static class CompanyContactExtensions
     {
         return query.Where(z => z.OrganizationId == organizationId.Value);
     }
-    
+
     internal static IQueryable<CompanyContact> WithCompanyId(
         this IQueryable<CompanyContact> query, CompanyId companyId)
     {
         return query.Where(z => z.CompanyId == companyId.Value);
+    }
+
+
+    internal static IQueryable<CompanyContact> WithCompanyId(
+        this IQueryable<CompanyContact> query, Guid? companyId)
+    {
+        return !companyId.HasValue || companyId.Value == Guid.Empty
+            ? query
+            : query.Where(z => z.CompanyId == companyId.Value);
     }
 
     internal static IQueryable<CompanyContact> WithSearch(
@@ -27,6 +36,7 @@ internal static class CompanyContactExtensions
             z.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
             || z.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
             || z.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-            || z.JobTitle.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            || z.JobTitle.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+            || z.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
     }
 }

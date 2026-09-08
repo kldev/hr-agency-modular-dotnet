@@ -31,6 +31,7 @@ internal static class CompanyDocumentsConfiguration
             .Index(x => new { x.OrganizationId, x.Email }, idx => { idx.IsUnique = true;})
             .Index(x => new { x.OrganizationId, x.FirstName })
             .Index(x => new { x.OrganizationId, x.LastName })
-            .Index(x => new { x.OrganizationId, x.CreatedAt });
+            .Index(x => new { x.OrganizationId, x.CreatedAt })
+            .Index(x => new { x.OrganizationId, x.CompanyName });
     }
 }
