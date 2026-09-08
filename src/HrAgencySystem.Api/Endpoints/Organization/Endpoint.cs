@@ -10,7 +10,7 @@ public static class Endpoint
 
         Maps.MapCreate.Map(group);
         Maps.MapUpdateSlug.Map(group);
-        Maps.MapGet.Map(group);
+        Maps.MapGetSlice.Map(group);
         Maps.MapGetBySlug.Map(group);
     }
 }
