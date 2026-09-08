@@ -25,7 +25,7 @@ public sealed class CandidateResolver(
 
         logger.CandidateFoundInDatabase(command.Email);
         await bus.InvokeAsync<CandidateApplicationUpdated>(
-            new UpdateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
+            new UpdateCandidateApplication(existing.CandidateId, info.Id, info.CompanyId, command.Source), ct);
 
         return existing;
     }

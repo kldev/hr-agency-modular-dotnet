@@ -12,5 +12,6 @@ public sealed record CandidateCreated(Guid CandidateId,
     UserSnapshot? CreatedBy,
     Guid? CompanyId,
     string FirstName,
-    string LastName
+    string LastName,
+    string Note = ""
     );

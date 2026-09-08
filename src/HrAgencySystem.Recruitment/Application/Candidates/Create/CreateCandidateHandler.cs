@@ -23,7 +23,7 @@ public static class CreateCandidateHandler
         IClock clock, 
         CancellationToken ct)
     {
-        var (email, phone, firstName, lastName) = CreateValueObjects(command);
+        var (email, phone, firstName, lastName, note) = CreateValueObjects(command);
         
         var organizationId = OrganizationId.From(command.OrganizationId);
 
@@ -47,7 +47,9 @@ public static class CreateCandidateHandler
             createdBy,
             command.CompanyId,
             firstName.Value,
-            lastName.Value);
+            lastName.Value, 
+            note.Value
+            );
 
         session.Events.StartStream<Candidate>(candidateId.Value, @event);
         
@@ -82,18 +84,19 @@ public static class CreateCandidateHandler
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
     }
 
-    private static (Email email, CandidatePhoneNumber phone, FirstName firstName, LastName lastName) CreateValueObjects(
+    private static (Email email, 
+        CandidatePhoneNumber phone, 
+        FirstName 
+        firstName, 
+        LastName lastName,
+        LongText note) CreateValueObjects(
         CreateCandidate command)
     {
+        var (data, errors) = CandidateDataFactory.Create(command, true);
         var (email, error) = Email.TryCreate(command.Email);
-        var (phone, phoneError) = CandidatePhoneNumber.TryCreate(command.Phone);
-        var errors = new List<string>();
         if (error != null) errors.Add(error);
-        if (phoneError != null) errors.Add(phoneError);
-
-        var (firstName, _) = FirstName.TryCreate(command.FirstName ?? "", false);
-        var (lastName, _) = LastName.TryCreate(command.LastName ?? "", false);
         
-        return errors.Count > 0 ? throw new ValidationException(errors) : (email!, phone!, firstName!, lastName!);
+        return errors.Count > 0 ? throw new ValidationException(errors) 
+            : (email!, data.Phone, data.FirstName, data.LastName, data.Note);
     }
 }

@@ -12,7 +12,7 @@ public static class UpdateApplicationHandler
 {
     [AggregateHandler]
     public static async Task<(CandidateApplicationUpdated, Wolverine.Marten.Events)> 
-        Handle(Candidates.UpdateApplication.UpdateApplication command, Domain.Candidates.Candidate aggregate,
+        Handle(UpdateCandidateApplication command, Domain.Candidates.Candidate aggregate,
             ICompanySnapshotRepository snapshotRepository,
             ILogger logger,
             IClock clock,

@@ -13,5 +13,6 @@ internal static class Endpoint
         Maps.MapGetSlice.Map(group);
         Maps.MapTag.Map(group);
         Maps.MapRemoveTag.Map(group);
+        Maps.MapUpdate.Map(group);
     }
 }

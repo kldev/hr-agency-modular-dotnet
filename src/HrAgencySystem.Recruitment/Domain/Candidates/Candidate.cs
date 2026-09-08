@@ -19,6 +19,8 @@ public sealed class Candidate
     
     public FirstName  FirstName { get; private set; } = null!;
     public LastName LastName { get; private set; } = null!;
+
+    public LongText Note { get; private set; } = null!;
     
     public static Candidate Empty()
     {
@@ -35,5 +37,15 @@ public sealed class Candidate
         PhoneNumber = CandidatePhoneNumber.Create(@event.Phone);
         FirstName = FirstName.Create(@event.FirstName, false);
         LastName = LastName.Create(@event.LastName, false);
+        Note = LongText.Create(@event.Note, false);
     }
+
+    public void Apply(CandidateUpdated @event)
+    {
+        PhoneNumber = CandidatePhoneNumber.Create(@event.Phone);
+        FirstName = FirstName.Create(@event.FirstName, false);
+        LastName = LastName.Create(@event.LastName, false);
+        Note = LongText.Create(@event.Note, false);
+    }
+    
 }

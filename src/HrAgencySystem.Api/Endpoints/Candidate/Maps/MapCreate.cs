@@ -18,13 +18,29 @@ internal static class MapCreate
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreateCandidateRequest request, CancellationToken ct)
     {
-        var result = await bus.InvokeAsync<CandidateCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<CandidateCreated>(
+            request.ToCommand(user.OrganizationId, user.UserId), ct);
         return TypedResults.Created($"/api/recruitment/candidates/{result.CandidateId}", result);
     }
 }
 
-internal sealed record CreateCandidateRequest(string Email, string PhoneNumber, string FirstName, string LastName, CandidateSource Source)
+// ReSharper disable once ClassNeverInstantiated.Global
+internal sealed record CreateCandidateRequest(
+    string Email, 
+    string PhoneNumber, 
+    string FirstName, 
+    string LastName, 
+    CandidateSource Source,
+    string Note)
 {
     public CreateCandidate ToCommand(Guid organizationId, Guid createdBy)
-        => new CreateCandidate(organizationId, Email, Source, PhoneNumber, FirstName, LastName, createdBy);
+        => new (organizationId, 
+            Email, 
+            Source, 
+            PhoneNumber, 
+            FirstName, 
+            LastName, 
+            createdBy, 
+            null, 
+            Note);
 }

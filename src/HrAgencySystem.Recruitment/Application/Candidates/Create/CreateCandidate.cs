@@ -8,7 +8,8 @@ public sealed record CreateCandidate(
     string Email,
     CandidateSource Source,
     string Phone,
-    string? FirstName = null,
-    string? LastName = null,
+    string FirstName = "",
+    string LastName = "",
     Guid? CreatedBy = null,
-    Guid? CompanyId = null); // can be created from application form or by user
+    Guid? CompanyId = null,
+    string Note = "") : ICandidateData;
