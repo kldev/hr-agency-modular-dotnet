@@ -6,4 +6,7 @@ public interface ICompanyContactRepository
 {
     Task Create(CompanyContact contact);
     Task Update(CompanyContact contact);
+    
+    Task<CompanyContact?> GetById(Guid contactId, Guid organizationId, CancellationToken ct);
+    
 }

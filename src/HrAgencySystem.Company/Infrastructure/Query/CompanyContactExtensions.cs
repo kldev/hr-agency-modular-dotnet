@@ -11,6 +11,12 @@ internal static class CompanyContactExtensions
     {
         return query.Where(z => z.OrganizationId == organizationId.Value);
     }
+    
+    internal static IQueryable<CompanyContact> WithContactId(
+        this IQueryable<CompanyContact> query, Guid contactId)
+    {
+        return query.Where(z => z.Id == contactId);
+    }
 
     internal static IQueryable<CompanyContact> WithCompanyId(
         this IQueryable<CompanyContact> query, CompanyId companyId)

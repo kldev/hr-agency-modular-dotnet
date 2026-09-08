@@ -10,4 +10,5 @@ public sealed record CompanyContact(
     string JobTitle,
     string Phone,
     string CompanyName,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    DateTimeOffset? ModifiedAt = null);

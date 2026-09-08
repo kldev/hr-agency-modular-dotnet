@@ -70,7 +70,7 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
         {
             var firstName = faker.Name.FirstName();
             var lastName = faker.Name.LastName() + Random.Shared.Next(9999);
-            var email = faker.Internet.Email(firstName, lastName,  provider: faker.Internet.DomainName() + ".co");
+            var email = faker.Internet.Email(firstName, lastName,  provider: faker.Internet.DomainName() + ".co").ToLower();
             var jobTitle = faker.Name.JobTitle();
             var phone = faker.Phone.PhoneNumber();
             
