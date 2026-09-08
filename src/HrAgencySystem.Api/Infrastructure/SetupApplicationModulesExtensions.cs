@@ -7,6 +7,7 @@ using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
 using HrAgencySystem.Recruitment;
+using HrAgencySystem.Sales;
 using HrAgencySystem.SharedKernel.Time;
 
 namespace HrAgencySystem.Api.Infrastructure;
@@ -29,6 +30,7 @@ public static class SetupApplicationModulesExtensions
             services.AddJobDescriptionModule();
             services.AddRecruitmentModule(configuration);
             services.AddFilesModule(configuration);
+            services.AddSalesModule();
         }
 
         private void ConfigureJson()

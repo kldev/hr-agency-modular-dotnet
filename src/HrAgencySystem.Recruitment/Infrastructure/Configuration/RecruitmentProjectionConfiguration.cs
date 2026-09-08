@@ -34,14 +34,14 @@ internal static class RecruitmentProjectionConfiguration
         options.Schema
             .For<JobApplicationProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { OrganizationId = x.OrgId })
-            .Index(x => new { OrganizationId = x.OrgId, x.CompanyId })
-            .Index(x => new { OrganizationId = x.OrgId, x.TagsIds })
-            .Index(x => new { OrganizationId = x.OrgId, x.ApplicantEmail })
-            .Index(x => new { OrganizationId = x.OrgId, x.ApplicantPhone })
-            .Index(x => new { OrganizationId = x.OrgId, x.ApplicantFullName })
-            .Index(x => new { OrganizationId = x.OrgId, x.JobPostTitle })
-            .Index(x => new { OrganizationId = x.OrgId, x.Source });
+            .Index(x => new { x.OrgId })
+            .Index(x => new { x.OrgId, x.CompanyId })
+            .Index(x => new { x.OrgId, x.TagsIds })
+            .Index(x => new { x.OrgId, x.ApplicantEmail })
+            .Index(x => new { x.OrgId, x.ApplicantPhone })
+            .Index(x => new { x.OrgId, x.ApplicantFullName })
+            .Index(x => new { x.OrgId, x.JobPostTitle })
+            .Index(x => new { x.OrgId, x.Source });
     }
 
     private static void ConfigureJobPostProjection(
@@ -56,15 +56,15 @@ internal static class RecruitmentProjectionConfiguration
         options.Schema
             .For<JobPostProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { OrganizationId = x.OrgId })
-            .Index(x => new { OrganizationId = x.OrgId, x.CompanyId })
-            .Index(x => new { OrganizationId = x.OrgId, x.Status })
-            .Index(x => new { OrganizationId = x.OrgId, x.LanguageCode })
-            .Index(x => new { OrganizationId = x.OrgId, x.RecruiterId })
-            .Index(x => new { OrganizationId = x.OrgId, x.Title, x.Id })
-            .Index(x => new { OrganizationId = x.OrgId, x.Company.Name })
-            .Index(x => new { OrganizationId = x.OrgId, x.Company.TaxId })
-            .Index(x => new { OrganizationId = x.OrgId, x.SearchText });
+            .Index(x => new { x.OrgId })
+            .Index(x => new { x.OrgId, x.CompanyId })
+            .Index(x => new { x.OrgId, x.Status })
+            .Index(x => new { x.OrgId, x.LanguageCode })
+            .Index(x => new { x.OrgId, x.RecruiterId })
+            .Index(x => new { x.OrgId, x.Title, x.Id })
+            .Index(x => new { x.OrgId, x.Company.Name })
+            .Index(x => new { x.OrgId, x.Company.TaxId })
+            .Index(x => new { x.OrgId, x.SearchText });
     }
 
     private static void ConfigureCandidateProjection(
@@ -79,10 +79,10 @@ internal static class RecruitmentProjectionConfiguration
         options.Schema
             .For<CandidateProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { OrganizationId = x.OrgId })
-            .Index(x => new { OrganizationId = x.OrgId, x.Email })
-            .Index(x => new { OrganizationId = x.OrgId, x.PhoneNumber })
-            .Index(x => new { OrganizationId = x.OrgId, x.CreatedAt });
+            .Index(x => new { x.OrgId })
+            .Index(x => new { x.OrgId, x.Email })
+            .Index(x => new { x.OrgId, x.PhoneNumber })
+            .Index(x => new { x.OrgId, x.CreatedAt });
     }
 
     private static void ConfigureInterviewProjection(
@@ -96,11 +96,11 @@ internal static class RecruitmentProjectionConfiguration
         options.Schema
             .For<InterviewProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { OrganizationId = x.OrgId })
-            .Index(x => new { OrganizationId = x.OrgId, x.ScheduleAt })
-            .Index(x => new { OrganizationId = x.OrgId, InterviewId = x.Id })
-            .Index(x => new { OrganizationId = x.OrgId, x.ApplicationId })
-            .Index(x => new { OrganizationId = x.OrgId, x.CreatedByUserId })
-            .Index(x => new { OrganizationId = x.OrgId, x.CreatedAt });
+            .Index(x => new { x.OrgId })
+            .Index(x => new { x.OrgId, x.ScheduleAt })
+            .Index(x => new { x.OrgId, InterviewId = x.Id })
+            .Index(x => new { x.OrgId, x.ApplicationId })
+            .Index(x => new { x.OrgId, x.CreatedByUserId })
+            .Index(x => new { x.OrgId, x.CreatedAt });
     }
 }
