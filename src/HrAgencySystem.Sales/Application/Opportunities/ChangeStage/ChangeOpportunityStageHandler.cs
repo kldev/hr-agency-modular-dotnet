@@ -4,25 +4,30 @@ using HrAgencySystem.Sales.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using Microsoft.Extensions.Logging;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Sales.Application.Opportunities.ChangeStage;
 
 public  static class ChangeOpportunityStageHandler
 {
+    public const string SameStageError = "Opportunity is already at this stage";
+
     [AggregateHandler]
-    public static async Task<(StageChanged, Wolverine.Marten.Events)>
-        Handle(ChangeOpportunityStage command, 
-            SalesOpportunity aggregate,
-            ISalesService service,
-            IClock clock,
-            CancellationToken ct)
+    public static async Task<(StageChanged, Wolverine.Marten.Events)> Handle(
+        ChangeOpportunityStage command,
+        SalesOpportunity aggregate,
+        ISalesService service,
+        IClock clock,
+        CancellationToken ct)
     {
+                
+        ArgumentNullException.ThrowIfNull(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
-        
+
         if (aggregate.Stage == command.Stage)
-            throw new BusinessRuleException("Opportunity is already at this stage");
-        
+            throw new BusinessRuleException(SameStageError);
+
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var lostReason = GetLostReason(command);
         var @event = new StageChanged(aggregate.Id.Value,

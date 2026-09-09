@@ -9,6 +9,8 @@ namespace HrAgencySystem.Sales.Application.Opportunities.ChangeResponsible;
 
 public static class ChangeResponsiblePersonHandler
 {
+    public const string AlreadyAssignedError = "The specified person is already responsible for this opportunit"; 
+    
     [AggregateHandler]
     public static async Task<(ResponsiblePersonChanged, Wolverine.Marten.Events)> Handle(
         ChangeResponsiblePerson command,
@@ -18,10 +20,11 @@ public static class ChangeResponsiblePersonHandler
         CancellationToken ct
     )
     {
+        ArgumentNullException.ThrowIfNull(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
         
         if (aggregate.ResponsiblePerson.Id == command.ResponsibleId)
-            throw new BusinessRuleException("The specified person is already responsible for this opportunity");
+            throw new BusinessRuleException(AlreadyAssignedError);
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var responsible = await service.GetUserAsync(command.ResponsibleId, ct);

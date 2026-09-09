@@ -39,7 +39,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
         OrganizationId = OrganizationId.From(@event.OrganizationId);
         Company = @event.Company;
         Title = OpportunityTitle.Create(@event.Title);
-        Description = LongText.Create(@event.Description);
+        Description = LongText.Create(@event.Description, false);
         Stage = OpportunityStage.New;
         ExpectedValue = @event.ExpectedValue;
         CurrencyCode = @event.Currency;
@@ -52,7 +52,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
     public void Apply(OpportunityUpdated @event)
     {
         Title = OpportunityTitle.Create(@event.Title);
-        Description = LongText.Create(@event.Description);
+        Description = LongText.Create(@event.Description, false);
         ExpectedValue = @event.ExpectedValue;
         ExpectedCloseDate = @event.ExpectedCloseDate;
         CurrencyCode = @event.Currency;

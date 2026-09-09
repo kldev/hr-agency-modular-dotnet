@@ -45,7 +45,7 @@ public static class CreateOpportunityHandler
             user
             );
 
-        session.Events.StartStream<SalesOpportunity>(organizationId.Value, @event);
+        session.Events.StartStream<SalesOpportunity>(opportunityId.Value, @event);
 
         return @event;
     }

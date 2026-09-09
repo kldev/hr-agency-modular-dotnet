@@ -30,6 +30,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
             new SalesActivityTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
 
         OpportunityTestClient = new OpportunityTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
+     //   _environment.SetOutputHelper(output);
 
     }
 
@@ -58,5 +59,10 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         return Task.CompletedTask;
     }
 
+    public void SetOutputHelper(ITestOutputHelper output)
+    {
+        _environment.SetOutputHelper(output);
+    }
+    
     protected virtual Task BeforeEachAsync() => Task.CompletedTask;
 }

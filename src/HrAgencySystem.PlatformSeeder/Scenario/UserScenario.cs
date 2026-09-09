@@ -41,7 +41,24 @@ internal class UserScenario(IMessageBus bus)
                 "Katy",
                 "Wells",
                 OrganizationRole.Recruiter,
-                userPassword, Guid.Empty)
+                userPassword, Guid.Empty),
+            
+            new(
+            data.OrganizationId,
+            $"bob.sale{domain}",
+            "Bob",
+            "Wells",
+            OrganizationRole.Sales,
+            userPassword, Guid.Empty),
+            
+            new(
+            data.OrganizationId,
+            $"adrian.sal{domain}",
+            "Adrian",
+            "Jimbo",
+            OrganizationRole.Sales,
+            userPassword, Guid.Empty)
+            
         };
 
         var faker = new Faker();

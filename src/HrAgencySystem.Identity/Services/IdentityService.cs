@@ -8,6 +8,7 @@ public sealed class IdentityService( IUserSnapshotRepository userSnapshotReposit
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {
+        if (userId == Guid.Empty) return new UserSnapshot(Guid.NewGuid(), "", "", "system");
         var user = await userSnapshotRepository.GetUserAsync(userId, ct);
         return user ?? throw new NotFoundException("User", userId);
     }

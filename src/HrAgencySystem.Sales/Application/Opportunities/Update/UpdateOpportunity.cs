@@ -1,11 +1,12 @@
 using HrAgencySystem.Sales.Application.Opportunities.Create;
 using HrAgencySystem.SharedKernel.Commands;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using JasperFx;
 
 namespace HrAgencySystem.Sales.Application.Opportunities.Update;
 
 public sealed record UpdateOpportunity(   
-    Guid SalesOpportunityId,
+    [property: Identity] Guid OpportunityId,
     Guid OrganizationId,
     string Title,
     string Description,

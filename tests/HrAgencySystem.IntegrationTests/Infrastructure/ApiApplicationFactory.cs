@@ -19,6 +19,8 @@ namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
 public class ApiApplicationFactory(string connectionString) : WebApplicationFactory<IApiMarker>
 {
+    public TestLoggerProvider LoggerProvider { get; } = new();
+    
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("ConnectionStrings__Postgres", connectionString);
@@ -58,6 +60,14 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
             });
             builder.UseEnvironment("Testing");
         });
+        // builder.ConfigureLogging(logging =>
+        // {
+        //     logging.ClearProviders();
+        //
+        //     logging.AddProvider(LoggerProvider);
+        //
+        //     logging.SetMinimumLevel(LogLevel.Debug);
+        // });
         
         
     }

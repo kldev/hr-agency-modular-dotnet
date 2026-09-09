@@ -5,6 +5,7 @@ using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Infrastructure.Query;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.Identity.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using JasperFx.Events.Projections;
 using Marten;
@@ -27,6 +28,7 @@ public static class IdentityModule
         services.AddOptions<JwtConfig>(JwtConfig.Section);
         services.AddScoped<IUserSuggestionRepository, UserSuggestionRepository>();
         services.AddScoped<IUserQueryRepository, UserQueryRepository>();
+        services.AddScoped<IIdentityService, IdentityService>();
     }
     
     public static void ConfigureMarten(

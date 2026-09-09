@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Api.Endpoints.SalesOpportunity.Maps;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Xunit.Abstractions;
@@ -80,7 +81,7 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         response.EnsureSuccessStatusCode();
 
         var result = (await response.ReadWithJson<OpportunityCreated>())!;
-        output.WriteLine($"Opportunity created: {result.OpportunityId}");
+        output.WriteLine($"Opportunity created: {result.OpportunityId} Org: {result.OrganizationId}");
 
         return result;
     }
@@ -118,7 +119,7 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         return result;
     }
     
-    internal async Task<OpportunityUpdated> ChangeResponsible(
+    internal async Task<ResponsiblePersonChanged> ChangeResponsible(
         Guid? organizationId = null,
         Guid? opportunityId = null,
         Guid? responsible = null,
@@ -131,11 +132,33 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         var request = new ChangeResponsiblePersonRequest(
             responsible ?? Guid.NewGuid());
 
-        var response = await client.PostAsJsonAsync(BaseUrl +$"/{opportunityId}/responsible", request);
+        var response = await client.PutAsJsonAsync(BaseUrl +$"/{opportunityId}/responsible", request);
 
         response.EnsureSuccessStatusCode();
 
-        var result = (await response.ReadWithJson<OpportunityUpdated>())!;
+        var result = (await response.ReadWithJson<ResponsiblePersonChanged>())!;
+        
+        return result;
+    }
+    
+    internal async Task<StageChanged> ChangeStage(
+        Guid? organizationId = null,
+        Guid? opportunityId = null,
+        OpportunityStage? stage = null,
+        Guid? modifiedBy = null
+    )
+    {
+        client.WithOrganizationId(organizationId ?? Guid.NewGuid());
+        client.WithUserId(modifiedBy ?? Guid.NewGuid());
+
+        var request = new ChangeOpportunityStageRequest(
+            stage ?? OpportunityStage.Qualified, LostReason: "");
+
+        var response = await client.PutAsJsonAsync(BaseUrl +$"/{opportunityId}/stage", request);
+
+        response.EnsureSuccessStatusCode();
+
+        var result = (await response.ReadWithJson<StageChanged>())!;
         
         return result;
     }

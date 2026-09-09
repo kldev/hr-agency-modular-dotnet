@@ -17,18 +17,123 @@ Content-Type: application/json
 ###
 
 
+### Get companies
+# @name getCompanies
+GET {{baseURL}}/api/companies?pageSize=1&page=1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+
 ###
-@oportunityId = 8f43cf9a-63d8-44b3-8890-8a2fdbc2531e
+
+@companyId = {{getCompanies.response.body.content[0].id}}
 ###
+
+###
+# @name createOpportunity
+POST {{baseURL}}/api/sales/opportunity
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "companyId": "{{companyId}}",
+    "title": "Senior Dotnet Developre",
+    "expectedValue": 200,
+    "currency": "PLN"
+}
+
+###
+@oportunityId = {{createOpportunity.response.body.opportunityId}}
+###
+
+###
+PUT {{baseURL}}/api/sales/opportunity/{{oportunityId}}/stage
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "stage": "Lost",
+    "lostReason": "Client went somewere else"
+    
+}
+
+###
+# @name changeStage
+PUT {{baseURL}}/api/sales/opportunity/{{oportunityId}}/stage
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "stage": "Viewed"
+    
+}
+
+###
+PUT {{baseURL}}/api/sales/opportunity/{{oportunityId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    
+    "title": "Senior .NET Developer With React",
+    "expectedValue": 200,
+    "currency": "EUR"
+    
+}
+
+
+### Get user list
+# @name getKate
+GET {{baseURL}}/api/users?pageSize=100&search=kate
+Authorization: Bearer {{token}}
+
+###
+@personId1 = {{getKate.response.body.$.content[0].id}}
+###
+
+### Get user list
+# @name getJohn
+GET {{baseURL}}/api/users?pageSize=100&search=John
+Authorization: Bearer {{token}}
+
+###
+@personId2 = {{getJohn.response.body.$.content[0].id}}
+###
+
+###
+# @name changeResponsible
+PUT {{baseURL}}/api/sales/opportunity/{{oportunityId}}/responsible
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "responsibleId": "{{personId1}}"
+    
+}
+
+###
+# @name changeResponsible
+PUT {{baseURL}}/api/sales/opportunity/{{oportunityId}}/responsible
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "responsibleId": "{{personId2}}"
+    
+}
+
+
+
 
 ###
 # @name createActivity
 POST {{baseURL}}/api/sales/activity
 Authorization: Bearer {{token}}
+Content-Type: application/json
 
 {
     "OpportunityId": "{{oportunityId}}",
-    "Type": "Call"
+    "Type": "Call",
     "Note": ""
 }
 
@@ -36,10 +141,11 @@ Authorization: Bearer {{token}}
 # @name createActivity
 POST {{baseURL}}/api/sales/activity
 Authorization: Bearer {{token}}
+Content-Type: application/json
 
 {
     "OpportunityId": "{{oportunityId}}",
-    "Type": "Email"
+    "Type": "Email",
     "Note": ""
 }
 
@@ -47,9 +153,11 @@ Authorization: Bearer {{token}}
 # @name createActivity
 POST {{baseURL}}/api/sales/activity
 Authorization: Bearer {{token}}
+Content-Type: application/json
 
 {
     "OpportunityId": "{{oportunityId}}",
-    "Type": "Meeting"
+    "Type": "Meeting",
     "Note": ""
 }
+

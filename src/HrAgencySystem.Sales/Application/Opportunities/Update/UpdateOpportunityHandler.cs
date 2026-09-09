@@ -17,6 +17,9 @@ public static class UpdateOpportunityHandler
         IClock clock,
         CancellationToken ct)
     {
+        
+        ArgumentNullException.ThrowIfNull(aggregate);
+        
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var (title, description) = OpportunityDataFactory.Create(command);

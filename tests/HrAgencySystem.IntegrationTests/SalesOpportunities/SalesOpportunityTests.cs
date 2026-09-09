@@ -1,7 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.Sales.Application.Opportunities.ChangeResponsible;
+using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Domain.Opportunity.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -22,6 +25,7 @@ public sealed class SalesOpportunityTests(
     
     protected override async Task BeforeEachAsync()
     {
+        
         await Cleaner.CleanSales();
     }
     
@@ -100,6 +104,7 @@ public sealed class SalesOpportunityTests(
         var updatedDate = date.AddHours(Random.Shared.Next(120));
         var modifiedBy = Guid.NewGuid();
         
+        Assert.Equal(_organizationId, result.OrganizationId);
         Assert.False(result.IsHotLead);
         
         var updatedResult = await OpportunityTestClient.Update(
@@ -195,5 +200,69 @@ public sealed class SalesOpportunityTests(
         
         Assert.Equal(OrganizationAccessDeniedException.ProblemTitle, problem.Title);
         Assert.Equal(OrganizationAccessDeniedException.ProblemMessage, problem.Detail);
+    }
+    
+      
+    [Fact]
+    public async Task ShouldChangeResponsiblePerson()
+    {
+        var result = await OpportunityTestClient.Create(
+            organizationId: _organizationId);
+        
+        Assert.Equal(result.OrganizationId, _organizationId);
+        OutputHelper.WriteLine($"Opportunity created person for {result.OpportunityId} {result.OrganizationId}");
+        
+        var newResponsiblePersonId = Guid.NewGuid();
+        var updateResult = await OpportunityTestClient.ChangeResponsible(
+            organizationId: _organizationId,
+            opportunityId: result.OpportunityId,
+            responsible: newResponsiblePersonId);
+        
+        Assert.Equal(newResponsiblePersonId, updateResult.Responsible.Id);
+        Assert.NotEqual(result.Responsible.Id, updateResult.Responsible.Id);
+    }
+    
+      
+    [Fact]
+    public async Task ShouldReturnBusinessRuleErrorWhenAssignSameResponsiblePerson()
+    {
+        var responsiblePersonId = Guid.NewGuid();
+        
+        var result = await OpportunityTestClient.Create(
+            organizationId: _organizationId,
+            responsibleId: responsiblePersonId);
+
+
+        Client.WithOrganizationId(_organizationId);
+        var changeRequest = new ChangeResponsiblePersonRequest(responsiblePersonId);
+        var response =
+            await Client.PutAsJsonAsync(OpportunityTestClient.BaseUrl + $"/{result.OpportunityId}/responsible",
+                changeRequest);
+    
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        var problem = await response.ReadWithJson<ProblemDetails>();
+
+        Assert.NotNull(problem);
+        Assert.Equal(ChangeResponsiblePersonHandler.AlreadyAssignedError, problem.Detail);
+    }
+    
+    [Fact]
+    public async Task ShouldChangeStage()
+    {
+        var result = await OpportunityTestClient.Create(
+            organizationId: _organizationId);
+        
+        Assert.Equal(result.OrganizationId, _organizationId);
+        OutputHelper.WriteLine($"Opportunity created person for {result.OpportunityId} {result.OrganizationId} {result.Stage}");
+
+        var newStage = OpportunityStage.Viewed;
+    
+        var updateResult = await OpportunityTestClient.ChangeStage(
+            organizationId: _organizationId,
+            opportunityId: result.OpportunityId,
+            stage: newStage);
+        
+        Assert.Equal(newStage, updateResult.Stage);
+        
     }
 }

@@ -35,4 +35,4 @@ internal static class MapChangeStage
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal record ChangeOpportunityStageRequest(OpportunityStage Stage, string? LostReason);
+internal record ChangeOpportunityStageRequest(OpportunityStage Stage, string? LostReason = null);

@@ -1,9 +1,10 @@
 using Testcontainers.PostgreSql;
+using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class IntegrationEnvironment : IAsyncLifetime
+public sealed class IntegrationEnvironment() : IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:17-alpine")
         .WithDatabase("hr_agency_test")
@@ -40,6 +41,11 @@ public sealed class IntegrationEnvironment : IAsyncLifetime
         await Factory.DisposeAsync();
 
         await _postgres.DisposeAsync();
+    }
+
+    public void SetOutputHelper(ITestOutputHelper output)
+    {
+        Factory.LoggerProvider.SetOutput(output);
     }
 }
 
