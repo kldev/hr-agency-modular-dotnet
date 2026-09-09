@@ -60,7 +60,7 @@ internal static class  SalesProjectionConfiguration
 
         options.Schema.For<SalesPipelineStageSummary>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { OrganizationId = x.OrgId })
-            .Index(x => new { OrganizationId = x.OrgId, x.Stage });
+            .Index(x => new { x.OrgId })
+            .Index(x => new { x.OrgId, x.Stage });
     }
 }

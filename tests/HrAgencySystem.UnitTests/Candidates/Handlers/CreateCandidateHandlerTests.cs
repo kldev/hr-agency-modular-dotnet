@@ -2,6 +2,7 @@ using HrAgencySystem.Recruitment.Application.Candidates.Create;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -10,6 +11,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace HrAgencySystem.UnitTests.Candidates.Handlers;
 
@@ -18,14 +20,15 @@ public class CreateCandidateHandlerTests : BaseTest
     private readonly IDocumentSession _documentSession =
         Substitute.For<IDocumentSession>();
 
-    private readonly IOrganizationChecker _organizationChecker =
+    private readonly IOrganizationChecker _checker =
         Substitute.For<IOrganizationChecker>();
+
+    private readonly IRecruitmentService _service =
+        Substitute.For<IRecruitmentService>();
+    
 
     private readonly ICandidateEmailReservationRepository _emailReservationRepository =
         Substitute.For<ICandidateEmailReservationRepository>();
-
-    private readonly IUserSnapshotRepository _userSnapshotRepository =
-        Substitute.For<IUserSnapshotRepository>();
 
     private static readonly Guid OrganizationId = Guid.NewGuid();
     private static readonly Guid CreatedById = Guid.NewGuid();
@@ -36,7 +39,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
     private void SetupCheckOrganization()
     {
-        _organizationChecker
+        _checker
             .Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(true);
     }
@@ -60,9 +63,9 @@ public class CreateCandidateHandlerTests : BaseTest
         Assert.Equal("John", result.FirstName);
         Assert.Equal("Doe", result.LastName);
 
-        await _organizationChecker
+        await _service
             .Received(1)
-            .Exists(
+            .ValidateOrganization(
                 OrganizationId,
                 Arg.Any<CancellationToken>());
 
@@ -118,7 +121,7 @@ public class CreateCandidateHandlerTests : BaseTest
             "Wells",
             "alice@hr-agency.com");
 
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 CreatedById,
                 Arg.Any<CancellationToken>())
@@ -128,7 +131,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
         Assert.Equal(CreatedById, result.CreatedBy?.Id);
 
-        await _userSnapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 CreatedById,
@@ -149,20 +152,14 @@ public class CreateCandidateHandlerTests : BaseTest
     {
         var command = CreateValidCommand(
             createdBy: CreatedById);
-
-        _userSnapshotRepository
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>())
-            .Returns((UserSnapshot?)null);
-
+        
         SetupCheckOrganization();
         
         var result = await Handle(command);
 
         Assert.Null(result.CreatedBy);
 
-        await _userSnapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 CreatedById,
@@ -206,22 +203,22 @@ public class CreateCandidateHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithNonExistingOrganization_ThrowsBusinessRuleException()
     {
-        _organizationChecker
-            .Exists(
+        _service
+            .ValidateOrganization(
                 OrganizationId,
                 Arg.Any<CancellationToken>())
-            .Returns(false);
+            .Throws( new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
 
         var exception = await Assert.ThrowsAsync<BusinessRuleException>(
-            () => Handle(CreateValidCommand()));
+            () => Handle(CreateValidCommand(OrganizationId)));
 
         Assert.Equal(
             IOrganizationChecker.OrganizationCheckMessage,
             exception.Message);
 
-        await _organizationChecker
+        await _service
             .Received(1)
-            .Exists(
+            .ValidateOrganization(
                 OrganizationId,
                 Arg.Any<CancellationToken>());
 
@@ -251,9 +248,9 @@ public class CreateCandidateHandlerTests : BaseTest
             ICandidateEmailReservationRepository.EmailAlreadyExistsMessage,
             exception.Message);
 
-        await _organizationChecker
+        await _service
             .Received(1)
-            .Exists(
+            .ValidateOrganization(
                 OrganizationId,
                 Arg.Any<CancellationToken>());
 
@@ -363,7 +360,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
         SetupCheckOrganization();
         
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 CreatedById,
                 Arg.Any<CancellationToken>())
@@ -373,8 +370,8 @@ public class CreateCandidateHandlerTests : BaseTest
 
         Received.InOrder(async () =>
         {
-            await _organizationChecker
-                .Exists(
+            await _service
+                .ValidateOrganization(
                     OrganizationId,
                     Arg.Any<CancellationToken>());
 
@@ -391,7 +388,7 @@ public class CreateCandidateHandlerTests : BaseTest
                     new CandidateId(result.CandidateId)
                     );
 
-            await _userSnapshotRepository
+            await _service
                 .GetUserAsync(
                     CreatedById,
                     Arg.Any<CancellationToken>());
@@ -404,9 +401,8 @@ public class CreateCandidateHandlerTests : BaseTest
     {
         return await CreateCandidateHandler.Handle(
             command,
-            _organizationChecker,
+            _service,
             _emailReservationRepository,
-            _userSnapshotRepository,
             _documentSession,
             clock ?? new FixedClock(Now),
             CancellationToken.None);
@@ -435,7 +431,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
     private void AssertNoOrganizationCheck()
     {
-        _organizationChecker
+        _checker
             .DidNotReceive()
             .Exists(
                 Arg.Any<Guid>(),
@@ -465,7 +461,7 @@ public class CreateCandidateHandlerTests : BaseTest
 
     private void AssertNoCreatedByLookup()
     {
-        _userSnapshotRepository
+        _service
             .DidNotReceive()
             .GetUserAsync(
                 Arg.Any<Guid>(),

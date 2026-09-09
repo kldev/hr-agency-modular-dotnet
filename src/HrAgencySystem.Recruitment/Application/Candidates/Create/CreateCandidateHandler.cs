@@ -2,8 +2,9 @@ using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
 using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
@@ -16,9 +17,8 @@ public static class CreateCandidateHandler
 {
     public static async Task<CandidateCreated> Handle(
         CreateCandidate command, 
-        IOrganizationChecker checker, 
+        IRecruitmentService service, 
         ICandidateEmailReservationRepository repository, 
-        IUserSnapshotRepository snapshotRepository,
         IDocumentSession session,
         IClock clock, 
         CancellationToken ct)
@@ -27,7 +27,7 @@ public static class CreateCandidateHandler
         
         var organizationId = OrganizationId.From(command.OrganizationId);
 
-        await ValidateOrganization(command, checker, ct);
+        await  service.ValidateOrganization(command.OrganizationId, ct);
 
         var candidateId = CandidateId.New();
 
@@ -35,7 +35,7 @@ public static class CreateCandidateHandler
 
         await repository.ReserveAsync(organizationId, email!, candidateId);
 
-        var createdBy = await GetCreatedBy(command, snapshotRepository, ct);
+        UserSnapshot? createdBy = await GetUser(service, command, ct);
 
         var @event = new CandidateCreated(
             candidateId.Value, 
@@ -56,18 +56,14 @@ public static class CreateCandidateHandler
         return @event;
     }
 
-    private static async Task<UserSnapshot?> GetCreatedBy(CreateCandidate command, IUserSnapshotRepository snapshotRepository,
-        CancellationToken ct)
+    private static async Task<UserSnapshot?> GetUser(IRecruitmentService service, CreateCandidate command, CancellationToken ct)
     {
-        UserSnapshot? createdBy = null;
-        if (command.CreatedBy != null && command.CreatedBy != Guid.Empty)
-        {
-            createdBy = await snapshotRepository.GetUserAsync(command.CreatedBy.Value, ct);
-        }
+        if (!command.CreatedBy.IsValid()) return null;
 
-        return createdBy;
+        var result = await service.GetUserAsync(command.CreatedBy!.Value, ct);
+        return (UserSnapshot?)result;
     }
-
+    
     private static async Task ValidateEmailReservation(ICandidateEmailReservationRepository repository,
         OrganizationId organizationId, Email email, CancellationToken ct)
     {
@@ -75,15 +71,7 @@ public static class CreateCandidateHandler
         if (reserved)
             throw new BusinessRuleException(ICandidateEmailReservationRepository.EmailAlreadyExistsMessage);
     }
-
-    private static async Task ValidateOrganization(CreateCandidate command, IOrganizationChecker checker,
-        CancellationToken ct)
-    {
-        var checkOrganization = await checker.Exists(command.OrganizationId, ct);
-        if (!checkOrganization)
-            throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
-    }
-
+    
     private static (Email email, 
         CandidatePhoneNumber phone, 
         FirstName 

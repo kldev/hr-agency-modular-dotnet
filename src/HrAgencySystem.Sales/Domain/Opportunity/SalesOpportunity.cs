@@ -33,17 +33,16 @@ public sealed class SalesOpportunity
 
     public void Apply(SalesOpportunityCreated @event)
     {
-        Id = SalesOpportunityId.From(@event.SalesOpportunityId);
+        Id = SalesOpportunityId.From(@event.OpportunityId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
         Company = @event.Company;
         Title = OpportunityTitle.Create(@event.Title);
         Description = LongText.Create(@event.Description);
         Stage = SalesOpportunityStage.New;
         ExpectedValue = @event.ExpectedValue;
-        CurrencyCode = @event.CurrencyCode;
+        CurrencyCode = @event.Currency;
         ExpectedCloseDate = @event.ExpectedCloseDate;
-        LostReason = ShortNote.Create(@event.LostReason, false);
-        SalesOwner = @event.SalesOwner;
+        SalesOwner = @event.Owner;
         CreatedAt = @event.CreatedAt;
     }
 

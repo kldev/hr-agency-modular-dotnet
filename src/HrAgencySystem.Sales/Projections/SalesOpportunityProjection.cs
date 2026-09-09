@@ -41,7 +41,7 @@ public sealed record SalesOpportunityProjection(
         SalesOpportunityCreated @event)
     {
         return new SalesOpportunityProjection(
-            @event.SalesOpportunityId,
+            @event.OpportunityId,
             @event.OrganizationId,
             @event.Company.Id,
             @event.Company,
@@ -49,11 +49,11 @@ public sealed record SalesOpportunityProjection(
             @event.Description,
             @event.Stage,
             @event.ExpectedValue,
-            @event.CurrencyCode,
+            @event.Currency,
             @event.ExpectedCloseDate,
             "",
-            @event.SalesOwner.Id,
-            @event.SalesOwner,
+            @event.Owner.Id,
+            @event.Owner,
             @event.CreatedAt,
             @event.CreatedBy,
             null,

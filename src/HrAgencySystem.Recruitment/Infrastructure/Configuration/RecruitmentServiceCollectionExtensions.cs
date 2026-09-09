@@ -14,6 +14,7 @@ using HrAgencySystem.Recruitment.Feeds.Port;
 using HrAgencySystem.Recruitment.Feeds.Worker;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Query;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Port;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,6 +56,7 @@ public static class RecruitmentServiceCollectionExtensions
             services.AddScoped<INoteQueryRepository, NoteQueryRepository>();
             services.AddScoped<IInterviewsQueryRepository, InterviewsQueryRepository>();
             services.AddScoped<IJobApplicationInfoQueryRepository, JobApplicationInfoQueryRepository>();
+            services.AddScoped<IRecruitmentService, RecruitmentService>();
 
             services.AddHostedService<JobFeedSchedulerWorker>();
             services.AddHostedService<JobFeedGenerationWorker>();

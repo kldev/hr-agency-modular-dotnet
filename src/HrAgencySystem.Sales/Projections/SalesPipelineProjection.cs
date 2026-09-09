@@ -21,7 +21,7 @@ public sealed class SalesPipelineProjection
             @event => CreateId(
                 @event.OrganizationId,
                 @event.Stage,
-                @event.CurrencyCode));
+                @event.Currency));
 
         /*
          * Updated:
@@ -76,11 +76,11 @@ public sealed class SalesPipelineProjection
             Id = CreateId(
                 @event.OrganizationId,
                 @event.Stage,
-                @event.CurrencyCode),
+                @event.Currency),
 
             OrgId = @event.OrganizationId,
             Stage = @event.Stage,
-            CurrencyCode = @event.CurrencyCode,
+            CurrencyCode = @event.Currency,
 
             OpportunityCount = 1,
             TotalExpectedValue = @event.ExpectedValue

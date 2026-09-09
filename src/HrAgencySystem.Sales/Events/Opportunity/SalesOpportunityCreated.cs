@@ -5,17 +5,16 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 namespace HrAgencySystem.Sales.Events.Opportunity;
 
 public sealed record SalesOpportunityCreated(
-    Guid SalesOpportunityId,
+    Guid OpportunityId,
     Guid OrganizationId,
     CompanySnapshot Company,
     string Title,
     string Description,
     SalesOpportunityStage Stage,
     decimal ExpectedValue,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode  Currency,
     DateTimeOffset? ExpectedCloseDate, 
-    string LostReason,
-    UserSnapshot SalesOwner,
+    UserSnapshot Owner,
     DateTimeOffset CreatedAt,
     UserSnapshot CreatedBy
     );
