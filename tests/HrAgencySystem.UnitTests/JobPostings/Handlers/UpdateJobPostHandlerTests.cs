@@ -1,18 +1,20 @@
 using HrAgencySystem.Recruitment.Application.JobPosting.Update;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
 public class UpdateJobPostHandlerTests : BaseTest
 {
-    private readonly IUserSnapshotRepository _snapshotRepository =
-        Substitute.For<IUserSnapshotRepository>();
+    private readonly IRecruitmentService _service =
+        Substitute.For<IRecruitmentService>();
 
     private static UserSnapshot ModifiedBy { get; } =
         new(
@@ -61,7 +63,7 @@ public class UpdateJobPostHandlerTests : BaseTest
 
         var clock = new FixedClock(now);
 
-        _snapshotRepository
+        _service
             .GetUserAsync(
                 command.ModifiedBy,
                 Arg.Any<CancellationToken>())
@@ -70,7 +72,7 @@ public class UpdateJobPostHandlerTests : BaseTest
         var result = (await UpdateJobPostHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             clock,
             CancellationToken.None)).Item1;
 
@@ -147,7 +149,7 @@ public class UpdateJobPostHandlerTests : BaseTest
             now,
             result.OccurredAt);
 
-        await _snapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 command.ModifiedBy,
@@ -191,7 +193,7 @@ public class UpdateJobPostHandlerTests : BaseTest
             UpdateJobPostHandler.Handle(
                 command,
                 aggregate,
-                _snapshotRepository,
+                _service,
                 TestClock,
                 CancellationToken.None));
 
@@ -213,7 +215,7 @@ public class UpdateJobPostHandlerTests : BaseTest
             ],
             exception.Errors);
 
-        await _snapshotRepository
+        await _service
             .DidNotReceive()
             .GetUserAsync(
                 Arg.Any<Guid>(),
@@ -230,25 +232,25 @@ public class UpdateJobPostHandlerTests : BaseTest
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
-        _snapshotRepository
+        _service
             .GetUserAsync(
                 modifiedBy,
                 Arg.Any<CancellationToken>())
-            .Returns((UserSnapshot?)null);
+            .ThrowsAsync(new NotFoundException("User", modifiedBy));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
             UpdateJobPostHandler.Handle(
                 command,
                 aggregate,
-                _snapshotRepository,
+                _service,
                 TestClock,
                 CancellationToken.None));
 
-        Assert.Equal(
-            IUserSnapshotRepository.NotFoundMessage,
+        Assert.Contains(
+            "User not found",
             exception.Message);
 
-        await _snapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 modifiedBy,
@@ -264,7 +266,7 @@ public class UpdateJobPostHandlerTests : BaseTest
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
-        _snapshotRepository
+        _service
             .GetUserAsync(
                 command.ModifiedBy,
                 Arg.Any<CancellationToken>())
@@ -273,7 +275,7 @@ public class UpdateJobPostHandlerTests : BaseTest
         var result = (await UpdateJobPostHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             TestClock,
             CancellationToken.None)).Item1;
 
@@ -296,7 +298,7 @@ public class UpdateJobPostHandlerTests : BaseTest
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
-        _snapshotRepository
+        _service
             .GetUserAsync(
                 command.ModifiedBy,
                 Arg.Any<CancellationToken>())
@@ -305,7 +307,7 @@ public class UpdateJobPostHandlerTests : BaseTest
         var result = (await UpdateJobPostHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             TestClock,
             CancellationToken.None)).Item1;
 
@@ -334,7 +336,7 @@ public class UpdateJobPostHandlerTests : BaseTest
 
         var clock = new FixedClock(now);
 
-        _snapshotRepository
+        _service
             .GetUserAsync(
                 command.ModifiedBy,
                 Arg.Any<CancellationToken>())
@@ -343,7 +345,7 @@ public class UpdateJobPostHandlerTests : BaseTest
         var result = (await UpdateJobPostHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             clock,
             CancellationToken.None)).Item1;
 

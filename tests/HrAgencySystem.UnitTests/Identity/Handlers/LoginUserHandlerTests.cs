@@ -21,7 +21,7 @@ public sealed class LoginUserHandlerTests
     private readonly IPasswordHasher _hasher = Substitute.For<IPasswordHasher>();
     private readonly IAccountRepository _repository = Substitute.For<IAccountRepository>();
     private readonly IJwtTokenService _tokenService = Substitute.For<IJwtTokenService>();
-    private readonly IOrganizationService _organizationService = Substitute.For<IOrganizationService>();
+    private readonly IQueryOrganizationRepository _queryOrganizationRepository = Substitute.For<IQueryOrganizationRepository>();
 
     [Fact]
     public async Task Handle_ShouldReturnToken_WhenCredentialsAreValid()
@@ -65,7 +65,7 @@ public sealed class LoginUserHandlerTests
             _hasher,
             _repository,
             _tokenService,
-            _organizationService,
+            _queryOrganizationRepository,
             CancellationToken.None);
 
         // Assert
@@ -97,7 +97,7 @@ public sealed class LoginUserHandlerTests
             _hasher,
             _repository,
             _tokenService,
-            _organizationService,
+            _queryOrganizationRepository,
             CancellationToken.None);
 
         // Assert
@@ -146,7 +146,7 @@ public sealed class LoginUserHandlerTests
             _hasher,
             _repository,
             _tokenService,
-            _organizationService,
+            _queryOrganizationRepository,
             CancellationToken.None);
 
         // Assert
@@ -204,7 +204,7 @@ public sealed class LoginUserHandlerTests
             _hasher,
             _repository,
             _tokenService,
-            _organizationService,
+            _queryOrganizationRepository,
             CancellationToken.None);
 
         // Assert
@@ -213,7 +213,7 @@ public sealed class LoginUserHandlerTests
             "acme",
             Arg.Any<CancellationToken>());
 
-        await _organizationService
+        await _queryOrganizationRepository
             .DidNotReceive()
             .GetByEmailDomainAsync(
                 Arg.Any<string>(),
@@ -235,7 +235,7 @@ public sealed class LoginUserHandlerTests
         var organization = new OrganizationInfo(Guid.NewGuid(), "acme", "Name");
 
         
-        _organizationService
+        _queryOrganizationRepository
             .GetByEmailDomainAsync(
                 "example.com",
                 Arg.Any<CancellationToken>())
@@ -269,13 +269,13 @@ public sealed class LoginUserHandlerTests
             _hasher,
             _repository,
             _tokenService,
-            _organizationService,
+            _queryOrganizationRepository,
             CancellationToken.None);
 
         // Assert
         Assert.Equal("jwt-token", result.Token);
 
-        await _organizationService.Received(1)
+        await _queryOrganizationRepository.Received(1)
             .GetByEmailDomainAsync(
                 "example.com",
                 Arg.Any<CancellationToken>());
@@ -299,7 +299,7 @@ public sealed class LoginUserHandlerTests
         var reservation = CreateReservation();
         var user = CreateUser();
 
-        _organizationService
+        _queryOrganizationRepository
             .GetByEmailDomainAsync(
                 "example.com",
                 Arg.Any<CancellationToken>())
@@ -333,7 +333,7 @@ public sealed class LoginUserHandlerTests
             _hasher,
             _repository,
             _tokenService,
-            _organizationService,
+            _queryOrganizationRepository,
             CancellationToken.None);
 
         // Assert
@@ -388,7 +388,7 @@ public sealed class LoginUserHandlerTests
             _hasher,
             _repository,
             _tokenService,
-            _organizationService,
+            _queryOrganizationRepository,
             cancellationToken);
 
         // Assert

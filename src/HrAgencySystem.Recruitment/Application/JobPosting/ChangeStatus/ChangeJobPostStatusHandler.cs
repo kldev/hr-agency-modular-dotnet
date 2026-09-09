@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -14,7 +15,7 @@ public static class ChangeJobPostStatusHandler
     public static async Task<(JobPostStatusChanged, Wolverine.Marten.Events)> Handle(
         ChangeJobPostStatus command,
         JobPost aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        IRecruitmentService service,
         IClock clock,
         CancellationToken ct
     )
@@ -25,11 +26,10 @@ public static class ChangeJobPostStatusHandler
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
 
-        var user = await GetModifiedBy(snapshotRepository, command.ModifiedBy, ct);
+        var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var concreteEvent = GetConcreteEvent(command, now, user);
 
         var newStatus = command.Status.ToDomain();
-       // var result = new ChangeJobPostStatusResult(oldStatus, newStatus);
 
         ValidatePolicy(aggregate, newStatus);
 
@@ -39,14 +39,7 @@ public static class ChangeJobPostStatusHandler
 
         return (@event, [concreteEvent, @event]);
     }
-
-    private static async Task<UserSnapshot> GetModifiedBy(IUserSnapshotRepository repository, Guid modifiedById,
-        CancellationToken ct)
-    {
-        var user = await repository.GetUserAsync(modifiedById, ct);
-        return user ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
+    
     private static void ValidatePolicy(JobPost aggregate, JobPostStatus newStatus)
     {
         var changeAllowed = JobPostStatusChangePolicy.Allow(aggregate.Status, newStatus);

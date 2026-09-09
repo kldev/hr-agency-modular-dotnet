@@ -15,12 +15,12 @@ public static class LoginUserHandler
         IPasswordHasher hasher,
         IAccountRepository repository,
         IJwtTokenService tokenService,
-        IOrganizationService organizationService,
+        IQueryOrganizationRepository queryOrganizationRepository,
         CancellationToken ct)
     {
 
         var email = Email.Create(command.Email);
-        var reservation = await GetEmailReservation(command, repository, email, organizationService, ct);
+        var reservation = await GetEmailReservation(command, repository, email, queryOrganizationRepository, ct);
 
         ValidatePassword(command, hasher, reservation);
 
@@ -39,13 +39,13 @@ public static class LoginUserHandler
             throw new AuthorizationException("Invalid login or password");
     }
 
-    private static async Task<UserEmailReservation> GetEmailReservation(LoginUser command, IAccountRepository repository, Email email, IOrganizationService organizationService, CancellationToken ct)
+    private static async Task<UserEmailReservation> GetEmailReservation(LoginUser command, IAccountRepository repository, Email email, IQueryOrganizationRepository queryOrganizationRepository, CancellationToken ct)
     {
         var slug = command.Slug;
         if (string.IsNullOrEmpty(command.Slug))
         {
             var domain = email.Value.Split("@", StringSplitOptions.RemoveEmptyEntries)[1];
-            var organization = await organizationService.GetByEmailDomainAsync(domain, ct);
+            var organization = await queryOrganizationRepository.GetByEmailDomainAsync(domain, ct);
             slug = organization?.Slug ?? "";
         }
         

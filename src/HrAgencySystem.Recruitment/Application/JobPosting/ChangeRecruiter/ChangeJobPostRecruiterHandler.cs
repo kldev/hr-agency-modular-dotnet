@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -14,12 +15,12 @@ public static class ChangeJobPostRecruiterHandler
     public static async Task<(JobPostRecruiterChanged, Wolverine.Marten.Events)> Handle(
         ChangeJobPostRecruiter command,
         JobPost aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        IRecruitmentService service,
         IClock clock,
         CancellationToken ct)
     {
-        var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);
-        var recruiter = await GetRecruiter(command, snapshotRepository, ct);
+        var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
+        var recruiter = await service.GetUserAsync(command.RecruiterId, ct);
 
         ValidateOrganization(command, aggregate);
 
@@ -32,22 +33,5 @@ public static class ChangeJobPostRecruiterHandler
     {
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException("Invalid organization id");
-    }
-
-    private static async Task<UserSnapshot> GetRecruiter(ChangeJobPostRecruiter command, IUserSnapshotRepository snapshotRepository,
-        CancellationToken ct)
-    {
-        if (command.RecruiterId == Guid.Empty)
-            throw new InValidValueException("Recruiter id has invalid value");
-        
-        var recruiter = await snapshotRepository.GetUserAsync(command.RecruiterId, ct);
-        return recruiter ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<UserSnapshot> GetModifiedBy(ChangeJobPostRecruiter command, IUserSnapshotRepository snapshotRepository,
-        CancellationToken ct)
-    {
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
-        return modifiedBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

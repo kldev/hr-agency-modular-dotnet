@@ -5,7 +5,7 @@ using Marten;
 
 namespace HrAgencySystem.Organization.Infrastructure;
 
-public class OrganizationService(IQuerySession session) : IOrganizationService
+public class QueryOrganizationRepository(IQuerySession session) : IQueryOrganizationRepository
 {
     public async Task<IReadOnlyList<OrganizationInfo>> GetActiveOrganizationsAsync(CancellationToken ct)
     {

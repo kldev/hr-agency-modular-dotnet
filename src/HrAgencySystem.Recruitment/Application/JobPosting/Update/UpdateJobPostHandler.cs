@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Application.JobPosting.Create;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -14,7 +15,7 @@ public static class UpdateJobPostHandler
     public static async Task<(JobPostUpdated, Wolverine.Marten.Events)> Handle(
         UpdateJobPost command,
         JobPost aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        IRecruitmentService service,
         IClock clock,
         CancellationToken ct)
     {
@@ -26,7 +27,7 @@ public static class UpdateJobPostHandler
             countryCode, 
             languageCode) = JobPostDataFactory.Create(command);
 
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
+        var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
         if (modifiedBy == null)
             throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
         

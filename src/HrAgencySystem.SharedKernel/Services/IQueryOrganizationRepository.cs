@@ -1,6 +1,6 @@
 namespace HrAgencySystem.SharedKernel.Services;
 
-public interface IOrganizationService
+public interface IQueryOrganizationRepository
 {
     Task<IReadOnlyList<OrganizationInfo>> GetActiveOrganizationsAsync(CancellationToken ct);
     Task<OrganizationInfo?> GetBySlugAsync(string slug, CancellationToken ct);

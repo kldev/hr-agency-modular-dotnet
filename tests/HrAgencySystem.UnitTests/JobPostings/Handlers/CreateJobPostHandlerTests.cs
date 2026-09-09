@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Application.JobPosting.Create;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -9,6 +10,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
@@ -17,15 +19,9 @@ public class CreateJobPostHandlerTests : BaseTest
     private readonly IDocumentSession _documentSession =
         Substitute.For<IDocumentSession>();
 
-    private readonly IOrganizationChecker _checker =
-        Substitute.For<IOrganizationChecker>();
-
-    private readonly IUserSnapshotRepository _userSnapshotRepository =
-        Substitute.For<IUserSnapshotRepository>();
-
-    private readonly ICompanySnapshotRepository _companySnapshotRepository =
-        Substitute.For<ICompanySnapshotRepository>();
-
+    private readonly IRecruitmentService _service =
+        Substitute.For<IRecruitmentService>();
+    
     private readonly IJobDescriptionSnapshotRepository _jobDescriptionSnapshotRepository =
         Substitute.For<IJobDescriptionSnapshotRepository>();
 
@@ -72,19 +68,19 @@ public class CreateJobPostHandlerTests : BaseTest
             "Company A",
             "TX-100-101");
 
-        _checker
-            .GetSlug(
-                organizationId,
+        _service
+            .GetOrganizationSlug(
+                OrganizationId.From(organizationId),
                 Arg.Any<CancellationToken>())
             .Returns("company-a");
 
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 RecruiterId,
                 Arg.Any<CancellationToken>())
             .Returns(Recruiter);
 
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 CreatedById,
                 Arg.Any<CancellationToken>())
@@ -97,7 +93,7 @@ public class CreateJobPostHandlerTests : BaseTest
                 Arg.Any<CancellationToken>())
             .Returns(jobDescription);
 
-        _companySnapshotRepository
+        _service
             .GetCompanyAsync(
                 companyId,
                 Arg.Any<CancellationToken>())
@@ -199,19 +195,19 @@ public class CreateJobPostHandlerTests : BaseTest
 
         Assert.NotEmpty(result.PostingSlug);
 
-        await _checker
+        await _service
             .Received(1)
-            .GetSlug(
-                organizationId,
+            .GetOrganizationSlug(
+                OrganizationId.From(organizationId),
                 Arg.Any<CancellationToken>());
 
-        await _userSnapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 RecruiterId,
                 Arg.Any<CancellationToken>());
 
-        await _userSnapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 CreatedById,
@@ -224,7 +220,7 @@ public class CreateJobPostHandlerTests : BaseTest
                 organizationId,
                 Arg.Any<CancellationToken>());
 
-        await _companySnapshotRepository
+        await _service
             .Received(1)
             .GetCompanyAsync(
                 companyId,
@@ -261,11 +257,11 @@ public class CreateJobPostHandlerTests : BaseTest
     {
         var organizationId = Guid.NewGuid();
 
-        _checker
-            .GetSlug(
-                organizationId,
+        _service
+            .GetOrganizationSlug(
+                OrganizationId.From(organizationId),
                 Arg.Any<CancellationToken>())
-            .Returns((string?)null);
+            .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
 
         var exception = await Assert.ThrowsAsync<BusinessRuleException>(
             () => Handle(
@@ -276,10 +272,10 @@ public class CreateJobPostHandlerTests : BaseTest
             OrganizationId.OrganizationCheckMessage,
             exception.Message);
 
-        await _checker
+        await _service
             .Received(1)
-            .GetSlug(
-                organizationId,
+            .GetOrganizationSlug(
+                OrganizationId.From(organizationId),
                 Arg.Any<CancellationToken>());
 
         AssertNoStream();
@@ -292,22 +288,22 @@ public class CreateJobPostHandlerTests : BaseTest
 
         SetupOrganization();
 
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 recruiterId,
                 Arg.Any<CancellationToken>())
-            .Returns((UserSnapshot?)null);
+            .ThrowsAsync(new NotFoundException("User", recruiterId.ToString()));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => Handle(
                 CreateValidCommand(
                     recruiterId: recruiterId)));
 
-        Assert.Equal(
-            IUserSnapshotRepository.NotFoundMessage,
+        Assert.Contains(
+            "User not found",
             exception.Message);
 
-        await _userSnapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 recruiterId,
@@ -324,22 +320,22 @@ public class CreateJobPostHandlerTests : BaseTest
         SetupOrganization();
         SetupRecruiter();
 
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 createdById,
                 Arg.Any<CancellationToken>())
-            .Returns((UserSnapshot?)null);
+            .ThrowsAsync(new NotFoundException("User", createdById.ToString()));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => Handle(
                 CreateValidCommand(
                     createdBy: createdById)));
 
-        Assert.Equal(
-            IUserSnapshotRepository.NotFoundMessage,
+        Assert.Contains(
+            "User not found",
             exception.Message);
 
-        await _userSnapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 createdById,
@@ -407,23 +403,23 @@ public class CreateJobPostHandlerTests : BaseTest
                     "TEST",
                     companyId));
 
-        _companySnapshotRepository
+        _service
             .GetCompanyAsync(
                 companyId,
                 Arg.Any<CancellationToken>())
-            .Returns((CompanySnapshot?)null);
+            .ThrowsAsync(new NotFoundException("Company", companyId));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => Handle(
                 CreateValidCommand(
                     organizationId: organizationId,
                     jobDescriptionId: jobDescriptionId)));
 
-        Assert.Equal(
-            ICompanySnapshotRepository.NotFoundMessage,
+        Assert.Contains(
+            "Company not found",
             exception.Message);
 
-        await _companySnapshotRepository
+        await _service
             .Received(1)
             .GetCompanyAsync(
                 companyId,
@@ -440,9 +436,7 @@ public class CreateJobPostHandlerTests : BaseTest
             command,
             _documentSession,
             clock ?? TestClock,
-            _checker,
-            _userSnapshotRepository,
-            _companySnapshotRepository,
+           _service,
             _jobDescriptionSnapshotRepository,
             CancellationToken.None);
     }
@@ -450,16 +444,16 @@ public class CreateJobPostHandlerTests : BaseTest
     private void SetupOrganization(
         string slug = "company-a")
     {
-        _checker
-            .GetSlug(
-                Arg.Any<Guid>(),
+        _service
+            .GetOrganizationSlug(
+                Arg.Any<OrganizationId>(),
                 Arg.Any<CancellationToken>())
             .Returns(slug);
     }
 
     private void SetupRecruiter()
     {
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 RecruiterId,
                 Arg.Any<CancellationToken>())
@@ -468,7 +462,7 @@ public class CreateJobPostHandlerTests : BaseTest
 
     private void SetupCreatedBy()
     {
-        _userSnapshotRepository
+        _service
             .GetUserAsync(
                 CreatedById,
                 Arg.Any<CancellationToken>())
@@ -477,16 +471,16 @@ public class CreateJobPostHandlerTests : BaseTest
 
     private async Task AssertNoOrganizationCheck()
     {
-        await _checker
+        await _service
             .DidNotReceive()
-            .GetSlug(
-                Arg.Any<Guid>(),
+            .GetOrganizationSlug(
+                Arg.Any<OrganizationId>(),
                 Arg.Any<CancellationToken>());
     }
 
     private void AssertNoUserLookup()
     {
-        _userSnapshotRepository
+        _service
             .DidNotReceive()
             .GetUserAsync(
                 Arg.Any<Guid>(),
@@ -505,7 +499,7 @@ public class CreateJobPostHandlerTests : BaseTest
 
     private void AssertNoCompanyLookup()
     {
-        _companySnapshotRepository
+        _service
             .DidNotReceive()
             .GetCompanyAsync(
                 Arg.Any<Guid>(),

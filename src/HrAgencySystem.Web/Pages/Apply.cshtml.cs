@@ -13,7 +13,7 @@ using Wolverine;
 
 namespace HrAgencySystem.Web.Pages;
 
-public partial class Apply(IMessageBus bus, IOrganizationService service, IJobPostQueryRepository jobPostQueryRepository, ILogger<Apply> logger) : PageModel
+public partial class Apply(IMessageBus bus, IQueryOrganizationRepository repository, IJobPostQueryRepository jobPostQueryRepository, ILogger<Apply> logger) : PageModel
 {
     public JobJson Job { get; private set; } = null!;
     public string Slug { get; set; } = "";
@@ -85,7 +85,7 @@ public partial class Apply(IMessageBus bus, IOrganizationService service, IJobPo
         string postslug,
         CancellationToken ct)
     {
-        var organization = await service.GetBySlugAsync(slug, ct);
+        var organization = await repository.GetBySlugAsync(slug, ct);
 
         if (organization is null)
             return null;

@@ -38,4 +38,12 @@ public sealed class RecruitmentService(
         var application = await applicationInfoQueryRepository.GetAsync(jobApplicationId, OrganizationId.From(organizationId), ct);
         return application ?? throw new NotFoundException("Job application", jobApplicationId);
     }
+
+    public async Task<string> GetOrganizationSlug(OrganizationId organizationId, CancellationToken ct)
+    {
+        var slug = await checker.GetSlug(organizationId.Value, ct);
+        return string.IsNullOrEmpty(slug)
+            ? throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage)
+            : slug;
+    }
 }

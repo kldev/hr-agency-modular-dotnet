@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 using HrAgencySystem.Recruitment.Events.JobPostings;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -16,9 +17,7 @@ public static class CreateJobPostHandler
         CreateJobPost command,
         IDocumentSession session,
         IClock clock,
-        IOrganizationChecker checker,
-        IUserSnapshotRepository userSnapshotRepository,
-        ICompanySnapshotRepository companySnapshotRepository,
+        IRecruitmentService service,
         IJobDescriptionSnapshotRepository  jobDescriptionSnapshotRepository,
         CancellationToken ct)
     {
@@ -36,15 +35,15 @@ public static class CreateJobPostHandler
             countryCode, 
             languageCode) = JobPostDataFactory.Create(command);
 
-        var organizationSlug = await GetOrganizationSlug(checker, organizationId, ct);
+        var organizationSlug = await service.GetOrganizationSlug(organizationId, ct);
 
-        var recruiter = await GetRecruiter(command, userSnapshotRepository, ct);
+        var recruiter = await service.GetUserAsync(command.RecruiterId, ct);
 
-        var createdBy = await GetCreatedBy(command, userSnapshotRepository, ct);
+        var createdBy = await service.GetUserAsync(command.CreatedBy, ct);
 
         var jobDescription = await GetJobDescription(command, jobDescriptionSnapshotRepository, ct);
 
-        var company = await GetCompany(companySnapshotRepository, jobDescription.CompanyId, ct);
+        var company = await service.GetCompanyAsync(jobDescription.CompanyId, ct);
 
         var jobPostId = JobPostId.New();
 
@@ -81,40 +80,12 @@ public static class CreateJobPostHandler
 
         return @event;
     }
-
-    private static async Task<CompanySnapshot> GetCompany(ICompanySnapshotRepository companySnapshotRepository, Guid companyId, CancellationToken ct)
-    {
-        var company = await companySnapshotRepository.GetCompanyAsync(companyId, ct);
-        return company ?? throw new BusinessRuleException(ICompanySnapshotRepository.NotFoundMessage);
-    }
-
+    
     private static async Task<JobDescriptionSnapshot> GetJobDescription(CreateJobPost command,
         IJobDescriptionSnapshotRepository jobDescriptionSnapshotRepository, CancellationToken ct)
     {
         var jobDescription =
             await jobDescriptionSnapshotRepository.GetAsync(command.JobDescriptionId, command.OrganizationId, ct);
         return jobDescription ?? throw new BusinessRuleException(IJobDescriptionSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<UserSnapshot> GetCreatedBy(CreateJobPost command, IUserSnapshotRepository userSnapshotRepository,
-        CancellationToken ct)
-    {
-        var createdBy = await userSnapshotRepository.GetUserAsync(command.CreatedBy, ct);
-        return createdBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<UserSnapshot> GetRecruiter(CreateJobPost command, IUserSnapshotRepository userSnapshotRepository,
-        CancellationToken ct)
-    {
-        var recruiter = await userSnapshotRepository.GetUserAsync(command.RecruiterId, ct);
-        return recruiter ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<string> GetOrganizationSlug(IOrganizationChecker checker,
-        OrganizationId organizationId,  CancellationToken ct)
-    {
-        var organizationSlug = await checker.GetSlug(organizationId.Value, ct);
-
-        return string.IsNullOrEmpty(organizationSlug) ? throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage) : organizationSlug;
     }
 }

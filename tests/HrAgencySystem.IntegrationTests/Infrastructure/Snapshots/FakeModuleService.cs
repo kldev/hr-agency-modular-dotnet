@@ -6,6 +6,7 @@ using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
@@ -36,6 +37,11 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
     {
         var result = new JobApplicationInfo(jobApplicationId, organizationId, Guid.NewGuid(), Guid.NewGuid());
         return Task.FromResult(result);
+    }
+
+    public Task<string> GetOrganizationSlug(OrganizationId organizationId, CancellationToken ct)
+    {
+        return Task.FromResult("Slug");
     }
 
     public Task<OpportunitySnapshot> GetOpportunityAsync(Guid organizationId, Guid opportunityId, CancellationToken ct)

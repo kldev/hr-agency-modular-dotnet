@@ -18,7 +18,7 @@ public static class OrganizationModule
     {
         services.AddScoped<IOrganizationSlugReservationRepository, OrganizationSlugReservationRepository>();
         services.AddScoped<IOrganizationChecker, OrganizationChecker>();
-        services.AddScoped<IOrganizationService, OrganizationService>();
+        services.AddScoped<IQueryOrganizationRepository, QueryOrganizationRepository>();
         services.AddScoped<IOrganizationQueryRepository, OrganizationQueryRepository>();
     }
     

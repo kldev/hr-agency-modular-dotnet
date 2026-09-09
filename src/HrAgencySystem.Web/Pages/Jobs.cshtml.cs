@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace HrAgencySystem.Web.Pages;
 
-public class Jobs(IOrganizationService service) : PageModel
+public class Jobs(IQueryOrganizationRepository repository) : PageModel
 {
     public string OrganizationName { get; private set; } = "";
     
@@ -15,7 +15,7 @@ public class Jobs(IOrganizationService service) : PageModel
     {
 
         Slug = slug;
-        var organization = await service.GetBySlugAsync(slug, ct);
+        var organization = await repository.GetBySlugAsync(slug, ct);
 
         if (organization == null)
         {
