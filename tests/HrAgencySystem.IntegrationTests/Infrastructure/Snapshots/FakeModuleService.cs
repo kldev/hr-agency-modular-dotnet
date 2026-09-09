@@ -1,3 +1,4 @@
+using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Services;
@@ -26,6 +27,12 @@ public class FakeModuleService : ISalesService, IRecruitmentService
     public Task ValidateOrganization(Guid organizationId, CancellationToken ct)
     {
         return Task.CompletedTask;
+    }
+
+    public Task<JobApplicationInfo> GetApplicationAsync(Guid jobApplicationId, Guid organizationId, CancellationToken ct)
+    {
+        var result = new JobApplicationInfo(jobApplicationId, organizationId, Guid.NewGuid(), Guid.NewGuid());
+        return Task.FromResult(result);
     }
 
     public Task<OpportunitySnapshot> GetOpportunityAsync(Guid organizationId, Guid opportunityId, CancellationToken ct)

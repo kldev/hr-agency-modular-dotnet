@@ -6,11 +6,13 @@ using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.Applications;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 
 namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
@@ -26,8 +28,8 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     private readonly IJobPostQueryRepository _jobPostQueryRepository =
         Substitute.For<IJobPostQueryRepository>();
 
-    private readonly ICompanySnapshotRepository _companySnapshotRepository =
-        Substitute.For<ICompanySnapshotRepository>();
+    private readonly IRecruitmentService _service =
+        Substitute.For<IRecruitmentService>();
     
     private readonly IClock _clock =
         Substitute.For<IClock>();
@@ -91,7 +93,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
                 post,
                 Arg.Any<CancellationToken>());
 
-        await _companySnapshotRepository
+        await _service
             .Received(1)
             .GetCompanyAsync(
                 CompanyId,
@@ -176,20 +178,20 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
         SetupJobPost(post);
         SetupCandidate(CreateCandidate());
 
-        _companySnapshotRepository
+        _service
             .GetCompanyAsync(
                 CompanyId,
                 Arg.Any<CancellationToken>())
-            .Returns((CompanySnapshot?)null);
+            .Throws(new NotFoundException("Company", ""));
 
         var exception = await Assert.ThrowsAsync<NotFoundException>(
             () => Handle(CreateValidCommand()));
 
-        Assert.Equal(
-            ICompanySnapshotRepository.NotFoundMessage,
+        Assert.Contains(
+            "Company not found",
             exception.Message);
 
-        await _companySnapshotRepository
+        await _service
             .Received(1)
             .GetCompanyAsync(
                 CompanyId,
@@ -233,7 +235,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             command,
             _candidateResolver,
             _jobPostQueryRepository,
-            _companySnapshotRepository,
+            _service,
             _documentSession,
             clock ?? TestClock,
             CancellationToken.None);
@@ -263,7 +265,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     private void SetupCompany(
         CompanySnapshot company)
     {
-        _companySnapshotRepository
+        _service
             .GetCompanyAsync(
                 CompanyId,
                 Arg.Any<CancellationToken>())
@@ -291,7 +293,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
 
     private void AssertNoCompanyLookup()
     {
-        _companySnapshotRepository
+        _service
             .DidNotReceive()
             .GetCompanyAsync(
                 Arg.Any<Guid>(),

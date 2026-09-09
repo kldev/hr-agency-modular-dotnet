@@ -5,6 +5,7 @@ using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.Applications;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -18,7 +19,7 @@ public static class ApplyToJobApplicationHandler
     public static async Task<JobApplicationCreated> Handle(ApplyToJobApplication command,
         ICandidateResolver resolver,
         IJobPostQueryRepository queryRepository,
-        ICompanySnapshotRepository companySnapshot,
+        IRecruitmentService service,
         IDocumentSession session,
         IClock clock,
         CancellationToken ct)
@@ -40,7 +41,7 @@ public static class ApplyToJobApplicationHandler
                 post.CompanyId);
         var candidate = await resolver.FindOrCreate(candidateCommand, post, ct);
 
-        var company = await GetCompany(companySnapshot, post.CompanyId, ct);
+        var company = await service.GetCompanyAsync(post.CompanyId, ct);
         
         var jobApplicationId = JobApplicationId.New();
         var @event = new JobApplicationCreated(
@@ -57,24 +58,17 @@ public static class ApplyToJobApplicationHandler
             lastName.Value,
             clock.UtcNow);
 
-        session.Events.StartStream<Domain.Applications.JobApplication>(jobApplicationId.Value, @event);
+        session.Events.StartStream<JobApplication>(jobApplicationId.Value, @event);
 
         return @event;
     }
-
-    private static async Task<CompanySnapshot> GetCompany(ICompanySnapshotRepository companySnapshot, Guid companyId,
-        CancellationToken ct)
-    {
-        var result = await companySnapshot.GetCompanyAsync(companyId, ct);
-        return result != null ? result! : throw new NotFoundException(ICompanySnapshotRepository.NotFoundMessage);
-    }
-
+    
     private static (Email email, FirstName firstName, LastName lastName, CandidatePhoneNumber phoneNumber)
         GetValueObjects(ApplyToJobApplication command)
     {
         var (email, emailError) = Email.TryCreate(command.Email);
-        var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName ?? "", false);
-        var (lastName, lastNameError) = LastName.TryCreate(command.LastName ?? "", false);
+        var (firstName, _) = FirstName.TryCreate(command.FirstName ?? "", false);
+        var (lastName, _) = LastName.TryCreate(command.LastName ?? "", false);
         var (phoneNumber, phoneNumberError) = CandidatePhoneNumber.TryCreate(command.Phone);
 
         var errors = new List<string>();

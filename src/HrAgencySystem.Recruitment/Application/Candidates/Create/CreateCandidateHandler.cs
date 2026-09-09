@@ -58,7 +58,7 @@ public static class CreateCandidateHandler
 
     private static async Task<UserSnapshot?> GetUser(IRecruitmentService service, CreateCandidate command, CancellationToken ct)
     {
-        if (!command.CreatedBy.IsValid()) return null;
+        if (command.CreatedBy.IsInvalid()) return null;
 
         var result = await service.GetUserAsync(command.CreatedBy!.Value, ct);
         return (UserSnapshot?)result;

@@ -1,10 +1,8 @@
-using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Interviews;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -17,22 +15,19 @@ public static class ScheduleInterviewHandler
 {
     public static async Task<(InterviewCreated, Wolverine.Marten.Events)> Handle(
         ScheduleInterview command,
-        IOrganizationChecker checker,
-        IJobApplicationInfoQueryRepository queryRepository,
-        IUserSnapshotRepository userSnapshotRepository,
+        IRecruitmentService service,
         IDocumentSession session,
         IClock clock,
         CancellationToken ct
     )
     {
-
-        var user = await GetUser(userSnapshotRepository, command.CreatedBy, ct);
-        var interviewer = await GetUser(userSnapshotRepository, command.InterviewerId, ct);
+        var user = await service.GetUserAsync(command.CreatedBy, ct);
+        var interviewer = await service.GetUserAsync(command.InterviewerId, ct);
         var organizationId = OrganizationId.From(command.OrganizationId);
-        var application = await GetApplication(queryRepository, command.JobApplicationId,
+        var application = await service.GetApplicationAsync(command.JobApplicationId,
             command.OrganizationId, ct);
         
-        await ValidateOrganization(checker, command.OrganizationId, ct);
+        await service.ValidateOrganization(command.OrganizationId, ct);
 
         var interviewId = InterviewId.New();
 
@@ -62,27 +57,5 @@ public static class ScheduleInterviewHandler
         session.Events.StartStream<Interview>(interviewId.Value, @event);
 
         return (@event, [@event, jobApplicationEvent]);
-    }
-    
-    private static async Task<JobApplicationInfo> GetApplication(IJobApplicationInfoQueryRepository repository, Guid jobApplicationId, Guid organizationId,
-        CancellationToken ct)
-    {
-        var application = await repository.GetAsync(jobApplicationId, OrganizationId.From(organizationId),ct);
-        return application ?? throw new NotFoundException("Job application", jobApplicationId);
-    }
-    
-    private static async Task ValidateOrganization(IOrganizationChecker checker, Guid organizationId,
-        CancellationToken ct)
-    {
-        var checkOrganization = await checker.Exists(organizationId, ct);
-        if (!checkOrganization)
-            throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
-    }
-    
-    private static async Task<UserSnapshot> GetUser(IUserSnapshotRepository repository, Guid userId,
-        CancellationToken ct)
-    {
-        var user = await repository.GetUserAsync(userId, ct);
-        return user ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

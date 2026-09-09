@@ -2,6 +2,7 @@ using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Events.Applications;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -18,7 +19,7 @@ public static class ChangeJobApplicationStatusHandler
     public static async Task<(ChangeJobApplicationStatusResult, Wolverine.Marten.Events)> Handle(
         ChangeJobApplicationStatus command,
         JobApplication aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        IRecruitmentService service,
         INoteRepository noteRepository,
         IClock clock,
         CancellationToken ct
@@ -30,7 +31,7 @@ public static class ChangeJobApplicationStatusHandler
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
         
-        var user = await GetModifiedBy(snapshotRepository, command.ModifiedBy, ct);
+        var user = await  service.GetUserAsync(command.ModifiedBy, ct);
         var concreteEvent = GetConcreteEvent(command, now, user);
         var result = new ChangeJobApplicationStatusResult(oldStatus, command.Status);
 
@@ -76,14 +77,7 @@ public static class ChangeJobApplicationStatusHandler
             command.Note, user);
         return noteAddedEvent;
     }
-
-    private static async Task<UserSnapshot> GetModifiedBy(IUserSnapshotRepository repository, Guid modifiedById,
-        CancellationToken ct)
-    {
-        var user = await repository.GetUserAsync(modifiedById, ct);
-        return user ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
+    
     private static IJobApplicationEvent GetConcreteEvent(ChangeJobApplicationStatus command, DateTimeOffset now,
         UserSnapshot user)
     {

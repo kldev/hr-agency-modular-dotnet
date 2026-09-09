@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -15,10 +16,10 @@ public static class TagCandidateHandler
     [AggregateHandler]
     // ReSharper disable once UnusedMember.Global
     public static async Task<(CandidateTagged, Wolverine.Marten.Events)> Handle(
-        Candidates.TagCandidate.TagCandidate command, 
+        TagCandidate command, 
         Domain.Candidates.Candidate aggregate,
         ITagRepository tagRepository,
-        IUserSnapshotRepository snapshotRepository,
+        IRecruitmentService service,
         IClock clock,
         CancellationToken ct)
     {
@@ -26,17 +27,10 @@ public static class TagCandidateHandler
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
         
         var tag = await tagRepository.GetTag(command.TagId, ct);
-        var user = await GetCreatedBy(snapshotRepository, command.CreatedBy, ct);
+        var user = await service.GetUserAsync(command.CreatedBy, ct);
 
         var @event = new CandidateTagged(aggregate.Id.Value, tag, user, clock.UtcNow);
         
         return (@event, [@event]);
-    }
-
-    private static async Task<UserSnapshot> GetCreatedBy(IUserSnapshotRepository snapshotRepository, Guid createdById, 
-        CancellationToken ct)
-    {
-        var user = await snapshotRepository.GetUserAsync(createdById, ct);
-        return user ?? throw new NotFoundException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

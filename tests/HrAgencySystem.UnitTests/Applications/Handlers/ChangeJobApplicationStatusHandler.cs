@@ -4,11 +4,13 @@ using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Applications;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace HrAgencySystem.UnitTests.Applications.Handlers;
 
@@ -19,6 +21,9 @@ public class ChangeJobApplicationStatusHandlerTests
 
     private readonly INoteRepository _noteRepository =
         Substitute.For<INoteRepository>();
+    
+    private readonly IRecruitmentService _service =
+        Substitute.For<IRecruitmentService>();
 
     private readonly IClock _clock =
         Substitute.For<IClock>();
@@ -44,6 +49,10 @@ public class ChangeJobApplicationStatusHandlerTests
         _clock.UtcNow.Returns(_now);
 
         _snapshotRepository
+            .GetUserAsync(_modifiedBy, Arg.Any<CancellationToken>())
+            .Returns(_user);
+        
+        _service
             .GetUserAsync(_modifiedBy, Arg.Any<CancellationToken>())
             .Returns(_user);
     }
@@ -324,18 +333,19 @@ public class ChangeJobApplicationStatusHandlerTests
 
         var missingUserId = Guid.NewGuid();
 
-        _snapshotRepository
+        _service
             .GetUserAsync(missingUserId, Arg.Any<CancellationToken>())
-            .Returns((UserSnapshot?)null);
+            .Throws(new NotFoundException("User", missingUserId));
 
         var command = CreateCommand(
             JobApplicationUpdateStatus.Screening,
             modifiedBy: missingUserId);
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command, aggregate));
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() => Handle(command, aggregate));
 
-        Assert.Equal(
-            IUserSnapshotRepository.NotFoundMessage,
+        Assert.Contains("User not found",
+            exception.Message);
+        Assert.Contains(missingUserId.ToString(),
             exception.Message);
     }
 
@@ -425,7 +435,7 @@ public class ChangeJobApplicationStatusHandlerTests
         return await ChangeJobApplicationStatusHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             _noteRepository,
             _clock,
             CancellationToken.None);

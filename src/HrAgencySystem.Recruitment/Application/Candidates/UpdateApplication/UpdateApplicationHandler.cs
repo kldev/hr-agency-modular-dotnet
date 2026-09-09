@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -12,16 +13,22 @@ public static class UpdateApplicationHandler
 {
     [AggregateHandler]
     public static async Task<(CandidateApplicationUpdated, Wolverine.Marten.Events)> 
-        Handle(UpdateCandidateApplication command, Domain.Candidates.Candidate aggregate,
-            ICompanySnapshotRepository snapshotRepository,
+        Handle(UpdateCandidateApplication command, 
+            Domain.Candidates.Candidate aggregate,
+            IRecruitmentService service,
             ILogger logger,
             IClock clock,
         CancellationToken ct)
     {
         logger.HandlingUpdateApplication(command.CompanyId);
-        var company = await snapshotRepository.GetCompanyAsync(command.CompanyId, ct);
-        if (company is null) throw new BusinessRuleException(ICompanySnapshotRepository.NotFoundMessage);
-        var @event = new CandidateApplicationUpdated(aggregate.Id.Value, command.JobPostId, command.CompanyId, clock.UtcNow);
+        var company = await service.GetCompanyAsync(command.CompanyId, ct);
+        
+        var @event = new 
+            CandidateApplicationUpdated(
+                aggregate.Id.Value, 
+                command.JobPostId,
+                company.Id, 
+                clock.UtcNow);
         
         return (@event, [@event]);
     }

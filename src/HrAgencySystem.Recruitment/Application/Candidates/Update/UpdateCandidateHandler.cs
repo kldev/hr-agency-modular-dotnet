@@ -1,10 +1,9 @@
-using System.Data.Common;
 using HrAgencySystem.Recruitment.Application.Candidates.Create;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidates;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
@@ -16,12 +15,12 @@ public static class UpdateCandidateHandler
     [AggregateHandler]
     public static async Task<(CandidateUpdated, Wolverine.Marten.Events)>
         Handle(UpdateCandidate command, Candidate aggregate,
-            IUserSnapshotRepository snapshotRepository,
+            IRecruitmentService service,
             IClock clock, CancellationToken ct)
     {
 
         var (data, _) = CandidateDataFactory.Create(command);
-        var user = await GetUser(snapshotRepository, command.ModifiedBy, ct);
+        var user = await service.GetUserAsync(command.ModifiedBy, ct);
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
         
@@ -34,12 +33,5 @@ public static class UpdateCandidateHandler
             clock.UtcNow);
 
         return (@event, [@event]);
-    }
-    
-    private static async Task<UserSnapshot> GetUser(IUserSnapshotRepository repository, Guid userId,
-        CancellationToken ct)
-    {
-        var user = await repository.GetUserAsync(userId, ct);
-        return user ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

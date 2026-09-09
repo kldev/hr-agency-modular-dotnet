@@ -55,7 +55,7 @@ public static class CreateSalesOpportunityHandler
     private static async Task<UserSnapshot> GetOwner(ISalesService service, Guid? ownerId, UserSnapshot defaultOwner,
         CancellationToken ct)
     {
-        if (!ownerId.IsValid() || ownerId!.Value == defaultOwner.Id) return defaultOwner;
+        if (ownerId.IsInvalid() || ownerId!.Value == defaultOwner.Id) return defaultOwner;
 
         var owner = await service.GetUserAsync(ownerId.Value, ct);
 
