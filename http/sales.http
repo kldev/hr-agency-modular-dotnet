@@ -194,5 +194,17 @@ GET {{baseURL}}/api/sales/opportunity?stage=Proposal
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseURL}}/api/sales/opportunity?responsibleId={{responsibleId2}}
+GET {{baseURL}}/api/sales/opportunity?responsibleId={{responsibleId2}}&pageSize=5
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/sales/opportunity/totals?stage=Proposal
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/sales/opportunity/totals?search=detailed pricing
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/sales/opportunity/totals-responsible
 Authorization: Bearer {{token}}
