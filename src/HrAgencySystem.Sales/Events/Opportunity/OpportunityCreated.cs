@@ -10,7 +10,7 @@ public sealed record OpportunityCreated(
     CompanySnapshot Company,
     string Title,
     string Description,
-    SalesOpportunityStage Stage,
+    OpportunityStage Stage,
     decimal ExpectedValue,
     CurrencyCode  Currency,
     bool IsHotLead,

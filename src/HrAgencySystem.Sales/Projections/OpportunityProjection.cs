@@ -16,7 +16,7 @@ public sealed record OpportunityProjection(
     string Title,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string Description,
-    SalesOpportunityStage Stage,
+    OpportunityStage Stage,
     bool IsHotLead,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     decimal ExpectedValue,

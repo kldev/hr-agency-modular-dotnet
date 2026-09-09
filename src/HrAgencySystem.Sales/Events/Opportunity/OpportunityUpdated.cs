@@ -7,7 +7,7 @@ namespace HrAgencySystem.Sales.Events.Opportunity;
 public sealed record OpportunityUpdated( 
     Guid SalesOpportunityId,
     Guid OrganizationId,   
-    SalesOpportunityStage Stage,
+    OpportunityStage Stage,
     string Title,
     string Description,
     decimal PreviousExpectedValue,

@@ -8,7 +8,7 @@ public sealed class PipelineStageSummary
     public String Id { get; set; } = "";
     public Guid OrgId { get; set; }
 
-    public SalesOpportunityStage Stage { get; set; }
+    public OpportunityStage Stage { get; set; }
 
     public CurrencyCode CurrencyCode { get; set; }
 

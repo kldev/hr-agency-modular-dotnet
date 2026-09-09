@@ -1,6 +1,7 @@
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.Sales.Services;
+using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
@@ -18,6 +19,9 @@ public static class ChangeResponsiblePersonHandler
     )
     {
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
+        
+        if (aggregate.ResponsiblePerson.Id == command.ResponsibleId)
+            throw new BusinessRuleException("The specified person is already responsible for this opportunity");
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var responsible = await service.GetUserAsync(command.ResponsibleId, ct);

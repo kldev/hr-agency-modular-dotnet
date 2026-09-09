@@ -9,7 +9,7 @@ public interface ISalesPipelineQueryRepository
 }
 
 public record SalesPipelineQueryResult(
-    SalesOpportunityStage Stage,
+    OpportunityStage Stage,
     CurrencyCode CurrencyCode,
     int Count,
     decimal TotalExpectedValue

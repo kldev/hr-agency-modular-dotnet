@@ -177,7 +177,7 @@ public sealed class PipelineProjection
 
     private static string CreateId(
         Guid organizationId,
-        SalesOpportunityStage stage,
+        OpportunityStage stage,
         CurrencyCode currencyCode)
     {
         return $"{organizationId:N}:{stage}:{currencyCode}";

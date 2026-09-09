@@ -102,7 +102,7 @@ public class CreateOpportunityHandlerTests : BaseTest
             result.Description);
 
         Assert.Equal(
-            SalesOpportunityStage.New,
+            OpportunityStage.New,
             result.Stage);
 
         Assert.Equal(

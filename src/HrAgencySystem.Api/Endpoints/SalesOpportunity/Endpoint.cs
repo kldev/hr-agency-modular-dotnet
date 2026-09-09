@@ -11,5 +11,6 @@ internal static class Endpoint
         Maps.MapCreate.Map(group);
         Maps.MapUpdate.Map(group);
         Maps.MapChangeResponsible.Map(group);
+        Maps.MapChangeStage.Map(group);
     }
 }

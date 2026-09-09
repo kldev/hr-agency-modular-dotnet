@@ -1,6 +1,6 @@
 namespace HrAgencySystem.Sales.Domain.Opportunity;
 
-public enum SalesOpportunityStage {
+public enum OpportunityStage {
     New,
     Viewed,
     Contacted,

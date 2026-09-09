@@ -35,7 +35,7 @@ public static class CreateOpportunityHandler
             company,
             title.Value,
             description.Value,
-            SalesOpportunityStage.New,
+            OpportunityStage.New,
             command.ExpectedValue,
             command.Currency,
             command.IsHotLead,

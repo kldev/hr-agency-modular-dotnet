@@ -7,8 +7,8 @@ namespace HrAgencySystem.Sales.Events.Opportunity;
 public sealed record StageChanged(
     Guid OpportunityId,
     Guid OrganizationId,
-    SalesOpportunityStage PreviousStage,
-    SalesOpportunityStage Stage,
+    OpportunityStage PreviousStage,
+    OpportunityStage Stage,
     UserSnapshot ChangedBy,
     DateTimeOffset ChangedAt,
     string LostReason,

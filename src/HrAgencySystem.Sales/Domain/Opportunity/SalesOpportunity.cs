@@ -23,7 +23,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
     public CompanySnapshot Company { get; private set; } = null!;
     public OpportunityTitle Title { get; private set; } = null!;
     public LongText Description { get; private set; } = null!;
-    public SalesOpportunityStage Stage { get; private set; }
+    public OpportunityStage Stage { get; private set; }
     public decimal ExpectedValue { get; private set; }
     public CurrencyCode CurrencyCode { get; private set; }
     public DateTimeOffset? ExpectedCloseDate { get; private set; }
@@ -40,7 +40,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
         Company = @event.Company;
         Title = OpportunityTitle.Create(@event.Title);
         Description = LongText.Create(@event.Description);
-        Stage = SalesOpportunityStage.New;
+        Stage = OpportunityStage.New;
         ExpectedValue = @event.ExpectedValue;
         CurrencyCode = @event.Currency;
         ExpectedCloseDate = @event.ExpectedCloseDate;
@@ -62,7 +62,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
     public void Apply(StageChanged @event)
     {
         Stage = @event.Stage;
-        if (@event.Stage == SalesOpportunityStage.Lost)
+        if (@event.Stage == OpportunityStage.Lost)
         {
             LostReason = ShortNote.Create(@event.LostReason);
         }
