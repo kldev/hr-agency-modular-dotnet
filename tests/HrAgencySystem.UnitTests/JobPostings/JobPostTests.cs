@@ -147,7 +147,7 @@ public sealed class JobPostTests
     }
 
     [Fact]
-    public void Apply_to_channel_should_change_status_to_published()
+    public void Apply_to_channel_should_not_change_status()
     {
         var posting = JobPost.Empty();
 
@@ -180,7 +180,7 @@ public sealed class JobPostTests
             PostingChannelType.Linkedin);
 
         Assert.Single(posting.Posts);
-        Assert.Equal(JobPostStatus.Published, posting.Status);
+        Assert.Equal(JobPostStatus.Archived, posting.Status);
     }
 
     private static void ApplyCreated(

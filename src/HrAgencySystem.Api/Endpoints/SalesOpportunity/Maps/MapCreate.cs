@@ -27,6 +27,7 @@ internal static class MapCreate
         string Title,
         string Description,
         decimal ExpectedValue,
+        bool IsHotLead,
         CurrencyCode Currency,
         DateTimeOffset? ExpectedCloseDate,
         Guid? ResponsibleId)
@@ -36,7 +37,8 @@ internal static class MapCreate
                 CompanyId, 
                 Title, 
                 Description, 
-                ExpectedValue, 
+                ExpectedValue,
+                IsHotLead,
                 Currency, 
                 ExpectedCloseDate, 
                 ResponsibleId, 

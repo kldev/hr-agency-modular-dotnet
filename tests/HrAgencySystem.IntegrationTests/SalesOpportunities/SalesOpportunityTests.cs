@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.Sales.Domain.Opportunity.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,8 @@ public sealed class SalesOpportunityTests(
             expectedCloseDate: date,
             expectedValue: 15_000,
             responsibleId: _responsibleId,
-            createdById: createdBy);
+            createdById: createdBy,
+            isHotLead: true);
         
         Assert.Equal(_organizationId, result.OrganizationId );
         Assert.Equal(_companyId, result.Company.Id );
@@ -49,6 +51,7 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(15_000, result.ExpectedValue);
         Assert.Equal(date, result.ExpectedCloseDate);
         Assert.Equal(createdBy, result.CreatedBy.Id);
+        Assert.True(result.IsHotLead);
     }
     
     [Fact]
@@ -97,6 +100,8 @@ public sealed class SalesOpportunityTests(
         var updatedDate = date.AddHours(Random.Shared.Next(120));
         var modifiedBy = Guid.NewGuid();
         
+        Assert.False(result.IsHotLead);
+        
         var updatedResult = await OpportunityTestClient.Update(
             opportunityId: result.OpportunityId,
             organizationId: _organizationId,
@@ -105,7 +110,8 @@ public sealed class SalesOpportunityTests(
             currency: CurrencyCode.EUR,
             expectedCloseDate: updatedDate,
             expectedValue: 5_000,
-            modifiedBy: modifiedBy);
+            modifiedBy: modifiedBy,
+            isHotLead: true);
 
 
         Assert.Equal(_organizationId, updatedResult.OrganizationId);
@@ -116,6 +122,7 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(15_000, updatedResult.PreviousExpectedValue);
         Assert.Equal(updatedDate, updatedResult.ExpectedCloseDate);
         Assert.Equal(modifiedBy, updatedResult.ModifiedBy.Id);
+        Assert.True(updatedResult.IsHotLead);
     }
     
     [Fact]
@@ -127,6 +134,27 @@ public sealed class SalesOpportunityTests(
         Assert.Null(result.ExpectedCloseDate);
         
     }
+    
+    [Fact]
+    public async Task ShouldNotCreateOpportunityWithoutTitle()
+    {
+        var request = OpportunityTestClient.CreateValidRequest() with
+        {
+            Title = ""
+        };
+
+        var response = await Client.PostAsJsonAsync(OpportunityTestClient.BaseUrl, request);
+        
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var problem = await response.ReadWithJson<BadRequestDetails>();
+
+        Assert.NotNull(problem);
+        Assert.Single(problem.ValidationErrors);
+        Assert.Contains(OpportunityTitle.RequiredMessage,  problem.ValidationErrors);
+
+    }
+    
     
     [Fact]
     public async Task ShouldReturnValidationErrorWithExpectedValueInvalid()

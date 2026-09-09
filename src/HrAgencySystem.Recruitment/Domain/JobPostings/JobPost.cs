@@ -138,6 +138,10 @@ public sealed class JobPost
     
     public void Apply(JobPostedToChannel @event)
     {
+        if(JobPostStatusChangePolicy.IsFinal(Status))
+            throw new InvalidOperationException(
+                "Job post in final status. Change status to published before posting to channel."); 
+        
         var posts = Posts.Append(new ChannelPost(@event.ChannelType, @event.OccurredAt));
         Posts = [.. posts];
         

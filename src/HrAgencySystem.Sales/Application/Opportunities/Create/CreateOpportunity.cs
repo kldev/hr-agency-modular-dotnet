@@ -9,6 +9,7 @@ public sealed record CreateOpportunity(
     string Title,
     string Description,
     decimal ExpectedValue,
+    bool IsHotLead,
     CurrencyCode Currency,
     DateTimeOffset? ExpectedCloseDate,
     Guid? ResponsibleId,

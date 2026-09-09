@@ -25,9 +25,10 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         CompanyId: companyId ?? Guid.NewGuid(),
         Title: title ?? "Some title",
         Description: description ?? "",
+        ExpectedValue: expectedValue ?? 10_000,
+        IsHotLead: false,
         Currency: currency ?? CurrencyCode.EUR,
         ExpectedCloseDate: expectedCloseDate,
-        ExpectedValue: expectedValue ?? 10_000,
         ResponsibleId: responsibleId
     );
     
@@ -41,9 +42,10 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         => new(
             Title: title ?? "Some title",
             Description: description ?? "",
+            ExpectedValue: expectedValue ?? 10_000,
+            false ,
             Currency: currency ?? CurrencyCode.EUR,
-            ExpectedCloseDate: expectedCloseDate,
-            ExpectedValue: expectedValue ?? 10_000
+            ExpectedCloseDate: expectedCloseDate
         );
     
     internal async Task<OpportunityCreated> Create(
@@ -55,7 +57,8 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         DateTimeOffset? expectedCloseDate = null,
         decimal? expectedValue = null,
         Guid? responsibleId = null,
-        Guid? createdById = null
+        Guid? createdById = null,
+        bool? isHotLead = null
     )
     {
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
@@ -68,7 +71,8 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
             Currency: currency ?? CurrencyCode.EUR,
             ExpectedCloseDate: expectedCloseDate,
             ExpectedValue: expectedValue ?? 10_000,
-            ResponsibleId: responsibleId
+            ResponsibleId: responsibleId,
+            IsHotLead: isHotLead ?? false
         );
 
         var response = await client.PostAsJsonAsync(BaseUrl, request);
@@ -89,7 +93,8 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         CurrencyCode? currency = null,
         DateTimeOffset? expectedCloseDate = null,
         decimal? expectedValue = null,
-        Guid? modifiedBy = null
+        Guid? modifiedBy = null,
+        bool? isHotLead = null
     )
     {
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
@@ -98,9 +103,10 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         var request = new MapUpdate.UpdateOpportunityRequest(
             Title: title ?? "Some title",
             Description: description ?? "",
+            ExpectedValue: expectedValue ?? 10_000,
+            isHotLead ?? false ,
             Currency: currency ?? CurrencyCode.EUR,
-            ExpectedCloseDate: expectedCloseDate,
-            ExpectedValue: expectedValue ?? 10_000
+            ExpectedCloseDate: expectedCloseDate
         );
 
         var response = await client.PutAsJsonAsync(BaseUrl +$"/{opportunityId}",  request);

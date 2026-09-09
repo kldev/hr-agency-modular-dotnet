@@ -75,7 +75,8 @@ public class CreateOpportunityHandlerTests : BaseTest
             companyId: CompanyId,
             createdBy: CreatedById,
             ownerId: OwnerId,
-            expectedCloseDate: expectedCloseDate);
+            expectedCloseDate: expectedCloseDate,
+            isHotLead: true);
 
         SetupOrganization();
         SetupCreatedBy();
@@ -90,6 +91,8 @@ public class CreateOpportunityHandlerTests : BaseTest
         Assert.Equal(OrganizationId, result.OrganizationId);
         Assert.Equal(CompanyId, result.Company.Id);
 
+        Assert.True(result.IsHotLead);
+        
         Assert.Equal(
             "Senior .NET Developer",
             result.Title);
@@ -594,7 +597,8 @@ public class CreateOpportunityHandlerTests : BaseTest
         CurrencyCode currency = CurrencyCode.PLN,
         DateTimeOffset? expectedCloseDate = null,
         Guid? ownerId = null,
-        Guid? createdBy = null)
+        Guid? createdBy = null,
+        bool? isHotLead = null)
     {
         return new CreateOpportunity(
             organizationId ?? OrganizationId,
@@ -602,6 +606,7 @@ public class CreateOpportunityHandlerTests : BaseTest
             title,
             description,
             expectedValue,
+            isHotLead ?? false,
             currency,
             expectedCloseDate ??
             new DateTimeOffset(

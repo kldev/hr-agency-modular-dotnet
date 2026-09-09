@@ -9,7 +9,7 @@ public sealed record OpportunityTitle
     private const string MaxLengthMessage =
         "Title cannot exceed 300 characters.";
     
-    private const string RequiredMessage = "Title is required.";
+    public const string RequiredMessage = "Title is required.";
 
     private OpportunityTitle(string value)
     {

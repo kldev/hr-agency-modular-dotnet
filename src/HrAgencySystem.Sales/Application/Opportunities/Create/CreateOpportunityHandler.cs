@@ -38,6 +38,7 @@ public static class CreateOpportunityHandler
             SalesOpportunityStage.New,
             command.ExpectedValue,
             command.Currency,
+            command.IsHotLead,
             command.ExpectedCloseDate,
             owner,
             clock.UtcNow,

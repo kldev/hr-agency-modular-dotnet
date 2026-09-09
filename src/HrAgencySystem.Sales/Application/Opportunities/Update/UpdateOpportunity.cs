@@ -10,6 +10,7 @@ public sealed record UpdateOpportunity(
     string Title,
     string Description,
     decimal ExpectedValue,
+    bool IsHotLead,
     CurrencyCode Currency,
     DateTimeOffset? ExpectedCloseDate,
     Guid ModifiedBy): IOpportunityData, IUpdateCommand;

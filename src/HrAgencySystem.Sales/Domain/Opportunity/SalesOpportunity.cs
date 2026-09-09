@@ -30,6 +30,8 @@ public sealed class SalesOpportunity  : IOrganizationDomain
     public ShortNote LostReason { get; private set; } = null!;
     public UserSnapshot ResponsiblePerson { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }
+    
+    public bool IsHotLead { get; private set; }
 
     public void Apply(OpportunityCreated @event)
     {
@@ -44,6 +46,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
         ExpectedCloseDate = @event.ExpectedCloseDate;
         ResponsiblePerson = @event.Responsible;
         CreatedAt = @event.CreatedAt;
+        IsHotLead = @event.IsHotLead;
     }
 
     public void Apply(OpportunityUpdated @event)
@@ -53,6 +56,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
         ExpectedValue = @event.ExpectedValue;
         ExpectedCloseDate = @event.ExpectedCloseDate;
         CurrencyCode = @event.Currency;
+        IsHotLead = @event.IsHotLead;
     }
 
     public void Apply(StageChanged @event)

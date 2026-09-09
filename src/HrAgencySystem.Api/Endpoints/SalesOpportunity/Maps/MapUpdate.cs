@@ -30,6 +30,7 @@ internal static class MapUpdate
         string Title,
         string Description,
         decimal ExpectedValue,
+        bool IsHotLead,
         CurrencyCode Currency,
         DateTimeOffset? ExpectedCloseDate
         )
@@ -41,6 +42,7 @@ internal static class MapUpdate
                 Title, 
                 Description, 
                 ExpectedValue, 
+                IsHotLead,
                 Currency, 
                 ExpectedCloseDate, 
                 modifiedBy);

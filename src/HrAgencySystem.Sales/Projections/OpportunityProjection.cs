@@ -17,6 +17,7 @@ public sealed record OpportunityProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string Description,
     SalesOpportunityStage Stage,
+    bool IsHotLead,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     decimal ExpectedValue,
     // ReSharper disable once NotAccessedPositionalProperty.Global
@@ -35,6 +36,7 @@ public sealed record OpportunityProjection(
     UserSnapshot? ModifiedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset? ModifiedAt
+    
 )
 {
     public static OpportunityProjection Create(
@@ -48,6 +50,7 @@ public sealed record OpportunityProjection(
             @event.Title,
             @event.Description,
             @event.Stage,
+            @event.IsHotLead,
             @event.ExpectedValue,
             @event.Currency,
             @event.ExpectedCloseDate,
@@ -69,7 +72,9 @@ public sealed record OpportunityProjection(
             Description = @event.Description,
             ExpectedValue = @event.ExpectedValue,
             ExpectedCloseDate = @event.ExpectedCloseDate,
-            CurrencyCode = @event.Currency
+            CurrencyCode = @event.Currency,
+            IsHotLead = @event.IsHotLead
+            
         };
     }
 

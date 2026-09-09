@@ -13,6 +13,7 @@ public sealed record OpportunityCreated(
     SalesOpportunityStage Stage,
     decimal ExpectedValue,
     CurrencyCode  Currency,
+    bool IsHotLead,
     DateTimeOffset? ExpectedCloseDate, 
     UserSnapshot Responsible,
     DateTimeOffset CreatedAt,
