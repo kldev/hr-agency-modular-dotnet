@@ -17,11 +17,11 @@ internal static class SalesEventsConfiguration
 
     private static void ConfigureActivityEvents(StoreOptions options)
     {
-        options.Events.AddEventType<SalesActivityCreated>();
+        options.Events.AddEventType<ActivityCreated>();
     }
     
     private static void ConfigureOpportunityEvents(StoreOptions options)
     {
-        options.Events.AddEventType<SalesOpportunityCreated>();
+        options.Events.AddEventType<OpportunityCreated>();
     }
 }

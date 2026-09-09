@@ -1,4 +1,4 @@
-using HrAgencySystem.Sales.Application.Opportunity.Create;
+using HrAgencySystem.Sales.Application.Opportunities.Create;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.Sales.Services;
@@ -12,7 +12,7 @@ using NSubstitute;
 
 namespace HrAgencySystem.UnitTests.Sales.Handlers;
 
-public class CreateSalesOpportunityHandlerTests : BaseTest
+public class CreateOpportunityHandlerTests : BaseTest
 {
     private readonly IDocumentSession _documentSession =
         Substitute.For<IDocumentSession>();
@@ -116,7 +116,7 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
 
         Assert.Equal(
             OwnerId,
-            result.Owner.Id);
+            result.Responsible.Id);
 
         Assert.Equal(
             CreatedById,
@@ -154,7 +154,7 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
             .Received(1)
             .StartStream<SalesOpportunity>(
                 OrganizationId,
-                Arg.Is<SalesOpportunityCreated>(x =>
+                Arg.Is<OpportunityCreated>(x =>
                     x.OpportunityId == result.OpportunityId &&
                     x.OrganizationId == result.OrganizationId &&
                     x.Company.Id == result.Company.Id &&
@@ -164,7 +164,7 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
                     x.ExpectedValue == result.ExpectedValue &&
                     x.Currency == result.Currency &&
                     x.ExpectedCloseDate == result.ExpectedCloseDate &&
-                    x.Owner.Id == result.Owner.Id &&
+                    x.Responsible.Id == result.Responsible.Id &&
                     x.CreatedBy.Id == result.CreatedBy.Id &&
                     x.CreatedAt == result.CreatedAt));
     }
@@ -186,7 +186,7 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
 
         Assert.Equal(
             CreatedById,
-            result.Owner.Id);
+            result.Responsible.Id);
 
         await _salesService
             .Received(1)
@@ -220,7 +220,7 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
 
         Assert.Equal(
             CreatedById,
-            result.Owner.Id);
+            result.Responsible.Id);
 
         await _salesService
             .Received(1)
@@ -249,15 +249,15 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
 
         Assert.Equal(
             OwnerId,
-            result.Owner.Id);
+            result.Responsible.Id);
 
         Assert.Equal(
             "Alice",
-            result.Owner.FirstName);
+            result.Responsible.FirstName);
 
         Assert.Equal(
             "Wells",
-            result.Owner.LastName);
+            result.Responsible.LastName);
 
         await _salesService
             .Received(1)
@@ -475,7 +475,7 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
 
         Assert.Equal(
             CreatedById,
-            result.Owner.Id);
+            result.Responsible.Id);
 
         await _salesService
             .Received(1)
@@ -492,11 +492,11 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
         AssertStreamCreated();
     }
 
-    private async Task<SalesOpportunityCreated> Handle(
-        CreateSalesOpportunity command,
+    private async Task<OpportunityCreated> Handle(
+        CreateOpportunity command,
         IClock? clock = null)
     {
-        return await CreateSalesOpportunityHandler.Handle(
+        return await CreateOpportunityHandler.Handle(
             command,
             _salesService,
             _documentSession,
@@ -582,10 +582,10 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
             .Received(1)
             .StartStream<SalesOpportunity>(
                 Arg.Any<Guid>(),
-                Arg.Any<SalesOpportunityCreated>());
+                Arg.Any<OpportunityCreated>());
     }
 
-    private static CreateSalesOpportunity CreateValidCommand(
+    private static CreateOpportunity CreateValidCommand(
         Guid? organizationId = null,
         Guid? companyId = null,
         string title = "Senior .NET Developer",
@@ -596,7 +596,7 @@ public class CreateSalesOpportunityHandlerTests : BaseTest
         Guid? ownerId = null,
         Guid? createdBy = null)
     {
-        return new CreateSalesOpportunity(
+        return new CreateOpportunity(
             organizationId ?? OrganizationId,
             companyId ?? CompanyId,
             title,

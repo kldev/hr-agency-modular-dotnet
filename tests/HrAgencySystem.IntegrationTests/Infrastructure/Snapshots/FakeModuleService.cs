@@ -49,4 +49,9 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
         var result = new OpportunitySnapshot(opportunityId, organizationId, Guid.NewGuid());
         return Task.FromResult(result);
     }
+
+    public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
+    {
+        // 
+    }
 }

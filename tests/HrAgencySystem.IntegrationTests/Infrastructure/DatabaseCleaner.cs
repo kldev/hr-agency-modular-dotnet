@@ -70,8 +70,8 @@ public sealed class DatabaseCleaner(string connectionString)
 
     public async Task CleanSales()
     {
-        await CleanTable<SalesActivityProjection>("sales");
-        await CleanTable<SalesOpportunityProjection>("sales");
+        await CleanTable<ActivityProjection>("sales");
+        await CleanTable<OpportunityProjection>("sales");
     }
 
 private async Task TruncateTable(string sql)

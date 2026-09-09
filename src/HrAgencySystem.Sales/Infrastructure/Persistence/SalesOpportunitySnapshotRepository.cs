@@ -9,14 +9,14 @@ public class SalesOpportunitySnapshotRepository(IQuerySession session) : ISalesO
 {
     public async Task<OpportunitySnapshot?> GetSnapshot(Guid opportunityId, Guid organizationId, CancellationToken ct)
     {
-        var result = await session.Query<SalesOpportunityProjection>()
+        var result = await session.Query<OpportunityProjection>()
             .WithOrganizationId(organizationId)
             .WithOpportunityId(opportunityId)
             .Select(z => new OpportunitySnapshot(z.Id, z.OrganizationId, z.CompanyId))
             .FirstOrDefaultAsync(ct);
         if (result != null) return result;
 
-        var fromEvent = await session.Query<SalesOpportunityCreated>()
+        var fromEvent = await session.Query<OpportunityCreated>()
             .Where(z => z.OrganizationId == organizationId)
             .Where(z => z.OpportunityId == organizationId)
             .Select(z => new OpportunitySnapshot(z.OpportunityId,

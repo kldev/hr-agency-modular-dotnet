@@ -5,7 +5,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Sales.Projections;
 
-public sealed record SalesOpportunityProjection(
+public sealed record OpportunityProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid Id,
     Guid OrganizationId,
@@ -25,9 +25,9 @@ public sealed record SalesOpportunityProjection(
     DateTimeOffset? ExpectedCloseDate,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string LostReason,
-    Guid SalesOwnerId,
+    Guid ResponsibleId,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    UserSnapshot SalesOwner,
+    UserSnapshot Responsible,
     DateTimeOffset CreatedAt,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     UserSnapshot CreatedBy,
@@ -37,10 +37,10 @@ public sealed record SalesOpportunityProjection(
     DateTimeOffset? ModifiedAt
 )
 {
-    public static SalesOpportunityProjection Create(
-        SalesOpportunityCreated @event)
+    public static OpportunityProjection Create(
+        OpportunityCreated @event)
     {
-        return new SalesOpportunityProjection(
+        return new OpportunityProjection(
             @event.OpportunityId,
             @event.OrganizationId,
             @event.Company.Id,
@@ -52,8 +52,8 @@ public sealed record SalesOpportunityProjection(
             @event.Currency,
             @event.ExpectedCloseDate,
             "",
-            @event.Owner.Id,
-            @event.Owner,
+            @event.Responsible.Id,
+            @event.Responsible,
             @event.CreatedAt,
             @event.CreatedBy,
             null,
@@ -61,7 +61,7 @@ public sealed record SalesOpportunityProjection(
         );
     }
 
-    public SalesOpportunityProjection Apply(SalesOpportunityUpdated @event)
+    public OpportunityProjection Apply(OpportunityUpdated @event)
     {
         return this with
         {
@@ -72,7 +72,7 @@ public sealed record SalesOpportunityProjection(
         };
     }
 
-    public SalesOpportunityProjection Apply(SalesOpportunityStageChanged @event)
+    public OpportunityProjection Apply(StageChanged @event)
     {
 
         return this with
@@ -84,11 +84,11 @@ public sealed record SalesOpportunityProjection(
         };
     }
 
-    public SalesOpportunityProjection Apply(SalesOpportunityOwnerChanged @event)
+    public OpportunityProjection Apply(ResponsiblePersonChanged @event)
     {
         return this with
         {
-            SalesOwner = @event.Owner,
+            Responsible = @event.Responsible,
             ModifiedAt = @event.ChangedAt,
             ModifiedBy = @event.ChangedBy
         };

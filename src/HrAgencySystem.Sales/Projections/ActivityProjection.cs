@@ -4,7 +4,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Sales.Projections;
 
-public sealed record SalesActivityProjection(
+public sealed record ActivityProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid Id,
     // ReSharper disable once NotAccessedPositionalProperty.Global
@@ -27,9 +27,9 @@ public sealed record SalesActivityProjection(
     CompanySnapshot Company
 )
 {
-    public static SalesActivityProjection Create(SalesActivityCreated @event)
+    public static ActivityProjection Create(ActivityCreated @event)
     {
-        return new SalesActivityProjection(
+        return new ActivityProjection(
             @event.SalesActivityId,
             @event.OrganizationId,
             @event.SalesOpportunityId,

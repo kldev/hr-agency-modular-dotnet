@@ -2,6 +2,7 @@ using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Sales.Services;
 
@@ -34,5 +35,11 @@ public sealed class SalesService(
     {
         var opportunity = await salesOpportunitySnapshotRepository.GetSnapshot(opportunityId, organizationId,ct);
         return opportunity ?? throw new NotFoundException("Sales opportunity", opportunityId);
+    }
+    
+    public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
+    {
+        if (aggregate.OrganizationId.Value != commandOrganizationId)
+            throw new BusinessRuleException("Invalid organization id");
     }
 }

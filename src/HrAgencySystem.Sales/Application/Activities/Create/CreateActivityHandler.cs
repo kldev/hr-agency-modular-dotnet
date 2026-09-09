@@ -1,20 +1,16 @@
-using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Domain.Activity;
 using HrAgencySystem.Sales.Events.Activity;
 using HrAgencySystem.Sales.Services;
-using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 
-namespace HrAgencySystem.Sales.Application.Activity.Create;
+namespace HrAgencySystem.Sales.Application.Activities.Create;
 
-public static class CreateSalesActivityHandler
+public static class CreateActivityHandler
 {
-    public static async Task<SalesActivityCreated> Handle(CreateSalesActivity command,
+    public static async Task<ActivityCreated> Handle(CreateActivity command,
         ISalesService service,
         IDocumentSession session,
         IClock clock,
@@ -31,7 +27,7 @@ public static class CreateSalesActivityHandler
         var company = await service.GetCompanyAsync(opportunity.CompanyId, ct);
 
         var activityId = SalesActivityId.New();
-        var @event = new SalesActivityCreated(
+        var @event = new ActivityCreated(
             activityId.Value,
             organizationId.Value, 
             opportunity.OpportunityId, 
@@ -43,7 +39,7 @@ public static class CreateSalesActivityHandler
         return @event;
     }
 
-    private static ShortNote CreateValueObjects(CreateSalesActivity command)
+    private static ShortNote CreateValueObjects(CreateActivity command)
     {
         return ShortNote.Create(command.Note, false);
     }

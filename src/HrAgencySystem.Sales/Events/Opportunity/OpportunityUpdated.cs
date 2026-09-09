@@ -4,14 +4,15 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Sales.Events.Opportunity;
 
-public sealed record SalesOpportunityStageChanged(
+public sealed record OpportunityUpdated( 
     Guid SalesOpportunityId,
-    Guid OrganizationId,
-    SalesOpportunityStage PreviousStage,
+    Guid OrganizationId,   
     SalesOpportunityStage Stage,
-    UserSnapshot ChangedBy,
-    DateTimeOffset ChangedAt,
-    string LostReason,
+    string Title,
+    string Description,
+    decimal PreviousExpectedValue,
     decimal ExpectedValue,
-    CurrencyCode CurrencyCode
-    );
+    CurrencyCode  Currency,
+    DateTimeOffset? ExpectedCloseDate,
+    UserSnapshot ModifiedBy,
+    DateTimeOffset ModifiedAt);

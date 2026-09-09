@@ -7,10 +7,10 @@ namespace HrAgencySystem.Sales.Infrastructure.Persistence;
 
 public sealed class SalesActivityQueryRepository(IQuerySession session) : ISalesActivityQueryRepository
 {
-    public async Task<SliceResponse<SalesActivityProjection>> GetSlicesAsync(Guid organizationId, 
+    public async Task<SliceResponse<ActivityProjection>> GetSlicesAsync(Guid organizationId, 
         SalesActivityQuery query, CancellationToken ct)
     {
-        return await session.Query<SalesActivityProjection>()
+        return await session.Query<ActivityProjection>()
             .WithOrganizationId(organizationId)
             .WithCompanyId(query.CompanyId)
             .WithOpportunityId(query.OpportunityId)

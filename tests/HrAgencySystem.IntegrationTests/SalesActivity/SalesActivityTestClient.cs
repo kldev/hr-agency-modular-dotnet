@@ -13,7 +13,7 @@ public sealed class SalesActivityTestClient(HttpClient client, ITestOutputHelper
 {
     public const string BaseUrl = "/api/sales";
 
-    internal async Task<SalesActivityCreated> Create(
+    internal async Task<ActivityCreated> Create(
         Guid? organizationId = null,
         Guid? opportunityId = null,
         SalesActivityType? type = null,
@@ -33,7 +33,7 @@ public sealed class SalesActivityTestClient(HttpClient client, ITestOutputHelper
         var response = await client.PostAsJsonAsync(BaseUrl + "/activity", request);
         response.EnsureSuccessStatusCode();
 
-        var result = await response.ReadWithJson<SalesActivityCreated>();
+        var result = await response.ReadWithJson<ActivityCreated>();
         output.WriteLine($"Created activity {result}");
 
         return result!;
@@ -44,7 +44,7 @@ public sealed class SalesActivityTestClient(HttpClient client, ITestOutputHelper
         return Enum.GetValues<SalesActivityType>()[Random.Shared.Next(Enum.GetValues<SalesActivityType>().Length)];
     }
     
-    internal async Task<SliceResponse<SalesActivityProjection>> GetSliceAsync ( 
+    internal async Task<SliceResponse<ActivityProjection>> GetSliceAsync ( 
         Guid organizationId,
         Guid? opportunityId = null,
         Guid? companyId = null,
@@ -72,6 +72,6 @@ public sealed class SalesActivityTestClient(HttpClient client, ITestOutputHelper
         
         response.EnsureSuccessStatusCode();
 
-        return (await response.ReadWithJson<SliceResponse<SalesActivityProjection>>())!;
+        return (await response.ReadWithJson<SliceResponse<ActivityProjection>>())!;
     }
 }

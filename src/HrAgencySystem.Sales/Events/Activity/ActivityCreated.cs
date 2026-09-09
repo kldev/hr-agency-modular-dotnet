@@ -3,7 +3,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Sales.Events.Activity;
 
-public sealed record SalesActivityCreated(
+public sealed record ActivityCreated(
     Guid SalesActivityId,
     Guid OrganizationId,
     Guid SalesOpportunityId,

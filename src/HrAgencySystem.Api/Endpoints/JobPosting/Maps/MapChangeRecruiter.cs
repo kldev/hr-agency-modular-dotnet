@@ -14,7 +14,7 @@ internal static class MapChangeRecruiter
         group.MapPut("/{jobPostId:guid}/change-recruiter", Handler).WithSummary("Change recruiter");
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobPostId, AssignRecruiter request,
+    private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobPostId, AssignRecruiterRequest request,
         IMessageBus bus, CancellationToken ct)
     {
         var result = await bus.InvokeAsync<JobPostRecruiterChanged>(

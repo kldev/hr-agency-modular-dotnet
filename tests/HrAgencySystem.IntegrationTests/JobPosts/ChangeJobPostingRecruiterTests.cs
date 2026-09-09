@@ -33,7 +33,7 @@ public sealed class ChangeJobPostingRecruiterTests(
 
         var recruiterId = Guid.NewGuid();
 
-        var request = new AssignRecruiter(recruiterId);
+        var request = new AssignRecruiterRequest(recruiterId);
 
         // Act
         var response = await Client.PutAsJsonAsync(
@@ -73,7 +73,7 @@ public sealed class ChangeJobPostingRecruiterTests(
 
         Assert.NotNull(created);
 
-        var request = new AssignRecruiter(
+        var request = new AssignRecruiterRequest(
             Guid.Empty);
 
         // Act

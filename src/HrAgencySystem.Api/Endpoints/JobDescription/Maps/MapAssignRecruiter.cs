@@ -13,7 +13,7 @@ internal static class MapAssignRecruiter
         group.MapPut("/api/job-description/{jobDescriptionId:guid}/assign-recruiter", Handler).WithSummary("Assign recruiter");
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobDescriptionId, AssignRecruiter request,
+    private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobDescriptionId, AssignRecruiterRequest request,
         IMessageBus bus, CancellationToken ct)
     {
         var result = await bus.InvokeAsync<JobDescriptionRecruiterAssigned>(

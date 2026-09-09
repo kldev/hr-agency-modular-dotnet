@@ -6,7 +6,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Sales.Domain.Opportunity;
 
-public sealed class SalesOpportunity
+public sealed class SalesOpportunity  : IOrganizationDomain
 {
     private SalesOpportunity()
     {
@@ -28,10 +28,10 @@ public sealed class SalesOpportunity
     public CurrencyCode CurrencyCode { get; private set; }
     public DateTimeOffset? ExpectedCloseDate { get; private set; }
     public ShortNote LostReason { get; private set; } = null!;
-    public UserSnapshot SalesOwner { get; private set; } = null!;
+    public UserSnapshot ResponsiblePerson { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }
 
-    public void Apply(SalesOpportunityCreated @event)
+    public void Apply(OpportunityCreated @event)
     {
         Id = SalesOpportunityId.From(@event.OpportunityId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
@@ -42,11 +42,11 @@ public sealed class SalesOpportunity
         ExpectedValue = @event.ExpectedValue;
         CurrencyCode = @event.Currency;
         ExpectedCloseDate = @event.ExpectedCloseDate;
-        SalesOwner = @event.Owner;
+        ResponsiblePerson = @event.Responsible;
         CreatedAt = @event.CreatedAt;
     }
 
-    public void Apply(SalesOpportunityUpdated @event)
+    public void Apply(OpportunityUpdated @event)
     {
         Title = OpportunityTitle.Create(@event.Title);
         Description = LongText.Create(@event.Description);
@@ -54,7 +54,7 @@ public sealed class SalesOpportunity
         ExpectedCloseDate = @event.ExpectedCloseDate;
     }
 
-    public void Apply(SalesOpportunityStageChanged @event)
+    public void Apply(StageChanged @event)
     {
         Stage = @event.Stage;
         if (@event.Stage == SalesOpportunityStage.Lost)
@@ -63,9 +63,9 @@ public sealed class SalesOpportunity
         }
     }
 
-    public void Apply(SalesOpportunityOwnerChanged @event)
+    public void Apply(ResponsiblePersonChanged @event)
     {
-        SalesOwner = @event.Owner;
+        ResponsiblePerson = @event.Responsible;
     }
 
 }

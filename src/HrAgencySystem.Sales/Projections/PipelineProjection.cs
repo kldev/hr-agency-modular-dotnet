@@ -6,10 +6,10 @@ using Marten.Events.Projections;
 
 namespace HrAgencySystem.Sales.Projections;
 
-public sealed class SalesPipelineProjection
-    : MultiStreamProjection<SalesPipelineStageSummary, string>
+public sealed class PipelineProjection
+    : MultiStreamProjection<PipelineStageSummary, string>
 {
-    public SalesPipelineProjection()
+    public PipelineProjection()
     {
         /*
          * Created:
@@ -17,7 +17,7 @@ public sealed class SalesPipelineProjection
          * One opportunity belongs to exactly one
          * organization/stage/currency bucket.
          */
-        Identity<SalesOpportunityCreated>(
+        Identity<OpportunityCreated>(
             @event => CreateId(
                 @event.OrganizationId,
                 @event.Stage,
@@ -29,11 +29,11 @@ public sealed class SalesPipelineProjection
          * The event contains the current stage and organization.
          * Currency is assumed to be immutable after creation.
          */
-        Identity<SalesOpportunityUpdated>(
+        Identity<OpportunityUpdated>(
             @event => CreateId(
                 @event.OrganizationId,
                 @event.Stage,
-                @event.CurrencyCode));
+                @event.Currency));
 
         /*
          * StageChanged:
@@ -43,7 +43,7 @@ public sealed class SalesPipelineProjection
          * PreviousStage -> remove opportunity/value
          * New Stage     -> add opportunity/value
          */
-        Identities<IEvent<SalesOpportunityStageChanged>>(
+        Identities<IEvent<StageChanged>>(
             @event =>
             {
                 var e = @event.Data;
@@ -68,10 +68,10 @@ public sealed class SalesPipelineProjection
     /*
      * First event for a pipeline bucket.
      */
-    public SalesPipelineStageSummary Create(
-        SalesOpportunityCreated @event)
+    public PipelineStageSummary Create(
+        OpportunityCreated @event)
     {
-        return new SalesPipelineStageSummary
+        return new PipelineStageSummary
         {
             Id = CreateId(
                 @event.OrganizationId,
@@ -93,19 +93,19 @@ public sealed class SalesPipelineProjection
      * If the bucket does not exist while rebuilding the projection,
      * this creates the bucket with the current opportunity.
      */
-    public SalesPipelineStageSummary Create(
-        SalesOpportunityUpdated @event)
+    public PipelineStageSummary Create(
+        OpportunityUpdated @event)
     {
-        return new SalesPipelineStageSummary
+        return new PipelineStageSummary
         {
             Id = CreateId(
                 @event.OrganizationId,
                 @event.Stage,
-                @event.CurrencyCode),
+                @event.Currency),
 
             OrgId = @event.OrganizationId,
             Stage = @event.Stage,
-            CurrencyCode = @event.CurrencyCode,
+            CurrencyCode = @event.Currency,
 
             OpportunityCount = 1,
             TotalExpectedValue = @event.ExpectedValue
@@ -118,8 +118,8 @@ public sealed class SalesPipelineProjection
      * bucket are applied here.
      */
     public void Apply(
-        SalesPipelineStageSummary summary,
-        SalesOpportunityCreated @event)
+        PipelineStageSummary summary,
+        OpportunityCreated @event)
     {
         summary.OpportunityCount++;
         summary.TotalExpectedValue += @event.ExpectedValue;
@@ -130,8 +130,8 @@ public sealed class SalesPipelineProjection
      * in the same stage.
      */
     public void Apply(
-        SalesPipelineStageSummary summary,
-        SalesOpportunityUpdated @event)
+        PipelineStageSummary summary,
+        OpportunityUpdated @event)
     {
         summary.TotalExpectedValue +=
             @event.ExpectedValue - @event.PreviousExpectedValue;
@@ -147,8 +147,8 @@ public sealed class SalesPipelineProjection
      * the summary's Stage with the event's PreviousStage.
      */
     public void Apply(
-        SalesPipelineStageSummary summary,
-        SalesOpportunityStageChanged @event)
+        PipelineStageSummary summary,
+        StageChanged @event)
     {
         if (summary.Stage == @event.PreviousStage)
         {
@@ -168,7 +168,7 @@ public sealed class SalesPipelineProjection
 
         throw new InvalidOperationException(
             $"Pipeline summary '{summary.Id}' does not match " +
-            $"stage change {nameof(SalesOpportunityStageChanged)}. " +
+            $"stage change {nameof(StageChanged)}. " +
             $"Summary stage: {summary.Stage}, " +
             $"previous stage: {@event.PreviousStage}, " +
             $"new stage: {@event.Stage}.");

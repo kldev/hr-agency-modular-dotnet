@@ -1,9 +1,9 @@
 using HrAgencySystem.SharedKernel.Commands;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.Sales.Application.Opportunity.Create;
+namespace HrAgencySystem.Sales.Application.Opportunities.Create;
 
-public sealed record CreateSalesOpportunity(
+public sealed record CreateOpportunity(
     Guid OrganizationId,
     Guid CompanyId,
     string Title,
@@ -11,5 +11,5 @@ public sealed record CreateSalesOpportunity(
     decimal ExpectedValue,
     CurrencyCode Currency,
     DateTimeOffset? ExpectedCloseDate,
-    Guid? OwnerId,
-    Guid CreatedBy) : ICreateCommand;
+    Guid? ResponsibleId,
+    Guid CreatedBy) : IOpportunityData, ICreateCommand;

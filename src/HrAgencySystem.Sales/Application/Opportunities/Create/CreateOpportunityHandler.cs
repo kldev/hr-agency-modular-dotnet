@@ -1,38 +1,35 @@
 using HrAgencySystem.Sales.Domain.Opportunity;
-using HrAgencySystem.Sales.Domain.Opportunity.ValueObjects;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.Sales.Services;
-using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 
-namespace HrAgencySystem.Sales.Application.Opportunity.Create;
+namespace HrAgencySystem.Sales.Application.Opportunities.Create;
 
-public static class CreateSalesOpportunityHandler
+public static class CreateOpportunityHandler
 {
-    public static async Task<SalesOpportunityCreated> Handle(
-        CreateSalesOpportunity command,
+    public static async Task<OpportunityCreated> Handle(
+        CreateOpportunity command,
         ISalesService service,
         IDocumentSession session,
         IClock clock,
         CancellationToken ct
     )
     {
-        var (title, description) = CreateValueObjects(command);
+        var (title, description) = OpportunityDataFactory.Create(command);
         
         var organizationId = OrganizationId.From(command.OrganizationId);
         await service.ValidateOrganization(command.OrganizationId, ct);
         
         var user = await service.GetUserAsync(command.CreatedBy, ct);
-        var owner = await GetOwner(service, command.OwnerId, user, ct);
+        var owner = await GetOwner(service, command.ResponsibleId, user, ct);
         var company = await service.GetCompanyAsync(command.CompanyId, ct);
 
         var opportunityId = SalesOpportunityId.New();
-        var @event = new SalesOpportunityCreated(
+        var @event = new OpportunityCreated(
             opportunityId.Value,
             organizationId.Value,
             company,
@@ -60,17 +57,5 @@ public static class CreateSalesOpportunityHandler
         var owner = await service.GetUserAsync(ownerId.Value, ct);
 
         return owner;
-    }
-
-    private static (OpportunityTitle title, LongText description) CreateValueObjects(CreateSalesOpportunity command)
-    {
-        var (title, titleError) = OpportunityTitle.TryCreate(command.Title);
-        var (description, descriptionError) = LongText.TryCreate(command.Description);
-
-        var errors = new List<string>();
-        if (titleError != null) errors.Add(titleError);
-        if (descriptionError != null) errors.Add(descriptionError);
-
-        return errors.Count > 0 ? throw new ValidationException(errors) : (title!, description!);
     }
 }

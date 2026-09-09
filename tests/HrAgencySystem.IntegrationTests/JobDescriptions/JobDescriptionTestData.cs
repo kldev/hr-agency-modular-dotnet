@@ -75,7 +75,7 @@ internal static class JobDescriptionTestData
             SalaryMin: 18_000,
             SalaryMax: 25_000);
 
-    public static AssignRecruiter CreateAssignRecruiterRequest(
+    public static AssignRecruiterRequest CreateAssignRecruiterRequest(
         Guid? recruiterId = null) =>
         new(recruiterId ?? Guid.NewGuid());
 

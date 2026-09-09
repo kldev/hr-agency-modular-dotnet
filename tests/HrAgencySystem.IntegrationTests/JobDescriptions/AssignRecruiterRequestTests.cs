@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class AssignRecruiterTests(
+public sealed class AssignRecruiterRequestTests(
     IntegrationEnvironment env,
     ITestOutputHelper output)
     : BaseIntegrationTest(env, output)

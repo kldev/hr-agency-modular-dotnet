@@ -1,10 +1,9 @@
-
 using HrAgencySystem.Sales.Domain.Activity;
 using HrAgencySystem.SharedKernel.Commands;
 
-namespace HrAgencySystem.Sales.Application.Activity.Create;
+namespace HrAgencySystem.Sales.Application.Activities.Create;
 
-public sealed record CreateSalesActivity(
+public sealed record CreateActivity(
     Guid OrganizationId,
     Guid SalesOpportunityId,
     SalesActivityType ActivityType,

@@ -3,7 +3,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Sales.Projections;
 
-public sealed class SalesPipelineStageSummary
+public sealed class PipelineStageSummary
 {
     public String Id { get; set; } = "";
     public Guid OrgId { get; set; }

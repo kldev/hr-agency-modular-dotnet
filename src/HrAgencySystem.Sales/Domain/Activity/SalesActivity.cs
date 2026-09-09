@@ -7,7 +7,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 namespace HrAgencySystem.Sales.Domain.Activity;
 
 // ReSharper disable once ClassCannotBeInstantiated
-public sealed class SalesActivity
+public sealed class SalesActivity : IOrganizationDomain
 {
     private SalesActivity(){}
     
@@ -20,7 +20,7 @@ public sealed class SalesActivity
     public UserSnapshot CreatedBy { get; private set; } = null!;
     public CompanySnapshot Company { get; private set; } = null!;
 
-    public void Apply(SalesActivityCreated @event)
+    public void Apply(ActivityCreated @event)
     {
         Id = SalesActivityId.From(@event.SalesActivityId);
         SalesOpportunityId = SalesOpportunityId.From(@event.SalesOpportunityId);

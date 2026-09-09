@@ -9,7 +9,7 @@ public class SalesPipelineQueryRepository(IQuerySession session) : ISalesPipelin
     public async Task<IReadOnlyCollection<SalesPipelineQueryResult>> GetTotalsAsync(Guid organizationId,
         CancellationToken ct)
     {
-        return await session.Query<SalesOpportunityProjection>()
+        return await session.Query<OpportunityProjection>()
             .Where(x => x.OrganizationId == organizationId)
             .GroupBy(x => new { x.Stage, x.CurrencyCode })
             .Select(g => new SalesPipelineQueryResult(

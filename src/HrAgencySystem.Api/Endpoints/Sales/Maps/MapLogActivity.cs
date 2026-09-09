@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Sales.Application.Activity.Create;
+using HrAgencySystem.Sales.Application.Activities.Create;
 using HrAgencySystem.Sales.Domain.Activity;
 using HrAgencySystem.Sales.Events.Activity;
 using Wolverine;
@@ -18,7 +18,7 @@ internal static class MapLogActivity
         AppUserAuthenticated user,
         CreateSalesActivityRequest request, CancellationToken ct)
     {
-        var result = await bus.InvokeAsync<SalesActivityCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<ActivityCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
         
         return TypedResults.Created($"/api/sales/activities?opportunityId={result.SalesOpportunityId}", result);
     }
@@ -31,9 +31,9 @@ internal record CreateSalesActivityRequest(
     SalesActivityType Type,
     string Note)
 {
-    public CreateSalesActivity ToCommand(Guid organizationId, Guid createdBy)
+    public CreateActivity ToCommand(Guid organizationId, Guid createdBy)
     {
-        return new CreateSalesActivity(organizationId, OpportunityId, Type, Note, createdBy);
+        return new CreateActivity(organizationId, OpportunityId, Type, Note, createdBy);
 
     }
 }
