@@ -1,4 +1,5 @@
 using HrAgencySystem.Company.Services;
+using HrAgencySystem.Identity.Services;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Services;
@@ -8,7 +9,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
-public class FakeModuleService : ISalesService, IRecruitmentService, ICompanyService, IJobDescriptionService
+public class FakeModuleService : ISalesService, IRecruitmentService, ICompanyService, IJobDescriptionService, IIdentityService
 {
     public Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {

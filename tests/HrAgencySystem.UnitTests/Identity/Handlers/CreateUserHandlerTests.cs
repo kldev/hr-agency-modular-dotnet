@@ -1,8 +1,8 @@
-using HrAgencySystem.Identity.Application.Handlers;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;
+using HrAgencySystem.Identity.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -11,6 +11,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 
 namespace HrAgencySystem.UnitTests.Identity.Handlers;
@@ -20,17 +21,14 @@ public class CreateUserHandlerTests : BaseTest
     private readonly IDocumentSession _documentSession =
         Substitute.For<IDocumentSession>();
 
-    private readonly IOrganizationChecker _checker =
-        Substitute.For<IOrganizationChecker>();
+    private readonly IIdentityService _service =
+        Substitute.For<IIdentityService>();
 
     private readonly IPasswordHasher _hasher =
         Substitute.For<IPasswordHasher>();
 
     private readonly IUserEmailReservationRepository _emailReservationRepository
         = Substitute.For<IUserEmailReservationRepository>();
-
-    private readonly IUserSnapshotRepository _snapshotRepository
-        = Substitute.For<IUserSnapshotRepository>();
     
     private static readonly Guid AdminId = Guid.NewGuid();
 
@@ -59,17 +57,11 @@ public class CreateUserHandlerTests : BaseTest
             OrganizationRole.Admin,
             password, Guid.NewGuid());
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         _hasher
             .Hash(password)
             .Returns(passwordHash);
         
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _documentSession
             .Events
@@ -83,11 +75,10 @@ public class CreateUserHandlerTests : BaseTest
         var result = await CreateUserHandler.Handle(
             command,
             _documentSession,
-            clock,
-            _checker,
             _hasher,
             _emailReservationRepository,
-            _snapshotRepository,
+            _service,
+            clock,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.UserId);
@@ -99,9 +90,9 @@ public class CreateUserHandlerTests : BaseTest
         Assert.Equal(passwordHash, result.PasswordHash);
         Assert.Equal(now, result.CreatedAt);
 
-        await _checker
+        await _service
             .Received(1)
-            .Exists(
+            .ValidateOrganization(
                 organizationId,
                 Arg.Any<CancellationToken>());
 
@@ -139,22 +130,8 @@ public class CreateUserHandlerTests : BaseTest
             "Password123!", Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.Equal(
             [
@@ -187,22 +164,8 @@ public class CreateUserHandlerTests : BaseTest
             "Password123!", Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.Equal(
             ["Email is required."],
@@ -231,22 +194,8 @@ public class CreateUserHandlerTests : BaseTest
             "Password123!",Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.Equal(
             ["First name is required."],
@@ -274,22 +223,8 @@ public class CreateUserHandlerTests : BaseTest
             OrganizationRole.Recruiter,
             "Password123!", Guid.NewGuid());
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.Equal(
             ["Last name is required."],
@@ -318,22 +253,8 @@ public class CreateUserHandlerTests : BaseTest
             "Password123!", Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.Contains(
             exception.Errors,
@@ -362,22 +283,8 @@ public class CreateUserHandlerTests : BaseTest
             "Password123!", Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.Contains(
             exception.Errors,
@@ -406,22 +313,8 @@ public class CreateUserHandlerTests : BaseTest
             "Password123!", Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.Contains(
             exception.Errors,
@@ -450,24 +343,8 @@ public class CreateUserHandlerTests : BaseTest
             "123", Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-        
-        
-
         var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
 
         Assert.NotEmpty(exception.Message);
 
@@ -496,22 +373,12 @@ public class CreateUserHandlerTests : BaseTest
             "Password123!", Guid.NewGuid()
             );
 
-        _checker
-            .Exists(
-                organizationId,
-                Arg.Any<CancellationToken>())
-            .Returns(false);
+        _service.ValidateOrganization(organizationId, Arg.Any<CancellationToken>())
+            .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
 
         await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                CancellationToken.None));
+            HandleCommand(command));
+
 
         _hasher
             .DidNotReceive()
@@ -538,29 +405,17 @@ public class CreateUserHandlerTests : BaseTest
             OrganizationRole.Recruiter,
             "Password123!", Guid.NewGuid());
 
-        _checker
-            .Exists(
-                organizationId,
-                cts.Token)
-            .Returns(false);
 
         _emailReservationRepository
             .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(false);
 
-        await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            CreateUserHandler.Handle(
-                command,
-                _documentSession,
-                TestClock,
-                _checker,
-                _hasher,
-                _emailReservationRepository,
-                _snapshotRepository,
-                cts.Token));
+        _service.ValidateOrganization(organizationId, cts.Token).Returns(Task.CompletedTask);
 
-        await _checker
+        await HandleCommand(command, ct: cts.Token);
+        
+        await _service
             .Received(1)
-            .Exists(
+            .ValidateOrganization(
                 organizationId,
                 cts.Token);
     }
@@ -582,14 +437,8 @@ public class CreateUserHandlerTests : BaseTest
             "  Doe  ",
             OrganizationRole.Admin,
             password, Guid.NewGuid());
-
-        _checker
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(true);
-
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
+        
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _hasher
             .Hash(password)
@@ -603,18 +452,20 @@ public class CreateUserHandlerTests : BaseTest
         _emailReservationRepository
             .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(true);
 
-        var clock = new FixedClock(now);
-
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(async () =>await CreateUserHandler.Handle(
-            command,
-            _documentSession,
-            clock,
-            _checker,
-            _hasher,
-            _emailReservationRepository,
-            _snapshotRepository,
-            CancellationToken.None));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>( async () => await HandleCommand(command));
         
         Assert.Equal(CreateUserHandler.UserWithEmailMessage, exception.Message);
+    }
+
+    private async Task HandleCommand(CreateUser command, IClock? clock = null, CancellationToken? ct = null)
+    {
+        await CreateUserHandler.Handle(
+            command,
+            _documentSession,
+            _hasher,
+            _emailReservationRepository,
+            _service,
+            clock ?? new FixedClock(DateTimeOffset.Now),
+            ct ?? CancellationToken.None);
     }
 }

@@ -3,6 +3,7 @@ using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Events;
+using HrAgencySystem.Identity.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -20,14 +21,13 @@ public static class CreateUserHandler
     public static async Task<UserCreated> Handle(
         CreateUser command,
         IDocumentSession session,
-        IClock clock,
-        IOrganizationChecker checker,
         IPasswordHasher hasher,
         IUserEmailReservationRepository repository,
-        IUserSnapshotRepository snapshotRepository,
+        IIdentityService service,
+        IClock clock,
         CancellationToken ct)
     {
-        var organizationId = await GetOrganization(command, checker, ct);
+        await service.ValidateOrganization(command.OrganizationId, ct);
 
         var (
             email,
@@ -37,9 +37,10 @@ public static class CreateUserHandler
 
         PasswordPolicyValidator.Validate(command.Password);
 
-        var user = await GetCreatedBy(command, snapshotRepository, ct);
+        var user = await service.GetUserAsync(command.CreatedBy, ct);
+        var organizationId = OrganizationId.From(command.OrganizationId);
 
-        await ValidateEmailReservation(repository, ct, organizationId, email);
+        await ValidateEmailReservation(repository, ct,organizationId , email);
         
         var userId = UserId.New();
         
@@ -71,35 +72,7 @@ public static class CreateUserHandler
         if (await repository.ExistAsync(organizationId, email, ct))
             throw new BusinessRuleException(UserWithEmailMessage);
     }
-
-    private static async Task<UserSnapshot?> GetCreatedBy(CreateUser command, IUserSnapshotRepository snapshotRepository,
-        CancellationToken ct)
-    {
-        UserSnapshot? user;
-        if (command.CreatedBy == Guid.Empty)
-        {
-            user = new UserSnapshot(Guid.NewGuid(), "System", "", "system");
-        }
-        else
-        {
-            user = await snapshotRepository.GetUserAsync(command.CreatedBy, ct);
-            if (user is null)
-                throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        }
-
-        return user;
-    }
-
-    private static async Task<OrganizationId> GetOrganization(CreateUser command, IOrganizationChecker checker, CancellationToken ct)
-    {
-        var organizationId =
-            OrganizationId.From(command.OrganizationId);
-
-        if (!await checker.Exists(command.OrganizationId, ct))
-            throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
-        return organizationId;
-    }
-
+    
     private static UserData CreateValueObjects(
         CreateUser command)
     {

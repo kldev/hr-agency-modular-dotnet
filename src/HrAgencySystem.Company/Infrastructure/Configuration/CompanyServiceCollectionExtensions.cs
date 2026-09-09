@@ -2,6 +2,7 @@ using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Company.Infrastructure.Query;
+using HrAgencySystem.Company.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,7 @@ internal static class CompanyServiceCollectionExtensions
             services.AddScoped<ICompanyContactQueryRepository, CompanyContactQueryRepository>();
             services.AddScoped<ICompanyContactSuggestionRepository, CompanyContactSuggestionRepository>();
             services.AddScoped<ICompanyContactRepository, CompanyContactRepository>();
+            services.AddScoped<ICompanyService, CompanyService>();
         }
     }
 }

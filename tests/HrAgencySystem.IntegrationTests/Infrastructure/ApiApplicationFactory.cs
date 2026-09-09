@@ -1,5 +1,6 @@
 using HrAgencySystem.Api;
 using HrAgencySystem.Company.Services;
+using HrAgencySystem.Identity.Services;
 using HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
@@ -42,6 +43,8 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
                 ServiceDescriptor.Scoped<ICompanyService, FakeModuleService>());
             services.Replace(
                 ServiceDescriptor.Scoped<IJobDescriptionService, FakeModuleService>());
+            services.Replace(
+                ServiceDescriptor.Scoped<IIdentityService, FakeModuleService>());
             
             
             ConfigureAuthentication(services);
