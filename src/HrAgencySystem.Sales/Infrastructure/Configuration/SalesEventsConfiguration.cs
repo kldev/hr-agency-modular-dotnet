@@ -23,5 +23,8 @@ internal static class SalesEventsConfiguration
     private static void ConfigureOpportunityEvents(StoreOptions options)
     {
         options.Events.AddEventType<OpportunityCreated>();
+        options.Events.AddEventType<OpportunityUpdated>();
+        options.Events.AddEventType<ResponsiblePersonChanged>();
+        options.Events.AddEventType<StageChanged>();
     }
 }

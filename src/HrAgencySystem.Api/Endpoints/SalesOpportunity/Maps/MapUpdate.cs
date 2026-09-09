@@ -36,8 +36,8 @@ internal static class MapUpdate
     {
         public UpdateOpportunity ToCommand(Guid organizationId, Guid opportunityId, Guid modifiedBy)
             => new (
+                organizationId,
                 opportunityId,
-                organizationId, 
                 Title, 
                 Description, 
                 ExpectedValue, 

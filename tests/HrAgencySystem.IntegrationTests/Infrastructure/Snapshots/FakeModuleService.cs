@@ -5,6 +5,7 @@ using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Services;
+using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 
@@ -50,8 +51,8 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
         return Task.FromResult(result);
     }
 
-    public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
+    public void ValidateAggregateUpdate(IOrganizationDomain? aggregate, Guid commandOrganizationId)
     {
-        // 
+        if (aggregate == null) throw new OrganizationAccessDeniedException();
     }
 }

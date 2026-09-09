@@ -1,5 +1,7 @@
 using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Infrastructure.Persistence;
+using HrAgencySystem.Identity.Application.Users.Create;
+using HrAgencySystem.Identity.Infrastructure.Persistence;
 
 namespace HrAgencySystem.Api.Common.Errors;
 
@@ -9,8 +11,10 @@ public static class MapDocumentErrors
 {
     private static readonly IReadOnlyCollection<DocumentMap> Maps =
     [
-        new(nameof(CompanyTaxIdReservation), "Company tax ID already exists",
-            CreateCompanyHandler.TaxIdAlreadyExistsMessage)
+        new(nameof(CompanyTaxIdReservation), "Business rule",
+            CreateCompanyHandler.TaxIdAlreadyExistsMessage),
+        new(nameof(UserEmailReservation), "Business rule",
+            CreateUserHandler.UserWithEmailMessage)
     ];
 
     public static string Title(string name)

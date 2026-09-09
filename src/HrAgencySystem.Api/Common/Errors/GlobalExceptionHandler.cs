@@ -17,6 +17,9 @@ public sealed class GlobalExceptionHandler(
     {
         switch (exception)
         {
+            case OrganizationAccessDeniedException:
+                return await WriteErrorAsync(httpContext, StatusCodes.Status403Forbidden, OrganizationAccessDeniedException.ProblemTitle,
+                    exception.Message, exception);
             case AuthorizationException:
                 return await WriteErrorAsync(httpContext, StatusCodes.Status401Unauthorized, "Authentication failed",
                     exception.Message, exception);

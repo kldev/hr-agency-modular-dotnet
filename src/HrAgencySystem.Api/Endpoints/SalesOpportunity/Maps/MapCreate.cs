@@ -29,7 +29,7 @@ internal static class MapCreate
         decimal ExpectedValue,
         CurrencyCode Currency,
         DateTimeOffset? ExpectedCloseDate,
-        Guid? OwnerId)
+        Guid? ResponsibleId)
     {
         public CreateOpportunity ToCommand(Guid organizationId, Guid createdBy)
             => new (organizationId, 
@@ -39,7 +39,7 @@ internal static class MapCreate
                 ExpectedValue, 
                 Currency, 
                 ExpectedCloseDate, 
-                OwnerId, 
+                ResponsibleId, 
                 createdBy);
     }
 }

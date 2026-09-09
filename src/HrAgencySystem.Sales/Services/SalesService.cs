@@ -39,7 +39,7 @@ public sealed class SalesService(
     
     public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
     {
-        if (aggregate.OrganizationId.Value != commandOrganizationId)
-            throw new BusinessRuleException("Invalid organization id");
+        if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
+            throw new OrganizationAccessDeniedException();
     }
 }

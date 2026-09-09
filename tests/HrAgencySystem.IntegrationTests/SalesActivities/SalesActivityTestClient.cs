@@ -7,7 +7,7 @@ using HrAgencySystem.Sales.Projections;
 using HrAgencySystem.SharedKernel.Web;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.SalesActivity;
+namespace HrAgencySystem.IntegrationTests.SalesActivities;
 
 public sealed class SalesActivityTestClient(HttpClient client, ITestOutputHelper output)
 {

@@ -5,7 +5,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 namespace HrAgencySystem.Sales.Application.Opportunities.Update;
 
 public sealed record UpdateOpportunity(   
-    Guid OpportunityId,
+    Guid SalesOpportunityId,
     Guid OrganizationId,
     string Title,
     string Description,

@@ -2,7 +2,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Sales.Domain.Activity;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.SalesActivity;
+namespace HrAgencySystem.IntegrationTests.SalesActivities;
 
 [Collection(IntegrationCollection.Name)]
 public sealed class SalesActivityTests(

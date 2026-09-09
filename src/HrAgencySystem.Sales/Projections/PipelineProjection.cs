@@ -153,6 +153,7 @@ public sealed class PipelineProjection
         if (summary.Stage == @event.PreviousStage)
         {
             summary.OpportunityCount--;
+            summary.CurrencyCode = @event.CurrencyCode;
             summary.TotalExpectedValue -= @event.ExpectedValue;
 
             return;

@@ -68,7 +68,8 @@ public sealed record OpportunityProjection(
             Title = @event.Title,
             Description = @event.Description,
             ExpectedValue = @event.ExpectedValue,
-            ExpectedCloseDate = @event.ExpectedCloseDate
+            ExpectedCloseDate = @event.ExpectedCloseDate,
+            CurrencyCode = @event.Currency
         };
     }
 

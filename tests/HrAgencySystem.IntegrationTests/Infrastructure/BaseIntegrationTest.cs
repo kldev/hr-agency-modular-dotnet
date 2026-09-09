@@ -4,7 +4,8 @@ using HrAgencySystem.IntegrationTests.Company;
 using HrAgencySystem.IntegrationTests.Interviews;
 using HrAgencySystem.IntegrationTests.JobDescriptions;
 using HrAgencySystem.IntegrationTests.JobPosts;
-using HrAgencySystem.IntegrationTests.SalesActivity;
+using HrAgencySystem.IntegrationTests.SalesActivities;
+using HrAgencySystem.IntegrationTests.SalesOpportunities;
 using HrAgencySystem.IntegrationTests.Users;
 using Xunit.Abstractions;
 
@@ -27,6 +28,9 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         CandidateClient = new CandidateTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
         SalesActivityTestClient =
             new SalesActivityTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
+
+        OpportunityTestClient = new OpportunityTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
+
     }
 
     protected HttpClient Client => _environment.Client;
@@ -43,6 +47,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     
     protected SalesActivityTestClient SalesActivityTestClient { get; }
     
+    protected OpportunityTestClient OpportunityTestClient { get;  }
     public async  Task InitializeAsync()
     {
         await BeforeEachAsync();

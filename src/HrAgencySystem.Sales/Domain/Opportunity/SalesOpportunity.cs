@@ -52,6 +52,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
         Description = LongText.Create(@event.Description);
         ExpectedValue = @event.ExpectedValue;
         ExpectedCloseDate = @event.ExpectedCloseDate;
+        CurrencyCode = @event.Currency;
     }
 
     public void Apply(StageChanged @event)

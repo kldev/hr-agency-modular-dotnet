@@ -29,7 +29,7 @@ public static class UpdateOpportunityHandler
             description.Value,
             aggregate.ExpectedValue,
             command.ExpectedValue,
-            aggregate.CurrencyCode,
+            command.Currency,
             command.ExpectedCloseDate,
             user,
             clock.UtcNow
