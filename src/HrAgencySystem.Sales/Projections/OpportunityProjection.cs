@@ -5,10 +5,10 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Sales.Projections;
 
-public sealed record SalesOpportunityProjection(
+public sealed record OpportunityProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid Id,
-    Guid OrgId,
+    Guid OrganizationId,
     Guid CompanyId,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     CompanySnapshot Company,
@@ -37,10 +37,10 @@ public sealed record SalesOpportunityProjection(
     DateTimeOffset? ModifiedAt
 )
 {
-    public static SalesOpportunityProjection Create(
+    public static OpportunityProjection Create(
         SalesOpportunityCreated @event)
     {
-        return new SalesOpportunityProjection(
+        return new OpportunityProjection(
             @event.SalesOpportunityId,
             @event.OrganizationId,
             @event.Company.Id,
@@ -61,7 +61,7 @@ public sealed record SalesOpportunityProjection(
         );
     }
 
-    public SalesOpportunityProjection Apply(SalesOpportunityUpdated @event)
+    public OpportunityProjection Apply(SalesOpportunityUpdated @event)
     {
         return this with
         {
@@ -72,7 +72,7 @@ public sealed record SalesOpportunityProjection(
         };
     }
 
-    public SalesOpportunityProjection Apply(SalesOpportunityStageChanged @event)
+    public OpportunityProjection Apply(SalesOpportunityStageChanged @event)
     {
 
         return this with
@@ -84,7 +84,7 @@ public sealed record SalesOpportunityProjection(
         };
     }
 
-    public SalesOpportunityProjection Apply(SalesOpportunityOwnerChanged @event)
+    public OpportunityProjection Apply(SalesOpportunityOwnerChanged @event)
     {
         return this with
         {

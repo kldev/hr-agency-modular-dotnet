@@ -7,6 +7,7 @@ public static class MapEndpoints
         Auth.Endpoint.Map(app);
         Company.Endpoint.Map(app);
         CompanyContacts.Endpoint.Map(app);
+        Sales.Endpoint.Map(app);
         Owner.Endpoint.Map(app);
         User.Endpoint.Map(app);
         JobDescription.Endpoint.Map(app);
@@ -17,6 +18,7 @@ public static class MapEndpoints
         Interviews.Endpoint.Map(app);
         Suggestion.Endpoint.Map(app);
         Organization.Endpoint.Map(app);
+        
       
         
         MapPlatformSeeder(app);

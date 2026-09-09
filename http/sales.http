@@ -1,0 +1,55 @@
+@baseURL = http://localhost:5000
+
+### Login Platform User
+# @name login
+POST {{baseURL}}/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "j.smith@hr-agency.com",
+    "password": "test123",
+    "slug": "hr-agency"
+}
+
+###
+@token = {{login.response.body.$.token}}
+
+###
+
+
+###
+@oportunityId = 8f43cf9a-63d8-44b3-8890-8a2fdbc2531e
+###
+
+###
+# @name createActivity
+POST {{baseURL}}/api/sales/activity
+Authorization: Bearer {{token}}
+
+{
+    "OpportunityId": "{{oportunityId}}",
+    "Type": "Call"
+    "Note": ""
+}
+
+###
+# @name createActivity
+POST {{baseURL}}/api/sales/activity
+Authorization: Bearer {{token}}
+
+{
+    "OpportunityId": "{{oportunityId}}",
+    "Type": "Email"
+    "Note": ""
+}
+
+###
+# @name createActivity
+POST {{baseURL}}/api/sales/activity
+Authorization: Bearer {{token}}
+
+{
+    "OpportunityId": "{{oportunityId}}",
+    "Type": "Meeting"
+    "Note": ""
+}

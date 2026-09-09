@@ -86,7 +86,7 @@ internal static partial class CandidateLogs
     [LoggerMessage(
         EventId = 1,
         Level = LogLevel.Information,
-        Message = "Candidate {email} found database. ")]
+        Message = "Candidate {email} found in database. ")]
     public static partial void CandidateFoundInDatabase(
         this ILogger logger,
         string email);

@@ -78,7 +78,7 @@ public sealed class SalesPipelineProjection
                 @event.Stage,
                 @event.CurrencyCode),
 
-            OrganizationId = @event.OrganizationId,
+            OrgId = @event.OrganizationId,
             Stage = @event.Stage,
             CurrencyCode = @event.CurrencyCode,
 
@@ -103,7 +103,7 @@ public sealed class SalesPipelineProjection
                 @event.Stage,
                 @event.CurrencyCode),
 
-            OrganizationId = @event.OrganizationId,
+            OrgId = @event.OrganizationId,
             Stage = @event.Stage,
             CurrencyCode = @event.CurrencyCode,
 

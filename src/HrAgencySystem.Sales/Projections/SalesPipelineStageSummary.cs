@@ -6,7 +6,7 @@ namespace HrAgencySystem.Sales.Projections;
 public sealed class SalesPipelineStageSummary
 {
     public String Id { get; set; } = "";
-    public Guid OrganizationId { get; set; }
+    public Guid OrgId { get; set; }
 
     public SalesOpportunityStage Stage { get; set; }
 

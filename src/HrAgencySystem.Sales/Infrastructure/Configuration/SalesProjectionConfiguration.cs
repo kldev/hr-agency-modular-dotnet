@@ -36,18 +36,19 @@ internal static class  SalesProjectionConfiguration
     private static void ConfigureOpportunityProjection(
         StoreOptions options)
     {
-        options.Projections.Snapshot<SalesOpportunityProjection>(
+        options.Projections.Snapshot<OpportunityProjection>(
             SnapshotLifecycle.Async);
 
         options.Schema
-            .For<SalesOpportunityProjection>()
+            .For<OpportunityProjection>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { x.OrgId })
-            .Index(x => new { x.OrgId, x.CreatedAt })
-            .Index(x => new { x.OrgId, x.CompanyId })
-            .Index(x => new { x.OrgId, x.Stage })
-            .Index(x => new { x.OrgId, x.SalesOwnerId })
-            .Index(x => new { x.OrgId, x.Stage, x.CurrencyCode, x.ExpectedValue });
+            .Index(x => new { x.OrganizationId })
+            .Index(x => new { x.OrganizationId, ca = x.CreatedAt })
+            .Index(x => new { x.OrganizationId, c = x.CompanyId })
+            .Index(x => new { x.OrganizationId, s = x.Stage })
+            .Index(x => new {  x.OrganizationId, o = x.SalesOwnerId })
+            .Index(x => new { x.OrganizationId,
+                s = x.Stage, cc = x.CurrencyCode, v = x.ExpectedValue }, idx => { idx.Name = "idx_sop_exp_value";});
     }
     
     private static void ConfigureSalesPipelineStageSummaryProjection(StoreOptions options)
@@ -56,7 +57,7 @@ internal static class  SalesProjectionConfiguration
 
         options.Schema.For<SalesPipelineStageSummary>()
             .DatabaseSchemaName(SchemaName)
-            .Index(x => new { x.OrganizationId })
-            .Index(x => new { x.OrganizationId, x.Stage });
+            .Index(x => new { OrganizationId = x.OrgId })
+            .Index(x => new { OrganizationId = x.OrgId, x.Stage });
     }
 }

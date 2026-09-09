@@ -2,7 +2,11 @@ using HrAgencySystem.Organization.Events;
 
 namespace HrAgencySystem.Organization.Projections;
 
-public sealed record OrganizationProjection(Guid OrganizationId, string Name, string Slug, DateTimeOffset CreatedAt, DateTimeOffset? ModifiedAt)
+public sealed record OrganizationProjection(Guid Id, 
+    string Name, 
+    string Slug, 
+    DateTimeOffset CreatedAt, 
+    DateTimeOffset? ModifiedAt)
 {
     public static OrganizationProjection Create(
         OrganizationCreated @event)

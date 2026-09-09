@@ -11,6 +11,7 @@ internal static class SalesServiceCollectionExtensions
         public void AddSalesServices()
         {
             services.AddScoped<ISalesPipelineQueryRepository, SalesPipelineQueryRepository>();
+            services.AddScoped<ISalesOpportunitySnapshotRepository, SalesOpportunitySnapshotRepository>();
         }
     }
 }

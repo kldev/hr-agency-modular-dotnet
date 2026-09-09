@@ -1,6 +1,7 @@
 using HrAgencySystem.Api;
 using HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
+using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,10 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
             services.Replace(ServiceDescriptor.Scoped<IJobDescriptionSnapshotRepository, FakeJobDescriptionSnapshot>());
             services.Replace(ServiceDescriptor
                 .Scoped<IJobApplicationInfoQueryRepository, FakeJobApplicationInfoQueryRepository>());
+
+            services.Replace(
+                ServiceDescriptor.Scoped<ISalesOpportunitySnapshotRepository, FakeSalesOpportunitySnapshot>());
+            
             ConfigureAuthentication(services);
         });
         
