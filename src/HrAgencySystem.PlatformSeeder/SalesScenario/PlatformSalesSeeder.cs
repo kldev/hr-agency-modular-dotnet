@@ -258,14 +258,7 @@ public sealed class PlatformSalesSeeder(
             }
             
             logger.LogInformation("Aggregate state: " + opportunityAggregate);
-            //
-            // if (sales == null)
-            // {
-            //     logger.LogInformation("Could not load aggregate with id " + command.OpportunityId);
-            //     
-            //     continue;
-            // }
-            //
+           
             logger.LogInformation("Aggregate loaded successfully with id " + command.OpportunityId);
             AggregateLoadTotal++;
             

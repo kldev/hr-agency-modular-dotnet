@@ -51,7 +51,17 @@ internal static class  SalesProjectionConfiguration
             {
                 x.OrganizationId,
                 s = x.Stage, cc = x.CurrencyCode, v = x.ExpectedValue
-            }, idx => { idx.Name = "idx_sop_exp_value"; });
+            }, idx => { idx.Name = "idx_sop_exp_value"; })
+            .Index(x => new
+            {
+                x.OrganizationId,
+                s = x.CreatedAt, 
+                cc = x.Title, 
+                v = x.Description, 
+                x.Company.Name, 
+                x.LostReason,
+                x.ResponsibleId
+            }, idx => { idx.Name = "idx_sop_search"; });
     }
 
     private static void ConfigureSalesPipelineStageSummaryProjection(StoreOptions options)

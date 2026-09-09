@@ -15,6 +15,7 @@ internal static class SalesServiceCollectionExtensions
             services.AddScoped<ISalesOpportunitySnapshotRepository, SalesOpportunitySnapshotRepository>();
             services.AddScoped<ISalesActivityQueryRepository, SalesActivityQueryRepository>();
             services.AddScoped<ISalesService, SalesService>();
+            services.AddScoped<IOpportunityQueryRepository, OpportunityQueryRepository>();
         }
     }
 }

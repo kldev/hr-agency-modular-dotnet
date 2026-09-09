@@ -161,3 +161,38 @@ Content-Type: application/json
     "Note": ""
 }
 
+
+###
+# @name getSlice
+GET {{baseURL}}/api/sales/opportunity?pageSize=50
+Authorization: Bearer {{token}}
+
+###
+@oportunityId2 = {{getSlice.response.body.$.content[0].id}}
+@responsibleId2 = {{getSlice.response.body.$.content[0].responsibleId}}
+###
+
+###
+GET {{baseURL}}/api/sales/opportunity?search=detailed pricing
+Authorization: Bearer {{token}}
+
+
+###
+GET {{baseURL}}/api/sales/opportunity/{{oportunityId2}}
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/sales/opportunity?stage=Viewed
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/sales/opportunity?stage=Lost
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/sales/opportunity?stage=Proposal
+Authorization: Bearer {{token}}
+
+###
+GET {{baseURL}}/api/sales/opportunity?responsibleId={{responsibleId2}}
+Authorization: Bearer {{token}}
