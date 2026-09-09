@@ -1,6 +1,7 @@
 using HrAgencySystem.JobDescription.Application.Create;
 using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -9,6 +10,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace HrAgencySystem.UnitTests.JobDescriptions.Handlers;
 
@@ -17,14 +19,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     private readonly IDocumentSession _documentSession =
             Substitute.For<IDocumentSession>();
     
-    private readonly IOrganizationChecker _checker =
-        Substitute.For<IOrganizationChecker>();
-
-    private readonly IUserSnapshotRepository _snapshotRepository =
-        Substitute.For<IUserSnapshotRepository>();
-
-    private readonly ICompanySnapshotRepository _companySnapshot =
-        Substitute.For<ICompanySnapshotRepository>();
+    private readonly IJobDescriptionService _service
+        = Substitute.For<IJobDescriptionService>();
 
     private static readonly Guid RecruiterId = Guid.NewGuid();
 
@@ -71,16 +67,13 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             22000m,
             RecruiterId,
             RecruiterId);
+        
 
-        _checker
-            .Exists(organizationId, Arg.Any<CancellationToken>())
-            .Returns(true);
-
-        _snapshotRepository
+        _service
             .GetUserAsync(RecruiterId, Arg.Any<CancellationToken>())
             .Returns(Recruiter);
 
-        _companySnapshot.GetCompanyAsync(companyId, Arg.Any<CancellationToken>())
+        _service.GetCompanyAsync(companyId, Arg.Any<CancellationToken>())
             .Returns(new CompanySnapshot(companyId, "Company A", "TX-100-101"));
 
         var result = await Handle(
@@ -127,9 +120,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         Assert.Equal(RecruiterId, result.Recruiter.Id);
         Assert.Equal(now, result.CreatedAt);
 
-        await _checker
+        await _service
             .Received(1)
-            .Exists(
+            .ValidateOrganization(
                 organizationId,
                 Arg.Any<CancellationToken>());
 
@@ -328,9 +321,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         var organizationId = Guid.NewGuid();
 
-        _checker
-            .Exists(organizationId, Arg.Any<CancellationToken>())
-            .Returns(false);
+        _service
+            .ValidateOrganization(organizationId, Arg.Any<CancellationToken>())
+            .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
 
         var exception = await AssertBusinessRuleError(
             CreateValidCommand(organizationId: organizationId));
@@ -339,9 +332,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             OrganizationId.OrganizationCheckMessage,
             exception.Message);
 
-        await _checker
+        await _service
             .Received(1)
-            .Exists(
+            .ValidateOrganization(
                 organizationId,
                 Arg.Any<CancellationToken>());
 
@@ -353,22 +346,18 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         var recruiterId = Guid.NewGuid();
 
-        _checker
-            .Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(true);
-
-        _snapshotRepository
+        _service
             .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
-            .Returns((UserSnapshot?)null);
+            .Throws(new NotFoundException("User", recruiterId));
 
-        var exception = await AssertBusinessRuleError(
+        var exception = await AssertNotFoundError(
             CreateValidCommand(recruiterId: recruiterId));
 
-        Assert.Equal(
-            IUserSnapshotRepository.NotFoundMessage,
+        Assert.Contains(
+            "User not found",
             exception.Message);
 
-        await _snapshotRepository
+        await _service
             .Received(1)
             .GetUserAsync(
                 recruiterId,
@@ -397,6 +386,11 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         return await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command));
     }
 
+    private async Task<NotFoundException> AssertNotFoundError(CreateJobDescription command)
+    {
+        return await Assert.ThrowsAsync<NotFoundException>(() => Handle(command));
+    }
+
     private async Task<JobDescriptionCreated> Handle(
         CreateJobDescription command,
         IClock? clock = null)
@@ -405,17 +399,15 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             command,
             _documentSession,
             clock ?? TestClock,
-            _checker,
-            _snapshotRepository,
-            _companySnapshot,
+            _service,
             CancellationToken.None);
     }
 
     private async Task AssertNoOrganizationCheck()
     {
-        await _checker
+        await _service
             .DidNotReceive()
-            .Exists(
+            .ValidateOrganization(
                 Arg.Any<Guid>(),
                 Arg.Any<CancellationToken>());
     }

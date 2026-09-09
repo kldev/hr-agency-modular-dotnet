@@ -1,5 +1,6 @@
 using HrAgencySystem.JobDescription.Application.Create;
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -13,7 +14,7 @@ public static class UpdateJobDescriptionHandler
     public static async Task<(JobDescriptionUpdated, Wolverine.Marten.Events)> Handle(
         UpdateJobDescription command,
         Domain.JobDescription aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        IJobDescriptionService service,
         IClock clock,
         CancellationToken ct)
     {
@@ -23,7 +24,7 @@ public static class UpdateJobDescriptionHandler
             location, responsibilities,
             requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
 
-        var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);
+        var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
 
         ValidateOrganization(command, aggregate);
 
@@ -52,12 +53,5 @@ public static class UpdateJobDescriptionHandler
     {
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException("Invalid organization id");
-    }
-
-    private static async Task<UserSnapshot> GetModifiedBy(UpdateJobDescription command, IUserSnapshotRepository snapshotRepository,
-        CancellationToken ct)
-    {
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
-        return modifiedBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

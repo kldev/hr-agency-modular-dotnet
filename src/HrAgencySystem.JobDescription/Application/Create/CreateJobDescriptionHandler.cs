@@ -1,5 +1,6 @@
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -15,27 +16,25 @@ public static class CreateJobDescriptionHandler
         CreateJobDescription command,
         IDocumentSession session,
         IClock clock,
-        IOrganizationChecker checker,
-        IUserSnapshotRepository userSnapshotRepository,
-        ICompanySnapshotRepository companySnapshotRepository,
+        IJobDescriptionService service,
         CancellationToken ct)
     {
         var (title, summary, description,
             location, responsibilities,
             requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
 
-        var organizationId = await ValidateOrganization(command, checker, ct);
+        await service.ValidateOrganization(command.OrganizationId, ct);
 
-        var recruiter = await GetRecruiter(command, userSnapshotRepository, ct);
+        var recruiter = await service.GetUserAsync(command.RecruiterId, ct);
 
-        var createdBy = await GetCreatedBy(command, userSnapshotRepository, ct);
+        var createdBy = await service.GetUserAsync(command.CreatedBy, ct);
 
-        var company = await GetCompany(command, companySnapshotRepository, ct);
+        var company = await service.GetCompanyAsync(command.CompanyId, ct);
 
         var jobDescriptionId = JobDescriptionId.New();
         var @event = new JobDescriptionCreated(
                 jobDescriptionId.Value,
-                organizationId.Value,
+                command.OrganizationId,
                 command.CompanyId,
                 title.Value,
                 summary.Value,
@@ -58,35 +57,5 @@ public static class CreateJobDescriptionHandler
         session.Events.StartStream<Domain.JobDescription>(jobDescriptionId.Value, @event);
 
         return @event;
-    }
-
-    private static async Task<CompanySnapshot> GetCompany(CreateJobDescription command, ICompanySnapshotRepository companySnapshotRepository,
-        CancellationToken ct)
-    {
-        var company = await companySnapshotRepository.GetCompanyAsync(command.CompanyId, ct);
-        return company ?? throw new BusinessRuleException(ICompanySnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<UserSnapshot> GetCreatedBy(CreateJobDescription command, IUserSnapshotRepository userSnapshotRepository,
-        CancellationToken ct)
-    {
-        var createdBy = await userSnapshotRepository.GetUserAsync(command.CreatedBy, ct);
-        return createdBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<UserSnapshot> GetRecruiter(CreateJobDescription command, IUserSnapshotRepository userSnapshotRepository,
-        CancellationToken ct)
-    {
-        var recruiter = await userSnapshotRepository.GetUserAsync(command.RecruiterId, ct);
-        return recruiter ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<OrganizationId> ValidateOrganization(CreateJobDescription command, IOrganizationChecker checker,
-        CancellationToken ct)
-    {
-        var organizationId = OrganizationId.From(command.OrganizationId);
-        if (!await checker.Exists(organizationId.Value, ct))
-            throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
-        return organizationId;
     }
 }

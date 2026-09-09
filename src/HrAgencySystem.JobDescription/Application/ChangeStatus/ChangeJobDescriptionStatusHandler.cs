@@ -1,8 +1,7 @@
-using HrAgencySystem.JobDescription.Application.Result;
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
@@ -14,14 +13,14 @@ public static class ChangeJobDescriptionStatusHandler
     public static async Task<(UpdateJobDescriptionStatusResult, Wolverine.Marten.Events)> Handle(
         ChangeJobDescriptionStatus command,
         Domain.JobDescription aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        IJobDescriptionService service,
         IClock clock,
         CancellationToken ct)
     {
         if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
         var result = new UpdateJobDescriptionStatusResult(aggregate.Id.Value, command.Status);
 
-        var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);
+        var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
 
         if (aggregate.Status == command.Status)
         {
@@ -47,11 +46,6 @@ public static class ChangeJobDescriptionStatusHandler
                 throw new BusinessRuleException("Invalid status change: " + command.Status);
         }
     }
-
-    private static async Task<UserSnapshot> GetModifiedBy(ChangeJobDescriptionStatus command, IUserSnapshotRepository snapshotRepository,
-        CancellationToken ct)
-    {
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
-        return modifiedBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
 }
+
+public sealed record UpdateJobDescriptionStatusResult(Guid JobDescriptionId, JobDescriptionStatus Status);

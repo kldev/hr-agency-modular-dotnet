@@ -1,8 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.JobDescription.Application.ChangeStatus;
-using HrAgencySystem.JobDescription.Application.Result;
 using HrAgencySystem.JobDescription.Domain;
-using HrAgencySystem.JobDescription.Events;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.JobDescription.Maps;

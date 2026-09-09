@@ -1,7 +1,7 @@
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.JobDescription.Maps;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.JobDescription.Application.Result;
+using HrAgencySystem.JobDescription.Application.ChangeStatus;
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.JobDescription.Projections;

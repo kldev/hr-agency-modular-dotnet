@@ -1,2 +1,0 @@
-namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
-

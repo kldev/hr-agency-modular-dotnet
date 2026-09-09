@@ -1,5 +1,6 @@
 using HrAgencySystem.JobDescription.Application.ChangeStatus;
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -12,8 +13,8 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
 {
     private readonly IClock _clock = Substitute.For<IClock>();
 
-    private readonly IUserSnapshotRepository _snapshotRepository =
-        Substitute.For<IUserSnapshotRepository>();
+    private readonly IJobDescriptionService _service =
+        Substitute.For<IJobDescriptionService>();
 
     private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
     
@@ -31,7 +32,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
 
         var aggregate = D.JobDescription.Empty();
 
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
@@ -40,7 +41,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var (result, events) = await ChangeJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             _clock,
             CancellationToken.None);
 
@@ -68,7 +69,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
 
         var aggregate = D.JobDescription.Empty();
 
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(ModifiedBy);
         
         _clock.UtcNow.Returns(now);
@@ -77,7 +78,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var (result, events) = await ChangeJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             _clock, CancellationToken.None);
 
         // Assert
@@ -104,7 +105,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
 
         var aggregate = D.JobDescription.Empty();
         
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
@@ -113,7 +114,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var (result, events) = await ChangeJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             _clock,
             CancellationToken.None);
 
@@ -141,7 +142,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
 
         var aggregate = D.JobDescription.Empty();
         
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
@@ -150,7 +151,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var (result, events) = await ChangeJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             _clock, CancellationToken.None);
 
         // Assert
@@ -170,7 +171,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         // Arrange
         var aggregate = D.JobDescription.Empty();
 
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(ModifiedBy);
         
         var command = new ChangeJobDescriptionStatus(
@@ -183,7 +184,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var (result, events) = await ChangeJobDescriptionStatusHandler.Handle(
             command,
             aggregate,
-            _snapshotRepository,
+            _service,
             _clock,
             CancellationToken.None);
 
@@ -210,7 +211,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             async () => await ChangeJobDescriptionStatusHandler.Handle(
                 command,
                 null!,
-                _snapshotRepository,
+                _service,
                 _clock, CancellationToken.None));
 
         // Assert
@@ -230,7 +231,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             aggregate.Id.Value,
             invalidStatus, Guid.NewGuid(), Guid.NewGuid());
 
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(ModifiedBy);
         
         // Act
@@ -238,7 +239,7 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             async () => await ChangeJobDescriptionStatusHandler.Handle(
                 command,
                 aggregate,
-                _snapshotRepository,
+                _service,
                 _clock, CancellationToken.None));
 
         // Assert

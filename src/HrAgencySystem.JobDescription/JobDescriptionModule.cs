@@ -2,6 +2,7 @@ using HrAgencySystem.JobDescription.Application.Port;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.JobDescription.Infrastructure.Query;
 using HrAgencySystem.JobDescription.Projections;
+using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using JasperFx.Events.Projections;
 using Marten;
@@ -18,6 +19,7 @@ public static class JobDescriptionModule
     {
        services.AddScoped<IJobDescriptionQueryRepository, JobDescriptionQueryRepository>();
        services.AddScoped<IJobDescriptionSnapshotRepository, JobDescriptionSnapshotRepository>();
+       services.AddScoped<IJobDescriptionService, JobDescriptionService>();
     }
 
     public static void ConfigureMarten(

@@ -1,4 +1,5 @@
 using HrAgencySystem.JobDescription.Events;
+using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -13,15 +14,15 @@ public static class AssignJobDescriptionRecruiterHandler
     public static async Task<(JobDescriptionRecruiterAssigned,Wolverine.Marten.Events)> Handle(
         AssignJobDescriptionRecruiter command,
         Domain.JobDescription aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        IJobDescriptionService service,
         IClock clock,
         CancellationToken ct)
     {
         if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
         
-        var recruiter = await GetRecruiter(command, snapshotRepository, ct);
+        var recruiter = await service.GetUserAsync(command.RecruiterId, ct);
 
-        var modifiedBy = await GetModifiedBy(command, snapshotRepository, ct);
+        var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
 
         ValidateOrganization(command, aggregate);
 
@@ -34,22 +35,5 @@ public static class AssignJobDescriptionRecruiterHandler
     {
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(OrganizationId.OrganizationNotMatchMessage);
-    }
-
-    private static async Task<UserSnapshot> GetModifiedBy(AssignJobDescriptionRecruiter command,
-        IUserSnapshotRepository snapshotRepository, CancellationToken ct)
-    {
-        var modifiedBy = await snapshotRepository.GetUserAsync(command.ModifiedBy, ct);
-        return modifiedBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task<UserSnapshot> GetRecruiter(AssignJobDescriptionRecruiter command,
-        IUserSnapshotRepository snapshotRepository, CancellationToken ct)
-    {
-        if (command.RecruiterId == Guid.Empty)
-            throw new InValidValueException("Recruiter id has invalid value");
-        
-        var recruiter = await snapshotRepository.GetUserAsync(command.RecruiterId, ct);
-        return recruiter ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
     }
 }
