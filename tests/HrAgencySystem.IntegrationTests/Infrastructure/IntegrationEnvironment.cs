@@ -47,6 +47,8 @@ public sealed class IntegrationEnvironment() : IAsyncLifetime
     {
         Factory.LoggerProvider.SetOutput(output);
     }
+
+    public IServiceProvider Services => Factory.Services;
 }
 
 [CollectionDefinition(Name)]

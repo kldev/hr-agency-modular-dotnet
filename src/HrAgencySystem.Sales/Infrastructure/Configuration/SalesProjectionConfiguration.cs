@@ -56,7 +56,7 @@ internal static class  SalesProjectionConfiguration
 
     private static void ConfigureSalesPipelineStageSummaryProjection(StoreOptions options)
     {
-       // options.Projections.Add<PipelineProjection>(ProjectionLifecycle.Async);
+        options.Projections.Add<PipelineProjection>(ProjectionLifecycle.Async);
 
         options.Schema.For<PipelineStageSummary>()
             .DatabaseSchemaName(SchemaName)

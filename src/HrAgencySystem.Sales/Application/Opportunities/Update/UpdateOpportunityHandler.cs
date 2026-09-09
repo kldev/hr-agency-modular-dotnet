@@ -30,6 +30,7 @@ public static class UpdateOpportunityHandler
             aggregate.Stage,
             title.Value,
             description.Value,
+            aggregate.CurrencyCode,
             aggregate.ExpectedValue,
             command.ExpectedValue,
             command.IsHotLead,

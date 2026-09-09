@@ -65,4 +65,6 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     }
     
     protected virtual Task BeforeEachAsync() => Task.CompletedTask;
+
+    public IServiceProvider Services => _environment.Services;
 }

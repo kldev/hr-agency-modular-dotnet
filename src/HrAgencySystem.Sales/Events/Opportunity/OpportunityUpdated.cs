@@ -5,11 +5,12 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 namespace HrAgencySystem.Sales.Events.Opportunity;
 
 public sealed record OpportunityUpdated( 
-    Guid SalesOpportunityId,
+    Guid OpportunityId,
     Guid OrganizationId,   
     OpportunityStage Stage,
     string Title,
     string Description,
+    CurrencyCode  PreviousCurrency,
     decimal PreviousExpectedValue,
     decimal ExpectedValue,
     bool IsHotLead,
