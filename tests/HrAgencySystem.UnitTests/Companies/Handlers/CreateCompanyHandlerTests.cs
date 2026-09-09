@@ -2,6 +2,7 @@ using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
+using HrAgencySystem.Company.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -10,6 +11,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
 
 namespace HrAgencySystem.UnitTests.Companies.Handlers;
@@ -22,11 +24,9 @@ public class CreateCompanyHandlerTests : BaseTest
     private readonly IDocumentSession _documentSession =
         Substitute.For<IDocumentSession>();
 
-    private readonly IOrganizationChecker _checker =
-        Substitute.For<IOrganizationChecker>();
+    private readonly ICompanyService _service =
+        Substitute.For<ICompanyService>();
 
-    private readonly IUserSnapshotRepository _snapshotRepository
-        = Substitute.For<IUserSnapshotRepository>();
 
     private static readonly Guid SalesId = Guid.NewGuid();
 
@@ -61,9 +61,7 @@ public class CreateCompanyHandlerTests : BaseTest
         _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
-        _snapshotRepository.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Sales);
-        
-        _checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Sales);
         
         var clock = new FixedClock(now);
 
@@ -72,8 +70,7 @@ public class CreateCompanyHandlerTests : BaseTest
             _documentSession,
             _repository,
             clock,
-            _checker,
-            _snapshotRepository,
+            _service,
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.CompanyId);
@@ -114,8 +111,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
-                _checker,
-                _snapshotRepository,
+                _service,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -160,8 +156,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
-                _checker,
-                _snapshotRepository,
+                _service,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -192,8 +187,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
-                _checker,
-                _snapshotRepository,
+                _service,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -224,8 +218,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
-                _checker,
-                _snapshotRepository,
+                _service,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -256,8 +249,7 @@ public class CreateCompanyHandlerTests : BaseTest
                 _documentSession,
                 _repository,
                 TestClock,
-                _checker,
-                _snapshotRepository,
+                _service,
                 CancellationToken.None));
 
         Assert.Equal(
@@ -296,7 +288,8 @@ public class CreateCompanyHandlerTests : BaseTest
         _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
-        _checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(false);
+        _service.ValidateOrganization(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
         
         var clock = new FixedClock(now);
 
@@ -306,8 +299,7 @@ public class CreateCompanyHandlerTests : BaseTest
             _documentSession,
             _repository,
             clock,
-            _checker,
-            _snapshotRepository,
+            _service,
             CancellationToken.None));
 
 

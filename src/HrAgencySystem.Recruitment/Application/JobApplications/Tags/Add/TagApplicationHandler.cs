@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Applications;
+using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -19,7 +20,7 @@ public static class TagApplicationHandler
         // ReSharper disable once UnusedParameter.Global
         Domain.Applications.JobApplication aggregate,
         ITagRepository tagRepository,
-        IUserSnapshotRepository snapshotRepository,
+        IRecruitmentService service,
         IClock clock,
         CancellationToken ct)
     {
@@ -27,17 +28,10 @@ public static class TagApplicationHandler
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
         
         var tag = await tagRepository.GetTag(command.TagId, ct);
-        var user = await GetCreatedBy(snapshotRepository, command.CreatedBy, ct);
+        var user = await service.GetUserAsync(command.CreatedBy, ct);
 
         var @event = new JobApplicationTagged(command.JobApplicationId, tag, user, clock.UtcNow);
         
         return (@event, [@event]);
-    }
-
-    private static async Task<UserSnapshot> GetCreatedBy(IUserSnapshotRepository snapshotRepository, Guid createdById, 
-        CancellationToken ct)
-    {
-        var user = await snapshotRepository.GetUserAsync(createdById, ct);
-        return user ?? throw new NotFoundException(IUserSnapshotRepository.NotFoundMessage);
     }
 }

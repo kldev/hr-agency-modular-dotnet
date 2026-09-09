@@ -1,5 +1,6 @@
 using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Events;
+using HrAgencySystem.Company.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -14,11 +15,11 @@ public static class UpdateCompanyHandler
      public static async Task<(CompanyUpdated, Wolverine.Marten.Events)> Handle(
         UpdateCompany command,
         Domain.Company aggregate,
-        IUserSnapshotRepository snapshotRepository,
+        ICompanyService service,
         IClock clock,
         CancellationToken ct)
      {
-         var user = await GetUser(snapshotRepository, command.ModifiedBy, ct);
+         var user = await service.GetUserAsync(command.ModifiedBy, ct);
          var (data, _) = CompanyDataFactory.CreateCompanyData(command);
          var (name, registrationNumber, webSite, countryCode) = data;
          if (aggregate.OrganizationId.Value != command.OrganizationId)
@@ -35,11 +36,4 @@ public static class UpdateCompanyHandler
 
          return (@event, [@event]);
      }
-     
-    private static async Task<UserSnapshot> GetUser(IUserSnapshotRepository repository, Guid userId,
-        CancellationToken ct)
-    {
-        var user = await repository.GetUserAsync(userId, ct);
-        return user ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
 }

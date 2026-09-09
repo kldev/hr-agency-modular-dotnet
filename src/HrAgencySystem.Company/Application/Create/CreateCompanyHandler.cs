@@ -2,9 +2,8 @@ using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
+using HrAgencySystem.Company.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -22,20 +21,19 @@ public static class CreateCompanyHandler
         IDocumentSession session,
         ICompanyTaxIdReservationRepository taxIdReservationRepository,
         IClock clock,
-        IOrganizationChecker checker,
-        IUserSnapshotRepository snapshotRepository,
-        CancellationToken cancellationToken)
+       ICompanyService service,
+        CancellationToken ct)
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
         
         var (name, registrationNumber, webSite, countryCode, taxId ) =
             CreateValueObjects(command);
         
-        await ValidateTaxReservation(taxIdReservationRepository, cancellationToken, organizationId, taxId);
+        await ValidateTaxReservation(taxIdReservationRepository, ct, organizationId, taxId);
 
-        await ValidateOrganization(checker, cancellationToken, organizationId);
+        await service.ValidateOrganization(organizationId.Value, ct);
 
-        var createdBy = await GetCreatedBy(command, snapshotRepository, cancellationToken);
+        var createdBy = await service.GetUserAsync(command.CreatedBy, ct);
 
         var companyId = CompanyId.New();
 
@@ -44,7 +42,7 @@ public static class CreateCompanyHandler
             organizationId,
             taxId,
             companyId,
-            cancellationToken);
+            ct);
 
         var @event = new CompanyCreated(
             companyId.Value,
@@ -62,21 +60,7 @@ public static class CreateCompanyHandler
 
         return @event;
     }
-
-    private static async Task<UserSnapshot> GetCreatedBy(CreateCompany command, IUserSnapshotRepository snapshotRepository,
-        CancellationToken cancellationToken)
-    {
-        var createdBy = await snapshotRepository.GetUserAsync(command.CreatedBy, cancellationToken);
-        return createdBy ?? throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-    }
-
-    private static async Task ValidateOrganization(IOrganizationChecker checker, CancellationToken cancellationToken,
-        OrganizationId organizationId)
-    {
-        if (!await checker.Exists(organizationId.Value, cancellationToken))
-            throw new BusinessRuleException(OrganizationId.OrganizationCheckMessage);
-    }
-
+    
     private static async Task ValidateTaxReservation(ICompanyTaxIdReservationRepository taxIdReservationRepository,
         CancellationToken cancellationToken, OrganizationId organizationId, TaxId taxId)
     {
