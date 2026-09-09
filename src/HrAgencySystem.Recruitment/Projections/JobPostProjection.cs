@@ -130,61 +130,62 @@ public sealed record JobPostProjection(
                 @event.OccurredAt))
             .ToArray();
 
-      //  throw new BusinessRuleException("Posts count: " + posts.Length);
-        
-        return this with
+        return ApplyCommon(this, @event) with
         {
-            Status = JobPostStatus.Published,
             Posts = posts,
-            UpdatedAt = @event.OccurredAt,
-            ModifiedById = @event.Author.Id,
-            ModifiedBy = @event.Author
         };
     }
 
     public JobPostProjection Apply(
         JobPostPublished @event)
     {
-        return this with
+        return ApplyCommon(this, @event) with
         {
             Status = JobPostStatus.Published,
-            UpdatedAt = @event.OccurredAt,
-            ModifiedById = @event.Author.Id,
-            ModifiedBy = @event.Author
         };
     }
 
     public JobPostProjection Apply(
         JobPostClosed @event)
     {
-        return this with
+        return ApplyCommon(this,@event) with
         {
             Status = JobPostStatus.Closed,
-            UpdatedAt = @event.OccurredAt,
-            ModifiedById = @event.Author.Id,
-            ModifiedBy = @event.Author
         };
     }
 
     public JobPostProjection Apply(
         JobPostArchived @event)
     {
-        return this with
+        return ApplyCommon(this, @event) with
         {
             Status = JobPostStatus.Archived,
-            UpdatedAt = @event.OccurredAt,
-            ModifiedById = @event.Author.Id,
-            ModifiedBy = @event.Author
+        };
+    }
+
+    public JobPostProjection Apply(
+        JobPostRecruiterChanged @event)
+    {
+        return ApplyCommon(this, @event) with
+        {
+            RecruiterId = @event.Recruiter.Id,
+            Recruiter = @event.Recruiter,
         };
     }
     
     public JobPostProjection Apply(
-        JobPostRecruiterChanged @event)
+        JobPostStatusChanged @event)
     {
-        return this with
+        return ApplyCommon(this, @event) with
         {
-            RecruiterId = @event.Recruiter.Id,
-            Recruiter = @event.Recruiter,
+            Status = @event.NewStatus,
+        };
+    }
+
+    private JobPostProjection ApplyCommon(JobPostProjection post, IJobPostEvent @event)
+    {
+        return post with
+        {
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author

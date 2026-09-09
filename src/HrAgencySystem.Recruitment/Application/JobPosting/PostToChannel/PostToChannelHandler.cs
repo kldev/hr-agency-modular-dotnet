@@ -13,7 +13,7 @@ public static class PostToChannelHandler
     [AggregateHandler]
     public static async Task<(JobPostedToChannel, Wolverine.Marten.Events)> Handle(
         PostToChannel command, JobPost aggregate,
-       IRecruitmentService service,
+        IRecruitmentService service,
         IClock clock,
         CancellationToken ct)
     {
@@ -27,14 +27,26 @@ public static class PostToChannelHandler
             throw new BusinessRuleException(
                 "Job post in final status. Change status to published before posting to channel.");
 
-        if (aggregate.Status == JobPostStatus.Published ||
-            !JobPostStatusChangePolicy.Allow(aggregate.Status, JobPostStatus.Published)) return (@event, [.. events]);
-
-        var changeStatusChange = new JobPostStatusChanged(aggregate.Id.Value, aggregate.CompanyId.Value,
-            aggregate.OrganizationId.Value, aggregate.Status, JobPostStatus.Published, clock.UtcNow, user);
-        @events.Add(changeStatusChange);
+        if (!IsPostToChannelChangingStatusToPublished(aggregate.Status)) return (@event, [.. events]);
+        
+        var jobPostStatusChanged = new JobPostStatusChanged(
+            aggregate.Id.Value, 
+            aggregate.CompanyId.Value,
+            aggregate.OrganizationId.Value, 
+            aggregate.Status, 
+            JobPostStatus.Published, 
+            clock.UtcNow, 
+            user);
+        
+        events.Add(jobPostStatusChanged);
 
         return (@event, [.. events]);
     }
 
+    private static bool IsPostToChannelChangingStatusToPublished(JobPostStatus currentStatus)
+    {
+        return currentStatus != JobPostStatus.Published &&
+               JobPostStatusChangePolicy.Allow(currentStatus, JobPostStatus.Published);
+    }
+    
 }

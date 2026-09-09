@@ -138,20 +138,16 @@ public sealed class JobPost
     
     public void Apply(JobPostedToChannel @event)
     {
-        if (Status != JobPostStatus.Published &&
-            !JobPostStatusChangePolicy.Allow(Status, JobPostStatus.Published))
-        {
-            throw new InvalidOperationException(
-                "Job post in final status. Change status to published before posting to channel.");
-        }
-        Status = JobPostStatus.Published;
-
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        Posts ??= new List<ChannelPost>();
-        
         var posts = Posts.Append(new ChannelPost(@event.ChannelType, @event.OccurredAt));
         Posts = [.. posts];
         
+        ApplyCommon(@event);
+    }
+    
+    public void Apply(JobPostStatusChanged @event)
+    {
+        Status = @event.NewStatus;
+
         ApplyCommon(@event);
     }
     
