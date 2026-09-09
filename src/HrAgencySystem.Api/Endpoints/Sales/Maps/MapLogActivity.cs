@@ -10,7 +10,7 @@ internal static class MapLogActivity
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/activity", Handler);
+        group.MapPost("/activity", Handler).WithSummary("Log activity");
     }
 
     private static async Task<IResult> Handler(
@@ -20,7 +20,7 @@ internal static class MapLogActivity
     {
         var result = await bus.InvokeAsync<SalesActivityCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
         
-        return TypedResults.Created($"/api/sales/{result.SalesOpportunityId}/activities", result);
+        return TypedResults.Created($"/api/sales/activities?opportunityId={result.SalesOpportunityId}", result);
     }
     
 }

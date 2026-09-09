@@ -36,11 +36,11 @@ internal static class  SalesProjectionConfiguration
     private static void ConfigureOpportunityProjection(
         StoreOptions options)
     {
-        options.Projections.Snapshot<OpportunityProjection>(
+        options.Projections.Snapshot<SalesOpportunityProjection>(
             SnapshotLifecycle.Async);
 
         options.Schema
-            .For<OpportunityProjection>()
+            .For<SalesOpportunityProjection>()
             .DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })
             .Index(x => new { x.OrganizationId, ca = x.CreatedAt })

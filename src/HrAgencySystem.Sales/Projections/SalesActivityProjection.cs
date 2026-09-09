@@ -29,7 +29,8 @@ public sealed record SalesActivityProjection(
 {
     public static SalesActivityProjection Create(SalesActivityCreated @event)
     {
-        return new SalesActivityProjection(@event.SalesActivityId,
+        return new SalesActivityProjection(
+            @event.SalesActivityId,
             @event.OrganizationId,
             @event.SalesOpportunityId,
             @event.ActivityType,

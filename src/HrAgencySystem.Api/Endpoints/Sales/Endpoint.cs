@@ -9,5 +9,6 @@ internal static class Endpoint
             .RequireAuthorization();
         
         Maps.MapLogActivity.Map(group);
+        Maps.MapGetActivitySlice.Map(group);
     }
 }

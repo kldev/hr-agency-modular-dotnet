@@ -9,7 +9,7 @@ public class SalesOpportunitySnapshotRepository(IQuerySession session) : ISalesO
 {
     public async Task<OpportunitySnapshot?> GetSnapshot(Guid opportunityId, Guid organizationId, CancellationToken ct)
     {
-        var result = await session.Query<OpportunityProjection>()
+        var result = await session.Query<SalesOpportunityProjection>()
             .WithOrganizationId(organizationId)
             .WithOpportunityId(opportunityId)
             .Select(z => new OpportunitySnapshot(z.Id, z.OrganizationId, z.CompanyId))
