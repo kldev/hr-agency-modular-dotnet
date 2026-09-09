@@ -18,7 +18,7 @@ public class SalesOpportunitySnapshotRepository(IQuerySession session) : ISalesO
 
         var fromEvent = await session.Query<OpportunityCreated>()
             .Where(z => z.OrganizationId == organizationId)
-            .Where(z => z.OpportunityId == organizationId)
+            .Where(z => z.OpportunityId == opportunityId)
             .Select(z => new OpportunitySnapshot(z.OpportunityId,
                 z.OrganizationId, z.Company.Id)).FirstOrDefaultAsync(ct);
 

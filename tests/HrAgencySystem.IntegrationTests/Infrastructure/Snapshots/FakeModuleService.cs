@@ -55,4 +55,9 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
     {
         if (aggregate == null) throw new OrganizationAccessDeniedException();
     }
+
+    public Task<OrganizationId> GetBySlugAsync(string slug, CancellationToken ct)
+    {
+        return Task.FromResult(OrganizationId.From(Guid.NewGuid()));
+    }
 }

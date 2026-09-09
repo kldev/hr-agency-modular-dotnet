@@ -14,6 +14,10 @@ internal static class Endpoint
         endpoints.MapGet("/api/development/seed/{type}", HandlerApplicants)
             .ExcludeFromDescription()
             .AllowAnonymous().WithRequestTimeout(TimeSpan.FromMinutes(5));
+        
+        endpoints.MapGet("/api/development/seed-sales", HandlerSales)
+            .ExcludeFromDescription()
+            .AllowAnonymous().WithRequestTimeout(TimeSpan.FromMinutes(5));
     }
 
     private static async Task<IResult> Handler(IPlatformSeeder seeder)
@@ -32,5 +36,13 @@ internal static class Endpoint
         }
         await seeder.SeedApplicants(count);
         return TypedResults.Text("Seed applicants completed");
+    }
+    
+    private static async Task<IResult> HandlerSales(IPlatformSalesSeeder seeder, int count = 500, string slug = "hr-agency", CancellationToken ct = default)
+    {
+        
+        await seeder.Seed(Math.Clamp(count,50, 2000), slug, ct);
+        
+        return TypedResults.Text("Seed completed");
     }
 }

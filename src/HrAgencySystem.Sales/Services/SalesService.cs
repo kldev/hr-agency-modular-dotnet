@@ -34,6 +34,7 @@ public sealed class SalesService(
     public async Task<OpportunitySnapshot> GetOpportunityAsync(Guid organizationId, Guid opportunityId, CancellationToken ct)
     {
         var opportunity = await salesOpportunitySnapshotRepository.GetSnapshot(opportunityId, organizationId,ct);
+        
         return opportunity ?? throw new NotFoundException("Sales opportunity", opportunityId);
     }
     
@@ -41,5 +42,10 @@ public sealed class SalesService(
     {
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
             throw new OrganizationAccessDeniedException();
+    }
+
+    public async Task<OrganizationId> GetBySlugAsync(string slug, CancellationToken ct)
+    {
+        return await checker.GetOrganizationIdBySlug(slug, ct);
     }
 }

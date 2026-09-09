@@ -1,5 +1,4 @@
 using HrAgencySystem.Sales.Application.Queries;
-using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 
@@ -12,5 +11,5 @@ public interface ISalesService
     Task ValidateOrganization(Guid organizationId, CancellationToken ct);
     Task<OpportunitySnapshot> GetOpportunityAsync(Guid organizationId, Guid opportunityId, CancellationToken ct);
     void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId);
-
+    Task<OrganizationId> GetBySlugAsync(string slug, CancellationToken ct);
 }

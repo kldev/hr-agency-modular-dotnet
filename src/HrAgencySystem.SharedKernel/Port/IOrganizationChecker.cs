@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.Tenant;
+
 namespace HrAgencySystem.SharedKernel.Port;
 
 public interface IOrganizationChecker
@@ -5,4 +7,5 @@ public interface IOrganizationChecker
     public const string OrganizationCheckMessage = "Non existing organization.";
     Task<bool> Exists(Guid organizationId, CancellationToken ct);
     Task<string?> GetSlug(Guid organizationId, CancellationToken ct);
+    Task<OrganizationId> GetOrganizationIdBySlug(string slug, CancellationToken ct);
 }
