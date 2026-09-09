@@ -32,7 +32,7 @@ internal static class  SalesProjectionConfiguration
             .Index(x => new { x.OrgId, x.CompanyId  });
 
     }
-    
+
     private static void ConfigureOpportunityProjection(
         StoreOptions options)
     {
@@ -44,13 +44,16 @@ internal static class  SalesProjectionConfiguration
             .DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })
             .Index(x => new { x.OrganizationId, ca = x.CreatedAt })
-            .Index(x => new { x.OrganizationId, c = x.CompanyId })
-            .Index(x => new { x.OrganizationId, s = x.Stage })
-            .Index(x => new {  x.OrganizationId, o = x.SalesOwnerId })
-            .Index(x => new { x.OrganizationId,
-                s = x.Stage, cc = x.CurrencyCode, v = x.ExpectedValue }, idx => { idx.Name = "idx_sop_exp_value";});
+            .Index(x => new { x.OrganizationId, c = x.CompanyId }, idx => { idx.Name = "idx_sop_company"; })
+            .Index(x => new { x.OrganizationId, s = x.Stage }, idx => { idx.Name = "idx_sop_stage"; })
+            .Index(x => new { x.OrganizationId, o = x.SalesOwnerId }, idx => { idx.Name = "idx_sop_owner_id"; })
+            .Index(x => new
+            {
+                x.OrganizationId,
+                s = x.Stage, cc = x.CurrencyCode, v = x.ExpectedValue
+            }, idx => { idx.Name = "idx_sop_exp_value"; });
     }
-    
+
     private static void ConfigureSalesPipelineStageSummaryProjection(StoreOptions options)
     {
         options.Projections.Add<SalesPipelineProjection>(ProjectionLifecycle.Async);
