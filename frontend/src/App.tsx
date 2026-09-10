@@ -1,33 +1,106 @@
-import { Route, Routes } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import Stub from "./components/Stub";
-import { ForgotPasswordPage } from "./features/auth/pages/ForgotPasswordPage";
-import { LoginPage } from "./features/auth/pages/LoginPage";
 import { ROUTES } from "./routes";
 
+const router = createBrowserRouter([
+	{
+		path: ROUTES.LOGIN,
+		lazy: async () => {
+			const module = await import("./features/auth/pages/LoginPage");
+
+			return {
+				Component: module.default,
+			};
+		},
+	},
+	{
+		path: ROUTES.FORGOT_PASSWORD,
+		lazy: async () => {
+			const module = await import("./features/auth/pages/ForgotPasswordPage");
+
+			return {
+				Component: module.default,
+			};
+		},
+	},
+	{
+		Component: AppLayout,
+		children: [
+			{
+				path: ROUTES.DASHBOARD,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.COMPANIES,
+				lazy: async () => {
+					const module = await import("./features/companies/pages/CompaniesPage");
+
+					return {
+						Component: module.default,
+					};
+				},
+			},
+			{
+				path: ROUTES.JOBS,
+				lazy: async () => {
+					const module = await import("./features/job-posts/pages/JobsPage");
+
+					return {
+						Component: module.default,
+					};
+				},
+			},
+			{
+				path: ROUTES.CANDIDATES,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.APPLICATIONS,
+				lazy: async () => {
+					const module = await import("./features/applications/pages/AplicationsPage");
+
+					return {
+						Component: module.default,
+					};
+				},
+			},
+			{
+				path: ROUTES.SALES,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.SALES_OPPORTUNITIES,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.INTERVIEWS,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.CALENDAR,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.ORGANIZATIONS,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.SETTINGS,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.USERS,
+				Component: Stub,
+			},
+			{
+				path: ROUTES.REPORTS,
+				Component: Stub,
+			},
+		],
+	},
+]);
+
 export const App: React.FC = () => {
-	return (
-		<Routes>
-			<Route path={ROUTES.LOGIN} element={<LoginPage />} />
-
-			<Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
-
-			<Route element={<AppLayout />}>
-				<Route path={ROUTES.DASHBOARD} element={<Stub />} />
-
-				<Route path={ROUTES.COMPANIES} element={<Stub />} />
-				<Route path={ROUTES.JOBS} element={<Stub />} />
-				<Route path={ROUTES.CANDIDATES} element={<Stub />} />
-				<Route path={ROUTES.APPLICATIONS} element={<Stub />} />
-				<Route path={ROUTES.SALES} element={<Stub />} />
-				<Route path={ROUTES.SALES_OPPORTUNITIES} element={<Stub />} />
-				<Route path={ROUTES.INTERVIEWS} element={<Stub />} />
-				<Route path={ROUTES.CALENDAR} element={<Stub />} />
-				<Route path={ROUTES.ORGANIZATIONS} element={<Stub />} />
-				<Route path={ROUTES.SETTINGS} element={<Stub />} />
-				<Route path={ROUTES.USERS} element={<Stub />} />
-				<Route path={ROUTES.REPORTS} element={<Stub />} />
-			</Route>
-		</Routes>
-	);
+	return <RouterProvider router={router} />;
 };

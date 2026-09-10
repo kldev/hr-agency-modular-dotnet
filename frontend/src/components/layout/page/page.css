@@ -1,0 +1,40 @@
+
+/* =========================================================
+   Page
+   ========================================================= */
+
+.page {
+  width: 100%;
+  max-width: var(--content-max-width);
+
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-6);
+
+  margin-bottom: var(--space-6);
+}
+
+.page-title {
+  margin: 0;
+
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.page-description {
+  margin: var(--space-2) 0 0;
+
+  color: var(--color-text-secondary);
+
+  font-size: var(--font-size-md);
+}

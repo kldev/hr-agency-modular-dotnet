@@ -10,7 +10,7 @@ interface SidebarProps {
 	mobileOpen: boolean;
 }
 
-export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
 	const location = useLocation();
 
 	return (
@@ -68,4 +68,6 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
 			</div>
 		</aside>
 	);
-}
+};
+
+export default Sidebar;

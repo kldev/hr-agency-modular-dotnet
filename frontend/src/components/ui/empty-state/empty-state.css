@@ -1,0 +1,52 @@
+
+/* =========================================================
+   Empty / Loading states
+   ========================================================= */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 240px;
+
+  padding: var(--space-8);
+
+  color: var(--color-text-secondary);
+
+  text-align: center;
+}
+
+.empty-state-title {
+  margin: var(--space-3) 0 var(--space-1);
+
+  color: var(--color-text);
+
+  font-weight: var(--font-weight-semibold);
+}
+
+.empty-state-description {
+  max-width: 420px;
+
+  margin: 0;
+
+  color: var(--color-text-muted);
+}
+
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layout";
 
-export function LoginPage() {
+const LoginPage: React.FC = () => {
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState(import.meta.env.VITE_DEFAULT_EMAIL || "");
@@ -148,4 +148,6 @@ export function LoginPage() {
 			</div>
 		</AuthLayout>
 	);
-}
+};
+
+export default LoginPage;

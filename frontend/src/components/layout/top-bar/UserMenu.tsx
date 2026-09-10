@@ -1,9 +1,9 @@
 import { LogOut, Moon, Settings2, Sun, User } from "lucide-react";
 import type React from "react";
 import { useNavigate } from "react-router-dom";
-import Dropdown from "../../ui/Dropdown/Dropdown";
-import DropdownDivider from "../../ui/Dropdown/DropdownDivider";
-import DropdownItem from "../../ui/Dropdown/DropdownItem";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
+import DropdownDivider from "@/components/ui/dropdown/DropdownDivider";
+import DropdownItem from "@/components/ui/dropdown/DropdownItem";
 
 interface Props {
 	theme: "light" | "dark";

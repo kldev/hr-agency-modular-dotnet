@@ -1,15 +1,15 @@
 import { ArrowLeft, ArrowRight, CheckCircle2, Mail, ShieldCheck } from "lucide-react";
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthLayout } from "../layout";
 
-export function ForgotPasswordPage() {
+const ForgotPasswordPage: React.FC = () => {
 	const [email, setEmail] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState("");
 
-	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+	async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		setError("");
@@ -144,4 +144,6 @@ export function ForgotPasswordPage() {
 			</Link>
 		</AuthLayout>
 	);
-}
+};
+
+export default ForgotPasswordPage;
