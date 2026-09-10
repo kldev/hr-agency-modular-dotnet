@@ -1,10 +1,10 @@
-import { ClipboardList } from "lucide-react";
+import { DollarSign } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Page } from "@/components/layout";
 import { EmptyState, WorkInProgress } from "@/components/ui";
 
-const AplicationsPage: React.FC = () => {
+const SalesPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const handleOnRefresh = async () => {
 		setLoading(true);
@@ -17,15 +17,15 @@ const AplicationsPage: React.FC = () => {
 	};
 	return (
 		<Page
-			title="Applications"
-			description=" Track candidates through the recruitment process."
+			title="Sales"
+			description="Manage your leads and sales opportunities THROUGH the pipeline."
 			onRefresh={handleOnRefresh}
 			loading={loading}
 			page={0}
 			isEmpty={true}
 			emptyState={
-				<EmptyState title="No applications found">
-					<ClipboardList size={24} />
+				<EmptyState title="No sales opportunities found">
+					<DollarSign size={24} />
 				</EmptyState>
 			}
 		>
@@ -34,4 +34,4 @@ const AplicationsPage: React.FC = () => {
 	);
 };
 
-export default AplicationsPage;
+export default SalesPage;

@@ -35,8 +35,8 @@ services:
     container_name: hr-agency-api-s3
     restart: unless-stopped
     environment:
-      RUSTFS_ACCESS_KEY: admin
-      RUSTFS_SECRET_KEY: password
+      RUSTFS_ACCESS_KEY: ${RustFsAccessKey}
+      RUSTFS_SECRET_KEY: ${RustFsSecretKey}
       RUSTFS_ADDRESS: ":9000"
       RUSTFS_CONSOLE_ADDRESS: ":9001"
       RUSTFS_CONSOLE_ENABLE: true
@@ -64,6 +64,8 @@ services:
       Jwt__Audience: "hr-agency"
       Jwt__SecretKey: ${SecretKey}
       RustFs__Endpoint: "http://hr-agency-api-s3:9000"
+      RustFs__AccessKey: ${RustFsAccessKey}
+      RustFs__SecretKey: ${RustFsSecretKey}
       Application__FeedUrl: "http://localhost:8080"
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
