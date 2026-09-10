@@ -32,11 +32,20 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
 	AssignRecruiterRequest,
+	BadRequestDetails,
 	CreateJobDescriptionRequest,
 	GetApiJobDescriptionParams,
 	GetApiJobDescriptionStatusParams,
+	JdStatusChangeHistory,
+	JobDescriptionCreated,
+	JobDescriptionProjection,
+	JobDescriptionRecruiterAssigned,
 	JobDescriptionStatus,
+	JobDescriptionUpdated,
+	ProblemDetails,
+	SliceResponseOfJobDescriptionProjection,
 	UpdateJobDescriptionRequest,
+	UpdateJobDescriptionStatusResult,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
@@ -66,7 +75,7 @@ export const postApiJobDescription = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobDescriptionCreated>(
 		{
 			url: `/api/job-description`,
 			method: "POST",
@@ -86,7 +95,7 @@ export const getPostApiJobDescriptionQueryKey = (
 
 export const getPostApiJobDescriptionQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiJobDescription>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createJobDescriptionRequest: BodyType<CreateJobDescriptionRequest>,
 	options?: {
@@ -114,11 +123,11 @@ export const getPostApiJobDescriptionQueryOptions = <
 export type PostApiJobDescriptionQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiJobDescription>>
 >;
-export type PostApiJobDescriptionQueryError = ErrorType<unknown>;
+export type PostApiJobDescriptionQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiJobDescription<
 	TData = Awaited<ReturnType<typeof postApiJobDescription>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createJobDescriptionRequest: BodyType<CreateJobDescriptionRequest>,
 	options: {
@@ -139,7 +148,7 @@ export function usePostApiJobDescription<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiJobDescription<
 	TData = Awaited<ReturnType<typeof postApiJobDescription>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createJobDescriptionRequest: BodyType<CreateJobDescriptionRequest>,
 	options?: {
@@ -160,7 +169,7 @@ export function usePostApiJobDescription<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiJobDescription<
 	TData = Awaited<ReturnType<typeof postApiJobDescription>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createJobDescriptionRequest: BodyType<CreateJobDescriptionRequest>,
 	options?: {
@@ -177,7 +186,7 @@ export function usePostApiJobDescription<
 
 export function usePostApiJobDescription<
 	TData = Awaited<ReturnType<typeof postApiJobDescription>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createJobDescriptionRequest: BodyType<CreateJobDescriptionRequest>,
 	options?: {
@@ -205,7 +214,7 @@ export const getApiJobDescription = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<SliceResponseOfJobDescriptionProjection>(
 		{ url: `/api/job-description`, method: "GET", params, signal },
 		options,
 	);
@@ -214,7 +223,7 @@ export const getApiJobDescription = (
 export const getGetApiJobDescriptionMutationKey = () => ["getApiJobDescription"] as const;
 
 export const getGetApiJobDescriptionMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -253,13 +262,16 @@ export type GetApiJobDescriptionMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiJobDescription>>
 >;
 
-export type GetApiJobDescriptionMutationError = ErrorType<unknown>;
+export type GetApiJobDescriptionMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiJobDescriptionMutationVariables = { params?: GetApiJobDescriptionParams };
 
 /**
  * @summary Get job descriptions
  */
-export const useGetApiJobDescription = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiJobDescription = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiJobDescription>>,
@@ -287,7 +299,7 @@ export const putApiJobDescriptionJobDescriptionId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobDescriptionUpdated>(
 		{
 			url: `/api/job-description/${jobDescriptionId}`,
 			method: "PUT",
@@ -308,7 +320,7 @@ export const getPutApiJobDescriptionJobDescriptionIdQueryKey = (
 
 export const getPutApiJobDescriptionJobDescriptionIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	updateJobDescriptionRequest: BodyType<UpdateJobDescriptionRequest>,
@@ -354,11 +366,13 @@ export const getPutApiJobDescriptionJobDescriptionIdQueryOptions = <
 export type PutApiJobDescriptionJobDescriptionIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionId>>
 >;
-export type PutApiJobDescriptionJobDescriptionIdQueryError = ErrorType<unknown>;
+export type PutApiJobDescriptionJobDescriptionIdQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiJobDescriptionJobDescriptionId<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	updateJobDescriptionRequest: BodyType<UpdateJobDescriptionRequest>,
@@ -384,7 +398,7 @@ export function usePutApiJobDescriptionJobDescriptionId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiJobDescriptionJobDescriptionId<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	updateJobDescriptionRequest: BodyType<UpdateJobDescriptionRequest>,
@@ -410,7 +424,7 @@ export function usePutApiJobDescriptionJobDescriptionId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiJobDescriptionJobDescriptionId<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	updateJobDescriptionRequest: BodyType<UpdateJobDescriptionRequest>,
@@ -432,7 +446,7 @@ export function usePutApiJobDescriptionJobDescriptionId<
 
 export function usePutApiJobDescriptionJobDescriptionId<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	updateJobDescriptionRequest: BodyType<UpdateJobDescriptionRequest>,
@@ -469,7 +483,7 @@ export const getApiJobDescriptionJobDescriptionId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobDescriptionProjection>(
 		{ url: `/api/job-description/${jobDescriptionId}`, method: "GET", signal },
 		options,
 	);
@@ -479,7 +493,7 @@ export const getGetApiJobDescriptionJobDescriptionIdMutationKey = () =>
 	["getApiJobDescriptionJobDescriptionId"] as const;
 
 export const getGetApiJobDescriptionJobDescriptionIdMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -518,14 +532,16 @@ export type GetApiJobDescriptionJobDescriptionIdMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiJobDescriptionJobDescriptionId>>
 >;
 
-export type GetApiJobDescriptionJobDescriptionIdMutationError = ErrorType<unknown>;
+export type GetApiJobDescriptionJobDescriptionIdMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiJobDescriptionJobDescriptionIdMutationVariables = { jobDescriptionId: string };
 
 /**
  * @summary Get job description
  */
 export const useGetApiJobDescriptionJobDescriptionId = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
@@ -555,7 +571,7 @@ export const putApiJobDescriptionJobDescriptionIdAssignRecruiter = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobDescriptionRecruiterAssigned>(
 		{
 			url: `/api/job-description/${jobDescriptionId}/assign-recruiter`,
 			method: "PUT",
@@ -580,7 +596,7 @@ export const getPutApiJobDescriptionJobDescriptionIdAssignRecruiterQueryKey = (
 
 export const getPutApiJobDescriptionJobDescriptionIdAssignRecruiterQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdAssignRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -629,11 +645,13 @@ export const getPutApiJobDescriptionJobDescriptionIdAssignRecruiterQueryOptions 
 export type PutApiJobDescriptionJobDescriptionIdAssignRecruiterQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdAssignRecruiter>>
 >;
-export type PutApiJobDescriptionJobDescriptionIdAssignRecruiterQueryError = ErrorType<unknown>;
+export type PutApiJobDescriptionJobDescriptionIdAssignRecruiterQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiJobDescriptionJobDescriptionIdAssignRecruiter<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdAssignRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -659,7 +677,7 @@ export function usePutApiJobDescriptionJobDescriptionIdAssignRecruiter<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiJobDescriptionJobDescriptionIdAssignRecruiter<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdAssignRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -685,7 +703,7 @@ export function usePutApiJobDescriptionJobDescriptionIdAssignRecruiter<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiJobDescriptionJobDescriptionIdAssignRecruiter<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdAssignRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -707,7 +725,7 @@ export function usePutApiJobDescriptionJobDescriptionIdAssignRecruiter<
 
 export function usePutApiJobDescriptionJobDescriptionIdAssignRecruiter<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdAssignRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -744,7 +762,7 @@ export const getApiJobDescriptionStatus = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JdStatusChangeHistory[]>(
 		{ url: `/api/job-description/status`, method: "GET", params, signal },
 		options,
 	);
@@ -754,7 +772,7 @@ export const getGetApiJobDescriptionStatusMutationKey = () =>
 	["getApiJobDescriptionStatus"] as const;
 
 export const getGetApiJobDescriptionStatusMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -793,7 +811,7 @@ export type GetApiJobDescriptionStatusMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiJobDescriptionStatus>>
 >;
 
-export type GetApiJobDescriptionStatusMutationError = ErrorType<unknown>;
+export type GetApiJobDescriptionStatusMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiJobDescriptionStatusMutationVariables = {
 	params?: GetApiJobDescriptionStatusParams;
 };
@@ -801,7 +819,10 @@ export type GetApiJobDescriptionStatusMutationVariables = {
 /**
  * @summary Get statuses history
  */
-export const useGetApiJobDescriptionStatus = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiJobDescriptionStatus = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiJobDescriptionStatus>>,
@@ -829,7 +850,7 @@ export const putApiJobDescriptionJobDescriptionIdStatus = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<UpdateJobDescriptionStatusResult>(
 		{ url: `/api/job-description/${jobDescriptionId}/${status}`, method: "PUT", signal },
 		options,
 	);
@@ -844,7 +865,7 @@ export const getPutApiJobDescriptionJobDescriptionIdStatusQueryKey = (
 
 export const getPutApiJobDescriptionJobDescriptionIdStatusQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	status: JobDescriptionStatus,
@@ -889,11 +910,13 @@ export const getPutApiJobDescriptionJobDescriptionIdStatusQueryOptions = <
 export type PutApiJobDescriptionJobDescriptionIdStatusQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdStatus>>
 >;
-export type PutApiJobDescriptionJobDescriptionIdStatusQueryError = ErrorType<unknown>;
+export type PutApiJobDescriptionJobDescriptionIdStatusQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiJobDescriptionJobDescriptionIdStatus<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	status: JobDescriptionStatus,
@@ -919,7 +942,7 @@ export function usePutApiJobDescriptionJobDescriptionIdStatus<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiJobDescriptionJobDescriptionIdStatus<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	status: JobDescriptionStatus,
@@ -945,7 +968,7 @@ export function usePutApiJobDescriptionJobDescriptionIdStatus<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiJobDescriptionJobDescriptionIdStatus<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	status: JobDescriptionStatus,
@@ -967,7 +990,7 @@ export function usePutApiJobDescriptionJobDescriptionIdStatus<
 
 export function usePutApiJobDescriptionJobDescriptionIdStatus<
 	TData = Awaited<ReturnType<typeof putApiJobDescriptionJobDescriptionIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobDescriptionId: string,
 	status: JobDescriptionStatus,

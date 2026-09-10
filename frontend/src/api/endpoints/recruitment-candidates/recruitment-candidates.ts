@@ -184,7 +184,7 @@ export const getPutApiRecruitmentCandidatesCandidateIdQueryKey = (
 
 export const getPutApiRecruitmentCandidatesCandidateIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiRecruitmentCandidatesCandidateId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	updateCandidateRequest: BodyType<UpdateCandidateRequest>,
@@ -230,11 +230,13 @@ export const getPutApiRecruitmentCandidatesCandidateIdQueryOptions = <
 export type PutApiRecruitmentCandidatesCandidateIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiRecruitmentCandidatesCandidateId>>
 >;
-export type PutApiRecruitmentCandidatesCandidateIdQueryError = ErrorType<unknown>;
+export type PutApiRecruitmentCandidatesCandidateIdQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiRecruitmentCandidatesCandidateId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentCandidatesCandidateId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	updateCandidateRequest: BodyType<UpdateCandidateRequest>,
@@ -260,7 +262,7 @@ export function usePutApiRecruitmentCandidatesCandidateId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentCandidatesCandidateId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentCandidatesCandidateId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	updateCandidateRequest: BodyType<UpdateCandidateRequest>,
@@ -286,7 +288,7 @@ export function usePutApiRecruitmentCandidatesCandidateId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentCandidatesCandidateId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentCandidatesCandidateId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	updateCandidateRequest: BodyType<UpdateCandidateRequest>,
@@ -308,7 +310,7 @@ export function usePutApiRecruitmentCandidatesCandidateId<
 
 export function usePutApiRecruitmentCandidatesCandidateId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentCandidatesCandidateId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	updateCandidateRequest: BodyType<UpdateCandidateRequest>,
@@ -365,7 +367,7 @@ export const getPostApiRecruitmentCandidatesQueryKey = (
 
 export const getPostApiRecruitmentCandidatesQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiRecruitmentCandidates>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCandidateRequest: BodyType<CreateCandidateRequest>,
 	options?: {
@@ -394,11 +396,11 @@ export const getPostApiRecruitmentCandidatesQueryOptions = <
 export type PostApiRecruitmentCandidatesQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiRecruitmentCandidates>>
 >;
-export type PostApiRecruitmentCandidatesQueryError = ErrorType<BadRequestDetails>;
+export type PostApiRecruitmentCandidatesQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiRecruitmentCandidates<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentCandidates>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCandidateRequest: BodyType<CreateCandidateRequest>,
 	options: {
@@ -419,7 +421,7 @@ export function usePostApiRecruitmentCandidates<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiRecruitmentCandidates<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentCandidates>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCandidateRequest: BodyType<CreateCandidateRequest>,
 	options?: {
@@ -440,7 +442,7 @@ export function usePostApiRecruitmentCandidates<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiRecruitmentCandidates<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentCandidates>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCandidateRequest: BodyType<CreateCandidateRequest>,
 	options?: {
@@ -457,7 +459,7 @@ export function usePostApiRecruitmentCandidates<
 
 export function usePostApiRecruitmentCandidates<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentCandidates>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCandidateRequest: BodyType<CreateCandidateRequest>,
 	options?: {
@@ -495,7 +497,7 @@ export const getGetApiRecruitmentCandidatesMutationKey = () =>
 	["getApiRecruitmentCandidates"] as const;
 
 export const getGetApiRecruitmentCandidatesMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -534,7 +536,9 @@ export type GetApiRecruitmentCandidatesMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiRecruitmentCandidates>>
 >;
 
-export type GetApiRecruitmentCandidatesMutationError = ErrorType<unknown>;
+export type GetApiRecruitmentCandidatesMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiRecruitmentCandidatesMutationVariables = {
 	params?: GetApiRecruitmentCandidatesParams;
 };
@@ -542,7 +546,10 @@ export type GetApiRecruitmentCandidatesMutationVariables = {
 /**
  * @summary Get candidates
  */
-export const useGetApiRecruitmentCandidates = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiRecruitmentCandidates = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiRecruitmentCandidates>>,
@@ -765,7 +772,7 @@ export const getDeleteApiRecruitmentCandidatesCandidateIdTagTagIdQueryKey = (
 
 export const getDeleteApiRecruitmentCandidatesCandidateIdTagTagIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof deleteApiRecruitmentCandidatesCandidateIdTagTagId>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	tagId: string,
@@ -807,12 +814,13 @@ export const getDeleteApiRecruitmentCandidatesCandidateIdTagTagIdQueryOptions = 
 export type DeleteApiRecruitmentCandidatesCandidateIdTagTagIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof deleteApiRecruitmentCandidatesCandidateIdTagTagId>>
 >;
-export type DeleteApiRecruitmentCandidatesCandidateIdTagTagIdQueryError =
-	ErrorType<BadRequestDetails>;
+export type DeleteApiRecruitmentCandidatesCandidateIdTagTagIdQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function useDeleteApiRecruitmentCandidatesCandidateIdTagTagId<
 	TData = Awaited<ReturnType<typeof deleteApiRecruitmentCandidatesCandidateIdTagTagId>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	tagId: string,
@@ -838,7 +846,7 @@ export function useDeleteApiRecruitmentCandidatesCandidateIdTagTagId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useDeleteApiRecruitmentCandidatesCandidateIdTagTagId<
 	TData = Awaited<ReturnType<typeof deleteApiRecruitmentCandidatesCandidateIdTagTagId>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	tagId: string,
@@ -864,7 +872,7 @@ export function useDeleteApiRecruitmentCandidatesCandidateIdTagTagId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useDeleteApiRecruitmentCandidatesCandidateIdTagTagId<
 	TData = Awaited<ReturnType<typeof deleteApiRecruitmentCandidatesCandidateIdTagTagId>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	tagId: string,
@@ -886,7 +894,7 @@ export function useDeleteApiRecruitmentCandidatesCandidateIdTagTagId<
 
 export function useDeleteApiRecruitmentCandidatesCandidateIdTagTagId<
 	TData = Awaited<ReturnType<typeof deleteApiRecruitmentCandidatesCandidateIdTagTagId>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	candidateId: string,
 	tagId: string,

@@ -34,7 +34,10 @@ import type {
 	BadRequestDetails,
 	CreateOrganizationRequest,
 	GetApiOrganizationParams,
+	OrganizationCreated,
+	OrganizationSlugUpdated,
 	ProblemDetails,
+	SliceResponseOfOrganizationProjection,
 	UpdateSlug,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
@@ -65,7 +68,7 @@ export const postApiOrganization = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<OrganizationCreated>(
 		{
 			url: `/api/organization`,
 			method: "POST",
@@ -204,13 +207,16 @@ export const getApiOrganization = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>({ url: `/api/organization`, method: "GET", params, signal }, options);
+	return customInstance<SliceResponseOfOrganizationProjection>(
+		{ url: `/api/organization`, method: "GET", params, signal },
+		options,
+	);
 };
 
 export const getGetApiOrganizationMutationKey = () => ["getApiOrganization"] as const;
 
 export const getGetApiOrganizationMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -249,13 +255,16 @@ export type GetApiOrganizationMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiOrganization>>
 >;
 
-export type GetApiOrganizationMutationError = ErrorType<unknown>;
+export type GetApiOrganizationMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiOrganizationMutationVariables = { params?: GetApiOrganizationParams };
 
 /**
  * @summary Get organizations
  */
-export const useGetApiOrganization = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiOrganization = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiOrganization>>,
@@ -283,7 +292,7 @@ export const putApiOrganizationOrganizationIdSlug = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<OrganizationSlugUpdated>(
 		{
 			url: `/api/organization/${organizationId}/slug`,
 			method: "PUT",
@@ -462,13 +471,16 @@ export const getApiOrganizationSlug = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>({ url: `/api/organization/${slug}`, method: "GET", signal }, options);
+	return customInstance<OrganizationCreated>(
+		{ url: `/api/organization/${slug}`, method: "GET", signal },
+		options,
+	);
 };
 
 export const getGetApiOrganizationSlugMutationKey = () => ["getApiOrganizationSlug"] as const;
 
 export const getGetApiOrganizationSlugMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -507,13 +519,16 @@ export type GetApiOrganizationSlugMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiOrganizationSlug>>
 >;
 
-export type GetApiOrganizationSlugMutationError = ErrorType<unknown>;
+export type GetApiOrganizationSlugMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiOrganizationSlugMutationVariables = { slug: string };
 
 /**
  * @summary Get organization by Slug
  */
-export const useGetApiOrganizationSlug = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiOrganizationSlug = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiOrganizationSlug>>,

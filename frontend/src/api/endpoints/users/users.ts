@@ -30,7 +30,13 @@ import type {
 } from "@tanstack/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import type { BadRequestDetails, CreateUserRequest, GetApiUsersParams } from "../../models";
+import type {
+	BadRequestDetails,
+	CreateUserRequest,
+	GetApiUsersParams,
+	ProblemDetails,
+	UserCreated,
+} from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
 
@@ -59,7 +65,7 @@ export const postApiUsers = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<UserCreated>(
 		{
 			url: `/api/users`,
 			method: "POST",
@@ -77,7 +83,7 @@ export const getPostApiUsersQueryKey = (createUserRequest?: BodyType<CreateUserR
 
 export const getPostApiUsersQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiUsers>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {
@@ -100,11 +106,11 @@ export const getPostApiUsersQueryOptions = <
 };
 
 export type PostApiUsersQueryResult = NonNullable<Awaited<ReturnType<typeof postApiUsers>>>;
-export type PostApiUsersQueryError = ErrorType<BadRequestDetails>;
+export type PostApiUsersQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiUsers<
 	TData = Awaited<ReturnType<typeof postApiUsers>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options: {
@@ -123,7 +129,7 @@ export function usePostApiUsers<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiUsers<
 	TData = Awaited<ReturnType<typeof postApiUsers>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {
@@ -142,7 +148,7 @@ export function usePostApiUsers<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiUsers<
 	TData = Awaited<ReturnType<typeof postApiUsers>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {
@@ -157,7 +163,7 @@ export function usePostApiUsers<
 
 export function usePostApiUsers<
 	TData = Awaited<ReturnType<typeof postApiUsers>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {

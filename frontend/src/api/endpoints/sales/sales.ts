@@ -31,6 +31,8 @@ import type {
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
+	ActivityCreated,
+	BadRequestDetails,
 	ChangeOpportunityStageRequest,
 	ChangeResponsiblePersonRequest,
 	CreateOpportunityRequest,
@@ -38,6 +40,16 @@ import type {
 	GetApiSalesActivitiesParams,
 	GetApiSalesOpportunityParams,
 	GetApiSalesOpportunityTotalsParams,
+	OpportunityCreated,
+	OpportunityProjection,
+	OpportunityUpdated,
+	ProblemDetails,
+	ResponsiblePersonChanged,
+	SalesPipelineQueryResult,
+	SalesPipelineResponsibleQueryResult,
+	SliceResponseOfActivityProjection,
+	SliceResponseOfOpportunityProjection,
+	StageChanged,
 	UpdateOpportunityRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
@@ -68,7 +80,7 @@ export const postApiSalesActivity = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<ActivityCreated>(
 		{
 			url: `/api/sales/activity`,
 			method: "POST",
@@ -88,7 +100,7 @@ export const getPostApiSalesActivityQueryKey = (
 
 export const getPostApiSalesActivityQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiSalesActivity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createSalesActivityRequest: BodyType<CreateSalesActivityRequest>,
 	options?: {
@@ -116,11 +128,11 @@ export const getPostApiSalesActivityQueryOptions = <
 export type PostApiSalesActivityQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiSalesActivity>>
 >;
-export type PostApiSalesActivityQueryError = ErrorType<unknown>;
+export type PostApiSalesActivityQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiSalesActivity<
 	TData = Awaited<ReturnType<typeof postApiSalesActivity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createSalesActivityRequest: BodyType<CreateSalesActivityRequest>,
 	options: {
@@ -141,7 +153,7 @@ export function usePostApiSalesActivity<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiSalesActivity<
 	TData = Awaited<ReturnType<typeof postApiSalesActivity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createSalesActivityRequest: BodyType<CreateSalesActivityRequest>,
 	options?: {
@@ -162,7 +174,7 @@ export function usePostApiSalesActivity<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiSalesActivity<
 	TData = Awaited<ReturnType<typeof postApiSalesActivity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createSalesActivityRequest: BodyType<CreateSalesActivityRequest>,
 	options?: {
@@ -179,7 +191,7 @@ export function usePostApiSalesActivity<
 
 export function usePostApiSalesActivity<
 	TData = Awaited<ReturnType<typeof postApiSalesActivity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createSalesActivityRequest: BodyType<CreateSalesActivityRequest>,
 	options?: {
@@ -207,7 +219,7 @@ export const getApiSalesActivities = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<SliceResponseOfActivityProjection>(
 		{ url: `/api/sales/activities`, method: "GET", params, signal },
 		options,
 	);
@@ -216,7 +228,7 @@ export const getApiSalesActivities = (
 export const getGetApiSalesActivitiesMutationKey = () => ["getApiSalesActivities"] as const;
 
 export const getGetApiSalesActivitiesMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -255,13 +267,16 @@ export type GetApiSalesActivitiesMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSalesActivities>>
 >;
 
-export type GetApiSalesActivitiesMutationError = ErrorType<unknown>;
+export type GetApiSalesActivitiesMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiSalesActivitiesMutationVariables = { params?: GetApiSalesActivitiesParams };
 
 /**
  * @summary Get activities
  */
-export const useGetApiSalesActivities = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiSalesActivities = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiSalesActivities>>,
@@ -288,7 +303,7 @@ export const postApiSalesOpportunity = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<OpportunityCreated>(
 		{
 			url: `/api/sales/opportunity`,
 			method: "POST",
@@ -308,7 +323,7 @@ export const getPostApiSalesOpportunityQueryKey = (
 
 export const getPostApiSalesOpportunityQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
@@ -337,11 +352,11 @@ export const getPostApiSalesOpportunityQueryOptions = <
 export type PostApiSalesOpportunityQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiSalesOpportunity>>
 >;
-export type PostApiSalesOpportunityQueryError = ErrorType<unknown>;
+export type PostApiSalesOpportunityQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiSalesOpportunity<
 	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options: {
@@ -362,7 +377,7 @@ export function usePostApiSalesOpportunity<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiSalesOpportunity<
 	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
@@ -383,7 +398,7 @@ export function usePostApiSalesOpportunity<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiSalesOpportunity<
 	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
@@ -400,7 +415,7 @@ export function usePostApiSalesOpportunity<
 
 export function usePostApiSalesOpportunity<
 	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
@@ -428,7 +443,7 @@ export const getApiSalesOpportunity = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<SliceResponseOfOpportunityProjection>(
 		{ url: `/api/sales/opportunity`, method: "GET", params, signal },
 		options,
 	);
@@ -437,7 +452,7 @@ export const getApiSalesOpportunity = (
 export const getGetApiSalesOpportunityMutationKey = () => ["getApiSalesOpportunity"] as const;
 
 export const getGetApiSalesOpportunityMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -476,13 +491,16 @@ export type GetApiSalesOpportunityMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSalesOpportunity>>
 >;
 
-export type GetApiSalesOpportunityMutationError = ErrorType<unknown>;
+export type GetApiSalesOpportunityMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiSalesOpportunityMutationVariables = { params?: GetApiSalesOpportunityParams };
 
 /**
  * @summary Get opportunities
  */
-export const useGetApiSalesOpportunity = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiSalesOpportunity = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiSalesOpportunity>>,
@@ -510,7 +528,7 @@ export const putApiSalesOpportunityOpportunityId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<OpportunityUpdated>(
 		{
 			url: `/api/sales/opportunity/${opportunityId}`,
 			method: "PUT",
@@ -531,7 +549,7 @@ export const getPutApiSalesOpportunityOpportunityIdQueryKey = (
 
 export const getPutApiSalesOpportunityOpportunityIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
@@ -577,11 +595,13 @@ export const getPutApiSalesOpportunityOpportunityIdQueryOptions = <
 export type PutApiSalesOpportunityOpportunityIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>
 >;
-export type PutApiSalesOpportunityOpportunityIdQueryError = ErrorType<unknown>;
+export type PutApiSalesOpportunityOpportunityIdQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiSalesOpportunityOpportunityId<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
@@ -607,7 +627,7 @@ export function usePutApiSalesOpportunityOpportunityId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiSalesOpportunityOpportunityId<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
@@ -633,7 +653,7 @@ export function usePutApiSalesOpportunityOpportunityId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiSalesOpportunityOpportunityId<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
@@ -655,7 +675,7 @@ export function usePutApiSalesOpportunityOpportunityId<
 
 export function usePutApiSalesOpportunityOpportunityId<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
@@ -692,7 +712,7 @@ export const getApiSalesOpportunityOpportunityId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<OpportunityProjection>(
 		{ url: `/api/sales/opportunity/${opportunityId}`, method: "GET", signal },
 		options,
 	);
@@ -702,7 +722,7 @@ export const getGetApiSalesOpportunityOpportunityIdMutationKey = () =>
 	["getApiSalesOpportunityOpportunityId"] as const;
 
 export const getGetApiSalesOpportunityOpportunityIdMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -741,14 +761,16 @@ export type GetApiSalesOpportunityOpportunityIdMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSalesOpportunityOpportunityId>>
 >;
 
-export type GetApiSalesOpportunityOpportunityIdMutationError = ErrorType<unknown>;
+export type GetApiSalesOpportunityOpportunityIdMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiSalesOpportunityOpportunityIdMutationVariables = { opportunityId: string };
 
 /**
  * @summary Get opportunity
  */
 export const useGetApiSalesOpportunityOpportunityId = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
@@ -778,7 +800,7 @@ export const putApiSalesOpportunityOpportunityIdResponsible = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<ResponsiblePersonChanged>(
 		{
 			url: `/api/sales/opportunity/${opportunityId}/responsible`,
 			method: "PUT",
@@ -803,7 +825,7 @@ export const getPutApiSalesOpportunityOpportunityIdResponsibleQueryKey = (
 
 export const getPutApiSalesOpportunityOpportunityIdResponsibleQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdResponsible>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeResponsiblePersonRequest: BodyType<ChangeResponsiblePersonRequest>,
@@ -852,11 +874,13 @@ export const getPutApiSalesOpportunityOpportunityIdResponsibleQueryOptions = <
 export type PutApiSalesOpportunityOpportunityIdResponsibleQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdResponsible>>
 >;
-export type PutApiSalesOpportunityOpportunityIdResponsibleQueryError = ErrorType<unknown>;
+export type PutApiSalesOpportunityOpportunityIdResponsibleQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiSalesOpportunityOpportunityIdResponsible<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdResponsible>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeResponsiblePersonRequest: BodyType<ChangeResponsiblePersonRequest>,
@@ -882,7 +906,7 @@ export function usePutApiSalesOpportunityOpportunityIdResponsible<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiSalesOpportunityOpportunityIdResponsible<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdResponsible>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeResponsiblePersonRequest: BodyType<ChangeResponsiblePersonRequest>,
@@ -908,7 +932,7 @@ export function usePutApiSalesOpportunityOpportunityIdResponsible<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiSalesOpportunityOpportunityIdResponsible<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdResponsible>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeResponsiblePersonRequest: BodyType<ChangeResponsiblePersonRequest>,
@@ -930,7 +954,7 @@ export function usePutApiSalesOpportunityOpportunityIdResponsible<
 
 export function usePutApiSalesOpportunityOpportunityIdResponsible<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdResponsible>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeResponsiblePersonRequest: BodyType<ChangeResponsiblePersonRequest>,
@@ -968,7 +992,7 @@ export const putApiSalesOpportunityOpportunityIdStage = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<StageChanged>(
 		{
 			url: `/api/sales/opportunity/${opportunityId}/stage`,
 			method: "PUT",
@@ -993,7 +1017,7 @@ export const getPutApiSalesOpportunityOpportunityIdStageQueryKey = (
 
 export const getPutApiSalesOpportunityOpportunityIdStageQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
@@ -1042,11 +1066,13 @@ export const getPutApiSalesOpportunityOpportunityIdStageQueryOptions = <
 export type PutApiSalesOpportunityOpportunityIdStageQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>
 >;
-export type PutApiSalesOpportunityOpportunityIdStageQueryError = ErrorType<unknown>;
+export type PutApiSalesOpportunityOpportunityIdStageQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiSalesOpportunityOpportunityIdStage<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
@@ -1072,7 +1098,7 @@ export function usePutApiSalesOpportunityOpportunityIdStage<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiSalesOpportunityOpportunityIdStage<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
@@ -1098,7 +1124,7 @@ export function usePutApiSalesOpportunityOpportunityIdStage<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiSalesOpportunityOpportunityIdStage<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
@@ -1120,7 +1146,7 @@ export function usePutApiSalesOpportunityOpportunityIdStage<
 
 export function usePutApiSalesOpportunityOpportunityIdStage<
 	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
@@ -1157,7 +1183,7 @@ export const getApiSalesOpportunityTotals = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<SalesPipelineQueryResult[]>(
 		{ url: `/api/sales/opportunity/totals`, method: "GET", params, signal },
 		options,
 	);
@@ -1167,7 +1193,7 @@ export const getGetApiSalesOpportunityTotalsMutationKey = () =>
 	["getApiSalesOpportunityTotals"] as const;
 
 export const getGetApiSalesOpportunityTotalsMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -1206,7 +1232,9 @@ export type GetApiSalesOpportunityTotalsMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>
 >;
 
-export type GetApiSalesOpportunityTotalsMutationError = ErrorType<unknown>;
+export type GetApiSalesOpportunityTotalsMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiSalesOpportunityTotalsMutationVariables = {
 	params?: GetApiSalesOpportunityTotalsParams;
 };
@@ -1214,7 +1242,10 @@ export type GetApiSalesOpportunityTotalsMutationVariables = {
 /**
  * @summary Get pipeline totals
  */
-export const useGetApiSalesOpportunityTotals = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiSalesOpportunityTotals = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>,
@@ -1240,7 +1271,7 @@ export const getApiSalesOpportunityTotalsResponsible = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<SalesPipelineResponsibleQueryResult[]>(
 		{ url: `/api/sales/opportunity/totals-responsible`, method: "GET", signal },
 		options,
 	);
@@ -1250,7 +1281,7 @@ export const getGetApiSalesOpportunityTotalsResponsibleMutationKey = () =>
 	["getApiSalesOpportunityTotalsResponsible"] as const;
 
 export const getGetApiSalesOpportunityTotalsResponsibleMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -1287,13 +1318,15 @@ export type GetApiSalesOpportunityTotalsResponsibleMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSalesOpportunityTotalsResponsible>>
 >;
 
-export type GetApiSalesOpportunityTotalsResponsibleMutationError = ErrorType<unknown>;
+export type GetApiSalesOpportunityTotalsResponsibleMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 /**
  * @summary Get responsible totals
  */
 export const useGetApiSalesOpportunityTotalsResponsible = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {

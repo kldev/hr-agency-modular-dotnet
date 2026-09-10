@@ -23,10 +23,16 @@ import type {
 import { useMutation } from "@tanstack/react-query";
 
 import type {
+	BadRequestDetails,
+	CompanyContact,
+	CompanySuggestion,
 	GetApiSuggestionCompaniesParams,
 	GetApiSuggestionCompanyContactsParams,
 	GetApiSuggestionTagsParams,
 	GetApiSuggestionUsersParams,
+	ProblemDetails,
+	Tag,
+	UserSuggestion,
 } from "../../models";
 import type { ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
@@ -41,7 +47,7 @@ export const getApiSuggestionCompanies = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanySuggestion[]>(
 		{ url: `/api/suggestion/companies`, method: "GET", params, signal },
 		options,
 	);
@@ -50,7 +56,7 @@ export const getApiSuggestionCompanies = (
 export const getGetApiSuggestionCompaniesMutationKey = () => ["getApiSuggestionCompanies"] as const;
 
 export const getGetApiSuggestionCompaniesMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -89,7 +95,7 @@ export type GetApiSuggestionCompaniesMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSuggestionCompanies>>
 >;
 
-export type GetApiSuggestionCompaniesMutationError = ErrorType<unknown>;
+export type GetApiSuggestionCompaniesMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiSuggestionCompaniesMutationVariables = {
 	params?: GetApiSuggestionCompaniesParams;
 };
@@ -97,7 +103,10 @@ export type GetApiSuggestionCompaniesMutationVariables = {
 /**
  * @summary Get top 25 companies
  */
-export const useGetApiSuggestionCompanies = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiSuggestionCompanies = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiSuggestionCompanies>>,
@@ -124,7 +133,7 @@ export const getApiSuggestionUsers = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<UserSuggestion[]>(
 		{ url: `/api/suggestion/users`, method: "GET", params, signal },
 		options,
 	);
@@ -133,7 +142,7 @@ export const getApiSuggestionUsers = (
 export const getGetApiSuggestionUsersMutationKey = () => ["getApiSuggestionUsers"] as const;
 
 export const getGetApiSuggestionUsersMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -172,13 +181,16 @@ export type GetApiSuggestionUsersMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSuggestionUsers>>
 >;
 
-export type GetApiSuggestionUsersMutationError = ErrorType<unknown>;
+export type GetApiSuggestionUsersMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiSuggestionUsersMutationVariables = { params: GetApiSuggestionUsersParams };
 
 /**
  * @summary Get top 25 users
  */
-export const useGetApiSuggestionUsers = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiSuggestionUsers = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiSuggestionUsers>>,
@@ -205,7 +217,7 @@ export const getApiSuggestionTags = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<Tag[]>(
 		{ url: `/api/suggestion/tags`, method: "GET", params, signal },
 		options,
 	);
@@ -214,7 +226,7 @@ export const getApiSuggestionTags = (
 export const getGetApiSuggestionTagsMutationKey = () => ["getApiSuggestionTags"] as const;
 
 export const getGetApiSuggestionTagsMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -253,13 +265,16 @@ export type GetApiSuggestionTagsMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSuggestionTags>>
 >;
 
-export type GetApiSuggestionTagsMutationError = ErrorType<unknown>;
+export type GetApiSuggestionTagsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiSuggestionTagsMutationVariables = { params?: GetApiSuggestionTagsParams };
 
 /**
  * @summary Get tags (limit 25)
  */
-export const useGetApiSuggestionTags = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiSuggestionTags = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiSuggestionTags>>,
@@ -286,7 +301,7 @@ export const getApiSuggestionCompanyContacts = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanyContact[]>(
 		{ url: `/api/suggestion/company-contacts`, method: "GET", params, signal },
 		options,
 	);
@@ -296,7 +311,7 @@ export const getGetApiSuggestionCompanyContactsMutationKey = () =>
 	["getApiSuggestionCompanyContacts"] as const;
 
 export const getGetApiSuggestionCompanyContactsMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -335,7 +350,9 @@ export type GetApiSuggestionCompanyContactsMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiSuggestionCompanyContacts>>
 >;
 
-export type GetApiSuggestionCompanyContactsMutationError = ErrorType<unknown>;
+export type GetApiSuggestionCompanyContactsMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiSuggestionCompanyContactsMutationVariables = {
 	params?: GetApiSuggestionCompanyContactsParams;
 };
@@ -343,7 +360,10 @@ export type GetApiSuggestionCompanyContactsMutationVariables = {
 /**
  * @summary Get top 25 contacts
  */
-export const useGetApiSuggestionCompanyContacts = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiSuggestionCompanyContacts = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiSuggestionCompanyContacts>>,

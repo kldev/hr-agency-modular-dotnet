@@ -33,10 +33,20 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	ApplyToPostRequest,
 	AssignRecruiterRequest,
+	BadRequestDetails,
 	ChangeJobPostStatusRequest,
 	CreatePostRequest,
 	GetApiRecruitmentJobPostingParams,
+	JobApplicationCreated,
+	JobPostCreated,
+	JobPostedToChannel,
+	JobPostProjection,
+	JobPostRecruiterChanged,
+	JobPostStatusChanged,
+	JobPostUpdated,
 	PostToChannelRequest,
+	ProblemDetails,
+	SliceResponseOfJobPostResponse,
 	UpdateJobPostRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
@@ -67,7 +77,7 @@ export const postApiRecruitmentJobPosting = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobPostCreated>(
 		{
 			url: `/api/recruitment/job-posting`,
 			method: "POST",
@@ -87,7 +97,7 @@ export const getPostApiRecruitmentJobPostingQueryKey = (
 
 export const getPostApiRecruitmentJobPostingQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPosting>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPostRequest: BodyType<CreatePostRequest>,
 	options?: {
@@ -116,11 +126,11 @@ export const getPostApiRecruitmentJobPostingQueryOptions = <
 export type PostApiRecruitmentJobPostingQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiRecruitmentJobPosting>>
 >;
-export type PostApiRecruitmentJobPostingQueryError = ErrorType<unknown>;
+export type PostApiRecruitmentJobPostingQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiRecruitmentJobPosting<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPosting>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPostRequest: BodyType<CreatePostRequest>,
 	options: {
@@ -141,7 +151,7 @@ export function usePostApiRecruitmentJobPosting<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiRecruitmentJobPosting<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPosting>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPostRequest: BodyType<CreatePostRequest>,
 	options?: {
@@ -162,7 +172,7 @@ export function usePostApiRecruitmentJobPosting<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiRecruitmentJobPosting<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPosting>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPostRequest: BodyType<CreatePostRequest>,
 	options?: {
@@ -179,7 +189,7 @@ export function usePostApiRecruitmentJobPosting<
 
 export function usePostApiRecruitmentJobPosting<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPosting>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPostRequest: BodyType<CreatePostRequest>,
 	options?: {
@@ -207,7 +217,7 @@ export const getApiRecruitmentJobPosting = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<SliceResponseOfJobPostResponse>(
 		{ url: `/api/recruitment/job-posting`, method: "GET", params, signal },
 		options,
 	);
@@ -217,7 +227,7 @@ export const getGetApiRecruitmentJobPostingMutationKey = () =>
 	["getApiRecruitmentJobPosting"] as const;
 
 export const getGetApiRecruitmentJobPostingMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -256,7 +266,9 @@ export type GetApiRecruitmentJobPostingMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiRecruitmentJobPosting>>
 >;
 
-export type GetApiRecruitmentJobPostingMutationError = ErrorType<unknown>;
+export type GetApiRecruitmentJobPostingMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiRecruitmentJobPostingMutationVariables = {
 	params?: GetApiRecruitmentJobPostingParams;
 };
@@ -264,7 +276,10 @@ export type GetApiRecruitmentJobPostingMutationVariables = {
 /**
  * @summary Get job posts
  */
-export const useGetApiRecruitmentJobPosting = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiRecruitmentJobPosting = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiRecruitmentJobPosting>>,
@@ -292,7 +307,7 @@ export const putApiRecruitmentJobPostingJobPostId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobPostUpdated>(
 		{
 			url: `/api/recruitment/job-posting/${jobPostId}`,
 			method: "PUT",
@@ -313,7 +328,7 @@ export const getPutApiRecruitmentJobPostingJobPostIdQueryKey = (
 
 export const getPutApiRecruitmentJobPostingJobPostIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	updateJobPostRequest: BodyType<UpdateJobPostRequest>,
@@ -354,11 +369,13 @@ export const getPutApiRecruitmentJobPostingJobPostIdQueryOptions = <
 export type PutApiRecruitmentJobPostingJobPostIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostId>>
 >;
-export type PutApiRecruitmentJobPostingJobPostIdQueryError = ErrorType<unknown>;
+export type PutApiRecruitmentJobPostingJobPostIdQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiRecruitmentJobPostingJobPostId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	updateJobPostRequest: BodyType<UpdateJobPostRequest>,
@@ -384,7 +401,7 @@ export function usePutApiRecruitmentJobPostingJobPostId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	updateJobPostRequest: BodyType<UpdateJobPostRequest>,
@@ -410,7 +427,7 @@ export function usePutApiRecruitmentJobPostingJobPostId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	updateJobPostRequest: BodyType<UpdateJobPostRequest>,
@@ -432,7 +449,7 @@ export function usePutApiRecruitmentJobPostingJobPostId<
 
 export function usePutApiRecruitmentJobPostingJobPostId<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	updateJobPostRequest: BodyType<UpdateJobPostRequest>,
@@ -469,7 +486,7 @@ export const getApiRecruitmentJobPostingJobPostId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobPostProjection>(
 		{ url: `/api/recruitment/job-posting/${jobPostId}`, method: "GET", signal },
 		options,
 	);
@@ -479,7 +496,7 @@ export const getGetApiRecruitmentJobPostingJobPostIdMutationKey = () =>
 	["getApiRecruitmentJobPostingJobPostId"] as const;
 
 export const getGetApiRecruitmentJobPostingJobPostIdMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -518,14 +535,16 @@ export type GetApiRecruitmentJobPostingJobPostIdMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiRecruitmentJobPostingJobPostId>>
 >;
 
-export type GetApiRecruitmentJobPostingJobPostIdMutationError = ErrorType<unknown>;
+export type GetApiRecruitmentJobPostingJobPostIdMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiRecruitmentJobPostingJobPostIdMutationVariables = { jobPostId: string };
 
 /**
  * @summary Get job post
  */
 export const useGetApiRecruitmentJobPostingJobPostId = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
@@ -555,7 +574,7 @@ export const putApiRecruitmentJobPostingJobPostIdChangeRecruiter = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobPostRecruiterChanged>(
 		{
 			url: `/api/recruitment/job-posting/${jobPostId}/change-recruiter`,
 			method: "PUT",
@@ -580,7 +599,7 @@ export const getPutApiRecruitmentJobPostingJobPostIdChangeRecruiterQueryKey = (
 
 export const getPutApiRecruitmentJobPostingJobPostIdChangeRecruiterQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChangeRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -629,11 +648,13 @@ export const getPutApiRecruitmentJobPostingJobPostIdChangeRecruiterQueryOptions 
 export type PutApiRecruitmentJobPostingJobPostIdChangeRecruiterQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChangeRecruiter>>
 >;
-export type PutApiRecruitmentJobPostingJobPostIdChangeRecruiterQueryError = ErrorType<unknown>;
+export type PutApiRecruitmentJobPostingJobPostIdChangeRecruiterQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiRecruitmentJobPostingJobPostIdChangeRecruiter<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChangeRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -659,7 +680,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdChangeRecruiter<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostIdChangeRecruiter<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChangeRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -685,7 +706,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdChangeRecruiter<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostIdChangeRecruiter<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChangeRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -707,7 +728,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdChangeRecruiter<
 
 export function usePutApiRecruitmentJobPostingJobPostIdChangeRecruiter<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChangeRecruiter>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	assignRecruiterRequest: BodyType<AssignRecruiterRequest>,
@@ -745,7 +766,7 @@ export const postApiRecruitmentJobPostingJobPostIdApply = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobApplicationCreated>(
 		{
 			url: `/api/recruitment/job-posting/${jobPostId}/apply`,
 			method: "POST",
@@ -766,7 +787,7 @@ export const getPostApiRecruitmentJobPostingJobPostIdApplyQueryKey = (
 
 export const getPostApiRecruitmentJobPostingJobPostIdApplyQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPostingJobPostIdApply>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	applyToPostRequest: BodyType<ApplyToPostRequest>,
@@ -812,11 +833,13 @@ export const getPostApiRecruitmentJobPostingJobPostIdApplyQueryOptions = <
 export type PostApiRecruitmentJobPostingJobPostIdApplyQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiRecruitmentJobPostingJobPostIdApply>>
 >;
-export type PostApiRecruitmentJobPostingJobPostIdApplyQueryError = ErrorType<unknown>;
+export type PostApiRecruitmentJobPostingJobPostIdApplyQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePostApiRecruitmentJobPostingJobPostIdApply<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPostingJobPostIdApply>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	applyToPostRequest: BodyType<ApplyToPostRequest>,
@@ -842,7 +865,7 @@ export function usePostApiRecruitmentJobPostingJobPostIdApply<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiRecruitmentJobPostingJobPostIdApply<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPostingJobPostIdApply>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	applyToPostRequest: BodyType<ApplyToPostRequest>,
@@ -868,7 +891,7 @@ export function usePostApiRecruitmentJobPostingJobPostIdApply<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiRecruitmentJobPostingJobPostIdApply<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPostingJobPostIdApply>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	applyToPostRequest: BodyType<ApplyToPostRequest>,
@@ -890,7 +913,7 @@ export function usePostApiRecruitmentJobPostingJobPostIdApply<
 
 export function usePostApiRecruitmentJobPostingJobPostIdApply<
 	TData = Awaited<ReturnType<typeof postApiRecruitmentJobPostingJobPostIdApply>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	applyToPostRequest: BodyType<ApplyToPostRequest>,
@@ -928,7 +951,7 @@ export const putApiRecruitmentJobPostingJobPostIdChannel = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobPostedToChannel>(
 		{
 			url: `/api/recruitment/job-posting/${jobPostId}/channel`,
 			method: "PUT",
@@ -953,7 +976,7 @@ export const getPutApiRecruitmentJobPostingJobPostIdChannelQueryKey = (
 
 export const getPutApiRecruitmentJobPostingJobPostIdChannelQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChannel>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
@@ -999,11 +1022,13 @@ export const getPutApiRecruitmentJobPostingJobPostIdChannelQueryOptions = <
 export type PutApiRecruitmentJobPostingJobPostIdChannelQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChannel>>
 >;
-export type PutApiRecruitmentJobPostingJobPostIdChannelQueryError = ErrorType<unknown>;
+export type PutApiRecruitmentJobPostingJobPostIdChannelQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiRecruitmentJobPostingJobPostIdChannel<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChannel>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
@@ -1029,7 +1054,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdChannel<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostIdChannel<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChannel>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
@@ -1055,7 +1080,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdChannel<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostIdChannel<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChannel>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
@@ -1077,7 +1102,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdChannel<
 
 export function usePutApiRecruitmentJobPostingJobPostIdChannel<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdChannel>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
@@ -1115,7 +1140,7 @@ export const putApiRecruitmentJobPostingJobPostIdStatus = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<JobPostStatusChanged>(
 		{
 			url: `/api/recruitment/job-posting/${jobPostId}/status`,
 			method: "PUT",
@@ -1140,7 +1165,7 @@ export const getPutApiRecruitmentJobPostingJobPostIdStatusQueryKey = (
 
 export const getPutApiRecruitmentJobPostingJobPostIdStatusQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	changeJobPostStatusRequest: BodyType<ChangeJobPostStatusRequest>,
@@ -1186,11 +1211,13 @@ export const getPutApiRecruitmentJobPostingJobPostIdStatusQueryOptions = <
 export type PutApiRecruitmentJobPostingJobPostIdStatusQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdStatus>>
 >;
-export type PutApiRecruitmentJobPostingJobPostIdStatusQueryError = ErrorType<unknown>;
+export type PutApiRecruitmentJobPostingJobPostIdStatusQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiRecruitmentJobPostingJobPostIdStatus<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	changeJobPostStatusRequest: BodyType<ChangeJobPostStatusRequest>,
@@ -1216,7 +1243,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdStatus<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostIdStatus<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	changeJobPostStatusRequest: BodyType<ChangeJobPostStatusRequest>,
@@ -1242,7 +1269,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdStatus<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiRecruitmentJobPostingJobPostIdStatus<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	changeJobPostStatusRequest: BodyType<ChangeJobPostStatusRequest>,
@@ -1264,7 +1291,7 @@ export function usePutApiRecruitmentJobPostingJobPostIdStatus<
 
 export function usePutApiRecruitmentJobPostingJobPostIdStatus<
 	TData = Awaited<ReturnType<typeof putApiRecruitmentJobPostingJobPostIdStatus>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	changeJobPostStatusRequest: BodyType<ChangeJobPostStatusRequest>,

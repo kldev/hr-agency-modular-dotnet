@@ -30,7 +30,13 @@ import type {
 } from "@tanstack/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import type { BadRequestDetails, CreatePlatformOwner } from "../../models";
+import type {
+	BadRequestDetails,
+	CreatePlatformOwner,
+	OwnerProjection,
+	PlatformOwnerCreated,
+	ProblemDetails,
+} from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
 
@@ -59,7 +65,7 @@ export const postApiOwners = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<PlatformOwnerCreated>(
 		{
 			url: `/api/owners`,
 			method: "POST",
@@ -77,7 +83,7 @@ export const getPostApiOwnersQueryKey = (createPlatformOwner?: BodyType<CreatePl
 
 export const getPostApiOwnersQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiOwners>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPlatformOwner: BodyType<CreatePlatformOwner>,
 	options?: {
@@ -100,11 +106,11 @@ export const getPostApiOwnersQueryOptions = <
 };
 
 export type PostApiOwnersQueryResult = NonNullable<Awaited<ReturnType<typeof postApiOwners>>>;
-export type PostApiOwnersQueryError = ErrorType<BadRequestDetails>;
+export type PostApiOwnersQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiOwners<
 	TData = Awaited<ReturnType<typeof postApiOwners>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPlatformOwner: BodyType<CreatePlatformOwner>,
 	options: {
@@ -123,7 +129,7 @@ export function usePostApiOwners<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiOwners<
 	TData = Awaited<ReturnType<typeof postApiOwners>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPlatformOwner: BodyType<CreatePlatformOwner>,
 	options?: {
@@ -142,7 +148,7 @@ export function usePostApiOwners<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiOwners<
 	TData = Awaited<ReturnType<typeof postApiOwners>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPlatformOwner: BodyType<CreatePlatformOwner>,
 	options?: {
@@ -157,7 +163,7 @@ export function usePostApiOwners<
 
 export function usePostApiOwners<
 	TData = Awaited<ReturnType<typeof postApiOwners>>,
-	TError = ErrorType<BadRequestDetails>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createPlatformOwner: BodyType<CreatePlatformOwner>,
 	options?: {
@@ -176,19 +182,19 @@ export function usePostApiOwners<
 }
 
 /**
- * @summary Owner
+ * @summary Get owners
  */
 export const getApiOwners = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>({ url: `/api/owners`, method: "GET", signal }, options);
+	return customInstance<OwnerProjection[]>({ url: `/api/owners`, method: "GET", signal }, options);
 };
 
 export const getGetApiOwnersMutationKey = () => ["getApiOwners"] as const;
 
 export const getGetApiOwnersMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiOwners>>, TError, void, TContext>;
@@ -210,12 +216,15 @@ export const getGetApiOwnersMutationOptions = <
 
 export type GetApiOwnersMutationResult = NonNullable<Awaited<ReturnType<typeof getApiOwners>>>;
 
-export type GetApiOwnersMutationError = ErrorType<unknown>;
+export type GetApiOwnersMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 /**
- * @summary Owner
+ * @summary Get owners
  */
-export const useGetApiOwners = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiOwners = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiOwners>>, TError, void, TContext>;
 		request?: SecondParameter<typeof customInstance>;
