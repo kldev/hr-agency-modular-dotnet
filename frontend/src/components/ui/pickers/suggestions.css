@@ -1,0 +1,476 @@
+/* =========================================================
+   Suggestion Picker
+   ========================================================= */
+
+.suggestion-picker {
+  position: relative;
+
+  width: 100%;
+}
+
+.suggestion-picker > .form-label {
+  display: block;
+
+  margin-bottom: var(--space-2);
+}
+
+
+/* =========================================================
+   Control
+   ========================================================= */
+
+.suggestion-picker-control {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 36px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+
+  background: var(--color-surface);
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.suggestion-picker-control-open {
+  border-color: var(--color-primary);
+
+  box-shadow:
+    0 0 0 2px var(--color-primary-soft);
+}
+
+.suggestion-picker-control-invalid {
+  border-color: var(--color-danger);
+}
+
+.suggestion-picker-control-invalid.suggestion-picker-control-open {
+  box-shadow:
+    0 0 0 2px var(--color-danger-soft);
+}
+
+.suggestion-picker-control-disabled {
+  background: var(--color-surface-subtle);
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   Input
+   ========================================================= */
+
+.suggestion-picker-input {
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+
+  box-sizing: border-box;
+
+  padding:
+    0
+    72px
+    0
+    36px;
+
+  border: 0;
+  outline: 0;
+
+  background: transparent;
+  color: var(--color-text);
+
+  font-size: var(--font-size-md);
+}
+
+.suggestion-picker-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.suggestion-picker-input:disabled {
+  color: var(--color-text-disabled);
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   Icons
+   ========================================================= */
+
+.suggestion-picker-icon {
+  position: absolute;
+  left: 11px;
+
+  color: var(--color-text-muted);
+
+  pointer-events: none;
+}
+
+.suggestion-picker-spinner {
+	position: absolute;
+	right: 40px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: var(--color-muted-foreground);
+	pointer-events: none;
+}
+
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+.suggestion-picker-clear,
+.suggestion-picker-trigger {
+  position: absolute;
+
+  display: grid;
+  place-items: center;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: var(--radius-md);
+
+  background: transparent;
+  color: var(--color-text-muted);
+
+  cursor: pointer;
+}
+
+.suggestion-picker-clear {
+  right: 32px;
+}
+
+.suggestion-picker-trigger {
+  right: 4px;
+}
+
+.suggestion-picker-clear:hover,
+.suggestion-picker-trigger:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.suggestion-picker-clear:disabled,
+.suggestion-picker-trigger:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.5;
+}
+
+.suggestion-picker-chevron-open {
+  transform: rotate(180deg);
+}
+
+.suggestion-picker-clear:focus-visible,
+.suggestion-picker-trigger:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+
+/* =========================================================
+   Dropdown
+   ========================================================= */
+
+.suggestion-picker-menu {
+  position: fixed;
+
+  z-index: 1000;
+
+  box-sizing: border-box;
+
+  max-height: 320px;
+
+  overflow-y: auto;
+
+  background: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  box-shadow:
+    0 8px 24px rgba(16, 24, 40, 0.12);
+}
+
+[data-theme="dark"] .suggestion-picker-menu {
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================================
+   List
+   ========================================================= */
+
+.suggestion-picker-list {
+  display: flex;
+  flex-direction: column;
+
+  padding: var(--space-1);
+}
+
+.suggestion-picker-option {
+  display: block;
+
+  width: 100%;
+  min-height: 48px;
+
+  box-sizing: border-box;
+
+  padding:
+    var(--space-2)
+    var(--space-3);
+
+  border: 0;
+  border-radius: var(--radius-sm);
+
+  background: transparent;
+  color: var(--color-text);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.suggestion-picker-option:hover,
+.suggestion-picker-option-selected {
+  background: var(--color-surface-selected);
+}
+
+.suggestion-picker-option-highlighted {
+  background: var(--color-surface-hover);
+}
+
+.suggestion-picker-option-selected:hover,
+.suggestion-picker-option-selected.suggestion-picker-option-highlighted {
+  background: var(--color-surface-selected);
+}
+
+.suggestion-picker-option:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+
+/* =========================================================
+   Default item
+   ========================================================= */
+
+.suggestion-picker-default-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: var(--space-3);
+
+  min-width: 0;
+}
+
+.suggestion-picker-item-content {
+  min-width: 0;
+
+  flex: 1 1 auto;
+}
+
+.suggestion-picker-item-label {
+  overflow: hidden;
+
+  color: var(--color-text);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suggestion-picker-item-description {
+  overflow: hidden;
+
+  margin-top: 2px;
+
+  color: var(--color-text-muted);
+
+  font-size: var(--font-size-xs);
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.suggestion-picker-item-check {
+  flex: 0 0 auto;
+
+  color: var(--color-primary);
+}
+
+
+/* =========================================================
+   Loading / Empty
+   ========================================================= */
+
+.suggestion-picker-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: var(--space-2);
+
+  min-height: 64px;
+
+  padding: var(--space-4);
+
+  color: var(--color-text-muted);
+
+  font-size: var(--font-size-sm);
+}
+
+.suggestion-picker-state-spinner {
+  color: var(--color-primary);
+
+  animation: spin 700ms linear infinite;
+}
+
+.suggestion-picker-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 80px;
+
+  padding: var(--space-4);
+
+  text-align: center;
+}
+
+.suggestion-picker-empty-title {
+  color: var(--color-text);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.suggestion-picker-empty-description {
+  margin-top: 3px;
+
+  color: var(--color-text-muted);
+
+  font-size: var(--font-size-xs);
+}
+
+
+/* =========================================================
+   Optional Header
+   ========================================================= */
+
+.suggestion-picker-header {
+  padding:
+    var(--space-2)
+    var(--space-3);
+
+  border-bottom: 1px solid var(--color-border-subtle);
+
+  color: var(--color-text-muted);
+
+  font-size: var(--font-size-xs);
+}
+
+
+/* =========================================================
+   Custom Value Hint
+   ========================================================= */
+
+.suggestion-picker-custom-hint {
+  margin-top: var(--space-1);
+
+  color: var(--color-text-muted);
+
+  font-size: var(--font-size-xs);
+}
+
+
+/* =========================================================
+   Rich Item
+   ========================================================= */
+
+.suggestion-picker-avatar {
+  display: grid;
+  place-items: center;
+
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.suggestion-picker-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.suggestion-picker-company-meta {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  min-width: 0;
+
+  margin-top: 2px;
+
+  overflow: hidden;
+
+  color: var(--color-text-muted);
+
+  font-size: var(--font-size-xs);
+
+  white-space: nowrap;
+}
+
+.suggestion-picker-company-meta svg {
+  flex: 0 0 auto;
+}
+
+.suggestion-picker-company-meta span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.suggestion-picker-selected-mark {
+  flex: 0 0 auto;
+
+  color: var(--color-primary);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}

@@ -5,6 +5,8 @@ import { getApiCompanies } from "@/api/endpoints";
 import type { SliceResponseOfCompanyProjection } from "@/api/models";
 import { Page } from "@/components/layout";
 import { EmptyState } from "@/components/ui";
+import { UsersPicker } from "@/components/ui/pickers/UsersPicker";
+import { CompaniesTable } from "./components/CompaniesTable";
 
 const CompaniesPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
@@ -12,12 +14,20 @@ const CompaniesPage: React.FC = () => {
 	const handleOnRefresh = async () => {
 		setLoading(true);
 
-		const result = await getApiCompanies({ pageSize: 100, page: 0 });
+		const result = await getApiCompanies({ pageSize: 20, page: 0 });
 
 		setCompanies(result);
 		setLoading(false);
 		return Promise.resolve();
 	};
+
+	const [recruiterId, setRecruiterId] = useState<string | null>(
+		null,
+	);
+
+	const [recruiterInput, setRecruiterInput] =
+		useState("");
+
 	return (
 		<Page
 			title="Companies"
@@ -25,20 +35,23 @@ const CompaniesPage: React.FC = () => {
 			onRefresh={handleOnRefresh}
 			loading={loading}
 			page={0}
-			isEmpty={true}
+			isEmpty={companies !== undefined && companies?.content.length === 0}
 			emptyState={
 				<EmptyState title="No companies found">
 					<Building2 size={24} />
 				</EmptyState>
 			}
 		>
-			<div className="flex items-center flex-col align-middle text-orange-800 text-4xl">
-				<ConstructionIcon />
-				<h1>Work in progress</h1>
+			<div className="space-y-5 p-5 max-w-120">
+				<UsersPicker value={recruiterId}
+					inputValue={recruiterInput}
+					onChange={(id) => {
+						setRecruiterId(id);
+					}}
+					onInputChange={setRecruiterInput}
+					allowCustomValue={false} />
 			</div>
-			<div>
-				<code>{JSON.stringify(companies)}</code>
-			</div>
+			<CompaniesTable companies={companies?.content ?? []} />
 		</Page>
 	);
 };
