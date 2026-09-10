@@ -20,9 +20,18 @@ internal static class Endpoint
             .AllowAnonymous().WithRequestTimeout(TimeSpan.FromMinutes(5));
     }
 
-    private static async Task<IResult> Handler(IPlatformSeeder seeder)
+    private static async Task<IResult> Handler(IPlatformSeeder seeder, ILogger<IPlatformSeeder> logger)
     {
-        await seeder.Seed();
+        try
+        {
+            await seeder.Seed();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occured while seeding the platform");
+            return TypedResults.InternalServerError(ex.Message);
+        }
+
         return TypedResults.Text("Seed completed");
     }
     

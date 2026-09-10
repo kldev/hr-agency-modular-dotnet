@@ -12,18 +12,19 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Host.SetupWolverineForApplication();
     builder.Services.AddAppOpenApi();
     builder.Services.SetupAppAuthorization(builder.Configuration);
-    if (builder.Environment.IsDevelopment())
+    if (builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName == "docker")
     {
         builder.Services.AddPlatformSeederModule();
     }
     
     builder.Host.ApplyJasperFxExtensions();
+    
 }
 
 var app = builder.Build();
 {
     await app.SeedAsync();
-    
+
     app.UseAuthentication();
     app.UseAuthorization();
     app.UseExceptionHandler();
@@ -31,6 +32,10 @@ var app = builder.Build();
     app.MapOpenApi().AllowAnonymous();
     app.MapAppScalar();
     app.MapGet("/", () => "HR Agency API").ExcludeFromDescription().AllowAnonymous();
+    app.MapGet("/healthz", () => new { status = "UP" }).ExcludeFromDescription().AllowAnonymous();
 
+    Console.WriteLine("HR agency API started");
+    Console.WriteLine("Environment: " + app.Environment.EnvironmentName);
+    
     await app.RunJasperFxCommands(args);
 }

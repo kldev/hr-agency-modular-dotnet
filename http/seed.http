@@ -11,4 +11,4 @@ GET {{baseURL}}/api/development/seed/random
 GET {{baseURL}}/api/development/seed/show
 
 ### seed sales
-GET {{baseURL}}/api/development/seed-sales
+GET {{baseURL}}/api/development/seed-sales?count=1000

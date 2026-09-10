@@ -25,7 +25,7 @@ public static class MapEndpoints
 
     private static void MapPlatformSeeder(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "docker")
         {
             Platform.Endpoint.Map(app);
         }

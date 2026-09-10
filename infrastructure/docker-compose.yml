@@ -1,0 +1,85 @@
+name: hr-agency-api
+services:
+  # ===================
+  # Infrastructure
+  # ===================
+  postgres:
+    image: postgres:17
+    shm_size: 256mb
+    container_name: hr-agency-api-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hr_app
+      POSTGRES_USER: hr_app
+      POSTGRES_PASSWORD: hr_app
+    command: 
+      - postgres 
+      - -c 
+      - max_connections=100
+      - -c 
+      - shared_preload_libraries=pg_stat_statements     
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      #- ./postgres/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hr_app -d hr_app"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - inner-cluster-communication           
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: hr-agency-api-s3
+    restart: unless-stopped
+    environment:
+      RUSTFS_ACCESS_KEY: admin
+      RUSTFS_SECRET_KEY: password
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+      RUSTFS_CONSOLE_ENABLE: true
+    volumes:
+      - files_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/health/ready || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: "10s"
+    networks:
+      - inner-cluster-communication           
+  webapi:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile
+    container_name: hr-agency-api    
+    networks:
+      - inner-cluster-communication     
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=50"
+      Jwt__Issuer: "hr-agency-api"
+      Jwt__Audience: "hr-agency"
+      Jwt__SecretKey: ${SecretKey}
+      RustFs__Endpoint: "http://hr-agency-api-s3:9000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: "10s"      
+    restart: on-failure      
+    ports:
+    - "5000:8080"
+    depends_on:      
+      postgres:
+        condition: service_healthy          
+
+networks:
+  inner-cluster-communication:
+
+volumes:
+  postgres_data:
+  files_data:

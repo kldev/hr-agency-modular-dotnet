@@ -7,7 +7,7 @@ Content-Type: application/json
 
 {
     "email": "j.smith@hr-agency.com",
-    "password": "test123",
+    "password": "agent999!",
     "slug": "hr-agency"
 }
 
@@ -202,7 +202,7 @@ GET {{baseURL}}/api/sales/opportunity/totals?stage=Proposal
 Authorization: Bearer {{token}}
 
 ###
-GET {{baseURL}}/api/sales/opportunity/totals?search=detailed pricing
+GET {{baseURL}}/api/sales/opportunity/totals?search=detailed
 Authorization: Bearer {{token}}
 
 ###

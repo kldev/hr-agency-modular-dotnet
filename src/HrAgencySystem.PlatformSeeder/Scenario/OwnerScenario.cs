@@ -8,7 +8,7 @@ internal sealed class OwnerScenario(IMessageBus bus)
 {
     internal async Task<PlatformOwnerCreated> Create()
     {
-        var command = new CreatePlatformOwner("admin@hr-agency.com", "pass123");
+        var command = new CreatePlatformOwner("admin@hr-agency.com", Config.TestPassword);
         return await bus.InvokeAsync<PlatformOwnerCreated>(command);
     }
 }

@@ -1,0 +1,100 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# .NET build output
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+**/TestResults/
+**/artifacts/
+**/publish/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# VS Code
+.vscode/
+.history/
+*.code-workspace
+
+# NuGet
+**/packages/
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+
+# Logs / diagnostics
+*.log
+*.binlog
+*.pdb
+*.coverage
+*.coveragexml
+coverage/
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Test / benchmark output
+BenchmarkDotNet.Artifacts/
+TestResult.xml
+test-results/
+NCrunch_*
+OpenCover/
+
+# OS files
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.lnk
+
+# Temporary files
+*~
+*.swp
+*.tmp
+*.temp
+
+# Node / frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Local databases / data
+*.db
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+*.ndf
+
+# Docker
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Documentation / local generated files
+*.userprefs
+*.publishsettings
+**/appsettings.Development.json

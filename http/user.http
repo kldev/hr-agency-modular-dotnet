@@ -8,7 +8,7 @@ Content-Type: application/json
 
 {
     "email": "j.smith@hr-agency.com",
-    "password": "test123",
+    "password": "agent999!",
     "slug": "hr-agency"
 }
 
