@@ -1,10 +1,10 @@
-import { UserRound } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Page } from "@/components/layout";
 import { EmptyState, WorkInProgress } from "@/components/ui";
 
-const AplicationsPage: React.FC = () => {
+const InterviewsPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
 	const handleOnRefresh = async () => {
 		setLoading(true);
@@ -17,15 +17,15 @@ const AplicationsPage: React.FC = () => {
 	};
 	return (
 		<Page
-			title="Applications"
-			description=" Track candidates through the recruitment process."
+			title="Interviews"
+			description="Schedule and manage interviews with job applicants."
 			onRefresh={handleOnRefresh}
 			loading={loading}
 			page={0}
 			isEmpty={true}
 			emptyState={
-				<EmptyState title="No applications found">
-					<UserRound size={24} />
+				<EmptyState title="No interviews found">
+					<MessageSquare size={24} />
 				</EmptyState>
 			}
 		>
@@ -34,4 +34,4 @@ const AplicationsPage: React.FC = () => {
 	);
 };
 
-export default AplicationsPage;
+export default InterviewsPage;

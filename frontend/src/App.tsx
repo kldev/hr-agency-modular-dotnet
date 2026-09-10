@@ -1,6 +1,8 @@
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import Stub from "./components/Stub";
+import AccessDeniedPage from "./features/common/AccessDeniedPage";
+import NotFoundPage from "./features/common/NotFoundPage";
 import { ROUTES } from "./routes";
 
 const router = createBrowserRouter([
@@ -63,6 +65,16 @@ const router = createBrowserRouter([
 			{
 				path: ROUTES.CANDIDATES,
 				Component: Stub,
+				lazy: async () => {
+					const module = await import("./features/candidates/pages/CandidatesPage");
+
+					return {
+						Component: module.default,
+					};
+				},
+				handle: {
+					breadcrumb: "Candidates",
+				},
 			},
 			{
 				path: ROUTES.APPLICATIONS,
@@ -87,7 +99,16 @@ const router = createBrowserRouter([
 			},
 			{
 				path: ROUTES.INTERVIEWS,
-				Component: Stub,
+				lazy: async () => {
+					const module = await import("./features/interviews/pages/InterviewsPage");
+
+					return {
+						Component: module.default,
+					};
+				},
+				handle: {
+					breadcrumb: "Interviews",
+				},
 			},
 			{
 				path: ROUTES.CALENDAR,
@@ -95,11 +116,20 @@ const router = createBrowserRouter([
 			},
 			{
 				path: ROUTES.ORGANIZATIONS,
-				Component: Stub,
+				lazy: async () => {
+					const module = await import("./features/organizations/pages/OrganizationsPage");
+
+					return {
+						Component: module.default,
+					};
+				},
+				handle: {
+					breadcrumb: "Organizations",
+				},
 			},
 			{
 				path: ROUTES.SETTINGS,
-				Component: Stub,
+				Component: AccessDeniedPage,
 			},
 			{
 				path: ROUTES.USERS,
@@ -107,7 +137,11 @@ const router = createBrowserRouter([
 			},
 			{
 				path: ROUTES.REPORTS,
-				Component: Stub,
+				Component: NotFoundPage,
+			},
+			{
+				path: "*",
+				Component: NotFoundPage,
 			},
 		],
 	},

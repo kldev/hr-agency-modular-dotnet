@@ -1,8 +1,8 @@
-import { ConstructionIcon, TextIcon, UserRound } from "lucide-react";
+import { BriefcaseBusiness } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Page } from "@/components/layout";
-import { EmptyState } from "@/components/ui";
+import { EmptyState, WorkInProgress } from "@/components/ui";
 
 const AplicationsPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
@@ -25,14 +25,11 @@ const AplicationsPage: React.FC = () => {
 			isEmpty={true}
 			emptyState={
 				<EmptyState title="No job posts found">
-					<TextIcon />
+					<BriefcaseBusiness />
 				</EmptyState>
 			}
 		>
-			<div className="flex items-center flex-col align-middle text-orange-800 text-4xl">
-				<ConstructionIcon />
-				<h1>Work in progress</h1>
-			</div>
+			<WorkInProgress />
 		</Page>
 	);
 };

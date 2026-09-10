@@ -1,0 +1,26 @@
+@import "tailwindcss";
+/* =========================================================
+   Common
+   ========================================================= */
+
+.technical-page {
+	width: 100%;
+	max-width: var(--content-max-width);
+
+	margin: 0 auto;
+	padding: var(--space-6);
+}
+
+.technical-page-title {
+	margin: 0;
+	font-weight: var(--font-weight-semibold);
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+}
+
+.technical-page-sub {
+	margin: 0;
+	color: var(--color-gray-500);
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+}

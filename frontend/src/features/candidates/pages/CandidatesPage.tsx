@@ -1,4 +1,4 @@
-import { UserRound } from "lucide-react";
+import { Users } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { Page } from "@/components/layout";
@@ -17,15 +17,15 @@ const AplicationsPage: React.FC = () => {
 	};
 	return (
 		<Page
-			title="Applications"
-			description=" Track candidates through the recruitment process."
+			title="Candidates"
+			description="Manage candidates and their recruitment profiles."
 			onRefresh={handleOnRefresh}
 			loading={loading}
 			page={0}
 			isEmpty={true}
 			emptyState={
-				<EmptyState title="No applications found">
-					<UserRound size={24} />
+				<EmptyState title="No candidates found">
+					<Users size={24} />
 				</EmptyState>
 			}
 		>
