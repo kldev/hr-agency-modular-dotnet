@@ -12,6 +12,7 @@ interface Props {
 	page?: number;
 	emptyState: React.ReactNode;
 	isEmpty?: boolean;
+	headerAddon?: React.ReactNode;
 }
 
 const Page: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const Page: React.FC<Props> = ({
 	page,
 	isEmpty,
 	emptyState,
+	headerAddon,
 }) => {
 	return (
 		<main className="min-w-0 flex-1 overflow-auto">
@@ -43,11 +45,12 @@ const Page: React.FC<Props> = ({
 							Refresh
 						</Button>
 					) : null}
+					{headerAddon}
 				</header>
+				{loading ? <LoadingState></LoadingState> : null}
+				{isEmpty && !loading ? emptyState : null}
+				{children}
 			</div>
-			{loading ? <LoadingState></LoadingState> : null}
-			{isEmpty && !loading ? emptyState : null}
-			{children}
 		</main>
 	);
 };

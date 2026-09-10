@@ -83,6 +83,20 @@
 
 	/* Layout */
 	--content-max-width: 1800px;
+
+	/* Badge / semantic colors */
+	--color-neutral: #667085;
+	--color-neutral-soft: #f2f4f7;
+
+	--color-violet: #6941c6;
+	--color-violet-soft: #f4f0ff;
+
+	--color-cyan: #087e8b;
+	--color-cyan-soft: #e6f7f8;
+
+	--color-orange: #c4320a;
+	--color-orange-soft: #fff1eb;
+	--color-badge-new: #affcff;
 }
 
 /* =========================================================
@@ -124,4 +138,17 @@
 
 	--shadow-subtle: 0 1px 2px rgba(0, 0, 0, 0.25);
 	--shadow-drawer: -4px 0 20px rgba(0, 0, 0, 0.35);
+
+	--color-neutral: #98a2b3;
+	--color-neutral-soft: #252b33;
+
+	--color-violet: #a98be8;
+	--color-violet-soft: #30264a;
+
+	--color-cyan: #5bc0c9;
+	--color-cyan-soft: #173438;
+
+	--color-orange: #f08a68;
+	--color-orange-soft: #42251d;
+	--color-badge-new: #414b55;
 }

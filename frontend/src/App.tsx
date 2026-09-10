@@ -37,7 +37,7 @@ const router = createBrowserRouter([
 					return {
 						Component: module.default,
 					};
-				},	
+				},
 				handle: {
 					breadcrumb: "Dashboard",
 				},

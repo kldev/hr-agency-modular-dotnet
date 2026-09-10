@@ -3,6 +3,7 @@ import type React from "react";
 import { useState } from "react";
 import { Page } from "@/components/layout";
 import { EmptyState, WorkInProgress } from "@/components/ui";
+import { OpportunityStageBadge } from "@/components/ui/Badge";
 
 const SalesPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
@@ -30,6 +31,15 @@ const SalesPage: React.FC = () => {
 			}
 		>
 			<WorkInProgress />
+			<div className="flex gap-5 flex-row">
+				<OpportunityStageBadge status={"New"}></OpportunityStageBadge>
+				<OpportunityStageBadge status={"Viewed"}></OpportunityStageBadge>
+				<OpportunityStageBadge status={"Contacted"}></OpportunityStageBadge>
+				<OpportunityStageBadge status={"Proposal"}></OpportunityStageBadge>
+				<OpportunityStageBadge status={"Qualified"}></OpportunityStageBadge>
+				<OpportunityStageBadge status={"Won"}></OpportunityStageBadge>
+				<OpportunityStageBadge status={"Lost"}></OpportunityStageBadge>
+			</div>
 		</Page>
 	);
 };

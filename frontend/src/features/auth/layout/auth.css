@@ -670,7 +670,7 @@
 	line-height: 1.5;
 }
 
-.auth-success-box strong {
+.auth-success-box-strong {
 	display: block;
 
 	color: var(--color-text);

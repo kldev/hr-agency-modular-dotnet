@@ -1,0 +1,80 @@
+/* =========================================================
+   Status Badges
+   ========================================================= */
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+
+	min-height: 22px;
+
+	padding: 0 7px;
+
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	line-height: 1;
+	max-width: 200px;
+}
+
+.badge-active {
+	background: var(--color-success-soft);
+	border-color: transparent;
+	color: var(--color-success);
+}
+
+.badge-inactive {
+	background: var(--color-surface-subtle);
+	border-color: var(--color-border);
+	color: var(--color-text-secondary);
+}
+
+.badge-prospect {
+	background: var(--color-info-soft);
+	color: var(--color-info);
+}
+
+.badge-suspended {
+	background: var(--color-danger-soft);
+	color: var(--color-danger);
+}
+
+/* =========================================================
+   Opportunity Stages
+   ========================================================= */
+.badge-new {
+	background: var(--color-badge-new);
+	color: var(--color-violet);
+}
+
+.badge-viewed {
+	background: var(--color-cyan-soft);
+	color: var(--color-cyan);
+}
+
+.badge-contacted {
+	background: var(--color-primary-soft);
+	color: var(--color-primary);
+}
+
+.badge-qualified {
+	background: var(--color-info-soft);
+	color: var(--color-info);
+}
+
+.badge-proposal {
+	background: var(--color-violet-soft);
+	color: var(--color-violet);
+}
+
+.badge-won {
+	background: var(--color-success-soft);
+	color: var(--color-success);
+}
+
+.badge-lost {
+	background: var(--color-danger-soft);
+	color: var(--color-danger);
+}

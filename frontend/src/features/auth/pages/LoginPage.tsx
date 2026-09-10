@@ -51,7 +51,10 @@ const LoginPage: React.FC = () => {
 
 				<h2>Welcome back</h2>
 
-				<p>Sign in to your HR Agency Portal account to continue.</p>
+				<p>
+					Sign in to your <strong className="auth-success-box-strong ">HR Agency Portal</strong>{" "}
+					account to continue.
+				</p>
 			</div>
 
 			<form className="auth-form" onSubmit={handleSubmit}>
