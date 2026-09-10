@@ -11,8 +11,10 @@ internal static class MapRemoveTag
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates/{id}/tag
-        group.MapDelete("{candidateId:guid}/tag/{tagId:guid}", Handler).WithSummary("Remove tag")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest);
+        group.MapDelete("{candidateId:guid}/tag/{tagId:guid}", Handler)
+            .WithSummary("Remove tag")
+            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .Produces<CandidateTagRemoved>();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, 

@@ -13,8 +13,11 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { ActionOfProblemDetailsContext } from "./actionOfProblemDetailsContext";
+import type { UserSnapshot } from "./userSnapshot";
 
-export interface ProblemDetailsOptions {
-	customizeProblemDetails?: null | ActionOfProblemDetailsContext;
+export interface JobApplicationNoteDeleted {
+	jobApplicationId: string;
+	candidateId: string;
+	deletedBy: UserSnapshot;
+	deletedAt: string;
 }

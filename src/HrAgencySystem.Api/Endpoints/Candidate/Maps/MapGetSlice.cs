@@ -1,7 +1,8 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Recruitment.Application.Candidates.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
+using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.SharedKernel.Web;
 
 namespace HrAgencySystem.Api.Endpoints.Candidate.Maps;
 
@@ -10,7 +11,8 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates
-        group.MapGet("", Handler).WithSummary("Get candidates");
+        group.MapGet("", Handler).WithSummary("Get candidates")
+            .Produces<SliceResponse<CandidateProjection>>();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, ICandidateQueryRepository repository,

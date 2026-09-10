@@ -1,7 +1,9 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Recruitment.Application.Interviews.Schedule;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Events.Interviews;
+using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Interviews.Maps;
@@ -11,7 +13,13 @@ internal static class MapSchedule
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/interviews/schedule
-        group.MapPost("schedule", Handler).WithSummary("Schedule interview");
+        group.MapPost("schedule", Handler)
+            .WithSummary("Schedule interview")
+            .Produces<InterviewCreated>()
+            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,

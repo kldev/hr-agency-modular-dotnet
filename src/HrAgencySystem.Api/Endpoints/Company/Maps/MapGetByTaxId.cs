@@ -1,6 +1,9 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Api.Common.Response;
 using HrAgencySystem.Company.Application.Port;
+using HrAgencySystem.Company.Projections;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
@@ -9,7 +12,13 @@ internal static class MapGetByTaxId
     internal static void Map(RouteGroupBuilder group)
     {
         // /api/companies/find-by-tax/{taxId}
-        group.MapGet("find-by-tax/{taxId}", Handler).WithSummary("Get company by tax");
+        group.MapGet("find-by-tax/{taxId}", Handler)
+            .WithSummary("Get company by tax")
+            .Produces<CompanyProjection>()
+            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
     }
     
     private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository, string taxId, CancellationToken ct)

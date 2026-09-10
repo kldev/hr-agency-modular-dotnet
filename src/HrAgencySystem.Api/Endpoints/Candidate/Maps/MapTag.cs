@@ -15,7 +15,8 @@ internal static class MapTag
         // api/recruitment/candidates/{id}/tag
         group.MapPut("{candidateId:guid}/tag", Handler).WithSummary("Tag candidate")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<CandidateTagged>();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, 

@@ -12,6 +12,7 @@ public static class ClaimsPrincipalExtensions
         var id = principal.FindFirst(AppClaims.UserId)?.Value;
         var email = principal.FindFirst(AppClaims.Email)?.Value;
         var organizationId = principal.FindFirst(AppClaims.OrganizationId)?.Value;
+        var fullName = principal.FindFirst(AppClaims.FullName)?.Value;
 
         if (!Guid.TryParse(id, out var userId))
             throw new InvalidOperationException("Authenticated user id claim is missing or invalid.");
@@ -26,7 +27,8 @@ public static class ClaimsPrincipalExtensions
             userId,
             email,
             orgId,
-            principal.GetOrganizationRole());
+            principal.GetOrganizationRole(),
+            fullName ?? "");
     }
 
     public static OwnerAuthenticated GetOwner(this ClaimsPrincipal principal)

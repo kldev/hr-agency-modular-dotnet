@@ -8,15 +8,37 @@ namespace HrAgencySystem.Api.Infrastructure;
 
 public static class AuthenticationExtensions
 {
-    public static IServiceCollection SetupAppAuthorization(this IServiceCollection services, 
-        IConfiguration configuration)
+    public static void SetupAppAuthorization(this IServiceCollection services, 
+        IConfiguration configuration, IWebHostEnvironment environment)
     {
-        services.AddAuthorization(opts =>
+        services.AddCors(opt =>
         {
-            opts.FallbackPolicy = new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build();
+            opt.AddDefaultPolicy(policy =>
+            {
+                if (environment.IsDevelopment())
+                {
+                    policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowAnyOrigin();
+                }
+                else
+                {
+                    var cors = configuration["Cors"] ?? "";
+                    var corsOrigins = cors.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                    policy.AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithOrigins("http://localhost:4300")
+                        .WithOrigins([.. corsOrigins]);
+
+                }
+            });
         });
+        
+        services.AddAuthorizationBuilder()
+                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build());
+        
         services.Configure<JwtConfig>(
             configuration.GetSection(JwtConfig.Section));
         
@@ -41,7 +63,5 @@ public static class AuthenticationExtensions
                         Encoding.UTF8.GetBytes(config.SecretKey))
                 };
             });
-
-        return services;
     }
 }

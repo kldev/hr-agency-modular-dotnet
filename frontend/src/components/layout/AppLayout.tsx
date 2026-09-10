@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { useUiStore } from "@/stores/uiStore";
 import { Sidebar } from "./sidebar";
 import { TopBar } from "./top-bar";
 
 export function AppLayout() {
 	const [collapsed, setCollapsed] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
-	const [theme, setTheme] = useState<"light" | "dark">("light");
+	const { mode } = useUiStore();
 
 	useEffect(() => {
-		document.documentElement.dataset.theme = theme;
-	}, [theme]);
+		document.documentElement.dataset.theme = mode;
+	}, [mode]);
 
 	return (
 		<div
@@ -29,11 +30,7 @@ export function AppLayout() {
 			/>
 
 			<main className="app-main">
-				<TopBar
-					onMenuClick={() => setMobileOpen((value) => !value)}
-					theme={theme}
-					onThemeChange={setTheme}
-				/>
+				<TopBar onMenuClick={() => setMobileOpen((value) => !value)} />
 				{/* View */}
 				<Outlet />
 			</main>

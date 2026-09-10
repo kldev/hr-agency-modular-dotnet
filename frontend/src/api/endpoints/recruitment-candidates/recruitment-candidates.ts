@@ -32,9 +32,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
 	BadRequestDetails,
+	CandidateCreated,
+	CandidateProjection,
+	CandidateTagged,
+	CandidateTagRemoved,
+	CandidateUpdated,
 	CreateCandidateRequest,
 	GetApiRecruitmentCandidatesParams,
 	ProblemDetails,
+	SliceResponseOfCandidateProjection,
 	TagRequest,
 	UpdateCandidateRequest,
 } from "../../models";
@@ -66,7 +72,7 @@ export const getApiRecruitmentCandidatesCandidateId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<CandidateProjection>(
 		{ url: `/api/recruitment/candidates/${candidateId}`, method: "GET", signal },
 		options,
 	);
@@ -157,7 +163,7 @@ export const putApiRecruitmentCandidatesCandidateId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CandidateUpdated>(
 		{
 			url: `/api/recruitment/candidates/${candidateId}`,
 			method: "PUT",
@@ -339,7 +345,7 @@ export const postApiRecruitmentCandidates = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<CandidateCreated>(
 		{
 			url: `/api/recruitment/candidates`,
 			method: "POST",
@@ -479,7 +485,7 @@ export const getApiRecruitmentCandidates = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<SliceResponseOfCandidateProjection>(
 		{ url: `/api/recruitment/candidates`, method: "GET", params, signal },
 		options,
 	);
@@ -564,7 +570,7 @@ export const putApiRecruitmentCandidatesCandidateIdTag = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<CandidateTagged>(
 		{
 			url: `/api/recruitment/candidates/${candidateId}/tag`,
 			method: "PUT",
@@ -744,7 +750,7 @@ export const deleteApiRecruitmentCandidatesCandidateIdTagTagId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<CandidateTagRemoved>(
 		{ url: `/api/recruitment/candidates/${candidateId}/tag/${tagId}`, method: "DELETE", signal },
 		options,
 	);

@@ -13,7 +13,8 @@ internal static class MapCreate
     {
         // api/recruitment/candidates
         group.MapPost("", Handler).WithSummary("Create candidate")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest);
+            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .Produces<CandidateCreated>();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreateCandidateRequest request, CancellationToken ct)

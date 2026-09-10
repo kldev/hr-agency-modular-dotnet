@@ -17,7 +17,8 @@ public sealed class JwtTokenService(IOptions<JwtConfig> configuration) : IJwtTok
             new (AppClaims.UserId, user.Id.ToString()),
             new (AppClaims.Email, user.Email),
             new (AppClaims.Role, user.Role.ToString()),
-            new (AppClaims.OrganizationId, user.OrganizationId.ToString())
+            new (AppClaims.OrganizationId, user.OrganizationId.ToString()),
+            new (AppClaims.FullName, user.FullName),
         ];
 
         return CreateToken(claims);

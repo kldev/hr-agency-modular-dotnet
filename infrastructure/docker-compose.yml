@@ -67,6 +67,7 @@ services:
       RustFs__AccessKey: ${RustFsAccessKey}
       RustFs__SecretKey: ${RustFsSecretKey}
       Application__FeedUrl: "http://localhost:8080"
+      Cors: ${Cors}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
       interval: 5s

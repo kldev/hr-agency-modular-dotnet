@@ -30,7 +30,15 @@ import type {
 } from "@tanstack/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import type { GetApiInterviewsParams, ScheduleInterviewRequest } from "../../models";
+import type {
+	BadRequestDetails,
+	GetApiInterviewsParams,
+	InterviewCreated,
+	InterviewProjection,
+	ProblemDetails,
+	ScheduleInterviewRequest,
+	SliceResponseOfInterviewProjection,
+} from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
 
@@ -59,13 +67,16 @@ export const getApiInterviews = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>({ url: `/api/interviews`, method: "GET", params, signal }, options);
+	return customInstance<SliceResponseOfInterviewProjection>(
+		{ url: `/api/interviews`, method: "GET", params, signal },
+		options,
+	);
 };
 
 export const getGetApiInterviewsMutationKey = () => ["getApiInterviews"] as const;
 
 export const getGetApiInterviewsMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -104,13 +115,16 @@ export type GetApiInterviewsMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiInterviews>>
 >;
 
-export type GetApiInterviewsMutationError = ErrorType<unknown>;
+export type GetApiInterviewsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiInterviewsMutationVariables = { params?: GetApiInterviewsParams };
 
 /**
  * @summary Get interviews
  */
-export const useGetApiInterviews = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiInterviews = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiInterviews>>,
@@ -137,7 +151,7 @@ export const getApiInterviewsInterviewId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<InterviewProjection>(
 		{ url: `/api/interviews/${interviewId}`, method: "GET", signal },
 		options,
 	);
@@ -147,7 +161,7 @@ export const getGetApiInterviewsInterviewIdMutationKey = () =>
 	["getApiInterviewsInterviewId"] as const;
 
 export const getGetApiInterviewsInterviewIdMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -186,13 +200,18 @@ export type GetApiInterviewsInterviewIdMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiInterviewsInterviewId>>
 >;
 
-export type GetApiInterviewsInterviewIdMutationError = ErrorType<unknown>;
+export type GetApiInterviewsInterviewIdMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiInterviewsInterviewIdMutationVariables = { interviewId: string };
 
 /**
  * @summary Get interview
  */
-export const useGetApiInterviewsInterviewId = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiInterviewsInterviewId = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiInterviewsInterviewId>>,
@@ -219,7 +238,7 @@ export const postApiInterviewsSchedule = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<InterviewCreated>(
 		{
 			url: `/api/interviews/schedule`,
 			method: "POST",
@@ -239,7 +258,7 @@ export const getPostApiInterviewsScheduleQueryKey = (
 
 export const getPostApiInterviewsScheduleQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {
@@ -268,11 +287,11 @@ export const getPostApiInterviewsScheduleQueryOptions = <
 export type PostApiInterviewsScheduleQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiInterviewsSchedule>>
 >;
-export type PostApiInterviewsScheduleQueryError = ErrorType<unknown>;
+export type PostApiInterviewsScheduleQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiInterviewsSchedule<
 	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options: {
@@ -293,7 +312,7 @@ export function usePostApiInterviewsSchedule<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiInterviewsSchedule<
 	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {
@@ -314,7 +333,7 @@ export function usePostApiInterviewsSchedule<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiInterviewsSchedule<
 	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {
@@ -331,7 +350,7 @@ export function usePostApiInterviewsSchedule<
 
 export function usePostApiInterviewsSchedule<
 	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {

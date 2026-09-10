@@ -9,7 +9,9 @@ internal static class MapUpdate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("{candidateId:guid}", Handler).WithSummary("Update candidate");
+        group.MapPut("{candidateId:guid}", Handler)
+            .WithSummary("Update candidate")
+            .Produces<CandidateUpdated>();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,

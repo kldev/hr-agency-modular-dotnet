@@ -5,13 +5,10 @@ import "./topbar.css";
 
 interface TopBarProps {
 	onMenuClick: () => void;
-	theme: "light" | "dark";
-	onThemeChange: (theme: "light" | "dark") => void;
 }
 
-export function TopBar({ onMenuClick, theme, onThemeChange }: TopBarProps) {
+export function TopBar({ onMenuClick }: TopBarProps) {
 	const [open, setOpen] = useState(false);
-
 	return (
 		<header className="topbar">
 			<div className="topbar-left">
@@ -42,7 +39,7 @@ export function TopBar({ onMenuClick, theme, onThemeChange }: TopBarProps) {
 						<ChevronDown size={15} />
 					</button>
 
-					{open && <UserMenu theme={theme} onThemeChange={onThemeChange} />}
+					{open && <UserMenu />}
 				</div>
 			</div>
 		</header>

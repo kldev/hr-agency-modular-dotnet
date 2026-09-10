@@ -1,18 +1,21 @@
 import { Building2, ConstructionIcon } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { getApiCompanies } from "@/api/endpoints";
+import type { SliceResponseOfCompanyProjection } from "@/api/models";
 import { Page } from "@/components/layout";
 import { EmptyState } from "@/components/ui";
 
 const CompaniesPage: React.FC = () => {
 	const [loading, setLoading] = useState(false);
+	const [companies, setCompanies] = useState<SliceResponseOfCompanyProjection>();
 	const handleOnRefresh = async () => {
 		setLoading(true);
 
-		window.setTimeout(() => {
-			setLoading(false);
-		}, 500);
+		const result = await getApiCompanies({ pageSize: 100, page: 0 });
 
+		setCompanies(result);
+		setLoading(false)
 		return Promise.resolve();
 	};
 	return (
@@ -32,6 +35,9 @@ const CompaniesPage: React.FC = () => {
 			<div className="flex items-center flex-col align-middle text-orange-800 text-4xl">
 				<ConstructionIcon />
 				<h1>Work in progress</h1>
+			</div>
+			<div>
+				<code>{JSON.stringify(companies)}</code>
 			</div>
 		</Page>
 	);

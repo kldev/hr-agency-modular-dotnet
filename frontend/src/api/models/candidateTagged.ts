@@ -13,5 +13,12 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { Tag } from "./tag";
+import type { UserSnapshot } from "./userSnapshot";
 
-export type ActionOfProblemDetailsContext = {};
+export interface CandidateTagged {
+	candidateId: string;
+	tag: Tag;
+	author: UserSnapshot;
+	createdAt: string;
+}

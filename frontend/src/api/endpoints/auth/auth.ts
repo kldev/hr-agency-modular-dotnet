@@ -18,16 +18,26 @@ import type {
 	DataTag,
 	DefinedInitialDataOptions,
 	DefinedUseQueryResult,
+	MutationFunction,
 	QueryClient,
 	QueryFunction,
 	QueryKey,
 	UndefinedInitialDataOptions,
+	UseMutationOptions,
+	UseMutationResult,
 	UseQueryOptions,
 	UseQueryResult,
 } from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-import type { LoginOwner, LoginUser } from "../../models";
+import type {
+	AppUserAuthenticated,
+	BadRequestDetails,
+	LoginOwner,
+	LoginUser,
+	LoginUserResult,
+	ProblemDetails,
+} from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
 
@@ -56,7 +66,7 @@ export const postApiAuthLogin = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<LoginUserResult>(
 		{
 			url: `/api/auth/login`,
 			method: "POST",
@@ -74,7 +84,7 @@ export const getPostApiAuthLoginQueryKey = (loginUser?: BodyType<LoginUser>) => 
 
 export const getPostApiAuthLoginQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
@@ -97,11 +107,11 @@ export const getPostApiAuthLoginQueryOptions = <
 };
 
 export type PostApiAuthLoginQueryResult = NonNullable<Awaited<ReturnType<typeof postApiAuthLogin>>>;
-export type PostApiAuthLoginQueryError = ErrorType<unknown>;
+export type PostApiAuthLoginQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiAuthLogin<
 	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options: {
@@ -120,7 +130,7 @@ export function usePostApiAuthLogin<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiAuthLogin<
 	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
@@ -139,7 +149,7 @@ export function usePostApiAuthLogin<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiAuthLogin<
 	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
@@ -154,7 +164,7 @@ export function usePostApiAuthLogin<
 
 export function usePostApiAuthLogin<
 	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
@@ -180,7 +190,7 @@ export const postApiOwnerLogin = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<LoginUserResult>(
 		{
 			url: `/api/owner/login`,
 			method: "POST",
@@ -198,7 +208,7 @@ export const getPostApiOwnerLoginQueryKey = (loginOwner?: BodyType<LoginOwner>) 
 
 export const getPostApiOwnerLoginQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
@@ -223,11 +233,11 @@ export const getPostApiOwnerLoginQueryOptions = <
 export type PostApiOwnerLoginQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiOwnerLogin>>
 >;
-export type PostApiOwnerLoginQueryError = ErrorType<unknown>;
+export type PostApiOwnerLoginQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePostApiOwnerLogin<
 	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options: {
@@ -246,7 +256,7 @@ export function usePostApiOwnerLogin<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiOwnerLogin<
 	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
@@ -265,7 +275,7 @@ export function usePostApiOwnerLogin<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiOwnerLogin<
 	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
@@ -280,7 +290,7 @@ export function usePostApiOwnerLogin<
 
 export function usePostApiOwnerLogin<
 	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
@@ -297,3 +307,56 @@ export function usePostApiOwnerLogin<
 
 	return withQueryKey(query, queryOptions.queryKey);
 }
+
+/**
+ * @summary Get information about the current user
+ */
+export const getApiUserMe = (
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<AppUserAuthenticated>(
+		{ url: `/api/user/me`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetApiUserMeMutationKey = () => ["getApiUserMe"] as const;
+
+export const getGetApiUserMeMutationOptions = <
+	TError = ErrorType<ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext> => {
+	const mutationKey = getGetApiUserMeMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<Awaited<ReturnType<typeof getApiUserMe>>, void> = () => {
+		return getApiUserMe(requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetApiUserMeMutationResult = NonNullable<Awaited<ReturnType<typeof getApiUserMe>>>;
+
+export type GetApiUserMeMutationError = ErrorType<ProblemDetails>;
+
+/**
+ * @summary Get information about the current user
+ */
+export const useGetApiUserMe = <TError = ErrorType<ProblemDetails>, TContext = unknown>(
+	options?: {
+		mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext> => {
+	return useMutation(getGetApiUserMeMutationOptions(options), queryClient);
+};

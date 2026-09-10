@@ -30,7 +30,12 @@ import type {
 } from "@tanstack/react-query";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-import type { CompanyContactRequest } from "../../models";
+import type {
+	BadRequestDetails,
+	CompanyContact,
+	CompanyContactRequest,
+	ProblemDetails,
+} from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
 
@@ -60,7 +65,7 @@ export const postApiCompanyContactsCompanyId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanyContact>(
 		{
 			url: `/api/company-contacts/${companyId}`,
 			method: "POST",
@@ -81,7 +86,7 @@ export const getPostApiCompanyContactsCompanyIdQueryKey = (
 
 export const getPostApiCompanyContactsCompanyIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -117,11 +122,13 @@ export const getPostApiCompanyContactsCompanyIdQueryOptions = <
 export type PostApiCompanyContactsCompanyIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>
 >;
-export type PostApiCompanyContactsCompanyIdQueryError = ErrorType<unknown>;
+export type PostApiCompanyContactsCompanyIdQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePostApiCompanyContactsCompanyId<
 	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -143,7 +150,7 @@ export function usePostApiCompanyContactsCompanyId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiCompanyContactsCompanyId<
 	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -165,7 +172,7 @@ export function usePostApiCompanyContactsCompanyId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePostApiCompanyContactsCompanyId<
 	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -183,7 +190,7 @@ export function usePostApiCompanyContactsCompanyId<
 
 export function usePostApiCompanyContactsCompanyId<
 	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -216,7 +223,7 @@ export const getApiCompanyContactsCompanyId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanyContact[]>(
 		{ url: `/api/company-contacts/${companyId}`, method: "GET", signal },
 		options,
 	);
@@ -226,7 +233,7 @@ export const getGetApiCompanyContactsCompanyIdMutationKey = () =>
 	["getApiCompanyContactsCompanyId"] as const;
 
 export const getGetApiCompanyContactsCompanyIdMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -265,13 +272,18 @@ export type GetApiCompanyContactsCompanyIdMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>
 >;
 
-export type GetApiCompanyContactsCompanyIdMutationError = ErrorType<unknown>;
+export type GetApiCompanyContactsCompanyIdMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiCompanyContactsCompanyIdMutationVariables = { companyId: string };
 
 /**
  * @summary Get contacts
  */
-export const useGetApiCompanyContactsCompanyId = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiCompanyContactsCompanyId = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>,
@@ -299,7 +311,7 @@ export const putApiCompanyContactsContactId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanyContact>(
 		{
 			url: `/api/company-contacts/${contactId}`,
 			method: "PUT",
@@ -320,7 +332,7 @@ export const getPutApiCompanyContactsContactIdQueryKey = (
 
 export const getPutApiCompanyContactsContactIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -356,11 +368,13 @@ export const getPutApiCompanyContactsContactIdQueryOptions = <
 export type PutApiCompanyContactsContactIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiCompanyContactsContactId>>
 >;
-export type PutApiCompanyContactsContactIdQueryError = ErrorType<unknown>;
+export type PutApiCompanyContactsContactIdQueryError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 
 export function usePutApiCompanyContactsContactId<
 	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -382,7 +396,7 @@ export function usePutApiCompanyContactsContactId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiCompanyContactsContactId<
 	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -404,7 +418,7 @@ export function usePutApiCompanyContactsContactId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiCompanyContactsContactId<
 	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
@@ -422,7 +436,7 @@ export function usePutApiCompanyContactsContactId<
 
 export function usePutApiCompanyContactsContactId<
 	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,

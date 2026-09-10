@@ -1,7 +1,9 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Company.Application.Update;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
+using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
@@ -10,7 +12,13 @@ internal static class MapUpdate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("{companyId:guid}", Handler).WithSummary("Update company");
+        group.MapPut("{companyId:guid}", Handler)
+            .WithSummary("Update company")
+            .Produces<CompanyUpdated>()
+            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,

@@ -1,9 +1,10 @@
+using System.Text.Json.Serialization;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Api.Auth;
 
-public record AppUserAuthenticated(Guid UserId, string Email, Guid OrganizationId, OrganizationRole Role)
+public record AppUserAuthenticated(Guid UserId, string Email, Guid OrganizationId, OrganizationRole Role, string FullName)
 {
     public static ValueTask<AppUserAuthenticated?> BindAsync(
         HttpContext context)
@@ -13,6 +14,7 @@ public record AppUserAuthenticated(Guid UserId, string Email, Guid OrganizationI
         return ValueTask.FromResult<AppUserAuthenticated?>(user);
     }
 
+    [JsonIgnore]
     public OrganizationId GetOrganization => new (OrganizationId);
 }
 

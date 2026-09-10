@@ -1,6 +1,8 @@
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getApiUserMe, postApiAuthLogin } from "@/api/endpoints";
+import { useAuthStore } from "@/stores/authStore";
 import { AuthLayout } from "../layout";
 
 const LoginPage: React.FC = () => {
@@ -12,6 +14,7 @@ const LoginPage: React.FC = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
+	const store = useAuthStore();
 
 	async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -31,8 +34,13 @@ const LoginPage: React.FC = () => {
 		setIsLoading(true);
 
 		try {
-			// Replace with real authentication API.
-			await new Promise((resolve) => setTimeout(resolve, 700));
+			const result = await postApiAuthLogin({ email: email, password: password, slug: "" });
+
+			store.setToken(result.token);
+			if (result.token) {
+				const user = await getApiUserMe();
+				store.setUser(user);
+			}
 
 			navigate("/");
 		} catch {

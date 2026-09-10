@@ -2,6 +2,7 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Recruitment.Application.JobApplications.Notes.Create;
 using HrAgencySystem.Recruitment.Events.Applications;
+using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.JobApplication.Maps;
@@ -11,9 +12,13 @@ internal static class MapCreateNote
     internal static void Map(RouteGroupBuilder group)
     {
         // /api/recruitment/job-applications/{applicationId}/{noteId}/note
-        group.MapPost("{applicationId:guid}/note", Handler).WithSummary("Add note")
+        group.MapPost("{applicationId:guid}/note", Handler)
+            .WithSummary("Add note")
+            .Produces<JobApplicationNoteAdded>()
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetailsOptions>(StatusCodes.Status404NotFound);
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, Guid applicationId,

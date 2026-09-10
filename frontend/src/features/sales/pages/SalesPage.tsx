@@ -44,7 +44,14 @@ const SalesPage: React.FC = () => {
 					<OpportunityStageBadge status={"Lost"}></OpportunityStageBadge>
 				</div>
 				<div>
-					<Button variant="ghost" onClick={() => { setShowDialog(true) }}>Show dialog</Button>
+					<Button
+						variant="ghost"
+						onClick={() => {
+							setShowDialog(true);
+						}}
+					>
+						Show dialog
+					</Button>
 				</div>
 			</Page>
 			{showDialog ? (

@@ -18,7 +18,10 @@ internal static class MapCreate
         endpoints.MapPost("", Handler)
             .WithSummary("Create company")
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);;
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden)
+            .Produces<CompanyCreated>();
     }
     
     private static async Task<IResult> Handler(AppUserAuthenticated user, CreateCompanyRequest request,

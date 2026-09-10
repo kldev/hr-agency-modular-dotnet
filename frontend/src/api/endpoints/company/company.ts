@@ -32,9 +32,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
 	BadRequestDetails,
+	CompanyCreated,
+	CompanyProjection,
+	CompanyUpdated,
 	CreateCompanyRequest,
 	GetApiCompaniesParams,
 	ProblemDetails,
+	SliceResponseOfCompanyProjection,
 	UpdateCompanyRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
@@ -65,7 +69,7 @@ export const postApiCompanies = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<unknown>(
+	return customInstance<CompanyCreated>(
 		{
 			url: `/api/companies`,
 			method: "POST",
@@ -191,13 +195,16 @@ export const getApiCompanies = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>({ url: `/api/companies`, method: "GET", params, signal }, options);
+	return customInstance<SliceResponseOfCompanyProjection>(
+		{ url: `/api/companies`, method: "GET", params, signal },
+		options,
+	);
 };
 
 export const getGetApiCompaniesMutationKey = () => ["getApiCompanies"] as const;
 
 export const getGetApiCompaniesMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -236,13 +243,16 @@ export type GetApiCompaniesMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiCompanies>>
 >;
 
-export type GetApiCompaniesMutationError = ErrorType<unknown>;
+export type GetApiCompaniesMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiCompaniesMutationVariables = { params?: GetApiCompaniesParams };
 
 /**
  * @summary Get companies
  */
-export const useGetApiCompanies = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiCompanies = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiCompanies>>,
@@ -269,7 +279,7 @@ export const getApiCompaniesCompanyId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanyProjection>(
 		{ url: `/api/companies/${companyId}`, method: "GET", signal },
 		options,
 	);
@@ -278,7 +288,7 @@ export const getApiCompaniesCompanyId = (
 export const getGetApiCompaniesCompanyIdMutationKey = () => ["getApiCompaniesCompanyId"] as const;
 
 export const getGetApiCompaniesCompanyIdMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -317,13 +327,16 @@ export type GetApiCompaniesCompanyIdMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiCompaniesCompanyId>>
 >;
 
-export type GetApiCompaniesCompanyIdMutationError = ErrorType<unknown>;
+export type GetApiCompaniesCompanyIdMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiCompaniesCompanyIdMutationVariables = { companyId: string };
 
 /**
  * @summary Get company
  */
-export const useGetApiCompaniesCompanyId = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiCompaniesCompanyId = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiCompaniesCompanyId>>,
@@ -351,7 +364,7 @@ export const putApiCompaniesCompanyId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanyUpdated>(
 		{
 			url: `/api/companies/${companyId}`,
 			method: "PUT",
@@ -372,7 +385,7 @@ export const getPutApiCompaniesCompanyIdQueryKey = (
 
 export const getPutApiCompaniesCompanyIdQueryOptions = <
 	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
@@ -405,11 +418,11 @@ export const getPutApiCompaniesCompanyIdQueryOptions = <
 export type PutApiCompaniesCompanyIdQueryResult = NonNullable<
 	Awaited<ReturnType<typeof putApiCompaniesCompanyId>>
 >;
-export type PutApiCompaniesCompanyIdQueryError = ErrorType<unknown>;
+export type PutApiCompaniesCompanyIdQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
 export function usePutApiCompaniesCompanyId<
 	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
@@ -431,7 +444,7 @@ export function usePutApiCompaniesCompanyId<
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiCompaniesCompanyId<
 	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
@@ -453,7 +466,7 @@ export function usePutApiCompaniesCompanyId<
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function usePutApiCompaniesCompanyId<
 	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
@@ -471,7 +484,7 @@ export function usePutApiCompaniesCompanyId<
 
 export function usePutApiCompaniesCompanyId<
 	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
@@ -504,7 +517,7 @@ export const getApiCompaniesFindByTaxTaxId = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>(
+	return customInstance<CompanyProjection>(
 		{ url: `/api/companies/find-by-tax/${taxId}`, method: "GET", signal },
 		options,
 	);
@@ -514,7 +527,7 @@ export const getGetApiCompaniesFindByTaxTaxIdMutationKey = () =>
 	["getApiCompaniesFindByTaxTaxId"] as const;
 
 export const getGetApiCompaniesFindByTaxTaxIdMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -553,13 +566,18 @@ export type GetApiCompaniesFindByTaxTaxIdMutationResult = NonNullable<
 	Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>
 >;
 
-export type GetApiCompaniesFindByTaxTaxIdMutationError = ErrorType<unknown>;
+export type GetApiCompaniesFindByTaxTaxIdMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
 export type GetApiCompaniesFindByTaxTaxIdMutationVariables = { taxId: string };
 
 /**
  * @summary Get company by tax
  */
-export const useGetApiCompaniesFindByTaxTaxId = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiCompaniesFindByTaxTaxId = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>,
