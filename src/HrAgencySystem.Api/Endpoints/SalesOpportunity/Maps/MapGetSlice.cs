@@ -1,6 +1,9 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Domain.Opportunity;
+using HrAgencySystem.Sales.Projections;
+using HrAgencySystem.SharedKernel.Web;
 
 namespace HrAgencySystem.Api.Endpoints.SalesOpportunity.Maps;
 
@@ -9,7 +12,10 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/opportunity
-        group.MapGet("", Handler).WithSummary("Get opportunities");
+        group.MapGet("", Handler)
+            .WithSummary("Get opportunities")
+            .Produces<SliceResponse<OpportunityProjection>>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(

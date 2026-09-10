@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Sales.Application.Opportunities.ChangeResponsible;
 using HrAgencySystem.Sales.Events.Opportunity;
@@ -11,7 +12,10 @@ internal static class MapChangeResponsible
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/sales/opportunity/{id}/responsible
-        group.MapPut("{opportunityId:guid}/responsible", Handler).WithSummary("Change responsible person");
+        group.MapPut("{opportunityId:guid}/responsible", Handler)
+            .WithSummary("Change responsible person")
+            .Produces<ResponsiblePersonChanged>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(

@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Candidates.Queries;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Projections;
@@ -12,7 +13,8 @@ internal static class MapGetSlice
     {
         // api/recruitment/candidates
         group.MapGet("", Handler).WithSummary("Get candidates")
-            .Produces<SliceResponse<CandidateProjection>>();
+            .Produces<SliceResponse<CandidateProjection>>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, ICandidateQueryRepository repository,

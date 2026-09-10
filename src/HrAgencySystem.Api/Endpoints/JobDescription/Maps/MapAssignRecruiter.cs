@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.JobDescription.Application.AssignRecruiter;
 using HrAgencySystem.JobDescription.Events;
@@ -10,7 +11,10 @@ internal static class MapAssignRecruiter
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/job-description/{jobDescriptionId:guid}/assign-recruiter", Handler).WithSummary("Assign recruiter");
+        group.MapPut("/api/job-description/{jobDescriptionId:guid}/assign-recruiter", Handler)
+            .Produces<JobDescriptionRecruiterAssigned>()
+            .ProducesStandardErrors()
+            .WithSummary("Assign recruiter");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobDescriptionId, AssignRecruiterRequest request,

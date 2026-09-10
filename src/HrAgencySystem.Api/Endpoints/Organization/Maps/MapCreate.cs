@@ -1,8 +1,7 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Events;
-using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
@@ -13,8 +12,8 @@ internal static class MapCreate
     {
         group.MapPost("/api/organization", Handler)
             .WithSummary("Create organization")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .Produces<OrganizationCreated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(OwnerAuthenticated owner, CreateOrganizationRequest request,

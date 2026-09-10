@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Opportunities.Create;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -11,7 +12,10 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         // /api/sales/opportunity
-        group.MapPost("", Handler).WithSummary("Create opportunity");
+        group.MapPost("", Handler)
+            .WithSummary("Create opportunity")
+            .Produces<OpportunityCreated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user,

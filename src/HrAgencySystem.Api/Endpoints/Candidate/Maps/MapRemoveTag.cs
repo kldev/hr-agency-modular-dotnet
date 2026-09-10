@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Candidates.RemoveCandidateTag;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using Wolverine;
@@ -13,7 +13,7 @@ internal static class MapRemoveTag
         // api/recruitment/candidates/{id}/tag
         group.MapDelete("{candidateId:guid}/tag/{tagId:guid}", Handler)
             .WithSummary("Remove tag")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .ProducesStandardErrors()
             .Produces<CandidateTagRemoved>();
     }
 

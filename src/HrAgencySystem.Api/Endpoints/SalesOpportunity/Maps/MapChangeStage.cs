@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Opportunities.ChangeStage;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
@@ -11,7 +12,10 @@ internal static class MapChangeStage
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/sales/opportunity/{id}/stage
-        group.MapPut("{opportunityId:guid}/stage", Handler).WithSummary("Change stage");
+        group.MapPut("{opportunityId:guid}/stage", Handler)
+            .WithSummary("Change stage")
+            .Produces<StageChanged>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(

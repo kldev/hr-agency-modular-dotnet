@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Candidates.Update;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using Wolverine;
@@ -11,6 +12,7 @@ internal static class MapUpdate
     {
         group.MapPut("{candidateId:guid}", Handler)
             .WithSummary("Update candidate")
+            .ProducesStandardErrors()
             .Produces<CandidateUpdated>();
     }
 

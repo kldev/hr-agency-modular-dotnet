@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobPosting.Update;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -12,7 +13,10 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/recruitment/job-posting/{id}
-        group.MapPut("{jobPostId}", Handler).WithSummary("Update job post");
+        group.MapPut("{jobPostId}", Handler)
+            .WithSummary("Update job post")
+            .Produces<JobPostUpdated>()
+            .ProducesStandardErrors();
     }
     
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobPostId,

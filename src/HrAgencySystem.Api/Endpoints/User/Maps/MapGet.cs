@@ -1,9 +1,8 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Response;
 using HrAgencySystem.Identity.Projections;
 using Marten;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.User.Maps;
 
@@ -13,8 +12,7 @@ internal static class MapGet
     {
         group.Map("/api/users/{userId:guid}", Handler)
             .WithSummary("Get user")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .ProducesStandardErrors();;
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IDocumentSession session, Guid userId, CancellationToken ct)

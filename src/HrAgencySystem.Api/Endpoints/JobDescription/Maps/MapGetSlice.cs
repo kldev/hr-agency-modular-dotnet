@@ -1,8 +1,9 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.JobDescription.Application.Port;
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Projections;
-using Marten;
+using HrAgencySystem.SharedKernel.Web;
 
 namespace HrAgencySystem.Api.Endpoints.JobDescription.Maps;
 
@@ -10,7 +11,10 @@ internal static class MapGetSlice
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/job-description", Handler).WithSummary("Get job descriptions");
+        group.MapGet("/api/job-description", Handler)
+            .ProducesStandardErrors()
+            .Produces<SliceResponse<JobDescriptionProjection>>()
+            .WithSummary("Get job descriptions");
     }
 
     private static async Task<IResult> Handler(IJobDescriptionQueryRepository repository,

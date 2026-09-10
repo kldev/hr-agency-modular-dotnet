@@ -1,12 +1,10 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Web;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.JobApplication.Maps;
 
@@ -17,10 +15,7 @@ internal static class MapGetSlice
         // GET /api/recruitment/job-applications
         group.MapGet("", Handler).WithSummary("Get applications")
             .Produces<SliceResponse<JobApplicationProjection>>()
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,

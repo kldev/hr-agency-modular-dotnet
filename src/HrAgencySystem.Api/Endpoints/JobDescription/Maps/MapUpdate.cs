@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.JobDescription.Application.Update;
-using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
@@ -11,7 +11,10 @@ internal static class MapUpdate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/job-description/{jobDescriptionId}", Handler).WithSummary("Update job description");
+        group.MapPut("/api/job-description/{jobDescriptionId}", Handler)
+            .ProducesStandardErrors()
+            .Produces<JobDescriptionUpdated>()
+            .WithSummary("Update job description");
     }
     
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobDescriptionId,

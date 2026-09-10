@@ -1,15 +1,19 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Domain.Opportunity;
 
 namespace HrAgencySystem.Api.Endpoints.SalesOpportunity.Maps;
 
-internal class MapGetTotals
+internal static class MapGetTotals
 {
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/opportunity/totals
-        group.MapGet("totals", Handler).WithSummary("Get pipeline totals");
+        group.MapGet("totals", Handler)
+            .WithSummary("Get pipeline totals")
+            .Produces<IReadOnlyList<SalesPipelineQueryResult>>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(

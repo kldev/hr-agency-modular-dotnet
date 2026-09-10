@@ -1,4 +1,4 @@
-using HrAgencySystem.Organization.Domain.ValueObjects;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Organization.Events;
 using Marten;
 
@@ -8,9 +8,12 @@ internal static class MapGetBySlug
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/organization/{slug}", Handler).WithSummary("Get organization by Slug");
+        group.MapGet("/api/organization/{slug}", Handler)
+            .WithSummary("Get organization by Slug")
+            .Produces<OrganizationCreated>()
+            .ProducesStandardErrors();
     }
-    
+
     private static async Task<IResult> Handler(IDocumentSession session, string slug, CancellationToken ct)
     {
         var result = await session.Query<OrganizationCreated>()

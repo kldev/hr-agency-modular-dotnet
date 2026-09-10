@@ -1,4 +1,7 @@
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Organization.Application.Port;
+using HrAgencySystem.Organization.Projections;
+using HrAgencySystem.SharedKernel.Web;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 
@@ -6,7 +9,10 @@ internal static class MapGetSlice
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/organization", Handler).WithSummary("Get organizations");
+        group.MapGet("/api/organization", Handler)
+            .WithSummary("Get organizations")
+            .Produces<SliceResponse<OrganizationProjection>>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IOrganizationQueryRepository repository,

@@ -1,4 +1,4 @@
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Organization.Application.UpdateSlug;
 using HrAgencySystem.Organization.Events;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +14,8 @@ public static class MapUpdateSlug
     {
         group.MapPut("/api/organization/{organizationId}/slug", Handler)
             .WithSummary("Update organization slug")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .Produces<OrganizationSlugUpdated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(

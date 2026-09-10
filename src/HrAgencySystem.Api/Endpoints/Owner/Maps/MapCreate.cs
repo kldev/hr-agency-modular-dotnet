@@ -1,4 +1,4 @@
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Owners.Create;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Projections;
@@ -12,7 +12,8 @@ internal static class MapCreate
     {
         group.MapPost("/api/owners", Handler)
             .WithSummary("Create owner")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest);
+            .Produces<PlatformOwnerCreated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IMessageBus bus, CreatePlatformOwner command)

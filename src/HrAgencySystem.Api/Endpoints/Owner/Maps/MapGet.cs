@@ -1,5 +1,5 @@
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Projections;
-using HrAgencySystem.SharedKernel.Exception;
 using Marten;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +11,8 @@ internal static class MapGet
     {
         group.Map("/api/owners/{ownerId:guid}", Handler)
             .WithSummary("Get owner")
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .Produces<OwnerProjection>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IDocumentSession session, Guid ownerId, CancellationToken ct)

@@ -1,9 +1,8 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobApplications.ChangeStatus;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Events.Applications;
-using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.JobApplication.Maps;
@@ -17,10 +16,7 @@ internal static class MapChangeStatus
         group.MapPut("{jobApplicationId}/status", Handler)
             .WithSummary("Change status")
             .Produces<JobApplicationStatusChanged>()
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden);
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobApplicationId,

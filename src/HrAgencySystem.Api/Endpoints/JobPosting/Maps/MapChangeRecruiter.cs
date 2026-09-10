@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Recruitment.Application.JobPosting.ChangeRecruiter;
 using HrAgencySystem.Recruitment.Events.JobPostings;
@@ -11,7 +12,10 @@ internal static class MapChangeRecruiter
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/recruitment/job-posting/{jobPostId:guid}/change-recruiter
-        group.MapPut("/{jobPostId:guid}/change-recruiter", Handler).WithSummary("Change recruiter");
+        group.MapPut("/{jobPostId:guid}/change-recruiter", Handler)
+            .WithSummary("Change recruiter")
+            .Produces<JobPostRecruiterChanged>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobPostId, AssignRecruiterRequest request,

@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobPosting.ChangeStatus;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
@@ -12,7 +13,10 @@ internal static class MapChangeStatus
     // PUT /api/recruitment/job-posting/{jobPostId:guid}/{id}/status
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("{jobPostId}/status", Handler).WithSummary("Change status");
+        group.MapPut("{jobPostId}/status", Handler)
+            .WithSummary("Change status")
+            .Produces<JobPostStatusChanged>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobPostId,

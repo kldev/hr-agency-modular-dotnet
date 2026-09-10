@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Activities.Create;
 using HrAgencySystem.Sales.Domain.Activity;
 using HrAgencySystem.Sales.Events.Activity;
@@ -10,7 +11,10 @@ internal static class MapLogActivity
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/activity", Handler).WithSummary("Log activity");
+        group.MapPost("/activity", Handler)
+            .WithSummary("Log activity")
+            .Produces<ActivityCreated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(

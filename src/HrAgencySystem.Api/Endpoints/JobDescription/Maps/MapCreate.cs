@@ -1,6 +1,6 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.JobDescription.Application.Create;
-using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
@@ -11,7 +11,10 @@ internal static class MapCreate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/api/job-description", Handler).WithSummary("Create job description");
+        group.MapPost("/api/job-description", Handler)
+            .Produces<JobDescriptionCreated>()
+            .ProducesStandardErrors()
+            .WithSummary("Create job description");
     }
 
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user,

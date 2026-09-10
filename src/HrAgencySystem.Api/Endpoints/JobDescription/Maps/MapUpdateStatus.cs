@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.JobDescription.Application.ChangeStatus;
 using HrAgencySystem.JobDescription.Domain;
 using Wolverine;
@@ -9,7 +10,10 @@ internal static class MapUpdateStatus
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/job-description/{jobDescriptionId:guid}/{status}", Handler).WithDescription("").WithSummary("Update status");
+        group.MapPut("/api/job-description/{jobDescriptionId:guid}/{status}", Handler)
+            .Produces<UpdateJobDescriptionStatusResult>()
+            .ProducesStandardErrors()
+            .WithSummary("Update status");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobDescriptionId, JobDescriptionStatus status,

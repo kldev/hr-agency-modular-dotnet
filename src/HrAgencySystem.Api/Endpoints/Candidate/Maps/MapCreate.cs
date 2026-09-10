@@ -1,5 +1,5 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Candidates.Create;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidates;
@@ -13,7 +13,7 @@ internal static class MapCreate
     {
         // api/recruitment/candidates
         group.MapPost("", Handler).WithSummary("Create candidate")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
+            .ProducesStandardErrors()
             .Produces<CandidateCreated>();
     }
 

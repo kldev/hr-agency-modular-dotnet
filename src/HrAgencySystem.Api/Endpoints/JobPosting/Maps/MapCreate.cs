@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobPosting.Create;
 using HrAgencySystem.Recruitment.Contracts.IntegrationEvents;
 using HrAgencySystem.Recruitment.Events.JobPostings;
@@ -12,7 +13,10 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         // POST /api/recruitment/job-posting
-        group.MapPost("", Handler).WithSummary("Create job post");
+        group.MapPost("", Handler)
+            .WithSummary("Create job post")
+            .Produces<JobPostCreated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreatePostRequest request, CancellationToken ct)

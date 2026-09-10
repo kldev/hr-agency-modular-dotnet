@@ -1,10 +1,9 @@
 using HrAgencySystem.Api.Auth;
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Tenant;
-using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
@@ -17,10 +16,7 @@ internal static class MapCreate
         // POST /api/companies
         endpoints.MapPost("", Handler)
             .WithSummary("Create company")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-            .Produces<ProblemDetails>(StatusCodes.Status403Forbidden)
+            .ProducesStandardErrors()
             .Produces<CompanyCreated>();
     }
     

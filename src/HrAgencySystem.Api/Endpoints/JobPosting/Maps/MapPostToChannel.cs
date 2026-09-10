@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobPosting.PostToChannel;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
@@ -11,7 +12,10 @@ internal static class MapPostToChannel
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/recruitment/job-posting/{id}/channel 
-        group.MapPut("{jobPostId:guid}/channel", Handler).WithSummary("Job posted to channel");
+        group.MapPut("{jobPostId:guid}/channel", Handler)
+            .WithSummary("Job posted to channel")
+            .Produces<JobPostedToChannel>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(

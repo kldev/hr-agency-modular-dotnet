@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Opportunities.Update;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -11,7 +12,10 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/sales/opportunity/{id}
-        group.MapPut("{opportunityId:guid}", Handler).WithSummary("Update opportunity");
+        group.MapPut("{opportunityId:guid}", Handler)
+            .WithSummary("Update opportunity")
+            .Produces<OpportunityUpdated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IMessageBus bus,

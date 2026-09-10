@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,10 @@ internal static class MapUsers
 {
     internal static void Map(this RouteGroupBuilder group)
     {
-        group.MapGet("/api/suggestion/users", Handler).WithSummary("Get top 25 users");
+        group.MapGet("/api/suggestion/users", Handler)
+            .Produces<IReadOnlyList<UserSuggestion>>()
+            .WithSummary("Get top 25 users")
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,IUserSuggestionRepository repository,

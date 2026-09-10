@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Domain;
@@ -28,7 +29,8 @@ internal static class MapCreate
     {
         group.MapPost("/api/users", Handler)
             .WithSummary("Create user")
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest);;
+            .Produces<UserCreated>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreateUserRequest request)

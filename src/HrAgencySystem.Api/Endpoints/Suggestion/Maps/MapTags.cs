@@ -1,4 +1,4 @@
-using HrAgencySystem.Recruitment.Application.Port;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Suggestion;
 using HrAgencySystem.Recruitment.Documents;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,10 @@ internal static class MapTags
 {
     internal static void Map(this RouteGroupBuilder group)
     {
-        group.MapGet("/api/suggestion/tags", Handler).WithSummary("Get tags (limit 25)");
+        group.MapGet("/api/suggestion/tags", Handler)
+            .Produces<IReadOnlyList<Tag>>()
+            .WithSummary("Get tags (limit 25)")
+            .ProducesStandardErrors();
     }
     
     private static async Task<IResult> Handler(ITagSuggestionRepository repository, string? search, TagCategory? category,

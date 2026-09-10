@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.SharedKernel.Web;
 using Microsoft.Extensions.Options;
@@ -13,7 +13,10 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/recruitment/job-posting
-        group.MapGet("", Handler).WithSummary("Get job posts");
+        group.MapGet("", Handler)
+            .WithSummary("Get job posts")
+            .Produces<SliceResponse<JobPostResponse>>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(IJobPostQueryRepository repository, IOptions<ApplicationConfig> config,
