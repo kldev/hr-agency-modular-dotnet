@@ -1,15 +1,41 @@
 import { ChevronRight } from "lucide-react";
-import type React from "react";
+import { Link, useMatches } from "react-router-dom";
 import "./breadcrumbs.css";
 
-const Breadcrumbs: React.FC = () => {
+type BreadcrumbHandle = {
+	breadcrumb?: string;
+};
+
+const Breadcrumbs = () => {
+	const matches = useMatches();
+
+	const breadcrumbs = matches
+		.filter((match) => (match.handle as BreadcrumbHandle)?.breadcrumb)
+		.map((match) => ({
+			// biome-ignore lint/style/noNonNullAssertion: false
+			label: (match.handle as BreadcrumbHandle).breadcrumb!,
+			path: match.pathname,
+		}));
+
 	return (
 		<nav className="breadcrumbs" aria-label="Breadcrumb">
-			<a href="/sales">Sales</a>
-			<ChevronRight className="breadcrumb-separator" size={13} />
-			<span className="breadcrumb-current" aria-current="page">
-				Companies
-			</span>
+			{breadcrumbs.map((breadcrumb, index) => {
+				const isLast = index === breadcrumbs.length - 1;
+
+				return (
+					<span key={breadcrumb.path} className="breadcrumb-item">
+						{isLast ? (
+							<span aria-current="page">{breadcrumb.label}</span>
+						) : (
+							<>
+								<Link to={breadcrumb.path}>{breadcrumb.label}</Link>
+
+								<ChevronRight className="breadcrumb-separator" size={13} />
+							</>
+						)}
+					</span>
+				);
+			})}
 		</nav>
 	);
 };

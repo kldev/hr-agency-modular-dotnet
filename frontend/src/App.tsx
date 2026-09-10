@@ -30,6 +30,9 @@ const router = createBrowserRouter([
 			{
 				path: ROUTES.DASHBOARD,
 				Component: Stub,
+				handle: {
+					breadcrumb: "Dashboard",
+				},
 			},
 			{
 				path: ROUTES.COMPANIES,
@@ -40,6 +43,9 @@ const router = createBrowserRouter([
 						Component: module.default,
 					};
 				},
+				handle: {
+					breadcrumb: "Companies",
+				},
 			},
 			{
 				path: ROUTES.JOBS,
@@ -49,6 +55,9 @@ const router = createBrowserRouter([
 					return {
 						Component: module.default,
 					};
+				},
+				handle: {
+					breadcrumb: "Jobs",
 				},
 			},
 			{
@@ -63,6 +72,9 @@ const router = createBrowserRouter([
 					return {
 						Component: module.default,
 					};
+				},
+				handle: {
+					breadcrumb: "Applications",
 				},
 			},
 			{
