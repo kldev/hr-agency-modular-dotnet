@@ -3,8 +3,6 @@ import {
 	BriefcaseBusiness,
 	Building2,
 	CalendarDays,
-	ChevronLeft,
-	ChevronRight,
 	ClipboardList,
 	DollarSign,
 	Globe2,

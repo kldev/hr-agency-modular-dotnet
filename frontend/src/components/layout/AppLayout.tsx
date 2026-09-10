@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
+import { Outlet } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
-import { Outlet } from "react-router-dom";
 
-interface AppLayoutProps {}
-
-export function AppLayout({}: AppLayoutProps) {
+export function AppLayout() {
 	const [collapsed, setCollapsed] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [theme, setTheme] = useState<"light" | "dark">("light");

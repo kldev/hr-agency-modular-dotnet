@@ -6,6 +6,7 @@ import "./styles/global.css";
 import { App } from "./App.tsx";
 import { Provider } from "./provider.tsx";
 
+// biome-ignore lint/style/noNonNullAssertion: false
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<BrowserRouter>

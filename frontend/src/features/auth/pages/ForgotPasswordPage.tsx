@@ -115,7 +115,6 @@ export function ForgotPasswordPage() {
 							value={email}
 							onChange={(event) => setEmail(event.target.value)}
 							disabled={isLoading}
-							autoFocus
 						/>
 					</div>
 

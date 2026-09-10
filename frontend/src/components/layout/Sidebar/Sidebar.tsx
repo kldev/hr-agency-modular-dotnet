@@ -1,8 +1,8 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import clsx from "clsx";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import "./sidebar.css";
-import { menuGroups } from "./menu";
 import { useLocation } from "react-router-dom";
+import { menuGroups } from "./menu";
 
 interface SidebarProps {
 	collapsed: boolean;

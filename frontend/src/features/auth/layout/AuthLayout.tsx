@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import { BriefcaseBusiness, ShieldCheck, Users } from "lucide-react";
+import type { ReactNode } from "react";
 import "./auth.css";
 
 interface AuthLayoutProps {
