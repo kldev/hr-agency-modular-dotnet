@@ -1,0 +1,90 @@
+/* =========================================================
+   App Layout
+   ========================================================= */
+
+.app-layout {
+	display: grid;
+	grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+
+	min-height: 100vh;
+
+	background: var(--color-bg);
+
+	transition: grid-template-columns var(--transition-normal);
+}
+
+.app-layout.sidebar-collapsed {
+	grid-template-columns: var(--sidebar-collapsed-width) minmax(0, 1fr);
+}
+
+.app-main {
+	min-width: 0;
+}
+
+/* =========================================================
+   Reset
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	min-height: 100%;
+	font-size: 14px;
+}
+
+body {
+	min-width: 320px;
+	min-height: 100vh;
+	margin: 0;
+
+	background: var(--color-bg);
+	color: var(--color-text);
+
+	font-family: var(--font-family);
+	font-size: var(--font-size-md);
+	font-weight: var(--font-weight-normal);
+	line-height: 1.5;
+
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+button {
+	color: inherit;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+	outline: none;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+	outline-offset: 0.5px;
+}
+
+::selection {
+	background: var(--color-primary-soft);
+}

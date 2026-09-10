@@ -1,0 +1,23 @@
+:root {
+	/* Sidebar */
+	--sidebar-width: 248px;
+	--sidebar-collapsed-width: 64px;
+
+	--sidebar-bg: #1b222b;
+	--sidebar-border: #303943;
+	--sidebar-text: #c4ccd5;
+	--sidebar-text-muted: #87929e;
+	--sidebar-text-active: #ffffff;
+	--sidebar-item-hover: #252e38;
+	--sidebar-item-active: #2d3945;
+}
+
+[data-theme="dark"] {
+	--sidebar-bg: #0d1217;
+	--sidebar-border: #252d35;
+	--sidebar-text: #aeb8c2;
+	--sidebar-text-muted: #727e89;
+	--sidebar-text-active: #ffffff;
+	--sidebar-item-hover: #181f26;
+	--sidebar-item-active: #222b34;
+}

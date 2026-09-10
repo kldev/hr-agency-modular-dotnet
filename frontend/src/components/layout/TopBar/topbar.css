@@ -1,0 +1,118 @@
+/* =========================================================
+   Top Bar
+   ========================================================= */
+
+.topbar {
+	position: sticky;
+	top: 0;
+	z-index: 20;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	height: var(--topbar-height);
+
+	padding: 0 var(--space-6);
+
+	background: var(--color-surface);
+	border-bottom: 1px solid var(--color-border);
+
+	box-shadow: var(--shadow-subtle);
+}
+
+.topbar-left,
+.topbar-right {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+}
+
+.topbar-menu-button {
+	display: grid;
+	place-items: center;
+
+	width: 32px;
+	height: 32px;
+
+	padding: 0;
+
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+
+	background: transparent;
+
+	cursor: pointer;
+}
+
+.topbar-menu-button:hover {
+	background: var(--color-surface-hover);
+	border-color: var(--color-border);
+}
+
+/* =========================================================
+   User Menu
+   ========================================================= */
+
+.user-menu {
+	position: relative;
+}
+
+.user-menu-trigger {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+
+	min-height: 38px;
+
+	padding: 4px 8px;
+
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+
+	background: transparent;
+
+	cursor: pointer;
+}
+
+.user-menu-trigger:hover {
+	background: var(--color-surface-hover);
+	border-color: var(--color-border);
+}
+
+.user-avatar {
+	display: grid;
+	place-items: center;
+
+	width: 30px;
+	height: 30px;
+
+	flex: 0 0 30px;
+
+	border-radius: 50%;
+
+	background: var(--color-primary-soft);
+	color: var(--color-primary);
+
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+}
+
+.user-info {
+	display: flex;
+	flex-direction: column;
+
+	align-items: flex-start;
+
+	line-height: 1.25;
+}
+
+.user-name {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+}
+
+.user-role {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+}
