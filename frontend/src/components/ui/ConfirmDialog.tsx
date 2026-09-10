@@ -30,11 +30,9 @@ export function ConfirmDialog({
 			title={title}
 			onClose={onClose}
 			footer={
-				<>
-					<Button variant={danger ? "danger" : "primary"} onClick={onConfirm} loading={loading}>
-						{confirmLabel}
-					</Button>
-				</>
+				<Button variant={danger ? "danger" : "primary"} onClick={onConfirm} loading={loading}>
+					{confirmLabel}
+				</Button>
 			}
 		>
 			<div className="confirm-dialog">

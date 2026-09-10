@@ -45,9 +45,6 @@ export function Dialog({ open, title, children, footer, onClose, maxWidth = "md"
 		<div
 			className="fixed inset-0 z-1000 flex items-center justify-center bg-black/45 p-4"
 			role="presentation"
-			onMouseDown={(event) => {
-				if (event.target === event.currentTarget) onClose();
-			}}
 		>
 			<div
 				ref={dialogRef}

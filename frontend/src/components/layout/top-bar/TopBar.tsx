@@ -2,6 +2,7 @@ import { ChevronDown, Menu } from "lucide-react";
 import { useState } from "react";
 import UserMenu from "./UserMenu";
 import "./topbar.css";
+import { useAuthStore } from "@/stores/authStore";
 
 interface TopBarProps {
 	onMenuClick: () => void;
@@ -9,6 +10,8 @@ interface TopBarProps {
 
 export function TopBar({ onMenuClick }: TopBarProps) {
 	const [open, setOpen] = useState(false);
+	const { user } = useAuthStore();
+
 	return (
 		<header className="topbar">
 			<div className="topbar-left">
@@ -31,10 +34,10 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 						aria-haspopup="menu"
 						onClick={() => setOpen((value) => !value)}
 					>
-						<span className="user-avatar">JS</span>
+						<span className="user-avatar">{user?.fullName.charAt(0)}</span>
 						<span className="user-info">
-							<span className="user-name">John Smith</span>
-							<span className="user-role">Administrator</span>
+							<span className="user-name">{user?.fullName}</span>
+							<span className="user-role">{user?.role}</span>
 						</span>
 						<ChevronDown size={15} />
 					</button>

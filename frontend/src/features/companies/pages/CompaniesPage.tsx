@@ -15,7 +15,7 @@ const CompaniesPage: React.FC = () => {
 		const result = await getApiCompanies({ pageSize: 100, page: 0 });
 
 		setCompanies(result);
-		setLoading(false)
+		setLoading(false);
 		return Promise.resolve();
 	};
 	return (
