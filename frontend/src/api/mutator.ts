@@ -1,4 +1,5 @@
 import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
+import type { BadRequestDetails } from "./models";
 
 const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
@@ -24,6 +25,10 @@ api.interceptors.response.use(
 			localStorage.removeItem("access_token");
 
 			window.location.href = "/login";
+		}
+
+		if (axios.isAxiosError(error) && error.response?.status === 400) {
+			return Promise.reject(error.response.data as BadRequestDetails);
 		}
 
 		return Promise.reject(error);

@@ -1,6 +1,6 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 
-import { Button, DatePicker } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
 
 interface InterviewToolbarProps {
@@ -32,7 +32,6 @@ export function InterviewToolbar({ search, onSearchChange, onClear }: InterviewT
 						onChange={(event) => onSearchChange(event.target.value)}
 					/>
 				</span>
-
 
 				<Button
 					variant="ghost"

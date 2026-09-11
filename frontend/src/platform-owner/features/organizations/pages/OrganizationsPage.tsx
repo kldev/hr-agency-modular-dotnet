@@ -10,13 +10,16 @@ import { OrganizationsToolbar } from "./components/OrganizationsToolbar";
 
 const OrganizationsPage: React.FC = () => {
 	const [search, setSearch] = useState<string>("");
-	const fetchPage = useCallback((page: number, pageSize: number) => {
-		return getApiOrganization({
-			page,
-			pageSize,
-			search: search ?? undefined
-		});
-	}, [search]);
+	const fetchPage = useCallback(
+		(page: number, pageSize: number) => {
+			return getApiOrganization({
+				page,
+				pageSize,
+				search: search ?? undefined,
+			});
+		},
+		[search],
+	);
 
 	const {
 		data: items,
@@ -49,7 +52,7 @@ const OrganizationsPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => { }}
+				onAdd={() => {}}
 			/>
 			<OrganizationsTable items={items} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />

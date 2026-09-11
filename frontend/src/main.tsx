@@ -3,10 +3,13 @@ import { createRoot } from "react-dom/client";
 
 import "./styles/global.css";
 import { App } from "./App.tsx";
+import QueryProvider from "./providers/QueryProvider.tsx";
 
 // biome-ignore lint/style/noNonNullAssertion: false
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<App />
+		<QueryProvider>
+			<App />
+		</QueryProvider>
 	</StrictMode>,
 );

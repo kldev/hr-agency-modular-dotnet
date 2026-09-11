@@ -1,6 +1,7 @@
 export * from "./Badge";
 export * from "./Button";
 export * from "./ConfirmDialog";
+export * from "./CountrySelect";
 export * from "./Dialog";
 export * from "./date-picker";
 export * from "./dropdown";

@@ -7,6 +7,7 @@ type EnumSelectFilterProps<T extends string> = {
 	options: Record<T, string>;
 	allLabel?: string;
 	className?: string;
+	hideAll?: boolean;
 };
 
 export function EnumSelectFilter<T extends string>({
@@ -15,6 +16,7 @@ export function EnumSelectFilter<T extends string>({
 	options,
 	allLabel = "All",
 	className,
+	hideAll,
 }: EnumSelectFilterProps<T>) {
 	return (
 		<Select
@@ -25,7 +27,7 @@ export function EnumSelectFilter<T extends string>({
 				onChange(value === "" ? null : (value as T));
 			}}
 		>
-			<option value="">{allLabel}</option>
+			{hideAll ? null : <option value="">{allLabel}</option>}
 
 			{(Object.keys(options) as T[]).map((option) => (
 				<option key={option} value={option}>

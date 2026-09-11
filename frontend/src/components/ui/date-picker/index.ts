@@ -1,20 +1,9 @@
-export {
-  DatePicker,
-} from "./DatePicker";
-
-export type {
-  DatePickerProps,
-} from "./DatePicker";
+export type { DatePickerProps } from "./DatePicker";
+export { DatePicker } from "./DatePicker";
+export type { DatePickerCalendarProps } from "./DatePickerCalendar";
+export { DatePickerCalendar } from "./DatePickerCalendar";
 
 export {
-  DatePickerCalendar,
-} from "./DatePickerCalendar";
-
-export type {
-  DatePickerCalendarProps,
-} from "./DatePickerCalendar";
-
-export {
-  fromIsoDate,
-  toIsoDate,
+	fromIsoDate,
+	toIsoDate,
 } from "./datePickerUtils";

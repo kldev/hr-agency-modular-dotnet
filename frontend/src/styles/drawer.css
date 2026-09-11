@@ -1,0 +1,82 @@
+/* =========================================================
+   Drawer
+   ========================================================= */
+
+.drawer-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+
+	background: rgba(15, 23, 30, 0.35);
+
+	animation: overlay-in 160ms ease;
+}
+
+.drawer {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 101;
+
+	display: flex;
+	flex-direction: column;
+
+	width: min(460px, 90vw);
+
+	background: var(--color-surface);
+	border-left: 1px solid var(--color-border);
+
+	box-shadow: var(--shadow-drawer);
+
+	animation: drawer-in 180ms ease;
+}
+
+.drawer-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	min-height: 56px;
+
+	padding: 0 var(--space-5);
+
+	border-bottom: 1px solid var(--color-border);
+}
+
+.drawer-title {
+	margin: 0;
+
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-semibold);
+}
+
+.drawer-content {
+	flex: 1;
+
+	padding: var(--space-5);
+
+	overflow-y: auto;
+}
+
+.drawer-form {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+}
+
+.drawer-footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--space-2);
+
+	min-height: 64px;
+
+	padding: var(--space-3) var(--space-5);
+
+	border-top: 1px solid var(--color-border);
+	background: var(--color-surface);
+
+	position: sticky;
+	bottom: 0;
+}
