@@ -8,6 +8,7 @@ export const OWNER_ROUTES = {
 	LOGIN: "/admin",
 	DASHBOARD: "/owner",
 	ORGANIZATIONS: "/owner/organizations",
+	USERS: "/owner/users",
 	REPORTS: "/owner/reports",
 	SETTINGS: "/owner/settings",
 } as const;
@@ -47,6 +48,20 @@ const ownerRoutes: RouteObject[] = [
 				},
 				handle: {
 					breadcrumb: "Organizations",
+				},
+				HydrateFallback: RouteFallback,
+			},
+			{
+				path: OWNER_ROUTES.USERS,
+				lazy: async () => {
+					const module = await import("@/platform-owner/features/users/pages/UsersPage");
+
+					return {
+						Component: module.default,
+					};
+				},
+				handle: {
+					breadcrumb: "Users",
 				},
 				HydrateFallback: RouteFallback,
 			},

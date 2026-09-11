@@ -417,8 +417,16 @@ public sealed class LoginUserHandlerTests
 
     private static UserProjection CreateUser()
     {
-        return new UserProjection(Guid.NewGuid(), Guid.NewGuid(), "joe@test.io", "Joe", "Test",
+        var info = new OrganizationInfo(Guid.NewGuid(), "hr-test", "Test");
+        return new UserProjection(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            "joe@test.io",
+            "Joe",
+            "Test",
             OrganizationRole.Recruiter, Guid.NewGuid(),
-            new UserSnapshot(Guid.NewGuid(), "", "", ""), DateTimeOffset.UtcNow);
+            new UserSnapshot(Guid.NewGuid(), "", "", ""), 
+            DateTimeOffset.UtcNow, 
+            info);
     }
 }

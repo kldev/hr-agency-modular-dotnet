@@ -37,12 +37,14 @@ public static class CreateUserHandler
 
         var user = await service.GetUserAsync(command.CreatedBy, ct);
         var organizationId = OrganizationId.From(command.OrganizationId);
-
+        
         await ValidateEmailReservation(repository, ct,organizationId , email);
         
         var userId = UserId.New();
         
         var passwordHash = hasher.Hash(command.Password);
+
+        var organizationInfo = await service.GetOrganization(organizationId, ct);
 
         await repository.ReserveAsync(organizationId, email, userId, passwordHash);
         
@@ -54,6 +56,7 @@ public static class CreateUserHandler
             lastName.Value,
             command.Role,
             passwordHash,
+            organizationInfo,
             user!,
             clock.UtcNow);
 

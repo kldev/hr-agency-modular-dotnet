@@ -1,6 +1,7 @@
 using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.Organization.Events;
 using HrAgencySystem.SharedKernel.Services;
+using HrAgencySystem.SharedKernel.Tenant;
 using Marten;
 
 namespace HrAgencySystem.Organization.Infrastructure;
@@ -27,6 +28,14 @@ public class QueryOrganizationRepository(IQuerySession session) : IQueryOrganiza
     {
         return await session.Query<OrganizationCreated>()
             .Where(z => z.EmailDomains.Contains(emailDomain, StringComparer.OrdinalIgnoreCase))
+            .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
+            .FirstOrDefaultAsync(ct);
+    }
+
+    public async Task<OrganizationInfo?> GetOrganization(OrganizationId organizationId, CancellationToken ct)
+    {
+        return await session.Query<OrganizationCreated>()
+            .Where(z => z.OrganizationId == organizationId.Value)
             .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
             .FirstOrDefaultAsync(ct);
     }

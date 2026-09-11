@@ -1,4 +1,5 @@
 using HrAgencySystem.Identity.Domain;
+using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Identity.Events;
@@ -11,5 +12,6 @@ public sealed record UserCreated(
     string LastName,
     OrganizationRole Role,
     string PasswordHash,
+    OrganizationInfo Organization,
     UserSnapshot CreatedBy,
     DateTimeOffset CreatedAt);

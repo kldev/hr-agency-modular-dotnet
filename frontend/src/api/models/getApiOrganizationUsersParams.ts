@@ -13,21 +13,18 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationInfo } from "./organizationInfo";
 import type { OrganizationRole } from "./organizationRole";
-import type { UserSnapshot } from "./userSnapshot";
 
-export interface UserProjection {
-	id: string;
-	organizationId: string;
-	email: string;
-	firstName: string;
-	lastName: string;
-	role: OrganizationRole;
-	createdById: string;
-	createdBy: UserSnapshot;
-	createdAt: string;
-	organization: OrganizationInfo;
-	/** @nullable */
-	fullName?: string | null;
-}
+export type GetApiOrganizationUsersParams = {
+	search?: string;
+	roles: OrganizationRole[];
+	organizationId?: string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	page?: number | string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	pageSize?: number | string;
+};

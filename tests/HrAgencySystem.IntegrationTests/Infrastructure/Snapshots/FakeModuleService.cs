@@ -7,6 +7,7 @@ using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Services;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 
@@ -33,6 +34,12 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
     public Task ValidateOrganization(Guid organizationId, CancellationToken ct)
     {
         return Task.CompletedTask;
+    }
+
+    public Task<OrganizationInfo> GetOrganization(OrganizationId organizationId, CancellationToken ct)
+    {
+        var info = new OrganizationInfo(organizationId.Value, "hr-test", "Test");
+        return Task.FromResult(info);
     }
 
     public Task<JobApplicationInfo> GetApplicationAsync(Guid jobApplicationId, Guid organizationId, CancellationToken ct)

@@ -21,7 +21,9 @@ export function getColumns(onEdit?: (company: InterviewProjection) => void) {
 
 					<div>
 						<div className="data-name">{getValue().fullName}</div>
-						<a href={`email:${getValue().email}`} className="data-meta">{getValue().email}</a>
+						<a href={`email:${getValue().email}`} className="data-meta">
+							{getValue().email}
+						</a>
 					</div>
 				</div>
 			),
@@ -46,11 +48,11 @@ export function getColumns(onEdit?: (company: InterviewProjection) => void) {
 
 			cell: ({ getValue }) => (
 				<div className="table-cell-content w-87.5">
-
-
 					<div>
 						<div className="data-name">{getValue().fullname}</div>
-						<a href={`email:${getValue().email}`} className="data-meta">{getValue().email}</a>
+						<a href={`email:${getValue().email}`} className="data-meta">
+							{getValue().email}
+						</a>
 					</div>
 				</div>
 			),

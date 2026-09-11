@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { OrganizationInfo } from "./organizationInfo";
 import type { OrganizationRole } from "./organizationRole";
 import type { UserSnapshot } from "./userSnapshot";
 
@@ -24,6 +25,7 @@ export interface UserCreated {
 	lastName: string;
 	role: OrganizationRole;
 	passwordHash: string;
+	organization: OrganizationInfo;
 	createdBy: UserSnapshot;
 	createdAt: string;
 }
