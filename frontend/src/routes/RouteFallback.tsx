@@ -1,5 +1,7 @@
 const RouteFallback: React.FC = () => (
-	<div className="flex min-h-40 items-center justify-center">Loading...</div>
+	<div className="h-full w-full flex align-middle items-center router-fallback">
+		<div>Loading...</div>
+	</div>
 );
 
 export default RouteFallback;

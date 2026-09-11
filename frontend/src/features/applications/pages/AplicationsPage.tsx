@@ -54,8 +54,8 @@ const AplicationsPage: React.FC = () => {
 		>
 			<ApplicationsToolbar
 				onClear={() => {
-					setSearch("")
-					setSource(null)
+					setSearch("");
+					setSource(null);
 				}}
 				search={search}
 				onSearchChange={(s) => setSearch(s)}
@@ -63,7 +63,7 @@ const AplicationsPage: React.FC = () => {
 				onSourceChange={(s) => {
 					setSource(s);
 				}}
-				onAdd={() => { }}
+				onAdd={() => {}}
 			/>
 
 			<div className="flex-col">

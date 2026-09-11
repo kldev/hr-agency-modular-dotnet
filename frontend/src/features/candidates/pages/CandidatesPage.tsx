@@ -1,5 +1,6 @@
 import { Users } from "lucide-react";
 import type React from "react";
+import { useCallback } from "react";
 import { getApiRecruitmentCandidates } from "@/api/endpoints";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
@@ -7,6 +8,13 @@ import { EmptyState, LoadMore } from "@/components/ui";
 import { CandidatesTable } from "../components/CandidatesTable";
 
 const CandidatesPage: React.FC = () => {
+	const fetchPage = useCallback((page: number, pageSize: number) => {
+		return getApiRecruitmentCandidates({
+			page,
+			pageSize,
+		});
+	}, []);
+
 	const {
 		data: items,
 		loading,
@@ -16,7 +24,7 @@ const CandidatesPage: React.FC = () => {
 		refresh,
 	} = usePaginatedData({
 		pageSize: 15,
-		fetchPage: (page, pageSize) => getApiRecruitmentCandidates({ page, pageSize }),
+		fetchPage: fetchPage,
 	});
 
 	return (

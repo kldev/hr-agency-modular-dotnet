@@ -64,7 +64,7 @@ export function usePaginatedData<T>({
 		setData([]);
 		setHasMore(false);
 		setInitialized(false);
-		if (page === 1) void loadData(page)
+		if (page === 1) void loadData(page);
 		setPage(1);
 	}, []);
 

@@ -21,6 +21,10 @@
 	font-size: var(--font-size-sm);
 }
 
+.table-wide {
+	min-width: 1200px;
+}
+
 .table th {
 	height: 40px;
 

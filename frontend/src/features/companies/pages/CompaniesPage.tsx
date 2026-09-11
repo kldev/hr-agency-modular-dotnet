@@ -1,14 +1,20 @@
 import { Building2 } from "lucide-react";
 import type React from "react";
+import { useCallback } from "react";
 import { getApiCompanies } from "@/api/endpoints";
-
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table/usePaginatedData";
 import { EmptyState, LoadMore } from "@/components/ui";
-
 import { CompaniesTable } from "./components/CompaniesTable";
 
 const CompaniesPage: React.FC = () => {
+	const fetchPage = useCallback((page: number, pageSize: number) => {
+		return getApiCompanies({
+			page,
+			pageSize,
+		});
+	}, []);
+
 	const {
 		data: companies,
 		loading,
@@ -18,7 +24,7 @@ const CompaniesPage: React.FC = () => {
 		refresh,
 	} = usePaginatedData({
 		pageSize: 15,
-		fetchPage: (page, pageSize) => getApiCompanies({ page, pageSize }),
+		fetchPage: fetchPage,
 	});
 
 	return (
@@ -35,12 +41,8 @@ const CompaniesPage: React.FC = () => {
 				</EmptyState>
 			}
 		>
-			{!isEmpty ? (
-				<>
-					<CompaniesTable companies={companies} />
-					<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
-				</>
-			) : null}
+			<CompaniesTable companies={companies} />
+			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);
 };

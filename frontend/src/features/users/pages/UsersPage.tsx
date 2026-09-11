@@ -1,5 +1,6 @@
 import { Users } from "lucide-react";
 import type React from "react";
+import { useCallback } from "react";
 import { getApiUsers } from "@/api/endpoints";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
@@ -7,6 +8,14 @@ import { EmptyState, LoadMore } from "@/components/ui";
 import { UseresTable } from "../components/UseresTable";
 
 const UsersPage: React.FC = () => {
+	const fetchPage = useCallback((page: number, pageSize: number) => {
+		return getApiUsers({
+			page,
+			pageSize,
+			roles: [],
+		});
+	}, []);
+
 	const {
 		data: users,
 		loading,
@@ -16,7 +25,7 @@ const UsersPage: React.FC = () => {
 		refresh,
 	} = usePaginatedData({
 		pageSize: 15,
-		fetchPage: (page, pageSize) => getApiUsers({ page, pageSize, roles: [] }),
+		fetchPage: fetchPage,
 	});
 
 	return (
@@ -33,12 +42,8 @@ const UsersPage: React.FC = () => {
 				</EmptyState>
 			}
 		>
-			{!isEmpty ? (
-				<>
-					<UseresTable users={users} />
-					<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
-				</>
-			) : null}
+			<UseresTable users={users} />
+			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);
 };

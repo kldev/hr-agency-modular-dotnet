@@ -15,7 +15,7 @@ export function getColumns(onEdit?: (company: CompanyProjection) => void) {
 			},
 
 			cell: ({ row, getValue }) => (
-				<div className="table-cell-content w-87.5">
+				<div className="table-cell-content">
 					<ItemMark name={row.original.name} />
 
 					<div>

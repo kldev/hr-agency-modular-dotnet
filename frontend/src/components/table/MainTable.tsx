@@ -4,12 +4,16 @@ import type { appTableFeaturesType } from "./tableFeatures";
 
 interface MainTableProps<TValue extends RowData> {
 	table: ReactTable<appTableFeaturesType, TValue>;
+	className?: string;
 }
 
-export default function MainTable<TValue extends RowData>({ table }: MainTableProps<TValue>) {
+export default function MainTable<TValue extends RowData>({
+	table,
+	className,
+}: MainTableProps<TValue>) {
 	return (
 		<div className="table-container">
-			<table className="table">
+			<table className={["table", className].join(" ")}>
 				<thead>
 					{table.getHeaderGroups().map((headerGroup) => (
 						<TableHeaderGroup key={headerGroup.id} table={table} group={headerGroup} />

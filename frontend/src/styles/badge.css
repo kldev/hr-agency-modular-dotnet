@@ -46,7 +46,7 @@
    ========================================================= */
 .badge-new {
 	background: var(--color-badge-new);
-	color: var(--color-violet);
+	color: var(--color-success);
 }
 
 .badge-viewed {
@@ -56,7 +56,7 @@
 
 .badge-contacted {
 	background: var(--color-primary-soft);
-	color: var(--color-primary);
+	color: var(--color-cyan);
 }
 
 .badge-qualified {
