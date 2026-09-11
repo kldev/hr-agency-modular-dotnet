@@ -31,7 +31,7 @@ export function SalesToolbar({ search, onSearchChange, onAdd, onClear }: SalesTo
 
 					<Input
 						value={search}
-						placeholder="Search ..."
+						placeholder="Search opportunites"
 						onChange={(event) => onSearchChange(event.target.value)}
 					/>
 				</span>

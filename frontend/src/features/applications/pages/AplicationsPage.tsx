@@ -64,7 +64,7 @@ const AplicationsPage: React.FC = () => {
 				onSourceChange={(s) => {
 					setSource(s);
 				}}
-				onAdd={() => { }}
+				onAdd={() => {}}
 			/>
 
 			<div className="flex-col">

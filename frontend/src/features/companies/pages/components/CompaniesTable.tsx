@@ -24,5 +24,5 @@ export function CompaniesTable({ companies, onEdit }: CompaniesTableProps) {
 		}),
 	);
 
-	return <MainTable table={table} />;
+	return <MainTable table={table} className="table-wide" />;
 }

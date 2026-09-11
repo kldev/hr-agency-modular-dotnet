@@ -1,29 +1,21 @@
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
-import type { CandidateSource } from "@/api/models";
-import { Button, EnumSelectFilter } from "@/components/ui";
+
+import { Button } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
-import { applicationSources } from "../../types";
 
-interface ApplicationsToolbarProps {
+interface CompaniesToolbarProps {
 	search: string;
-	source: CandidateSource | null;
-
 	onSearchChange: (value: string) => void;
-	onSourceChange: (value: CandidateSource | null) => void;
-	companyId?: string;
-	onCompanyChange?: (value: string) => void;
 	onClear: () => void;
 	onAdd: () => void;
 }
 
-export function ApplicationsToolbar({
+export function CompaniesToolbar({
 	search,
-	source,
 	onSearchChange,
-	onSourceChange,
 	onAdd,
 	onClear,
-}: ApplicationsToolbarProps) {
+}: CompaniesToolbarProps) {
 	return (
 		<div className="toolbar">
 			<div className="toolbar-left">
@@ -38,20 +30,14 @@ export function ApplicationsToolbar({
 						}}
 					/>
 
-					<span className="sr-only">Search applications</span>
+					<span className="sr-only">Search users</span>
 
 					<Input
 						value={search}
-						placeholder="Search applicants"
+						placeholder="Search companies"
 						onChange={(event) => onSearchChange(event.target.value)}
 					/>
 				</span>
-
-				<EnumSelectFilter
-					options={applicationSources}
-					value={source}
-					onChange={(value) => onSourceChange(value)}
-				/>
 
 				<Button
 					variant="ghost"
@@ -66,7 +52,7 @@ export function ApplicationsToolbar({
 
 			<div className="toolbar-right">
 				<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
-					Add application
+					Add company
 				</Button>
 			</div>
 		</div>

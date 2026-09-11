@@ -37,7 +37,7 @@ const SalesPage: React.FC = () => {
 	} = usePaginatedData({
 		pageSize: 15,
 		fetchPage: fetchPage,
-		queryKey: [stage, search]
+		queryKey: [stage, search],
 	});
 
 	return (
@@ -56,8 +56,10 @@ const SalesPage: React.FC = () => {
 			<SalesToolbar
 				search={search}
 				onSearchChange={(s) => setSearch(s)}
-				onClear={() => { setSearch("") }}
-				onAdd={() => { }}
+				onClear={() => {
+					setSearch("");
+				}}
+				onAdd={() => {}}
 			/>
 			<EnumFilter
 				value={stage}

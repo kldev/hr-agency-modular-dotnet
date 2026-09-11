@@ -1,20 +1,29 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { getApiUsers } from "@/api/endpoints";
+import type { OrganizationRoleApi } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
-import { EmptyState, LoadMore } from "@/components/ui";
+import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { UseresTable } from "../components/UseresTable";
+import { UsersToolbar } from "../components/UsersToolbar";
+import { organizationRoles } from "../types";
 
 const UsersPage: React.FC = () => {
-	const fetchPage = useCallback((page: number, pageSize: number) => {
-		return getApiUsers({
-			page,
-			pageSize,
-			roles: [],
-		});
-	}, []);
+	const [role, setRole] = useState<OrganizationRoleApi | null>(null);
+	const [search, setSearch] = useState<string>("");
+	const fetchPage = useCallback(
+		(page: number, pageSize: number) => {
+			return getApiUsers({
+				page,
+				pageSize,
+				search: search,
+				...(role ? { roles: [role] } : { roles: [] }),
+			});
+		},
+		[search, role],
+	);
 
 	const {
 		data: users,
@@ -26,7 +35,7 @@ const UsersPage: React.FC = () => {
 	} = usePaginatedData({
 		pageSize: 15,
 		fetchPage: fetchPage,
-		queryKey: []
+		queryKey: [search, role],
 	});
 
 	return (
@@ -43,6 +52,21 @@ const UsersPage: React.FC = () => {
 				</EmptyState>
 			}
 		>
+			<UsersToolbar
+				search={search}
+				onSearchChange={(s) => setSearch(s)}
+				onClear={() => {
+					setSearch("");
+				}}
+				onAdd={() => {}}
+			/>
+			<EnumFilter
+				value={role}
+				options={organizationRoles}
+				onChange={(s) => {
+					setRole(s);
+				}}
+			/>
 			<UseresTable users={users} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>

@@ -1,19 +1,25 @@
 import { Building2 } from "lucide-react";
 import type React from "react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { getApiCompanies } from "@/api/endpoints";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table/usePaginatedData";
 import { EmptyState, LoadMore } from "@/components/ui";
 import { CompaniesTable } from "./components/CompaniesTable";
+import { CompaniesToolbar } from "./components/CompaniesToolbar";
 
 const CompaniesPage: React.FC = () => {
-	const fetchPage = useCallback((page: number, pageSize: number) => {
-		return getApiCompanies({
-			page,
-			pageSize,
-		});
-	}, []);
+	const [search, setSearch] = useState<string>("");
+	const fetchPage = useCallback(
+		(page: number, pageSize: number) => {
+			return getApiCompanies({
+				page,
+				pageSize,
+				search,
+			});
+		},
+		[search],
+	);
 
 	const {
 		data: companies,
@@ -25,7 +31,7 @@ const CompaniesPage: React.FC = () => {
 	} = usePaginatedData({
 		pageSize: 15,
 		fetchPage: fetchPage,
-		queryKey: []
+		queryKey: [search],
 	});
 
 	return (
@@ -42,6 +48,14 @@ const CompaniesPage: React.FC = () => {
 				</EmptyState>
 			}
 		>
+			<CompaniesToolbar
+				onAdd={() => {}}
+				search={search}
+				onClear={() => {
+					setSearch("");
+				}}
+				onSearchChange={(s) => setSearch(s)}
+			/>
 			<CompaniesTable companies={companies} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>

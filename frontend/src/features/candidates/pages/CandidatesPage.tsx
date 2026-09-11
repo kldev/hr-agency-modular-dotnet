@@ -1,19 +1,29 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { getApiRecruitmentCandidates } from "@/api/endpoints";
+import type { CandidateSource } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, LoadMore } from "@/components/ui";
 import { CandidatesTable } from "../components/CandidatesTable";
+import { CandidatesToolbar } from "../components/CandidatesToolbar";
 
 const CandidatesPage: React.FC = () => {
-	const fetchPage = useCallback((page: number, pageSize: number) => {
-		return getApiRecruitmentCandidates({
-			page,
-			pageSize,
-		});
-	}, []);
+	const [source, setSource] = useState<CandidateSource | null>(null);
+	const [search, setSearch] = useState<string>("");
+
+	const fetchPage = useCallback(
+		(page: number, pageSize: number) => {
+			return getApiRecruitmentCandidates({
+				page,
+				pageSize,
+				...(source ? { source: [source] } : {}),
+				search,
+			});
+		},
+		[source, search],
+	);
 
 	const {
 		data: items,
@@ -25,7 +35,7 @@ const CandidatesPage: React.FC = () => {
 	} = usePaginatedData({
 		pageSize: 15,
 		fetchPage: fetchPage,
-		queryKey: []
+		queryKey: [source, search],
 	});
 
 	return (
@@ -41,12 +51,21 @@ const CandidatesPage: React.FC = () => {
 				</EmptyState>
 			}
 		>
-			{!isEmpty ? (
-				<>
-					<CandidatesTable items={items} />
-					<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
-				</>
-			) : null}
+			<CandidatesToolbar
+				onClear={() => {
+					setSearch("");
+					setSource(null);
+				}}
+				search={search}
+				onSearchChange={(s) => setSearch(s)}
+				source={source}
+				onSourceChange={(s) => {
+					setSource(s);
+				}}
+				onAdd={() => {}}
+			/>
+			<CandidatesTable items={items} />
+			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);
 };
