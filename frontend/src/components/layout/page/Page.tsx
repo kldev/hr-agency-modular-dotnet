@@ -48,8 +48,8 @@ const Page: React.FC<Props> = ({
 					{headerAddon}
 				</header>
 
-				{isEmpty && !loading ? emptyState : null}
 				{children}
+				{isEmpty && !loading ? emptyState : null}
 			</div>
 		</main>
 	);

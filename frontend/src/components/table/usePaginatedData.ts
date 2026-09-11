@@ -45,14 +45,11 @@ export function usePaginatedData<T>({
 				setLoading(false);
 			}
 		},
-		[pageSize],
+		[fetchPage, pageSize],
 	);
 
 	useEffect(() => {
-		//console.log(`page changed ${page}`)
-		if (page > 0) {
-			void loadData(page);
-		}
+		void loadData(page);
 	}, [page, loadData]);
 
 	const loadMore = useCallback(() => {
@@ -67,12 +64,9 @@ export function usePaginatedData<T>({
 		setData([]);
 		setHasMore(false);
 		setInitialized(false);
-
-		if (page === 1) void loadData(page);
-		else {
-			setPage(1);
-		}
-	}, [page]);
+		if (page === 1) void loadData(page)
+		setPage(1);
+	}, []);
 
 	const isEmpty = initialized && !loading && data.length === 0;
 

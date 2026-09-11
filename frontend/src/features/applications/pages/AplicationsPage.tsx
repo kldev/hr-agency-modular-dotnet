@@ -1,35 +1,77 @@
 import { ClipboardList } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { getApiRecruitmentJobApplications } from "@/api/endpoints";
+import type { CandidateSource, JobApplicationStatus } from "@/api/models";
 import { Page } from "@/components/layout";
-import { EmptyState, WorkInProgress } from "@/components/ui";
+import { usePaginatedData } from "@/components/table";
+import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
+import { applicationStatuses } from "../types";
+import { AplicationsTable } from "./components/AplicationsTable";
+import { ApplicationsToolbar } from "./components/ApplicationsToolbar";
 
 const AplicationsPage: React.FC = () => {
-	const [loading, setLoading] = useState(false);
-	const handleOnRefresh = async () => {
-		setLoading(true);
+	const [status, setStatus] = useState<JobApplicationStatus | null>(null);
+	const [source, setSource] = useState<CandidateSource | null>(null);
+	const [search, setSearch] = useState<string>("");
 
-		window.setTimeout(() => {
-			setLoading(false);
-		}, 500);
+	const fetchPage = useCallback(
+		(page: number, pageSize: number) => {
+			return getApiRecruitmentJobApplications({
+				page,
+				pageSize,
+				...(status ? { status: [status] } : {}),
+				search: search,
+				...(source ? { source: [source] } : {}),
+			});
+		},
+		[status, source, search],
+	);
 
-		return Promise.resolve();
-	};
+	const {
+		data: items,
+		loading,
+		hasMore,
+		isEmpty,
+		loadMore,
+		refresh,
+	} = usePaginatedData({
+		pageSize: 15,
+		fetchPage,
+	});
+
 	return (
 		<Page
 			title="Applications"
-			description=" Track candidates through the recruitment process."
-			onRefresh={handleOnRefresh}
+			description="Track candidates through the recruitment process."
+			onRefresh={() => refresh()}
 			loading={loading}
-			page={0}
-			isEmpty={true}
+			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No applications found">
 					<ClipboardList size={24} />
 				</EmptyState>
 			}
 		>
-			<WorkInProgress />
+			<ApplicationsToolbar
+				onClear={() => {
+					setSearch("")
+					setSource(null)
+				}}
+				search={search}
+				onSearchChange={(s) => setSearch(s)}
+				source={source}
+				onSourceChange={(s) => {
+					setSource(s);
+				}}
+				onAdd={() => { }}
+			/>
+
+			<div className="flex-col">
+				<EnumFilter value={status} options={applicationStatuses} onChange={setStatus} />
+			</div>
+
+			<AplicationsTable items={items} />
+			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);
 };

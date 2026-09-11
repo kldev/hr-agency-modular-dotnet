@@ -1,15 +1,16 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import type { CandidateProjection } from "@/api/models";
+import type { JobApplicationProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
+import { ApplicationBadge } from "@/components/ui/Badge";
 import { formatDateTime } from "@/utlis/dateUtils";
 
-const columnHelper = createColumnHelper<appTableFeaturesType, CandidateProjection>();
+const columnHelper = createColumnHelper<appTableFeaturesType, JobApplicationProjection>();
 
-export function getColumns(onEdit?: (company: CandidateProjection) => void) {
+export function getColumns(onEdit?: (company: JobApplicationProjection) => void) {
 	const columns = columnHelper.columns([
-		columnHelper.accessor("fullName", {
+		columnHelper.accessor("applicantFullName", {
 			header: "",
 			meta: {
 				width: "xs",
@@ -17,11 +18,11 @@ export function getColumns(onEdit?: (company: CandidateProjection) => void) {
 
 			cell: ({ row }) => (
 				<div className="table-cell-content w-87.5">
-					<ItemMark name={row.original.fullName ?? row.original.email} />
+					<ItemMark name={row.original.applicantFullName ?? row.original.applicantEmail} />
 				</div>
 			),
 		}),
-		columnHelper.accessor("email", {
+		columnHelper.accessor("applicantEmail", {
 			header: "Email",
 			cell: ({ getValue }) => (
 				<a href={`email:${getValue()}`} className="table-number truncate">
@@ -32,7 +33,7 @@ export function getColumns(onEdit?: (company: CandidateProjection) => void) {
 				width: "xl",
 			},
 		}),
-		columnHelper.accessor("phoneNumber", {
+		columnHelper.accessor("applicantPhone", {
 			header: "Phone",
 			cell: ({ getValue }) => (
 				<a href={`tel:${getValue()}`} className="table-number truncate">
@@ -40,10 +41,14 @@ export function getColumns(onEdit?: (company: CandidateProjection) => void) {
 				</a>
 			),
 		}),
+		columnHelper.accessor("status", {
+			header: "Status",
+			cell: ({ getValue }) => <ApplicationBadge status={getValue()} />,
+		}),
 		columnHelper.accessor("source", {
 			header: "Source",
 		}),
-		columnHelper.accessor("fullName", {
+		columnHelper.accessor("applicantFullName", {
 			header: "Name",
 			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
 			meta: {
@@ -53,6 +58,22 @@ export function getColumns(onEdit?: (company: CandidateProjection) => void) {
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
+		}),
+		columnHelper.accessor("jobPostTitle", {
+			header: "Job post",
+			cell: ({ getValue }) => (
+				<a href={`tel:${getValue()}`} className="table-number truncate">
+					{getValue()}
+				</a>
+			),
+		}),
+		columnHelper.accessor("company", {
+			header: "Company",
+			cell: ({ getValue }) => (
+				<a href={`tel:${getValue()}`} className="table-number truncate">
+					{getValue().name}
+				</a>
+			),
 		}),
 
 		columnHelper.display({
@@ -70,7 +91,7 @@ export function getColumns(onEdit?: (company: CandidateProjection) => void) {
 						<button
 							type="button"
 							className="table-action-button"
-							aria-label={`Actions for ${user.email}`}
+							aria-label={`Actions for ${user.applicantEmail}`}
 						>
 							<MoreHorizontal className="size-4" />
 						</button>

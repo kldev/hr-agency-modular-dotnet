@@ -6,7 +6,6 @@ import { ItemMark } from "@/components/ui";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, CompanyProjection>();
 
-
 export function getColumns(onEdit?: (company: CompanyProjection) => void) {
 	const columns = columnHelper.columns([
 		columnHelper.accessor("name", {

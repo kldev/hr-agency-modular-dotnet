@@ -1,0 +1,102 @@
+/* =========================================================
+   Enum Filter
+   ========================================================= */
+
+.enum-filter {
+	display: inline-flex;
+	align-items: center;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	background: var(--color-surface);
+	overflow: hidden;
+}
+
+.enum-filter-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	min-height: 32px;
+	padding: 0 var(--space-3);
+
+	border: 0;
+	border-right: 1px solid var(--color-border);
+
+	background: transparent;
+
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+
+	cursor: pointer;
+	transition:
+		background var(--transition-fast),
+		color var(--transition-fast);
+
+	white-space: nowrap;
+}
+
+.enum-filter-button:last-child {
+	border-right: 0;
+}
+
+.enum-filter-button:hover {
+	background: var(--color-surface-hover);
+	color: var(--color-text);
+}
+
+.enum-filter-button.is-selected {
+	background: var(--color-primary-soft);
+	color: var(--color-primary);
+}
+
+.enum-filter-button:focus-visible {
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
+}
+
+/* =========================================================
+   Status colors
+   ========================================================= */
+
+.enum-filter-applied.is-selected {
+	background: var(--color-info-soft);
+	color: var(--color-info);
+}
+
+.enum-filter-screening.is-selected {
+	background: var(--color-violet-soft);
+	color: var(--color-violet);
+}
+
+.enum-filter-interview.is-selected {
+	background: var(--color-cyan-soft);
+	color: var(--color-cyan);
+}
+
+.enum-filter-assessment.is-selected {
+	background: var(--color-warning-soft);
+	color: var(--color-warning);
+}
+
+.enum-filter-offer.is-selected {
+	background: var(--color-orange-soft);
+	color: var(--color-orange);
+}
+
+.enum-filter-hired.is-selected {
+	background: var(--color-success-soft);
+	color: var(--color-success);
+}
+
+.enum-filter-rejected.is-selected {
+	background: var(--color-danger-soft);
+	color: var(--color-danger);
+}
+
+.enum-filter-withdrawn.is-selected {
+	background: var(--color-neutral-soft);
+	color: var(--color-neutral);
+}
