@@ -9,7 +9,7 @@ internal static class MapGetSlice
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/organization", Handler)
+        group.MapGet("", Handler)
             .WithSummary("Get organizations")
             .Produces<SliceResponse<OrganizationProjection>>()
             .ProducesStandardErrors();

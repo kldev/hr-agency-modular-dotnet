@@ -8,7 +8,7 @@ internal static class MapGetBySlug
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/organization/{slug}", Handler)
+        group.MapGet("{slug}", Handler)
             .WithSummary("Get organization by Slug")
             .Produces<OrganizationCreated>()
             .ProducesStandardErrors();

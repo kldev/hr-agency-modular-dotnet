@@ -28,4 +28,17 @@ public class UserQueryRepository(IDocumentSession session) : IUserQueryRepositor
             .WithoutSystemRole()
             .SingleOrDefaultAsync(ct);
     }
+
+    public async Task<SliceResponse<UserProjection>> GetUsersOwner(Guid? organizationId, string search, IReadOnlyList<OrganizationRole> roles, int page, int pageSize,
+        CancellationToken ct)
+    {
+        var query = session.Query<UserProjection>()
+            .WithOptionalOrganizationId(organizationId)
+            .WithSearch(search)
+            .WithRoles(roles)
+            .WithoutSystemRole()
+            .OrderByDescending(z=>z.CreatedAt);
+
+        return await query.ToSlice(page, pageSize, ct);
+    }
 }

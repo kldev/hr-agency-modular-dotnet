@@ -5,8 +5,6 @@ using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;

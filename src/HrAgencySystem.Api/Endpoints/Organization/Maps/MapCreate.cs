@@ -10,7 +10,7 @@ internal static class MapCreate
 {
     public static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/api/organization", Handler)
+        group.MapPost("", Handler)
             .WithSummary("Create organization")
             .Produces<OrganizationCreated>()
             .ProducesStandardErrors();

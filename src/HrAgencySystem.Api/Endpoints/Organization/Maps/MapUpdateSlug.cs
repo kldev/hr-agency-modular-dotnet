@@ -12,7 +12,8 @@ public static class MapUpdateSlug
 
     public static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/organization/{organizationId}/slug", Handler)
+        // PUT /api/organization/{organizationId}/slug
+        group.MapPut("{organizationId}/slug", Handler)
             .WithSummary("Update organization slug")
             .Produces<OrganizationSlugUpdated>()
             .ProducesStandardErrors();
