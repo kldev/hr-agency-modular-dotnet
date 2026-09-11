@@ -17,9 +17,10 @@ internal static class MapGetSlice
 
     private static async Task<IResult> Handler(IOrganizationQueryRepository repository,
         int page = 1, int pageSize = 100,
+        string? search = null,
         CancellationToken ct = default)
     {
-        var result = await repository.GetSlice(page, pageSize, ct);
+        var result = await repository.GetSlice(search,  page, pageSize, ct);
 
         return TypedResults.Ok(result);
     }

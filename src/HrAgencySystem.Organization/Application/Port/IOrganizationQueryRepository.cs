@@ -5,5 +5,5 @@ namespace HrAgencySystem.Organization.Application.Port;
 
 public interface IOrganizationQueryRepository
 {
-    Task<SliceResponse<OrganizationProjection>> GetSlice(int page, int pageSize, CancellationToken ct);
+    Task<SliceResponse<OrganizationProjection>> GetSlice(string? search, int page, int pageSize, CancellationToken ct);
 }

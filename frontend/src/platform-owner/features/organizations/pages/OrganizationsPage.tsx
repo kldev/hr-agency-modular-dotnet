@@ -14,8 +14,9 @@ const OrganizationsPage: React.FC = () => {
 		return getApiOrganization({
 			page,
 			pageSize,
+			search: search ?? undefined
 		});
-	}, []);
+	}, [search]);
 
 	const {
 		data: items,
@@ -27,7 +28,7 @@ const OrganizationsPage: React.FC = () => {
 	} = usePaginatedData({
 		pageSize: 15,
 		fetchPage: fetchPage,
-		queryKey: [],
+		queryKey: [search],
 	});
 	return (
 		<Page
@@ -48,7 +49,7 @@ const OrganizationsPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => {}}
+				onAdd={() => { }}
 			/>
 			<OrganizationsTable items={items} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />

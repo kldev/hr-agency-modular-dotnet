@@ -23,4 +23,5 @@ export type GetApiOrganizationParams = {
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */
 	pageSize?: number | string;
+	search?: string;
 };
