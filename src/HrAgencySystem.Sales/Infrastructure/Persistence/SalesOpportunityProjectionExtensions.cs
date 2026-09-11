@@ -44,17 +44,20 @@ internal static class SalesOpportunityProjectionExtensions
     {
         return !stage.HasValue ? query : query.Where(p => p.Stage == stage);
     }
-    
+
     internal static IQueryable<OpportunityProjection> WithSearch(
         this IQueryable<OpportunityProjection> query, string search)
     {
-        return string.IsNullOrEmpty(search) ? query : 
-            query.Where(p => p.Company.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
-                .Where(p => p.Title.Contains(search, StringComparison.OrdinalIgnoreCase))
-                .Where(p => p.Description.Contains(search, StringComparison.OrdinalIgnoreCase))
-                .Where(p => p.LostReason.Contains(search, StringComparison.OrdinalIgnoreCase));
+        return string.IsNullOrEmpty(search)
+            ? query
+            : query.Where(p => p.Company.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                               || p.Title.Contains(search, StringComparison.OrdinalIgnoreCase)
+                               || p.Description.Contains(search, StringComparison.OrdinalIgnoreCase)
+                               || p.LostReason.Contains(search, StringComparison.OrdinalIgnoreCase)
+            );
+
     }
-    
+
     internal static IQueryable<OpportunityProjection> WithResponsibleIds(
         this IQueryable<OpportunityProjection> query, IReadOnlyList<Guid> responsibleIds)
     {
