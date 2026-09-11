@@ -28,6 +28,7 @@ public static class AuthenticationExtensions
                     policy.AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithOrigins("http://localhost:4300")
+                        .WithOrigins("http://localhost:8080")
                         .WithOrigins([.. corsOrigins]);
 
                 }
