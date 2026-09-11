@@ -101,6 +101,17 @@ internal static class RecruitmentProjectionConfiguration
             .Index(x => new { x.OrgId, InterviewId = x.Id })
             .Index(x => new { x.OrgId, x.ApplicationId })
             .Index(x => new { x.OrgId, x.CreatedByUserId })
-            .Index(x => new { x.OrgId, x.CreatedAt });
+            .Index(x => new { x.OrgId, x.CreatedAt })
+            .Index(x => new
+            {
+                x.OrgId,
+                x.CreatedAt, 
+                x.Format, 
+                x.Status, 
+                x.ApplicantInfo.Email,
+                x.ApplicantInfo.FirstName,
+                x.ApplicantInfo.LastName,
+                x.ApplicantInfo.PhoneNumber
+            }, idx => { idx.Name = "idx_interview_search"; });
     }
 }

@@ -1,3 +1,5 @@
+using Amazon.Util.Internal.PlatformServices;
+using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Events.Interviews;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -22,7 +24,8 @@ public sealed record InterviewProjection(
     Guid? ModifiedByUserId,
     UserSnapshot? ModifiedBy,
     DateTimeOffset CreatedAt,
-    DateTimeOffset? ModifiedAt)
+    DateTimeOffset? ModifiedAt,
+    CandidateInfo ApplicantInfo)
 {
     public static InterviewProjection Create(InterviewCreated @event)
     {
@@ -41,7 +44,11 @@ public sealed record InterviewProjection(
             @event.Author.Id,
             @event.Author,
             @event.Note,
-            null, null, @event.OccurredAt, null
+            null, 
+            null, 
+            @event.OccurredAt, 
+            null,
+            @event.Candidate
         );
     }
     

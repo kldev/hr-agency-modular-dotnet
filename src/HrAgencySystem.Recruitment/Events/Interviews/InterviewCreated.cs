@@ -1,3 +1,4 @@
+using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.SharedKernel.Snapshots;
 
@@ -16,4 +17,5 @@ public sealed record InterviewCreated(
     InterviewType InterviewType,
     string Note,
     UserSnapshot Author,
-    DateTimeOffset OccurredAt) : IInterviewEvent;
+    DateTimeOffset OccurredAt,
+    CandidateInfo Candidate) : IInterviewEvent;

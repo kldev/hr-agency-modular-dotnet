@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
+using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -10,7 +11,8 @@ public sealed class RecruitmentService(
     IUserSnapshotRepository userSnapshotRepository,
     ICompanySnapshotRepository companySnapshotRepository,
     IOrganizationChecker checker,
-    IJobApplicationInfoQueryRepository applicationInfoQueryRepository ) : IRecruitmentService
+    IJobApplicationInfoQueryRepository applicationInfoQueryRepository
+    ) : IRecruitmentService
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {
@@ -45,5 +47,11 @@ public sealed class RecruitmentService(
         return string.IsNullOrEmpty(slug)
             ? throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage)
             : slug;
+    }
+    
+    public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
+    {
+        if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
+            throw new OrganizationAccessDeniedException();
     }
 }

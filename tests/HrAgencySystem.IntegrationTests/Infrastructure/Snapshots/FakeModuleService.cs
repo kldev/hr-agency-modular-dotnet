@@ -2,6 +2,7 @@ using HrAgencySystem.Company.Services;
 using HrAgencySystem.Identity.Services;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
+using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Services;
@@ -36,7 +37,8 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
 
     public Task<JobApplicationInfo> GetApplicationAsync(Guid jobApplicationId, Guid organizationId, CancellationToken ct)
     {
-        var result = new JobApplicationInfo(jobApplicationId, organizationId, Guid.NewGuid(), Guid.NewGuid());
+        var candidateInfo = new CandidateInfo(Guid.NewGuid(), "test@fake.com", "", "", "");
+        var result = new JobApplicationInfo(jobApplicationId, organizationId, Guid.NewGuid(), Guid.NewGuid(), candidateInfo);
         return Task.FromResult(result);
     }
 

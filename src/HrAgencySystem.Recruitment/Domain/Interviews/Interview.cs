@@ -8,7 +8,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Domain.Interviews;
 
-public sealed class Interview
+public sealed class Interview : IOrganizationDomain
 {
     private Interview()
     {

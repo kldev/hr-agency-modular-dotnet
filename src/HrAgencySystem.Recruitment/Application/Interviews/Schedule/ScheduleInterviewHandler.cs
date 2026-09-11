@@ -33,6 +33,7 @@ public static class ScheduleInterviewHandler
 
         var (shortNote, error) = ShortNote.TryCreate(command.Note, false);
         if (error != null) throw new ValidationException(error);
+        
 
         var @event = new InterviewCreated(
             interviewId.Value,
@@ -47,7 +48,8 @@ public static class ScheduleInterviewHandler
             command.InterviewType,
             shortNote!.Value,
             user,
-            clock.UtcNow
+            clock.UtcNow,
+            application.Candidate
         );
 
         var jobApplicationEvent = new JobApplicationInterviewScheduled(command.JobApplicationId,

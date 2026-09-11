@@ -1,5 +1,6 @@
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Recruitment.Application.Interviews.Queries;
+using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Projections;
@@ -502,10 +503,11 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         DateTimeOffset? scheduleAt = null,
         string timeZone = "Europe/Warsaw",
         InterviewType interviewType = InterviewType.Hr,
-        InterviewStatus status = InterviewStatus.Planned)
+        InterviewStatus status = InterviewStatus.Planned
+    )
     {
         var creatorId = createdByUserId ?? _user.Id;
-
+        var candidateInfo = new CandidateInfo(Guid.NewGuid(), "test@fake.com", "", "", "");
         return new InterviewProjection(
             Guid.NewGuid(),
             organizationId ?? _organizationId,
@@ -524,6 +526,6 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
             null,
             null,
             DateTimeOffset.UtcNow,
-            null);
+            null, candidateInfo);
     }
 }

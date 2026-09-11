@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
+using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 
@@ -15,4 +16,6 @@ public interface IRecruitmentService
         CancellationToken ct);
     
     public Task<string> GetOrganizationSlug(OrganizationId organizationId, CancellationToken ct);
+    
+    void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId);
 }

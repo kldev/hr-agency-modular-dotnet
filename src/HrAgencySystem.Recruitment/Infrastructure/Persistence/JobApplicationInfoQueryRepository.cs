@@ -15,7 +15,7 @@ public partial class JobApplicationInfoQueryRepository(IQuerySession session, IL
         var result = await session.Query<JobApplicationProjection>()
             .WithOrganizationId(organizationId.Value)
             .WithJobApplicationId(jobApplicationId)
-            .Select(z => new JobApplicationInfo(z.Id, z.OrgId, z.CandidateId, z.CompanyId))
+            .Select(z => new JobApplicationInfo(z.Id, z.OrgId, z.CandidateId, z.CompanyId, z.CandidateInfo))
             .FirstOrDefaultAsync(ct);
 
         if (result != null) return result;
@@ -24,7 +24,7 @@ public partial class JobApplicationInfoQueryRepository(IQuerySession session, IL
         var data = await session.Query<JobApplicationCreated>()
             .Where(z => z.OrganizationId == organizationId.Value && z.JobApplicationId == jobApplicationId)
             .Select(z =>
-                new JobApplicationInfo(z.JobApplicationId, z.OrganizationId, z.CandidateInfo.CandidateId, z.Company.Id))
+                new JobApplicationInfo(z.JobApplicationId, z.OrganizationId, z.CandidateInfo.CandidateId, z.Company.Id, z.CandidateInfo))
             .SingleOrDefaultAsync(ct);
 
         if (data == null) return null;
