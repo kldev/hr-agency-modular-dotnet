@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { CandidateInfo } from "./candidateInfo";
 import type { InterviewFormat } from "./interviewFormat";
 import type { InterviewStatus } from "./interviewStatus";
 import type { InterviewType } from "./interviewType";
@@ -39,4 +40,5 @@ export interface InterviewProjection {
 	createdAt: string;
 	/** @nullable */
 	modifiedAt: string | null;
+	applicantInfo: CandidateInfo;
 }

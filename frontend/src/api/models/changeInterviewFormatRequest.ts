@@ -13,13 +13,10 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { InterviewFormat } from "./interviewFormat";
 
-export interface CandidateInfo {
-	candidateId: string;
-	email: string;
-	phoneNumber: string;
-	firstName: string;
-	lastName: string;
+export interface ChangeInterviewFormatRequest {
+	format: InterviewFormat;
 	/** @nullable */
-	fullName?: string | null;
+	note: string | null;
 }

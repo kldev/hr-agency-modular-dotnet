@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { CandidateInfo } from "./candidateInfo";
 import type { InterviewFormat } from "./interviewFormat";
 import type { InterviewType } from "./interviewType";
 import type { UserSnapshot } from "./userSnapshot";
@@ -31,4 +32,5 @@ export interface InterviewCreated {
 	note: string;
 	author: UserSnapshot;
 	occurredAt: string;
+	candidate: CandidateInfo;
 }
