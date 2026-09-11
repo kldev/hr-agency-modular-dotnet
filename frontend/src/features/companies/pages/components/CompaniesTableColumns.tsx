@@ -2,19 +2,10 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import type { CompanyProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
+import { ItemMark } from "@/components/ui";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, CompanyProjection>();
 
-function CompanyMark({ company }: { company: CompanyProjection }) {
-	const initials = company.name
-		.split(" ")
-		.slice(0, 2)
-		.map((part) => part[0])
-		.join("")
-		.toUpperCase();
-
-	return <span className="data-avatar">{initials}</span>;
-}
 
 export function getColumns(onEdit?: (company: CompanyProjection) => void) {
 	const columns = columnHelper.columns([
@@ -26,7 +17,7 @@ export function getColumns(onEdit?: (company: CompanyProjection) => void) {
 
 			cell: ({ row, getValue }) => (
 				<div className="table-cell-content w-87.5">
-					<CompanyMark company={row.original} />
+					<ItemMark name={row.original.name} />
 
 					<div>
 						<div className="data-name">{getValue()}</div>

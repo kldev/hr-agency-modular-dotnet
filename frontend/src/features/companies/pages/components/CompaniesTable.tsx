@@ -1,6 +1,6 @@
 import { useTable } from "@tanstack/react-table";
 import type { CompanyProjection } from "@/api/models";
-import { TableHeaderGroup } from "@/components/table/TableHeaderGroup";
+import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
 import { getColumns } from "./CompaniesTableColumns";
 
@@ -13,7 +13,7 @@ interface CompaniesTableProps {
 export function CompaniesTable({ companies, onEdit }: CompaniesTableProps) {
 	const table = useTable(
 		{
-			features: { ...appTableFeatures, className: "" },
+			features: appTableFeatures,
 			columns: getColumns(onEdit),
 			data: companies,
 			getRowId: (company) => company.id,
@@ -24,34 +24,5 @@ export function CompaniesTable({ companies, onEdit }: CompaniesTableProps) {
 		}),
 	);
 
-	return (
-		<div className="table-container">
-			<table className="table">
-				<thead>
-					{table.getHeaderGroups().map((headerGroup) => (
-						<TableHeaderGroup key={headerGroup.id} table={table} group={headerGroup} />
-					))}
-				</thead>
-
-				<tbody>
-					{table.getRowModel().rows.map((row) => (
-						<tr key={row.id}>
-							{row.getAllCells().map((cell) => {
-								const meta = cell.column.columnDef.meta;
-								const className =
-									meta?.align === "right"
-										? `table-number ${meta?.className}`
-										: `${meta?.className}`;
-								return (
-									<td key={cell.id} className={className}>
-										<table.FlexRender cell={cell} />
-									</td>
-								);
-							})}
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
-	);
+	return <MainTable table={table} />;
 }

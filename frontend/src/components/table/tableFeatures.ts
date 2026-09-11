@@ -5,7 +5,7 @@ import {
 	tableFeatures,
 } from "@tanstack/react-table";
 
-export type CellWidth = "sm" | "md" | "xl" | "2xl";
+export type CellWidth = "xs" | "sm" | "md" | "xl" | "2xl";
 
 export interface AppColumnMeta {
 	className?: string;

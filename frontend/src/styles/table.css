@@ -71,6 +71,11 @@
 	gap: var(--space-3);
 }
 
+.table-header-xs {
+	width: 60px;
+}
+
+
 .table-header-sm {
 	width: 120px;
 }
@@ -80,7 +85,7 @@
 }
 
 .table-header-xl {
-	width: 350px;
+	width: 250px;
 }
 
 .table-header-2xl {

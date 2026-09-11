@@ -1,37 +1,45 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { getApiRecruitmentCandidates } from "@/api/endpoints";
 import { Page } from "@/components/layout";
-import { EmptyState, WorkInProgress } from "@/components/ui";
+import { usePaginatedData } from "@/components/table";
+import { EmptyState, LoadMore } from "@/components/ui";
+import { CandidatesTable } from "../components/CandidatesTable";
 
-const AplicationsPage: React.FC = () => {
-	const [loading, setLoading] = useState(false);
-	const handleOnRefresh = async () => {
-		setLoading(true);
+const CandidatesPage: React.FC = () => {
+	const {
+		data: items,
+		loading,
+		hasMore,
+		isEmpty,
+		loadMore,
+		refresh,
+	} = usePaginatedData({
+		pageSize: 15,
+		fetchPage: (page, pageSize) => getApiRecruitmentCandidates({ page, pageSize }),
+	});
 
-		window.setTimeout(() => {
-			setLoading(false);
-		}, 500);
-
-		return Promise.resolve();
-	};
 	return (
 		<Page
 			title="Candidates"
 			description="Manage candidates and their recruitment profiles."
-			onRefresh={handleOnRefresh}
+			onRefresh={refresh}
 			loading={loading}
-			page={0}
-			isEmpty={true}
+			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No candidates found">
 					<Users size={24} />
 				</EmptyState>
 			}
 		>
-			<WorkInProgress />
+			{!isEmpty ? (
+				<>
+					<CandidatesTable items={items} />
+					<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+				</>
+			) : null}
 		</Page>
 	);
 };
 
-export default AplicationsPage;
+export default CandidatesPage;

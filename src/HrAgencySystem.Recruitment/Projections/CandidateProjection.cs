@@ -38,7 +38,9 @@ public sealed record CandidateProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     IReadOnlyList<Guid> CompanyIds,
     DateTimeOffset? ModifiedAt,
-    string Note)
+    string Note,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
+    string FullName)
 {
     public static CandidateProjection Create(
         CandidateCreated @event)
@@ -60,7 +62,8 @@ public sealed record CandidateProjection(
             [],
             @event.CompanyId.HasValue ? [@event.CompanyId.Value] : [], 
             null,
-            @event.Note);
+            @event.Note,
+            $"{@event.FirstName} {@event.LastName}");
     }
 
     public CandidateProjection Apply(CandidateTagged @event)
