@@ -1,6 +1,9 @@
 using HrAgencySystem.Api.Auth;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
+using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.SharedKernel.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HrAgencySystem.Api.Endpoints.User.Maps;
@@ -9,7 +12,10 @@ internal static class MapGetSlice
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/users", Handler).WithSummary("Get users");
+        group.MapGet("/api/users", Handler)
+            .WithSummary("Get users")
+            .Produces<SliceResponse<UserProjection>>()
+            .ProducesStandardErrors();
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,

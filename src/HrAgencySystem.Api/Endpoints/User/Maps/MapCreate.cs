@@ -1,6 +1,5 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
-using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;

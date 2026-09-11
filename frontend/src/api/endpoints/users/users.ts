@@ -35,6 +35,7 @@ import type {
 	CreateUserRequest,
 	GetApiUsersParams,
 	ProblemDetails,
+	SliceResponseOfUserProjection,
 	UserCreated,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
@@ -189,13 +190,16 @@ export const getApiUsers = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<void>({ url: `/api/users`, method: "GET", params, signal }, options);
+	return customInstance<SliceResponseOfUserProjection>(
+		{ url: `/api/users`, method: "GET", params, signal },
+		options,
+	);
 };
 
 export const getGetApiUsersMutationKey = () => ["getApiUsers"] as const;
 
 export const getGetApiUsersMutationOptions = <
-	TError = ErrorType<unknown>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
@@ -232,13 +236,16 @@ export const getGetApiUsersMutationOptions = <
 
 export type GetApiUsersMutationResult = NonNullable<Awaited<ReturnType<typeof getApiUsers>>>;
 
-export type GetApiUsersMutationError = ErrorType<unknown>;
+export type GetApiUsersMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
 export type GetApiUsersMutationVariables = { params: GetApiUsersParams };
 
 /**
  * @summary Get users
  */
-export const useGetApiUsers = <TError = ErrorType<unknown>, TContext = unknown>(
+export const useGetApiUsers = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
 	options?: {
 		mutation?: UseMutationOptions<
 			Awaited<ReturnType<typeof getApiUsers>>,

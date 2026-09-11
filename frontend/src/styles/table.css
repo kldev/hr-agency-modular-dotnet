@@ -16,7 +16,7 @@
 
 	border-collapse: collapse;
 
-	table-layout: auto;
+	table-layout: fixed;
 
 	font-size: var(--font-size-sm);
 }
@@ -69,4 +69,20 @@
 	display: flex;
 	align-items: center;
 	gap: var(--space-3);
+}
+
+.table-header-sm {
+	width: 120px;
+}
+
+.table-header-md {
+	width: 180px;
+}
+
+.table-header-xl {
+	width: 350px;
+}
+
+.table-header-2xl {
+	width: 350px;
 }

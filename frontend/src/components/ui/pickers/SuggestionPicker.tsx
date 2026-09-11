@@ -1,12 +1,5 @@
+import { Check, ChevronDown, Search, X } from "lucide-react";
 import {
-	Check,
-	ChevronDown,
-	LoaderCircle,
-	Search,
-	X,
-} from "lucide-react";
-import {
-
 	type ReactNode,
 	useCallback,
 	useEffect,
@@ -139,33 +132,21 @@ export function SuggestionPicker<T>({
 		const viewportHeight = window.innerHeight;
 		const viewportWidth = window.innerWidth;
 
-		const spaceBelow =
-			viewportHeight - rect.bottom - MENU_GAP - VIEWPORT_PADDING;
+		const spaceBelow = viewportHeight - rect.bottom - MENU_GAP - VIEWPORT_PADDING;
 
-		const spaceAbove =
-			rect.top - MENU_GAP - VIEWPORT_PADDING;
+		const spaceAbove = rect.top - MENU_GAP - VIEWPORT_PADDING;
 
-		const preferredHeight = Math.min(
-			MENU_MAX_HEIGHT,
-			Math.max(spaceBelow, spaceAbove),
-		);
+		const preferredHeight = Math.min(MENU_MAX_HEIGHT, Math.max(spaceBelow, spaceAbove));
 
-		const shouldOpenAbove =
-			spaceBelow < 180 && spaceAbove > spaceBelow;
+		const shouldOpenAbove = spaceBelow < 180 && spaceAbove > spaceBelow;
 
 		const top = shouldOpenAbove
-			? Math.max(
-				VIEWPORT_PADDING,
-				rect.top - MENU_GAP - preferredHeight,
-			)
+			? Math.max(VIEWPORT_PADDING, rect.top - MENU_GAP - preferredHeight)
 			: rect.bottom + MENU_GAP;
 
 		const maxHeight = Math.max(
 			120,
-			Math.min(
-				MENU_MAX_HEIGHT,
-				shouldOpenAbove ? spaceAbove : spaceBelow,
-			),
+			Math.min(MENU_MAX_HEIGHT, shouldOpenAbove ? spaceAbove : spaceBelow),
 		);
 
 		const width = rect.width;
@@ -257,9 +238,7 @@ export function SuggestionPicker<T>({
 			return;
 		}
 
-		const selectedItem = suggestions.find(
-			(item) => getKey(item) === value,
-		);
+		const selectedItem = suggestions.find((item) => getKey(item) === value);
 
 		if (selectedItem) {
 			selectedItemRef.current = selectedItem;
@@ -270,14 +249,7 @@ export function SuggestionPicker<T>({
 				onInputChange(label);
 			}
 		}
-	}, [
-		value,
-		suggestions,
-		getKey,
-		getLabel,
-		inputValue,
-		onInputChange,
-	]);
+	}, [value, suggestions, getKey, getLabel, inputValue, onInputChange]);
 
 	/*
 	 * =========================================================
@@ -296,11 +268,9 @@ export function SuggestionPicker<T>({
 		const handlePointerDown = (event: PointerEvent) => {
 			const target = event.target as Node;
 
-			const clickedInsideRoot =
-				rootRef.current?.contains(target);
+			const clickedInsideRoot = rootRef.current?.contains(target);
 
-			const clickedInsideMenu =
-				menuRef.current?.contains(target);
+			const clickedInsideMenu = menuRef.current?.contains(target);
 
 			if (!clickedInsideRoot && !clickedInsideMenu) {
 				setIsOpen(false);
@@ -308,16 +278,10 @@ export function SuggestionPicker<T>({
 			}
 		};
 
-		document.addEventListener(
-			"pointerdown",
-			handlePointerDown,
-		);
+		document.addEventListener("pointerdown", handlePointerDown);
 
 		return () => {
-			document.removeEventListener(
-				"pointerdown",
-				handlePointerDown,
-			);
+			document.removeEventListener("pointerdown", handlePointerDown);
 		};
 	}, [isOpen]);
 
@@ -352,37 +316,23 @@ export function SuggestionPicker<T>({
 
 			loadSuggestions(inputValue, controller.signal)
 				.then((items) => {
-					if (
-						controller.signal.aborted ||
-						requestId !== requestIdRef.current
-					) {
+					if (controller.signal.aborted || requestId !== requestIdRef.current) {
 						return;
 					}
 
-					setSuggestions(
-						items.slice(0, maxSuggestions),
-					);
+					setSuggestions(items.slice(0, maxSuggestions));
 				})
 				.catch((error) => {
-					if (
-						error instanceof DOMException &&
-						error.name === "AbortError"
-					) {
+					if (error instanceof DOMException && error.name === "AbortError") {
 						return;
 					}
 
-					if (
-						!controller.signal.aborted &&
-						requestId === requestIdRef.current
-					) {
+					if (!controller.signal.aborted && requestId === requestIdRef.current) {
 						setSuggestions([]);
 					}
 				})
 				.finally(() => {
-					if (
-						!controller.signal.aborted &&
-						requestId === requestIdRef.current
-					) {
+					if (!controller.signal.aborted && requestId === requestIdRef.current) {
 						setIsLoading(false);
 					}
 				});
@@ -391,14 +341,7 @@ export function SuggestionPicker<T>({
 		return () => {
 			window.clearTimeout(timeoutId);
 		};
-	}, [
-		inputValue,
-		isOpen,
-		minQueryLength,
-		debounceMs,
-		maxSuggestions,
-		loadSuggestions,
-	]);
+	}, [inputValue, isOpen, minQueryLength, debounceMs, maxSuggestions, loadSuggestions]);
 
 	useEffect(() => {
 		return () => {
@@ -435,20 +378,14 @@ export function SuggestionPicker<T>({
 		setHighlightedIndex(-1);
 
 		inputRef.current?.focus();
-		setIsLoading(true)
+		setIsLoading(true);
 		setIsOpen(true);
 	};
 
-	const handleInputChange = (
-		event: React.ChangeEvent<HTMLInputElement>,
-	) => {
+	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const nextValue = event.target.value;
 
-		if (
-			selectedItemRef.current &&
-			nextValue !==
-			getLabel(selectedItemRef.current)
-		) {
+		if (selectedItemRef.current && nextValue !== getLabel(selectedItemRef.current)) {
 			selectedItemRef.current = undefined;
 
 			if (!allowCustomValue) {
@@ -470,9 +407,7 @@ export function SuggestionPicker<T>({
 		setIsOpen(true);
 	};
 
-	const handleKeyDown = (
-		event: React.KeyboardEvent<HTMLInputElement>,
-	) => {
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (disabled) {
 			return;
 		}
@@ -490,9 +425,7 @@ export function SuggestionPicker<T>({
 					return -1;
 				}
 
-				return current >= suggestions.length - 1
-					? 0
-					: current + 1;
+				return current >= suggestions.length - 1 ? 0 : current + 1;
 			});
 
 			return;
@@ -506,25 +439,17 @@ export function SuggestionPicker<T>({
 					return -1;
 				}
 
-				return current <= 0
-					? suggestions.length - 1
-					: current - 1;
+				return current <= 0 ? suggestions.length - 1 : current - 1;
 			});
 
 			return;
 		}
 
 		if (event.key === "Enter") {
-			if (
-				isOpen &&
-				highlightedIndex >= 0 &&
-				highlightedIndex < suggestions.length
-			) {
+			if (isOpen && highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
 				event.preventDefault();
 
-				selectItem(
-					suggestions[highlightedIndex],
-				);
+				selectItem(suggestions[highlightedIndex]);
 			}
 
 			return;
@@ -548,9 +473,7 @@ export function SuggestionPicker<T>({
 	const selectedKey = value;
 
 	const showEmptyState =
-		!isLoading &&
-		suggestions.length === 0 &&
-		inputValue.length >= minQueryLength;
+		!isLoading && suggestions.length === 0 && inputValue.length >= minQueryLength;
 
 	/*
 	 * =========================================================
@@ -559,23 +482,12 @@ export function SuggestionPicker<T>({
 	 */
 
 	return (
-		<div
-			ref={rootRef}
-			className={`suggestion-picker ${className}`}
-		>
+		<div ref={rootRef} className={`suggestion-picker ${className}`}>
 			{label && (
-				<label
-					htmlFor={inputId}
-					className="form-label"
-				>
+				<label htmlFor={inputId} className="form-label">
 					{label}
 
-					{required && (
-						<span aria-hidden="true">
-							{" "}
-							*
-						</span>
-					)}
+					{required && <span aria-hidden="true"> *</span>}
 				</label>
 			)}
 
@@ -584,24 +496,14 @@ export function SuggestionPicker<T>({
 					ref={controlRef}
 					className={[
 						"suggestion-picker-control",
-						isOpen
-							? "suggestion-picker-control-open"
-							: "",
-						invalid
-							? "suggestion-picker-control-invalid"
-							: "",
-						disabled
-							? "suggestion-picker-control-disabled"
-							: "",
+						isOpen ? "suggestion-picker-control-open" : "",
+						invalid ? "suggestion-picker-control-invalid" : "",
+						disabled ? "suggestion-picker-control-disabled" : "",
 					]
 						.filter(Boolean)
 						.join(" ")}
 				>
-					<Search
-						size={16}
-						aria-hidden="true"
-						className="suggestion-picker-icon"
-					/>
+					<Search size={16} aria-hidden="true" className="suggestion-picker-icon" />
 
 					<input
 						ref={inputRef}
@@ -609,16 +511,10 @@ export function SuggestionPicker<T>({
 						type="text"
 						role="combobox"
 						aria-expanded={isOpen}
-						aria-controls={
-							isOpen
-								? listboxId
-								: undefined
-						}
+						aria-controls={isOpen ? listboxId : undefined}
 						aria-autocomplete="list"
 						aria-activedescendant={
-							highlightedIndex >= 0
-								? `${listboxId}-option-${highlightedIndex}`
-								: undefined
+							highlightedIndex >= 0 ? `${listboxId}-option-${highlightedIndex}` : undefined
 						}
 						aria-invalid={invalid}
 						aria-required={required}
@@ -630,10 +526,6 @@ export function SuggestionPicker<T>({
 						onChange={handleInputChange}
 						onKeyDown={handleKeyDown}
 					/>
-					{/* 
-					{isLoading && (
-						<LoaderCircle className="suggestion-picker-spinner size-4 animate-spin" />
-					)} */}
 
 					{!isLoading && inputValue && (
 						<button
@@ -661,33 +553,16 @@ export function SuggestionPicker<T>({
 						}}
 						onClick={() => {
 							inputRef.current?.focus();
-							setIsOpen(
-								(current) => !current,
-							);
+							setIsOpen((current) => !current);
 						}}
 					>
-						<ChevronDown
-							size={16}
-							className={
-								isOpen
-									? "suggestion-picker-chevron-open"
-									: ""
-							}
-						/>
+						<ChevronDown size={16} className={isOpen ? "suggestion-picker-chevron-open" : ""} />
 					</button>
 				</div>
 
-				{description && !error && (
-					<div className="form-hint">
-						{description}
-					</div>
-				)}
+				{description && !error && <div className="form-hint">{description}</div>}
 
-				{error && (
-					<div className="form-error">
-						{error}
-					</div>
-				)}
+				{error && <div className="form-error">{error}</div>}
 			</div>
 
 			{isOpen &&
@@ -702,14 +577,11 @@ export function SuggestionPicker<T>({
 							top: menuPosition.top,
 							left: menuPosition.left,
 							width: menuPosition.width,
-							maxHeight:
-								menuPosition.maxHeight,
+							maxHeight: menuPosition.maxHeight,
 						}}
 					>
 						{renderHeader && (
-							<div className="suggestion-picker-header">
-								{renderHeader(inputValue)}
-							</div>
+							<div className="suggestion-picker-header">{renderHeader(inputValue)}</div>
 						)}
 
 						{/* {isLoading && (
@@ -744,12 +616,8 @@ export function SuggestionPicker<T>({
 											aria-selected={selected}
 											className={[
 												"suggestion-picker-option",
-												highlighted
-													? "suggestion-picker-option-highlighted"
-													: "",
-												selected
-													? "suggestion-picker-option-selected"
-													: "",
+												highlighted ? "suggestion-picker-option-highlighted" : "",
+												selected ? "suggestion-picker-option-selected" : "",
 											]
 												.filter(Boolean)
 												.join(" ")}
@@ -768,9 +636,7 @@ export function SuggestionPicker<T>({
 											) : (
 												<div className="suggestion-picker-default-item">
 													<div className="suggestion-picker-item-content">
-														<div className="suggestion-picker-item-label">
-															{getLabel(item)}
-														</div>
+														<div className="suggestion-picker-item-label">{getLabel(item)}</div>
 
 														{itemDescription && (
 															<div className="suggestion-picker-item-description">
@@ -779,12 +645,7 @@ export function SuggestionPicker<T>({
 														)}
 													</div>
 
-													{selected && (
-														<Check
-															size={16}
-															className="suggestion-picker-item-check"
-														/>
-													)}
+													{selected && <Check size={16} className="suggestion-picker-item-check" />}
 												</div>
 											)}
 										</button>
@@ -795,60 +656,37 @@ export function SuggestionPicker<T>({
 
 						{showEmptyState &&
 							(renderEmptyState ? (
-								renderEmptyState(
-									inputValue,
-								)
+								renderEmptyState(inputValue)
 							) : (
 								<div className="suggestion-picker-empty">
-									<div className="suggestion-picker-empty-title">
-										No suggestions
-										found
-									</div>
+									<div className="suggestion-picker-empty-title">No suggestions found</div>
 
 									{inputValue ? (
 										<div className="suggestion-picker-empty-description">
-											Try a
-											different
-											search
-											term.
+											Try a different search term.
 										</div>
 									) : (
 										<div className="suggestion-picker-empty-description">
-											No
-											suggestions
-											available.
+											No suggestions available.
 										</div>
 									)}
 								</div>
 							))}
 
-						{!isLoading &&
-							inputValue.length <
-							minQueryLength && (
-								<div className="suggestion-picker-empty">
-									<div className="suggestion-picker-empty-description">
-										Enter at
-										least{" "}
-										{
-											minQueryLength
-										}{" "}
-										characters
-										to
-										search.
-									</div>
+						{!isLoading && inputValue.length < minQueryLength && (
+							<div className="suggestion-picker-empty">
+								<div className="suggestion-picker-empty-description">
+									Enter at least {minQueryLength} characters to search.
 								</div>
-							)}
+							</div>
+						)}
 					</div>,
 					document.body,
 				)}
 
-			{allowCustomValue &&
-				inputValue &&
-				!value && (
-					<div className="suggestion-picker-custom-hint">
-						You can enter a custom value.
-					</div>
-				)}
+			{allowCustomValue && inputValue && !value && (
+				<div className="suggestion-picker-custom-hint">You can enter a custom value.</div>
+			)}
 		</div>
 	);
 }

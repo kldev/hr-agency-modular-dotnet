@@ -3,25 +3,24 @@ import { getApiSuggestionUsers } from "@/api/endpoints";
 import type { OrganizationRole, UserSuggestion } from "@/api/models";
 import { SuggestionPicker, type SuggestionPickerProps } from "./SuggestionPicker";
 
-
 type OwnProps = {
-	role?: OrganizationRole
-}
+	role?: OrganizationRole;
+};
 export type UsersPickerProps = Omit<
 	SuggestionPickerProps<UserSuggestion>,
 	"loadSuggestions" | "getKey" | "getLabel"
 >;
 
-type Props = OwnProps & UsersPickerProps
-
+type Props = OwnProps & UsersPickerProps;
 
 export function UsersPicker(props: Props) {
-	const searchUsers = async (query: string,
-		signal: AbortSignal): Promise<UserSuggestion[]> => {
-
-		return await getApiSuggestionUsers({ search: query ?? "", roles: props.role ? [props.role] : [] }, undefined, signal);
-
-	}
+	const searchUsers = async (query: string, signal: AbortSignal): Promise<UserSuggestion[]> => {
+		return await getApiSuggestionUsers(
+			{ search: query ?? "", roles: props.role ? [props.role] : [] },
+			undefined,
+			signal,
+		);
+	};
 
 	return (
 		<SuggestionPicker<UserSuggestion>

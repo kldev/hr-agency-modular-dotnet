@@ -1,9 +1,10 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import Stub from "./components/Stub";
+
 import AccessDeniedPage from "./features/common/AccessDeniedPage";
 import NotFoundPage from "./features/common/NotFoundPage";
-import { ROUTES } from "./routes";
+import { ROUTES, RouteFallback } from "./routes";
 
 const router = createBrowserRouter([
 	{
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Dashboard",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.COMPANIES,
@@ -54,6 +56,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Companies",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.JOBS,
@@ -67,6 +70,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Jobs",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.CANDIDATES,
@@ -81,6 +85,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Candidates",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.APPLICATIONS,
@@ -94,6 +99,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Applications",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.SALES,
@@ -107,6 +113,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Sales",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.SALES_OPPORTUNITIES,
@@ -124,6 +131,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Interviews",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.CALENDAR,
@@ -141,6 +149,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Organizations",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.SETTINGS,
@@ -158,6 +167,7 @@ const router = createBrowserRouter([
 				handle: {
 					breadcrumb: "Users",
 				},
+				HydrateFallback: RouteFallback,
 			},
 			{
 				path: ROUTES.REPORTS,

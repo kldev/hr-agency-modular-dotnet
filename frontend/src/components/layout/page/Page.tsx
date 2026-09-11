@@ -1,5 +1,5 @@
 import { RefreshCcw } from "lucide-react";
-import { Button, LoadingState } from "../../ui";
+import { Button } from "../../ui";
 import { Breadcrumbs } from "../breadcrumbs";
 import "./page.css";
 
@@ -21,7 +21,6 @@ const Page: React.FC<Props> = ({
 	description,
 	onRefresh,
 	loading,
-	page,
 	isEmpty,
 	emptyState,
 	headerAddon,
@@ -35,19 +34,20 @@ const Page: React.FC<Props> = ({
 						<h1 className="page-title">{title}</h1>
 						<p className="page-description">{description}</p>
 					</div>
+
 					{onRefresh ? (
 						<Button
 							variant="secondary"
 							icon={<RefreshCcw size={15} />}
 							onClick={() => onRefresh(0)}
-							loading={loading && page === 0}
+							loading={loading}
 						>
 							Refresh
 						</Button>
 					) : null}
 					{headerAddon}
 				</header>
-				{loading ? <LoadingState></LoadingState> : null}
+
 				{isEmpty && !loading ? emptyState : null}
 				{children}
 			</div>

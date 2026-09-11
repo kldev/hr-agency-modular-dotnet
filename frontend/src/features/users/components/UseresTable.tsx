@@ -1,22 +1,22 @@
 import { useTable } from "@tanstack/react-table";
-import type { CompanyProjection } from "@/api/models";
+import type { UserProjection } from "@/api/models";
 import { TableHeaderGroup } from "@/components/table/TableHeaderGroup";
 import { appTableFeatures } from "@/components/table/tableFeatures";
-import { getColumns } from "./CompaniesTableColumns";
+import { getColumns } from "./UsersTableColumns";
 
-interface CompaniesTableProps {
-	companies: CompanyProjection[];
-	onEdit?: (company: CompanyProjection) => void;
-	onDelete?: (company: CompanyProjection) => void;
+interface UseresTableProps {
+	users: UserProjection[];
+	onEdit?: (user: UserProjection) => void;
+	onDelete?: (user: UserProjection) => void;
 }
 
-export function CompaniesTable({ companies, onEdit }: CompaniesTableProps) {
+export function UseresTable({ users, onEdit }: UseresTableProps) {
 	const table = useTable(
 		{
-			features: { ...appTableFeatures, className: "" },
+			features: appTableFeatures,
 			columns: getColumns(onEdit),
-			data: companies,
-			getRowId: (company) => company.id,
+			data: users,
+			getRowId: (user) => user.id,
 			enableSorting: false,
 		},
 		(state) => ({
