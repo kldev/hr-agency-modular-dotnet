@@ -19,6 +19,7 @@ public sealed record InterviewsQuery(
     InterviewStatus? Status,
     DateTimeOffset? From,
     DateTimeOffset? To,
+    string Search,
     int Page, 
     int PageSize) : IPagedQuery;
     

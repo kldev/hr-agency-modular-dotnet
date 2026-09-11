@@ -10,5 +10,6 @@ internal static class Endpoint
         MapLoginUser.Map(group);
         MapLoginOwner.Map(group);
         MapCurrent.Map(group);
+        MapCurrentOwner.Map(group);
     }
 }

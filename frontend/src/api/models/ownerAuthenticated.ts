@@ -13,15 +13,10 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { PlatformRole } from "./platformRole";
 
-export type InterviewStatus = (typeof InterviewStatus)[keyof typeof InterviewStatus];
-
-export const InterviewStatus = {
-	Planned: "Planned",
-	Confirmed: "Confirmed",
-	InProgress: "InProgress",
-	Completed: "Completed",
-	Canceled: "Canceled",
-	NoShow: "NoShow",
-	Rescheduled: "Rescheduled",
-} as const;
+export interface OwnerAuthenticated {
+	id: string;
+	email: string;
+	role: PlatformRole;
+}

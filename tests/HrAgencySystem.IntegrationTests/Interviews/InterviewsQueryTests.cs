@@ -481,6 +481,7 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
             status,
             from,
             to,
+            "",
             page,
             pageSize);
     }

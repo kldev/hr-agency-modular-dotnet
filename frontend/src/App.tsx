@@ -1,39 +1,22 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
-import Stub from "./components/Stub";
-
-import AccessDeniedPage from "./features/common/AccessDeniedPage";
 import NotFoundPage from "./features/common/NotFoundPage";
 import { ROUTES, RouteFallback } from "./routes";
+import { ownerRoutes } from "./routes/OwnerRoutes";
+import { publicRoutes } from "./routes/PublicRoutes";
+import { recruitmentRoutes } from "./routes/RecruitmentRoutes";
+import { salesRoutes } from "./routes/SalesRoutes";
+import { settingsRoutes } from "./routes/SettingsRoutes";
 
 const router = createBrowserRouter([
-	{
-		path: ROUTES.LOGIN,
-		lazy: async () => {
-			const module = await import("./features/auth/pages/LoginPage");
-
-			return {
-				Component: module.default,
-			};
-		},
-	},
-	{
-		path: ROUTES.FORGOT_PASSWORD,
-		lazy: async () => {
-			const module = await import("./features/auth/pages/ForgotPasswordPage");
-
-			return {
-				Component: module.default,
-			};
-		},
-	},
+	...publicRoutes,
 	{
 		Component: AppLayout,
 		children: [
 			{
 				path: ROUTES.DASHBOARD,
 				lazy: async () => {
-					const module = await import("./features/dashboard/pages/DashboardPage");
+					const module = await import("@/features/dashboard/pages/DashboardPage");
 
 					return {
 						Component: module.default,
@@ -44,140 +27,15 @@ const router = createBrowserRouter([
 				},
 				HydrateFallback: RouteFallback,
 			},
-			{
-				path: ROUTES.COMPANIES,
-				lazy: async () => {
-					const module = await import("./features/companies/pages/CompaniesPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Companies",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.JOBS,
-				lazy: async () => {
-					const module = await import("./features/job-posts/pages/JobsPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Jobs",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.CANDIDATES,
-				Component: Stub,
-				lazy: async () => {
-					const module = await import("./features/candidates/pages/CandidatesPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Candidates",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.APPLICATIONS,
-				lazy: async () => {
-					const module = await import("./features/applications/pages/AplicationsPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Applications",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.SALES,
-				lazy: async () => {
-					const module = await import("./features/sales/pages/SalesPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Sales",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.SALES_OPPORTUNITIES,
-				Component: Stub,
-			},
-			{
-				path: ROUTES.INTERVIEWS,
-				lazy: async () => {
-					const module = await import("./features/interviews/pages/InterviewsPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Interviews",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.CALENDAR,
-				Component: Stub,
-			},
-			{
-				path: ROUTES.ORGANIZATIONS,
-				lazy: async () => {
-					const module = await import("./features/organizations/pages/OrganizationsPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Organizations",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.SETTINGS,
-				Component: AccessDeniedPage,
-			},
-			{
-				path: ROUTES.USERS,
-				lazy: async () => {
-					const module = await import("./features/users/pages/UsersPage");
-
-					return {
-						Component: module.default,
-					};
-				},
-				handle: {
-					breadcrumb: "Users",
-				},
-				HydrateFallback: RouteFallback,
-			},
-			{
-				path: ROUTES.REPORTS,
-				Component: NotFoundPage,
-			},
-			{
-				path: "*",
-				Component: NotFoundPage,
-			},
+			...settingsRoutes,
+			...recruitmentRoutes,
+			...salesRoutes,
 		],
+	},
+	...ownerRoutes,
+	{
+		path: "*",
+		Component: NotFoundPage,
 	},
 ]);
 

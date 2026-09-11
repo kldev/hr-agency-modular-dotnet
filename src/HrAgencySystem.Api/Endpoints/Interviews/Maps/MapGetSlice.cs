@@ -21,6 +21,7 @@ internal static class MapGetSlice
 
     private static async Task<IResult> Handler(AppUserAuthenticated user,
         IInterviewsQueryRepository repository,
+        string? search,
         Guid?  jobApplicationId,
         Guid? interviewerId,
         Guid? candidateId, 
@@ -40,6 +41,7 @@ internal static class MapGetSlice
             status,
             fromDate.ToUtc(timezone),
             toDate?.AddDays(1).ToUtc(timezone),
+            search ?? "",
             page, pageSize);
         var result = await repository.GetSlice(user.OrganizationId, query, ct);
         

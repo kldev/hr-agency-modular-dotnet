@@ -36,6 +36,7 @@ import type {
 	LoginOwner,
 	LoginUser,
 	LoginUserResult,
+	OwnerAuthenticated,
 	ProblemDetails,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
@@ -359,4 +360,61 @@ export const useGetApiUserMe = <TError = ErrorType<ProblemDetails>, TContext = u
 	queryClient?: QueryClient,
 ): UseMutationResult<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext> => {
 	return useMutation(getGetApiUserMeMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get information about the current owner
+ */
+export const getApiOwnerMe = (
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<OwnerAuthenticated>(
+		{ url: `/api/owner/me`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetApiOwnerMeMutationKey = () => ["getApiOwnerMe"] as const;
+
+export const getGetApiOwnerMeMutationOptions = <
+	TError = ErrorType<ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiOwnerMe>>, TError, void, TContext>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof getApiOwnerMe>>, TError, void, TContext> => {
+	const mutationKey = getGetApiOwnerMeMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<Awaited<ReturnType<typeof getApiOwnerMe>>, void> = () => {
+		return getApiOwnerMe(requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetApiOwnerMeMutationResult = NonNullable<Awaited<ReturnType<typeof getApiOwnerMe>>>;
+
+export type GetApiOwnerMeMutationError = ErrorType<ProblemDetails>;
+
+/**
+ * @summary Get information about the current owner
+ */
+export const useGetApiOwnerMe = <TError = ErrorType<ProblemDetails>, TContext = unknown>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getApiOwnerMe>>,
+			TError,
+			void,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getApiOwnerMe>>, TError, void, TContext> => {
+	return useMutation(getGetApiOwnerMeMutationOptions(options), queryClient);
 };

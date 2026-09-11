@@ -1,51 +1,41 @@
 import {
-	BarChart3,
 	BriefcaseBusiness,
 	Building2,
 	CalendarDays,
 	ClipboardList,
 	DollarSign,
-	Globe2,
 	LayoutDashboard,
 	MessageSquare,
-	Settings,
 	Users,
 } from "lucide-react";
+import { ROUTES } from "@/routes";
 import type { MenuGroup } from "./types/sidebar";
 
 const menuGroups: MenuGroup[] = [
 	{
 		title: "",
-		items: [{ label: "Dashboard", icon: LayoutDashboard, link: "/" }],
+		items: [{ label: "Dashboard", icon: LayoutDashboard, link: ROUTES.DASHBOARD }],
 	},
 	{
 		title: "Recruitment",
 		items: [
-			{ label: "Job postings", icon: BriefcaseBusiness, link: "/jobs" },
-			{ label: "Candidates", icon: Users, link: "/candidates" },
-			{ label: "Applications", icon: ClipboardList, link: "/applications" },
-			{ label: "Interviews", icon: MessageSquare, link: "/interviews" },
-			{ label: "Calendar", icon: CalendarDays, link: "/calendar" },
+			{ label: "Job postings", icon: BriefcaseBusiness, link: ROUTES.JOBS },
+			{ label: "Candidates", icon: Users, link: ROUTES.CANDIDATES },
+			{ label: "Applications", icon: ClipboardList, link: ROUTES.APPLICATIONS },
+			{ label: "Interviews", icon: MessageSquare, link: ROUTES.INTERVIEWS },
+			{ label: "Calendar", icon: CalendarDays, link: ROUTES.CALENDAR },
 		],
 	},
 	{
 		title: "Sales",
 		items: [
-			{ label: "Companies", icon: Building2, link: "/companies" },
-			{ label: "Sales", icon: DollarSign, link: "/sales" },
+			{ label: "Companies", icon: Building2, link: ROUTES.COMPANIES },
+			{ label: "Sales", icon: DollarSign, link: ROUTES.SALES },
 		],
 	},
 	{
 		title: "Users",
-		items: [{ label: "Users", icon: Users, link: "/users" }],
-	},
-	{
-		title: "System",
-		items: [
-			{ label: "Organizations", icon: Globe2, link: "/organizations" },
-			{ label: "Reports", icon: BarChart3, link: "/reports" },
-			{ label: "Settings", icon: Settings, link: "/settings" },
-		],
+		items: [{ label: "Users", icon: Users, link: ROUTES.USERS }],
 	},
 ];
 

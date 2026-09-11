@@ -18,6 +18,7 @@ public class InterviewsQueryRepository(IQuerySession session) : IInterviewsQuery
             .WithStatus(query.Status)
             .WithScheduleFrom(query.From)
             .WithScheduleTo(query.To)
+            .WithSearch(query.Search)
             .OrderByDescending(z=>z.ScheduleAt)
             .ToSlice(query, ct);
     }

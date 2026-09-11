@@ -123,6 +123,26 @@ table-cell-content {
 	min-width: 0;
 }
 
+.data-avatar {
+	display: grid;
+	place-items: center;
+
+	width: 32px;
+	height: 32px;
+
+	flex: 0 0 32px;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	background: var(--color-surface-subtle);
+
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+}
+
 .data-name,
 .data-meta {
 	min-width: 0;

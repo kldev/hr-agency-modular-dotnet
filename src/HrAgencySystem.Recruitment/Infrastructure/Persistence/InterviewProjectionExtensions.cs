@@ -65,4 +65,15 @@ internal static class InterviewProjectionExtensions
         return !to.HasValue ? query : 
             query.Where(i => i.ScheduleAt < to.Value);
     }
+
+    internal static IQueryable<InterviewProjection> WithSearch(this IQueryable<InterviewProjection> query,
+        string search)
+    {
+        return string.IsNullOrWhiteSpace(search)
+            ? query
+            : query.Where(i => i.ApplicantInfo.Email.Contains(search, StringComparison.OrdinalIgnoreCase)
+                               || i.ApplicantInfo.FirstName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                               || i.ApplicantInfo.LastName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                               || i.ApplicantInfo.PhoneNumber.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
 }

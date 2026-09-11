@@ -16,6 +16,7 @@
 import type { InterviewStatus } from "./interviewStatus";
 
 export type GetApiInterviewsParams = {
+	search?: string;
 	jobApplicationId?: string;
 	interviewerId?: string;
 	candidateId?: string;

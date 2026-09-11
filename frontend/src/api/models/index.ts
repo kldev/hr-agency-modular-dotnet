@@ -116,6 +116,7 @@ export * from "./organizationProjection";
 export * from "./organizationRole";
 export * from "./organizationRoleApi";
 export * from "./organizationSlugUpdated";
+export * from "./ownerAuthenticated";
 export * from "./ownerProjection";
 export * from "./platformOwnerCreated";
 export * from "./platformRole";

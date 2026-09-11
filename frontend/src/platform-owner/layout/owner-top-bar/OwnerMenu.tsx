@@ -1,16 +1,16 @@
-import { LogOut, Moon, Settings2, Sun, User } from "lucide-react";
+import { LogOut, Moon, Sun, User } from "lucide-react";
 import type React from "react";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "@/components/ui/dropdown/Dropdown";
 import DropdownDivider from "@/components/ui/dropdown/DropdownDivider";
 import DropdownItem from "@/components/ui/dropdown/DropdownItem";
-import { ROUTES } from "@/routes";
-import { useAuthStore } from "@/stores/authStore";
+import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
+import { OWNER_ROUTES } from "@/routes/OwnerRoutes";
 import { useUiStore } from "@/stores/uiStore";
 
-const UserMenu: React.FC = () => {
+const OwnerMenu: React.FC = () => {
 	const ui = useUiStore();
-	const store = useAuthStore();
+	const store = useOwnerAuthStore();
 
 	const navigation = useNavigate();
 	return (
@@ -18,10 +18,6 @@ const UserMenu: React.FC = () => {
 			<DropdownItem>
 				<User size={15} />
 				Profile
-			</DropdownItem>
-			<DropdownItem>
-				<Settings2 size={15} />
-				Preferences
 			</DropdownItem>
 
 			<DropdownDivider />
@@ -40,8 +36,8 @@ const UserMenu: React.FC = () => {
 
 			<DropdownItem
 				onClick={() => {
-					store.clearUser();
-					navigation(ROUTES.LOGIN);
+					store.clear();
+					navigation(OWNER_ROUTES.LOGIN);
 				}}
 			>
 				<LogOut size={15} />
@@ -51,4 +47,4 @@ const UserMenu: React.FC = () => {
 	);
 };
 
-export default UserMenu;
+export default OwnerMenu;
