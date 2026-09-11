@@ -8,6 +8,7 @@ type PaginatedResponse<T> = {
 type UsePaginatedDataOptions<T> = {
 	pageSize?: number;
 	fetchPage: (page: number, pageSize: number) => Promise<PaginatedResponse<T>>;
+	queryKey: readonly unknown[];
 };
 
 type UsePaginatedDataResult<T> = {
@@ -22,12 +23,15 @@ type UsePaginatedDataResult<T> = {
 export function usePaginatedData<T>({
 	pageSize = 15,
 	fetchPage,
+	queryKey,
 }: UsePaginatedDataOptions<T>): UsePaginatedDataResult<T> {
 	const [data, setData] = useState<T[]>([]);
 	const [page, setPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [hasMore, setHasMore] = useState(false);
 	const [initialized, setInitialized] = useState(false);
+
+	const queryHash = JSON.stringify(queryKey);
 
 	const loadData = useCallback(
 		async (pageNumber: number) => {
@@ -49,6 +53,13 @@ export function usePaginatedData<T>({
 	);
 
 	useEffect(() => {
+		setData([]);
+		setHasMore(false);
+		setInitialized(false);
+		setPage(1);
+	}, [queryHash]);
+
+	useEffect(() => {
 		void loadData(page);
 	}, [page, loadData]);
 
@@ -64,9 +75,16 @@ export function usePaginatedData<T>({
 		setData([]);
 		setHasMore(false);
 		setInitialized(false);
-		if (page === 1) void loadData(page);
-		setPage(1);
-	}, []);
+
+		setPage((current) => {
+			if (current === 1) {
+				void loadData(1);
+				return current;
+			}
+
+			return 1;
+		});
+	}, [loadData]);
 
 	const isEmpty = initialized && !loading && data.length === 0;
 

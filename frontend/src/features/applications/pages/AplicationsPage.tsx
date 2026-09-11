@@ -37,6 +37,7 @@ const AplicationsPage: React.FC = () => {
 	} = usePaginatedData({
 		pageSize: 15,
 		fetchPage,
+		queryKey: [status, source, search],
 	});
 
 	return (
@@ -63,7 +64,7 @@ const AplicationsPage: React.FC = () => {
 				onSourceChange={(s) => {
 					setSource(s);
 				}}
-				onAdd={() => {}}
+				onAdd={() => { }}
 			/>
 
 			<div className="flex-col">

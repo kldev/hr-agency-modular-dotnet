@@ -25,9 +25,7 @@ export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
 		}),
 		columnHelper.accessor("description", {
 			header: "Email",
-			cell: ({ getValue }) => (
-				<div className="data-meta truncate">{getValue()}</div>
-			),
+			cell: ({ getValue }) => <div className="data-meta truncate">{getValue()}</div>,
 			meta: {
 				width: "2xl",
 			},
@@ -50,9 +48,7 @@ export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
 
 		columnHelper.accessor("company.name", {
 			header: "Company",
-			cell: ({ getValue }) => (
-				<div className="data-meta truncate">{getValue()}</div>
-			),
+			cell: ({ getValue }) => <div className="data-meta truncate">{getValue()}</div>,
 		}),
 
 		columnHelper.accessor("responsible", {
@@ -60,13 +56,9 @@ export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
 			cell: ({ row }) => (
 				<div className="table-cell-content">
 					<div className="min-w-0">
-						<div className="data-name">
-							{row.original.responsible.fullname ?? ""}
-						</div>
+						<div className="data-name">{row.original.responsible.fullname ?? ""}</div>
 
-						<div className="data-meta">
-							{row.original.responsible.email}
-						</div>
+						<div className="data-meta">{row.original.responsible.email}</div>
 					</div>
 				</div>
 			),

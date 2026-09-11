@@ -26,6 +26,7 @@ const UsersPage: React.FC = () => {
 	} = usePaginatedData({
 		pageSize: 15,
 		fetchPage: fetchPage,
+		queryKey: []
 	});
 
 	return (
