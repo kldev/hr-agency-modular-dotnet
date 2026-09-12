@@ -1,5 +1,6 @@
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.SharedKernel.Commands;
+using HrAgencySystem.SharedKernel.Web.Common;
 
 namespace HrAgencySystem.Company.Application.Create;
 
@@ -12,5 +13,6 @@ public sealed record CreateCompany(
     string RegistrationNumber,
     Guid CreatedBy,
     Industry Industry = Industry.Other,
-    string WebSite = ""
+    string WebSite = "",
+    ContactPerson? Contact = null
 ) : ICreateCommand, ICompanyData;

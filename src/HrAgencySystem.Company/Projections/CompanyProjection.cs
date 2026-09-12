@@ -2,6 +2,7 @@ using HrAgencySystem.Company.Application.Suggestion;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Web.Common;
 
 
 namespace HrAgencySystem.Company.Projections;
@@ -26,11 +27,12 @@ public sealed record CompanyProjection(
     Guid? ModifiedById,
     UserSnapshot?  ModifiedBy,
     DateTimeOffset? ModifiedAt,
-    
     int JobsPostCount,
     int ActiveJobsPostCount,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    int ApplicantsCount)
+    int ApplicantsCount,
+    ContactPerson? Contact,
+    Guid? ContactPersonId)
 {
     public static CompanyProjection Create(CompanyCreated @event)
     {
@@ -52,7 +54,9 @@ public sealed record CompanyProjection(
             null,
             0,
             0,
-            0
+            0,
+            @event.Contact,
+            @event.ContactPersonId
         );
     }
     
@@ -83,6 +87,16 @@ public sealed record CompanyProjection(
             CountryCode = @event.CountryCode,
             ModifiedBy = @event.ModifiedBy,
             ModifiedById = @event.ModifiedBy.Id,
+            ModifiedAt = @event.ModifiedAt
+        };
+    }
+    
+    public CompanyProjection Apply(CompanyPrimaryContactUpdated @event)
+    {
+        return this with
+        {
+            Contact = @event.Contact,
+            ContactPersonId = @event.ContactPersonId,
             ModifiedAt = @event.ModifiedAt
         };
     }

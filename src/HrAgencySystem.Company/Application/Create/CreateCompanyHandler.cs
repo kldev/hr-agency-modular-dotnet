@@ -1,4 +1,6 @@
+using HrAgencySystem.Company.Application.Contacts.Create;
 using HrAgencySystem.Company.Application.Port;
+using HrAgencySystem.Company.Documents;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
@@ -7,6 +9,7 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using HrAgencySystem.SharedKernel.Web.Common;
 using Marten;
 
 namespace HrAgencySystem.Company.Application.Create;
@@ -21,7 +24,7 @@ public static class CreateCompanyHandler
         IDocumentSession session,
         ICompanyTaxIdReservationRepository taxIdReservationRepository,
         IClock clock,
-       ICompanyService service,
+        ICompanyService service,
         CancellationToken ct)
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
@@ -44,6 +47,8 @@ public static class CreateCompanyHandler
             companyId,
             ct);
 
+        var (addContact, addContactId) = CreateAndSaveContact(session, command, companyId, organizationId, clock);
+        
         var @event = new CompanyCreated(
             companyId.Value,
             organizationId.Value,
@@ -54,12 +59,35 @@ public static class CreateCompanyHandler
             command.Industry,
             webSite.Value,
             createdBy,
-            clock.UtcNow);
+            clock.UtcNow,
+            addContact,
+            addContactId);
 
         session.Events.StartStream<Domain.Company>(companyId.Value, @event);
 
         return @event;
     }
+
+    private static (ContactPerson?, Guid?) CreateAndSaveContact(IDocumentSession session, 
+        CreateCompany command, 
+        CompanyId id, OrganizationId organizationId, IClock clock)
+    {
+        if (command.Contact == null) return (null, null);
+        var data = ContactDataFactory.Create(
+            new CreateCompanyContact(organizationId.Value, id.Value, command.Contact, command.CreatedBy));
+
+        var contactId = Guid.NewGuid();
+        var contact = new CompanyContact(
+            contactId,
+            command.OrganizationId,
+            id.Value,
+            data, command!.Name, clock.UtcNow);
+        
+        session.Insert(contact);
+
+        return (data, contactId);
+    }
+    
     
     private static async Task ValidateTaxReservation(ICompanyTaxIdReservationRepository taxIdReservationRepository,
         CancellationToken cancellationToken, OrganizationId organizationId, TaxId taxId)

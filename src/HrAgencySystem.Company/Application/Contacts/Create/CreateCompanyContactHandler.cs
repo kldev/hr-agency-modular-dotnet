@@ -22,11 +22,7 @@ public static class CreateCompanyContactHandler
             Guid.NewGuid(),
             command.OrganizationId,
             command.CompanyId,
-            data.Email.Value,
-            data.FirstName.Value,
-            data.LastName.Value,
-            data.JobTitle.Value,
-            data.Phone.Value, company!.Name, clock.UtcNow);
+            data, company!.Name, clock.UtcNow);
 
         await repository.Create(contact);
 

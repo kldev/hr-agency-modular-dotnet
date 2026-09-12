@@ -14,7 +14,7 @@ public sealed class CompanyContactSuggestionRepository(IQuerySession session) : 
             .WithCompanyId(companyId)
             .WithSearch(search)
             .OrderByDescending(z=>z.CreatedAt)
-            .ThenBy(z=>z.FirstName)
+            .ThenBy(z=>z.Contact.FirstName)
             .Take(25)
             .ToListAsync(ct);
     }

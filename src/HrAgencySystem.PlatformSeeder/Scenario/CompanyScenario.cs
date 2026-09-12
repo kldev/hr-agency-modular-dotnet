@@ -3,6 +3,7 @@ using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Documents;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
+using HrAgencySystem.SharedKernel.Web.Common;
 using Marten;
 using Wolverine;
 
@@ -44,7 +45,8 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
                 var name = GenerateCompanyName(country, index);
                 var userId = userIds[index % userIds.Count];
                 var website = "https://"+name.Replace(" ", "-").Replace(",", "").ToLower() +faker.Internet.DomainName() + ".com";
-
+                var primaryContact = CreateContactPerson(faker);
+                
                 return new CreateCompany(
                     organizationId,
                     name,
@@ -53,7 +55,8 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
                     GenerateRegistrationNumber(faker, country),
                     userId,
                     GetRandomIndustry(),
-                    website
+                    website,
+                    primaryContact
                     );
             });
 
@@ -74,26 +77,29 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
         return Enum.GetValues<Industry>()[Random.Shared.Next(0, Enum.GetValues<Industry>().Length)];
     }
 
+    private ContactPerson CreateContactPerson(Faker faker)
+    {
+        var firstName = faker.Name.FirstName();
+        var lastName = faker.Name.LastName() + Random.Shared.Next(9999);
+        var email = faker.Internet.Email(firstName, lastName,  provider: faker.Internet.DomainName() + ".co").ToLower();
+        var jobTitle = faker.Name.JobTitle();
+        var phone = faker.Phone.PhoneNumber();
+
+        return new ContactPerson(email, firstName, lastName, jobTitle, phone);
+    } 
+    
     private async Task AddCompanyContacts(Faker faker, Guid organizationId, Guid companyId, string companyName)
     {
         var contacts = new List<CompanyContact>();
         for (var i = 0; i < 5; i++)
         {
-            var firstName = faker.Name.FirstName();
-            var lastName = faker.Name.LastName() + Random.Shared.Next(9999);
-            var email = faker.Internet.Email(firstName, lastName,  provider: faker.Internet.DomainName() + ".co").ToLower();
-            var jobTitle = faker.Name.JobTitle();
-            var phone = faker.Phone.PhoneNumber();
+            var contactPerson = CreateContactPerson(faker);
             
             var contact = new CompanyContact(
                 Guid.NewGuid(), 
-                organizationId, 
-                companyId, 
-                email, 
-                firstName, 
-                lastName, 
-                jobTitle, 
-                phone,  
+                organizationId,
+                companyId,
+                contactPerson,
                 companyName,
                 DateTimeOffset.Now);
             contacts.Add(contact);

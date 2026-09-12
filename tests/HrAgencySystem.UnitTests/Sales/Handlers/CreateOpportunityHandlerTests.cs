@@ -156,7 +156,7 @@ public class CreateOpportunityHandlerTests : BaseTest
         _documentSession.Events
             .Received(1)
             .StartStream<SalesOpportunity>(
-                OrganizationId,
+                result.OpportunityId,
                 Arg.Is<OpportunityCreated>(x =>
                     x.OpportunityId == result.OpportunityId &&
                     x.OrganizationId == result.OrganizationId &&

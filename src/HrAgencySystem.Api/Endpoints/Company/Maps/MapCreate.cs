@@ -4,6 +4,7 @@ using HrAgencySystem.Company.Application.Create;
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Tenant;
+using HrAgencySystem.SharedKernel.Web.Common;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Company.Maps;
@@ -40,11 +41,12 @@ internal static class MapCreate
         string TaxId,
         string RegistrationNumber,
         string Website,
-        Industry Industry)
+        Industry Industry,
+        ContactPerson? Contact = null)
     {
         public CreateCompany ToCommand(OrganizationId  organizationId, Guid createdBy)
         {
-            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber, createdBy, Industry, Website);
+            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber, createdBy, Industry, Website, Contact);
         }
     }
 }

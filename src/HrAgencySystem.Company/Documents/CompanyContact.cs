@@ -1,14 +1,14 @@
+using HrAgencySystem.SharedKernel.Web.Common;
+
 namespace HrAgencySystem.Company.Documents;
 
 public sealed record CompanyContact(
     Guid Id, 
     Guid OrganizationId,
     Guid CompanyId, 
-    string Email, 
-    string FirstName, 
-    string LastName, 
-    string JobTitle,
-    string Phone,
+    ContactPerson Contact,
     string CompanyName,
     DateTimeOffset CreatedAt,
     DateTimeOffset? ModifiedAt = null);
+    
+    

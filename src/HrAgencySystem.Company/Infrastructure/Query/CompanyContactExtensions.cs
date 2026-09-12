@@ -39,10 +39,10 @@ internal static class CompanyContactExtensions
         if (string.IsNullOrWhiteSpace(searchTerm)) return query;
 
         return query.Where(z =>
-            z.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-            || z.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-            || z.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-            || z.JobTitle.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+            z.Contact.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+            || z.Contact.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+            || z.Contact.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+            || z.Contact.JobTitle.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
             || z.CompanyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
     }
 }

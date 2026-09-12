@@ -1,5 +1,6 @@
 using HrAgencySystem.Company.Domain;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Web.Common;
 
 namespace HrAgencySystem.Company.Events;
 
@@ -13,5 +14,7 @@ public sealed record CompanyCreated(
     Industry Industry,
     string Website,
     UserSnapshot CreatedBy,
-    DateTimeOffset CreatedAt
+    DateTimeOffset CreatedAt,
+    ContactPerson? Contact = null,
+    Guid? ContactPersonId = null
 );

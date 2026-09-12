@@ -1,16 +1,19 @@
 using HrAgencySystem.Company.Application.Contacts.Create;
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Documents;
+using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
+using Wolverine;
 
 namespace HrAgencySystem.Company.Application.Contacts.Update;
 
 public static class UpdateCompanyContactHandler
 {
-    public static async Task<CompanyContact> Handle(
+    public static async Task<(CompanyContact, Wolverine.Marten.Events)> Handle(
         UpdateCompanyContact command,
         ICompanyContactRepository repository,
+        IMessageBus bus,
         IClock clock, CancellationToken ct)
     {
         var data = ContactDataFactory.Create(command);
@@ -21,16 +24,18 @@ public static class UpdateCompanyContactHandler
 
         var updateContact = contact with
         {
-            FirstName = data.FirstName.Value,
-            LastName = data.LastName.Value,
-            Email = data.LastName.Value,
-            JobTitle = data.JobTitle.Value,
-            Phone = data.Phone.Value,
+            Contact = data,
             ModifiedAt = clock.UtcNow
         };
-        
+
         await repository.Update(updateContact);
 
-        return updateContact;
+        if (!command.UpdatePrimary) return (updateContact, []);
+        
+        var @event = new CompanyPrimaryContactUpdated(contact.CompanyId, contact.OrganizationId, data, contact.Id,
+            clock.UtcNow);
+
+        return (updateContact, [@event]);
+
     }
 }

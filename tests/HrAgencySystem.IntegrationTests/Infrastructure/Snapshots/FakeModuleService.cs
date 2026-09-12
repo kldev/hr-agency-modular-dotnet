@@ -62,7 +62,7 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
 
     public void ValidateAggregateUpdate(IOrganizationDomain? aggregate, Guid commandOrganizationId)
     {
-        if (aggregate == null) throw new OrganizationAccessDeniedException();
+        if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId) throw new OrganizationAccessDeniedException();
     }
 
     public Task<OrganizationId> GetBySlugAsync(string slug, CancellationToken ct)

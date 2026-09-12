@@ -3,6 +3,7 @@ using HrAgencySystem.Api.Common;
 using HrAgencySystem.Company.Application.Contacts.Create;
 using HrAgencySystem.Company.Application.Contacts.Update;
 using HrAgencySystem.Company.Documents;
+using HrAgencySystem.SharedKernel.Web.Common;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.CompanyContacts.Maps;
@@ -33,21 +34,17 @@ internal static class MapCreate
 
 // ReSharper disable once ClassNeverInstantiated.Global
 internal sealed record CompanyContactRequest(
-    string FirstName,
-    string LastName,
-    string Email,
-    string Phone,
-    string JobTitle)
+    ContactPerson Contact, bool UpdatePrimary = false)
 {
     public CreateCompanyContact ToCreateCommand(Guid organizationId, Guid companyId, Guid createdBy)
     {
         return new CreateCompanyContact(organizationId, companyId,
-            Email, FirstName, LastName, JobTitle, Phone, createdBy);
+            Contact, createdBy,  UpdatePrimary);
     }
-    
+
     public UpdateCompanyContact ToUpdateCommand(Guid organizationId, Guid contactId, Guid modifiedBy)
     {
         return new UpdateCompanyContact(organizationId, contactId,
-            Email, FirstName, LastName, JobTitle, Phone, modifiedBy);
+            Contact, UpdatePrimary, modifiedBy);
     }
 }
