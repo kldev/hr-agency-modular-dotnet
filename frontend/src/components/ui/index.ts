@@ -1,3 +1,4 @@
+export * from "./ArrayField";
 export * from "./Badge";
 export * from "./Button";
 export * from "./ConfirmDialog";
