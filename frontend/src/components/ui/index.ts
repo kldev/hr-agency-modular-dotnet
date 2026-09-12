@@ -17,7 +17,6 @@ export * from "./ItemMark";
 export * from "./LoadMore";
 export * from "./MetricCard";
 export * from "./pickers";
-export * from "./pickers";
 export * from "./SaveChangesButton";
 export * from "./Select";
 export * from "./Textarea";
