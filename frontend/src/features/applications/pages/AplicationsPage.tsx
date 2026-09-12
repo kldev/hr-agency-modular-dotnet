@@ -1,6 +1,6 @@
 import { ClipboardList } from "lucide-react";
 import { useCallback, useState } from "react";
-import { getApiRecruitmentJobApplications } from "@/api/endpoints";
+import { getJobApplicationsSlice } from "@/api/endpoints";
 import type { CandidateSource, JobApplicationStatus } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
@@ -16,7 +16,7 @@ const AplicationsPage: React.FC = () => {
 
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getApiRecruitmentJobApplications({
+			return getJobApplicationsSlice({
 				page,
 				pageSize,
 				...(status ? { status: [status] } : {}),

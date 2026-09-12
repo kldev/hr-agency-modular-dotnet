@@ -1,5 +1,5 @@
 import { Mail, UserRound } from "lucide-react";
-import { getApiSuggestionUsers } from "@/api/endpoints";
+import { getUsersSuggestions } from "@/api/endpoints";
 import type { OrganizationRole, UserSuggestion } from "@/api/models";
 import { SuggestionPicker, type SuggestionPickerProps } from "./SuggestionPicker";
 
@@ -15,7 +15,7 @@ type Props = OwnProps & UsersPickerProps;
 
 export function UsersPicker(props: Props) {
 	const searchUsers = async (query: string, signal: AbortSignal): Promise<UserSuggestion[]> => {
-		return await getApiSuggestionUsers(
+		return await getUsersSuggestions(
 			{ search: query ?? "", roles: props.role ? [props.role] : [] },
 			undefined,
 			signal,

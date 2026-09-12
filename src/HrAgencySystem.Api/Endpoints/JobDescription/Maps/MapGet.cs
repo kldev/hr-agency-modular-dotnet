@@ -13,7 +13,8 @@ internal static class MapGet
         group.MapGet("/api/job-description/{jobDescriptionId:guid}", Handler)
             .Produces<JobDescriptionProjection>()
             .ProducesStandardErrors()
-            .WithSummary("Get job description");
+            .WithSummary("Get job description")
+            .WithName("Get job description");
     }
 
     private static async Task<IResult> Handler(IJobDescriptionQueryRepository repository, AppUserAuthenticated user, Guid jobDescriptionId, CancellationToken ct)

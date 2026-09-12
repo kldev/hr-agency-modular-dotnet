@@ -164,3 +164,9 @@ table-cell-content {
 .router-fallback {
 	background: var(--color-bg);
 }
+
+@media (max-width: 700px) {
+	.data-avatar {
+		display: none;
+	}
+}

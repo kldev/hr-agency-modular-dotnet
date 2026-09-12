@@ -12,6 +12,7 @@ internal static class MapGetActivitySlice
     {
         group.MapGet("/activities", Handler)
             .WithSummary("Get activities")
+            .WithName("Get sales activities")
             .Produces<SliceResponse<ActivityProjection>>()
             .ProducesStandardErrors();
     }

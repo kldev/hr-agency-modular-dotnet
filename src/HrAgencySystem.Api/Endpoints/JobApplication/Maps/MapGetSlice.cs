@@ -13,7 +13,9 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/recruitment/job-applications
-        group.MapGet("", Handler).WithSummary("Get applications")
+        group.MapGet("", Handler)
+            .WithSummary("Get applications")
+            .WithName("Get job applications slice")
             .Produces<SliceResponse<JobApplicationProjection>>()
             .ProducesStandardErrors();
     }

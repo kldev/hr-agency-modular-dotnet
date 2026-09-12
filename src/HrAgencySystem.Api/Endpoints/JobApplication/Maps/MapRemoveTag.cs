@@ -13,6 +13,7 @@ internal static class MapRemoveTag
         // /api/recruitment/job-applications/{id}/tag
         group.MapDelete("{applicationId:guid}/tag/{tagId:guid}", Handler)
             .WithSummary("Remove tag")
+            .WithName("Remove job application tag")
             .Produces<JobApplicationTagRemoved>()
             .ProducesStandardErrors();
     }

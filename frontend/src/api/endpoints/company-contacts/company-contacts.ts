@@ -33,6 +33,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	BadRequestDetails,
 	CompanyContact,
+	CompanyContactDeleted,
 	CompanyContactRequest,
 	ProblemDetails,
 } from "../../models";
@@ -209,90 +210,6 @@ export function useCreateCompanyContact<
 	return withQueryKey(query, queryOptions.queryKey);
 }
 
-/**
- * @summary Get contacts
- */
-export const getCompanyContacts = (
-	companyId: string,
-	options?: SecondParameter<typeof customInstance>,
-	signal?: AbortSignal,
-) => {
-	return customInstance<CompanyContact[]>(
-		{ url: `/api/company-contacts/${companyId}`, method: "GET", signal },
-		options,
-	);
-};
-
-export const getGetCompanyContactsMutationKey = () => ["getCompanyContacts"] as const;
-
-export const getGetCompanyContactsMutationOptions = <
-	TError = ErrorType<BadRequestDetails | ProblemDetails>,
-	TContext = unknown,
->(options?: {
-	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getCompanyContacts>>,
-		TError,
-		GetCompanyContactsMutationVariables,
-		TContext
-	>;
-	request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<
-	Awaited<ReturnType<typeof getCompanyContacts>>,
-	TError,
-	GetCompanyContactsMutationVariables,
-	TContext
-> => {
-	const mutationKey = getGetCompanyContactsMutationKey();
-	const { mutation: mutationOptions, request: requestOptions } = options
-		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
-			? options
-			: { ...options, mutation: { ...options.mutation, mutationKey } }
-		: { mutation: { mutationKey }, request: undefined };
-
-	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getCompanyContacts>>,
-		GetCompanyContactsMutationVariables
-	> = (props) => {
-		const { companyId } = props ?? {};
-
-		return getCompanyContacts(companyId, requestOptions);
-	};
-
-	return { mutationFn, ...mutationOptions };
-};
-
-export type GetCompanyContactsMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getCompanyContacts>>
->;
-
-export type GetCompanyContactsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetCompanyContactsMutationVariables = { companyId: string };
-
-/**
- * @summary Get contacts
- */
-export const useGetCompanyContacts = <
-	TError = ErrorType<BadRequestDetails | ProblemDetails>,
-	TContext = unknown,
->(
-	options?: {
-		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getCompanyContacts>>,
-			TError,
-			GetCompanyContactsMutationVariables,
-			TContext
-		>;
-		request?: SecondParameter<typeof customInstance>;
-	},
-	queryClient?: QueryClient,
-): UseMutationResult<
-	Awaited<ReturnType<typeof getCompanyContacts>>,
-	TError,
-	GetCompanyContactsMutationVariables,
-	TContext
-> => {
-	return useMutation(getGetCompanyContactsMutationOptions(options), queryClient);
-};
 /**
  * @summary Update contact
  */
@@ -530,3 +447,135 @@ export const useGetCompanyContact = <
 > => {
 	return useMutation(getGetCompanyContactMutationOptions(options), queryClient);
 };
+/**
+ * @summary Delete contact
+ */
+export const deleteCompanyContact = (
+	contactId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<CompanyContactDeleted>(
+		{ url: `/api/company-contacts/${contactId}`, method: "DELETE", signal },
+		options,
+	);
+};
+
+export const getDeleteCompanyContactQueryKey = (contactId: string) => {
+	return ["DELETE", `/api/company-contacts/${contactId}`] as const;
+};
+
+export const getDeleteCompanyContactQueryOptions = <
+	TData = Awaited<ReturnType<typeof deleteCompanyContact>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	contactId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof deleteCompanyContact>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getDeleteCompanyContactQueryKey(contactId);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof deleteCompanyContact>>> = ({ signal }) =>
+		deleteCompanyContact(contactId, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: contactId !== null && contactId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof deleteCompanyContact>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type DeleteCompanyContactQueryResult = NonNullable<
+	Awaited<ReturnType<typeof deleteCompanyContact>>
+>;
+export type DeleteCompanyContactQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useDeleteCompanyContact<
+	TData = Awaited<ReturnType<typeof deleteCompanyContact>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	contactId: string,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof deleteCompanyContact>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof deleteCompanyContact>>,
+					TError,
+					Awaited<ReturnType<typeof deleteCompanyContact>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useDeleteCompanyContact<
+	TData = Awaited<ReturnType<typeof deleteCompanyContact>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	contactId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof deleteCompanyContact>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof deleteCompanyContact>>,
+					TError,
+					Awaited<ReturnType<typeof deleteCompanyContact>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useDeleteCompanyContact<
+	TData = Awaited<ReturnType<typeof deleteCompanyContact>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	contactId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof deleteCompanyContact>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Delete contact
+ */
+
+export function useDeleteCompanyContact<
+	TData = Awaited<ReturnType<typeof deleteCompanyContact>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	contactId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof deleteCompanyContact>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getDeleteCompanyContactQueryOptions(contactId, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}

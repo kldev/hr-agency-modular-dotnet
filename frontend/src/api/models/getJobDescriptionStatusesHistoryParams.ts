@@ -13,9 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationRole } from "./organizationRole";
 
-export type GetApiSuggestionUsersParams = {
-	search?: string;
-	roles: OrganizationRole[];
+export type GetJobDescriptionStatusesHistoryParams = {
+	jobDescriptionId?: string;
 };

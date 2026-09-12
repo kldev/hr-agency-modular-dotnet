@@ -14,7 +14,7 @@
  * OpenAPI spec version: v1
  */
 
-export type GetApiSuggestionCompanyContactsParams = {
-	search?: string;
-	companyId?: string;
-};
+export interface CompanyContactDeleted {
+	contactId: string;
+	deletedAt: string;
+}

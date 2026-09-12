@@ -3,13 +3,13 @@ using HrAgencySystem.Api.Common;
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Documents;
 
-namespace HrAgencySystem.Api.Endpoints.CompanyContacts.Maps;
+namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
-internal static class MapGetAll
+internal static class MapGetContacts
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("{companyId:guid}", Handler)
+        group.MapGet("{companyId:guid}/contacts", Handler)
             .WithSummary("Get contacts")
             .WithName("Get company contacts")
             .Produces<IReadOnlyList<CompanyContact>>()

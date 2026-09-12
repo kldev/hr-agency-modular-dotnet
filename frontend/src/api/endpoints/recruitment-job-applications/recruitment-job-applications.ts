@@ -35,7 +35,7 @@ import type {
 	BadRequestDetails,
 	ChangeJobApplicationStatusRequest,
 	CreateNoteRequest,
-	GetApiRecruitmentJobApplicationsParams,
+	GetJobApplicationsSliceParams,
 	JobApplicationNoteAdded,
 	JobApplicationNoteDeleted,
 	JobApplicationProjection,
@@ -69,7 +69,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 /**
  * @summary Get application
  */
-export const getApiRecruitmentJobApplicationsJobApplicationId = (
+export const getJobApplication = (
 	jobApplicationId: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -80,27 +80,26 @@ export const getApiRecruitmentJobApplicationsJobApplicationId = (
 	);
 };
 
-export const getGetApiRecruitmentJobApplicationsJobApplicationIdMutationKey = () =>
-	["getApiRecruitmentJobApplicationsJobApplicationId"] as const;
+export const getGetJobApplicationMutationKey = () => ["getJobApplication"] as const;
 
-export const getGetApiRecruitmentJobApplicationsJobApplicationIdMutationOptions = <
+export const getGetJobApplicationMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationId>>,
+		Awaited<ReturnType<typeof getJobApplication>>,
 		TError,
-		GetApiRecruitmentJobApplicationsJobApplicationIdMutationVariables,
+		GetJobApplicationMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationId>>,
+	Awaited<ReturnType<typeof getJobApplication>>,
 	TError,
-	GetApiRecruitmentJobApplicationsJobApplicationIdMutationVariables,
+	GetJobApplicationMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiRecruitmentJobApplicationsJobApplicationIdMutationKey();
+	const mutationKey = getGetJobApplicationMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -108,61 +107,54 @@ export const getGetApiRecruitmentJobApplicationsJobApplicationIdMutationOptions 
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationId>>,
-		GetApiRecruitmentJobApplicationsJobApplicationIdMutationVariables
+		Awaited<ReturnType<typeof getJobApplication>>,
+		GetJobApplicationMutationVariables
 	> = (props) => {
 		const { jobApplicationId } = props ?? {};
 
-		return getApiRecruitmentJobApplicationsJobApplicationId(jobApplicationId, requestOptions);
+		return getJobApplication(jobApplicationId, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiRecruitmentJobApplicationsJobApplicationIdMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationId>>
+export type GetJobApplicationMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getJobApplication>>
 >;
 
-export type GetApiRecruitmentJobApplicationsJobApplicationIdMutationError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
-export type GetApiRecruitmentJobApplicationsJobApplicationIdMutationVariables = {
-	jobApplicationId: string;
-};
+export type GetJobApplicationMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetJobApplicationMutationVariables = { jobApplicationId: string };
 
 /**
  * @summary Get application
  */
-export const useGetApiRecruitmentJobApplicationsJobApplicationId = <
+export const useGetJobApplication = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationId>>,
+			Awaited<ReturnType<typeof getJobApplication>>,
 			TError,
-			GetApiRecruitmentJobApplicationsJobApplicationIdMutationVariables,
+			GetJobApplicationMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationId>>,
+	Awaited<ReturnType<typeof getJobApplication>>,
 	TError,
-	GetApiRecruitmentJobApplicationsJobApplicationIdMutationVariables,
+	GetJobApplicationMutationVariables,
 	TContext
 > => {
-	return useMutation(
-		getGetApiRecruitmentJobApplicationsJobApplicationIdMutationOptions(options),
-		queryClient,
-	);
+	return useMutation(getGetJobApplicationMutationOptions(options), queryClient);
 };
 /**
  * @summary Get applications
  */
-export const getApiRecruitmentJobApplications = (
-	params?: GetApiRecruitmentJobApplicationsParams,
+export const getJobApplicationsSlice = (
+	params?: GetJobApplicationsSliceParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -172,27 +164,26 @@ export const getApiRecruitmentJobApplications = (
 	);
 };
 
-export const getGetApiRecruitmentJobApplicationsMutationKey = () =>
-	["getApiRecruitmentJobApplications"] as const;
+export const getGetJobApplicationsSliceMutationKey = () => ["getJobApplicationsSlice"] as const;
 
-export const getGetApiRecruitmentJobApplicationsMutationOptions = <
+export const getGetJobApplicationsSliceMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiRecruitmentJobApplications>>,
+		Awaited<ReturnType<typeof getJobApplicationsSlice>>,
 		TError,
-		GetApiRecruitmentJobApplicationsMutationVariables,
+		GetJobApplicationsSliceMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplications>>,
+	Awaited<ReturnType<typeof getJobApplicationsSlice>>,
 	TError,
-	GetApiRecruitmentJobApplicationsMutationVariables,
+	GetJobApplicationsSliceMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiRecruitmentJobApplicationsMutationKey();
+	const mutationKey = getGetJobApplicationsSliceMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -200,57 +191,53 @@ export const getGetApiRecruitmentJobApplicationsMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiRecruitmentJobApplications>>,
-		GetApiRecruitmentJobApplicationsMutationVariables
+		Awaited<ReturnType<typeof getJobApplicationsSlice>>,
+		GetJobApplicationsSliceMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiRecruitmentJobApplications(params, requestOptions);
+		return getJobApplicationsSlice(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiRecruitmentJobApplicationsMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplications>>
+export type GetJobApplicationsSliceMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getJobApplicationsSlice>>
 >;
 
-export type GetApiRecruitmentJobApplicationsMutationError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
-export type GetApiRecruitmentJobApplicationsMutationVariables = {
-	params?: GetApiRecruitmentJobApplicationsParams;
-};
+export type GetJobApplicationsSliceMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetJobApplicationsSliceMutationVariables = { params?: GetJobApplicationsSliceParams };
 
 /**
  * @summary Get applications
  */
-export const useGetApiRecruitmentJobApplications = <
+export const useGetJobApplicationsSlice = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiRecruitmentJobApplications>>,
+			Awaited<ReturnType<typeof getJobApplicationsSlice>>,
 			TError,
-			GetApiRecruitmentJobApplicationsMutationVariables,
+			GetJobApplicationsSliceMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplications>>,
+	Awaited<ReturnType<typeof getJobApplicationsSlice>>,
 	TError,
-	GetApiRecruitmentJobApplicationsMutationVariables,
+	GetJobApplicationsSliceMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiRecruitmentJobApplicationsMutationOptions(options), queryClient);
+	return useMutation(getGetJobApplicationsSliceMutationOptions(options), queryClient);
 };
 /**
  * @summary Tag application
  */
-export const putApiRecruitmentJobApplicationsApplicationIdTag = (
+export const tagJobApplication = (
 	applicationId: string,
 	tagRequest: BodyType<TagRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -268,84 +255,60 @@ export const putApiRecruitmentJobApplicationsApplicationIdTag = (
 	);
 };
 
-export const getPutApiRecruitmentJobApplicationsApplicationIdTagQueryKey = (
+export const getTagJobApplicationQueryKey = (
 	applicationId: string,
 	tagRequest?: BodyType<TagRequest>,
 ) => {
 	return ["PUT", `/api/recruitment/job-applications/${applicationId}/tag`, tagRequest] as const;
 };
 
-export const getPutApiRecruitmentJobApplicationsApplicationIdTagQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
+export const getTagJobApplicationQueryOptions = <
+	TData = Awaited<ReturnType<typeof tagJobApplication>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagRequest: BodyType<TagRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
-				TError,
-				TData
-			>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof tagJobApplication>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getPutApiRecruitmentJobApplicationsApplicationIdTagQueryKey(applicationId, tagRequest);
+		queryOptions?.queryKey ?? getTagJobApplicationQueryKey(applicationId, tagRequest);
 
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>
-	> = ({ signal }) =>
-		putApiRecruitmentJobApplicationsApplicationIdTag(
-			applicationId,
-			tagRequest,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof tagJobApplication>>> = ({ signal }) =>
+		tagJobApplication(applicationId, tagRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: applicationId !== null && applicationId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof tagJobApplication>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiRecruitmentJobApplicationsApplicationIdTagQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>
+export type TagJobApplicationQueryResult = NonNullable<
+	Awaited<ReturnType<typeof tagJobApplication>>
 >;
-export type PutApiRecruitmentJobApplicationsApplicationIdTagQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type TagJobApplicationQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
+export function useTagJobApplication<
+	TData = Awaited<ReturnType<typeof tagJobApplication>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagRequest: BodyType<TagRequest>,
 	options: {
-		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
-				TError,
-				TData
-			>
-		> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof tagJobApplication>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
+					Awaited<ReturnType<typeof tagJobApplication>>,
 					TError,
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>
+					Awaited<ReturnType<typeof tagJobApplication>>
 				>,
 				"initialData"
 			>;
@@ -353,25 +316,19 @@ export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
+export function useTagJobApplication<
+	TData = Awaited<ReturnType<typeof tagJobApplication>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagRequest: BodyType<TagRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
-				TError,
-				TData
-			>
-		> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof tagJobApplication>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
+					Awaited<ReturnType<typeof tagJobApplication>>,
 					TError,
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>
+					Awaited<ReturnType<typeof tagJobApplication>>
 				>,
 				"initialData"
 			>;
@@ -379,20 +336,14 @@ export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
+export function useTagJobApplication<
+	TData = Awaited<ReturnType<typeof tagJobApplication>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagRequest: BodyType<TagRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
-				TError,
-				TData
-			>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof tagJobApplication>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -401,29 +352,19 @@ export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
  * @summary Tag application
  */
 
-export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
+export function useTagJobApplication<
+	TData = Awaited<ReturnType<typeof tagJobApplication>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagRequest: BodyType<TagRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsApplicationIdTag>>,
-				TError,
-				TData
-			>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof tagJobApplication>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiRecruitmentJobApplicationsApplicationIdTagQueryOptions(
-		applicationId,
-		tagRequest,
-		options,
-	);
+	const queryOptions = getTagJobApplicationQueryOptions(applicationId, tagRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -435,7 +376,7 @@ export function usePutApiRecruitmentJobApplicationsApplicationIdTag<
 /**
  * @summary Remove tag
  */
-export const deleteApiRecruitmentJobApplicationsApplicationIdTagTagId = (
+export const removeJobApplicationTag = (
 	applicationId: string,
 	tagId: string,
 	options?: SecondParameter<typeof customInstance>,
@@ -451,26 +392,19 @@ export const deleteApiRecruitmentJobApplicationsApplicationIdTagTagId = (
 	);
 };
 
-export const getDeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryKey = (
-	applicationId: string,
-	tagId: string,
-) => {
+export const getRemoveJobApplicationTagQueryKey = (applicationId: string, tagId: string) => {
 	return ["DELETE", `/api/recruitment/job-applications/${applicationId}/tag/${tagId}`] as const;
 };
 
-export const getDeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryOptions = <
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
+export const getRemoveJobApplicationTagQueryOptions = <
+	TData = Awaited<ReturnType<typeof removeJobApplicationTag>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof removeJobApplicationTag>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -478,18 +412,11 @@ export const getDeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryOpt
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getDeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryKey(applicationId, tagId);
+		queryOptions?.queryKey ?? getRemoveJobApplicationTagQueryKey(applicationId, tagId);
 
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>
-	> = ({ signal }) =>
-		deleteApiRecruitmentJobApplicationsApplicationIdTagTagId(
-			applicationId,
-			tagId,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof removeJobApplicationTag>>> = ({
+		signal,
+	}) => removeJobApplicationTag(applicationId, tagId, requestOptions, signal);
 
 	return {
 		queryKey,
@@ -500,39 +427,31 @@ export const getDeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryOpt
 			tagId !== null &&
 			tagId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof removeJobApplicationTag>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type DeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryResult = NonNullable<
-	Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>
+export type RemoveJobApplicationTagQueryResult = NonNullable<
+	Awaited<ReturnType<typeof removeJobApplicationTag>>
 >;
-export type DeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type RemoveJobApplicationTagQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
+export function useRemoveJobApplicationTag<
+	TData = Awaited<ReturnType<typeof removeJobApplicationTag>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagId: string,
 	options: {
 		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof removeJobApplicationTag>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
+					Awaited<ReturnType<typeof removeJobApplicationTag>>,
 					TError,
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>
+					Awaited<ReturnType<typeof removeJobApplicationTag>>
 				>,
 				"initialData"
 			>;
@@ -540,25 +459,21 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
+export function useRemoveJobApplicationTag<
+	TData = Awaited<ReturnType<typeof removeJobApplicationTag>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof removeJobApplicationTag>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
+					Awaited<ReturnType<typeof removeJobApplicationTag>>,
 					TError,
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>
+					Awaited<ReturnType<typeof removeJobApplicationTag>>
 				>,
 				"initialData"
 			>;
@@ -566,19 +481,15 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
+export function useRemoveJobApplicationTag<
+	TData = Awaited<ReturnType<typeof removeJobApplicationTag>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof removeJobApplicationTag>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -588,29 +499,21 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
  * @summary Remove tag
  */
 
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
+export function useRemoveJobApplicationTag<
+	TData = Awaited<ReturnType<typeof removeJobApplicationTag>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	tagId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdTagTagId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof removeJobApplicationTag>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getDeleteApiRecruitmentJobApplicationsApplicationIdTagTagIdQueryOptions(
-		applicationId,
-		tagId,
-		options,
-	);
+	const queryOptions = getRemoveJobApplicationTagQueryOptions(applicationId, tagId, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -622,7 +525,7 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdTagTagId<
 /**
  * @summary Change status
  */
-export const putApiRecruitmentJobApplicationsJobApplicationIdStatus = (
+export const changeJobApplicationStatus = (
 	jobApplicationId: string,
 	changeJobApplicationStatusRequest: BodyType<ChangeJobApplicationStatusRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -640,7 +543,7 @@ export const putApiRecruitmentJobApplicationsJobApplicationIdStatus = (
 	);
 };
 
-export const getPutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryKey = (
+export const getChangeJobApplicationStatusQueryKey = (
 	jobApplicationId: string,
 	changeJobApplicationStatusRequest?: BodyType<ChangeJobApplicationStatusRequest>,
 ) => {
@@ -651,19 +554,15 @@ export const getPutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryKey =
 	] as const;
 };
 
-export const getPutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
+export const getChangeJobApplicationStatusQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeJobApplicationStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobApplicationId: string,
 	changeJobApplicationStatusRequest: BodyType<ChangeJobApplicationStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeJobApplicationStatus>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -672,15 +571,12 @@ export const getPutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryOptio
 
 	const queryKey =
 		queryOptions?.queryKey ??
-		getPutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryKey(
-			jobApplicationId,
-			changeJobApplicationStatusRequest,
-		);
+		getChangeJobApplicationStatusQueryKey(jobApplicationId, changeJobApplicationStatusRequest);
 
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>
-	> = ({ signal }) =>
-		putApiRecruitmentJobApplicationsJobApplicationIdStatus(
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeJobApplicationStatus>>> = ({
+		signal,
+	}) =>
+		changeJobApplicationStatus(
 			jobApplicationId,
 			changeJobApplicationStatusRequest,
 			requestOptions,
@@ -692,39 +588,31 @@ export const getPutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryOptio
 		queryFn,
 		enabled: jobApplicationId !== null && jobApplicationId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof changeJobApplicationStatus>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>
+export type ChangeJobApplicationStatusQueryResult = NonNullable<
+	Awaited<ReturnType<typeof changeJobApplicationStatus>>
 >;
-export type PutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type ChangeJobApplicationStatusQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
+export function useChangeJobApplicationStatus<
+	TData = Awaited<ReturnType<typeof changeJobApplicationStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobApplicationId: string,
 	changeJobApplicationStatusRequest: BodyType<ChangeJobApplicationStatusRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeJobApplicationStatus>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
+					Awaited<ReturnType<typeof changeJobApplicationStatus>>,
 					TError,
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>
+					Awaited<ReturnType<typeof changeJobApplicationStatus>>
 				>,
 				"initialData"
 			>;
@@ -732,25 +620,21 @@ export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
+export function useChangeJobApplicationStatus<
+	TData = Awaited<ReturnType<typeof changeJobApplicationStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobApplicationId: string,
 	changeJobApplicationStatusRequest: BodyType<ChangeJobApplicationStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeJobApplicationStatus>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
+					Awaited<ReturnType<typeof changeJobApplicationStatus>>,
 					TError,
-					Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>
+					Awaited<ReturnType<typeof changeJobApplicationStatus>>
 				>,
 				"initialData"
 			>;
@@ -758,19 +642,15 @@ export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
+export function useChangeJobApplicationStatus<
+	TData = Awaited<ReturnType<typeof changeJobApplicationStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobApplicationId: string,
 	changeJobApplicationStatusRequest: BodyType<ChangeJobApplicationStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeJobApplicationStatus>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -780,25 +660,21 @@ export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
  * @summary Change status
  */
 
-export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
-	TData = Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
+export function useChangeJobApplicationStatus<
+	TData = Awaited<ReturnType<typeof changeJobApplicationStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobApplicationId: string,
 	changeJobApplicationStatusRequest: BodyType<ChangeJobApplicationStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiRecruitmentJobApplicationsJobApplicationIdStatus>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeJobApplicationStatus>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiRecruitmentJobApplicationsJobApplicationIdStatusQueryOptions(
+	const queryOptions = getChangeJobApplicationStatusQueryOptions(
 		jobApplicationId,
 		changeJobApplicationStatusRequest,
 		options,
@@ -814,7 +690,7 @@ export function usePutApiRecruitmentJobApplicationsJobApplicationIdStatus<
 /**
  * @summary Get notes
  */
-export const getApiRecruitmentJobApplicationsJobApplicationIdNotes = (
+export const getJobApplicationNotes = (
 	jobApplicationId: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -825,27 +701,26 @@ export const getApiRecruitmentJobApplicationsJobApplicationIdNotes = (
 	);
 };
 
-export const getGetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationKey = () =>
-	["getApiRecruitmentJobApplicationsJobApplicationIdNotes"] as const;
+export const getGetJobApplicationNotesMutationKey = () => ["getJobApplicationNotes"] as const;
 
-export const getGetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationOptions = <
+export const getGetJobApplicationNotesMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationIdNotes>>,
+		Awaited<ReturnType<typeof getJobApplicationNotes>>,
 		TError,
-		GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationVariables,
+		GetJobApplicationNotesMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationIdNotes>>,
+	Awaited<ReturnType<typeof getJobApplicationNotes>>,
 	TError,
-	GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationVariables,
+	GetJobApplicationNotesMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationKey();
+	const mutationKey = getGetJobApplicationNotesMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -853,60 +728,53 @@ export const getGetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationOpt
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationIdNotes>>,
-		GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationVariables
+		Awaited<ReturnType<typeof getJobApplicationNotes>>,
+		GetJobApplicationNotesMutationVariables
 	> = (props) => {
 		const { jobApplicationId } = props ?? {};
 
-		return getApiRecruitmentJobApplicationsJobApplicationIdNotes(jobApplicationId, requestOptions);
+		return getJobApplicationNotes(jobApplicationId, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationIdNotes>>
+export type GetJobApplicationNotesMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getJobApplicationNotes>>
 >;
 
-export type GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
-export type GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationVariables = {
-	jobApplicationId: string;
-};
+export type GetJobApplicationNotesMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetJobApplicationNotesMutationVariables = { jobApplicationId: string };
 
 /**
  * @summary Get notes
  */
-export const useGetApiRecruitmentJobApplicationsJobApplicationIdNotes = <
+export const useGetJobApplicationNotes = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationIdNotes>>,
+			Awaited<ReturnType<typeof getJobApplicationNotes>>,
 			TError,
-			GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationVariables,
+			GetJobApplicationNotesMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiRecruitmentJobApplicationsJobApplicationIdNotes>>,
+	Awaited<ReturnType<typeof getJobApplicationNotes>>,
 	TError,
-	GetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationVariables,
+	GetJobApplicationNotesMutationVariables,
 	TContext
 > => {
-	return useMutation(
-		getGetApiRecruitmentJobApplicationsJobApplicationIdNotesMutationOptions(options),
-		queryClient,
-	);
+	return useMutation(getGetJobApplicationNotesMutationOptions(options), queryClient);
 };
 /**
  * @summary Delete note
  */
-export const deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId = (
+export const deleteJobApplicationNote = (
 	applicationId: string,
 	noteId: string,
 	options?: SecondParameter<typeof customInstance>,
@@ -922,26 +790,19 @@ export const deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId = (
 	);
 };
 
-export const getDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryKey = (
-	applicationId: string,
-	noteId: string,
-) => {
+export const getDeleteJobApplicationNoteQueryKey = (applicationId: string, noteId: string) => {
 	return ["DELETE", `/api/recruitment/job-applications/${applicationId}/note/${noteId}`] as const;
 };
 
-export const getDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryOptions = <
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
+export const getDeleteJobApplicationNoteQueryOptions = <
+	TData = Awaited<ReturnType<typeof deleteJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	noteId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof deleteJobApplicationNote>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -949,18 +810,11 @@ export const getDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryO
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryKey(applicationId, noteId);
+		queryOptions?.queryKey ?? getDeleteJobApplicationNoteQueryKey(applicationId, noteId);
 
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>
-	> = ({ signal }) =>
-		deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId(
-			applicationId,
-			noteId,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof deleteJobApplicationNote>>> = ({
+		signal,
+	}) => deleteJobApplicationNote(applicationId, noteId, requestOptions, signal);
 
 	return {
 		queryKey,
@@ -971,39 +825,31 @@ export const getDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryO
 			noteId !== null &&
 			noteId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof deleteJobApplicationNote>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type DeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryResult = NonNullable<
-	Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>
+export type DeleteJobApplicationNoteQueryResult = NonNullable<
+	Awaited<ReturnType<typeof deleteJobApplicationNote>>
 >;
-export type DeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type DeleteJobApplicationNoteQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
+export function useDeleteJobApplicationNote<
+	TData = Awaited<ReturnType<typeof deleteJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	noteId: string,
 	options: {
 		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof deleteJobApplicationNote>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
+					Awaited<ReturnType<typeof deleteJobApplicationNote>>,
 					TError,
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>
+					Awaited<ReturnType<typeof deleteJobApplicationNote>>
 				>,
 				"initialData"
 			>;
@@ -1011,25 +857,21 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
+export function useDeleteJobApplicationNote<
+	TData = Awaited<ReturnType<typeof deleteJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	noteId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof deleteJobApplicationNote>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
+					Awaited<ReturnType<typeof deleteJobApplicationNote>>,
 					TError,
-					Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>
+					Awaited<ReturnType<typeof deleteJobApplicationNote>>
 				>,
 				"initialData"
 			>;
@@ -1037,19 +879,15 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
+export function useDeleteJobApplicationNote<
+	TData = Awaited<ReturnType<typeof deleteJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	noteId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof deleteJobApplicationNote>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -1059,29 +897,21 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
  * @summary Delete note
  */
 
-export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
-	TData = Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
+export function useDeleteJobApplicationNote<
+	TData = Awaited<ReturnType<typeof deleteJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	noteId: string,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof deleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof deleteJobApplicationNote>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteIdQueryOptions(
-		applicationId,
-		noteId,
-		options,
-	);
+	const queryOptions = getDeleteJobApplicationNoteQueryOptions(applicationId, noteId, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -1093,7 +923,7 @@ export function useDeleteApiRecruitmentJobApplicationsApplicationIdNoteNoteId<
 /**
  * @summary Add note
  */
-export const postApiRecruitmentJobApplicationsApplicationIdNote = (
+export const addJobApplicationNote = (
 	applicationId: string,
 	createNoteRequest: BodyType<CreateNoteRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -1111,7 +941,7 @@ export const postApiRecruitmentJobApplicationsApplicationIdNote = (
 	);
 };
 
-export const getPostApiRecruitmentJobApplicationsApplicationIdNoteQueryKey = (
+export const getAddJobApplicationNoteQueryKey = (
 	applicationId: string,
 	createNoteRequest?: BodyType<CreateNoteRequest>,
 ) => {
@@ -1122,19 +952,15 @@ export const getPostApiRecruitmentJobApplicationsApplicationIdNoteQueryKey = (
 	] as const;
 };
 
-export const getPostApiRecruitmentJobApplicationsApplicationIdNoteQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
+export const getAddJobApplicationNoteQueryOptions = <
+	TData = Awaited<ReturnType<typeof addJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	createNoteRequest: BodyType<CreateNoteRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof addJobApplicationNote>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -1142,57 +968,41 @@ export const getPostApiRecruitmentJobApplicationsApplicationIdNoteQueryOptions =
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getPostApiRecruitmentJobApplicationsApplicationIdNoteQueryKey(applicationId, createNoteRequest);
+		queryOptions?.queryKey ?? getAddJobApplicationNoteQueryKey(applicationId, createNoteRequest);
 
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>
-	> = ({ signal }) =>
-		postApiRecruitmentJobApplicationsApplicationIdNote(
-			applicationId,
-			createNoteRequest,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof addJobApplicationNote>>> = ({ signal }) =>
+		addJobApplicationNote(applicationId, createNoteRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: applicationId !== null && applicationId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof addJobApplicationNote>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PostApiRecruitmentJobApplicationsApplicationIdNoteQueryResult = NonNullable<
-	Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>
+export type AddJobApplicationNoteQueryResult = NonNullable<
+	Awaited<ReturnType<typeof addJobApplicationNote>>
 >;
-export type PostApiRecruitmentJobApplicationsApplicationIdNoteQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type AddJobApplicationNoteQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiRecruitmentJobApplicationsApplicationIdNote<
-	TData = Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
+export function useAddJobApplicationNote<
+	TData = Awaited<ReturnType<typeof addJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	createNoteRequest: BodyType<CreateNoteRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof addJobApplicationNote>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
+					Awaited<ReturnType<typeof addJobApplicationNote>>,
 					TError,
-					Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>
+					Awaited<ReturnType<typeof addJobApplicationNote>>
 				>,
 				"initialData"
 			>;
@@ -1200,25 +1010,21 @@ export function usePostApiRecruitmentJobApplicationsApplicationIdNote<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiRecruitmentJobApplicationsApplicationIdNote<
-	TData = Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
+export function useAddJobApplicationNote<
+	TData = Awaited<ReturnType<typeof addJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	createNoteRequest: BodyType<CreateNoteRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof addJobApplicationNote>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
+					Awaited<ReturnType<typeof addJobApplicationNote>>,
 					TError,
-					Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>
+					Awaited<ReturnType<typeof addJobApplicationNote>>
 				>,
 				"initialData"
 			>;
@@ -1226,19 +1032,15 @@ export function usePostApiRecruitmentJobApplicationsApplicationIdNote<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiRecruitmentJobApplicationsApplicationIdNote<
-	TData = Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
+export function useAddJobApplicationNote<
+	TData = Awaited<ReturnType<typeof addJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	createNoteRequest: BodyType<CreateNoteRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof addJobApplicationNote>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -1248,25 +1050,21 @@ export function usePostApiRecruitmentJobApplicationsApplicationIdNote<
  * @summary Add note
  */
 
-export function usePostApiRecruitmentJobApplicationsApplicationIdNote<
-	TData = Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
+export function useAddJobApplicationNote<
+	TData = Awaited<ReturnType<typeof addJobApplicationNote>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	applicationId: string,
 	createNoteRequest: BodyType<CreateNoteRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof postApiRecruitmentJobApplicationsApplicationIdNote>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof addJobApplicationNote>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiRecruitmentJobApplicationsApplicationIdNoteQueryOptions(
+	const queryOptions = getAddJobApplicationNoteQueryOptions(
 		applicationId,
 		createNoteRequest,
 		options,

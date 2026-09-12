@@ -13,7 +13,8 @@ internal static class MapUpdateStatus
         group.MapPut("/api/job-description/{jobDescriptionId:guid}/{status}", Handler)
             .Produces<UpdateJobDescriptionStatusResult>()
             .ProducesStandardErrors()
-            .WithSummary("Update status");
+            .WithSummary("Update status")
+            .WithName("Update job description status");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobDescriptionId, JobDescriptionStatus status,

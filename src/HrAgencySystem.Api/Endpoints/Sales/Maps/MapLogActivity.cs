@@ -13,6 +13,7 @@ internal static class MapLogActivity
     {
         group.MapPost("/activity", Handler)
             .WithSummary("Log activity")
+            .WithName("Log sales activity")
             .Produces<ActivityCreated>()
             .ProducesStandardErrors();
     }

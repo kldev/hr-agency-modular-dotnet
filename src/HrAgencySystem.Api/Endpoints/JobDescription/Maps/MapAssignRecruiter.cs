@@ -14,7 +14,8 @@ internal static class MapAssignRecruiter
         group.MapPut("/api/job-description/{jobDescriptionId:guid}/assign-recruiter", Handler)
             .Produces<JobDescriptionRecruiterAssigned>()
             .ProducesStandardErrors()
-            .WithSummary("Assign recruiter");
+            .WithSummary("Assign recruiter")
+            .WithName("Assign job description recruiter");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobDescriptionId, AssignRecruiterRequest request,

@@ -13,6 +13,7 @@ internal static class MapGetNotes
         // GET /api/recruitment/job-applications/{id}/notes
         group.MapGet("{jobApplicationId:guid}/notes", Handler).WithSummary("Get notes")
             .Produces<IReadOnlyList<ApplicationNoteItem>>()
+            .WithName("Get job application notes")
             .ProducesStandardErrors();
     }
 

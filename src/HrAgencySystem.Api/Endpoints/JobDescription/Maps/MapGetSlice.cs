@@ -14,7 +14,8 @@ internal static class MapGetSlice
         group.MapGet("/api/job-description", Handler)
             .ProducesStandardErrors()
             .Produces<SliceResponse<JobDescriptionProjection>>()
-            .WithSummary("Get job descriptions");
+            .WithSummary("Get job descriptions")
+            .WithName("Get job descriptions slice");
     }
 
     private static async Task<IResult> Handler(IJobDescriptionQueryRepository repository,

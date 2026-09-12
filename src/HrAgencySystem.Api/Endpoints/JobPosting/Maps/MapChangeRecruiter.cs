@@ -14,6 +14,7 @@ internal static class MapChangeRecruiter
         // PUT /api/recruitment/job-posting/{jobPostId:guid}/change-recruiter
         group.MapPut("/{jobPostId:guid}/change-recruiter", Handler)
             .WithSummary("Change recruiter")
+            .WithName("Change job post responsible recruiter")
             .Produces<JobPostRecruiterChanged>()
             .ProducesStandardErrors();
     }

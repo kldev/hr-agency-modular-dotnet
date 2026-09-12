@@ -32,6 +32,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
 	BadRequestDetails,
+	CompanyContact,
 	CompanyCreated,
 	CompanyProjection,
 	CompanyUpdated,
@@ -569,4 +570,88 @@ export const useGetCompanyByTax = <
 	TContext
 > => {
 	return useMutation(getGetCompanyByTaxMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get contacts
+ */
+export const getCompanyContacts = (
+	companyId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<CompanyContact[]>(
+		{ url: `/api/companies/${companyId}/contacts`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetCompanyContactsMutationKey = () => ["getCompanyContacts"] as const;
+
+export const getGetCompanyContactsMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getCompanyContacts>>,
+		TError,
+		GetCompanyContactsMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getCompanyContacts>>,
+	TError,
+	GetCompanyContactsMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetCompanyContactsMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getCompanyContacts>>,
+		GetCompanyContactsMutationVariables
+	> = (props) => {
+		const { companyId } = props ?? {};
+
+		return getCompanyContacts(companyId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetCompanyContactsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getCompanyContacts>>
+>;
+
+export type GetCompanyContactsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCompanyContactsMutationVariables = { companyId: string };
+
+/**
+ * @summary Get contacts
+ */
+export const useGetCompanyContacts = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getCompanyContacts>>,
+			TError,
+			GetCompanyContactsMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getCompanyContacts>>,
+	TError,
+	GetCompanyContactsMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetCompanyContactsMutationOptions(options), queryClient);
 };

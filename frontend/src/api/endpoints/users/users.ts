@@ -61,7 +61,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 /**
  * @summary Create user
  */
-export const postApiUsers = (
+export const createUser = (
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -78,49 +78,49 @@ export const postApiUsers = (
 	);
 };
 
-export const getPostApiUsersQueryKey = (createUserRequest?: BodyType<CreateUserRequest>) => {
+export const getCreateUserQueryKey = (createUserRequest?: BodyType<CreateUserRequest>) => {
 	return ["POST", `/api/users`, createUserRequest] as const;
 };
 
-export const getPostApiUsersQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiUsers>>,
+export const getCreateUserQueryOptions = <
+	TData = Awaited<ReturnType<typeof createUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiUsers>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createUser>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getPostApiUsersQueryKey(createUserRequest);
+	const queryKey = queryOptions?.queryKey ?? getCreateUserQueryKey(createUserRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiUsers>>> = ({ signal }) =>
-		postApiUsers(createUserRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof createUser>>> = ({ signal }) =>
+		createUser(createUserRequest, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiUsers>>,
+		Awaited<ReturnType<typeof createUser>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiUsersQueryResult = NonNullable<Awaited<ReturnType<typeof postApiUsers>>>;
-export type PostApiUsersQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type CreateUserQueryResult = NonNullable<Awaited<ReturnType<typeof createUser>>>;
+export type CreateUserQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiUsers<
-	TData = Awaited<ReturnType<typeof postApiUsers>>,
+export function useCreateUser<
+	TData = Awaited<ReturnType<typeof createUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options: {
-		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiUsers>>, TError, TData>> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof createUser>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiUsers>>,
+					Awaited<ReturnType<typeof createUser>>,
 					TError,
-					Awaited<ReturnType<typeof postApiUsers>>
+					Awaited<ReturnType<typeof createUser>>
 				>,
 				"initialData"
 			>;
@@ -128,18 +128,18 @@ export function usePostApiUsers<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiUsers<
-	TData = Awaited<ReturnType<typeof postApiUsers>>,
+export function useCreateUser<
+	TData = Awaited<ReturnType<typeof createUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiUsers>>, TError, TData>> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createUser>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiUsers>>,
+					Awaited<ReturnType<typeof createUser>>,
 					TError,
-					Awaited<ReturnType<typeof postApiUsers>>
+					Awaited<ReturnType<typeof createUser>>
 				>,
 				"initialData"
 			>;
@@ -147,13 +147,13 @@ export function usePostApiUsers<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiUsers<
-	TData = Awaited<ReturnType<typeof postApiUsers>>,
+export function useCreateUser<
+	TData = Awaited<ReturnType<typeof createUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiUsers>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createUser>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -162,18 +162,18 @@ export function usePostApiUsers<
  * @summary Create user
  */
 
-export function usePostApiUsers<
-	TData = Awaited<ReturnType<typeof postApiUsers>>,
+export function useCreateUser<
+	TData = Awaited<ReturnType<typeof createUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserRequest: BodyType<CreateUserRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiUsers>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createUser>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiUsersQueryOptions(createUserRequest, options);
+	const queryOptions = getCreateUserQueryOptions(createUserRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;

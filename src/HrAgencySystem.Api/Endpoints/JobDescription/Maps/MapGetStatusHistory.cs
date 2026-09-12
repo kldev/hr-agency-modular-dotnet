@@ -12,7 +12,8 @@ internal static class MapGetStatusHistory
         group.MapGet("/api/job-description/status", Handler)
             .Produces<IReadOnlyList<JdStatusChangeHistory>>()
             .ProducesStandardErrors()
-            .WithSummary("Get statuses history");
+            .WithSummary("Get statuses history")
+            .WithName("Get job-description statuses history");
     }
 
     private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user,

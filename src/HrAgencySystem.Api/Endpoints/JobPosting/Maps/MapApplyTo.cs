@@ -15,7 +15,8 @@ internal static class MapApplyTo
         group.MapPost("/{jobPostId:guid}/apply", Handler)
             .Produces<JobApplicationCreated>()
             .ProducesStandardErrors()
-            .WithSummary("Apply to job post");
+            .WithSummary("Apply to job post")
+            .WithName("Apply to job post");
     }
 
     private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, Guid jobPostId, ApplyToPostRequest request,

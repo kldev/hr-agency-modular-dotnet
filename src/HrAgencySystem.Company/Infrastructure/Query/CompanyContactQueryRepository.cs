@@ -13,6 +13,8 @@ public sealed class CompanyContactQueryRepository(IQuerySession session) : IComp
         return await session.Query<CompanyContact>()
             .WithOrganizationId(OrganizationId.From(organizationId))
             .WithCompanyId(CompanyId.From(companyId))
+            .OrderBy(z=>z.Contact.FirstName)
+            .ThenByDescending(z=>z.CreatedAt)
             .ToListAsync(ct);
     }
 

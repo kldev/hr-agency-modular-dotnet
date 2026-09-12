@@ -15,6 +15,7 @@ internal static class MapUpdate
         // PUT /api/recruitment/job-posting/{id}
         group.MapPut("{jobPostId}", Handler)
             .WithSummary("Update job post")
+            .WithName("Update job post")
             .Produces<JobPostUpdated>()
             .ProducesStandardErrors();
     }

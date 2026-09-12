@@ -6,9 +6,18 @@ type SaveChangesButtonProps = {
 	isPending: boolean;
 	form: string;
 	onClick?: () => void;
+	label?: string;
+	labelPending?: string;
 };
 
-export function SaveChangesButton({ wait, isPending, form, onClick }: SaveChangesButtonProps) {
+export function SaveChangesButton({
+	wait,
+	isPending,
+	form,
+	onClick,
+	label,
+	labelPending,
+}: SaveChangesButtonProps) {
 	return (
 		<Button
 			variant="primary"
@@ -19,7 +28,7 @@ export function SaveChangesButton({ wait, isPending, form, onClick }: SaveChange
 			form={form}
 			onClick={onClick}
 		>
-			{isPending ? "Saving..." : "Save changes"}
+			{isPending ? (labelPending ?? "Saving...") : (label ?? "Save changes")}
 		</Button>
 	);
 }

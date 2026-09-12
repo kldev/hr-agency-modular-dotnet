@@ -12,6 +12,7 @@ internal static class MapCompanyContacts
     {
         group.MapGet("/api/suggestion/company-contacts", Handler)
             .WithSummary("Get top 25 contacts")
+            .WithName("Get company-contacts suggestions")
             .Produces<IReadOnlyList<CompanyContact>>()
             .ProducesStandardErrors();
     }

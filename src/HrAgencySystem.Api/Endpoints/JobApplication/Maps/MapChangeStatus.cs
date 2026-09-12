@@ -15,6 +15,7 @@ internal static class MapChangeStatus
     {
         group.MapPut("{jobApplicationId}/status", Handler)
             .WithSummary("Change status")
+            .WithName("Change job application status")
             .Produces<JobApplicationStatusChanged>()
             .ProducesStandardErrors();
     }

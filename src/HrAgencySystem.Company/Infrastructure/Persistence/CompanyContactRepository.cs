@@ -19,6 +19,13 @@ public sealed class CompanyContactRepository(IDocumentSession session) : ICompan
         session.Update(contact);
         return Task.CompletedTask;
     }
+    
+    public Task Delete(CompanyContact contact)
+    {
+        session.Delete(contact);
+        return Task.CompletedTask;
+    }
+
 
     public async Task<CompanyContact?> GetById(Guid contactId, Guid organizationId, CancellationToken ct)
     {

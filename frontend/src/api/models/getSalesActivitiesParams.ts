@@ -13,13 +13,10 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { JobDescriptionStatus } from "./jobDescriptionStatus";
 
-export type GetApiJobDescriptionParams = {
-	search?: string;
+export type GetSalesActivitiesParams = {
+	opportunityId?: string;
 	companyId?: string;
-	recruiterId?: string;
-	status?: JobDescriptionStatus[];
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */

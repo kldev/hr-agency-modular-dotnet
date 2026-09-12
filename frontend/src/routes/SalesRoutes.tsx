@@ -40,6 +40,16 @@ const salesRoutes: RouteObject[] = [
 		path: ROUTES.SALES_OPPORTUNITIES,
 		Component: Stub,
 	},
+	{
+		path: ROUTES.COMPANIES_DETAILS,
+		lazy: async () => {
+			const { CompanyDetailsPage } = await import("@/features/companies/pages/CompanyDetailsPage");
+
+			return {
+				Component: CompanyDetailsPage,
+			};
+		},
+	},
 ];
 
 export { salesRoutes };

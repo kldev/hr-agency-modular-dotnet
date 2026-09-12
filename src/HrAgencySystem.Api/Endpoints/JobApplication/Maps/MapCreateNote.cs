@@ -13,6 +13,7 @@ internal static class MapCreateNote
         // /api/recruitment/job-applications/{applicationId}/{noteId}/note
         group.MapPost("{applicationId:guid}/note", Handler)
             .WithSummary("Add note")
+            .WithName("Add job application note")
             .Produces<JobApplicationNoteAdded>()
             .ProducesStandardErrors();
     }

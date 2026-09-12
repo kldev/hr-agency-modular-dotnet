@@ -15,6 +15,7 @@ internal static class MapGetSlice
         // GET /api/recruitment/job-posting
         group.MapGet("", Handler)
             .WithSummary("Get job posts")
+            .WithName("Get job posts slice")
             .Produces<SliceResponse<JobPostResponse>>()
             .ProducesStandardErrors();
     }

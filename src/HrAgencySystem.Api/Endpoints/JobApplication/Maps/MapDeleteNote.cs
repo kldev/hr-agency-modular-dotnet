@@ -13,6 +13,7 @@ internal static class MapDeleteNote
         // /api/recruitment/job-applications/{applicationId}/{noteId}/note
         group.MapDelete("{applicationId:guid}/note/{noteId:guid}", Handler)
             .WithSummary("Delete note")
+            .WithName("Delete job application note")
             .Produces<JobApplicationNoteDeleted>()
             .ProducesStandardErrors();
     }

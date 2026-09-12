@@ -3,6 +3,7 @@ export const ROUTES = {
 	FORGOT_PASSWORD: "/forgot-password",
 	DASHBOARD: "/",
 	COMPANIES: "/companies",
+	COMPANIES_DETAILS: "/companies/:id",
 	JOBS: "/jobs",
 	JOBS_ADD: "/jobs/add",
 	CANDIDATES: "/candidates",

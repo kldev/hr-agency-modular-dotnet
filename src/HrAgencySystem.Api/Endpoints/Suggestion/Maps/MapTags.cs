@@ -12,6 +12,7 @@ internal static class MapTags
         group.MapGet("/api/suggestion/tags", Handler)
             .Produces<IReadOnlyList<Tag>>()
             .WithSummary("Get tags (limit 25)")
+            .WithName("Get tags suggestions")
             .ProducesStandardErrors();
     }
     

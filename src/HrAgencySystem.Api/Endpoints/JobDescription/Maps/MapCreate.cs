@@ -14,7 +14,8 @@ internal static class MapCreate
         group.MapPost("/api/job-description", Handler)
             .Produces<JobDescriptionCreated>()
             .ProducesStandardErrors()
-            .WithSummary("Create job description");
+            .WithSummary("Create job description")
+            .WithName("Create job description");
     }
 
     private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user,

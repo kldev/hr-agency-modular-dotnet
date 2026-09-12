@@ -28,6 +28,7 @@ internal static class MapCreate
     {
         group.MapPost("/api/users", Handler)
             .WithSummary("Create user")
+            .WithName("Create user")
             .Produces<UserCreated>()
             .ProducesStandardErrors();
     }

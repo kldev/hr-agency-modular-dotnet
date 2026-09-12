@@ -1,3 +1,5 @@
+using HrAgencySystem.Api.Endpoints.Company.Maps;
+
 namespace HrAgencySystem.Api.Endpoints.CompanyContacts;
 
 internal static class Endpoint
@@ -6,8 +8,9 @@ internal static class Endpoint
     {
         var group = endpoints.MapGroup("/api/company-contacts").WithTags("Company contacts");
         Maps.MapCreate.Map(group);
-        Maps.MapGetAll.Map(group);
         Maps.MapUpdate.Map(group);
         Maps.MapGet.Map(group);
+        Maps.MapDelete.Map(group);
     }
+    
 }

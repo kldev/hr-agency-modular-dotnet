@@ -13,6 +13,7 @@ internal static class MapUsers
         group.MapGet("/api/suggestion/users", Handler)
             .Produces<IReadOnlyList<UserSuggestion>>()
             .WithSummary("Get top 25 users")
+            .WithName("Get users suggestions")
             .ProducesStandardErrors();
     }
 

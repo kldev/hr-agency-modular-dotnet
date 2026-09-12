@@ -4,6 +4,7 @@ export * from "./ConfirmDialog";
 export * from "./CountrySelect";
 export * from "./Dialog";
 export * from "./date-picker";
+export * from "./details";
 export * from "./dropdown";
 export * from "./dropdown";
 export * from "./EnumFilter";

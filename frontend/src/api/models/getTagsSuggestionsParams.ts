@@ -13,7 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { TagCategory } from "./tagCategory";
 
-export type GetApiJobDescriptionStatusParams = {
-	jobDescriptionId?: string;
+export type GetTagsSuggestionsParams = {
+	search?: string;
+	category?: TagCategory;
 };

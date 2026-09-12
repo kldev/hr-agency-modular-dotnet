@@ -10,6 +10,7 @@ internal static class MapCompanies
     {
         group.MapGet("/api/suggestion/companies", Handler)
             .Produces<IReadOnlyList<CompanySuggestion>>()
+            .WithName("Get companies suggestions")
             .WithSummary("Get top 25 companies")
             .ProducesStandardErrors();
     }
