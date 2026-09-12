@@ -12,6 +12,7 @@ internal static class MapUpdate
     {
         group.MapPut("{contactId:guid}", Handler)
             .WithSummary("Update contact")
+            .WithName("Update company contact")
             .Produces<CompanyContact>()
             .ProducesStandardErrors();
     }

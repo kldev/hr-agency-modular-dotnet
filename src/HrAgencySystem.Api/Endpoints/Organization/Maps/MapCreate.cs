@@ -12,6 +12,7 @@ internal static class MapCreate
     {
         group.MapPost("", Handler)
             .WithSummary("Create organization")
+            .WithName("Create organization")
             .Produces<OrganizationCreated>()
             .ProducesStandardErrors();
     }

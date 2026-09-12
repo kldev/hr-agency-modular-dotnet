@@ -13,6 +13,7 @@ internal static class MapGet
         // GET /api/interviews
         group.MapGet("{interviewId}", Handler)
             .WithSummary("Get interview")
+            .WithName("Get interview")
             .Produces<InterviewProjection>()
             .ProducesStandardErrors();
     }

@@ -14,6 +14,7 @@ internal static class MapCreate
         // /api/sales/opportunity
         group.MapPost("", Handler)
             .WithSummary("Create opportunity")
+            .WithName("Create opportunity")
             .Produces<OpportunityCreated>()
             .ProducesStandardErrors();
     }

@@ -14,6 +14,7 @@ internal static class MapGetSlice
         // GET /api/companies
         endpoints.MapGet("", Handler)
             .WithSummary("Get companies")
+            .WithName("Get companies")
             .Produces<SliceResponse<CompanyProjection>>()
             .ProducesStandardErrors();
     }

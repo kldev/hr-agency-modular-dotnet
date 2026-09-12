@@ -15,4 +15,12 @@ public sealed class CompanyContactQueryRepository(IQuerySession session) : IComp
             .WithCompanyId(CompanyId.From(companyId))
             .ToListAsync(ct);
     }
+
+    public async Task<CompanyContact?> GetAsync(Guid organizationId, Guid contactId, CancellationToken ct)
+    {
+        return await session.Query<CompanyContact>()
+            .WithOrganizationId(OrganizationId.From(organizationId))
+            .WithContactId(contactId)
+            .FirstOrDefaultAsync(ct);
+    }
 }

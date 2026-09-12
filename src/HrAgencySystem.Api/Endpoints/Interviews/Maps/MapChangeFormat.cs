@@ -15,6 +15,7 @@ internal static class MapChangeFormat
     {
         group.MapPut("{interviewId}/format", Handler)
             .WithSummary("Change format")
+            .WithName("Change interview format")
             .Produces<InterviewFormatChanged>()
             .ProducesStandardErrors();
     }

@@ -14,6 +14,7 @@ internal static class MapCreate
     {
         group.MapPost("{companyId:guid}", Handler)
             .WithSummary("Create contact")
+            .WithName("Create company contact")
             .Produces<CompanyContact>()
             .ProducesStandardErrors();
     }

@@ -14,6 +14,7 @@ internal static class MapSchedule
         // GET /api/interviews/schedule
         group.MapPost("schedule", Handler)
             .WithSummary("Schedule interview")
+            .WithName("Schedule interview")
             .Produces<InterviewCreated>()
             .ProducesStandardErrors();
     }

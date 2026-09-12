@@ -29,6 +29,7 @@ internal static class MapCreateUser
     {
         group.MapPost("users", Handler)
             .WithSummary("Create user")
+            .WithName("Create organization user")
             .Produces<UserCreated>()
             .ProducesStandardErrors();
     }

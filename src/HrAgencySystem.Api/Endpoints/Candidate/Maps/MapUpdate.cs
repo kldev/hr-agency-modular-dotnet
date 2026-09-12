@@ -12,6 +12,7 @@ internal static class MapUpdate
     {
         group.MapPut("{candidateId:guid}", Handler)
             .WithSummary("Update candidate")
+            .WithName("Update candidate")
             .ProducesStandardErrors()
             .Produces<CandidateUpdated>();
     }

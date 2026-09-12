@@ -10,6 +10,7 @@ internal static class MapGetBySlug
     {
         group.MapGet("{slug}", Handler)
             .WithSummary("Get organization by Slug")
+            .WithName("Get organization by Slug")
             .Produces<OrganizationCreated>()
             .ProducesStandardErrors();
     }

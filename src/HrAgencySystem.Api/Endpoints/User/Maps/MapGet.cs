@@ -12,6 +12,7 @@ internal static class MapGet
     {
         group.Map("/api/users/{userId:guid}", Handler)
             .WithSummary("Get user")
+            .WithName("Get user")
             .Produces<UserProjection>()
             .ProducesStandardErrors();;
     }

@@ -12,7 +12,9 @@ internal static class MapTag
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates/{id}/tag
-        group.MapPut("{candidateId:guid}/tag", Handler).WithSummary("Tag candidate")
+        group.MapPut("{candidateId:guid}/tag", Handler)
+            .WithSummary("Tag candidate")
+            .WithName("Tag candidate")
             .ProducesStandardErrors()
             .Produces<CandidateTagged>();
     }

@@ -15,6 +15,7 @@ public static class MapUpdateSlug
         // PUT /api/organization/{organizationId}/slug
         group.MapPut("{organizationId}/slug", Handler)
             .WithSummary("Update organization slug")
+            .WithName("Update organization slug")
             .Produces<OrganizationSlugUpdated>()
             .ProducesStandardErrors();
     }

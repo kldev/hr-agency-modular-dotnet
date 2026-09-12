@@ -11,6 +11,7 @@ internal static class MapGetSlice
     {
         group.MapGet("", Handler)
             .WithSummary("Get organizations")
+            .WithName("Get organizations")
             .Produces<SliceResponse<OrganizationProjection>>()
             .ProducesStandardErrors();
     }

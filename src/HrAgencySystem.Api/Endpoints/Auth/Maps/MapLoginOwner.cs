@@ -1,7 +1,6 @@
-using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Owners.Login;
 using HrAgencySystem.Identity.Application.Users.Login;
-using Microsoft.AspNetCore.Mvc;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Auth.Maps;
@@ -12,10 +11,9 @@ internal static class MapLoginOwner
     {
         group.MapPost("/api/owner/login", Handler)
             .WithSummary("Login platform owner")
+            .WithName("Login platform owner")
             .Produces<LoginUserResult>()
-            .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError)
-            .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+            .ProducesStandardErrors()
             .AllowAnonymous();
     }
 

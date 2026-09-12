@@ -12,7 +12,9 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates
-        group.MapGet("", Handler).WithSummary("Get candidates")
+        group.MapGet("", Handler)
+            .WithSummary("Get candidates")
+            .WithName("Get candidates")
             .Produces<SliceResponse<CandidateProjection>>()
             .ProducesStandardErrors();
     }

@@ -9,6 +9,7 @@ internal static class MapCurrent
     {
         group.MapGet("/api/user/me", Handler)
             .WithSummary("Get information about the current user")
+            .WithName("Get authenticated user")
             .Produces<AppUserAuthenticated>()
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);
     }

@@ -12,7 +12,9 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/opportunity/{opportunityId}
-        group.MapGet("{opportunityId:guid}", Handler).WithSummary("Get opportunity")
+        group.MapGet("{opportunityId:guid}", Handler)
+            .WithSummary("Get opportunity")
+            .WithName("Get opportunity")
             .Produces<OpportunityProjection>()
             .ProducesStandardErrors();
     }

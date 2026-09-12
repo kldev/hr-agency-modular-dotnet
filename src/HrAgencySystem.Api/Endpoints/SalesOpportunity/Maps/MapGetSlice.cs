@@ -14,6 +14,7 @@ internal static class MapGetSlice
         // GET /api/sales/opportunity
         group.MapGet("", Handler)
             .WithSummary("Get opportunities")
+            .WithName("Get opportunities")
             .Produces<SliceResponse<OpportunityProjection>>()
             .ProducesStandardErrors();
     }

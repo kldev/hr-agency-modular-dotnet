@@ -14,6 +14,7 @@ internal static class MapGetSlice
     {
         group.MapGet("/api/users", Handler)
             .WithSummary("Get users")
+            .WithName("Get users")
             .Produces<SliceResponse<UserProjection>>()
             .ProducesStandardErrors();
     }

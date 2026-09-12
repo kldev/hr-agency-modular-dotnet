@@ -9,6 +9,7 @@ internal static class MapCurrentOwner
     {
         group.MapGet("/api/owner/me", Handler)
             .WithSummary("Get information about the current owner")
+            .WithName("Get authenticated> owner")
             .Produces<OwnerAuthenticated>()
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);
     }

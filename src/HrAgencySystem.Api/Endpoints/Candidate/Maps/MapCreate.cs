@@ -12,7 +12,9 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates
-        group.MapPost("", Handler).WithSummary("Create candidate")
+        group.MapPost("", Handler)
+            .WithSummary("Create candidate")
+            .WithName("Create candidate")
             .ProducesStandardErrors()
             .Produces<CandidateCreated>();
     }
