@@ -1,1 +1,1 @@
-export * from './useProjectionWait'
+export * from "./useProjectionWait";

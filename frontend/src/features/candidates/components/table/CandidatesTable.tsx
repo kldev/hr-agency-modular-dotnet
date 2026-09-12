@@ -1,20 +1,27 @@
 import { useTable } from "@tanstack/react-table";
+import { useRef } from "react";
 import type { CandidateProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
+import { EditCandidateDrawer, type EditCandidateFormCommand } from "../form";
 import { getColumns } from "./CandidatesTableColumns";
 
 interface CandidatesTableProps {
 	items: CandidateProjection[];
-	onEdit?: (user: CandidateProjection) => void;
-	onDelete?: (user: CandidateProjection) => void;
+	onRefresh: () => void;
 }
 
-export function CandidatesTable({ items, onEdit }: CandidatesTableProps) {
+export function CandidatesTable({ items, onRefresh }: CandidatesTableProps) {
+	const formRef = useRef<EditCandidateFormCommand>(null);
+
+	const handleOnEdit = (item: CandidateProjection) => {
+		formRef.current?.edit(item.id);
+	};
+
 	const table = useTable(
 		{
 			features: appTableFeatures,
-			columns: getColumns(onEdit),
+			columns: getColumns(handleOnEdit),
 			data: items,
 			getRowId: (user) => user.id,
 			enableSorting: false,
@@ -24,5 +31,10 @@ export function CandidatesTable({ items, onEdit }: CandidatesTableProps) {
 		}),
 	);
 
-	return <MainTable table={table} />;
+	return (
+		<>
+			<MainTable table={table} />
+			<EditCandidateDrawer ref={formRef} onSuccess={onRefresh} />
+		</>
+	);
 }

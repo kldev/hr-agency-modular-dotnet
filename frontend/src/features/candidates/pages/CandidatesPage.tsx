@@ -1,17 +1,22 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { getCandidates } from "@/api/endpoints";
 import type { CandidateSource } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, LoadMore } from "@/components/ui";
-import { CandidatesTable } from "../components/CandidatesTable";
-import { CandidatesToolbar } from "../components/CandidatesToolbar";
+import {
+	CandidatesTable,
+	CandidatesToolbar,
+	CreateCandidateDrawer,
+	type CreateCandidateFormCommand,
+} from "../components";
 
 const CandidatesPage: React.FC = () => {
 	const [source, setSource] = useState<CandidateSource | null>(null);
 	const [search, setSearch] = useState<string>("");
+	const formRef = useRef<CreateCandidateFormCommand>(null);
 
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
@@ -62,10 +67,13 @@ const CandidatesPage: React.FC = () => {
 				onSourceChange={(s) => {
 					setSource(s);
 				}}
-				onAdd={() => {}}
+				onAdd={() => {
+					formRef.current?.create();
+				}}
 			/>
-			<CandidatesTable items={items} />
+			<CandidatesTable items={items} onRefresh={refresh} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+			<CreateCandidateDrawer ref={formRef} onSuccess={refresh} />
 		</Page>
 	);
 };

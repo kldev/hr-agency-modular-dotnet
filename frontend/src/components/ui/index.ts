@@ -19,5 +19,6 @@ export * from "./pickers";
 export * from "./pickers";
 export * from "./SaveChangesButton";
 export * from "./Select";
+export * from "./Textarea";
 export * from "./Toggle";
 export * from "./WorkInProgress";

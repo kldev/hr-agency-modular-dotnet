@@ -26,7 +26,12 @@ function getCompanyPath(id: string): string {
 	return `${ROUTES.COMPANIES}/${id}`;
 }
 
+function getCandidatePath(id: string): string {
+	return `${ROUTES.CANDIDATES}/${id}`;
+}
+
 export const RoutesNavigation = {
 	getOpportunityPath,
 	getCompanyPath,
+	getCandidatePath,
 };

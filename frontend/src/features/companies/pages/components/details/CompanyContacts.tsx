@@ -80,7 +80,7 @@ export function CompanyContacts({
 									contactRef.current?.editContact(item.id);
 								}}
 								onDelete={() => {
-									deleteContactRef.current?.deleteContact(item.id)
+									deleteContactRef.current?.deleteContact(item.id);
 								}}
 							/>
 						</div>
