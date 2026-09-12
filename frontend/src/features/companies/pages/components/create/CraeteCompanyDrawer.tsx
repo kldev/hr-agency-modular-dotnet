@@ -2,8 +2,9 @@ import { useMutation } from "@tanstack/react-query";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { createCompany } from "@/api/endpoints";
 import type { CreateCompanyRequest } from "@/api/models";
-import { Button } from "@/components/ui";
+import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
+import { useProjectionWait } from "@/hooks/useProjectionWait";
 import type { CreateCompanyFormCommand } from "../CompanyFormCommand";
 import { CreateCompanyForm, emptyForm } from "./CreateCompanyForm";
 
@@ -15,10 +16,12 @@ const CraeteCompanyDrawer = forwardRef<CreateCompanyFormCommand, CraeteCompanyDr
 	({ onSuccess }, ref) => {
 		const [isOpen, setIsOpen] = useState(false);
 		const [company, setCompany] = useState<CreateCompanyRequest>(emptyForm);
+		const { waiting, wait } = useProjectionWait();
 
 		const createCompanyMutation = useMutation({
 			mutationFn: (request: CreateCompanyRequest) => createCompany(request),
-			onSuccess: () => {
+			onSuccess: async () => {
+				await wait();
 				setIsOpen(false);
 				setCompany(emptyForm);
 				onSuccess();
@@ -59,14 +62,11 @@ const CraeteCompanyDrawer = forwardRef<CreateCompanyFormCommand, CraeteCompanyDr
 				title="Create company"
 				onClose={handleClose}
 				footer={
-					<Button
-						variant="primary"
-						type="submit"
+					<SaveChangesButton
 						form="company-form"
-						disabled={createCompanyMutation.isPending}
-					>
-						{createCompanyMutation.isPending ? "Creating..." : "Create company"}
-					</Button>
+						isPending={createCompanyMutation.isPending}
+						wait={waiting}
+					/>
 				}
 			>
 				<CreateCompanyForm

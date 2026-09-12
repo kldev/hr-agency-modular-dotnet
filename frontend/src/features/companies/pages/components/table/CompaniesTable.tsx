@@ -47,7 +47,7 @@ export function CompaniesTable({ companies, onRefresh }: CompaniesTableProps) {
 					onRefresh();
 				}}
 			/>
-			<CompanyContactDrawer ref={contactRef} onSuccess={() => { }} />
+			<CompanyContactDrawer ref={contactRef} onSuccess={() => {}} />
 		</>
 	);
 }

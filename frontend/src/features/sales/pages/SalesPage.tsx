@@ -59,7 +59,7 @@ const SalesPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => { }}
+				onAdd={() => {}}
 			/>
 			<EnumFilter
 				value={stage}

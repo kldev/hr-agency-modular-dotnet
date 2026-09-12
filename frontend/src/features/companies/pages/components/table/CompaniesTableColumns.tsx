@@ -3,6 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { CompanyProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
+import { formatDateTime } from "@/utlis/dateUtils";
 import { CompanyActions } from "./CompanyActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, CompanyProjection>();
@@ -13,7 +14,6 @@ type companiesActions = {
 };
 
 export function getColumns(actions: companiesActions = {}) {
-
 	const columns = columnHelper.columns([
 		columnHelper.accessor("name", {
 			header: "Company",
@@ -40,7 +40,7 @@ export function getColumns(actions: companiesActions = {}) {
 							</div>
 						</div>
 					</div>
-				)
+				);
 			},
 		}),
 
@@ -83,9 +83,8 @@ export function getColumns(actions: companiesActions = {}) {
 
 		columnHelper.accessor("modifiedAt", {
 			header: "Updated",
+			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
-
-
 	]);
 	return columns;
 }

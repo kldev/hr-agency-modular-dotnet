@@ -31,20 +31,23 @@ export function ActionMenu({
 				aria-label={ariaLabel}
 				title={title}
 				aria-expanded={open}
-				onClick={() => { console.log(`Set it to ${!open}`); setOpen((prev) => !prev) }}
+				onClick={() => {
+					console.log(`Set it to ${!open}`);
+					setOpen((prev) => !prev);
+				}}
 			>
 				<MoreVertical size={20} />
 			</button>
 
 			{open ? (
-
 				<Dropdown placement="right">
 					{actions.map((item, index) => {
 						const Icon = item.icon;
 
 						return (
-							<div key={`drop-item-${index}`} >
-								<DropdownItem key={`drop-item-${index}`}
+							<div key={`drop-item-${index}`}>
+								<DropdownItem
+									key={`drop-item-${index}`}
 									disabled={item.disabled}
 									onClick={() => {
 										item.action();
@@ -60,9 +63,7 @@ export function ActionMenu({
 						);
 					})}
 				</Dropdown>
-
-			) : null
-			}
-		</div >
+			) : null}
+		</div>
 	);
 }

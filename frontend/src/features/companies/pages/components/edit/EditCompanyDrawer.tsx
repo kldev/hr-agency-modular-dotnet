@@ -2,8 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { getCompany, updateCompany as updateCompanyApi } from "@/api/endpoints";
 import type { UpdateCompanyRequest } from "@/api/models";
-import { Button } from "@/components/ui";
+import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
+import { useProjectionWait } from "@/hooks/useProjectionWait";
 import type { EditCompanyFormCommand } from "../CompanyFormCommand";
 import { EditCompanyForm } from "./EditCompanyForm";
 
@@ -15,6 +16,7 @@ const EditCompanyDrawer = forwardRef<EditCompanyFormCommand, EditCompanyDrawerPr
 	({ onSuccess }, ref) => {
 		const [isOpen, setIsOpen] = useState(false);
 		const [companyId, setCompanyId] = useState<string | null>(null);
+		const { waiting, wait } = useProjectionWait();
 
 		const queryClient = useQueryClient();
 
@@ -29,13 +31,7 @@ const EditCompanyDrawer = forwardRef<EditCompanyFormCommand, EditCompanyDrawerPr
 				updateCompanyApi(companyId, request),
 
 			onSuccess: () => {
-				queryClient.invalidateQueries({
-					queryKey: ["company", companyId],
-				});
-				setIsOpen(false);
-				setCompanyId(null);
-
-				onSuccess();
+				handleSuccess();
 			},
 		});
 
@@ -43,6 +39,9 @@ const EditCompanyDrawer = forwardRef<EditCompanyFormCommand, EditCompanyDrawerPr
 			ref,
 			() => ({
 				edit: (id: string) => {
+					queryClient.invalidateQueries({
+						queryKey: ["company", id],
+					});
 					updateCompany.reset();
 					setCompanyId(id);
 					setIsOpen(true);
@@ -50,6 +49,16 @@ const EditCompanyDrawer = forwardRef<EditCompanyFormCommand, EditCompanyDrawerPr
 			}),
 			[updateCompany],
 		);
+
+		const handleSuccess = async () => {
+			await wait();
+			queryClient.invalidateQueries({
+				queryKey: ["company", companyId],
+			});
+			setIsOpen(false);
+			setCompanyId(null);
+			onSuccess();
+		};
 
 		const handleSave = useCallback(
 			(data: UpdateCompanyRequest) => {
@@ -83,14 +92,11 @@ const EditCompanyDrawer = forwardRef<EditCompanyFormCommand, EditCompanyDrawerPr
 				title="Edit company"
 				onClose={handleClose}
 				footer={
-					<Button
-						variant="primary"
-						type="submit"
+					<SaveChangesButton
 						form="edit-company-form"
-						disabled={companyQuery.isLoading || companyQuery.isError || updateCompany.isPending}
-					>
-						{updateCompany.isPending ? "Saving..." : "Save changes"}
-					</Button>
+						isPending={updateCompany.isPending}
+						wait={waiting}
+					/>
 				}
 			>
 				{companyQuery.isLoading && <div className="form-loading">Loading company...</div>}
@@ -114,7 +120,7 @@ const EditCompanyDrawer = forwardRef<EditCompanyFormCommand, EditCompanyDrawerPr
 						taxId={company.taxId}
 						onSubmit={handleSave}
 						error={updateCompany.error}
-						isSubmitting={updateCompany.isPending}
+						isSubmitting={updateCompany.isPending || waiting}
 					/>
 				)}
 			</Drawer>

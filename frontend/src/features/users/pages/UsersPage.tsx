@@ -58,7 +58,7 @@ const UsersPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => { }}
+				onAdd={() => {}}
 			/>
 			<EnumFilter
 				value={role}

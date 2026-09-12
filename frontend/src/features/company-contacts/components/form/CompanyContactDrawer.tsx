@@ -2,8 +2,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { createCompanyContact, getCompanyContact, updateCompanyContact } from "@/api/endpoints";
 import type { CompanyContactRequest } from "@/api/models";
-import { Button } from "@/components/ui";
+import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
+import { useProjectionWait } from "@/hooks/useProjectionWait";
 import type { CompanyContactCommand } from "./CompanyContactCommand";
 import { CompanyContactForm } from "./CompanyContactForm";
 
@@ -13,13 +14,13 @@ type CompanyContactDrawerProps = {
 
 type Mode =
 	| {
-		type: "create";
-		companyId: string;
-	}
+			type: "create";
+			companyId: string;
+	  }
 	| {
-		type: "edit";
-		contactId: string;
-	}
+			type: "edit";
+			contactId: string;
+	  }
 	| null;
 
 const emptyForm: CompanyContactRequest = {
@@ -37,6 +38,7 @@ const CompanyContactDrawer = forwardRef<CompanyContactCommand, CompanyContactDra
 	({ onSuccess }, ref) => {
 		const [isOpen, setIsOpen] = useState(false);
 		const [mode, setMode] = useState<Mode>(null);
+		const { wait, waiting } = useProjectionWait();
 
 		const isEdit = mode?.type === "edit";
 
@@ -50,7 +52,8 @@ const CompanyContactDrawer = forwardRef<CompanyContactCommand, CompanyContactDra
 			mutationFn: ({ companyId, request }: { companyId: string; request: CompanyContactRequest }) =>
 				createCompanyContact(companyId, request),
 
-			onSuccess: () => {
+			onSuccess: async () => {
+				await wait();
 				closeDrawer();
 				onSuccess();
 			},
@@ -60,13 +63,12 @@ const CompanyContactDrawer = forwardRef<CompanyContactCommand, CompanyContactDra
 			mutationFn: ({ contactId, request }: { contactId: string; request: CompanyContactRequest }) =>
 				updateCompanyContact(contactId, request),
 
-			onSuccess: () => {
+			onSuccess: async () => {
+				await wait();
 				closeDrawer();
 				onSuccess();
 			},
 		});
-
-
 
 		const error = createContact.error ?? updateContact.error;
 
@@ -133,12 +135,14 @@ const CompanyContactDrawer = forwardRef<CompanyContactCommand, CompanyContactDra
 				? emptyForm
 				: contactQuery.data
 					? {
-						contact: contactQuery.data.contact,
-						updatePrimary: false,
-					}
+							contact: contactQuery.data.contact,
+							updatePrimary: false,
+						}
 					: null;
 
 		const isLoading = isEdit && contactQuery.isLoading;
+		const isPending =
+			isLoading || createContact.isPending || updateContact.isPaused || !initialValue;
 
 		return (
 			<Drawer
@@ -146,21 +150,24 @@ const CompanyContactDrawer = forwardRef<CompanyContactCommand, CompanyContactDra
 				title={isEdit ? "Edit contact" : "Add contact"}
 				onClose={closeDrawer}
 				footer={
-					<Button
-						variant="primary"
-						type="submit"
-						form="company-contact-form"
-						disabled={isLoading || createContact.isPending || updateContact.isPaused || !initialValue}
-					>
-						{createContact.isPending || updateContact.isPaused
-							? isEdit
-								? "Saving..."
-								: "Creating..."
-							: isEdit
-								? "Save changes"
-								: "Add contact"}
-					</Button>
+					<SaveChangesButton form="company-contact-form" isPending={isPending} wait={waiting} />
 				}
+				// footer={
+				// 	<Button
+				// 		variant="primary"
+				// 		type="submit"
+				// 		form="company-contact-form"
+				// 		disabled={isLoading || createContact.isPending || updateContact.isPaused || !initialValue}
+				// 	>
+				// 		{createContact.isPending || updateContact.isPaused
+				// 			? isEdit
+				// 				? "Saving..."
+				// 				: "Creating..."
+				// 			: isEdit
+				// 				? "Save changes"
+				// 				: "Add contact"}
+				// 	</Button>
+				// }
 			>
 				{isLoading && <div className="form-loading">Loading contact...</div>}
 

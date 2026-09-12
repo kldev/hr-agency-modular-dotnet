@@ -62,7 +62,7 @@ const CandidatesPage: React.FC = () => {
 				onSourceChange={(s) => {
 					setSource(s);
 				}}
-				onAdd={() => { }}
+				onAdd={() => {}}
 			/>
 			<CandidatesTable items={items} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />

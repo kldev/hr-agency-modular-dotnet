@@ -47,9 +47,8 @@ export function CreateCompanyForm({
 		onSubmit: async ({ value }) => {
 			if (hasContact) {
 				onSubmit(value);
-			}
-			else {
-				onSubmit({ ...value, contact: undefined })
+			} else {
+				onSubmit({ ...value, contact: undefined });
 			}
 		},
 	});
