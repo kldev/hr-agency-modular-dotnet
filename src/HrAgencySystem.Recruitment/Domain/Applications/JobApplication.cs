@@ -7,7 +7,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Domain.Applications;
 
-public sealed class JobApplication
+public sealed class JobApplication : IOrganizationDomain
 {
     private JobApplication()
     {
@@ -116,6 +116,12 @@ public sealed class JobApplication
     public void Apply(JobApplicationReactivated @event)
     {
         Status = JobApplicationStatus.Screening;
+        ApplyCommon(@event);
+    }
+    
+    public void Apply(JobApplicationUpdated @event)
+    {
+        
         ApplyCommon(@event);
     }
 

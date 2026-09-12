@@ -45,7 +45,9 @@ public sealed record JobApplicationProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid CompanyId,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    CompanySnapshot Company)
+    CompanySnapshot Company,
+    string ApplicantFirstName,
+    string ApplicantLastName)
 {
     public static JobApplicationProjection Create(JobApplicationCreated @event)
     {
@@ -68,7 +70,9 @@ public sealed record JobApplicationProjection(
             [],
             [],
             @event.Company.Id,
-            @event.Company);
+            @event.Company,
+            @event.ApplicantFirstName,
+            @event.ApplicantLastName);
     }
 
     public static JobApplicationProjection Apply(
@@ -191,6 +195,17 @@ public sealed record JobApplicationProjection(
             ModifiedBy = @event.RemovedBy,
             Tags = tags,
             TagsIds = tagIds
+        };
+    }
+    
+    public JobApplicationProjection Apply(JobApplicationUpdated @event)
+    {
+        return ApplyCommon(this, @event) with
+        {
+            ApplicantFullName = @event.FullName,
+            ApplicantFirstName = @event.FirstName,
+            ApplicantLastName = @event.LastName,
+            ApplicantPhone = @event.Phone
         };
     }
 }

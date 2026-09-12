@@ -67,13 +67,15 @@ public static class ApplyToJobApplicationHandler
         GetValueObjects(ApplyToJobApplication command)
     {
         var (email, emailError) = Email.TryCreate(command.Email);
-        var (firstName, _) = FirstName.TryCreate(command.FirstName ?? "", false);
-        var (lastName, _) = LastName.TryCreate(command.LastName ?? "", false);
+        var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName ?? "", false);
+        var (lastName, lastNameError) = LastName.TryCreate(command.LastName ?? "", false);
         var (phoneNumber, phoneNumberError) = CandidatePhoneNumber.TryCreate(command.Phone);
 
         var errors = new List<string>();
         if (emailError != null) errors.Add(emailError);
         if (phoneNumberError != null) errors.Add(phoneNumberError);
+        if (firstNameError != null) errors.Add(firstNameError);
+        if (lastNameError != null) errors.Add(lastNameError);
 
         return errors.Count > 0 ? throw new ValidationException(errors) : (email!, firstName!, lastName!, phoneNumber!);
     }

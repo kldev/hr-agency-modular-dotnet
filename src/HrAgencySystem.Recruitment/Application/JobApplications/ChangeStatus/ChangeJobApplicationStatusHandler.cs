@@ -28,8 +28,7 @@ public static class ChangeJobApplicationStatusHandler
         var oldStatus = aggregate.Status;
         var now = clock.UtcNow;
 
-        if (aggregate.OrganizationId.Value != command.OrganizationId)
-            throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
+        service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
         
         var user = await  service.GetUserAsync(command.ModifiedBy, ct);
         var concreteEvent = GetConcreteEvent(command, now, user);

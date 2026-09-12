@@ -61,7 +61,7 @@ const OrganizationsPage: React.FC = () => {
 					formRef.current?.create();
 				}}
 			/>
-			<OrganizationsTable items={items} />
+			<OrganizationsTable items={items} onRefresh={refresh} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 			<CreateOrganizationDrawer ref={formRef} onSuccess={refresh} />
 		</Page>
