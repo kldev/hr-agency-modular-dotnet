@@ -1,7 +1,7 @@
 import { DollarSign } from "lucide-react";
 import type React from "react";
 import { useCallback, useState } from "react";
-import { getApiSalesOpportunity } from "@/api/endpoints";
+import { getOpportunities } from "@/api/endpoints";
 import type { OpportunityStage } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
@@ -17,7 +17,7 @@ const SalesPage: React.FC = () => {
 
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getApiSalesOpportunity({
+			return getOpportunities({
 				page,
 				pageSize,
 				stage: stage ?? undefined,
@@ -59,7 +59,7 @@ const SalesPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => {}}
+				onAdd={() => { }}
 			/>
 			<EnumFilter
 				value={stage}

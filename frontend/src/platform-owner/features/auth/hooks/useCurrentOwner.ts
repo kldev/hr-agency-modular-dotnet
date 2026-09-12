@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { getApiOwnerMe } from "@/api/endpoints";
+import { getAuthenticatedOwner } from "@/api/endpoints";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
 import { OWNER_ROUTES } from "@/routes/OwnerRoutes";
 
@@ -19,7 +19,7 @@ export function useCurrentOwner() {
 
 		setLoading(true);
 		try {
-			const result = await getApiOwnerMe();
+			const result = await getAuthenticatedOwner();
 			setOwner(result);
 		} catch {
 			clear();

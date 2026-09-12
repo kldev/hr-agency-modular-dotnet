@@ -33,7 +33,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	BadRequestDetails,
 	CreateUserRequest,
-	GetApiUsersParams,
+	GetUsersParams,
 	ProblemDetails,
 	SliceResponseOfUserProjection,
 	UserCreated,
@@ -185,8 +185,8 @@ export function usePostApiUsers<
 /**
  * @summary Get users
  */
-export const getApiUsers = (
-	params: GetApiUsersParams,
+export const getUsers = (
+	params: GetUsersParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -196,26 +196,26 @@ export const getApiUsers = (
 	);
 };
 
-export const getGetApiUsersMutationKey = () => ["getApiUsers"] as const;
+export const getGetUsersMutationKey = () => ["getUsers"] as const;
 
-export const getGetApiUsersMutationOptions = <
+export const getGetUsersMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiUsers>>,
+		Awaited<ReturnType<typeof getUsers>>,
 		TError,
-		GetApiUsersMutationVariables,
+		GetUsersMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiUsers>>,
+	Awaited<ReturnType<typeof getUsers>>,
 	TError,
-	GetApiUsersMutationVariables,
+	GetUsersMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiUsersMutationKey();
+	const mutationKey = getGetUsersMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -223,44 +223,44 @@ export const getGetApiUsersMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiUsers>>,
-		GetApiUsersMutationVariables
+		Awaited<ReturnType<typeof getUsers>>,
+		GetUsersMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiUsers(params, requestOptions);
+		return getUsers(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiUsersMutationResult = NonNullable<Awaited<ReturnType<typeof getApiUsers>>>;
+export type GetUsersMutationResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>;
 
-export type GetApiUsersMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiUsersMutationVariables = { params: GetApiUsersParams };
+export type GetUsersMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetUsersMutationVariables = { params: GetUsersParams };
 
 /**
  * @summary Get users
  */
-export const useGetApiUsers = <
+export const useGetUsers = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiUsers>>,
+			Awaited<ReturnType<typeof getUsers>>,
 			TError,
-			GetApiUsersMutationVariables,
+			GetUsersMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiUsers>>,
+	Awaited<ReturnType<typeof getUsers>>,
 	TError,
-	GetApiUsersMutationVariables,
+	GetUsersMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiUsersMutationOptions(options), queryClient);
+	return useMutation(getGetUsersMutationOptions(options), queryClient);
 };

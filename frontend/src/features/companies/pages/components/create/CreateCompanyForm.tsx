@@ -1,8 +1,15 @@
 import { useForm } from "@tanstack/react-form";
-import { type BadRequestDetails, type CreateCompanyRequest, Industry } from "@/api/models";
-import { CountrySelect, EnumSelectFilter, Input } from "@/components/ui";
+import { useState } from "react";
+import {
+	type BadRequestDetails,
+	type ContactPerson,
+	type CreateCompanyRequest,
+	Industry,
+} from "@/api/models";
+import { CountrySelect, EnumSelectFilter, FieldError, Input, Toggle } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
-import { industries } from "../../types";
+import { industries } from "@/features/companies/types";
+import { ContactPersonForm } from "@/features/company-contacts/components/ContactPersonForm";
 
 interface CompanyFormProps {
 	initialValue?: CreateCompanyRequest;
@@ -11,6 +18,13 @@ interface CompanyFormProps {
 	isSubmitting?: boolean;
 }
 
+const emptyContact: ContactPerson = {
+	email: "",
+	firstName: "",
+	jobTitle: "",
+	lastName: "",
+	phone: "",
+};
 export const emptyForm: CreateCompanyRequest = {
 	name: "",
 	website: "",
@@ -18,21 +32,8 @@ export const emptyForm: CreateCompanyRequest = {
 	taxId: "",
 	countryCode: "PL",
 	industry: "Technology",
+	contact: emptyContact,
 };
-
-function FieldError({ errors }: { errors: Array<unknown> }) {
-	if (errors.length === 0) {
-		return null;
-	}
-
-	return (
-		<div className="form-field-error" role="alert">
-			{errors.map((error, index) => (
-				<div key={index}>{String(error)}</div>
-			))}
-		</div>
-	);
-}
 
 export function CreateCompanyForm({
 	initialValue,
@@ -44,9 +45,16 @@ export function CreateCompanyForm({
 		defaultValues: initialValue ?? emptyForm,
 
 		onSubmit: async ({ value }) => {
-			onSubmit(value);
+			if (hasContact) {
+				onSubmit(value);
+			}
+			else {
+				onSubmit({ ...value, contact: undefined })
+			}
 		},
 	});
+
+	const [hasContact, setHasContact] = useState(true);
 
 	return (
 		<form
@@ -219,7 +227,6 @@ export function CreateCompanyForm({
 				name="registrationNumber"
 				validators={{
 					onChange: ({ value }) => {
-
 						if (!value.trim()) {
 							return "Registration number is required";
 						}
@@ -227,7 +234,7 @@ export function CreateCompanyForm({
 						if (value.trim().length < 3) {
 							return "Registration number must be at least 3 characters";
 						}
-						return undefined
+						return undefined;
 					},
 				}}
 			>
@@ -249,6 +256,65 @@ export function CreateCompanyForm({
 						<FieldError errors={field.state.meta.errors} />
 					</div>
 				)}
+			</form.Field>
+			<form.Field
+				name="contact"
+				validators={{
+					onChange: ({ value }) => {
+						if (!value || hasContact === false) {
+							return undefined;
+						}
+
+						if (!value.firstName.trim()) {
+							return "First name is required";
+						}
+
+						if (!value.lastName.trim()) {
+							return "Last name is required";
+						}
+
+						if (!value.email.trim()) {
+							return "Email is required";
+						}
+
+						if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.email)) {
+							return "Enter a valid email address";
+						}
+
+						return undefined;
+					},
+				}}
+			>
+				{(field) => {
+					return (
+						<div className="form-field">
+							<div className="flex items-center justify-between">
+								<label className="form-label" htmlFor="company-contact-toggle">
+									Contact
+								</label>
+
+								<Toggle
+									id="company-contact-toggle"
+									checked={hasContact}
+									disabled={isSubmitting}
+									onChange={(event) => {
+										setHasContact(event.target.checked);
+									}}
+								/>
+							</div>
+
+							{hasContact && (
+								<ContactPersonForm
+									value={field.state.value as ContactPerson}
+									mode="company-create-form"
+									disabled={isSubmitting}
+									onChange={field.handleChange}
+								/>
+							)}
+							<FieldError errors={field.state.meta.errors} />
+						</div>
+					);
+				}}
 			</form.Field>
 
 			<ApiError error={error as unknown as BadRequestDetails} />

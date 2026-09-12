@@ -51,7 +51,7 @@ export function Drawer({ open, title, children, footer, onClose }: DrawerProps) 
 						title="Close"
 						onClick={onClose}
 					>
-						<X size={17} />
+						<X size={17} className="cursor-pointer" />
 					</button>
 				</header>
 

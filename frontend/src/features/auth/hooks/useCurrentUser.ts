@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { getApiUserMe } from "@/api/endpoints";
+import { getAuthenticatedUser } from "@/api/endpoints";
 import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -19,7 +19,7 @@ export function useCurrentUser() {
 
 		setLoading(true);
 		try {
-			const result = await getApiUserMe();
+			const result = await getAuthenticatedUser();
 			setUser(result);
 		} catch {
 			clearUser();

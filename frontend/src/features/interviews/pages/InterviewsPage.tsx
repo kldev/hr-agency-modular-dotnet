@@ -1,7 +1,7 @@
 import { MessageSquare } from "lucide-react";
 import type React from "react";
 import { useCallback, useState } from "react";
-import { getApiInterviews } from "@/api/endpoints";
+import { getInterviews } from "@/api/endpoints";
 import type { InterviewStatus } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
@@ -16,7 +16,7 @@ const InterviewsPage: React.FC = () => {
 
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getApiInterviews({
+			return getInterviews({
 				page,
 				pageSize,
 				status: status || undefined,

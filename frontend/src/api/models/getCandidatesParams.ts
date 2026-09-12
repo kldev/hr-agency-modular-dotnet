@@ -13,18 +13,15 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { InterviewStatus } from "./interviewStatus";
+import type { CandidateSource } from "./candidateSource";
+import type { CandidateStatus } from "./candidateStatus";
 
-export type GetApiInterviewsParams = {
+export type GetCandidatesParams = {
 	search?: string;
-	jobApplicationId?: string;
-	interviewerId?: string;
-	candidateId?: string;
-	createdByUserId?: string;
-	status?: InterviewStatus;
-	fromDate?: string;
-	toDate?: string;
-	timezone?: string;
+	companyId?: string;
+	tag?: string[];
+	status?: CandidateStatus;
+	source?: CandidateSource[];
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */

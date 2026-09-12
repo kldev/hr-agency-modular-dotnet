@@ -13,19 +13,13 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OpportunityStage } from "./opportunityStage";
 
-export type GetApiSalesOpportunityTotalsParams = {
-	search?: string;
-	companyId?: string;
-	responsibleId?: string;
-	stage?: OpportunityStage;
-	/**
-	 * @pattern ^-?(?:0|[1-9]\d*)$
-	 */
-	page?: number | string;
-	/**
-	 * @pattern ^-?(?:0|[1-9]\d*)$
-	 */
-	pageSize?: number | string;
-};
+export interface ContactPerson {
+	email: string;
+	firstName: string;
+	lastName: string;
+	jobTitle: string;
+	phone: string;
+	/** @nullable */
+	fullname?: string | null;
+}

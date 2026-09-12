@@ -17,6 +17,15 @@ export const ROUTES = {
 	REPORTS: "/reports",
 } as const;
 
-export function getOpportunityPath(id: string): string {
-	return `/sales/opportunities/${id}`;
+function getOpportunityPath(id: string): string {
+	return `${ROUTES.SALES}/opportunities/${id}`;
 }
+
+function getCompanyPath(id: string): string {
+	return `${ROUTES.COMPANIES}/${id}`;
+}
+
+export const RoutesNavigation = {
+	getOpportunityPath,
+	getCompanyPath,
+};

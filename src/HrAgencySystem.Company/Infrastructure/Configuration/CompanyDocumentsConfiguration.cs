@@ -28,7 +28,7 @@ internal static class CompanyDocumentsConfiguration
     {
         options.Schema.For<CompanyContact>().DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId, x.CompanyId })
-            .Index(x => new { x.OrganizationId, x.Contact.Email }, idx => { idx.IsUnique = true;})
+            .Index(x => new { x.OrganizationId, x.Contact.Email, x.CompanyId }, idx => { idx.IsUnique = true;})
             .Index(x => new { x.OrganizationId, x.Contact.FirstName })
             .Index(x => new { x.OrganizationId, x.Contact.LastName })
             .Index(x => new { x.OrganizationId, x.CreatedAt })

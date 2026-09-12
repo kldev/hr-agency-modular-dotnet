@@ -1,21 +1,20 @@
 import { Building2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useRef, useState } from "react";
-import { getApiCompanies } from "@/api/endpoints";
+import { getCompanies } from "@/api/endpoints";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table/usePaginatedData";
 import { EmptyState, LoadMore } from "@/components/ui";
-import { CompaniesTable } from "./components/CompaniesTable";
+import { CompaniesTable, CraeteCompanyDrawer } from "./components";
 import { CompaniesToolbar } from "./components/CompaniesToolbar";
-import type { CompanyFormCommand } from "./components/CompanyFormCommand";
-import CraeteCompanyDrawer from "./components/CraeteCompanyDrawer";
+import type { CreateCompanyFormCommand } from "./components/CompanyFormCommand";
 
 const CompaniesPage: React.FC = () => {
 	const [search, setSearch] = useState<string>("");
-	const formRef = useRef<CompanyFormCommand>(null);
+	const formRef = useRef<CreateCompanyFormCommand>(null);
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getApiCompanies({
+			return getCompanies({
 				page,
 				pageSize,
 				search,
@@ -62,7 +61,7 @@ const CompaniesPage: React.FC = () => {
 					}}
 					onSearchChange={(s) => setSearch(s)}
 				/>
-				<CompaniesTable companies={companies} />
+				<CompaniesTable companies={companies} onRefresh={refresh} />
 				<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 			</Page>
 			<CraeteCompanyDrawer

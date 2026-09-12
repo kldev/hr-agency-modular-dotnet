@@ -59,7 +59,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 /**
  * @summary Create contact
  */
-export const postApiCompanyContactsCompanyId = (
+export const createCompanyContact = (
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -77,22 +77,22 @@ export const postApiCompanyContactsCompanyId = (
 	);
 };
 
-export const getPostApiCompanyContactsCompanyIdQueryKey = (
+export const getCreateCompanyContactQueryKey = (
 	companyId: string,
 	companyContactRequest?: BodyType<CompanyContactRequest>,
 ) => {
 	return ["POST", `/api/company-contacts/${companyId}`, companyContactRequest] as const;
 };
 
-export const getPostApiCompanyContactsCompanyIdQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
+export const getCreateCompanyContactQueryOptions = <
+	TData = Awaited<ReturnType<typeof createCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createCompanyContact>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -100,47 +100,41 @@ export const getPostApiCompanyContactsCompanyIdQueryOptions = <
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getPostApiCompanyContactsCompanyIdQueryKey(companyId, companyContactRequest);
+		queryOptions?.queryKey ?? getCreateCompanyContactQueryKey(companyId, companyContactRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>> = ({
-		signal,
-	}) => postApiCompanyContactsCompanyId(companyId, companyContactRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof createCompanyContact>>> = ({ signal }) =>
+		createCompanyContact(companyId, companyContactRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: companyId !== null && companyId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof createCompanyContact>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PostApiCompanyContactsCompanyIdQueryResult = NonNullable<
-	Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>
+export type CreateCompanyContactQueryResult = NonNullable<
+	Awaited<ReturnType<typeof createCompanyContact>>
 >;
-export type PostApiCompanyContactsCompanyIdQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type CreateCompanyContactQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiCompanyContactsCompanyId<
-	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
+export function useCreateCompanyContact<
+	TData = Awaited<ReturnType<typeof createCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createCompanyContact>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
+					Awaited<ReturnType<typeof createCompanyContact>>,
 					TError,
-					Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>
+					Awaited<ReturnType<typeof createCompanyContact>>
 				>,
 				"initialData"
 			>;
@@ -148,21 +142,21 @@ export function usePostApiCompanyContactsCompanyId<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiCompanyContactsCompanyId<
-	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
+export function useCreateCompanyContact<
+	TData = Awaited<ReturnType<typeof createCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createCompanyContact>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
+					Awaited<ReturnType<typeof createCompanyContact>>,
 					TError,
-					Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>
+					Awaited<ReturnType<typeof createCompanyContact>>
 				>,
 				"initialData"
 			>;
@@ -170,15 +164,15 @@ export function usePostApiCompanyContactsCompanyId<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiCompanyContactsCompanyId<
-	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
+export function useCreateCompanyContact<
+	TData = Awaited<ReturnType<typeof createCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createCompanyContact>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -188,21 +182,21 @@ export function usePostApiCompanyContactsCompanyId<
  * @summary Create contact
  */
 
-export function usePostApiCompanyContactsCompanyId<
-	TData = Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>,
+export function useCreateCompanyContact<
+	TData = Awaited<ReturnType<typeof createCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiCompanyContactsCompanyId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createCompanyContact>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiCompanyContactsCompanyIdQueryOptions(
+	const queryOptions = getCreateCompanyContactQueryOptions(
 		companyId,
 		companyContactRequest,
 		options,
@@ -218,7 +212,7 @@ export function usePostApiCompanyContactsCompanyId<
 /**
  * @summary Get contacts
  */
-export const getApiCompanyContactsCompanyId = (
+export const getCompanyContacts = (
 	companyId: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -229,27 +223,26 @@ export const getApiCompanyContactsCompanyId = (
 	);
 };
 
-export const getGetApiCompanyContactsCompanyIdMutationKey = () =>
-	["getApiCompanyContactsCompanyId"] as const;
+export const getGetCompanyContactsMutationKey = () => ["getCompanyContacts"] as const;
 
-export const getGetApiCompanyContactsCompanyIdMutationOptions = <
+export const getGetCompanyContactsMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>,
+		Awaited<ReturnType<typeof getCompanyContacts>>,
 		TError,
-		GetApiCompanyContactsCompanyIdMutationVariables,
+		GetCompanyContactsMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>,
+	Awaited<ReturnType<typeof getCompanyContacts>>,
 	TError,
-	GetApiCompanyContactsCompanyIdMutationVariables,
+	GetCompanyContactsMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiCompanyContactsCompanyIdMutationKey();
+	const mutationKey = getGetCompanyContactsMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -257,55 +250,53 @@ export const getGetApiCompanyContactsCompanyIdMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>,
-		GetApiCompanyContactsCompanyIdMutationVariables
+		Awaited<ReturnType<typeof getCompanyContacts>>,
+		GetCompanyContactsMutationVariables
 	> = (props) => {
 		const { companyId } = props ?? {};
 
-		return getApiCompanyContactsCompanyId(companyId, requestOptions);
+		return getCompanyContacts(companyId, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiCompanyContactsCompanyIdMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>
+export type GetCompanyContactsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getCompanyContacts>>
 >;
 
-export type GetApiCompanyContactsCompanyIdMutationError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
-export type GetApiCompanyContactsCompanyIdMutationVariables = { companyId: string };
+export type GetCompanyContactsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCompanyContactsMutationVariables = { companyId: string };
 
 /**
  * @summary Get contacts
  */
-export const useGetApiCompanyContactsCompanyId = <
+export const useGetCompanyContacts = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>,
+			Awaited<ReturnType<typeof getCompanyContacts>>,
 			TError,
-			GetApiCompanyContactsCompanyIdMutationVariables,
+			GetCompanyContactsMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiCompanyContactsCompanyId>>,
+	Awaited<ReturnType<typeof getCompanyContacts>>,
 	TError,
-	GetApiCompanyContactsCompanyIdMutationVariables,
+	GetCompanyContactsMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiCompanyContactsCompanyIdMutationOptions(options), queryClient);
+	return useMutation(getGetCompanyContactsMutationOptions(options), queryClient);
 };
 /**
  * @summary Update contact
  */
-export const putApiCompanyContactsContactId = (
+export const updateCompanyContact = (
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -323,22 +314,22 @@ export const putApiCompanyContactsContactId = (
 	);
 };
 
-export const getPutApiCompanyContactsContactIdQueryKey = (
+export const getUpdateCompanyContactQueryKey = (
 	contactId: string,
 	companyContactRequest?: BodyType<CompanyContactRequest>,
 ) => {
 	return ["PUT", `/api/company-contacts/${contactId}`, companyContactRequest] as const;
 };
 
-export const getPutApiCompanyContactsContactIdQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
+export const getUpdateCompanyContactQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompanyContactsContactId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof updateCompanyContact>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -346,47 +337,41 @@ export const getPutApiCompanyContactsContactIdQueryOptions = <
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getPutApiCompanyContactsContactIdQueryKey(contactId, companyContactRequest);
+		queryOptions?.queryKey ?? getUpdateCompanyContactQueryKey(contactId, companyContactRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof putApiCompanyContactsContactId>>> = ({
-		signal,
-	}) => putApiCompanyContactsContactId(contactId, companyContactRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateCompanyContact>>> = ({ signal }) =>
+		updateCompanyContact(contactId, companyContactRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: contactId !== null && contactId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateCompanyContact>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiCompanyContactsContactIdQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiCompanyContactsContactId>>
+export type UpdateCompanyContactQueryResult = NonNullable<
+	Awaited<ReturnType<typeof updateCompanyContact>>
 >;
-export type PutApiCompanyContactsContactIdQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type UpdateCompanyContactQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiCompanyContactsContactId<
-	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
+export function useUpdateCompanyContact<
+	TData = Awaited<ReturnType<typeof updateCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompanyContactsContactId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof updateCompanyContact>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
+					Awaited<ReturnType<typeof updateCompanyContact>>,
 					TError,
-					Awaited<ReturnType<typeof putApiCompanyContactsContactId>>
+					Awaited<ReturnType<typeof updateCompanyContact>>
 				>,
 				"initialData"
 			>;
@@ -394,21 +379,21 @@ export function usePutApiCompanyContactsContactId<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiCompanyContactsContactId<
-	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
+export function useUpdateCompanyContact<
+	TData = Awaited<ReturnType<typeof updateCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompanyContactsContactId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof updateCompanyContact>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
+					Awaited<ReturnType<typeof updateCompanyContact>>,
 					TError,
-					Awaited<ReturnType<typeof putApiCompanyContactsContactId>>
+					Awaited<ReturnType<typeof updateCompanyContact>>
 				>,
 				"initialData"
 			>;
@@ -416,15 +401,15 @@ export function usePutApiCompanyContactsContactId<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiCompanyContactsContactId<
-	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
+export function useUpdateCompanyContact<
+	TData = Awaited<ReturnType<typeof updateCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompanyContactsContactId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof updateCompanyContact>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -434,21 +419,21 @@ export function usePutApiCompanyContactsContactId<
  * @summary Update contact
  */
 
-export function usePutApiCompanyContactsContactId<
-	TData = Awaited<ReturnType<typeof putApiCompanyContactsContactId>>,
+export function useUpdateCompanyContact<
+	TData = Awaited<ReturnType<typeof updateCompanyContact>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	contactId: string,
 	companyContactRequest: BodyType<CompanyContactRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompanyContactsContactId>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof updateCompanyContact>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiCompanyContactsContactIdQueryOptions(
+	const queryOptions = getUpdateCompanyContactQueryOptions(
 		contactId,
 		companyContactRequest,
 		options,
@@ -460,3 +445,88 @@ export function usePutApiCompanyContactsContactId<
 
 	return withQueryKey(query, queryOptions.queryKey);
 }
+
+/**
+ * @summary Get contact
+ */
+export const getCompanyContact = (
+	contactId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<CompanyContact>(
+		{ url: `/api/company-contacts/${contactId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetCompanyContactMutationKey = () => ["getCompanyContact"] as const;
+
+export const getGetCompanyContactMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getCompanyContact>>,
+		TError,
+		GetCompanyContactMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getCompanyContact>>,
+	TError,
+	GetCompanyContactMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetCompanyContactMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getCompanyContact>>,
+		GetCompanyContactMutationVariables
+	> = (props) => {
+		const { contactId } = props ?? {};
+
+		return getCompanyContact(contactId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetCompanyContactMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getCompanyContact>>
+>;
+
+export type GetCompanyContactMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCompanyContactMutationVariables = { contactId: string };
+
+/**
+ * @summary Get contact
+ */
+export const useGetCompanyContact = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getCompanyContact>>,
+			TError,
+			GetCompanyContactMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getCompanyContact>>,
+	TError,
+	GetCompanyContactMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetCompanyContactMutationOptions(options), queryClient);
+};

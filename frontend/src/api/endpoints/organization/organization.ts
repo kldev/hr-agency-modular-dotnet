@@ -34,8 +34,8 @@ import type {
 	BadRequestDetails,
 	CreateOrganizationRequest,
 	CreateUserForOrganizationRequest,
-	GetApiOrganizationParams,
-	GetApiOrganizationUsersParams,
+	GetOrganizationsParams,
+	GetOrganizationsUsersParams,
 	OrganizationCreated,
 	OrganizationSlugUpdated,
 	ProblemDetails,
@@ -67,7 +67,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 /**
  * @summary Create organization
  */
-export const postApiOrganization = (
+export const createOrganization = (
 	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -84,58 +84,54 @@ export const postApiOrganization = (
 	);
 };
 
-export const getPostApiOrganizationQueryKey = (
+export const getCreateOrganizationQueryKey = (
 	createOrganizationRequest?: BodyType<CreateOrganizationRequest>,
 ) => {
 	return ["POST", `/api/organization`, createOrganizationRequest] as const;
 };
 
-export const getPostApiOrganizationQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiOrganization>>,
+export const getCreateOrganizationQueryOptions = <
+	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganization>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ?? getPostApiOrganizationQueryKey(createOrganizationRequest);
+		queryOptions?.queryKey ?? getCreateOrganizationQueryKey(createOrganizationRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiOrganization>>> = ({ signal }) =>
-		postApiOrganization(createOrganizationRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof createOrganization>>> = ({ signal }) =>
+		createOrganization(createOrganizationRequest, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiOrganization>>,
+		Awaited<ReturnType<typeof createOrganization>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiOrganizationQueryResult = NonNullable<
-	Awaited<ReturnType<typeof postApiOrganization>>
+export type CreateOrganizationQueryResult = NonNullable<
+	Awaited<ReturnType<typeof createOrganization>>
 >;
-export type PostApiOrganizationQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type CreateOrganizationQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiOrganization<
-	TData = Awaited<ReturnType<typeof postApiOrganization>>,
+export function useCreateOrganization<
+	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
 	options: {
-		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganization>>, TError, TData>
-		> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiOrganization>>,
+					Awaited<ReturnType<typeof createOrganization>>,
 					TError,
-					Awaited<ReturnType<typeof postApiOrganization>>
+					Awaited<ReturnType<typeof createOrganization>>
 				>,
 				"initialData"
 			>;
@@ -143,20 +139,20 @@ export function usePostApiOrganization<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiOrganization<
-	TData = Awaited<ReturnType<typeof postApiOrganization>>,
+export function useCreateOrganization<
+	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganization>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiOrganization>>,
+					Awaited<ReturnType<typeof createOrganization>>,
 					TError,
-					Awaited<ReturnType<typeof postApiOrganization>>
+					Awaited<ReturnType<typeof createOrganization>>
 				>,
 				"initialData"
 			>;
@@ -164,15 +160,13 @@ export function usePostApiOrganization<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiOrganization<
-	TData = Awaited<ReturnType<typeof postApiOrganization>>,
+export function useCreateOrganization<
+	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganization>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -181,20 +175,18 @@ export function usePostApiOrganization<
  * @summary Create organization
  */
 
-export function usePostApiOrganization<
-	TData = Awaited<ReturnType<typeof postApiOrganization>>,
+export function useCreateOrganization<
+	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganization>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiOrganizationQueryOptions(createOrganizationRequest, options);
+	const queryOptions = getCreateOrganizationQueryOptions(createOrganizationRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -206,8 +198,8 @@ export function usePostApiOrganization<
 /**
  * @summary Get organizations
  */
-export const getApiOrganization = (
-	params?: GetApiOrganizationParams,
+export const getOrganizations = (
+	params?: GetOrganizationsParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -217,26 +209,26 @@ export const getApiOrganization = (
 	);
 };
 
-export const getGetApiOrganizationMutationKey = () => ["getApiOrganization"] as const;
+export const getGetOrganizationsMutationKey = () => ["getOrganizations"] as const;
 
-export const getGetApiOrganizationMutationOptions = <
+export const getGetOrganizationsMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiOrganization>>,
+		Awaited<ReturnType<typeof getOrganizations>>,
 		TError,
-		GetApiOrganizationMutationVariables,
+		GetOrganizationsMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiOrganization>>,
+	Awaited<ReturnType<typeof getOrganizations>>,
 	TError,
-	GetApiOrganizationMutationVariables,
+	GetOrganizationsMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiOrganizationMutationKey();
+	const mutationKey = getGetOrganizationsMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -244,53 +236,53 @@ export const getGetApiOrganizationMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiOrganization>>,
-		GetApiOrganizationMutationVariables
+		Awaited<ReturnType<typeof getOrganizations>>,
+		GetOrganizationsMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiOrganization(params, requestOptions);
+		return getOrganizations(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiOrganizationMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiOrganization>>
+export type GetOrganizationsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getOrganizations>>
 >;
 
-export type GetApiOrganizationMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiOrganizationMutationVariables = { params?: GetApiOrganizationParams };
+export type GetOrganizationsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetOrganizationsMutationVariables = { params?: GetOrganizationsParams };
 
 /**
  * @summary Get organizations
  */
-export const useGetApiOrganization = <
+export const useGetOrganizations = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiOrganization>>,
+			Awaited<ReturnType<typeof getOrganizations>>,
 			TError,
-			GetApiOrganizationMutationVariables,
+			GetOrganizationsMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiOrganization>>,
+	Awaited<ReturnType<typeof getOrganizations>>,
 	TError,
-	GetApiOrganizationMutationVariables,
+	GetOrganizationsMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiOrganizationMutationOptions(options), queryClient);
+	return useMutation(getGetOrganizationsMutationOptions(options), queryClient);
 };
 /**
  * @summary Update organization slug
  */
-export const putApiOrganizationOrganizationIdSlug = (
+export const updateOrganizationSlug = (
 	organizationId: string,
 	updateSlug: BodyType<UpdateSlug>,
 	options?: SecondParameter<typeof customInstance>,
@@ -308,26 +300,22 @@ export const putApiOrganizationOrganizationIdSlug = (
 	);
 };
 
-export const getPutApiOrganizationOrganizationIdSlugQueryKey = (
+export const getUpdateOrganizationSlugQueryKey = (
 	organizationId: string,
 	updateSlug?: BodyType<UpdateSlug>,
 ) => {
 	return ["PUT", `/api/organization/${organizationId}/slug`, updateSlug] as const;
 };
 
-export const getPutApiOrganizationOrganizationIdSlugQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
+export const getUpdateOrganizationSlugQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateOrganizationSlug>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	organizationId: string,
 	updateSlug: BodyType<UpdateSlug>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationSlug>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -335,52 +323,41 @@ export const getPutApiOrganizationOrganizationIdSlugQueryOptions = <
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getPutApiOrganizationOrganizationIdSlugQueryKey(organizationId, updateSlug);
+		queryOptions?.queryKey ?? getUpdateOrganizationSlugQueryKey(organizationId, updateSlug);
 
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>
-	> = ({ signal }) =>
-		putApiOrganizationOrganizationIdSlug(organizationId, updateSlug, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateOrganizationSlug>>> = ({ signal }) =>
+		updateOrganizationSlug(organizationId, updateSlug, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: organizationId !== null && organizationId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationSlug>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiOrganizationOrganizationIdSlugQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>
+export type UpdateOrganizationSlugQueryResult = NonNullable<
+	Awaited<ReturnType<typeof updateOrganizationSlug>>
 >;
-export type PutApiOrganizationOrganizationIdSlugQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type UpdateOrganizationSlugQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiOrganizationOrganizationIdSlug<
-	TData = Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
+export function useUpdateOrganizationSlug<
+	TData = Awaited<ReturnType<typeof updateOrganizationSlug>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	organizationId: string,
 	updateSlug: BodyType<UpdateSlug>,
 	options: {
 		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationSlug>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
+					Awaited<ReturnType<typeof updateOrganizationSlug>>,
 					TError,
-					Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>
+					Awaited<ReturnType<typeof updateOrganizationSlug>>
 				>,
 				"initialData"
 			>;
@@ -388,25 +365,21 @@ export function usePutApiOrganizationOrganizationIdSlug<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiOrganizationOrganizationIdSlug<
-	TData = Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
+export function useUpdateOrganizationSlug<
+	TData = Awaited<ReturnType<typeof updateOrganizationSlug>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	organizationId: string,
 	updateSlug: BodyType<UpdateSlug>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationSlug>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
+					Awaited<ReturnType<typeof updateOrganizationSlug>>,
 					TError,
-					Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>
+					Awaited<ReturnType<typeof updateOrganizationSlug>>
 				>,
 				"initialData"
 			>;
@@ -414,19 +387,15 @@ export function usePutApiOrganizationOrganizationIdSlug<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiOrganizationOrganizationIdSlug<
-	TData = Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
+export function useUpdateOrganizationSlug<
+	TData = Awaited<ReturnType<typeof updateOrganizationSlug>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	organizationId: string,
 	updateSlug: BodyType<UpdateSlug>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationSlug>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -436,29 +405,21 @@ export function usePutApiOrganizationOrganizationIdSlug<
  * @summary Update organization slug
  */
 
-export function usePutApiOrganizationOrganizationIdSlug<
-	TData = Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
+export function useUpdateOrganizationSlug<
+	TData = Awaited<ReturnType<typeof updateOrganizationSlug>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	organizationId: string,
 	updateSlug: BodyType<UpdateSlug>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiOrganizationOrganizationIdSlug>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationSlug>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiOrganizationOrganizationIdSlugQueryOptions(
-		organizationId,
-		updateSlug,
-		options,
-	);
+	const queryOptions = getUpdateOrganizationSlugQueryOptions(organizationId, updateSlug, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -470,7 +431,7 @@ export function usePutApiOrganizationOrganizationIdSlug<
 /**
  * @summary Get organization by Slug
  */
-export const getApiOrganizationSlug = (
+export const getOrganizationBySlug = (
 	slug: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -481,26 +442,26 @@ export const getApiOrganizationSlug = (
 	);
 };
 
-export const getGetApiOrganizationSlugMutationKey = () => ["getApiOrganizationSlug"] as const;
+export const getGetOrganizationBySlugMutationKey = () => ["getOrganizationBySlug"] as const;
 
-export const getGetApiOrganizationSlugMutationOptions = <
+export const getGetOrganizationBySlugMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiOrganizationSlug>>,
+		Awaited<ReturnType<typeof getOrganizationBySlug>>,
 		TError,
-		GetApiOrganizationSlugMutationVariables,
+		GetOrganizationBySlugMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiOrganizationSlug>>,
+	Awaited<ReturnType<typeof getOrganizationBySlug>>,
 	TError,
-	GetApiOrganizationSlugMutationVariables,
+	GetOrganizationBySlugMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiOrganizationSlugMutationKey();
+	const mutationKey = getGetOrganizationBySlugMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -508,53 +469,53 @@ export const getGetApiOrganizationSlugMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiOrganizationSlug>>,
-		GetApiOrganizationSlugMutationVariables
+		Awaited<ReturnType<typeof getOrganizationBySlug>>,
+		GetOrganizationBySlugMutationVariables
 	> = (props) => {
 		const { slug } = props ?? {};
 
-		return getApiOrganizationSlug(slug, requestOptions);
+		return getOrganizationBySlug(slug, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiOrganizationSlugMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiOrganizationSlug>>
+export type GetOrganizationBySlugMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getOrganizationBySlug>>
 >;
 
-export type GetApiOrganizationSlugMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiOrganizationSlugMutationVariables = { slug: string };
+export type GetOrganizationBySlugMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetOrganizationBySlugMutationVariables = { slug: string };
 
 /**
  * @summary Get organization by Slug
  */
-export const useGetApiOrganizationSlug = <
+export const useGetOrganizationBySlug = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiOrganizationSlug>>,
+			Awaited<ReturnType<typeof getOrganizationBySlug>>,
 			TError,
-			GetApiOrganizationSlugMutationVariables,
+			GetOrganizationBySlugMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiOrganizationSlug>>,
+	Awaited<ReturnType<typeof getOrganizationBySlug>>,
 	TError,
-	GetApiOrganizationSlugMutationVariables,
+	GetOrganizationBySlugMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiOrganizationSlugMutationOptions(options), queryClient);
+	return useMutation(getGetOrganizationBySlugMutationOptions(options), queryClient);
 };
 /**
  * @summary Create user
  */
-export const postApiOrganizationUsers = (
+export const createOrganizationUser = (
 	createUserForOrganizationRequest: BodyType<CreateUserForOrganizationRequest>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -571,20 +532,20 @@ export const postApiOrganizationUsers = (
 	);
 };
 
-export const getPostApiOrganizationUsersQueryKey = (
+export const getCreateOrganizationUserQueryKey = (
 	createUserForOrganizationRequest?: BodyType<CreateUserForOrganizationRequest>,
 ) => {
 	return ["POST", `/api/organization/users`, createUserForOrganizationRequest] as const;
 };
 
-export const getPostApiOrganizationUsersQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+export const getCreateOrganizationUserQueryOptions = <
+	TData = Awaited<ReturnType<typeof createOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserForOrganizationRequest: BodyType<CreateUserForOrganizationRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganizationUsers>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createOrganizationUser>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -592,38 +553,37 @@ export const getPostApiOrganizationUsersQueryOptions = <
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ?? getPostApiOrganizationUsersQueryKey(createUserForOrganizationRequest);
+		queryOptions?.queryKey ?? getCreateOrganizationUserQueryKey(createUserForOrganizationRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiOrganizationUsers>>> = ({
-		signal,
-	}) => postApiOrganizationUsers(createUserForOrganizationRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof createOrganizationUser>>> = ({ signal }) =>
+		createOrganizationUser(createUserForOrganizationRequest, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+		Awaited<ReturnType<typeof createOrganizationUser>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiOrganizationUsersQueryResult = NonNullable<
-	Awaited<ReturnType<typeof postApiOrganizationUsers>>
+export type CreateOrganizationUserQueryResult = NonNullable<
+	Awaited<ReturnType<typeof createOrganizationUser>>
 >;
-export type PostApiOrganizationUsersQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type CreateOrganizationUserQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiOrganizationUsers<
-	TData = Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+export function useCreateOrganizationUser<
+	TData = Awaited<ReturnType<typeof createOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserForOrganizationRequest: BodyType<CreateUserForOrganizationRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganizationUsers>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createOrganizationUser>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+					Awaited<ReturnType<typeof createOrganizationUser>>,
 					TError,
-					Awaited<ReturnType<typeof postApiOrganizationUsers>>
+					Awaited<ReturnType<typeof createOrganizationUser>>
 				>,
 				"initialData"
 			>;
@@ -631,20 +591,20 @@ export function usePostApiOrganizationUsers<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiOrganizationUsers<
-	TData = Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+export function useCreateOrganizationUser<
+	TData = Awaited<ReturnType<typeof createOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserForOrganizationRequest: BodyType<CreateUserForOrganizationRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganizationUsers>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createOrganizationUser>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+					Awaited<ReturnType<typeof createOrganizationUser>>,
 					TError,
-					Awaited<ReturnType<typeof postApiOrganizationUsers>>
+					Awaited<ReturnType<typeof createOrganizationUser>>
 				>,
 				"initialData"
 			>;
@@ -652,14 +612,14 @@ export function usePostApiOrganizationUsers<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiOrganizationUsers<
-	TData = Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+export function useCreateOrganizationUser<
+	TData = Awaited<ReturnType<typeof createOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserForOrganizationRequest: BodyType<CreateUserForOrganizationRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganizationUsers>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createOrganizationUser>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -669,20 +629,20 @@ export function usePostApiOrganizationUsers<
  * @summary Create user
  */
 
-export function usePostApiOrganizationUsers<
-	TData = Awaited<ReturnType<typeof postApiOrganizationUsers>>,
+export function useCreateOrganizationUser<
+	TData = Awaited<ReturnType<typeof createOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createUserForOrganizationRequest: BodyType<CreateUserForOrganizationRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiOrganizationUsers>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof createOrganizationUser>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiOrganizationUsersQueryOptions(
+	const queryOptions = getCreateOrganizationUserQueryOptions(
 		createUserForOrganizationRequest,
 		options,
 	);
@@ -697,8 +657,8 @@ export function usePostApiOrganizationUsers<
 /**
  * @summary Get users
  */
-export const getApiOrganizationUsers = (
-	params: GetApiOrganizationUsersParams,
+export const getOrganizationsUsers = (
+	params: GetOrganizationsUsersParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -708,26 +668,26 @@ export const getApiOrganizationUsers = (
 	);
 };
 
-export const getGetApiOrganizationUsersMutationKey = () => ["getApiOrganizationUsers"] as const;
+export const getGetOrganizationsUsersMutationKey = () => ["getOrganizationsUsers"] as const;
 
-export const getGetApiOrganizationUsersMutationOptions = <
+export const getGetOrganizationsUsersMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiOrganizationUsers>>,
+		Awaited<ReturnType<typeof getOrganizationsUsers>>,
 		TError,
-		GetApiOrganizationUsersMutationVariables,
+		GetOrganizationsUsersMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiOrganizationUsers>>,
+	Awaited<ReturnType<typeof getOrganizationsUsers>>,
 	TError,
-	GetApiOrganizationUsersMutationVariables,
+	GetOrganizationsUsersMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiOrganizationUsersMutationKey();
+	const mutationKey = getGetOrganizationsUsersMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -735,46 +695,46 @@ export const getGetApiOrganizationUsersMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiOrganizationUsers>>,
-		GetApiOrganizationUsersMutationVariables
+		Awaited<ReturnType<typeof getOrganizationsUsers>>,
+		GetOrganizationsUsersMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiOrganizationUsers(params, requestOptions);
+		return getOrganizationsUsers(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiOrganizationUsersMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiOrganizationUsers>>
+export type GetOrganizationsUsersMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getOrganizationsUsers>>
 >;
 
-export type GetApiOrganizationUsersMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiOrganizationUsersMutationVariables = { params: GetApiOrganizationUsersParams };
+export type GetOrganizationsUsersMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetOrganizationsUsersMutationVariables = { params: GetOrganizationsUsersParams };
 
 /**
  * @summary Get users
  */
-export const useGetApiOrganizationUsers = <
+export const useGetOrganizationsUsers = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiOrganizationUsers>>,
+			Awaited<ReturnType<typeof getOrganizationsUsers>>,
 			TError,
-			GetApiOrganizationUsersMutationVariables,
+			GetOrganizationsUsersMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiOrganizationUsers>>,
+	Awaited<ReturnType<typeof getOrganizationsUsers>>,
 	TError,
-	GetApiOrganizationUsersMutationVariables,
+	GetOrganizationsUsersMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiOrganizationUsersMutationOptions(options), queryClient);
+	return useMutation(getGetOrganizationsUsersMutationOptions(options), queryClient);
 };

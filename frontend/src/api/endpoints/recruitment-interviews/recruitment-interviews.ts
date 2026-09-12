@@ -34,7 +34,7 @@ import type {
 	BadRequestDetails,
 	ChangeInterviewFormatRequest,
 	ChangeInterviewStatusRequest,
-	GetApiInterviewsParams,
+	GetInterviewsParams,
 	InterviewCreated,
 	InterviewFormatChanged,
 	InterviewProjection,
@@ -66,8 +66,8 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 /**
  * @summary Get interviews
  */
-export const getApiInterviews = (
-	params?: GetApiInterviewsParams,
+export const getInterviews = (
+	params?: GetInterviewsParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -77,26 +77,26 @@ export const getApiInterviews = (
 	);
 };
 
-export const getGetApiInterviewsMutationKey = () => ["getApiInterviews"] as const;
+export const getGetInterviewsMutationKey = () => ["getInterviews"] as const;
 
-export const getGetApiInterviewsMutationOptions = <
+export const getGetInterviewsMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiInterviews>>,
+		Awaited<ReturnType<typeof getInterviews>>,
 		TError,
-		GetApiInterviewsMutationVariables,
+		GetInterviewsMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiInterviews>>,
+	Awaited<ReturnType<typeof getInterviews>>,
 	TError,
-	GetApiInterviewsMutationVariables,
+	GetInterviewsMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiInterviewsMutationKey();
+	const mutationKey = getGetInterviewsMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -104,53 +104,51 @@ export const getGetApiInterviewsMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiInterviews>>,
-		GetApiInterviewsMutationVariables
+		Awaited<ReturnType<typeof getInterviews>>,
+		GetInterviewsMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiInterviews(params, requestOptions);
+		return getInterviews(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiInterviewsMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiInterviews>>
->;
+export type GetInterviewsMutationResult = NonNullable<Awaited<ReturnType<typeof getInterviews>>>;
 
-export type GetApiInterviewsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiInterviewsMutationVariables = { params?: GetApiInterviewsParams };
+export type GetInterviewsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetInterviewsMutationVariables = { params?: GetInterviewsParams };
 
 /**
  * @summary Get interviews
  */
-export const useGetApiInterviews = <
+export const useGetInterviews = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiInterviews>>,
+			Awaited<ReturnType<typeof getInterviews>>,
 			TError,
-			GetApiInterviewsMutationVariables,
+			GetInterviewsMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiInterviews>>,
+	Awaited<ReturnType<typeof getInterviews>>,
 	TError,
-	GetApiInterviewsMutationVariables,
+	GetInterviewsMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiInterviewsMutationOptions(options), queryClient);
+	return useMutation(getGetInterviewsMutationOptions(options), queryClient);
 };
 /**
  * @summary Get interview
  */
-export const getApiInterviewsInterviewId = (
+export const getInterview = (
 	interviewId: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -161,27 +159,26 @@ export const getApiInterviewsInterviewId = (
 	);
 };
 
-export const getGetApiInterviewsInterviewIdMutationKey = () =>
-	["getApiInterviewsInterviewId"] as const;
+export const getGetInterviewMutationKey = () => ["getInterview"] as const;
 
-export const getGetApiInterviewsInterviewIdMutationOptions = <
+export const getGetInterviewMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiInterviewsInterviewId>>,
+		Awaited<ReturnType<typeof getInterview>>,
 		TError,
-		GetApiInterviewsInterviewIdMutationVariables,
+		GetInterviewMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiInterviewsInterviewId>>,
+	Awaited<ReturnType<typeof getInterview>>,
 	TError,
-	GetApiInterviewsInterviewIdMutationVariables,
+	GetInterviewMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiInterviewsInterviewIdMutationKey();
+	const mutationKey = getGetInterviewMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -189,55 +186,51 @@ export const getGetApiInterviewsInterviewIdMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiInterviewsInterviewId>>,
-		GetApiInterviewsInterviewIdMutationVariables
+		Awaited<ReturnType<typeof getInterview>>,
+		GetInterviewMutationVariables
 	> = (props) => {
 		const { interviewId } = props ?? {};
 
-		return getApiInterviewsInterviewId(interviewId, requestOptions);
+		return getInterview(interviewId, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiInterviewsInterviewIdMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiInterviewsInterviewId>>
->;
+export type GetInterviewMutationResult = NonNullable<Awaited<ReturnType<typeof getInterview>>>;
 
-export type GetApiInterviewsInterviewIdMutationError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
-export type GetApiInterviewsInterviewIdMutationVariables = { interviewId: string };
+export type GetInterviewMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetInterviewMutationVariables = { interviewId: string };
 
 /**
  * @summary Get interview
  */
-export const useGetApiInterviewsInterviewId = <
+export const useGetInterview = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiInterviewsInterviewId>>,
+			Awaited<ReturnType<typeof getInterview>>,
 			TError,
-			GetApiInterviewsInterviewIdMutationVariables,
+			GetInterviewMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiInterviewsInterviewId>>,
+	Awaited<ReturnType<typeof getInterview>>,
 	TError,
-	GetApiInterviewsInterviewIdMutationVariables,
+	GetInterviewMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiInterviewsInterviewIdMutationOptions(options), queryClient);
+	return useMutation(getGetInterviewMutationOptions(options), queryClient);
 };
 /**
  * @summary Schedule interview
  */
-export const postApiInterviewsSchedule = (
+export const scheduleInterview = (
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -254,59 +247,53 @@ export const postApiInterviewsSchedule = (
 	);
 };
 
-export const getPostApiInterviewsScheduleQueryKey = (
+export const getScheduleInterviewQueryKey = (
 	scheduleInterviewRequest?: BodyType<ScheduleInterviewRequest>,
 ) => {
 	return ["POST", `/api/interviews/schedule`, scheduleInterviewRequest] as const;
 };
 
-export const getPostApiInterviewsScheduleQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+export const getScheduleInterviewQueryOptions = <
+	TData = Awaited<ReturnType<typeof scheduleInterview>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiInterviewsSchedule>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof scheduleInterview>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey =
-		queryOptions?.queryKey ?? getPostApiInterviewsScheduleQueryKey(scheduleInterviewRequest);
+	const queryKey = queryOptions?.queryKey ?? getScheduleInterviewQueryKey(scheduleInterviewRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiInterviewsSchedule>>> = ({
-		signal,
-	}) => postApiInterviewsSchedule(scheduleInterviewRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof scheduleInterview>>> = ({ signal }) =>
+		scheduleInterview(scheduleInterviewRequest, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+		Awaited<ReturnType<typeof scheduleInterview>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiInterviewsScheduleQueryResult = NonNullable<
-	Awaited<ReturnType<typeof postApiInterviewsSchedule>>
+export type ScheduleInterviewQueryResult = NonNullable<
+	Awaited<ReturnType<typeof scheduleInterview>>
 >;
-export type PostApiInterviewsScheduleQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type ScheduleInterviewQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiInterviewsSchedule<
-	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+export function useScheduleInterview<
+	TData = Awaited<ReturnType<typeof scheduleInterview>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options: {
-		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiInterviewsSchedule>>, TError, TData>
-		> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof scheduleInterview>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+					Awaited<ReturnType<typeof scheduleInterview>>,
 					TError,
-					Awaited<ReturnType<typeof postApiInterviewsSchedule>>
+					Awaited<ReturnType<typeof scheduleInterview>>
 				>,
 				"initialData"
 			>;
@@ -314,20 +301,18 @@ export function usePostApiInterviewsSchedule<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiInterviewsSchedule<
-	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+export function useScheduleInterview<
+	TData = Awaited<ReturnType<typeof scheduleInterview>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiInterviewsSchedule>>, TError, TData>
-		> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof scheduleInterview>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+					Awaited<ReturnType<typeof scheduleInterview>>,
 					TError,
-					Awaited<ReturnType<typeof postApiInterviewsSchedule>>
+					Awaited<ReturnType<typeof scheduleInterview>>
 				>,
 				"initialData"
 			>;
@@ -335,15 +320,13 @@ export function usePostApiInterviewsSchedule<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiInterviewsSchedule<
-	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+export function useScheduleInterview<
+	TData = Awaited<ReturnType<typeof scheduleInterview>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiInterviewsSchedule>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof scheduleInterview>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -352,20 +335,18 @@ export function usePostApiInterviewsSchedule<
  * @summary Schedule interview
  */
 
-export function usePostApiInterviewsSchedule<
-	TData = Awaited<ReturnType<typeof postApiInterviewsSchedule>>,
+export function useScheduleInterview<
+	TData = Awaited<ReturnType<typeof scheduleInterview>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	scheduleInterviewRequest: BodyType<ScheduleInterviewRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiInterviewsSchedule>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof scheduleInterview>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiInterviewsScheduleQueryOptions(scheduleInterviewRequest, options);
+	const queryOptions = getScheduleInterviewQueryOptions(scheduleInterviewRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -377,7 +358,7 @@ export function usePostApiInterviewsSchedule<
 /**
  * @summary Change format
  */
-export const putApiInterviewsInterviewIdFormat = (
+export const changeInterviewFormat = (
 	interviewId: string,
 	changeInterviewFormatRequest: BodyType<ChangeInterviewFormatRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -395,22 +376,22 @@ export const putApiInterviewsInterviewIdFormat = (
 	);
 };
 
-export const getPutApiInterviewsInterviewIdFormatQueryKey = (
+export const getChangeInterviewFormatQueryKey = (
 	interviewId: string,
 	changeInterviewFormatRequest?: BodyType<ChangeInterviewFormatRequest>,
 ) => {
 	return ["PUT", `/api/interviews/${interviewId}/format`, changeInterviewFormatRequest] as const;
 };
 
-export const getPutApiInterviewsInterviewIdFormatQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
+export const getChangeInterviewFormatQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeInterviewFormat>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewFormatRequest: BodyType<ChangeInterviewFormatRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewFormat>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -419,52 +400,41 @@ export const getPutApiInterviewsInterviewIdFormatQueryOptions = <
 
 	const queryKey =
 		queryOptions?.queryKey ??
-		getPutApiInterviewsInterviewIdFormatQueryKey(interviewId, changeInterviewFormatRequest);
+		getChangeInterviewFormatQueryKey(interviewId, changeInterviewFormatRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>> = ({
-		signal,
-	}) =>
-		putApiInterviewsInterviewIdFormat(
-			interviewId,
-			changeInterviewFormatRequest,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeInterviewFormat>>> = ({ signal }) =>
+		changeInterviewFormat(interviewId, changeInterviewFormatRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: interviewId !== null && interviewId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof changeInterviewFormat>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiInterviewsInterviewIdFormatQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>
+export type ChangeInterviewFormatQueryResult = NonNullable<
+	Awaited<ReturnType<typeof changeInterviewFormat>>
 >;
-export type PutApiInterviewsInterviewIdFormatQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type ChangeInterviewFormatQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiInterviewsInterviewIdFormat<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
+export function useChangeInterviewFormat<
+	TData = Awaited<ReturnType<typeof changeInterviewFormat>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewFormatRequest: BodyType<ChangeInterviewFormatRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewFormat>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
+					Awaited<ReturnType<typeof changeInterviewFormat>>,
 					TError,
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>
+					Awaited<ReturnType<typeof changeInterviewFormat>>
 				>,
 				"initialData"
 			>;
@@ -472,21 +442,21 @@ export function usePutApiInterviewsInterviewIdFormat<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiInterviewsInterviewIdFormat<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
+export function useChangeInterviewFormat<
+	TData = Awaited<ReturnType<typeof changeInterviewFormat>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewFormatRequest: BodyType<ChangeInterviewFormatRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewFormat>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
+					Awaited<ReturnType<typeof changeInterviewFormat>>,
 					TError,
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>
+					Awaited<ReturnType<typeof changeInterviewFormat>>
 				>,
 				"initialData"
 			>;
@@ -494,15 +464,15 @@ export function usePutApiInterviewsInterviewIdFormat<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiInterviewsInterviewIdFormat<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
+export function useChangeInterviewFormat<
+	TData = Awaited<ReturnType<typeof changeInterviewFormat>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewFormatRequest: BodyType<ChangeInterviewFormatRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewFormat>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -512,21 +482,21 @@ export function usePutApiInterviewsInterviewIdFormat<
  * @summary Change format
  */
 
-export function usePutApiInterviewsInterviewIdFormat<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>,
+export function useChangeInterviewFormat<
+	TData = Awaited<ReturnType<typeof changeInterviewFormat>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewFormatRequest: BodyType<ChangeInterviewFormatRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdFormat>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewFormat>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiInterviewsInterviewIdFormatQueryOptions(
+	const queryOptions = getChangeInterviewFormatQueryOptions(
 		interviewId,
 		changeInterviewFormatRequest,
 		options,
@@ -542,7 +512,7 @@ export function usePutApiInterviewsInterviewIdFormat<
 /**
  * @summary Change status
  */
-export const putApiInterviewsInterviewIdStatus = (
+export const changeInterviewStatus = (
 	interviewId: string,
 	changeInterviewStatusRequest: BodyType<ChangeInterviewStatusRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -560,22 +530,22 @@ export const putApiInterviewsInterviewIdStatus = (
 	);
 };
 
-export const getPutApiInterviewsInterviewIdStatusQueryKey = (
+export const getChangeInterviewStatusQueryKey = (
 	interviewId: string,
 	changeInterviewStatusRequest?: BodyType<ChangeInterviewStatusRequest>,
 ) => {
 	return ["PUT", `/api/interviews/${interviewId}/status`, changeInterviewStatusRequest] as const;
 };
 
-export const getPutApiInterviewsInterviewIdStatusQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
+export const getChangeInterviewStatusQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeInterviewStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewStatusRequest: BodyType<ChangeInterviewStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewStatus>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -584,52 +554,41 @@ export const getPutApiInterviewsInterviewIdStatusQueryOptions = <
 
 	const queryKey =
 		queryOptions?.queryKey ??
-		getPutApiInterviewsInterviewIdStatusQueryKey(interviewId, changeInterviewStatusRequest);
+		getChangeInterviewStatusQueryKey(interviewId, changeInterviewStatusRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>> = ({
-		signal,
-	}) =>
-		putApiInterviewsInterviewIdStatus(
-			interviewId,
-			changeInterviewStatusRequest,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeInterviewStatus>>> = ({ signal }) =>
+		changeInterviewStatus(interviewId, changeInterviewStatusRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: interviewId !== null && interviewId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof changeInterviewStatus>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiInterviewsInterviewIdStatusQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>
+export type ChangeInterviewStatusQueryResult = NonNullable<
+	Awaited<ReturnType<typeof changeInterviewStatus>>
 >;
-export type PutApiInterviewsInterviewIdStatusQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type ChangeInterviewStatusQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiInterviewsInterviewIdStatus<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
+export function useChangeInterviewStatus<
+	TData = Awaited<ReturnType<typeof changeInterviewStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewStatusRequest: BodyType<ChangeInterviewStatusRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewStatus>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
+					Awaited<ReturnType<typeof changeInterviewStatus>>,
 					TError,
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>
+					Awaited<ReturnType<typeof changeInterviewStatus>>
 				>,
 				"initialData"
 			>;
@@ -637,21 +596,21 @@ export function usePutApiInterviewsInterviewIdStatus<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiInterviewsInterviewIdStatus<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
+export function useChangeInterviewStatus<
+	TData = Awaited<ReturnType<typeof changeInterviewStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewStatusRequest: BodyType<ChangeInterviewStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewStatus>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
+					Awaited<ReturnType<typeof changeInterviewStatus>>,
 					TError,
-					Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>
+					Awaited<ReturnType<typeof changeInterviewStatus>>
 				>,
 				"initialData"
 			>;
@@ -659,15 +618,15 @@ export function usePutApiInterviewsInterviewIdStatus<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiInterviewsInterviewIdStatus<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
+export function useChangeInterviewStatus<
+	TData = Awaited<ReturnType<typeof changeInterviewStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewStatusRequest: BodyType<ChangeInterviewStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewStatus>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -677,21 +636,21 @@ export function usePutApiInterviewsInterviewIdStatus<
  * @summary Change status
  */
 
-export function usePutApiInterviewsInterviewIdStatus<
-	TData = Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>,
+export function useChangeInterviewStatus<
+	TData = Awaited<ReturnType<typeof changeInterviewStatus>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	interviewId: string,
 	changeInterviewStatusRequest: BodyType<ChangeInterviewStatusRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiInterviewsInterviewIdStatus>>, TError, TData>
+			UseQueryOptions<Awaited<ReturnType<typeof changeInterviewStatus>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiInterviewsInterviewIdStatusQueryOptions(
+	const queryOptions = getChangeInterviewStatusQueryOptions(
 		interviewId,
 		changeInterviewStatusRequest,
 		options,

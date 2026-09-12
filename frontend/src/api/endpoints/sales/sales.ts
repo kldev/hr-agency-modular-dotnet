@@ -38,8 +38,8 @@ import type {
 	CreateOpportunityRequest,
 	CreateSalesActivityRequest,
 	GetApiSalesActivitiesParams,
-	GetApiSalesOpportunityParams,
-	GetApiSalesOpportunityTotalsParams,
+	GetOpportunitiesParams,
+	GetOpportunitiesPipelineTotalsParams,
 	OpportunityCreated,
 	OpportunityProjection,
 	OpportunityUpdated,
@@ -298,7 +298,7 @@ export const useGetApiSalesActivities = <
 /**
  * @summary Create opportunity
  */
-export const postApiSalesOpportunity = (
+export const createOpportunity = (
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -315,59 +315,53 @@ export const postApiSalesOpportunity = (
 	);
 };
 
-export const getPostApiSalesOpportunityQueryKey = (
+export const getCreateOpportunityQueryKey = (
 	createOpportunityRequest?: BodyType<CreateOpportunityRequest>,
 ) => {
 	return ["POST", `/api/sales/opportunity`, createOpportunityRequest] as const;
 };
 
-export const getPostApiSalesOpportunityQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+export const getCreateOpportunityQueryOptions = <
+	TData = Awaited<ReturnType<typeof createOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiSalesOpportunity>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOpportunity>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey =
-		queryOptions?.queryKey ?? getPostApiSalesOpportunityQueryKey(createOpportunityRequest);
+	const queryKey = queryOptions?.queryKey ?? getCreateOpportunityQueryKey(createOpportunityRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiSalesOpportunity>>> = ({
-		signal,
-	}) => postApiSalesOpportunity(createOpportunityRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof createOpportunity>>> = ({ signal }) =>
+		createOpportunity(createOpportunityRequest, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+		Awaited<ReturnType<typeof createOpportunity>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiSalesOpportunityQueryResult = NonNullable<
-	Awaited<ReturnType<typeof postApiSalesOpportunity>>
+export type CreateOpportunityQueryResult = NonNullable<
+	Awaited<ReturnType<typeof createOpportunity>>
 >;
-export type PostApiSalesOpportunityQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type CreateOpportunityQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiSalesOpportunity<
-	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+export function useCreateOpportunity<
+	TData = Awaited<ReturnType<typeof createOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options: {
-		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiSalesOpportunity>>, TError, TData>
-		> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOpportunity>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+					Awaited<ReturnType<typeof createOpportunity>>,
 					TError,
-					Awaited<ReturnType<typeof postApiSalesOpportunity>>
+					Awaited<ReturnType<typeof createOpportunity>>
 				>,
 				"initialData"
 			>;
@@ -375,20 +369,18 @@ export function usePostApiSalesOpportunity<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiSalesOpportunity<
-	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+export function useCreateOpportunity<
+	TData = Awaited<ReturnType<typeof createOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiSalesOpportunity>>, TError, TData>
-		> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOpportunity>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+					Awaited<ReturnType<typeof createOpportunity>>,
 					TError,
-					Awaited<ReturnType<typeof postApiSalesOpportunity>>
+					Awaited<ReturnType<typeof createOpportunity>>
 				>,
 				"initialData"
 			>;
@@ -396,15 +388,13 @@ export function usePostApiSalesOpportunity<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiSalesOpportunity<
-	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+export function useCreateOpportunity<
+	TData = Awaited<ReturnType<typeof createOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiSalesOpportunity>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOpportunity>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -413,20 +403,18 @@ export function usePostApiSalesOpportunity<
  * @summary Create opportunity
  */
 
-export function usePostApiSalesOpportunity<
-	TData = Awaited<ReturnType<typeof postApiSalesOpportunity>>,
+export function useCreateOpportunity<
+	TData = Awaited<ReturnType<typeof createOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createOpportunityRequest: BodyType<CreateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof postApiSalesOpportunity>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOpportunity>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiSalesOpportunityQueryOptions(createOpportunityRequest, options);
+	const queryOptions = getCreateOpportunityQueryOptions(createOpportunityRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -438,8 +426,8 @@ export function usePostApiSalesOpportunity<
 /**
  * @summary Get opportunities
  */
-export const getApiSalesOpportunity = (
-	params?: GetApiSalesOpportunityParams,
+export const getOpportunities = (
+	params?: GetOpportunitiesParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -449,26 +437,26 @@ export const getApiSalesOpportunity = (
 	);
 };
 
-export const getGetApiSalesOpportunityMutationKey = () => ["getApiSalesOpportunity"] as const;
+export const getGetOpportunitiesMutationKey = () => ["getOpportunities"] as const;
 
-export const getGetApiSalesOpportunityMutationOptions = <
+export const getGetOpportunitiesMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiSalesOpportunity>>,
+		Awaited<ReturnType<typeof getOpportunities>>,
 		TError,
-		GetApiSalesOpportunityMutationVariables,
+		GetOpportunitiesMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiSalesOpportunity>>,
+	Awaited<ReturnType<typeof getOpportunities>>,
 	TError,
-	GetApiSalesOpportunityMutationVariables,
+	GetOpportunitiesMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiSalesOpportunityMutationKey();
+	const mutationKey = getGetOpportunitiesMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -476,53 +464,53 @@ export const getGetApiSalesOpportunityMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiSalesOpportunity>>,
-		GetApiSalesOpportunityMutationVariables
+		Awaited<ReturnType<typeof getOpportunities>>,
+		GetOpportunitiesMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiSalesOpportunity(params, requestOptions);
+		return getOpportunities(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiSalesOpportunityMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiSalesOpportunity>>
+export type GetOpportunitiesMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getOpportunities>>
 >;
 
-export type GetApiSalesOpportunityMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiSalesOpportunityMutationVariables = { params?: GetApiSalesOpportunityParams };
+export type GetOpportunitiesMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetOpportunitiesMutationVariables = { params?: GetOpportunitiesParams };
 
 /**
  * @summary Get opportunities
  */
-export const useGetApiSalesOpportunity = <
+export const useGetOpportunities = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiSalesOpportunity>>,
+			Awaited<ReturnType<typeof getOpportunities>>,
 			TError,
-			GetApiSalesOpportunityMutationVariables,
+			GetOpportunitiesMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiSalesOpportunity>>,
+	Awaited<ReturnType<typeof getOpportunities>>,
 	TError,
-	GetApiSalesOpportunityMutationVariables,
+	GetOpportunitiesMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiSalesOpportunityMutationOptions(options), queryClient);
+	return useMutation(getGetOpportunitiesMutationOptions(options), queryClient);
 };
 /**
  * @summary Update opportunity
  */
-export const putApiSalesOpportunityOpportunityId = (
+export const updateOpportunity = (
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -540,84 +528,60 @@ export const putApiSalesOpportunityOpportunityId = (
 	);
 };
 
-export const getPutApiSalesOpportunityOpportunityIdQueryKey = (
+export const getUpdateOpportunityQueryKey = (
 	opportunityId: string,
 	updateOpportunityRequest?: BodyType<UpdateOpportunityRequest>,
 ) => {
 	return ["PUT", `/api/sales/opportunity/${opportunityId}`, updateOpportunityRequest] as const;
 };
 
-export const getPutApiSalesOpportunityOpportunityIdQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
+export const getUpdateOpportunityQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-				TError,
-				TData
-			>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateOpportunity>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ??
-		getPutApiSalesOpportunityOpportunityIdQueryKey(opportunityId, updateOpportunityRequest);
+		queryOptions?.queryKey ?? getUpdateOpportunityQueryKey(opportunityId, updateOpportunityRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>> = ({
-		signal,
-	}) =>
-		putApiSalesOpportunityOpportunityId(
-			opportunityId,
-			updateOpportunityRequest,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateOpportunity>>> = ({ signal }) =>
+		updateOpportunity(opportunityId, updateOpportunityRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: opportunityId !== null && opportunityId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateOpportunity>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiSalesOpportunityOpportunityIdQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>
+export type UpdateOpportunityQueryResult = NonNullable<
+	Awaited<ReturnType<typeof updateOpportunity>>
 >;
-export type PutApiSalesOpportunityOpportunityIdQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type UpdateOpportunityQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiSalesOpportunityOpportunityId<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
+export function useUpdateOpportunity<
+	TData = Awaited<ReturnType<typeof updateOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
 	options: {
-		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-				TError,
-				TData
-			>
-		> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateOpportunity>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
+					Awaited<ReturnType<typeof updateOpportunity>>,
 					TError,
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>
+					Awaited<ReturnType<typeof updateOpportunity>>
 				>,
 				"initialData"
 			>;
@@ -625,25 +589,19 @@ export function usePutApiSalesOpportunityOpportunityId<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiSalesOpportunityOpportunityId<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
+export function useUpdateOpportunity<
+	TData = Awaited<ReturnType<typeof updateOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-				TError,
-				TData
-			>
-		> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateOpportunity>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
+					Awaited<ReturnType<typeof updateOpportunity>>,
 					TError,
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>
+					Awaited<ReturnType<typeof updateOpportunity>>
 				>,
 				"initialData"
 			>;
@@ -651,20 +609,14 @@ export function usePutApiSalesOpportunityOpportunityId<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiSalesOpportunityOpportunityId<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
+export function useUpdateOpportunity<
+	TData = Awaited<ReturnType<typeof updateOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-				TError,
-				TData
-			>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateOpportunity>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -673,25 +625,19 @@ export function usePutApiSalesOpportunityOpportunityId<
  * @summary Update opportunity
  */
 
-export function usePutApiSalesOpportunityOpportunityId<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
+export function useUpdateOpportunity<
+	TData = Awaited<ReturnType<typeof updateOpportunity>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	updateOpportunityRequest: BodyType<UpdateOpportunityRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityId>>,
-				TError,
-				TData
-			>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateOpportunity>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiSalesOpportunityOpportunityIdQueryOptions(
+	const queryOptions = getUpdateOpportunityQueryOptions(
 		opportunityId,
 		updateOpportunityRequest,
 		options,
@@ -707,7 +653,7 @@ export function usePutApiSalesOpportunityOpportunityId<
 /**
  * @summary Get opportunity
  */
-export const getApiSalesOpportunityOpportunityId = (
+export const getOpportunity = (
 	opportunityId: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -718,27 +664,26 @@ export const getApiSalesOpportunityOpportunityId = (
 	);
 };
 
-export const getGetApiSalesOpportunityOpportunityIdMutationKey = () =>
-	["getApiSalesOpportunityOpportunityId"] as const;
+export const getGetOpportunityMutationKey = () => ["getOpportunity"] as const;
 
-export const getGetApiSalesOpportunityOpportunityIdMutationOptions = <
+export const getGetOpportunityMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiSalesOpportunityOpportunityId>>,
+		Awaited<ReturnType<typeof getOpportunity>>,
 		TError,
-		GetApiSalesOpportunityOpportunityIdMutationVariables,
+		GetOpportunityMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiSalesOpportunityOpportunityId>>,
+	Awaited<ReturnType<typeof getOpportunity>>,
 	TError,
-	GetApiSalesOpportunityOpportunityIdMutationVariables,
+	GetOpportunityMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiSalesOpportunityOpportunityIdMutationKey();
+	const mutationKey = getGetOpportunityMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -746,53 +691,49 @@ export const getGetApiSalesOpportunityOpportunityIdMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiSalesOpportunityOpportunityId>>,
-		GetApiSalesOpportunityOpportunityIdMutationVariables
+		Awaited<ReturnType<typeof getOpportunity>>,
+		GetOpportunityMutationVariables
 	> = (props) => {
 		const { opportunityId } = props ?? {};
 
-		return getApiSalesOpportunityOpportunityId(opportunityId, requestOptions);
+		return getOpportunity(opportunityId, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiSalesOpportunityOpportunityIdMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiSalesOpportunityOpportunityId>>
->;
+export type GetOpportunityMutationResult = NonNullable<Awaited<ReturnType<typeof getOpportunity>>>;
 
-export type GetApiSalesOpportunityOpportunityIdMutationError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
-export type GetApiSalesOpportunityOpportunityIdMutationVariables = { opportunityId: string };
+export type GetOpportunityMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetOpportunityMutationVariables = { opportunityId: string };
 
 /**
  * @summary Get opportunity
  */
-export const useGetApiSalesOpportunityOpportunityId = <
+export const useGetOpportunity = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiSalesOpportunityOpportunityId>>,
+			Awaited<ReturnType<typeof getOpportunity>>,
 			TError,
-			GetApiSalesOpportunityOpportunityIdMutationVariables,
+			GetOpportunityMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiSalesOpportunityOpportunityId>>,
+	Awaited<ReturnType<typeof getOpportunity>>,
 	TError,
-	GetApiSalesOpportunityOpportunityIdMutationVariables,
+	GetOpportunityMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiSalesOpportunityOpportunityIdMutationOptions(options), queryClient);
+	return useMutation(getGetOpportunityMutationOptions(options), queryClient);
 };
 /**
- * @summary Change responsible person
+ * @summary Change opportunity responsible person
  */
 export const putApiSalesOpportunityOpportunityIdResponsible = (
 	opportunityId: string,
@@ -949,7 +890,7 @@ export function usePutApiSalesOpportunityOpportunityIdResponsible<
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 /**
- * @summary Change responsible person
+ * @summary Change opportunity responsible person
  */
 
 export function usePutApiSalesOpportunityOpportunityIdResponsible<
@@ -986,7 +927,7 @@ export function usePutApiSalesOpportunityOpportunityIdResponsible<
 /**
  * @summary Change stage
  */
-export const putApiSalesOpportunityOpportunityIdStage = (
+export const changeOpportunityStage = (
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -1004,7 +945,7 @@ export const putApiSalesOpportunityOpportunityIdStage = (
 	);
 };
 
-export const getPutApiSalesOpportunityOpportunityIdStageQueryKey = (
+export const getChangeOpportunityStageQueryKey = (
 	opportunityId: string,
 	changeOpportunityStageRequest?: BodyType<ChangeOpportunityStageRequest>,
 ) => {
@@ -1015,19 +956,15 @@ export const getPutApiSalesOpportunityOpportunityIdStageQueryKey = (
 	] as const;
 };
 
-export const getPutApiSalesOpportunityOpportunityIdStageQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
+export const getChangeOpportunityStageQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeOpportunityStage>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeOpportunityStage>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -1036,59 +973,41 @@ export const getPutApiSalesOpportunityOpportunityIdStageQueryOptions = <
 
 	const queryKey =
 		queryOptions?.queryKey ??
-		getPutApiSalesOpportunityOpportunityIdStageQueryKey(
-			opportunityId,
-			changeOpportunityStageRequest,
-		);
+		getChangeOpportunityStageQueryKey(opportunityId, changeOpportunityStageRequest);
 
-	const queryFn: QueryFunction<
-		Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>
-	> = ({ signal }) =>
-		putApiSalesOpportunityOpportunityIdStage(
-			opportunityId,
-			changeOpportunityStageRequest,
-			requestOptions,
-			signal,
-		);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeOpportunityStage>>> = ({ signal }) =>
+		changeOpportunityStage(opportunityId, changeOpportunityStageRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: opportunityId !== null && opportunityId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<
-		Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-		TError,
-		TData
-	> & { queryKey: DataTag<QueryKey, TData, TError> };
+	} as UseQueryOptions<Awaited<ReturnType<typeof changeOpportunityStage>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
 };
 
-export type PutApiSalesOpportunityOpportunityIdStageQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>
+export type ChangeOpportunityStageQueryResult = NonNullable<
+	Awaited<ReturnType<typeof changeOpportunityStage>>
 >;
-export type PutApiSalesOpportunityOpportunityIdStageQueryError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
+export type ChangeOpportunityStageQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiSalesOpportunityOpportunityIdStage<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
+export function useChangeOpportunityStage<
+	TData = Awaited<ReturnType<typeof changeOpportunityStage>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
 	options: {
 		query: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeOpportunityStage>>, TError, TData>
 		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
+					Awaited<ReturnType<typeof changeOpportunityStage>>,
 					TError,
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>
+					Awaited<ReturnType<typeof changeOpportunityStage>>
 				>,
 				"initialData"
 			>;
@@ -1096,25 +1015,21 @@ export function usePutApiSalesOpportunityOpportunityIdStage<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiSalesOpportunityOpportunityIdStage<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
+export function useChangeOpportunityStage<
+	TData = Awaited<ReturnType<typeof changeOpportunityStage>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeOpportunityStage>>, TError, TData>
 		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
+					Awaited<ReturnType<typeof changeOpportunityStage>>,
 					TError,
-					Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>
+					Awaited<ReturnType<typeof changeOpportunityStage>>
 				>,
 				"initialData"
 			>;
@@ -1122,19 +1037,15 @@ export function usePutApiSalesOpportunityOpportunityIdStage<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiSalesOpportunityOpportunityIdStage<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
+export function useChangeOpportunityStage<
+	TData = Awaited<ReturnType<typeof changeOpportunityStage>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeOpportunityStage>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
@@ -1144,25 +1055,21 @@ export function usePutApiSalesOpportunityOpportunityIdStage<
  * @summary Change stage
  */
 
-export function usePutApiSalesOpportunityOpportunityIdStage<
-	TData = Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
+export function useChangeOpportunityStage<
+	TData = Awaited<ReturnType<typeof changeOpportunityStage>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	opportunityId: string,
 	changeOpportunityStageRequest: BodyType<ChangeOpportunityStageRequest>,
 	options?: {
 		query?: Partial<
-			UseQueryOptions<
-				Awaited<ReturnType<typeof putApiSalesOpportunityOpportunityIdStage>>,
-				TError,
-				TData
-			>
+			UseQueryOptions<Awaited<ReturnType<typeof changeOpportunityStage>>, TError, TData>
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiSalesOpportunityOpportunityIdStageQueryOptions(
+	const queryOptions = getChangeOpportunityStageQueryOptions(
 		opportunityId,
 		changeOpportunityStageRequest,
 		options,
@@ -1178,8 +1085,8 @@ export function usePutApiSalesOpportunityOpportunityIdStage<
 /**
  * @summary Get pipeline totals
  */
-export const getApiSalesOpportunityTotals = (
-	params?: GetApiSalesOpportunityTotalsParams,
+export const getOpportunitiesPipelineTotals = (
+	params?: GetOpportunitiesPipelineTotalsParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -1189,27 +1096,27 @@ export const getApiSalesOpportunityTotals = (
 	);
 };
 
-export const getGetApiSalesOpportunityTotalsMutationKey = () =>
-	["getApiSalesOpportunityTotals"] as const;
+export const getGetOpportunitiesPipelineTotalsMutationKey = () =>
+	["getOpportunitiesPipelineTotals"] as const;
 
-export const getGetApiSalesOpportunityTotalsMutationOptions = <
+export const getGetOpportunitiesPipelineTotalsMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>,
+		Awaited<ReturnType<typeof getOpportunitiesPipelineTotals>>,
 		TError,
-		GetApiSalesOpportunityTotalsMutationVariables,
+		GetOpportunitiesPipelineTotalsMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>,
+	Awaited<ReturnType<typeof getOpportunitiesPipelineTotals>>,
 	TError,
-	GetApiSalesOpportunityTotalsMutationVariables,
+	GetOpportunitiesPipelineTotalsMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiSalesOpportunityTotalsMutationKey();
+	const mutationKey = getGetOpportunitiesPipelineTotalsMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -1217,57 +1124,57 @@ export const getGetApiSalesOpportunityTotalsMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>,
-		GetApiSalesOpportunityTotalsMutationVariables
+		Awaited<ReturnType<typeof getOpportunitiesPipelineTotals>>,
+		GetOpportunitiesPipelineTotalsMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiSalesOpportunityTotals(params, requestOptions);
+		return getOpportunitiesPipelineTotals(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiSalesOpportunityTotalsMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>
+export type GetOpportunitiesPipelineTotalsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getOpportunitiesPipelineTotals>>
 >;
 
-export type GetApiSalesOpportunityTotalsMutationError = ErrorType<
+export type GetOpportunitiesPipelineTotalsMutationError = ErrorType<
 	BadRequestDetails | ProblemDetails
 >;
-export type GetApiSalesOpportunityTotalsMutationVariables = {
-	params?: GetApiSalesOpportunityTotalsParams;
+export type GetOpportunitiesPipelineTotalsMutationVariables = {
+	params?: GetOpportunitiesPipelineTotalsParams;
 };
 
 /**
  * @summary Get pipeline totals
  */
-export const useGetApiSalesOpportunityTotals = <
+export const useGetOpportunitiesPipelineTotals = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>,
+			Awaited<ReturnType<typeof getOpportunitiesPipelineTotals>>,
 			TError,
-			GetApiSalesOpportunityTotalsMutationVariables,
+			GetOpportunitiesPipelineTotalsMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiSalesOpportunityTotals>>,
+	Awaited<ReturnType<typeof getOpportunitiesPipelineTotals>>,
 	TError,
-	GetApiSalesOpportunityTotalsMutationVariables,
+	GetOpportunitiesPipelineTotalsMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiSalesOpportunityTotalsMutationOptions(options), queryClient);
+	return useMutation(getGetOpportunitiesPipelineTotalsMutationOptions(options), queryClient);
 };
 /**
  * @summary Get responsible totals
  */
-export const getApiSalesOpportunityTotalsResponsible = (
+export const getOpportunitiesResponsibleTotals = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -1277,27 +1184,27 @@ export const getApiSalesOpportunityTotalsResponsible = (
 	);
 };
 
-export const getGetApiSalesOpportunityTotalsResponsibleMutationKey = () =>
-	["getApiSalesOpportunityTotalsResponsible"] as const;
+export const getGetOpportunitiesResponsibleTotalsMutationKey = () =>
+	["getOpportunitiesResponsibleTotals"] as const;
 
-export const getGetApiSalesOpportunityTotalsResponsibleMutationOptions = <
+export const getGetOpportunitiesResponsibleTotalsMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiSalesOpportunityTotalsResponsible>>,
+		Awaited<ReturnType<typeof getOpportunitiesResponsibleTotals>>,
 		TError,
 		void,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiSalesOpportunityTotalsResponsible>>,
+	Awaited<ReturnType<typeof getOpportunitiesResponsibleTotals>>,
 	TError,
 	void,
 	TContext
 > => {
-	const mutationKey = getGetApiSalesOpportunityTotalsResponsibleMutationKey();
+	const mutationKey = getGetOpportunitiesResponsibleTotalsMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -1305,33 +1212,33 @@ export const getGetApiSalesOpportunityTotalsResponsibleMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiSalesOpportunityTotalsResponsible>>,
+		Awaited<ReturnType<typeof getOpportunitiesResponsibleTotals>>,
 		void
 	> = () => {
-		return getApiSalesOpportunityTotalsResponsible(requestOptions);
+		return getOpportunitiesResponsibleTotals(requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiSalesOpportunityTotalsResponsibleMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiSalesOpportunityTotalsResponsible>>
+export type GetOpportunitiesResponsibleTotalsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getOpportunitiesResponsibleTotals>>
 >;
 
-export type GetApiSalesOpportunityTotalsResponsibleMutationError = ErrorType<
+export type GetOpportunitiesResponsibleTotalsMutationError = ErrorType<
 	BadRequestDetails | ProblemDetails
 >;
 
 /**
  * @summary Get responsible totals
  */
-export const useGetApiSalesOpportunityTotalsResponsible = <
+export const useGetOpportunitiesResponsibleTotals = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiSalesOpportunityTotalsResponsible>>,
+			Awaited<ReturnType<typeof getOpportunitiesResponsibleTotals>>,
 			TError,
 			void,
 			TContext
@@ -1340,13 +1247,10 @@ export const useGetApiSalesOpportunityTotalsResponsible = <
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiSalesOpportunityTotalsResponsible>>,
+	Awaited<ReturnType<typeof getOpportunitiesResponsibleTotals>>,
 	TError,
 	void,
 	TContext
 > => {
-	return useMutation(
-		getGetApiSalesOpportunityTotalsResponsibleMutationOptions(options),
-		queryClient,
-	);
+	return useMutation(getGetOpportunitiesResponsibleTotalsMutationOptions(options), queryClient);
 };

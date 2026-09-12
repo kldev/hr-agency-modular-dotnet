@@ -1,7 +1,7 @@
 import { Globe2 } from "lucide-react";
 import type React from "react";
 import { useCallback, useState } from "react";
-import { getApiOrganization } from "@/api/endpoints";
+import { getOrganizations } from "@/api/endpoints";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, LoadMore } from "@/components/ui";
@@ -12,7 +12,7 @@ const OrganizationsPage: React.FC = () => {
 	const [search, setSearch] = useState<string>("");
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getApiOrganization({
+			return getOrganizations({
 				page,
 				pageSize,
 				search: search ?? undefined,

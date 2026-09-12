@@ -8,6 +8,9 @@ namespace HrAgencySystem.Company.Application.Contacts.Create;
 
 public static class CreateCompanyContactHandler
 {
+    
+    public const string ContactWithEmailMessage = "Contact with this email already exists in the company.";
+    
     public static async Task<CompanyContact> Handle(CreateCompanyContact command,
         ICompanySnapshotRepository snapshotRepository,
         ICompanyContactRepository repository,

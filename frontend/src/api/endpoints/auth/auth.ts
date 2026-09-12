@@ -62,7 +62,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 /**
  * @summary Login organization user
  */
-export const postApiAuthLogin = (
+export const loginOrganizationUser = (
 	loginUser: BodyType<LoginUser>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -79,49 +79,55 @@ export const postApiAuthLogin = (
 	);
 };
 
-export const getPostApiAuthLoginQueryKey = (loginUser?: BodyType<LoginUser>) => {
+export const getLoginOrganizationUserQueryKey = (loginUser?: BodyType<LoginUser>) => {
 	return ["POST", `/api/auth/login`, loginUser] as const;
 };
 
-export const getPostApiAuthLoginQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
+export const getLoginOrganizationUserQueryOptions = <
+	TData = Awaited<ReturnType<typeof loginOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError, TData>>;
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof loginOrganizationUser>>, TError, TData>
+		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getPostApiAuthLoginQueryKey(loginUser);
+	const queryKey = queryOptions?.queryKey ?? getLoginOrganizationUserQueryKey(loginUser);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiAuthLogin>>> = ({ signal }) =>
-		postApiAuthLogin(loginUser, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof loginOrganizationUser>>> = ({ signal }) =>
+		loginOrganizationUser(loginUser, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiAuthLogin>>,
+		Awaited<ReturnType<typeof loginOrganizationUser>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiAuthLoginQueryResult = NonNullable<Awaited<ReturnType<typeof postApiAuthLogin>>>;
-export type PostApiAuthLoginQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type LoginOrganizationUserQueryResult = NonNullable<
+	Awaited<ReturnType<typeof loginOrganizationUser>>
+>;
+export type LoginOrganizationUserQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiAuthLogin<
-	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
+export function useLoginOrganizationUser<
+	TData = Awaited<ReturnType<typeof loginOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options: {
-		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError, TData>> &
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof loginOrganizationUser>>, TError, TData>
+		> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiAuthLogin>>,
+					Awaited<ReturnType<typeof loginOrganizationUser>>,
 					TError,
-					Awaited<ReturnType<typeof postApiAuthLogin>>
+					Awaited<ReturnType<typeof loginOrganizationUser>>
 				>,
 				"initialData"
 			>;
@@ -129,18 +135,20 @@ export function usePostApiAuthLogin<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiAuthLogin<
-	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
+export function useLoginOrganizationUser<
+	TData = Awaited<ReturnType<typeof loginOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError, TData>> &
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof loginOrganizationUser>>, TError, TData>
+		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiAuthLogin>>,
+					Awaited<ReturnType<typeof loginOrganizationUser>>,
 					TError,
-					Awaited<ReturnType<typeof postApiAuthLogin>>
+					Awaited<ReturnType<typeof loginOrganizationUser>>
 				>,
 				"initialData"
 			>;
@@ -148,13 +156,15 @@ export function usePostApiAuthLogin<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiAuthLogin<
-	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
+export function useLoginOrganizationUser<
+	TData = Awaited<ReturnType<typeof loginOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError, TData>>;
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof loginOrganizationUser>>, TError, TData>
+		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -163,18 +173,20 @@ export function usePostApiAuthLogin<
  * @summary Login organization user
  */
 
-export function usePostApiAuthLogin<
-	TData = Awaited<ReturnType<typeof postApiAuthLogin>>,
+export function useLoginOrganizationUser<
+	TData = Awaited<ReturnType<typeof loginOrganizationUser>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginUser: BodyType<LoginUser>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError, TData>>;
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof loginOrganizationUser>>, TError, TData>
+		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiAuthLoginQueryOptions(loginUser, options);
+	const queryOptions = getLoginOrganizationUserQueryOptions(loginUser, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -186,7 +198,7 @@ export function usePostApiAuthLogin<
 /**
  * @summary Login platform owner
  */
-export const postApiOwnerLogin = (
+export const loginPlatformOwner = (
 	loginOwner: BodyType<LoginOwner>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -203,51 +215,51 @@ export const postApiOwnerLogin = (
 	);
 };
 
-export const getPostApiOwnerLoginQueryKey = (loginOwner?: BodyType<LoginOwner>) => {
+export const getLoginPlatformOwnerQueryKey = (loginOwner?: BodyType<LoginOwner>) => {
 	return ["POST", `/api/owner/login`, loginOwner] as const;
 };
 
-export const getPostApiOwnerLoginQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
+export const getLoginPlatformOwnerQueryOptions = <
+	TData = Awaited<ReturnType<typeof loginPlatformOwner>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiOwnerLogin>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof loginPlatformOwner>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getPostApiOwnerLoginQueryKey(loginOwner);
+	const queryKey = queryOptions?.queryKey ?? getLoginPlatformOwnerQueryKey(loginOwner);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiOwnerLogin>>> = ({ signal }) =>
-		postApiOwnerLogin(loginOwner, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof loginPlatformOwner>>> = ({ signal }) =>
+		loginPlatformOwner(loginOwner, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiOwnerLogin>>,
+		Awaited<ReturnType<typeof loginPlatformOwner>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiOwnerLoginQueryResult = NonNullable<
-	Awaited<ReturnType<typeof postApiOwnerLogin>>
+export type LoginPlatformOwnerQueryResult = NonNullable<
+	Awaited<ReturnType<typeof loginPlatformOwner>>
 >;
-export type PostApiOwnerLoginQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type LoginPlatformOwnerQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiOwnerLogin<
-	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
+export function useLoginPlatformOwner<
+	TData = Awaited<ReturnType<typeof loginPlatformOwner>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options: {
-		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiOwnerLogin>>, TError, TData>> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof loginPlatformOwner>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiOwnerLogin>>,
+					Awaited<ReturnType<typeof loginPlatformOwner>>,
 					TError,
-					Awaited<ReturnType<typeof postApiOwnerLogin>>
+					Awaited<ReturnType<typeof loginPlatformOwner>>
 				>,
 				"initialData"
 			>;
@@ -255,18 +267,20 @@ export function usePostApiOwnerLogin<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiOwnerLogin<
-	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
+export function useLoginPlatformOwner<
+	TData = Awaited<ReturnType<typeof loginPlatformOwner>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiOwnerLogin>>, TError, TData>> &
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof loginPlatformOwner>>, TError, TData>
+		> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiOwnerLogin>>,
+					Awaited<ReturnType<typeof loginPlatformOwner>>,
 					TError,
-					Awaited<ReturnType<typeof postApiOwnerLogin>>
+					Awaited<ReturnType<typeof loginPlatformOwner>>
 				>,
 				"initialData"
 			>;
@@ -274,13 +288,13 @@ export function usePostApiOwnerLogin<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiOwnerLogin<
-	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
+export function useLoginPlatformOwner<
+	TData = Awaited<ReturnType<typeof loginPlatformOwner>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiOwnerLogin>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof loginPlatformOwner>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -289,18 +303,18 @@ export function usePostApiOwnerLogin<
  * @summary Login platform owner
  */
 
-export function usePostApiOwnerLogin<
-	TData = Awaited<ReturnType<typeof postApiOwnerLogin>>,
+export function useLoginPlatformOwner<
+	TData = Awaited<ReturnType<typeof loginPlatformOwner>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	loginOwner: BodyType<LoginOwner>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiOwnerLogin>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof loginPlatformOwner>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiOwnerLoginQueryOptions(loginOwner, options);
+	const queryOptions = getLoginPlatformOwnerQueryOptions(loginOwner, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -312,7 +326,7 @@ export function usePostApiOwnerLogin<
 /**
  * @summary Get information about the current user
  */
-export const getApiUserMe = (
+export const getAuthenticatedUser = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -322,49 +336,69 @@ export const getApiUserMe = (
 	);
 };
 
-export const getGetApiUserMeMutationKey = () => ["getApiUserMe"] as const;
+export const getGetAuthenticatedUserMutationKey = () => ["getAuthenticatedUser"] as const;
 
-export const getGetApiUserMeMutationOptions = <
+export const getGetAuthenticatedUserMutationOptions = <
 	TError = ErrorType<ProblemDetails>,
 	TContext = unknown,
 >(options?: {
-	mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext>;
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getAuthenticatedUser>>,
+		TError,
+		void,
+		TContext
+	>;
 	request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext> => {
-	const mutationKey = getGetApiUserMeMutationKey();
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getAuthenticatedUser>>,
+	TError,
+	void,
+	TContext
+> => {
+	const mutationKey = getGetAuthenticatedUserMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
 		: { mutation: { mutationKey }, request: undefined };
 
-	const mutationFn: MutationFunction<Awaited<ReturnType<typeof getApiUserMe>>, void> = () => {
-		return getApiUserMe(requestOptions);
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getAuthenticatedUser>>,
+		void
+	> = () => {
+		return getAuthenticatedUser(requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiUserMeMutationResult = NonNullable<Awaited<ReturnType<typeof getApiUserMe>>>;
+export type GetAuthenticatedUserMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getAuthenticatedUser>>
+>;
 
-export type GetApiUserMeMutationError = ErrorType<ProblemDetails>;
+export type GetAuthenticatedUserMutationError = ErrorType<ProblemDetails>;
 
 /**
  * @summary Get information about the current user
  */
-export const useGetApiUserMe = <TError = ErrorType<ProblemDetails>, TContext = unknown>(
+export const useGetAuthenticatedUser = <TError = ErrorType<ProblemDetails>, TContext = unknown>(
 	options?: {
-		mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext>;
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getAuthenticatedUser>>,
+			TError,
+			void,
+			TContext
+		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
-): UseMutationResult<Awaited<ReturnType<typeof getApiUserMe>>, TError, void, TContext> => {
-	return useMutation(getGetApiUserMeMutationOptions(options), queryClient);
+): UseMutationResult<Awaited<ReturnType<typeof getAuthenticatedUser>>, TError, void, TContext> => {
+	return useMutation(getGetAuthenticatedUserMutationOptions(options), queryClient);
 };
 /**
  * @summary Get information about the current owner
  */
-export const getApiOwnerMe = (
+export const getAuthenticatedOwner = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -374,40 +408,55 @@ export const getApiOwnerMe = (
 	);
 };
 
-export const getGetApiOwnerMeMutationKey = () => ["getApiOwnerMe"] as const;
+export const getGetAuthenticatedOwnerMutationKey = () => ["getAuthenticatedOwner"] as const;
 
-export const getGetApiOwnerMeMutationOptions = <
+export const getGetAuthenticatedOwnerMutationOptions = <
 	TError = ErrorType<ProblemDetails>,
 	TContext = unknown,
 >(options?: {
-	mutation?: UseMutationOptions<Awaited<ReturnType<typeof getApiOwnerMe>>, TError, void, TContext>;
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getAuthenticatedOwner>>,
+		TError,
+		void,
+		TContext
+	>;
 	request?: SecondParameter<typeof customInstance>;
-}): UseMutationOptions<Awaited<ReturnType<typeof getApiOwnerMe>>, TError, void, TContext> => {
-	const mutationKey = getGetApiOwnerMeMutationKey();
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getAuthenticatedOwner>>,
+	TError,
+	void,
+	TContext
+> => {
+	const mutationKey = getGetAuthenticatedOwnerMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
 			: { ...options, mutation: { ...options.mutation, mutationKey } }
 		: { mutation: { mutationKey }, request: undefined };
 
-	const mutationFn: MutationFunction<Awaited<ReturnType<typeof getApiOwnerMe>>, void> = () => {
-		return getApiOwnerMe(requestOptions);
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getAuthenticatedOwner>>,
+		void
+	> = () => {
+		return getAuthenticatedOwner(requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiOwnerMeMutationResult = NonNullable<Awaited<ReturnType<typeof getApiOwnerMe>>>;
+export type GetAuthenticatedOwnerMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getAuthenticatedOwner>>
+>;
 
-export type GetApiOwnerMeMutationError = ErrorType<ProblemDetails>;
+export type GetAuthenticatedOwnerMutationError = ErrorType<ProblemDetails>;
 
 /**
  * @summary Get information about the current owner
  */
-export const useGetApiOwnerMe = <TError = ErrorType<ProblemDetails>, TContext = unknown>(
+export const useGetAuthenticatedOwner = <TError = ErrorType<ProblemDetails>, TContext = unknown>(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiOwnerMe>>,
+			Awaited<ReturnType<typeof getAuthenticatedOwner>>,
 			TError,
 			void,
 			TContext
@@ -415,6 +464,6 @@ export const useGetApiOwnerMe = <TError = ErrorType<ProblemDetails>, TContext = 
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
-): UseMutationResult<Awaited<ReturnType<typeof getApiOwnerMe>>, TError, void, TContext> => {
-	return useMutation(getGetApiOwnerMeMutationOptions(options), queryClient);
+): UseMutationResult<Awaited<ReturnType<typeof getAuthenticatedOwner>>, TError, void, TContext> => {
+	return useMutation(getGetAuthenticatedOwnerMutationOptions(options), queryClient);
 };

@@ -13,15 +13,15 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { ContactPerson } from "./contactPerson";
-import type { Industry } from "./industry";
 
-export interface CreateCompanyRequest {
-	name: string;
-	countryCode: string;
-	taxId: string;
-	registrationNumber: string;
-	website: string;
-	industry: Industry;
-	contact?: null | ContactPerson;
-}
+export type GetCompaniesParams = {
+	search?: string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	page?: number | string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	pageSize?: number | string;
+};

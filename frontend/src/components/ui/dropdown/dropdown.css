@@ -50,3 +50,11 @@
 
 	background: var(--color-border-subtle);
 }
+
+.dropdown-left {
+	right: 0;
+}
+
+.dropdown-right {
+	left: 0;
+}

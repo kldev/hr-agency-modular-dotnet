@@ -1,3 +1,3 @@
-export * from "./Dropdown";
-export * from "./DropdownDivider";
-export * from "./DropdownItem";
+export { default as Dropdown } from "./Dropdown";
+export { default as DropdownDivider } from "./DropdownDivider";
+export { default as DropdownItem } from "./DropdownItem";

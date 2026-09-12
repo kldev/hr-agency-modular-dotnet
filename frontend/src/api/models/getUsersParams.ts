@@ -15,10 +15,9 @@
  */
 import type { OrganizationRole } from "./organizationRole";
 
-export type GetApiOrganizationUsersParams = {
+export type GetUsersParams = {
 	search?: string;
 	roles: OrganizationRole[];
-	organizationId?: string;
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */

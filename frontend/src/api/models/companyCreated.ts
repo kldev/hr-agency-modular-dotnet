@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { ContactPerson } from "./contactPerson";
 import type { Industry } from "./industry";
 import type { UserSnapshot } from "./userSnapshot";
 
@@ -27,4 +28,7 @@ export interface CompanyCreated {
 	website: string;
 	createdBy: UserSnapshot;
 	createdAt: string;
+	contact?: null | ContactPerson;
+	/** @nullable */
+	contactPersonId?: string | null;
 }

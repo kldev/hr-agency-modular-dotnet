@@ -1,7 +1,7 @@
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getApiUserMe, postApiAuthLogin } from "@/api/endpoints";
+import { getAuthenticatedUser, loginOrganizationUser } from "@/api/endpoints";
 import { useAuthStore } from "@/stores/authStore";
 import { AuthLayout } from "../layout";
 
@@ -34,11 +34,11 @@ const LoginPage: React.FC = () => {
 		setIsLoading(true);
 
 		try {
-			const result = await postApiAuthLogin({ email: email, password: password, slug: "" });
+			const result = await loginOrganizationUser({ email: email, password: password, slug: "" });
 
 			store.setToken(result.token);
 			if (result.token) {
-				const user = await getApiUserMe();
+				const user = await getAuthenticatedUser();
 				store.setUser(user);
 			}
 

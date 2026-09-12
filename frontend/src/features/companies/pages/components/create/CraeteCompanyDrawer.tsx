@@ -1,23 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-import { postApiCompanies } from "@/api/endpoints";
+import { createCompany } from "@/api/endpoints";
 import type { CreateCompanyRequest } from "@/api/models";
 import { Button } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
-import type { CompanyFormCommand } from "./CompanyFormCommand";
+import type { CreateCompanyFormCommand } from "../CompanyFormCommand";
 import { CreateCompanyForm, emptyForm } from "./CreateCompanyForm";
 
 type CraeteCompanyDrawerProps = {
 	onSuccess: () => void;
 };
 
-const CraeteCompanyDrawer = forwardRef<CompanyFormCommand, CraeteCompanyDrawerProps>(
+const CraeteCompanyDrawer = forwardRef<CreateCompanyFormCommand, CraeteCompanyDrawerProps>(
 	({ onSuccess }, ref) => {
 		const [isOpen, setIsOpen] = useState(false);
 		const [company, setCompany] = useState<CreateCompanyRequest>(emptyForm);
 
-		const createCompany = useMutation({
-			mutationFn: (request: CreateCompanyRequest) => postApiCompanies(request),
+		const createCompanyMutation = useMutation({
+			mutationFn: (request: CreateCompanyRequest) => createCompany(request),
 			onSuccess: () => {
 				setIsOpen(false);
 				setCompany(emptyForm);
@@ -29,7 +29,7 @@ const CraeteCompanyDrawer = forwardRef<CompanyFormCommand, CraeteCompanyDrawerPr
 			ref,
 			() => ({
 				create: () => {
-					createCompany.reset();
+					createCompanyMutation.reset();
 					setCompany(emptyForm);
 					setIsOpen(true);
 				},
@@ -39,17 +39,17 @@ const CraeteCompanyDrawer = forwardRef<CompanyFormCommand, CraeteCompanyDrawerPr
 
 		const handleSave = useCallback(
 			(data: CreateCompanyRequest) => {
-				createCompany.mutate(data);
+				createCompanyMutation.mutate(data);
 			},
 			[createCompany],
 		);
 
 		const handleClose = useCallback(() => {
-			if (createCompany.isPending) {
+			if (createCompanyMutation.isPending) {
 				return;
 			}
 
-			createCompany.reset();
+			createCompanyMutation.reset();
 			setIsOpen(false);
 		}, [createCompany]);
 
@@ -63,17 +63,17 @@ const CraeteCompanyDrawer = forwardRef<CompanyFormCommand, CraeteCompanyDrawerPr
 						variant="primary"
 						type="submit"
 						form="company-form"
-						disabled={createCompany.isPending}
+						disabled={createCompanyMutation.isPending}
 					>
-						{createCompany.isPending ? "Creating..." : "Create company"}
+						{createCompanyMutation.isPending ? "Creating..." : "Create company"}
 					</Button>
 				}
 			>
 				<CreateCompanyForm
 					initialValue={company}
 					onSubmit={handleSave}
-					error={createCompany.error}
-					isSubmitting={createCompany.isPending}
+					error={createCompanyMutation.error}
+					isSubmitting={createCompanyMutation.isPending}
 				/>
 			</Drawer>
 		);

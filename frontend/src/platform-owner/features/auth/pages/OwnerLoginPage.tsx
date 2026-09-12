@@ -1,7 +1,7 @@
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getApiOwnerMe, postApiOwnerLogin } from "@/api/endpoints";
+import { getAuthenticatedOwner, loginPlatformOwner } from "@/api/endpoints";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
 import { OWNER_ROUTES } from "@/routes/OwnerRoutes";
 
@@ -35,11 +35,11 @@ const LoginPage: React.FC = () => {
 		setIsLoading(true);
 
 		try {
-			const result = await postApiOwnerLogin({ email: email, password: password });
+			const result = await loginPlatformOwner({ email: email, password: password });
 
 			store.setToken(result.token);
 			if (result.token) {
-				const owner = await getApiOwnerMe();
+				const owner = await getAuthenticatedOwner();
 				store.setOwner(owner);
 			}
 

@@ -1,7 +1,7 @@
 import { Users } from "lucide-react";
 import type React from "react";
 import { useCallback, useState } from "react";
-import { getApiRecruitmentCandidates } from "@/api/endpoints";
+import { getCandidates } from "@/api/endpoints";
 import type { CandidateSource } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
@@ -15,7 +15,7 @@ const CandidatesPage: React.FC = () => {
 
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getApiRecruitmentCandidates({
+			return getCandidates({
 				page,
 				pageSize,
 				...(source ? { source: [source] } : {}),
@@ -62,7 +62,7 @@ const CandidatesPage: React.FC = () => {
 				onSourceChange={(s) => {
 					setSource(s);
 				}}
-				onAdd={() => {}}
+				onAdd={() => { }}
 			/>
 			<CandidatesTable items={items} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />

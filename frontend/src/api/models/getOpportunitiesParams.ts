@@ -13,11 +13,13 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationRole } from "./organizationRole";
+import type { OpportunityStage } from "./opportunityStage";
 
-export type GetApiUsersParams = {
+export type GetOpportunitiesParams = {
 	search?: string;
-	roles: OrganizationRole[];
+	companyId?: string;
+	responsibleId?: string;
+	stage?: OpportunityStage;
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */

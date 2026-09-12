@@ -13,16 +13,13 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { ContactPerson } from "./contactPerson";
 
 export interface CompanyContact {
 	id: string;
 	organizationId: string;
 	companyId: string;
-	email: string;
-	firstName: string;
-	lastName: string;
-	jobTitle: string;
-	phone: string;
+	contact: ContactPerson;
 	companyName: string;
 	createdAt: string;
 	/** @nullable */

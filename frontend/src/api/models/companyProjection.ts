@@ -14,6 +14,7 @@
  * OpenAPI spec version: v1
  */
 import type { CompanyStatus } from "./companyStatus";
+import type { ContactPerson } from "./contactPerson";
 import type { Industry } from "./industry";
 import type { UserSnapshot } from "./userSnapshot";
 
@@ -41,4 +42,7 @@ export interface CompanyProjection {
 	activeJobsPostCount: number | string;
 	/** @pattern ^-?(?:0|[1-9]\d*)$ */
 	applicantsCount: number | string;
+	contact: null | ContactPerson;
+	/** @nullable */
+	contactPersonId: string | null;
 }

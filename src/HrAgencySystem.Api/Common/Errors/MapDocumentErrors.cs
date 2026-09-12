@@ -1,4 +1,6 @@
+using HrAgencySystem.Company.Application.Contacts.Create;
 using HrAgencySystem.Company.Application.Create;
+using HrAgencySystem.Company.Documents;
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
@@ -14,7 +16,9 @@ public static class MapDocumentErrors
         new(nameof(CompanyTaxIdReservation), "Business rule",
             CreateCompanyHandler.TaxIdAlreadyExistsMessage),
         new(nameof(UserEmailReservation), "Business rule",
-            CreateUserHandler.UserWithEmailMessage)
+            CreateUserHandler.UserWithEmailMessage),
+        new(nameof(CompanyContact), "Business rule",
+        CreateCompanyContactHandler.ContactWithEmailMessage)
     ];
 
     public static string Title(string name)

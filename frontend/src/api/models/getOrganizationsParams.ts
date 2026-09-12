@@ -13,15 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CandidateSource } from "./candidateSource";
-import type { CandidateStatus } from "./candidateStatus";
 
-export type GetApiRecruitmentCandidatesParams = {
-	search?: string;
-	companyId?: string;
-	tag?: string[];
-	status?: CandidateStatus;
-	source?: CandidateSource[];
+export type GetOrganizationsParams = {
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */
@@ -30,4 +23,5 @@ export type GetApiRecruitmentCandidatesParams = {
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */
 	pageSize?: number | string;
+	search?: string;
 };

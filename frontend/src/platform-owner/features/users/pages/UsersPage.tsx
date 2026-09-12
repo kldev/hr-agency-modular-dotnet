@@ -1,7 +1,7 @@
 import { Users } from "lucide-react";
 import type React from "react";
 import { useCallback, useState } from "react";
-import { getApiOrganizationUsers } from "@/api/endpoints";
+import { getOrganizationsUsers } from "@/api/endpoints";
 import type { OrganizationRoleApi } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
@@ -15,7 +15,7 @@ const UsersPage: React.FC = () => {
 	const [search, setSearch] = useState<string>("");
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getApiOrganizationUsers({
+			return getOrganizationsUsers({
 				page,
 				pageSize,
 				search: search,

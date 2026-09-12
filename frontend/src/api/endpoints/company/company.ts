@@ -36,7 +36,7 @@ import type {
 	CompanyProjection,
 	CompanyUpdated,
 	CreateCompanyRequest,
-	GetApiCompaniesParams,
+	GetCompaniesParams,
 	ProblemDetails,
 	SliceResponseOfCompanyProjection,
 	UpdateCompanyRequest,
@@ -64,7 +64,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
 /**
  * @summary Create company
  */
-export const postApiCompanies = (
+export const createCompany = (
 	createCompanyRequest: BodyType<CreateCompanyRequest>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -81,51 +81,49 @@ export const postApiCompanies = (
 	);
 };
 
-export const getPostApiCompaniesQueryKey = (
-	createCompanyRequest?: BodyType<CreateCompanyRequest>,
-) => {
+export const getCreateCompanyQueryKey = (createCompanyRequest?: BodyType<CreateCompanyRequest>) => {
 	return ["POST", `/api/companies`, createCompanyRequest] as const;
 };
 
-export const getPostApiCompaniesQueryOptions = <
-	TData = Awaited<ReturnType<typeof postApiCompanies>>,
+export const getCreateCompanyQueryOptions = <
+	TData = Awaited<ReturnType<typeof createCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCompanyRequest: BodyType<CreateCompanyRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiCompanies>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createCompany>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey = queryOptions?.queryKey ?? getPostApiCompaniesQueryKey(createCompanyRequest);
+	const queryKey = queryOptions?.queryKey ?? getCreateCompanyQueryKey(createCompanyRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof postApiCompanies>>> = ({ signal }) =>
-		postApiCompanies(createCompanyRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof createCompany>>> = ({ signal }) =>
+		createCompany(createCompanyRequest, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-		Awaited<ReturnType<typeof postApiCompanies>>,
+		Awaited<ReturnType<typeof createCompany>>,
 		TError,
 		TData
 	> & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type PostApiCompaniesQueryResult = NonNullable<Awaited<ReturnType<typeof postApiCompanies>>>;
-export type PostApiCompaniesQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type CreateCompanyQueryResult = NonNullable<Awaited<ReturnType<typeof createCompany>>>;
+export type CreateCompanyQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePostApiCompanies<
-	TData = Awaited<ReturnType<typeof postApiCompanies>>,
+export function useCreateCompany<
+	TData = Awaited<ReturnType<typeof createCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCompanyRequest: BodyType<CreateCompanyRequest>,
 	options: {
-		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiCompanies>>, TError, TData>> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof createCompany>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiCompanies>>,
+					Awaited<ReturnType<typeof createCompany>>,
 					TError,
-					Awaited<ReturnType<typeof postApiCompanies>>
+					Awaited<ReturnType<typeof createCompany>>
 				>,
 				"initialData"
 			>;
@@ -133,18 +131,18 @@ export function usePostApiCompanies<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiCompanies<
-	TData = Awaited<ReturnType<typeof postApiCompanies>>,
+export function useCreateCompany<
+	TData = Awaited<ReturnType<typeof createCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCompanyRequest: BodyType<CreateCompanyRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiCompanies>>, TError, TData>> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createCompany>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof postApiCompanies>>,
+					Awaited<ReturnType<typeof createCompany>>,
 					TError,
-					Awaited<ReturnType<typeof postApiCompanies>>
+					Awaited<ReturnType<typeof createCompany>>
 				>,
 				"initialData"
 			>;
@@ -152,13 +150,13 @@ export function usePostApiCompanies<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePostApiCompanies<
-	TData = Awaited<ReturnType<typeof postApiCompanies>>,
+export function useCreateCompany<
+	TData = Awaited<ReturnType<typeof createCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCompanyRequest: BodyType<CreateCompanyRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiCompanies>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createCompany>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -167,18 +165,18 @@ export function usePostApiCompanies<
  * @summary Create company
  */
 
-export function usePostApiCompanies<
-	TData = Awaited<ReturnType<typeof postApiCompanies>>,
+export function useCreateCompany<
+	TData = Awaited<ReturnType<typeof createCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	createCompanyRequest: BodyType<CreateCompanyRequest>,
 	options?: {
-		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postApiCompanies>>, TError, TData>>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createCompany>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPostApiCompaniesQueryOptions(createCompanyRequest, options);
+	const queryOptions = getCreateCompanyQueryOptions(createCompanyRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -190,8 +188,8 @@ export function usePostApiCompanies<
 /**
  * @summary Get companies
  */
-export const getApiCompanies = (
-	params?: GetApiCompaniesParams,
+export const getCompanies = (
+	params?: GetCompaniesParams,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -201,26 +199,26 @@ export const getApiCompanies = (
 	);
 };
 
-export const getGetApiCompaniesMutationKey = () => ["getApiCompanies"] as const;
+export const getGetCompaniesMutationKey = () => ["getCompanies"] as const;
 
-export const getGetApiCompaniesMutationOptions = <
+export const getGetCompaniesMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiCompanies>>,
+		Awaited<ReturnType<typeof getCompanies>>,
 		TError,
-		GetApiCompaniesMutationVariables,
+		GetCompaniesMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiCompanies>>,
+	Awaited<ReturnType<typeof getCompanies>>,
 	TError,
-	GetApiCompaniesMutationVariables,
+	GetCompaniesMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiCompaniesMutationKey();
+	const mutationKey = getGetCompaniesMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -228,53 +226,51 @@ export const getGetApiCompaniesMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiCompanies>>,
-		GetApiCompaniesMutationVariables
+		Awaited<ReturnType<typeof getCompanies>>,
+		GetCompaniesMutationVariables
 	> = (props) => {
 		const { params } = props ?? {};
 
-		return getApiCompanies(params, requestOptions);
+		return getCompanies(params, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiCompaniesMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiCompanies>>
->;
+export type GetCompaniesMutationResult = NonNullable<Awaited<ReturnType<typeof getCompanies>>>;
 
-export type GetApiCompaniesMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiCompaniesMutationVariables = { params?: GetApiCompaniesParams };
+export type GetCompaniesMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCompaniesMutationVariables = { params?: GetCompaniesParams };
 
 /**
  * @summary Get companies
  */
-export const useGetApiCompanies = <
+export const useGetCompanies = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiCompanies>>,
+			Awaited<ReturnType<typeof getCompanies>>,
 			TError,
-			GetApiCompaniesMutationVariables,
+			GetCompaniesMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiCompanies>>,
+	Awaited<ReturnType<typeof getCompanies>>,
 	TError,
-	GetApiCompaniesMutationVariables,
+	GetCompaniesMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiCompaniesMutationOptions(options), queryClient);
+	return useMutation(getGetCompaniesMutationOptions(options), queryClient);
 };
 /**
  * @summary Get company
  */
-export const getApiCompaniesCompanyId = (
+export const getCompany = (
 	companyId: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -285,26 +281,26 @@ export const getApiCompaniesCompanyId = (
 	);
 };
 
-export const getGetApiCompaniesCompanyIdMutationKey = () => ["getApiCompaniesCompanyId"] as const;
+export const getGetCompanyMutationKey = () => ["getCompany"] as const;
 
-export const getGetApiCompaniesCompanyIdMutationOptions = <
+export const getGetCompanyMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiCompaniesCompanyId>>,
+		Awaited<ReturnType<typeof getCompany>>,
 		TError,
-		GetApiCompaniesCompanyIdMutationVariables,
+		GetCompanyMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiCompaniesCompanyId>>,
+	Awaited<ReturnType<typeof getCompany>>,
 	TError,
-	GetApiCompaniesCompanyIdMutationVariables,
+	GetCompanyMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiCompaniesCompanyIdMutationKey();
+	const mutationKey = getGetCompanyMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -312,53 +308,51 @@ export const getGetApiCompaniesCompanyIdMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiCompaniesCompanyId>>,
-		GetApiCompaniesCompanyIdMutationVariables
+		Awaited<ReturnType<typeof getCompany>>,
+		GetCompanyMutationVariables
 	> = (props) => {
 		const { companyId } = props ?? {};
 
-		return getApiCompaniesCompanyId(companyId, requestOptions);
+		return getCompany(companyId, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiCompaniesCompanyIdMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiCompaniesCompanyId>>
->;
+export type GetCompanyMutationResult = NonNullable<Awaited<ReturnType<typeof getCompany>>>;
 
-export type GetApiCompaniesCompanyIdMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
-export type GetApiCompaniesCompanyIdMutationVariables = { companyId: string };
+export type GetCompanyMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCompanyMutationVariables = { companyId: string };
 
 /**
  * @summary Get company
  */
-export const useGetApiCompaniesCompanyId = <
+export const useGetCompany = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiCompaniesCompanyId>>,
+			Awaited<ReturnType<typeof getCompany>>,
 			TError,
-			GetApiCompaniesCompanyIdMutationVariables,
+			GetCompanyMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiCompaniesCompanyId>>,
+	Awaited<ReturnType<typeof getCompany>>,
 	TError,
-	GetApiCompaniesCompanyIdMutationVariables,
+	GetCompanyMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiCompaniesCompanyIdMutationOptions(options), queryClient);
+	return useMutation(getGetCompanyMutationOptions(options), queryClient);
 };
 /**
  * @summary Update company
  */
-export const putApiCompaniesCompanyId = (
+export const updateCompany = (
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -376,65 +370,58 @@ export const putApiCompaniesCompanyId = (
 	);
 };
 
-export const getPutApiCompaniesCompanyIdQueryKey = (
+export const getUpdateCompanyQueryKey = (
 	companyId: string,
 	updateCompanyRequest?: BodyType<UpdateCompanyRequest>,
 ) => {
 	return ["PUT", `/api/companies/${companyId}`, updateCompanyRequest] as const;
 };
 
-export const getPutApiCompaniesCompanyIdQueryOptions = <
-	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
+export const getUpdateCompanyQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompaniesCompanyId>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateCompany>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ?? getPutApiCompaniesCompanyIdQueryKey(companyId, updateCompanyRequest);
+		queryOptions?.queryKey ?? getUpdateCompanyQueryKey(companyId, updateCompanyRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof putApiCompaniesCompanyId>>> = ({
-		signal,
-	}) => putApiCompaniesCompanyId(companyId, updateCompanyRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateCompany>>> = ({ signal }) =>
+		updateCompany(companyId, updateCompanyRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: companyId !== null && companyId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<Awaited<ReturnType<typeof putApiCompaniesCompanyId>>, TError, TData> & {
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateCompany>>, TError, TData> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
 	};
 };
 
-export type PutApiCompaniesCompanyIdQueryResult = NonNullable<
-	Awaited<ReturnType<typeof putApiCompaniesCompanyId>>
->;
-export type PutApiCompaniesCompanyIdQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type UpdateCompanyQueryResult = NonNullable<Awaited<ReturnType<typeof updateCompany>>>;
+export type UpdateCompanyQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function usePutApiCompaniesCompanyId<
-	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
+export function useUpdateCompany<
+	TData = Awaited<ReturnType<typeof updateCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
 	options: {
-		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompaniesCompanyId>>, TError, TData>
-		> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateCompany>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
+					Awaited<ReturnType<typeof updateCompany>>,
 					TError,
-					Awaited<ReturnType<typeof putApiCompaniesCompanyId>>
+					Awaited<ReturnType<typeof updateCompany>>
 				>,
 				"initialData"
 			>;
@@ -442,21 +429,19 @@ export function usePutApiCompaniesCompanyId<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiCompaniesCompanyId<
-	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
+export function useUpdateCompany<
+	TData = Awaited<ReturnType<typeof updateCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompaniesCompanyId>>, TError, TData>
-		> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateCompany>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
+					Awaited<ReturnType<typeof updateCompany>>,
 					TError,
-					Awaited<ReturnType<typeof putApiCompaniesCompanyId>>
+					Awaited<ReturnType<typeof updateCompany>>
 				>,
 				"initialData"
 			>;
@@ -464,16 +449,14 @@ export function usePutApiCompaniesCompanyId<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function usePutApiCompaniesCompanyId<
-	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
+export function useUpdateCompany<
+	TData = Awaited<ReturnType<typeof updateCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompaniesCompanyId>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateCompany>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -482,25 +465,19 @@ export function usePutApiCompaniesCompanyId<
  * @summary Update company
  */
 
-export function usePutApiCompaniesCompanyId<
-	TData = Awaited<ReturnType<typeof putApiCompaniesCompanyId>>,
+export function useUpdateCompany<
+	TData = Awaited<ReturnType<typeof updateCompany>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	companyId: string,
 	updateCompanyRequest: BodyType<UpdateCompanyRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof putApiCompaniesCompanyId>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateCompany>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getPutApiCompaniesCompanyIdQueryOptions(
-		companyId,
-		updateCompanyRequest,
-		options,
-	);
+	const queryOptions = getUpdateCompanyQueryOptions(companyId, updateCompanyRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -512,7 +489,7 @@ export function usePutApiCompaniesCompanyId<
 /**
  * @summary Get company by tax
  */
-export const getApiCompaniesFindByTaxTaxId = (
+export const getCompanyByTax = (
 	taxId: string,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
@@ -523,27 +500,26 @@ export const getApiCompaniesFindByTaxTaxId = (
 	);
 };
 
-export const getGetApiCompaniesFindByTaxTaxIdMutationKey = () =>
-	["getApiCompaniesFindByTaxTaxId"] as const;
+export const getGetCompanyByTaxMutationKey = () => ["getCompanyByTax"] as const;
 
-export const getGetApiCompaniesFindByTaxTaxIdMutationOptions = <
+export const getGetCompanyByTaxMutationOptions = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(options?: {
 	mutation?: UseMutationOptions<
-		Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>,
+		Awaited<ReturnType<typeof getCompanyByTax>>,
 		TError,
-		GetApiCompaniesFindByTaxTaxIdMutationVariables,
+		GetCompanyByTaxMutationVariables,
 		TContext
 	>;
 	request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
-	Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>,
+	Awaited<ReturnType<typeof getCompanyByTax>>,
 	TError,
-	GetApiCompaniesFindByTaxTaxIdMutationVariables,
+	GetCompanyByTaxMutationVariables,
 	TContext
 > => {
-	const mutationKey = getGetApiCompaniesFindByTaxTaxIdMutationKey();
+	const mutationKey = getGetCompanyByTaxMutationKey();
 	const { mutation: mutationOptions, request: requestOptions } = options
 		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
 			? options
@@ -551,48 +527,46 @@ export const getGetApiCompaniesFindByTaxTaxIdMutationOptions = <
 		: { mutation: { mutationKey }, request: undefined };
 
 	const mutationFn: MutationFunction<
-		Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>,
-		GetApiCompaniesFindByTaxTaxIdMutationVariables
+		Awaited<ReturnType<typeof getCompanyByTax>>,
+		GetCompanyByTaxMutationVariables
 	> = (props) => {
 		const { taxId } = props ?? {};
 
-		return getApiCompaniesFindByTaxTaxId(taxId, requestOptions);
+		return getCompanyByTax(taxId, requestOptions);
 	};
 
 	return { mutationFn, ...mutationOptions };
 };
 
-export type GetApiCompaniesFindByTaxTaxIdMutationResult = NonNullable<
-	Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>
+export type GetCompanyByTaxMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getCompanyByTax>>
 >;
 
-export type GetApiCompaniesFindByTaxTaxIdMutationError = ErrorType<
-	BadRequestDetails | ProblemDetails
->;
-export type GetApiCompaniesFindByTaxTaxIdMutationVariables = { taxId: string };
+export type GetCompanyByTaxMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCompanyByTaxMutationVariables = { taxId: string };
 
 /**
  * @summary Get company by tax
  */
-export const useGetApiCompaniesFindByTaxTaxId = <
+export const useGetCompanyByTax = <
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 	TContext = unknown,
 >(
 	options?: {
 		mutation?: UseMutationOptions<
-			Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>,
+			Awaited<ReturnType<typeof getCompanyByTax>>,
 			TError,
-			GetApiCompaniesFindByTaxTaxIdMutationVariables,
+			GetCompanyByTaxMutationVariables,
 			TContext
 		>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseMutationResult<
-	Awaited<ReturnType<typeof getApiCompaniesFindByTaxTaxId>>,
+	Awaited<ReturnType<typeof getCompanyByTax>>,
 	TError,
-	GetApiCompaniesFindByTaxTaxIdMutationVariables,
+	GetCompanyByTaxMutationVariables,
 	TContext
 > => {
-	return useMutation(getGetApiCompaniesFindByTaxTaxIdMutationOptions(options), queryClient);
+	return useMutation(getGetCompanyByTaxMutationOptions(options), queryClient);
 };

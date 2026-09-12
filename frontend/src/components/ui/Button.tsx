@@ -28,3 +28,22 @@ export function Button({
 		</button>
 	);
 }
+
+type ActionButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+	children?: React.ReactNode;
+	title: string;
+};
+
+export function ActionButton({ onClick, children, title }: ActionButtonProps) {
+	return (
+		<button
+			type="button"
+			className="action-button"
+			aria-label={title}
+			title={title}
+			onClick={onClick}
+		>
+			{children}
+		</button>
+	);
+}

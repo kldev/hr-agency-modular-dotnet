@@ -97,3 +97,43 @@
 .load-more-button {
 	min-width: 120px;
 }
+
+/* =========================================================
+   Table action/menu
+   ========================================================= */
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+}
+
+.action-menu {
+	position: relative;
+}
+
+.action-button {
+	display: grid;
+	place-items: center;
+
+	width: 30px;
+	height: 30px;
+
+	padding: 0;
+
+	border: 1px solid transparent;
+	border-radius: var(--radius-md);
+
+	background: transparent;
+
+	color: var(--color-text-secondary);
+
+	cursor: pointer;
+}
+
+.action-button:hover {
+	background: var(--color-surface-hover);
+	border-color: var(--color-border);
+	color: var(--color-text);
+}
