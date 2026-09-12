@@ -2,12 +2,12 @@
    Dropdown
    ========================================================= */
 
+.action-menu {
+	position: relative;
+}
 .dropdown {
-	position: absolute;
-	right: 0;
-	top: calc(100% + 6px);
-
-	z-index: 50;
+	position: fixed;
+	z-index: 1000;
 
 	min-width: 190px;
 
@@ -49,12 +49,4 @@
 	margin: var(--space-1) 0;
 
 	background: var(--color-border-subtle);
-}
-
-.dropdown-left {
-	right: 0;
-}
-
-.dropdown-right {
-	left: 0;
 }

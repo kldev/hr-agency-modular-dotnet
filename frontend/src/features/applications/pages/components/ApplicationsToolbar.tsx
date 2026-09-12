@@ -1,4 +1,4 @@
-import { Plus, Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
 import type { CandidateSource } from "@/api/models";
 import { Button, EnumSelectFilter } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
@@ -13,7 +13,6 @@ interface ApplicationsToolbarProps {
 	companyId?: string;
 	onCompanyChange?: (value: string) => void;
 	onClear: () => void;
-	onAdd: () => void;
 }
 
 export function ApplicationsToolbar({
@@ -21,7 +20,6 @@ export function ApplicationsToolbar({
 	source,
 	onSearchChange,
 	onSourceChange,
-	onAdd,
 	onClear,
 }: ApplicationsToolbarProps) {
 	return (
@@ -61,12 +59,6 @@ export function ApplicationsToolbar({
 					onClick={onClear}
 				>
 					Clear
-				</Button>
-			</div>
-
-			<div className="toolbar-right">
-				<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
-					Add application
 				</Button>
 			</div>
 		</div>

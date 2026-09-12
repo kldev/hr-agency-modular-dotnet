@@ -6,7 +6,7 @@ import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { applicationStatuses } from "../types";
-import { AplicationsTable } from "./components/AplicationsTable";
+import { AplicationsTable } from "./components";
 import { ApplicationsToolbar } from "./components/ApplicationsToolbar";
 
 const AplicationsPage: React.FC = () => {
@@ -64,14 +64,13 @@ const AplicationsPage: React.FC = () => {
 				onSourceChange={(s) => {
 					setSource(s);
 				}}
-				onAdd={() => {}}
 			/>
 
 			<div className="flex-col">
 				<EnumFilter value={status} options={applicationStatuses} onChange={setStatus} />
 			</div>
 
-			<AplicationsTable items={items} />
+			<AplicationsTable items={items} onRefresh={refresh} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);

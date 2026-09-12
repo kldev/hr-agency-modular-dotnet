@@ -1,15 +1,45 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+
 import type { JobApplicationProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
 import { ApplicationBadge } from "@/components/ui/Badge";
 import { formatDateTime } from "@/utlis/dateUtils";
+import { AplicationsActions } from "./AplicationsActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, JobApplicationProjection>();
 
-export function getColumns(onEdit?: (company: JobApplicationProjection) => void) {
+export type Actions = {
+	onEdit: (item: JobApplicationProjection) => void;
+	onChangeStatus: (item: JobApplicationProjection) => void;
+	addNote: (item: JobApplicationProjection) => void;
+	addTag: (item: JobApplicationProjection) => void;
+};
+
+export function getColumns(actions: Actions) {
 	const columns = columnHelper.columns([
+		columnHelper.display({
+			id: "actions",
+			meta: {
+				width: "xxs",
+			},
+			header: () => null,
+			cell: ({ row }) => {
+				const item = row.original;
+
+				return (
+					<div className="table-cell-content w-87.5">
+						<AplicationsActions
+							id={item.id}
+							addNote={() => actions.addNote(item)}
+							onChangeStatus={() => actions.onChangeStatus(item)}
+							addTag={() => actions.addTag(item)}
+							onEdit={() => actions.onEdit(item)}
+						/>
+					</div>
+				);
+			},
+		}),
 		columnHelper.accessor("applicantFullName", {
 			header: "",
 			meta: {
@@ -74,30 +104,6 @@ export function getColumns(onEdit?: (company: JobApplicationProjection) => void)
 					{getValue().name}
 				</a>
 			),
-		}),
-
-		columnHelper.display({
-			id: "actions",
-			header: () => null,
-			cell: ({ row }) => {
-				const user = row.original;
-
-				if (!onEdit) {
-					return null;
-				}
-
-				return (
-					<div className="table-actions">
-						<button
-							type="button"
-							className="table-action-button"
-							aria-label={`Actions for ${user.applicantEmail}`}
-						>
-							<MoreHorizontal className="size-4" />
-						</button>
-					</div>
-				);
-			},
 		}),
 	]);
 	return columns;
