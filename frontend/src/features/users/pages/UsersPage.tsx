@@ -1,16 +1,22 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { getUsers } from "@/api/endpoints";
 import type { OrganizationRoleApi } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { UseresTable } from "../components/UseresTable";
-import { UsersToolbar } from "../components/UsersToolbar";
+import {
+	CreateUserDrawer,
+	type CreateUserFormCommand,
+	UseresTable,
+	UsersToolbar,
+} from "../components";
+
 import { organizationRoles } from "../types";
 
 const UsersPage: React.FC = () => {
+	const formRef = useRef<CreateUserFormCommand>(null);
 	const [role, setRole] = useState<OrganizationRoleApi | null>(null);
 	const [search, setSearch] = useState<string>("");
 	const fetchPage = useCallback(
@@ -58,7 +64,9 @@ const UsersPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => {}}
+				onAdd={() => {
+					formRef.current?.create();
+				}}
 			/>
 			<EnumFilter
 				value={role}
@@ -69,6 +77,7 @@ const UsersPage: React.FC = () => {
 			/>
 			<UseresTable users={users} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+			<CreateUserDrawer ref={formRef} onSuccess={refresh} />
 		</Page>
 	);
 };

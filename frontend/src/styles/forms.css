@@ -229,3 +229,18 @@ textarea:disabled {
 textarea:disabled::placeholder {
 	color: var(--color-text-muted);
 }
+
+.form-input-action {
+	display: flex;
+	gap: 6px;
+	align-items: stretch;
+}
+
+.form-input-action .input {
+	flex: 1;
+	min-width: 0;
+}
+
+.form-input-action .button {
+	flex-shrink: 0;
+}

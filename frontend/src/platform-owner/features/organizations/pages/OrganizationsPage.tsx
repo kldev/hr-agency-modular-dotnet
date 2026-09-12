@@ -1,14 +1,18 @@
 import { Globe2 } from "lucide-react";
 import type React from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { getOrganizations } from "@/api/endpoints";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, LoadMore } from "@/components/ui";
-import { OrganizationsTable } from "./components/OrganizationsTable";
-import { OrganizationsToolbar } from "./components/OrganizationsToolbar";
+import {
+	type CreateOrganizationCommand,
+	OrganizationsTable,
+	OrganizationsToolbar,
+} from "./components";
 
 const OrganizationsPage: React.FC = () => {
+	const formRef = useRef<CreateOrganizationCommand>(null);
 	const [search, setSearch] = useState<string>("");
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
@@ -52,7 +56,9 @@ const OrganizationsPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => {}}
+				onAdd={() => {
+					formRef.current?.create();
+				}}
 			/>
 			<OrganizationsTable items={items} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />

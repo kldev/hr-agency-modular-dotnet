@@ -7,7 +7,7 @@ interface UsersToolbarProps {
 	search: string;
 	onSearchChange: (value: string) => void;
 	onClear: () => void;
-	onAdd: () => void;
+	onAdd?: () => void;
 }
 
 export function UsersToolbar({ search, onSearchChange, onAdd, onClear }: UsersToolbarProps) {
@@ -45,11 +45,13 @@ export function UsersToolbar({ search, onSearchChange, onAdd, onClear }: UsersTo
 				</Button>
 			</div>
 
-			<div className="toolbar-right">
-				<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
-					Add user
-				</Button>
-			</div>
+			{onAdd ? (
+				<div className="toolbar-right">
+					<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
+						Add user
+					</Button>
+				</div>
+			) : null}
 		</div>
 	);
 }

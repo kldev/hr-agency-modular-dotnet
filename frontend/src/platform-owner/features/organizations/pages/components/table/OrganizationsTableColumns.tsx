@@ -1,14 +1,35 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+
 import type { OrganizationProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
 import { formatDateTime } from "@/utlis/dateUtils";
+import { OrganizationsActions } from "./OrganizationsActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, OrganizationProjection>();
 
-export function getColumns(onEdit?: (company: OrganizationProjection) => void) {
+export type Actions = {
+	onAddUser: (item: OrganizationProjection) => void;
+};
+
+export function getColumns(actions: Actions) {
 	const columns = columnHelper.columns([
+		columnHelper.display({
+			id: "actions",
+			header: () => null,
+			meta: {
+				width: "xxs",
+			},
+			cell: ({ row }) => {
+				const item = row.original;
+
+				return (
+					<div className="table-cell-content w-87.5">
+						<OrganizationsActions onAddUser={() => actions.onAddUser(item)} />
+					</div>
+				);
+			},
+		}),
 		columnHelper.accessor("name", {
 			header: "Name",
 			meta: {
@@ -36,30 +57,6 @@ export function getColumns(onEdit?: (company: OrganizationProjection) => void) {
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
-		}),
-
-		columnHelper.display({
-			id: "actions",
-			header: () => null,
-			cell: ({ row }) => {
-				const item = row.original;
-
-				if (!onEdit) {
-					return null;
-				}
-
-				return (
-					<div className="table-actions">
-						<button
-							type="button"
-							className="table-action-button"
-							aria-label={`Actions for ${item.name}`}
-						>
-							<MoreHorizontal className="size-4" />
-						</button>
-					</div>
-				);
-			},
 		}),
 	]);
 	return columns;

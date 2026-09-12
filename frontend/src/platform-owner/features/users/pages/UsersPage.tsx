@@ -8,7 +8,7 @@ import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { UsersToolbar } from "@/features/users/components/UsersToolbar";
 import { organizationRoles } from "@/features/users/types";
-import { UseresTable } from "./components/UseresTable";
+import { UseresTable } from "./components";
 
 const UsersPage: React.FC = () => {
 	const [role, setRole] = useState<OrganizationRoleApi | null>(null);
@@ -44,7 +44,6 @@ const UsersPage: React.FC = () => {
 			description="People with access to the organization"
 			onRefresh={refresh}
 			loading={loading}
-			page={0}
 			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No users found">
@@ -58,7 +57,6 @@ const UsersPage: React.FC = () => {
 				onClear={() => {
 					setSearch("");
 				}}
-				onAdd={() => {}}
 			/>
 			<EnumFilter
 				value={role}

@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
 import { AppLayout } from "./components/layout/AppLayout";
 import NotFoundPage from "./features/common/NotFoundPage";
 import { ROUTES, RouteFallback } from "./routes";
@@ -40,5 +41,10 @@ const router = createBrowserRouter([
 ]);
 
 export const App: React.FC = () => {
-	return <RouterProvider router={router} />;
+	return (
+		<>
+			<Toaster position="top-center" />
+			<RouterProvider router={router} />
+		</>
+	);
 };
