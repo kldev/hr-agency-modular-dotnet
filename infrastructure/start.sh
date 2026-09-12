@@ -43,6 +43,10 @@ while [[ $# -gt 0 ]]; do
             docker-compose down
             exit 0
             ;;  
+        --sa)
+            docker-compose stop webapi
+            exit 0
+            ;;              
         --c)
             echo "Cleaning up volumes and containers..."
             docker-compose down -v --remove-orphans

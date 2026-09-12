@@ -42,4 +42,6 @@ export interface JobApplicationProjection {
 	tagsIds: string[];
 	companyId: string;
 	company: CompanySnapshot;
+	applicantFirstName: string;
+	applicantLastName: string;
 }

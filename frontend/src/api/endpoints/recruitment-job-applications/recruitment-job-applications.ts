@@ -42,9 +42,11 @@ import type {
 	JobApplicationStatusChanged,
 	JobApplicationTagged,
 	JobApplicationTagRemoved,
+	JobApplicationUpdated,
 	ProblemDetails,
 	SliceResponseOfJobApplicationProjection,
 	TagRequest,
+	UpdateApplicantRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator";
 import { customInstance } from "../../mutator";
@@ -150,6 +152,156 @@ export const useGetJobApplication = <
 > => {
 	return useMutation(getGetJobApplicationMutationOptions(options), queryClient);
 };
+/**
+ * @summary Update job applicant
+ */
+export const updateJobApplicant = (
+	jobApplicationId: string,
+	updateApplicantRequest: BodyType<UpdateApplicantRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<JobApplicationUpdated>(
+		{
+			url: `/api/recruitment/job-applications/${jobApplicationId}`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: updateApplicantRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getUpdateJobApplicantQueryKey = (
+	jobApplicationId: string,
+	updateApplicantRequest?: BodyType<UpdateApplicantRequest>,
+) => {
+	return [
+		"PUT",
+		`/api/recruitment/job-applications/${jobApplicationId}`,
+		updateApplicantRequest,
+	] as const;
+};
+
+export const getUpdateJobApplicantQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateJobApplicant>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	jobApplicationId: string,
+	updateApplicantRequest: BodyType<UpdateApplicantRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateJobApplicant>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getUpdateJobApplicantQueryKey(jobApplicationId, updateApplicantRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateJobApplicant>>> = ({ signal }) =>
+		updateJobApplicant(jobApplicationId, updateApplicantRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: jobApplicationId !== null && jobApplicationId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateJobApplicant>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type UpdateJobApplicantQueryResult = NonNullable<
+	Awaited<ReturnType<typeof updateJobApplicant>>
+>;
+export type UpdateJobApplicantQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useUpdateJobApplicant<
+	TData = Awaited<ReturnType<typeof updateJobApplicant>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	jobApplicationId: string,
+	updateApplicantRequest: BodyType<UpdateApplicantRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateJobApplicant>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateJobApplicant>>,
+					TError,
+					Awaited<ReturnType<typeof updateJobApplicant>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateJobApplicant<
+	TData = Awaited<ReturnType<typeof updateJobApplicant>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	jobApplicationId: string,
+	updateApplicantRequest: BodyType<UpdateApplicantRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateJobApplicant>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateJobApplicant>>,
+					TError,
+					Awaited<ReturnType<typeof updateJobApplicant>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateJobApplicant<
+	TData = Awaited<ReturnType<typeof updateJobApplicant>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	jobApplicationId: string,
+	updateApplicantRequest: BodyType<UpdateApplicantRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateJobApplicant>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Update job applicant
+ */
+
+export function useUpdateJobApplicant<
+	TData = Awaited<ReturnType<typeof updateJobApplicant>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	jobApplicationId: string,
+	updateApplicantRequest: BodyType<UpdateApplicantRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateJobApplicant>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getUpdateJobApplicantQueryOptions(
+		jobApplicationId,
+		updateApplicantRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
 /**
  * @summary Get applications
  */

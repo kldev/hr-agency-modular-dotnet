@@ -3,9 +3,11 @@ import { useRef } from "react";
 import type { JobApplicationProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
-import type {
-	AddJobApplicationNoteFormCommand,
-	ChangeJobApplicationStatusFormCommand,
+import {
+	type AddJobApplicationNoteFormCommand,
+	type ChangeJobApplicationStatusFormCommand,
+	type EditApplicantCommand,
+	EditApplicantDrawer,
 } from "../forms";
 import AddJobApplicationNoteDrawer from "../forms/AddJobApplicationNoteDrawer";
 import ChangeJobApplicationStatusDrawer from "../forms/ChangeJobApplicationStatusDrawer";
@@ -19,6 +21,7 @@ interface AplicationsTableProps {
 export function AplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 	const changeStatusRef = useRef<ChangeJobApplicationStatusFormCommand>(null);
 	const addNoteRef = useRef<AddJobApplicationNoteFormCommand>(null);
+	const editRef = useRef<EditApplicantCommand>(null);
 
 	const handleActions: Actions = {
 		addNote: (it) => {
@@ -31,7 +34,7 @@ export function AplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 			changeStatusRef.current?.changeStatus(it.id, it.status);
 		},
 		onEdit: (it) => {
-			console.log(`Edit ${it.applicantEmail}`);
+			editRef.current?.edit(it.id);
 		},
 	};
 
@@ -53,6 +56,7 @@ export function AplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 			<MainTable table={table} className="table-wide" />
 			<AddJobApplicationNoteDrawer ref={addNoteRef} onSuccess={onRefresh} />
 			<ChangeJobApplicationStatusDrawer ref={changeStatusRef} onSuccess={onRefresh} />
+			<EditApplicantDrawer ref={editRef} onSuccess={onRefresh} />
 		</>
 	);
 }
