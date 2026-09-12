@@ -58,7 +58,7 @@ export function ArrayField({
 					</div>
 				))}
 
-				<Button variant="secondary" onClick={() => onChange([...values, ""])}>
+				<Button type="button" variant="secondary" onClick={() => onChange([...values, ""])}>
 					<Plus size={15} />
 					Add item
 				</Button>

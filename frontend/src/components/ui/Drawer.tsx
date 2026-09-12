@@ -31,14 +31,12 @@ export function Drawer({ open, title, children, footer, onClose }: DrawerProps) 
 
 	return (
 		<>
-			{/** biome-ignore lint/a11y/noStaticElementInteractions: false */}
-			<div className="drawer-overlay" onMouseDown={onClose} />
+			<div className="drawer-overlay" />
 			<aside
 				className={clsx("drawer")}
 				role="dialog"
 				aria-modal="true"
 				aria-labelledby="drawer-title"
-				onMouseDown={(event) => event.stopPropagation()}
 			>
 				<header className="drawer-header">
 					<h2 id="drawer-title" className="drawer-title">

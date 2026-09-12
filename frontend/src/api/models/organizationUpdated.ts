@@ -14,12 +14,10 @@
  * OpenAPI spec version: v1
  */
 
-export interface OrganizationProjection {
-	id: string;
+export interface OrganizationUpdated {
+	organizationId: string;
 	name: string;
 	slug: string;
-	createdAt: string;
-	/** @nullable */
-	modifiedAt: string | null;
 	emailDomains: string[];
+	modifiedAt: string;
 }

@@ -32,6 +32,8 @@ public static class UpdateOrganizationSlugHandler
         if (await repository.Exists(slug!, ct))
             throw new BusinessRuleException(CreateOrganizationHandler.SlugAlreadyExitsMessage);
 
+        await repository.Reserve(aggregate.Id, slug!);
+        
         var @event = new OrganizationSlugUpdated(slug!.Value, command.OrganizationId, clock.UtcNow);
 
         return (@event, [@event]);

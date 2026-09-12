@@ -22,6 +22,7 @@ public sealed class Organization
     public OrganizationSlug Slug { get; private set; } = null!;
 
     public DateTimeOffset CreatedAt { get; private set; }
+    public DateTimeOffset? ModifiedAt { get; private set; }
 
     public void Apply(OrganizationCreated @event)
     {
@@ -34,5 +35,12 @@ public sealed class Organization
     public void Apply(OrganizationSlugUpdated @event)
     {
         Slug = OrganizationSlug.Create(@event.Slug);
+    }
+
+    public void Apply(OrganizationUpdated @event)
+    {
+        Name = OrganizationName.Create(@event.Name);
+        Slug = OrganizationSlug.Create(@event.Slug);
+        ModifiedAt = @event.ModifiedAt;
     }
 }

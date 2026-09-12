@@ -17,7 +17,7 @@ internal static class MapCreate
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(OwnerAuthenticated owner, CreateOrganizationRequest request,
+    private static async Task<IResult> Handler(OwnerAuthenticated owner, OrganizationRequest request,
         IMessageBus bus,
         CancellationToken ct)
     {
@@ -28,7 +28,8 @@ internal static class MapCreate
     }
 }
 
-internal sealed record CreateOrganizationRequest(string Name, string Slug, IReadOnlyList<string> EmailDomains)
+// ReSharper disable once ClassNeverInstantiated.Global
+internal sealed record OrganizationRequest(string Name, string Slug, IReadOnlyList<string> EmailDomains)
 {
     public CreateOrganization ToCommand(Guid createdBy) => new (Name, Slug, createdBy, EmailDomains);
 }

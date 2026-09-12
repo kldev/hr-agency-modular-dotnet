@@ -7,7 +7,9 @@ export function ApiError({ error }: { error: BadRequestDetails | null }) {
 
 	return (
 		<div className="form-error" role="alert">
-			<strong>{error.title ?? "An unexpected error occurred. Please contact your administrator."}</strong>
+			<strong>
+				{error.title ?? "An unexpected error occurred. Please contact your administrator."}
+			</strong>
 
 			{error.detail && <div className="text-xl text-muted!">{error.detail}</div>}
 

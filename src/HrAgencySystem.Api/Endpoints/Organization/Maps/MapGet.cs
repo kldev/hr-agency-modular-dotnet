@@ -1,29 +1,30 @@
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Response;
-using HrAgencySystem.Organization.Events;
 using HrAgencySystem.Organization.Projections;
 using Marten;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 
-internal static class MapGetBySlug
+
+internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("{slug}", Handler)
-            .WithSummary("Get organization by Slug")
-            .WithName("Get organization by Slug")
+        group.MapGet("{organizationId:guid}", Handler)
+            .WithSummary("Get organization by id")
+            .WithName("Get organization by id")
             .Produces<OrganizationProjection>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(IDocumentSession session, string slug, CancellationToken ct)
+    private static async Task<IResult> Handler(IDocumentSession session, Guid organizationId, CancellationToken ct)
     {
         var result = await session.Query<OrganizationProjection>()
-            .Where(z => z.Slug == slug).OrderByDescending(z=>z.CreatedAt)
+            .Where(z => z.Id == organizationId)
+            .OrderByDescending(z=>z.CreatedAt)
             .FirstOrDefaultAsync(ct);
 
-        if (result == null) return TypedResults.NotFound(DomainObjectNotFound.NotFound("Organization",slug ));
+        if (result == null) return TypedResults.NotFound(DomainObjectNotFound.NotFound("Organization",organizationId ));
         
         return TypedResults.Ok(result);
     }

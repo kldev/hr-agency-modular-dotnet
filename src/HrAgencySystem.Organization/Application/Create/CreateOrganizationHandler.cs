@@ -20,21 +20,22 @@ public static class CreateOrganizationHandler
         CancellationToken ct)
     {
         var organizationId = OrganizationId.NewId();
-        var (name, slug) = CreateValueObjects(command);
+        var (name, slug) = OrganizationDataFactory.Create(command);
 
         if (await repository.Exists(slug, ct))
             throw new BusinessRuleException(SlugAlreadyExitsMessage);
         
-        if (command.EmailDomains.Count == 0)
+        if (command.EmailDomains.Count == 0 || command.EmailDomains.All(z=>string.IsNullOrEmpty(z.Trim())))
             throw new BusinessRuleException("No email domains specified");
 
+        
         await repository.Reserve(organizationId, slug);
 
         var @event = new OrganizationCreated(
             organizationId.Value,
             name.Value,
             slug.Value,
-            command.EmailDomains,
+            [..command.EmailDomains.Where(z=>z.Trim().Length >0)],
             clock.UtcNow);
 
         session.Events.StartStream<Domain.Organization>(organizationId.Value, @event);
@@ -42,19 +43,5 @@ public static class CreateOrganizationHandler
         return @event;
     }
 
-    private static OrganizationData CreateValueObjects(CreateOrganization command)
-    {
-        var errors = new List<string>();
-        var (slug, errorSlug) = OrganizationSlug.TryCreate(command.Slug);
-        var (name, errorName) = OrganizationName.TryCreate(command.Name);
 
-        if (errorSlug != null) errors.Add(errorSlug);
-        if (errorName != null) errors.Add(errorName);
-
-        return errors.Count > 0 ? throw new ValidationException(errors) : new OrganizationData(name!, slug!);
-    }
-
-    private sealed record OrganizationData(
-        OrganizationName Name,
-        OrganizationSlug Slug);
 }

@@ -7,6 +7,7 @@ import { usePaginatedData } from "@/components/table";
 import { EmptyState, LoadMore } from "@/components/ui";
 import {
 	type CreateOrganizationCommand,
+	CreateOrganizationDrawer,
 	OrganizationsTable,
 	OrganizationsToolbar,
 } from "./components";
@@ -62,6 +63,7 @@ const OrganizationsPage: React.FC = () => {
 			/>
 			<OrganizationsTable items={items} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+			<CreateOrganizationDrawer ref={formRef} onSuccess={refresh} />
 		</Page>
 	);
 };

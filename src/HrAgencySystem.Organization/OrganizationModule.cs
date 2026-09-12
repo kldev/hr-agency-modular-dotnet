@@ -55,6 +55,7 @@ public static class OrganizationModule
     {
         options.Events.AddEventType(
             typeof(OrganizationCreated));
+        options.Events.AddEventType<OrganizationUpdated>();
         options.Events.AddEventType<OrganizationSlugUpdated>();
     }
 }

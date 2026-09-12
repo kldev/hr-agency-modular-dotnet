@@ -10,6 +10,7 @@ const columnHelper = createColumnHelper<appTableFeaturesType, OrganizationProjec
 
 export type Actions = {
 	onAddUser: (item: OrganizationProjection) => void;
+	onEdit: (item: OrganizationProjection) => void;
 };
 
 export function getColumns(actions: Actions) {
@@ -25,7 +26,10 @@ export function getColumns(actions: Actions) {
 
 				return (
 					<div className="table-cell-content w-87.5">
-						<OrganizationsActions onAddUser={() => actions.onAddUser(item)} />
+						<OrganizationsActions
+							onAddUser={() => actions.onAddUser(item)}
+							onEdit={() => actions.onEdit(item)}
+						/>
 					</div>
 				);
 			},
@@ -56,6 +60,10 @@ export function getColumns(actions: Actions) {
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
+			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
+		}),
+		columnHelper.accessor("modifiedAt", {
+			header: "Modified at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
 	]);

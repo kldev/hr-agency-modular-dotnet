@@ -32,12 +32,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
 	BadRequestDetails,
-	CreateOrganizationRequest,
 	CreateUserForOrganizationRequest,
 	GetOrganizationsParams,
 	GetOrganizationsUsersParams,
 	OrganizationCreated,
+	OrganizationProjection,
+	OrganizationRequest,
 	OrganizationSlugUpdated,
+	OrganizationUpdated,
 	ProblemDetails,
 	SliceResponseOfOrganizationProjection,
 	SliceResponseOfUserProjection,
@@ -68,7 +70,7 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
  * @summary Create organization
  */
 export const createOrganization = (
-	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
+	organizationRequest: BodyType<OrganizationRequest>,
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
@@ -77,7 +79,7 @@ export const createOrganization = (
 			url: `/api/organization`,
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			data: createOrganizationRequest,
+			data: organizationRequest,
 			signal,
 		},
 		options,
@@ -85,16 +87,16 @@ export const createOrganization = (
 };
 
 export const getCreateOrganizationQueryKey = (
-	createOrganizationRequest?: BodyType<CreateOrganizationRequest>,
+	organizationRequest?: BodyType<OrganizationRequest>,
 ) => {
-	return ["POST", `/api/organization`, createOrganizationRequest] as const;
+	return ["POST", `/api/organization`, organizationRequest] as const;
 };
 
 export const getCreateOrganizationQueryOptions = <
 	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
-	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
+	organizationRequest: BodyType<OrganizationRequest>,
 	options?: {
 		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
@@ -102,11 +104,10 @@ export const getCreateOrganizationQueryOptions = <
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
-	const queryKey =
-		queryOptions?.queryKey ?? getCreateOrganizationQueryKey(createOrganizationRequest);
+	const queryKey = queryOptions?.queryKey ?? getCreateOrganizationQueryKey(organizationRequest);
 
 	const queryFn: QueryFunction<Awaited<ReturnType<typeof createOrganization>>> = ({ signal }) =>
-		createOrganization(createOrganizationRequest, requestOptions, signal);
+		createOrganization(organizationRequest, requestOptions, signal);
 
 	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
 		Awaited<ReturnType<typeof createOrganization>>,
@@ -124,7 +125,7 @@ export function useCreateOrganization<
 	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
-	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
+	organizationRequest: BodyType<OrganizationRequest>,
 	options: {
 		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>> &
 			Pick<
@@ -143,7 +144,7 @@ export function useCreateOrganization<
 	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
-	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
+	organizationRequest: BodyType<OrganizationRequest>,
 	options?: {
 		query?: Partial<
 			UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>
@@ -164,7 +165,7 @@ export function useCreateOrganization<
 	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
-	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
+	organizationRequest: BodyType<OrganizationRequest>,
 	options?: {
 		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
@@ -179,14 +180,14 @@ export function useCreateOrganization<
 	TData = Awaited<ReturnType<typeof createOrganization>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
-	createOrganizationRequest: BodyType<CreateOrganizationRequest>,
+	organizationRequest: BodyType<OrganizationRequest>,
 	options?: {
 		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof createOrganization>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getCreateOrganizationQueryOptions(createOrganizationRequest, options);
+	const queryOptions = getCreateOrganizationQueryOptions(organizationRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
@@ -436,7 +437,7 @@ export const getOrganizationBySlug = (
 	options?: SecondParameter<typeof customInstance>,
 	signal?: AbortSignal,
 ) => {
-	return customInstance<OrganizationCreated>(
+	return customInstance<OrganizationProjection>(
 		{ url: `/api/organization/${slug}`, method: "GET", signal },
 		options,
 	);
@@ -737,4 +738,242 @@ export const useGetOrganizationsUsers = <
 	TContext
 > => {
 	return useMutation(getGetOrganizationsUsersMutationOptions(options), queryClient);
+};
+/**
+ * @summary Update organization data
+ */
+export const updateOrganizationData = (
+	organizationId: string,
+	organizationRequest: BodyType<OrganizationRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<OrganizationUpdated>(
+		{
+			url: `/api/organization/${organizationId}`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: organizationRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getUpdateOrganizationDataQueryKey = (
+	organizationId: string,
+	organizationRequest?: BodyType<OrganizationRequest>,
+) => {
+	return ["PUT", `/api/organization/${organizationId}`, organizationRequest] as const;
+};
+
+export const getUpdateOrganizationDataQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateOrganizationData>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	organizationId: string,
+	organizationRequest: BodyType<OrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationData>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getUpdateOrganizationDataQueryKey(organizationId, organizationRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateOrganizationData>>> = ({ signal }) =>
+		updateOrganizationData(organizationId, organizationRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: organizationId !== null && organizationId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationData>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type UpdateOrganizationDataQueryResult = NonNullable<
+	Awaited<ReturnType<typeof updateOrganizationData>>
+>;
+export type UpdateOrganizationDataQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useUpdateOrganizationData<
+	TData = Awaited<ReturnType<typeof updateOrganizationData>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	organizationId: string,
+	organizationRequest: BodyType<OrganizationRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationData>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateOrganizationData>>,
+					TError,
+					Awaited<ReturnType<typeof updateOrganizationData>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateOrganizationData<
+	TData = Awaited<ReturnType<typeof updateOrganizationData>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	organizationId: string,
+	organizationRequest: BodyType<OrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationData>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateOrganizationData>>,
+					TError,
+					Awaited<ReturnType<typeof updateOrganizationData>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateOrganizationData<
+	TData = Awaited<ReturnType<typeof updateOrganizationData>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	organizationId: string,
+	organizationRequest: BodyType<OrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationData>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Update organization data
+ */
+
+export function useUpdateOrganizationData<
+	TData = Awaited<ReturnType<typeof updateOrganizationData>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	organizationId: string,
+	organizationRequest: BodyType<OrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationData>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getUpdateOrganizationDataQueryOptions(
+		organizationId,
+		organizationRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Get organization by id
+ */
+export const getOrganizationById = (
+	organizationId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<OrganizationProjection>(
+		{ url: `/api/organization/${organizationId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetOrganizationByIdMutationKey = () => ["getOrganizationById"] as const;
+
+export const getGetOrganizationByIdMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getOrganizationById>>,
+		TError,
+		GetOrganizationByIdMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getOrganizationById>>,
+	TError,
+	GetOrganizationByIdMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetOrganizationByIdMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getOrganizationById>>,
+		GetOrganizationByIdMutationVariables
+	> = (props) => {
+		const { organizationId } = props ?? {};
+
+		return getOrganizationById(organizationId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetOrganizationByIdMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getOrganizationById>>
+>;
+
+export type GetOrganizationByIdMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetOrganizationByIdMutationVariables = { organizationId: string };
+
+/**
+ * @summary Get organization by id
+ */
+export const useGetOrganizationById = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getOrganizationById>>,
+			TError,
+			GetOrganizationByIdMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getOrganizationById>>,
+	TError,
+	GetOrganizationByIdMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetOrganizationByIdMutationOptions(options), queryClient);
 };

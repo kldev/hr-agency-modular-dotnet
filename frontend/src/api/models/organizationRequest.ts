@@ -14,7 +14,7 @@
  * OpenAPI spec version: v1
  */
 
-export interface CreateOrganizationRequest {
+export interface OrganizationRequest {
 	name: string;
 	slug: string;
 	emailDomains: string[];

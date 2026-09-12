@@ -11,10 +11,7 @@ export type TagsPickerProps = Omit<
 type Props = TagsPickerProps;
 
 export function TagsPicker(props: Props) {
-	const searchCompanies = async (
-		query: string,
-		signal: AbortSignal,
-	): Promise<Tag[]> => {
+	const searchCompanies = async (query: string, signal: AbortSignal): Promise<Tag[]> => {
 		return await getTagsSuggestions({ search: query ?? "" }, undefined, signal);
 	};
 

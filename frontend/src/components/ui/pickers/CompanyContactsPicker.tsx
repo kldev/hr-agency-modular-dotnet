@@ -9,17 +9,18 @@ export type CompanyContactsPickerProps = Omit<
 >;
 
 type OwnProps = {
-	companyId: string
-}
+	companyId: string;
+};
 
 type Props = CompanyContactsPickerProps & OwnProps;
 
 export function CompanyContactsPicker(props: Props) {
-	const searchCompanies = async (
-		query: string,
-		signal: AbortSignal,
-	): Promise<CompanyContact[]> => {
-		return await getCompanyContactsSuggestions({ search: query ?? "", companyId: props.companyId }, undefined, signal);
+	const searchCompanies = async (query: string, signal: AbortSignal): Promise<CompanyContact[]> => {
+		return await getCompanyContactsSuggestions(
+			{ search: query ?? "", companyId: props.companyId },
+			undefined,
+			signal,
+		);
 	};
 
 	return (
@@ -37,7 +38,9 @@ export function CompanyContactsPicker(props: Props) {
 					</div>
 
 					<div className="suggestion-picker-item-content">
-						<div className="suggestion-picker-item-label">{item.contact.fullname ?? item.contact.email}</div>
+						<div className="suggestion-picker-item-label">
+							{item.contact.fullname ?? item.contact.email}
+						</div>
 
 						<div className="suggestion-picker-company-meta">
 							<span>`${item.contact.email}`</span>
