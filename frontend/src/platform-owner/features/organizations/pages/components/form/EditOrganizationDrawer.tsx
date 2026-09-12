@@ -83,7 +83,7 @@ const EditOrganizationDrawer = forwardRef<EditOrganizationCommand, EditOrganizat
 		return (
 			<Drawer
 				open={isOpen}
-				title="Create organization"
+				title="Edit organization"
 				onClose={handleClose}
 				footer={
 					<SaveChangesButton
@@ -104,7 +104,7 @@ const EditOrganizationDrawer = forwardRef<EditOrganizationCommand, EditOrganizat
 				{organizationData ? (
 					<OrganizationForm
 						initialValue={{
-							emailDomains: organizationData.emailDomains,
+							emailDomains: organizationData.emailDomains ?? [],
 							name: organizationData.name,
 							slug: organizationData.slug,
 						}}

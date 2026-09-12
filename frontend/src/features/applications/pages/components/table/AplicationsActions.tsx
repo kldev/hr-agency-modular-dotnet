@@ -1,4 +1,4 @@
-import { NotebookPen, Pencil, Settings2, TagPlus, TrendingUp } from "lucide-react";
+import { MessageSquare, NotebookPen, Pencil, Settings2, TagPlus, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { RoutesNavigation } from "@/routes";
@@ -9,6 +9,7 @@ interface AplicationsProps {
 	onChangeStatus: () => void;
 	addNote: () => void;
 	addTag: () => void;
+	scheduleInterview: () => void;
 }
 
 export function AplicationsActions({
@@ -17,6 +18,7 @@ export function AplicationsActions({
 	addNote,
 	addTag,
 	id,
+	scheduleInterview,
 }: AplicationsProps) {
 	const navigate = useNavigate();
 
@@ -35,7 +37,8 @@ export function AplicationsActions({
 					},
 					{ label: "Add note", icon: NotebookPen, action: addNote },
 					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
-					{ label: "Add tag", icon: TagPlus, action: addTag },
+					{ label: "Add tag", icon: TagPlus, action: addTag, dividerAfter: true },
+					{ label: "Schedule interview", icon: MessageSquare, action: scheduleInterview },
 				]}
 			/>
 		</div>

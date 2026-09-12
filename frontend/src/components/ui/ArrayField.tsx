@@ -30,7 +30,7 @@ export function ArrayField({
 			</div>
 
 			<div className="space-y-2">
-				{values.map((item, index) => (
+				{values?.map((item, index) => (
 					<div key={index} className="flex items-center gap-2">
 						<input
 							value={item}

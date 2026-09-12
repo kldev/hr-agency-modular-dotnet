@@ -14,6 +14,7 @@ export type Actions = {
 	onChangeStatus: (item: JobApplicationProjection) => void;
 	addNote: (item: JobApplicationProjection) => void;
 	addTag: (item: JobApplicationProjection) => void;
+	scheduleInterview: (item: JobApplicationProjection) => void;
 };
 
 export function getColumns(actions: Actions) {
@@ -35,6 +36,7 @@ export function getColumns(actions: Actions) {
 							onChangeStatus={() => actions.onChangeStatus(item)}
 							addTag={() => actions.addTag(item)}
 							onEdit={() => actions.onEdit(item)}
+							scheduleInterview={() => actions.scheduleInterview(item)}
 						/>
 					</div>
 				);

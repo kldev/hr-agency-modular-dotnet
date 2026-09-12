@@ -4,6 +4,10 @@ import type { JobApplicationProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
 import {
+	type ScheduleInterviewCommand,
+	ScheduletInterviewDrawer,
+} from "@/features/interviews/pages/components";
+import {
 	type AddJobApplicationNoteFormCommand,
 	type ChangeJobApplicationStatusFormCommand,
 	type EditApplicantCommand,
@@ -22,6 +26,7 @@ export function AplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 	const changeStatusRef = useRef<ChangeJobApplicationStatusFormCommand>(null);
 	const addNoteRef = useRef<AddJobApplicationNoteFormCommand>(null);
 	const editRef = useRef<EditApplicantCommand>(null);
+	const scheduleRef = useRef<ScheduleInterviewCommand>(null);
 
 	const handleActions: Actions = {
 		addNote: (it) => {
@@ -35,6 +40,9 @@ export function AplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 		},
 		onEdit: (it) => {
 			editRef.current?.edit(it.id);
+		},
+		scheduleInterview: (it) => {
+			scheduleRef.current?.schedule(it.id);
 		},
 	};
 
@@ -57,6 +65,7 @@ export function AplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 			<AddJobApplicationNoteDrawer ref={addNoteRef} onSuccess={onRefresh} />
 			<ChangeJobApplicationStatusDrawer ref={changeStatusRef} onSuccess={onRefresh} />
 			<EditApplicantDrawer ref={editRef} onSuccess={onRefresh} />
+			<ScheduletInterviewDrawer ref={scheduleRef} onSuccess={onRefresh} />
 		</>
 	);
 }

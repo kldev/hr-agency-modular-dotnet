@@ -7,8 +7,7 @@ import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { interviewStatuses } from "../type";
-import { InterviewsTable } from "./components/InterviewsTable";
-import { InterviewToolbar } from "./components/InterviewToolbar";
+import { InterviewsTable, InterviewToolbar } from "./components";
 
 const InterviewsPage: React.FC = () => {
 	const [status, setStatus] = useState<InterviewStatus | null>(null);

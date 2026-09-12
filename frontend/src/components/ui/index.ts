@@ -20,5 +20,6 @@ export * from "./pickers";
 export * from "./SaveChangesButton";
 export * from "./Select";
 export * from "./Textarea";
+export * from "./TimeInput";
 export * from "./Toggle";
 export * from "./WorkInProgress";
