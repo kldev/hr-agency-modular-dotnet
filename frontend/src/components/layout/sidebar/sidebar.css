@@ -188,3 +188,147 @@
 	padding-left: var(--space-2);
 	padding-right: var(--space-2);
 }
+
+/* =========================================================
+   Mobile navigation
+   ========================================================= */
+
+.sidebar-mobile-overlay {
+	display: none;
+}
+
+@media (max-width: 768px) {
+	.sidebar {
+		position: fixed;
+		z-index: 100;
+
+		top: 0;
+		left: 0;
+
+		width: var(--sidebar-width);
+		height: 100dvh;
+
+		transform: translateX(-100%);
+
+		transition:
+			transform var(--transition-normal),
+			box-shadow var(--transition-normal);
+	}
+
+	.sidebar-mobile-open .sidebar {
+		transform: translateX(0);
+
+		box-shadow: 8px 0 24px rgb(0 0 0 / 15%);
+	}
+
+	/*
+	 * Na mobile collapsed nie powinien wpływać
+	 * na szerokość sidebaru.
+	 */
+	.sidebar-collapsed .sidebar {
+		width: var(--sidebar-width);
+	}
+
+	.sidebar-collapsed .sidebar-header {
+		justify-content: flex-start;
+		padding: 0 var(--space-4);
+	}
+
+	.sidebar-collapsed .sidebar-logo-text,
+	.sidebar-collapsed .sidebar-group-title,
+	.sidebar-collapsed .sidebar-item-label {
+		display: inline;
+	}
+
+	.sidebar-collapsed .sidebar-item {
+		justify-content: flex-start;
+		padding: 0 var(--space-3);
+		min-height: 36px;
+	}
+
+	.sidebar-mobile-overlay {
+		display: block;
+
+		position: fixed;
+		z-index: 90;
+
+		inset: 0;
+
+		width: 100%;
+		height: 100%;
+
+		padding: 0;
+		border: 0;
+
+		background: rgb(0 0 0 / 35%);
+		cursor: pointer;
+	}
+
+	.app-main {
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+@media (max-width: 768px) {
+	.sidebar {
+		position: fixed;
+		z-index: 100;
+
+		top: 0;
+		left: 0;
+
+		width: var(--sidebar-width);
+		height: 100dvh;
+
+		transform: translateX(-100%);
+
+		transition: transform var(--transition-normal);
+	}
+
+	.sidebar-mobile-open .sidebar {
+		transform: translateX(0);
+	}
+
+	/*
+	 * Mobile sidebar is always expanded.
+	 * Desktop collapsed state must not affect it.
+	 */
+	.sidebar-collapsed .sidebar {
+		width: var(--sidebar-width);
+	}
+
+	.sidebar-collapsed .sidebar-header {
+		justify-content: flex-start;
+		padding: 0 var(--space-4);
+	}
+
+	.sidebar-collapsed .sidebar-logo-text,
+	.sidebar-collapsed .sidebar-group-title,
+	.sidebar-collapsed .sidebar-item-label {
+		display: inline;
+	}
+
+	.sidebar-collapsed .sidebar-item {
+		justify-content: flex-start;
+		padding: 0 var(--space-3);
+		min-height: 36px;
+	}
+
+	.sidebar-mobile-overlay {
+		position: fixed;
+		z-index: 90;
+		inset: 0;
+
+		display: block;
+
+		width: 100%;
+		height: 100%;
+
+		padding: 0;
+		border: 0;
+
+		background: rgb(0 0 0 / 35%);
+		cursor: pointer;
+	}
+}
