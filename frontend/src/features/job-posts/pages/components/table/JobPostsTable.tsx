@@ -29,8 +29,12 @@ export function JobPostsTable({ items, onRefresh }: JobPostsTableProps) {
 		onAddApplication: (it) => {
 			applicationRef.current?.create(it.id, it.title);
 		},
-		onChangeStatus: (it) => { statusRef.current?.changeStatus(it.id) },
-		onPostToChannel: (it) => { channelRef.current?.postToChannel(it.id) }
+		onChangeStatus: (it) => {
+			statusRef.current?.changeStatus(it.id);
+		},
+		onPostToChannel: (it) => {
+			channelRef.current?.postToChannel(it.id);
+		},
 	};
 
 	const table = useTable(

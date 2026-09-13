@@ -32,10 +32,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
 	BadRequestDetails,
+	ChangeInterviewerRequest,
 	ChangeInterviewFormatRequest,
 	ChangeInterviewStatusRequest,
 	GetInterviewsParams,
 	InterviewCreated,
+	InterviewerChanged,
 	InterviewFormatChanged,
 	InterviewProjection,
 	InterviewStatusChanged,
@@ -653,6 +655,149 @@ export function useChangeInterviewStatus<
 	const queryOptions = getChangeInterviewStatusQueryOptions(
 		interviewId,
 		changeInterviewStatusRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Change interviewer
+ */
+export const changeInterviewer = (
+	interviewId: string,
+	changeInterviewerRequest: BodyType<ChangeInterviewerRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<InterviewerChanged>(
+		{
+			url: `/api/interviews/${interviewId}/interviewer`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: changeInterviewerRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getChangeInterviewerQueryKey = (
+	interviewId: string,
+	changeInterviewerRequest?: BodyType<ChangeInterviewerRequest>,
+) => {
+	return ["PUT", `/api/interviews/${interviewId}/interviewer`, changeInterviewerRequest] as const;
+};
+
+export const getChangeInterviewerQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeInterviewer>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	changeInterviewerRequest: BodyType<ChangeInterviewerRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeInterviewer>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getChangeInterviewerQueryKey(interviewId, changeInterviewerRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeInterviewer>>> = ({ signal }) =>
+		changeInterviewer(interviewId, changeInterviewerRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: interviewId !== null && interviewId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof changeInterviewer>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type ChangeInterviewerQueryResult = NonNullable<
+	Awaited<ReturnType<typeof changeInterviewer>>
+>;
+export type ChangeInterviewerQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useChangeInterviewer<
+	TData = Awaited<ReturnType<typeof changeInterviewer>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	changeInterviewerRequest: BodyType<ChangeInterviewerRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeInterviewer>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeInterviewer>>,
+					TError,
+					Awaited<ReturnType<typeof changeInterviewer>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeInterviewer<
+	TData = Awaited<ReturnType<typeof changeInterviewer>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	changeInterviewerRequest: BodyType<ChangeInterviewerRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeInterviewer>>, TError, TData>> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeInterviewer>>,
+					TError,
+					Awaited<ReturnType<typeof changeInterviewer>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeInterviewer<
+	TData = Awaited<ReturnType<typeof changeInterviewer>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	changeInterviewerRequest: BodyType<ChangeInterviewerRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeInterviewer>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Change interviewer
+ */
+
+export function useChangeInterviewer<
+	TData = Awaited<ReturnType<typeof changeInterviewer>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	changeInterviewerRequest: BodyType<ChangeInterviewerRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeInterviewer>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getChangeInterviewerQueryOptions(
+		interviewId,
+		changeInterviewerRequest,
 		options,
 	);
 

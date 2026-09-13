@@ -5,7 +5,7 @@ import type { ScheduleInterviewRequest } from "@/api/models";
 import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
-import type { ScheduleInterviewCommand } from "./InterviewCommand";
+import type { ScheduleInterviewCommand } from "../InterviewCommand";
 import { emptyScheduleInterview, InterviewForm } from "./InterviewForm";
 
 interface CreateUserDrawerProps {
@@ -42,7 +42,7 @@ const ScheduletInterviewDrawer = forwardRef<ScheduleInterviewCommand, CreateUser
 		useImperativeHandle(
 			ref,
 			() => ({
-				schedule: (jobApplicationId) => {
+				schedule: (jobApplicationId: string) => {
 					createMutation.reset();
 					setJobApplicationIdtInterview(jobApplicationId);
 					setInterview(emptyScheduleInterview);
