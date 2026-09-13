@@ -23,4 +23,6 @@ export interface InterviewRescheduled {
 	note: string;
 	author: UserSnapshot;
 	occurredAt: string;
+	location?: string;
+	meetingUrl?: string;
 }

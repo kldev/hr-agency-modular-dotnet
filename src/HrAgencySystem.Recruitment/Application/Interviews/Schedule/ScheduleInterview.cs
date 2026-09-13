@@ -14,7 +14,9 @@ public sealed record ScheduleInterview(
     string Note,
     Guid InterviewerId,
     Guid CreatedBy,
-    string ScheduledTimezone = "Europe/Warsaw") : ICreateCommand
+    string ScheduledTimezone = "Europe/Warsaw",
+    string Location = "",
+    string MeetingUrl = "") : ICreateCommand
 {
     [JsonIgnore]
     public DateTimeOffset ScheduledAtInstant

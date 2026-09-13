@@ -527,6 +527,10 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
             null,
             null,
             DateTimeOffset.UtcNow,
-            null, candidateInfo);
+            null, candidateInfo,
+            "Job Post Title",
+            "Location",
+            "Meeting Url",
+            Guid.NewGuid());
     }
 }

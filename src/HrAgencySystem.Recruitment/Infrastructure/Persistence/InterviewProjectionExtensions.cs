@@ -1,3 +1,4 @@
+using HrAgencySystem.Recruitment.Application.Interviews.Queries;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Projections;
 
@@ -5,6 +6,20 @@ namespace HrAgencySystem.Recruitment.Infrastructure.Persistence;
 
 internal static class InterviewProjectionExtensions
 {
+    internal static IQueryable<InterviewProjection> WithQuery(this IQueryable<InterviewProjection> query,
+        Guid organizationId, InterviewsQuery filter)
+    {
+        return query.WithOrganizationId(organizationId)
+            .WithInterviewerId(filter.InterviewerId)
+            .WithCandidateId(filter.CandidateId)
+            .WithCreatedByUserId(filter.CreatedByUserId)
+            .WithJobApplicationId(filter.JobApplicationId)
+            .WithStatus(filter.Status)
+            .WithScheduleFrom(filter.From)
+            .WithScheduleTo(filter.To)
+            .WithSearch(filter.Search);
+    }
+    
     internal static IQueryable<InterviewProjection> WithOrganizationId(this IQueryable<InterviewProjection> query,
         Guid organizationId)
     {

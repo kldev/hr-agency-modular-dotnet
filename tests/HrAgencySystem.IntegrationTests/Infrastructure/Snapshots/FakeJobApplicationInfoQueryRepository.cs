@@ -9,7 +9,14 @@ public class FakeJobApplicationInfoQueryRepository : IJobApplicationInfoQueryRep
     public Task<JobApplicationInfo?> GetAsync(Guid jobApplicationId, OrganizationId organizationId, CancellationToken ct)
     {
         var candidateInfo = new CandidateInfo(Guid.NewGuid(), "test@fake.com", "", "", "");
-        var result = new JobApplicationInfo(jobApplicationId, organizationId.Value, Guid.NewGuid(), Guid.NewGuid(), candidateInfo);
+        var result = new JobApplicationInfo(jobApplicationId, 
+            organizationId.Value, 
+            Guid.NewGuid(), 
+            Guid.NewGuid(), 
+            candidateInfo,
+            "Job Post Title", 
+            Guid.NewGuid());
+        
         return Task.FromResult((JobApplicationInfo?)result);
     }
 }

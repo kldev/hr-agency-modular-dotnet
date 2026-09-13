@@ -48,7 +48,8 @@ public sealed record JobApplicationProjection(
     CompanySnapshot Company,
     string ApplicantFirstName,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    string ApplicantLastName)
+    string ApplicantLastName,
+    Guid JobPostId)
 {
     public static JobApplicationProjection Create(JobApplicationCreated @event)
     {
@@ -73,7 +74,8 @@ public sealed record JobApplicationProjection(
             @event.Company.Id,
             @event.Company,
             @event.ApplicantFirstName,
-            @event.ApplicantLastName);
+            @event.ApplicantLastName,
+            @event.JobPostId);
     }
 
     public static JobApplicationProjection Apply(

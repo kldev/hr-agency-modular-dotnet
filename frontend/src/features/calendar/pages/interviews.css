@@ -1,0 +1,761 @@
+/* =========================================================
+   Interviews Calendar
+   ========================================================= */
+
+.interviews-calendar-panel {
+	position: relative;
+
+	overflow: hidden;
+
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	box-shadow: var(--shadow-subtle);
+}
+
+.interviews-calendar {
+	min-width: 0;
+}
+
+.interviews-calendar-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-4);
+
+	min-height: 64px;
+
+	padding: var(--space-3) var(--space-4);
+
+	border-bottom: 1px solid var(--color-border);
+}
+
+.interviews-calendar-navigation {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+
+	min-width: 0;
+}
+
+.interviews-calendar-title {
+	margin: 0 0 0 var(--space-2);
+
+	color: var(--color-text);
+
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-semibold);
+
+	white-space: nowrap;
+}
+
+.interviews-calendar-view-switch {
+	display: flex;
+	align-items: center;
+
+	padding: 2px;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	background: var(--color-surface-subtle);
+}
+
+.interviews-calendar-view-button {
+	min-height: 30px;
+
+	padding: 0 var(--space-3);
+
+	border: 0;
+	border-radius: var(--radius-sm);
+
+	background: transparent;
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+
+	cursor: pointer;
+}
+
+.interviews-calendar-view-button:hover {
+	color: var(--color-text);
+	background: var(--color-surface-hover);
+}
+
+.interviews-calendar-view-button.active {
+	background: var(--color-surface);
+	color: var(--color-text);
+
+	box-shadow: var(--shadow-subtle);
+}
+
+/* =========================================================
+   Stats
+   ========================================================= */
+
+.interview-stats {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+
+	gap: var(--space-3);
+
+	margin-bottom: var(--space-5);
+}
+
+.interview-stat {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+
+	min-height: 82px;
+
+	padding: var(--space-4);
+
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	box-shadow: var(--shadow-subtle);
+}
+
+.interview-stat-icon {
+	display: grid;
+	place-items: center;
+
+	width: 36px;
+	height: 36px;
+
+	flex: 0 0 36px;
+
+	border-radius: var(--radius-md);
+
+	background: var(--color-primary-soft);
+	color: var(--color-primary);
+}
+
+.interview-stat-label {
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+}
+
+.interview-stat-value {
+	margin-top: 2px;
+
+	font-size: 20px;
+	font-weight: var(--font-weight-semibold);
+	line-height: 1.2;
+}
+
+.interview-stat-description {
+	margin-top: 2px;
+
+	color: var(--color-text-muted);
+
+	font-size: var(--font-size-xs);
+}
+
+/* =========================================================
+   Calendar loading
+   ========================================================= */
+
+.interviews-calendar-loading {
+	position: absolute;
+	right: var(--space-4);
+	top: 14px;
+	z-index: 5;
+
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+
+	padding: 5px 8px;
+
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+
+	box-shadow: var(--shadow-subtle);
+}
+
+/* =========================================================
+   Calendar scroll
+   ========================================================= */
+
+.interviews-calendar-scroll {
+	width: 100%;
+	overflow-x: auto;
+}
+
+/* =========================================================
+   Month
+   ========================================================= */
+
+.interviews-month {
+	min-width: 1100px;
+}
+
+.interviews-month-weekdays {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+
+	border-bottom: 1px solid var(--color-border);
+}
+
+.interviews-month-weekday {
+	min-height: 38px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	border-left: 1px solid var(--color-border-subtle);
+
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+}
+
+.interviews-month-weekday:first-child {
+	border-left: 0;
+}
+
+.interviews-month-grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.interviews-month-day {
+	min-height: 155px;
+
+	padding: var(--space-2);
+
+    /* biome-ignore lint/complexity/noImportantStyles: true*/
+    border-right: 1px solid var(--color-border-subtle) !important;
+    /* biome-ignore lint/complexity/noImportantStyles: true */
+    border-bottom: 1px solid var(--color-border-subtle) !important;
+
+	background: var(--color-surface);
+
+	cursor: pointer;
+	border: 1px;
+	font: inherit;
+	color: inherit;
+}
+
+.interviews-month-day:nth-child(7n) {
+	border-right: 0;
+}
+
+.interviews-month-day:hover {
+	background: var(--color-surface-hover);
+}
+
+.interviews-month-day-outside {
+	background: var(--color-surface-subtle);
+
+	color: var(--color-text-muted);
+}
+
+.interviews-month-day-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	margin-bottom: var(--space-2);
+}
+
+.interviews-day-number {
+	display: grid;
+	place-items: center;
+
+	width: 28px;
+	height: 28px;
+
+	border-radius: 50%;
+
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+}
+
+.interviews-day-number-today {
+	background: var(--color-primary);
+	color: #fff;
+}
+
+.interviews-day-count {
+	color: var(--color-text-muted);
+
+	font-size: var(--font-size-xs);
+}
+
+.interviews-month-events {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+/* =========================================================
+   Calendar Event
+   ========================================================= */
+
+.interview-calendar-event {
+	width: 100%;
+
+	padding: 7px 8px;
+
+	border: 1px solid var(--color-primary-soft);
+	border-left: 3px solid var(--color-primary);
+	border-radius: var(--radius-md);
+
+	background: var(--color-primary-soft);
+	color: var(--color-text);
+
+	text-align: left;
+
+	cursor: pointer;
+
+	transition:
+		background var(--transition-fast),
+		border-color var(--transition-fast);
+}
+
+.interview-calendar-event:hover {
+	background: var(--color-surface-selected);
+	border-color: var(--color-primary);
+}
+
+.interview-calendar-event-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 5px;
+}
+
+.interview-calendar-event-time {
+	color: var(--color-primary);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+
+	white-space: nowrap;
+}
+
+.interview-calendar-event-name {
+	margin-top: 3px;
+
+	overflow: hidden;
+
+	color: var(--color-text);
+
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.interview-calendar-event-job {
+	margin-top: 1px;
+
+	overflow: hidden;
+
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.interview-calendar-event-meta {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	margin-top: 5px;
+
+	color: var(--color-text-muted);
+
+	font-size: 10px;
+}
+
+.interview-calendar-event-meta span {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+
+	min-width: 0;
+
+	overflow: hidden;
+
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.interview-calendar-event-compact {
+	padding: 3px 5px;
+
+	border-left-width: 2px;
+
+	font-size: 10px;
+}
+
+.interview-calendar-event-compact .interview-calendar-event-name {
+	margin-top: 0;
+
+	font-size: 10px;
+}
+
+.interview-calendar-event-compact .interview-calendar-event-time {
+	font-size: 9px;
+}
+
+/* =========================================================
+   Status
+   ========================================================= */
+
+.interview-status-badge {
+	display: inline-flex;
+	align-items: center;
+
+	min-height: 18px;
+
+	padding: 0 5px;
+
+	border-radius: var(--radius-sm);
+
+	font-size: 9px;
+	font-weight: var(--font-weight-medium);
+
+	white-space: nowrap;
+}
+
+.interview-status-planned {
+	background: var(--color-info-soft);
+	color: var(--color-info);
+}
+
+.interview-status-completed {
+	background: var(--color-success-soft);
+	color: var(--color-success);
+}
+
+.interview-status-canceled {
+	background: var(--color-danger-soft);
+	color: var(--color-danger);
+}
+
+.interview-status-noshow {
+	background: var(--color-warning-soft);
+	color: var(--color-warning);
+}
+
+/* =========================================================
+   More
+   ========================================================= */
+
+.interviews-more-button,
+.interviews-quarter-more {
+	padding: 3px 5px;
+
+	border: 0;
+	background: transparent;
+
+	color: var(--color-primary);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+
+	text-align: left;
+
+	cursor: pointer;
+}
+
+.interviews-more-button:hover,
+.interviews-quarter-more:hover {
+	text-decoration: underline;
+}
+
+/* =========================================================
+   Week
+   ========================================================= */
+
+.interviews-week {
+	min-width: 1190px;
+}
+
+.interviews-week-header {
+	display: grid;
+
+	border-bottom: 1px solid var(--color-border);
+}
+
+.interviews-week-day-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	min-height: 58px;
+
+	border-left: 1px solid var(--color-border-subtle);
+
+	cursor: pointer;
+	border: 0;
+	background: transparent;
+	font: inherit;
+	color: inherit;
+}
+
+.interviews-week-day-header span {
+	color: var(--color-text-muted);
+
+	font-size: var(--font-size-xs);
+	text-transform: uppercase;
+}
+
+.interviews-week-day-header strong {
+	display: grid;
+	place-items: center;
+
+	margin-top: 2px;
+
+	width: 28px;
+	height: 28px;
+
+	border-radius: 50%;
+
+	font-size: var(--font-size-sm);
+}
+
+.interviews-week-day-header-today strong {
+	background: var(--color-primary);
+	color: #fff;
+}
+
+.interviews-week-body {
+	position: relative;
+}
+
+.interviews-week-row {
+	position: relative;
+}
+
+.interviews-week-time {
+	padding: 7px 8px 0 0;
+
+	border-bottom: 1px solid var(--color-border-subtle);
+
+	color: var(--color-text-muted);
+
+	font-size: var(--font-size-xs);
+	text-align: right;
+}
+
+.interviews-week-cell {
+	border-left: 1px solid var(--color-border-subtle);
+	border-bottom: 1px solid var(--color-border-subtle);
+
+	cursor: pointer;
+}
+
+.interviews-week-cell:hover {
+	background: var(--color-surface-hover);
+}
+
+.interviews-week-events {
+	pointer-events: none;
+}
+
+.interviews-week-events-column {
+	position: relative;
+
+	min-width: 0;
+
+	pointer-events: none;
+}
+
+.interviews-week-event-position {
+	position: absolute;
+	left: 4px;
+	right: 4px;
+
+	z-index: 2;
+
+	pointer-events: auto;
+}
+/* =========================================================
+   Quarter
+   ========================================================= */
+
+.interviews-quarter {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	width: 100%;
+	min-width: 1200px;
+}
+
+.interviews-quarter-month {
+	min-width: 0;
+	overflow: hidden;
+
+	border-right: 1px solid var(--color-border);
+}
+
+.interviews-quarter-month:last-child {
+	border-right: 0;
+}
+
+.interviews-quarter-month-header {
+	padding: 12px 14px;
+
+	border-bottom: 1px solid var(--color-border);
+
+	font-size: var(--font-size-md);
+	font-weight: var(--font-weight-semibold);
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.interviews-quarter-weekdays {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	width: 100%;
+	min-width: 0;
+
+	border-bottom: 1px solid var(--color-border);
+}
+
+.interviews-quarter-weekdays span {
+	min-width: 0;
+
+	padding: 7px 0;
+
+	color: var(--color-text-muted);
+
+	font-size: 10px;
+	font-weight: var(--font-weight-medium);
+
+	text-align: center;
+}
+
+.interviews-quarter-grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	width: 100%;
+	min-width: 0;
+}
+
+.interviews-quarter-day {
+	min-width: 0;
+	min-height: 94px;
+
+	padding: 5px;
+
+	border-right: 1px solid var(--color-border-subtle);
+	border-bottom: 1px solid var(--color-border-subtle);
+
+	cursor: pointer;
+
+	overflow: hidden;
+}
+
+.interviews-quarter-day:nth-child(7n) {
+	border-right: 0;
+}
+
+.interviews-quarter-day:hover {
+	background: var(--color-surface-hover);
+}
+
+.interviews-quarter-day-outside {
+	background: var(--color-surface-subtle);
+}
+
+.interviews-quarter-day-number {
+	display: grid;
+	place-items: center;
+
+	width: 24px;
+	height: 24px;
+
+	margin: 0 auto 3px;
+
+	border-radius: 50%;
+
+	font-size: var(--font-size-xs);
+}
+
+.interviews-quarter-day-today {
+	background: var(--color-primary);
+	color: #fff;
+	font-weight: var(--font-weight-semibold);
+}
+
+.interviews-quarter-events {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+
+	min-width: 0;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+
+@media (max-width: 1100px) {
+	.interview-stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.interviews-calendar-toolbar {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.interviews-calendar-navigation {
+		width: 100%;
+	}
+
+	.interviews-calendar-view-switch {
+		width: 100%;
+	}
+
+	.interviews-calendar-view-button {
+		flex: 1;
+	}
+}
+
+@media (max-width: 600px) {
+	.interview-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.interviews-calendar-navigation {
+		flex-wrap: wrap;
+	}
+
+	.interviews-calendar-title {
+		width: 100%;
+
+		margin-left: 0;
+
+		order: -1;
+	}
+
+	.interviews-calendar-view-switch {
+		width: 100%;
+	}
+}

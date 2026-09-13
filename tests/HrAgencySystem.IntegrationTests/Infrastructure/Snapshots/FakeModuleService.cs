@@ -3,6 +3,7 @@ using HrAgencySystem.Identity.Services;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
+using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Services;
@@ -45,7 +46,15 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
     public Task<JobApplicationInfo> GetApplicationAsync(Guid jobApplicationId, Guid organizationId, CancellationToken ct)
     {
         var candidateInfo = new CandidateInfo(Guid.NewGuid(), "test@fake.com", "", "", "");
-        var result = new JobApplicationInfo(jobApplicationId, organizationId, Guid.NewGuid(), Guid.NewGuid(), candidateInfo);
+        var result = new JobApplicationInfo(
+            jobApplicationId, 
+            organizationId, 
+            Guid.NewGuid(), 
+            Guid.NewGuid(), 
+            candidateInfo,
+            "Job Post Title", 
+            Guid.NewGuid());
+        
         return Task.FromResult(result);
     }
 
@@ -63,6 +72,12 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
     public void ValidateAggregateUpdate(IOrganizationDomain? aggregate, Guid commandOrganizationId)
     {
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId) throw new OrganizationAccessDeniedException();
+    }
+
+    public Task AppendApplicationNoteToStream(JobApplicationId jobApplicationId, OrganizationId organizationId, string note,
+        UserSnapshot user, CancellationToken ct)
+    {
+        return Task.CompletedTask;
     }
 
     public Task<OrganizationId> GetBySlugAsync(string slug, CancellationToken ct)

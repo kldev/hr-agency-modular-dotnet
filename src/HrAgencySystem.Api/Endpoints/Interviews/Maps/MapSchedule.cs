@@ -36,7 +36,9 @@ public sealed record ScheduleInterviewRequest(
     InterviewType InterviewType,
     string Note,
     Guid InterviewerId,
-    string ScheduledTimezone = "Europe/Warsaw")
+    string ScheduledTimezone = "Europe/Warsaw",
+    string Location = "",
+    string MeetingUrl = "")
 {
     public ScheduleInterview ToCommand(Guid organizationId, Guid createdBy)
     {

@@ -10,15 +10,7 @@ public class InterviewsQueryRepository(IQuerySession session) : IInterviewsQuery
     public async Task<SliceResponse<InterviewProjection>> GetSlice(Guid organizationId, InterviewsQuery query, CancellationToken ct)
     {
         return await session.Query<InterviewProjection>()
-            .WithOrganizationId(organizationId)
-            .WithInterviewerId(query.InterviewerId)
-            .WithCandidateId(query.CandidateId)
-            .WithCreatedByUserId(query.CreatedByUserId)
-            .WithJobApplicationId(query.JobApplicationId)
-            .WithStatus(query.Status)
-            .WithScheduleFrom(query.From)
-            .WithScheduleTo(query.To)
-            .WithSearch(query.Search)
+            .WithQuery(organizationId, query)
             .OrderByDescending(z=>z.ScheduleAt)
             .ToSlice(query, ct);
     }
@@ -28,5 +20,14 @@ public class InterviewsQueryRepository(IQuerySession session) : IInterviewsQuery
         return await session.Query<InterviewProjection>()
             .WithOrganizationId(organizationId)
             .WithInterviewId(interviewId).SingleOrDefaultAsync(ct);
+    }
+
+    public async Task<IReadOnlyList<InterviewProjection>> GetRange(Guid organizationId, InterviewsQuery query,
+        CancellationToken ct)
+    {
+        return await session.Query<InterviewProjection>()
+            .WithQuery(organizationId, query)
+            .OrderByDescending(z => z.ScheduleAt)
+            .ToListAsync(ct);
     }
 }

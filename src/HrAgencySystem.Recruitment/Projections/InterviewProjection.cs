@@ -25,7 +25,11 @@ public sealed record InterviewProjection(
     UserSnapshot? ModifiedBy,
     DateTimeOffset CreatedAt,
     DateTimeOffset? ModifiedAt,
-    CandidateInfo ApplicantInfo)
+    CandidateInfo ApplicantInfo,
+    string JobPostTitle,
+    string Location,
+    string MeetingUrl,
+    Guid JobPostId)
 {
     public static InterviewProjection Create(InterviewCreated @event)
     {
@@ -48,7 +52,11 @@ public sealed record InterviewProjection(
             null, 
             @event.OccurredAt, 
             null,
-            @event.Candidate
+            @event.Candidate,
+            @event.JobPostTitle ?? "",
+            @event.Location ?? "",
+            @event.MeetingUrl ?? "",
+            @event.JobPostId ?? Guid.Empty
         );
     }
     
@@ -92,7 +100,9 @@ public sealed record InterviewProjection(
         return ApplyCommon(this, @event) with
         {
             ScheduleAt = @event.ScheduleAt,
-            Timezone = @event.Timezone
+            Timezone = @event.Timezone,
+            Location = @event.Location,
+            MeetingUrl =@event.MeetingUrl
         };
     }
 }

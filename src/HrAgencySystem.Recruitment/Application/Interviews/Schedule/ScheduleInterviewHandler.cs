@@ -50,7 +50,11 @@ public static class ScheduleInterviewHandler
             shortNote!.Value,
             user,
             clock.UtcNow,
-            application.Candidate
+            application.Candidate,
+            application.JobPostTitle,
+            command.Location,
+            command.MeetingUrl,
+            application.JobPostId
         );
 
         var jobApplicationEvent = new JobApplicationInterviewScheduled(command.JobApplicationId,

@@ -44,4 +44,5 @@ export interface JobApplicationProjection {
 	company: CompanySnapshot;
 	applicantFirstName: string;
 	applicantLastName: string;
+	jobPostId: string;
 }

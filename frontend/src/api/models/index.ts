@@ -63,6 +63,7 @@ export * from "./getCandidatesParams";
 export * from "./getCompaniesParams";
 export * from "./getCompaniesSuggestionsParams";
 export * from "./getCompanyContactsSuggestionsParams";
+export * from "./getInterviewsForDateRangeParams";
 export * from "./getInterviewsParams";
 export * from "./getJobApplicationsSliceParams";
 export * from "./getJobDescriptionStatusesHistoryParams";

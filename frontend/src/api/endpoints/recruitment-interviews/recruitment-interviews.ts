@@ -35,6 +35,7 @@ import type {
 	ChangeInterviewerRequest,
 	ChangeInterviewFormatRequest,
 	ChangeInterviewStatusRequest,
+	GetInterviewsForDateRangeParams,
 	GetInterviewsParams,
 	InterviewCreated,
 	InterviewerChanged,
@@ -963,3 +964,90 @@ export function useRescheduleInterview<
 
 	return withQueryKey(query, queryOptions.queryKey);
 }
+
+/**
+ * @summary Get interviews for date range
+ */
+export const getInterviewsForDateRange = (
+	params: GetInterviewsForDateRangeParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<InterviewProjection[]>(
+		{ url: `/api/interviews/range`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getGetInterviewsForDateRangeMutationKey = () => ["getInterviewsForDateRange"] as const;
+
+export const getGetInterviewsForDateRangeMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getInterviewsForDateRange>>,
+		TError,
+		GetInterviewsForDateRangeMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getInterviewsForDateRange>>,
+	TError,
+	GetInterviewsForDateRangeMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetInterviewsForDateRangeMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getInterviewsForDateRange>>,
+		GetInterviewsForDateRangeMutationVariables
+	> = (props) => {
+		const { params } = props ?? {};
+
+		return getInterviewsForDateRange(params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetInterviewsForDateRangeMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getInterviewsForDateRange>>
+>;
+
+export type GetInterviewsForDateRangeMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetInterviewsForDateRangeMutationVariables = {
+	params: GetInterviewsForDateRangeParams;
+};
+
+/**
+ * @summary Get interviews for date range
+ */
+export const useGetInterviewsForDateRange = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getInterviewsForDateRange>>,
+			TError,
+			GetInterviewsForDateRangeMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getInterviewsForDateRange>>,
+	TError,
+	GetInterviewsForDateRangeMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetInterviewsForDateRangeMutationOptions(options), queryClient);
+};

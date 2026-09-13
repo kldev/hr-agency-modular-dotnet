@@ -41,4 +41,8 @@ export interface InterviewProjection {
 	/** @nullable */
 	modifiedAt: string | null;
 	applicantInfo: CandidateInfo;
+	jobPostTitle: string;
+	location: string;
+	meetingUrl: string;
+	jobPostId: string;
 }

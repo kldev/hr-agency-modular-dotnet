@@ -8,6 +8,7 @@ public interface IInterviewsQueryRepository
 {
     Task<SliceResponse<InterviewProjection>> GetSlice(Guid organizationId, InterviewsQuery query, CancellationToken ct);
     Task<InterviewProjection?> Get(Guid organizationId, Guid interviewId, CancellationToken ct);
+    Task<IReadOnlyList<InterviewProjection>> GetRange(Guid organizationId, InterviewsQuery query, CancellationToken ct);
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global

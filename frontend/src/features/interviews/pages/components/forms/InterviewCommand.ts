@@ -25,6 +25,5 @@ export interface RescheduleInterviewCommand {
 }
 
 export interface InterviewActionsRef {
-
-	update: (id: string, action: InterviewActionsType) => void
+	update: (id: string, action: InterviewActionsType) => void;
 }

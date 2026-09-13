@@ -33,4 +33,12 @@ export interface InterviewCreated {
 	author: UserSnapshot;
 	occurredAt: string;
 	candidate: CandidateInfo;
+	/** @nullable */
+	jobPostTitle: string | null;
+	/** @nullable */
+	location: string | null;
+	/** @nullable */
+	meetingUrl: string | null;
+	/** @nullable */
+	jobPostId: string | null;
 }

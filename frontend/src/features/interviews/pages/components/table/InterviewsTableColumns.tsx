@@ -68,8 +68,6 @@ export function getColumns(actions: Actions) {
 			cell: ({ getValue }) => <InterviewStatusBadge status={getValue()} />,
 		}),
 
-
-
 		columnHelper.accessor("interviewer", {
 			header: "Interviewer",
 			meta: {

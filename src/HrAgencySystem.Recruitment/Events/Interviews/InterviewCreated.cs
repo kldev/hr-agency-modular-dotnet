@@ -18,4 +18,8 @@ public sealed record InterviewCreated(
     string Note,
     UserSnapshot Author,
     DateTimeOffset OccurredAt,
-    CandidateInfo Candidate) : IInterviewEvent;
+    CandidateInfo Candidate,
+    string? JobPostTitle,
+    string? Location,
+    string? MeetingUrl,
+    Guid? JobPostId) : IInterviewEvent;

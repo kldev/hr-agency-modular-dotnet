@@ -64,7 +64,17 @@ const recruitmentRoutes: RouteObject[] = [
 	},
 	{
 		path: ROUTES.CALENDAR,
-		Component: Stub,
+		lazy: async () => {
+			const module = await import("@/features/calendar/pages/InterviewCalendarPage");
+
+			return {
+				Component: module.default,
+			};
+		},
+		handle: {
+			breadcrumb: "Calendar",
+		},
+		HydrateFallback: RouteFallback,
 	},
 ];
 

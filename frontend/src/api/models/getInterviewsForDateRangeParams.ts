@@ -13,17 +13,16 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { InterviewFormat } from "./interviewFormat";
-import type { InterviewType } from "./interviewType";
+import type { InterviewStatus } from "./interviewStatus";
 
-export interface ScheduleInterviewRequest {
-	jobApplicationId: string;
-	scheduledAt: string;
-	format: InterviewFormat;
-	interviewType: InterviewType;
-	note: string;
-	interviewerId: string;
-	scheduledTimezone?: string;
-	location?: string;
-	meetingUrl?: string;
-}
+export type GetInterviewsForDateRangeParams = {
+	search?: string;
+	jobApplicationId?: string;
+	interviewerId?: string;
+	candidateId?: string;
+	createdByUserId?: string;
+	status?: InterviewStatus;
+	fromDate: string;
+	toDate: string;
+	timezone?: string;
+};
