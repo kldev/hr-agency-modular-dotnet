@@ -17,12 +17,12 @@ const DashboardPage: React.FC = () => {
 			emptyState={<div></div>}
 			headerAddon={
 				<div className="flex gap-2">
-					<Button variant="secondary" onClick={() => navigate(ROUTES.CANDIDATES)}>
+					<Button variant="secondary" onClick={() => navigate(ROUTES.APPLICATIONS)}>
 						<Users className="size-4" />
-						Candidates
+						Job applications
 					</Button>
 
-					<Button onClick={() => navigate(ROUTES.JOBS_ADD)}>
+					<Button onClick={() => navigate(ROUTES.JOBS_DESCRIPTION)}>
 						<BriefcaseBusiness className="size-4" />
 						New job posting
 					</Button>

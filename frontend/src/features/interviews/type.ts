@@ -3,10 +3,10 @@ import type { InterviewFormat, InterviewStatus, InterviewType } from "@/api/mode
 export const interviewStatuses: Record<InterviewStatus, string> = {
 	Planned: "Planned",
 	Confirmed: "Confirmed",
-	InProgress: "InProgress",
+	InProgress: "In progress",
 	Completed: "Completed",
 	Canceled: "Canceled",
-	NoShow: "NoShow",
+	NoShow: "No show",
 	Rescheduled: "Rescheduled",
 };
 

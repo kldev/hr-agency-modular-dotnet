@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const MODE = "mode";
+const MODE = "theme";
 
 export type Theme = "light" | "dark";
 

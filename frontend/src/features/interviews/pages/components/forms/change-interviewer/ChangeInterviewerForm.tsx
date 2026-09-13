@@ -61,6 +61,8 @@ export function ChangeInterviewerForm({
 						</label>
 
 						<UsersPicker
+							label="Select interviewer"
+							placeholder="Search interviewer"
 							inputValue={input}
 							onInputChange={setInput}
 							value={field.state.value}

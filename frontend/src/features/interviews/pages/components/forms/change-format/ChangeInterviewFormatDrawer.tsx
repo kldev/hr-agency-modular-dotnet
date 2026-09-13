@@ -5,7 +5,7 @@ import type { ChangeInterviewFormatRequest } from "@/api/models";
 import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
-import type { ChangeInterviewStatusCommand } from "../InterviewCommand";
+import type { ChangeInterviewFormatCommand } from "../InterviewCommand";
 
 import { ChangeInterviewFormatForm, emptyFormat } from "./ChangeInterviewFormatForm";
 
@@ -14,7 +14,7 @@ interface ChangeInterviewFormatDrawerProps {
 }
 
 const ChangeInterviewFormatDrawer = forwardRef<
-	ChangeInterviewStatusCommand,
+	ChangeInterviewFormatCommand,
 	ChangeInterviewFormatDrawerProps
 >(({ onSuccess }, ref) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,7 @@ const ChangeInterviewFormatDrawer = forwardRef<
 	useImperativeHandle(
 		ref,
 		() => ({
-			changeStatus: (id: string) => {
+			changeFormat: (id: string) => {
 				mutation.reset();
 				setInterviewId(id);
 				setIsOpen(true);

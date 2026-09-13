@@ -60,7 +60,7 @@ const InterviewsPage: React.FC = () => {
 				}}
 			/>
 			<EnumFilter value={status} options={interviewStatuses} onChange={setStatus} />
-			<InterviewsTable items={items} />
+			<InterviewsTable items={items} onRefresh={refresh} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);

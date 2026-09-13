@@ -90,6 +90,7 @@ const ChangeInterviewStatusDrawer = forwardRef<
 				formId="interview-status-from"
 				onSubmit={handleSave}
 				error={mutation.error}
+				isSubmitting={mutation.isPending}
 			/>
 		</Drawer>
 	);

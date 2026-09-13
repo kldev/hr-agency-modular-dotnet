@@ -1,14 +1,52 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
 import type { InterviewProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
-import { ItemMark } from "@/components/ui";
+import {
+	InterviewFormatBadge,
+	InterviewStatusBadge,
+	InterviewTypeBadge,
+	ItemMark,
+} from "@/components/ui";
 import { formatDateTime } from "@/utlis/dateUtils";
+import { InterviewActions } from "./InterviewActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, InterviewProjection>();
 
-export function getColumns(onEdit?: (company: InterviewProjection) => void) {
+export type Actions = {
+	onChangeForamt: (item: InterviewProjection) => void;
+	onChangeStatus: (item: InterviewProjection) => void;
+	onChangeInterviewer: (item: InterviewProjection) => void;
+};
+
+export function getColumns(actions: Actions) {
 	const columns = columnHelper.columns([
+		columnHelper.display({
+			id: "actions",
+			header: () => null,
+			meta: {
+				width: "xxs",
+			},
+			cell: ({ row }) => {
+				const item = row.original;
+
+				return (
+					<div className="table-cell-content">
+						<InterviewActions
+							onChangeForamt={(): void => {
+								actions.onChangeForamt(item);
+							}}
+							onChangeStatus={(): void => {
+								actions.onChangeStatus(item);
+							}}
+							onChangeInterviewer={(): void => {
+								actions.onChangeInterviewer(item);
+							}}
+						/>
+					</div>
+				);
+			},
+		}),
+
 		columnHelper.accessor("applicantInfo", {
 			header: "Applicant",
 			meta: {
@@ -33,6 +71,8 @@ export function getColumns(onEdit?: (company: InterviewProjection) => void) {
 		}),
 		columnHelper.accessor("status", {
 			header: "Status",
+			//InterviewStatusBadge
+			cell: ({ getValue }) => <InterviewStatusBadge status={getValue()} />,
 		}),
 
 		columnHelper.accessor("scheduleAt", {
@@ -58,37 +98,19 @@ export function getColumns(onEdit?: (company: InterviewProjection) => void) {
 			),
 		}),
 
+		columnHelper.accessor("interviewType", {
+			header: "Type",
+			cell: ({ getValue }) => <InterviewTypeBadge status={getValue()} />,
+		}),
+
 		columnHelper.accessor("format", {
 			header: "Format",
+			cell: ({ getValue }) => <InterviewFormatBadge status={getValue()} />,
 		}),
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
-		}),
-
-		columnHelper.display({
-			id: "actions",
-			header: () => null,
-			cell: ({ row }) => {
-				const item = row.original;
-
-				if (!onEdit) {
-					return null;
-				}
-
-				return (
-					<div className="table-actions">
-						<button
-							type="button"
-							className="table-action-button"
-							aria-label={`Actions for ${item.applicantInfo.email}`}
-						>
-							<MoreHorizontal className="size-4" />
-						</button>
-					</div>
-				);
-			},
 		}),
 	]);
 	return columns;

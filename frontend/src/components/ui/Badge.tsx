@@ -1,5 +1,8 @@
 import clsx from "clsx";
 import type {
+	InterviewFormat,
+	InterviewStatus,
+	InterviewType,
 	JobApplicationStatus,
 	JobDescriptionStatus,
 	JobPostStatus,
@@ -56,4 +59,39 @@ const jobDescriptionClass: Record<JobDescriptionStatus, string> = {
 
 export function JobDescriptionBadge({ status }: { status: JobDescriptionStatus }) {
 	return <span className={clsx("badge", jobDescriptionClass[status])}>{status}</span>;
+}
+
+const interviewClass: Record<InterviewStatus, string> = {
+	Planned: "badge-new",
+	Confirmed: "badge-contacted",
+	InProgress: "badge-active",
+	Rescheduled: "badge-qualified",
+	NoShow: "badge-inactive ",
+	Canceled: "badge-suspended",
+	Completed: "badge-closed",
+};
+
+export function InterviewStatusBadge({ status }: { status: InterviewStatus }) {
+	return <span className={clsx("badge", interviewClass[status])}>{status}</span>;
+}
+
+const interviewFormat: Record<InterviewFormat, string> = {
+	Online: "badge-new",
+	OnSite: "badge-contacted",
+	Phone: "badge-qualified",
+};
+
+export function InterviewFormatBadge({ status }: { status: InterviewFormat }) {
+	return <span className={clsx("badge", interviewFormat[status])}>{status}</span>;
+}
+
+const interviewType: Record<InterviewType, string> = {
+	Hr: "badge-new",
+	Final: "badge-contacted",
+	Client: "badge-qualified",
+	Technical: "badge-contacted",
+};
+
+export function InterviewTypeBadge({ status }: { status: InterviewType }) {
+	return <span className={clsx("badge", interviewType[status])}>{status}</span>;
 }
