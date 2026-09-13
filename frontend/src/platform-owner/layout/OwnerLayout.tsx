@@ -32,9 +32,17 @@ export function OwnerLayout() {
 					onToggle={() => setCollapsed((value) => !value)}
 				/>
 
+				{mobileOpen && (
+					<button
+						type="button"
+						className="sidebar-mobile-overlay"
+						aria-label="Close navigation"
+						onClick={() => setMobileOpen(false)}
+					/>
+				)}
+
 				<main className="app-main">
 					<OwnerTopBar onMenuClick={() => setMobileOpen((value) => !value)} />
-					{/* View */}
 					<Outlet />
 				</main>
 			</div>

@@ -1,0 +1,246 @@
+/* ---------------------------------------------------------
+   Lists
+   --------------------------------------------------------- */
+
+.data-content-lists {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: var(--space-5);
+}
+
+.data-content-section {
+	min-width: 0;
+
+	border: 1px solid var(--color-border);
+	background: var(--color-surface);
+}
+
+.data-content-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-3);
+
+	padding: var(--space-4);
+
+	border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.data-content-header h2 {
+	margin: 0;
+
+	color: var(--color-text);
+	font-size: var(--font-size-md);
+	font-weight: var(--font-weight-semibold);
+}
+
+.data-content-header span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	min-width: 22px;
+	height: 22px;
+	padding: 0 var(--space-1);
+
+	border-radius: var(--radius-sm);
+
+	color: var(--color-text-muted);
+	background: var(--color-surface-subtle);
+
+	font-size: var(--font-size-xs);
+	font-variant-numeric: tabular-nums;
+}
+
+.data-content-list {
+	display: flex;
+	flex-direction: column;
+
+	margin: 0;
+	padding: 0;
+
+	list-style: none;
+}
+
+.data-content-list li {
+	position: relative;
+
+	padding: var(--space-3) var(--space-4) var(--space-3) 34px;
+
+	border-bottom: 1px solid var(--color-border-subtle);
+
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+	line-height: 1.55;
+}
+
+.data-content-list li:last-child {
+	border-bottom: 0;
+}
+
+.data-content-list li::before {
+	content: "";
+
+	position: absolute;
+	top: 19px;
+	left: var(--space-4);
+
+	width: 5px;
+	height: 5px;
+
+	border-radius: 50%;
+	background: var(--color-primary);
+}
+
+.data-content-empty {
+	padding: var(--space-5);
+
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+	.data-content-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.data-content-sidebar {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: start;
+	}
+}
+
+@media (max-width: 800px) {
+	.data-content-lists {
+		grid-template-columns: 1fr;
+	}
+
+	.data-content-skills-section {
+		grid-column: auto;
+	}
+
+	.data-content-sidebar {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 700px) {
+	.data-content-text {
+		padding: var(--space-4);
+	}
+
+	.data-content-summary {
+		font-size: var(--font-size-md);
+	}
+
+	.data-content-body {
+		font-size: var(--font-size-sm);
+	}
+
+	.data-content-header-meta {
+		gap: var(--space-1);
+	}
+}
+
+@media (max-width: 480px) {
+	.data-content-text {
+		padding: var(--space-3);
+	}
+
+	.data-content-list li {
+		padding-left: 30px;
+	}
+
+	.data-content-list li::before {
+		left: var(--space-3);
+	}
+}
+
+.data-details-text {
+	padding: var(--space-5);
+}
+
+.data-details-summary {
+	margin: 0 0 var(--space-5);
+
+	color: var(--color-text);
+	font-size: var(--font-size-md);
+	font-weight: var(--font-weight-medium);
+	line-height: 1.5;
+}
+
+.data-details-body {
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-md);
+	line-height: 1.7;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.short-items-section {
+	grid-column: 1 / -1;
+}
+
+.short-items-section .data-content-list {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+
+	padding: var(--space-4);
+}
+
+.short-items-section .data-content-list li {
+	padding: 5px 9px;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	color: var(--color-text-secondary);
+	background: var(--color-surface-subtle);
+
+	font-size: var(--font-size-xs);
+	line-height: 1.3;
+}
+
+.short-items-section .data-content-list li::before {
+	display: none;
+}
+
+/**
+####
+**/
+
+.data-details-header-meta {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	margin-top: var(--space-1);
+}
+
+.data-details-header-status,
+.data-details-header-info {
+	display: inline-flex;
+	align-items: center;
+	min-height: 22px;
+	padding: 2px 7px;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.data-details-header-info {
+	color: var(--color-text-secondary);
+	background: var(--color-surface-subtle);
+}

@@ -1,121 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import "./job-description-details.css";
 
 import { getJobDescription } from "@/api/endpoints";
 import type { JobDescriptionProjection } from "@/api/models";
-import { DataDetails, DetailsHeader } from "@/components/ui";
-import { DetailItem } from "@/components/ui/details/DataDetails";
+import {
+	formatSalary,
+	getCountryLabel,
+	getEmploymentTypeLabel,
+	getWorkModeLabel,
+} from "@/components";
+import {
+	DataDetails,
+	DetailsHeader,
+	DetailsListSection,
+	JobDescriptionBadge,
+} from "@/components/ui";
+import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
+import { formatDateTime } from "@/utlis";
 
-function formatSalary(
-	min: number | string,
-	max: number | string,
-	currencyCode: string,
-) {
-	const formatter = new Intl.NumberFormat("pl-PL", {
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 2,
-	});
-
-	return `${formatter.format(Number(min))} – ${formatter.format(Number(max))} ${currencyCode}`;
-}
-
-function formatDate(value: string) {
-	return new Intl.DateTimeFormat("pl-PL", {
-		dateStyle: "medium",
-		timeStyle: "short",
-	}).format(new Date(value));
-}
-
-function getStatusLabel(status: string) {
-	switch (status) {
-		case "Draft":
-			return "Draft";
-		case "Active":
-			return "Active";
-		case "Archived":
-			return "Archived";
-		default:
-			return status;
-	}
-}
-
-function getEmploymentTypeLabel(type: string) {
-	switch (type) {
-		case "FullTime":
-			return "Full time";
-		case "PartTime":
-			return "Part time";
-		case "Contract":
-			return "Contract";
-		case "B2B":
-			return "B2B";
-		case "Internship":
-			return "Internship";
-		default:
-			return type;
-	}
-}
-
-function getWorkModeLabel(mode: string) {
-	switch (mode) {
-		case "Remote":
-			return "Remote";
-		case "Hybrid":
-			return "Hybrid";
-		case "OnSite":
-			return "On-site";
-		default:
-			return mode;
-	}
-}
-
-function getCountryLabel(countryCode: string) {
-	try {
-		return new Intl.DisplayNames(["en"], {
-			type: "region",
-		}).of(countryCode);
-	} catch {
-		return countryCode;
-	}
-}
-
-function ListSection({
-	title,
-	items,
-	className = "",
-}: {
-	title: string;
-	items: string[];
-	className?: string;
-}) {
-	return (
-		<section className={`job-description-content-section ${className}`}>
-			<header className="job-description-content-header">
-				<h2>{title}</h2>
-				<span>{items.length}</span>
-			</header>
-
-			{items.length === 0 ? (
-				<div className="job-description-content-empty">
-					No items added.
-				</div>
-			) : (
-				<ul className="job-description-list">
-					{items.map((item, index) => (
-						<li key={`${item}-${index}`}>{item}</li>
-					))}
-				</ul>
-			)}
-		</section>
-	);
-}
-
-function JobDescriptionOverview({
-	jobDescription,
-}: {
-	jobDescription: JobDescriptionProjection;
-}) {
+function JobDescriptionOverview({ jobDescription }: { jobDescription: JobDescriptionProjection }) {
 	return (
 		<section className="data-details-section">
 			<div className="data-details-section-header">
@@ -126,33 +29,21 @@ function JobDescriptionOverview({
 			</div>
 
 			<dl className="data-details-list">
-				<DetailItem label="Company">
-					{jobDescription.company.name}
-				</DetailItem>
+				<DetailItem label="Company">{jobDescription.company.name}</DetailItem>
 
 				<DetailItem label="Status">
-					<span
-						className={`job-description-status job-description-status--${jobDescription.status.toLowerCase()}`}
-					>
-						{getStatusLabel(jobDescription.status)}
-					</span>
+					<JobDescriptionBadge status={jobDescription.status} />
 				</DetailItem>
 
 				<DetailItem label="Employment type">
 					{getEmploymentTypeLabel(jobDescription.employmentType)}
 				</DetailItem>
 
-				<DetailItem label="Work mode">
-					{getWorkModeLabel(jobDescription.workMode)}
-				</DetailItem>
+				<DetailItem label="Work mode">{getWorkModeLabel(jobDescription.workMode)}</DetailItem>
 
-				<DetailItem label="Location">
-					{jobDescription.location || "—"}
-				</DetailItem>
+				<DetailItem label="Location">{jobDescription.location || "—"}</DetailItem>
 
-				<DetailItem label="Country">
-					{getCountryLabel(jobDescription.countryCode)}
-				</DetailItem>
+				<DetailItem label="Country">{getCountryLabel(jobDescription.countryCode)}</DetailItem>
 
 				<DetailItem label="Salary">
 					{formatSalary(
@@ -162,9 +53,7 @@ function JobDescriptionOverview({
 					)}
 				</DetailItem>
 
-				<DetailItem label="Recruiter">
-					{jobDescription.recruiter.fullname}
-				</DetailItem>
+				<DetailItem label="Recruiter">{jobDescription.recruiter.fullname}</DetailItem>
 			</dl>
 		</section>
 	);
@@ -184,17 +73,11 @@ function JobDescriptionDescription({
 				</div>
 			</div>
 
-			<div className="job-description-text">
-				{jobDescription.summary && (
-					<p className="job-description-summary">
-						{jobDescription.summary}
-					</p>
-				)}
+			<div className="data-details-text">
+				{jobDescription.summary && <p className="data-details-summary">{jobDescription.summary}</p>}
 
 				{jobDescription.description && (
-					<div className="job-description-body">
-						{jobDescription.description}
-					</div>
+					<div className="data-details-body">{jobDescription.description}</div>
 				)}
 			</div>
 		</section>
@@ -218,30 +101,24 @@ const JobDescriptionDetailsPage: React.FC = () => {
 
 	if (!id) {
 		return (
-			<div className="job-description-details">
-				<div className="data-details-empty">
-					Job description not found.
-				</div>
+			<div className="data-details-details">
+				<div className="data-details-empty">Job description not found.</div>
 			</div>
 		);
 	}
 
 	if (jobDescriptionQuery.isLoading) {
 		return (
-			<div className="job-description-details">
-				<div className="data-details-loading">
-					Loading job description...
-				</div>
+			<div className="data-details-details">
+				<div className="data-details-loading">Loading job description...</div>
 			</div>
 		);
 	}
 
 	if (jobDescriptionQuery.isError || !jobDescriptionQuery.data) {
 		return (
-			<div className="job-description-details">
-				<div className="data-details-error">
-					Unable to load job description.
-				</div>
+			<div className="data-details-details">
+				<div className="data-details-error">Unable to load job description.</div>
 			</div>
 		);
 	}
@@ -253,16 +130,10 @@ const JobDescriptionDetailsPage: React.FC = () => {
 			<DetailsHeader
 				name={jobDescription.title}
 				detailsAddons={
-					<div className="job-description-header-meta">
-						<span
-							className={`job-description-status job-description-status--${jobDescription.status.toLowerCase()}`}
-						>
-							{getStatusLabel(jobDescription.status)}
-						</span>
+					<div className="data-details-header-meta">
+						<JobDescriptionBadge status={jobDescription.status} />
 
-						<span className="job-description-company">
-							{jobDescription.company.name}
-						</span>
+						<span className="data-details-header-info">{jobDescription.company.name}</span>
 					</div>
 				}
 				onEdit={() => {
@@ -270,64 +141,54 @@ const JobDescriptionDetailsPage: React.FC = () => {
 				}}
 			/>
 
-			<div className="job-description-layout">
-				<div className="job-description-main">
-					<JobDescriptionDescription jobDescription={jobDescription} />
+			<DataDetailsLayout
+				main={
+					<>
+						<JobDescriptionDescription jobDescription={jobDescription} />
 
-					<div className="job-description-lists">
-						<ListSection
-							title="Responsibilities"
-							items={jobDescription.responsibilities}
-						/>
+						<div className="data-content-lists ">
+							<DetailsListSection
+								title="Responsibilities"
+								items={jobDescription.responsibilities}
+							/>
 
-						<ListSection
-							title="Requirements"
-							items={jobDescription.requirements}
-						/>
+							<DetailsListSection title="Requirements" items={jobDescription.requirements} />
 
-						<ListSection
-							title="Skills"
-							items={jobDescription.skills}
-							className="job-description-skills-section"
-						/>
-					</div>
-				</div>
-
-				<aside className="job-description-sidebar">
-					<JobDescriptionOverview
-						jobDescription={jobDescription}
-					/>
-
-					<section className="data-details-section">
-						<div className="data-details-section-header">
-							<div>
-								<h2>Audit</h2>
-								<p>Record information</p>
-							</div>
+							<DetailsListSection
+								title="Skills"
+								items={jobDescription.skills}
+								className="short-items-section"
+							/>
 						</div>
+					</>
+				}
+				sidebar={
+					<>
+						<JobDescriptionOverview jobDescription={jobDescription} />
 
-						<dl className="data-details-list">
-							<DetailItem label="Created">
-								{formatDate(jobDescription.createdAt)}
-							</DetailItem>
+						<section className="data-details-section">
+							<div className="data-details-section-header">
+								<div>
+									<h2>Audit</h2>
+									<p>Record information</p>
+								</div>
+							</div>
 
-							<DetailItem label="Created by">
-								{jobDescription.createdBy.fullname}
-							</DetailItem>
+							<dl className="data-details-list">
+								<DetailItem label="Created">{formatDateTime(jobDescription.createdAt)}</DetailItem>
 
-							<DetailItem label="Updated">
-								{formatDate(jobDescription.updatedAt)}
-							</DetailItem>
+								<DetailItem label="Created by">{jobDescription.createdBy.fullname}</DetailItem>
 
-							<DetailItem label="Modified by">
-								{jobDescription.modifiedBy?.fullname}
-							</DetailItem>
-						</dl>
-					</section>
-				</aside>
-			</div>
+								<DetailItem label="Updated">{formatDateTime(jobDescription.updatedAt)}</DetailItem>
+
+								<DetailItem label="Modified by">{jobDescription.modifiedBy?.fullname}</DetailItem>
+							</dl>
+						</section>
+					</>
+				}
+			/>
 		</DataDetails>
 	);
-}
+};
 
-export default JobDescriptionDetailsPage
+export default JobDescriptionDetailsPage;

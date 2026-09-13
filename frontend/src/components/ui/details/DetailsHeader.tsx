@@ -4,8 +4,9 @@ import { ActionButton, ItemMark } from "@/components/ui";
 interface dataDetailsHeaderProps {
 	name: string;
 	website?: string;
-	onEdit: () => void;
+	onEdit?: () => void;
 	detailsAddons?: React.ReactNode;
+	extraAdd?: React.ReactNode;
 }
 
 function renderWebiste(website?: string) {
@@ -17,7 +18,13 @@ function renderWebiste(website?: string) {
 	);
 }
 
-export function DetailsHeader({ name, onEdit, website, detailsAddons }: dataDetailsHeaderProps) {
+export function DetailsHeader({
+	name,
+	onEdit,
+	website,
+	detailsAddons,
+	extraAdd,
+}: dataDetailsHeaderProps) {
 	return (
 		<header className="data-details-header">
 			<div className="data-details-header-main">
@@ -30,11 +37,16 @@ export function DetailsHeader({ name, onEdit, website, detailsAddons }: dataDeta
 				</div>
 			</div>
 
-			<div className="data-details-header-actions">
-				<ActionButton title="Edit data" onClick={onEdit}>
-					<Pencil size={15} />
-					<span>Edit</span>
-				</ActionButton>
+			<div className="flex flex-row gap-3">
+				{extraAdd}
+				{onEdit ? (
+					<div className="data-details-header-actions">
+						<ActionButton title="Edit data" onClick={onEdit}>
+							<Pencil size={15} />
+							<span>Edit</span>
+						</ActionButton>
+					</div>
+				) : null}
 			</div>
 		</header>
 	);

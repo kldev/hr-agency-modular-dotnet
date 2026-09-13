@@ -41,3 +41,18 @@ type DataDetailsProps = {
 export function DataDetails({ children }: DataDetailsProps) {
 	return <main className="data-details">{children}</main>;
 }
+
+export function DataDetailsLayout({
+	main,
+	sidebar,
+}: {
+	main: React.ReactNode;
+	sidebar: React.ReactNode;
+}) {
+	return (
+		<div className="data-details-layout">
+			<div className="data-details-main">{main}</div>
+			<aside className="data-details-sidebar">{sidebar}</aside>
+		</div>
+	);
+}

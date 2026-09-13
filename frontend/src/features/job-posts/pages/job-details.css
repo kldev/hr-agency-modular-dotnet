@@ -1,0 +1,124 @@
+.job-post-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1.7fr) minmax(360px, 0.8fr);
+	gap: var(--space-5);
+	align-items: start;
+}
+
+.job-post-main,
+.job-post-sidebar {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-5);
+}
+
+.job-post-header-meta {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	margin-top: var(--space-1);
+}
+
+.job-post-status,
+.job-post-company {
+	display: inline-flex;
+	align-items: center;
+	min-height: 22px;
+	padding: 2px 7px;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.job-post-company {
+	color: var(--color-text-secondary);
+	background: var(--color-surface-subtle);
+}
+
+.job-post-status--draft {
+	color: var(--color-neutral);
+	background: var(--color-neutral-soft);
+	border-color: transparent;
+}
+
+.job-post-status--active,
+.job-post-status--published {
+	color: var(--color-success);
+	background: var(--color-success-soft);
+	border-color: transparent;
+}
+
+.job-post-status--archived {
+	color: var(--color-text-muted);
+	background: var(--color-surface-subtle);
+	border-color: transparent;
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+	.job-post-layout {
+		grid-template-columns: 1fr;
+	}
+
+	.job-post-sidebar {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: start;
+	}
+}
+
+@media (max-width: 800px) {
+	.job-post-lists {
+		grid-template-columns: 1fr;
+	}
+
+	.job-post-skills-section {
+		grid-column: auto;
+	}
+
+	.job-post-sidebar {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 700px) {
+	.job-post-text {
+		padding: var(--space-4);
+	}
+
+	.job-post-summary {
+		font-size: var(--font-size-md);
+	}
+
+	.job-post-body {
+		font-size: var(--font-size-sm);
+	}
+
+	.job-post-header-meta {
+		gap: var(--space-1);
+	}
+}
+
+@media (max-width: 480px) {
+	.job-post-text {
+		padding: var(--space-3);
+	}
+
+	.job-post-list li {
+		padding-left: 30px;
+	}
+
+	.job-post-list li::before {
+		left: var(--space-3);
+	}
+}

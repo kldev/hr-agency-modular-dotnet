@@ -20,3 +20,10 @@ export function formatDate(value: string | null | undefined): string {
 		locale: pl,
 	});
 }
+
+export function formatDateTimeIntl(value: string) {
+	return new Intl.DateTimeFormat("pl-PL", {
+		dateStyle: "medium",
+		timeStyle: "short",
+	}).format(new Date(value));
+}

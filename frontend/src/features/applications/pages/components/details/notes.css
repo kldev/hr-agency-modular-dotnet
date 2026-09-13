@@ -1,0 +1,107 @@
+/* =========================================================
+   Notes
+   ========================================================= */
+
+.notes-section {
+	min-width: 0;
+}
+
+.notes-section .data-details-section-header {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.notes-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	min-width: 22px;
+	height: 20px;
+	padding: 0 var(--space-1);
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	background: var(--color-surface-subtle);
+
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+	line-height: 1;
+}
+
+/* =========================================================
+   List
+   ========================================================= */
+
+.notes-list {
+	display: flex;
+	flex-direction: column;
+	padding-left: var(--space-3);
+	padding-right: var(--space-3);
+
+	border-top: 1px solid var(--color-border);
+	/* max-height: 400px;
+	overflow: auto; */
+}
+
+/* =========================================================
+   Note
+   ========================================================= */
+
+.note-item {
+	padding: var(--space-4) 0;
+
+	border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.note-item:last-child {
+	border-bottom: 0;
+}
+
+.note-content {
+	color: var(--color-text);
+	font-size: var(--font-size-md);
+	line-height: 1.55;
+
+	min-width: 0;
+}
+
+/* =========================================================
+   Metadata
+   ========================================================= */
+
+.note-meta {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--space-1);
+
+	margin-top: var(--space-3);
+
+	color: var(--color-text-muted);
+
+	font-size: var(--font-size-xs);
+	justify-content: end;
+	line-height: 1.4;
+}
+
+.note-author {
+	color: var(--color-text-secondary);
+	font-weight: var(--font-weight-medium);
+}
+
+.note-separator {
+	color: var(--color-border-strong);
+}
+
+/* =========================================================
+   Empty state
+   ========================================================= */
+
+.notes-section .data-details-empty {
+	padding: var(--space-6) 0;
+}
