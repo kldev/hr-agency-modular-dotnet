@@ -1,9 +1,14 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
+using HrAgencySystem.Recruitment.Domain.Applications;
+using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
+using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.SharedKernel.ValueObjects;
+using Marten;
 
 namespace HrAgencySystem.Recruitment.Services;
 
@@ -11,7 +16,9 @@ public sealed class RecruitmentService(
     IUserSnapshotRepository userSnapshotRepository,
     ICompanySnapshotRepository companySnapshotRepository,
     IOrganizationChecker checker,
-    IJobApplicationInfoQueryRepository applicationInfoQueryRepository
+    IJobApplicationInfoQueryRepository applicationInfoQueryRepository,
+    IDocumentSession session,
+    IClock clock
     ) : IRecruitmentService
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
@@ -53,5 +60,20 @@ public sealed class RecruitmentService(
     {
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
             throw new OrganizationAccessDeniedException();
+    }
+    
+    public async Task AppendApplicationNoteToStream(JobApplicationId jobApplicationId, OrganizationId organizationId, string note, UserSnapshot user, CancellationToken ct)
+    {
+        if (string.IsNullOrEmpty(note)) return;
+
+        var (shortNote, error) = ShortNote.TryCreate(note, false);
+        if (error != null) throw new ValidationException(error);
+        
+        var application = await GetApplicationAsync(jobApplicationId.Value, organizationId.Value, ct);
+        var noteEvent = new JobApplicationNoteAdded(jobApplicationId.Value, application.CandidateId,
+            clock.UtcNow, shortNote!.Value, user);
+
+        // save changes will be called by wolverine handler
+        session.Events.Append(jobApplicationId.Value, @noteEvent);
     }
 }

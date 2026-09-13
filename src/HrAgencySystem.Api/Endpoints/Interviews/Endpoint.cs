@@ -13,5 +13,6 @@ internal static class Endpoint
         Maps.MapChangeFormat.Map(group);
         Maps.MapChangeStatus.Map(group);
         Maps.MapChangeInterviewer.Map(group);
+        Maps.MapReschedule.Map(group);
     }
 }

@@ -1,3 +1,4 @@
+using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Interviews;
@@ -26,14 +27,14 @@ public static class ScheduleInterviewHandler
         var organizationId = OrganizationId.From(command.OrganizationId);
         var application = await service.GetApplicationAsync(command.JobApplicationId,
             command.OrganizationId, ct);
-        
+
         await service.ValidateOrganization(command.OrganizationId, ct);
 
         var interviewId = InterviewId.New();
 
         var (shortNote, error) = ShortNote.TryCreate(command.Note, false);
         if (error != null) throw new ValidationException(error);
-        
+
 
         var @event = new InterviewCreated(
             interviewId.Value,
@@ -55,17 +56,15 @@ public static class ScheduleInterviewHandler
         var jobApplicationEvent = new JobApplicationInterviewScheduled(command.JobApplicationId,
             clock.UtcNow, user, interviewId.Value
         );
-        
+
         session.Events.StartStream<Interview>(interviewId.Value, @event);
         session.Events.Append(jobApplicationEvent.JobApplicationId, jobApplicationEvent);
-        
-        if (!string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
-        
-        var noteEvent = new JobApplicationNoteAdded(command.JobApplicationId, application.CandidateId,
-            clock.UtcNow, shortNote!.Value, user);
 
-        session.Events.Append(command.JobApplicationId, noteEvent);
-        
+        if (string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
+
+        await service.AppendApplicationNoteToStream(new JobApplicationId(application.JobApplicationId),
+            OrganizationId.From(command.OrganizationId), command.Note, user, ct);
+
         return (@event, [@event]);
     }
 }

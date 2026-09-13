@@ -1,10 +1,8 @@
 using HrAgencySystem.Recruitment.Domain.Interviews;
-using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Interviews;
 using HrAgencySystem.Recruitment.Services;
-using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using Wolverine.Marten;
 
@@ -33,15 +31,10 @@ public static class ChangeInterviewerHandler
                 user, 
                 clock.UtcNow);
 
-        if (!string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
+        if (string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
         
-        var applicationInfo = await service.GetApplicationAsync(aggregate.JobApplicationId.Value, command.OrganizationId, ct);
-        var (shortNote, error) = ShortNote.TryCreate(command.Note ??"", false);
-        if (error != null) throw new ValidationException(error);
-        var noteEvent = new JobApplicationNoteAdded(aggregate.JobApplicationId.Value, applicationInfo.CandidateId,
-            clock.UtcNow, shortNote!.Value, user);
-
-        session.Events.Append(aggregate.JobApplicationId.Value, noteEvent);
+        await service.AppendApplicationNoteToStream(aggregate.JobApplicationId,
+            OrganizationId.From(command.OrganizationId), command.Note, user, ct);
 
         return (@event, [@event]);
     }
