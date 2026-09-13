@@ -7,10 +7,7 @@ import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
 
 import { AddJobApplicationNoteForm, emptyCreateNote } from "./AddJobApplicationNoteForm";
-
-export interface AddJobApplicationNoteFormCommand {
-	addNote(jobApplicationId: string): void;
-}
+import type { AddJobApplicationNoteFormCommand } from "./ApplicationsCommand";
 
 interface AddJobApplicationNoteDrawerProps {
 	onSuccess: () => void;

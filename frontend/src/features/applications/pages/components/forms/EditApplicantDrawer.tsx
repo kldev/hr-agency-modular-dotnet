@@ -6,13 +6,10 @@ import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
 import { ApplicantForm } from "./ApplicantForm";
+import type { EditApplicantCommand } from "./ApplicationsCommand";
 
 interface EditApplicantDrawerProps {
 	onSuccess: () => void;
-}
-
-export interface EditApplicantCommand {
-	edit(jobApplicationId: string): void;
 }
 
 const EditApplicantDrawer = forwardRef<EditApplicantCommand, EditApplicantDrawerProps>(

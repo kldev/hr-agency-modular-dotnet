@@ -6,8 +6,7 @@ import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { applicationStatuses } from "../types";
-import { AplicationsTable } from "./components";
-import { ApplicationsToolbar } from "./components/ApplicationsToolbar";
+import { AplicationsTable, ApplicationsToolbar } from "./components";
 
 const AplicationsPage: React.FC = () => {
 	const [status, setStatus] = useState<JobApplicationStatus | null>(null);

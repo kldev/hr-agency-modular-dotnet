@@ -1,17 +1,26 @@
 import { useTable } from "@tanstack/react-table";
+import { useRef } from "react";
 import type { JobPostResponse } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
+import {
+	type CreateJobApplicationsCommand,
+	CreateJobApplicationsDrawer,
+} from "@/features/applications/pages/components";
 import { type Actions, getColumns } from "./JobPostsTableColumns";
 
 interface JobPostsTableProps {
 	items: JobPostResponse[];
-	onRefresh?: () => void;
+	onRefresh: () => void;
 }
 
-export function JobPostsTable({ items }: JobPostsTableProps) {
+export function JobPostsTable({ items, onRefresh }: JobPostsTableProps) {
+	const applicationRef = useRef<CreateJobApplicationsCommand>(null);
+
 	const actionsHandler: Actions = {
-		onAddApplication: () => { },
+		onAddApplication: (it) => {
+			applicationRef.current?.create(it.id, it.title);
+		},
 	};
 
 	const table = useTable(
@@ -27,5 +36,10 @@ export function JobPostsTable({ items }: JobPostsTableProps) {
 		}),
 	);
 
-	return <MainTable table={table} className="table-wide" />;
+	return (
+		<>
+			<MainTable table={table} className="table-wide" />
+			<CreateJobApplicationsDrawer ref={applicationRef} onSuccess={onRefresh} />
+		</>
+	);
 }
