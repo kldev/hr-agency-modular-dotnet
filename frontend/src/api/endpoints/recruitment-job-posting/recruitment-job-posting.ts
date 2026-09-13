@@ -800,7 +800,7 @@ export function useApplyToJobPost<
 /**
  * @summary Job posted to channel
  */
-export const addChannelToJobPost = (
+export const postJobToChannel = (
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
 	options?: SecondParameter<typeof customInstance>,
@@ -818,7 +818,7 @@ export const addChannelToJobPost = (
 	);
 };
 
-export const getAddChannelToJobPostQueryKey = (
+export const getPostJobToChannelQueryKey = (
 	jobPostId: string,
 	postToChannelRequest?: BodyType<PostToChannelRequest>,
 ) => {
@@ -829,57 +829,51 @@ export const getAddChannelToJobPostQueryKey = (
 	] as const;
 };
 
-export const getAddChannelToJobPostQueryOptions = <
-	TData = Awaited<ReturnType<typeof addChannelToJobPost>>,
+export const getPostJobToChannelQueryOptions = <
+	TData = Awaited<ReturnType<typeof postJobToChannel>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof addChannelToJobPost>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postJobToChannel>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 ) => {
 	const { query: queryOptions, request: requestOptions } = options ?? {};
 
 	const queryKey =
-		queryOptions?.queryKey ?? getAddChannelToJobPostQueryKey(jobPostId, postToChannelRequest);
+		queryOptions?.queryKey ?? getPostJobToChannelQueryKey(jobPostId, postToChannelRequest);
 
-	const queryFn: QueryFunction<Awaited<ReturnType<typeof addChannelToJobPost>>> = ({ signal }) =>
-		addChannelToJobPost(jobPostId, postToChannelRequest, requestOptions, signal);
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof postJobToChannel>>> = ({ signal }) =>
+		postJobToChannel(jobPostId, postToChannelRequest, requestOptions, signal);
 
 	return {
 		queryKey,
 		queryFn,
 		enabled: jobPostId !== null && jobPostId !== undefined,
 		...queryOptions,
-	} as UseQueryOptions<Awaited<ReturnType<typeof addChannelToJobPost>>, TError, TData> & {
+	} as UseQueryOptions<Awaited<ReturnType<typeof postJobToChannel>>, TError, TData> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
 	};
 };
 
-export type AddChannelToJobPostQueryResult = NonNullable<
-	Awaited<ReturnType<typeof addChannelToJobPost>>
->;
-export type AddChannelToJobPostQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type PostJobToChannelQueryResult = NonNullable<Awaited<ReturnType<typeof postJobToChannel>>>;
+export type PostJobToChannelQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
 
-export function useAddChannelToJobPost<
-	TData = Awaited<ReturnType<typeof addChannelToJobPost>>,
+export function usePostJobToChannel<
+	TData = Awaited<ReturnType<typeof postJobToChannel>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
 	options: {
-		query: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof addChannelToJobPost>>, TError, TData>
-		> &
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof postJobToChannel>>, TError, TData>> &
 			Pick<
 				DefinedInitialDataOptions<
-					Awaited<ReturnType<typeof addChannelToJobPost>>,
+					Awaited<ReturnType<typeof postJobToChannel>>,
 					TError,
-					Awaited<ReturnType<typeof addChannelToJobPost>>
+					Awaited<ReturnType<typeof postJobToChannel>>
 				>,
 				"initialData"
 			>;
@@ -887,21 +881,19 @@ export function useAddChannelToJobPost<
 	},
 	queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useAddChannelToJobPost<
-	TData = Awaited<ReturnType<typeof addChannelToJobPost>>,
+export function usePostJobToChannel<
+	TData = Awaited<ReturnType<typeof postJobToChannel>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof addChannelToJobPost>>, TError, TData>
-		> &
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postJobToChannel>>, TError, TData>> &
 			Pick<
 				UndefinedInitialDataOptions<
-					Awaited<ReturnType<typeof addChannelToJobPost>>,
+					Awaited<ReturnType<typeof postJobToChannel>>,
 					TError,
-					Awaited<ReturnType<typeof addChannelToJobPost>>
+					Awaited<ReturnType<typeof postJobToChannel>>
 				>,
 				"initialData"
 			>;
@@ -909,16 +901,14 @@ export function useAddChannelToJobPost<
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useAddChannelToJobPost<
-	TData = Awaited<ReturnType<typeof addChannelToJobPost>>,
+export function usePostJobToChannel<
+	TData = Awaited<ReturnType<typeof postJobToChannel>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof addChannelToJobPost>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postJobToChannel>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
@@ -927,21 +917,19 @@ export function useAddChannelToJobPost<
  * @summary Job posted to channel
  */
 
-export function useAddChannelToJobPost<
-	TData = Awaited<ReturnType<typeof addChannelToJobPost>>,
+export function usePostJobToChannel<
+	TData = Awaited<ReturnType<typeof postJobToChannel>>,
 	TError = ErrorType<BadRequestDetails | ProblemDetails>,
 >(
 	jobPostId: string,
 	postToChannelRequest: BodyType<PostToChannelRequest>,
 	options?: {
-		query?: Partial<
-			UseQueryOptions<Awaited<ReturnType<typeof addChannelToJobPost>>, TError, TData>
-		>;
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof postJobToChannel>>, TError, TData>>;
 		request?: SecondParameter<typeof customInstance>;
 	},
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-	const queryOptions = getAddChannelToJobPostQueryOptions(jobPostId, postToChannelRequest, options);
+	const queryOptions = getPostJobToChannelQueryOptions(jobPostId, postToChannelRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;

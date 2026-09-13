@@ -14,7 +14,7 @@ internal static class MapPostToChannel
         // PUT /api/recruitment/job-posting/{id}/channel 
         group.MapPut("{jobPostId:guid}/channel", Handler)
             .WithSummary("Job posted to channel")
-            .WithName("Add channel to job post")
+            .WithName("Post job to channel")
             .Produces<JobPostedToChannel>()
             .ProducesStandardErrors();
     }

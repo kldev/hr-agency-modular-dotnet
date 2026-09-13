@@ -8,13 +8,13 @@ import {
 	ScheduletInterviewDrawer,
 } from "@/features/interviews/pages/components";
 import {
+	AddJobApplicationNoteDrawer,
 	type AddJobApplicationNoteFormCommand,
+	ChangeJobApplicationStatusDrawer,
 	type ChangeJobApplicationStatusFormCommand,
 	type EditApplicantCommand,
 	EditApplicantDrawer,
 } from "../forms";
-import AddJobApplicationNoteDrawer from "../forms/AddJobApplicationNoteDrawer";
-import ChangeJobApplicationStatusDrawer from "../forms/ChangeJobApplicationStatusDrawer";
 import { type Actions, getColumns } from "./AplicationsTableColumns";
 
 interface AplicationsTableProps {

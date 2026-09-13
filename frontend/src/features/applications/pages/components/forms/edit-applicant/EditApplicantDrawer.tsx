@@ -5,8 +5,8 @@ import type { UpdateApplicantRequest } from "@/api/models";
 import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
+import type { EditApplicantCommand } from "../ApplicationsCommand";
 import { ApplicantForm } from "./ApplicantForm";
-import type { EditApplicantCommand } from "./ApplicationsCommand";
 
 interface EditApplicantDrawerProps {
 	onSuccess: () => void;

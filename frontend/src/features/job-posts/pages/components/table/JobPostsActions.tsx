@@ -1,12 +1,19 @@
-import { ClipboardList, Pencil, Settings2 } from "lucide-react";
+import { ClipboardList, Pencil, Rss, Settings2, TrendingUp } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import { RoutesNavigation } from "@/routes";
 
 interface JobPostsActionsProps {
 	id: string;
 	onAddApplication: () => void;
+	onChangeStatus: () => void;
+	onPostToChannel: () => void;
 }
-export function JobPostsActions({ id, onAddApplication }: JobPostsActionsProps) {
+export function JobPostsActions({
+	id,
+	onAddApplication,
+	onChangeStatus,
+	onPostToChannel,
+}: JobPostsActionsProps) {
 	return (
 		<div className="table-actions">
 			<ActionMenu
@@ -18,6 +25,8 @@ export function JobPostsActions({ id, onAddApplication }: JobPostsActionsProps) 
 							window.open(RoutesNavigation.getJobsEdit(id), "_blank", "noopener,noreferrer");
 						},
 					},
+					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
+					{ label: "Post to channel", icon: Rss, action: onPostToChannel },
 					{
 						label: "Open details",
 						icon: Settings2,

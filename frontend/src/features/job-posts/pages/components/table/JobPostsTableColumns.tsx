@@ -11,6 +11,8 @@ const columnHelper = createColumnHelper<appTableFeaturesType, JobPostResponse>()
 
 export type Actions = {
 	onAddApplication: (item: JobPostResponse) => void;
+	onChangeStatus: (item: JobPostResponse) => void;
+	onPostToChannel: (item: JobPostResponse) => void;
 };
 
 export function getColumns(actions: Actions) {
@@ -26,7 +28,12 @@ export function getColumns(actions: Actions) {
 
 				return (
 					<div className="table-cell-content">
-						<JobPostsActions id={item.id} onAddApplication={() => actions.onAddApplication(item)} />
+						<JobPostsActions
+							id={item.id}
+							onAddApplication={() => actions.onAddApplication(item)}
+							onChangeStatus={() => actions.onChangeStatus(item)}
+							onPostToChannel={() => actions.onPostToChannel(item)}
+						/>
 					</div>
 				);
 			},

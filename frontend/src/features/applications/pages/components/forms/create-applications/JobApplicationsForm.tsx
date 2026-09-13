@@ -54,7 +54,8 @@ export function JobApplicationsForm({
 							Source
 						</label>
 
-						<EnumSelectFilter allLabel="Select source"
+						<EnumSelectFilter
+							allLabel="Select source"
 							value={field.state.value ?? null}
 							options={applicationSources}
 							onChange={(v) => field.handleChange(v ?? undefined)}

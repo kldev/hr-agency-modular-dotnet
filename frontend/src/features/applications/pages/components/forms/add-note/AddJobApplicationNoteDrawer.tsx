@@ -5,9 +5,8 @@ import type { CreateNoteRequest } from "@/api/models";
 import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
-
+import type { AddJobApplicationNoteFormCommand } from "../ApplicationsCommand";
 import { AddJobApplicationNoteForm, emptyCreateNote } from "./AddJobApplicationNoteForm";
-import type { AddJobApplicationNoteFormCommand } from "./ApplicationsCommand";
 
 interface AddJobApplicationNoteDrawerProps {
 	onSuccess: () => void;

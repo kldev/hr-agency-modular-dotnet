@@ -58,7 +58,7 @@ const JobsPage: React.FC = () => {
 			/>
 
 			<EnumFilter value={status} options={jobPostsStatuses} onChange={setStatus} />
-			<JobPostsTable items={items} />
+			<JobPostsTable items={items} onRefresh={refresh} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);

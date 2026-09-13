@@ -9,7 +9,7 @@ import type {
 import { SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
-import type { ChangeJobApplicationStatusFormCommand } from "./ApplicationsCommand";
+import type { ChangeJobApplicationStatusFormCommand } from "../ApplicationsCommand";
 import {
 	ChangeJobApplicationStatusForm,
 	emptyChangeJobApplicationStatus,

@@ -5,7 +5,7 @@ import type { ApplyToPostRequest } from "@/api/models";
 import { DetailOverviewHeader, SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import { useProjectionWait } from "@/hooks";
-import type { CreateJobApplicationsCommand } from "./ApplicationsCommand";
+import type { CreateJobApplicationsCommand } from "../ApplicationsCommand";
 import { emptyJobApplications, JobApplicationsForm } from "./JobApplicationsForm";
 
 interface CreateJobApplictionsDrawerProps {

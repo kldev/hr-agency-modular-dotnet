@@ -7,6 +7,12 @@ import {
 	type CreateJobApplicationsCommand,
 	CreateJobApplicationsDrawer,
 } from "@/features/applications/pages/components";
+import {
+	type ChangeJobPostStatusCommand,
+	ChangeJobPostStatusDrawer,
+	type PostToChannelCommand,
+	PostToChannelDrawer,
+} from "../forms";
 import { type Actions, getColumns } from "./JobPostsTableColumns";
 
 interface JobPostsTableProps {
@@ -16,11 +22,15 @@ interface JobPostsTableProps {
 
 export function JobPostsTable({ items, onRefresh }: JobPostsTableProps) {
 	const applicationRef = useRef<CreateJobApplicationsCommand>(null);
+	const statusRef = useRef<ChangeJobPostStatusCommand>(null);
+	const channelRef = useRef<PostToChannelCommand>(null);
 
 	const actionsHandler: Actions = {
 		onAddApplication: (it) => {
 			applicationRef.current?.create(it.id, it.title);
 		},
+		onChangeStatus: (it) => { statusRef.current?.changeStatus(it.id) },
+		onPostToChannel: (it) => { channelRef.current?.postToChannel(it.id) }
 	};
 
 	const table = useTable(
@@ -40,6 +50,8 @@ export function JobPostsTable({ items, onRefresh }: JobPostsTableProps) {
 		<>
 			<MainTable table={table} className="table-wide" />
 			<CreateJobApplicationsDrawer ref={applicationRef} onSuccess={onRefresh} />
+			<PostToChannelDrawer ref={channelRef} onSuccess={onRefresh} />
+			<ChangeJobPostStatusDrawer ref={statusRef} onSuccess={onRefresh} />
 		</>
 	);
 }

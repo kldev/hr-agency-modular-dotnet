@@ -1,5 +1,5 @@
-export { default as AddJobApplicationNoteDrawer } from "./AddJobApplicationNoteDrawer";
 export * from "./ApplicationsCommand";
-export { default as ChangeJobApplicationStatusDrawer } from "./ChangeJobApplicationStatusDrawer";
-export { default as CreateJobApplicationsDrawer } from "./CreateJobApplicationsDrawer";
-export { default as EditApplicantDrawer } from "./EditApplicantDrawer";
+export * from "./add-note";
+export * from "./change-status";
+export * from "./create-applications";
+export * from "./edit-applicant";
