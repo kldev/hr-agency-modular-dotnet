@@ -8,6 +8,7 @@ export const ROUTES = {
 	JOBS_ADD: "/jobs/add/:jdId/",
 	JOBS_DETAILS: "/jobs/:id",
 	JOBS_DESCRIPTION: "/job-descriptions",
+	JOBS_DESCRIPTION_DETAILS: "/job-descriptions/:id",
 	JOBS_DESCRIPTION_ADD: "/job-descriptions/add",
 	CANDIDATES: "/candidates",
 	APPLICATIONS: "/applications",
