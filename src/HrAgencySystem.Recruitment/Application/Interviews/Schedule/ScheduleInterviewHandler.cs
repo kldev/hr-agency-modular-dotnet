@@ -58,6 +58,8 @@ public static class ScheduleInterviewHandler
 
         session.Events.StartStream<Interview>(interviewId.Value, @event);
 
-        return (@event, [@event, jobApplicationEvent]);
+        session.Events.Append(jobApplicationEvent.JobApplicationId, jobApplicationEvent);
+        
+        return (@event, [@event]);
     }
 }
