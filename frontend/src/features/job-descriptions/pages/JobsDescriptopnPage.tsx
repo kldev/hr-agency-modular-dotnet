@@ -1,20 +1,21 @@
-import { BriefcaseBusiness } from "lucide-react";
+import { ChessRook } from "lucide-react";
 import type React from "react";
 import { useCallback, useState } from "react";
-import { getJobPostsSlice } from "@/api/endpoints";
-import type { JobPostStatus } from "@/api/models";
+import { getJobDescriptionsSlice } from "@/api/endpoints";
+import type { JobDescriptionStatus } from "@/api/models";
 import { Page } from "@/components/layout";
 import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { jobPostsStatuses } from "../type";
-import { JobPostsTable, JobsPageToolbar } from "./components";
+import { jobDescriptionStatuses } from "../type";
+import { JobsDescriptopnTable, JobsDescriptopnToolbar } from "./components";
 
-const JobsPage: React.FC = () => {
+const JobsDescriptopnPage: React.FC = () => {
 	const [search, setSearch] = useState("");
-	const [status, setStatus] = useState<JobPostStatus | null>(null);
+	const [status, setStatus] = useState<JobDescriptionStatus | null>(null);
+
 	const fetchPage = useCallback(
 		(page: number, pageSize: number) => {
-			return getJobPostsSlice({
+			return getJobDescriptionsSlice({
 				page,
 				pageSize,
 				...(status ? { status: [status] } : {}),
@@ -36,32 +37,34 @@ const JobsPage: React.FC = () => {
 		fetchPage: fetchPage,
 		queryKey: [search, status],
 	});
+
 	return (
 		<Page
-			title="Job postings"
-			description=" Manage job posts."
+			title="Jobs description"
+			description=" Manage jobs description."
 			onRefresh={refresh}
 			loading={loading}
 			isEmpty={isEmpty}
 			emptyState={
-				<EmptyState title="No job posts found">
-					<BriefcaseBusiness />
+				<EmptyState title="No job description found">
+					<ChessRook />
 				</EmptyState>
 			}
 		>
-			<JobsPageToolbar
-				onClear={() => {}}
+			<JobsDescriptopnToolbar
 				search={search}
+				onClear={() => {
+					setSearch("");
+				}}
 				onSearchChange={(v) => {
 					setSearch(v);
 				}}
 			/>
-
-			<EnumFilter value={status} options={jobPostsStatuses} onChange={setStatus} />
-			<JobPostsTable items={items} />
+			<EnumFilter value={status} options={jobDescriptionStatuses} onChange={setStatus} />
+			<JobsDescriptopnTable items={items} />
 			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
 		</Page>
 	);
 };
 
-export default JobsPage;
+export default JobsDescriptopnPage;

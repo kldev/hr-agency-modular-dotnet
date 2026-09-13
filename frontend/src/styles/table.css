@@ -83,6 +83,10 @@
 	width: 40px;
 }
 
+.table-header-ssm {
+	width: 70px;
+}
+
 .table-header-sm {
 	width: 120px;
 }
@@ -116,4 +120,11 @@
 
 		flex-shrink: 0;
 	}
+}
+
+.table-header-label {
+	min-width: 0;
+	white-space: normal;
+	overflow-wrap: break-word;
+	line-height: 1.2;
 }

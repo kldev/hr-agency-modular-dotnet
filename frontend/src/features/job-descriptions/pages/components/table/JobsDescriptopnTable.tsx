@@ -1,19 +1,23 @@
 import { useTable } from "@tanstack/react-table";
-import type { InterviewProjection } from "@/api/models";
+import type { JobDescriptionProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
-import { getColumns } from "./InterviewsTableColumns";
+import { type Actions, getColumns } from "./JobsDescriptopnTableColumns";
 
-interface InterviewsTableProps {
-	items: InterviewProjection[];
+interface JobsDescriptopnTableProps {
+	items: JobDescriptionProjection[];
 	onRefresh?: () => void;
 }
 
-export function InterviewsTable({ items }: InterviewsTableProps) {
+export function JobsDescriptopnTable({ items }: JobsDescriptopnTableProps) {
+	const actionsHandler: Actions = {
+		onChangeStatus: () => {},
+	};
+
 	const table = useTable(
 		{
 			features: appTableFeatures,
-			columns: getColumns(),
+			columns: getColumns(actionsHandler),
 			data: items,
 			getRowId: (item) => item.id,
 			enableSorting: false,

@@ -39,6 +39,10 @@ public sealed class HrAgencyShowcaseSeeder(
                 UsersCount: 50,
                 CompaniesCount: 999));
 
+        await SeedMinimalAgency(
+            owner.PlatformOwnerId,
+            new SeedConfig(Name: "Tech Jobs", Slug: "tech-jobs", UsersCount: 5, CompaniesCount: 20));
+
         logger.LogInformation(
             "HR Agency showcase seeding completed in {Elapsed}",
             stopwatch.Elapsed);
@@ -120,6 +124,18 @@ public sealed class HrAgencyShowcaseSeeder(
             .ExecuteShowcase();
 
         logger.LogInformation("Showcase seeding completed");
+    }
+
+    private async Task SeedMinimalAgency(Guid ownerId, SeedConfig config)
+    {
+        var organization = await new OrganizationScenario(bus)
+            .Create(ownerId, config.Name, config.Slug);
+        var userIds = await CreateUsers(config, organization);
+        var companyIds = await CreateCompanies(config, organization, userIds);
+        await CreateModernDeveloperPosts(
+            organization,
+            userIds,
+            companyIds);
     }
 
     private async Task SeedAgency(Guid ownerId, SeedConfig config)

@@ -5,7 +5,10 @@ export const ROUTES = {
 	COMPANIES: "/companies",
 	COMPANIES_DETAILS: "/companies/:id",
 	JOBS: "/jobs",
-	JOBS_ADD: "/jobs/add",
+	JOBS_ADD: "/jobs/add/:jdId/",
+	JOBS_DETAILS: "/jobs/:id",
+	JOBS_DESCRIPTION: "/job-descriptions",
+	JOBS_DESCRIPTION_ADD: "/job-descriptions/add",
 	CANDIDATES: "/candidates",
 	APPLICATIONS: "/applications",
 	CALENDAR: "calendar",
@@ -34,9 +37,34 @@ function getApplicationPath(id: string): string {
 	return `${ROUTES.APPLICATIONS}/${id}`;
 }
 
+function getJobsDetailsPath(id: string): string {
+	return `${ROUTES.JOBS}/${id}`;
+}
+
+function getJobsEdit(id: string): string {
+	return `${ROUTES.JOBS}/edit/${id}`;
+}
+
+function getJobsAdd(jdId: string): string {
+	return `${ROUTES.JOBS}/add/${jdId}`;
+}
+
+function getJobsDescriptionDetailsPath(id: string): string {
+	return `${ROUTES.JOBS_DESCRIPTION}/${id}`;
+}
+
+function getJobsDescriptionEditPath(id: string): string {
+	return `${ROUTES.JOBS_DESCRIPTION}/edit/${id}`;
+}
+
 export const RoutesNavigation = {
 	getOpportunityPath,
 	getCompanyPath,
 	getCandidatePath,
 	getApplicationPath,
+	getJobsDetailsPath,
+	getJobsAdd,
+	getJobsEdit,
+	getJobsDescriptionDetailsPath,
+	getJobsDescriptionEditPath,
 };

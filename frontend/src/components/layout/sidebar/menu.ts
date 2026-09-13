@@ -2,6 +2,7 @@ import {
 	BriefcaseBusiness,
 	Building2,
 	CalendarDays,
+	ChessRook,
 	ClipboardList,
 	DollarSign,
 	LayoutDashboard,
@@ -29,6 +30,7 @@ const menuGroups: MenuGroup[] = [
 	{
 		title: "Sales",
 		items: [
+			{ label: "Job descriptions", icon: ChessRook, link: ROUTES.JOBS_DESCRIPTION },
 			{ label: "Companies", icon: Building2, link: ROUTES.COMPANIES },
 			{ label: "Sales", icon: DollarSign, link: ROUTES.SALES },
 		],

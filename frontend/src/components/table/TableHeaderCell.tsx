@@ -43,7 +43,9 @@ export function TableHeaderCell<TValue extends RowData>({
 					{!sorted && <ArrowUpDown className="size-3.5 opacity-40" />}
 				</button>
 			) : (
-				<table.FlexRender header={header} />
+				<span className="table-header-label">
+					<table.FlexRender header={header} />
+				</span>
 			)}
 		</th>
 	);

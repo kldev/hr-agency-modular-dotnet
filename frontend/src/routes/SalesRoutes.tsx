@@ -50,6 +50,20 @@ const salesRoutes: RouteObject[] = [
 			};
 		},
 	},
+	{
+		path: ROUTES.JOBS_DESCRIPTION,
+		lazy: async () => {
+			const module = await import("@/features/job-descriptions/pages/JobsDescriptopnPage");
+
+			return {
+				Component: module.default,
+			};
+		},
+		handle: {
+			breadcrumb: "Jobs descriptions",
+		},
+		HydrateFallback: RouteFallback,
+	},
 ];
 
 export { salesRoutes };
