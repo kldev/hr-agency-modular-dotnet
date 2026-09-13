@@ -47,6 +47,20 @@ const recruitmentRoutes: RouteObject[] = [
 		},
 		HydrateFallback: RouteFallback,
 	},
+	{
+		path: ROUTES.APPLICATIONS_DETAILS,
+		lazy: async () => {
+			const module = await import("@/features/applications/pages/JobApplicationDetailsPage");
+
+			return {
+				Component: module.default,
+			};
+		},
+		handle: {
+			breadcrumb: "Details",
+		},
+		HydrateFallback: RouteFallback,
+	},
 
 	{
 		path: ROUTES.INTERVIEWS,

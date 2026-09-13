@@ -1,0 +1,122 @@
+.job-application-details-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--space-5);
+	align-items: start;
+}
+
+.job-application-header-meta {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	margin-top: var(--space-1);
+}
+
+.job-application-status,
+.job-application-source {
+	display: inline-flex;
+	align-items: center;
+	min-height: 22px;
+	padding: 2px 7px;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.job-application-status--applied {
+	color: var(--color-info);
+	background: var(--color-info-soft);
+	border-color: transparent;
+}
+
+.job-application-status--screening {
+	color: var(--color-violet);
+	background: var(--color-violet-soft);
+	border-color: transparent;
+}
+
+.job-application-status--assessment {
+	color: var(--color-warning);
+	background: var(--color-warning-soft);
+	border-color: transparent;
+}
+
+.job-application-status--interview {
+	color: var(--color-primary);
+	background: var(--color-primary-soft);
+	border-color: transparent;
+}
+
+.job-application-status--offer,
+.job-application-status--hired {
+	color: var(--color-success);
+	background: var(--color-success-soft);
+	border-color: transparent;
+}
+
+.job-application-status--rejected,
+.job-application-status--withdrawn {
+	color: var(--color-danger);
+	background: var(--color-danger-soft);
+	border-color: transparent;
+}
+
+.job-application-status--reactivated {
+	color: var(--color-info);
+	background: var(--color-info-soft);
+	border-color: transparent;
+}
+
+.job-application-source {
+	color: var(--color-text-secondary);
+	background: var(--color-surface-subtle);
+}
+
+.job-application-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	padding: var(--space-4);
+}
+
+.job-application-tag {
+	display: inline-flex;
+	align-items: center;
+	min-height: 24px;
+	padding: 3px 8px;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	color: var(--color-text-secondary);
+	background: var(--color-surface-subtle);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+}
+
+.job-application-empty {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+}
+
+@media (max-width: 900px) {
+	.job-application-details-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 700px) {
+	.job-application-header-meta {
+		flex-wrap: wrap;
+	}
+
+	.job-application-details-grid {
+		gap: var(--space-4);
+	}
+}

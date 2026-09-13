@@ -11,6 +11,7 @@ export const ROUTES = {
 	JOBS_DESCRIPTION_ADD: "/job-descriptions/add",
 	CANDIDATES: "/candidates",
 	APPLICATIONS: "/applications",
+	APPLICATIONS_DETAILS: "/applications/:id",
 	CALENDAR: "calendar",
 	SALES: "/sales",
 	SALES_OPPORTUNITIES: "/sales/opportunities/:id",
