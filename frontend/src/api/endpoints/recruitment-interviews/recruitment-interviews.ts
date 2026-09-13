@@ -40,8 +40,10 @@ import type {
 	InterviewerChanged,
 	InterviewFormatChanged,
 	InterviewProjection,
+	InterviewRescheduled,
 	InterviewStatusChanged,
 	ProblemDetails,
+	RescheduleInterviewRequest,
 	ScheduleInterviewRequest,
 	SliceResponseOfInterviewProjection,
 } from "../../models";
@@ -798,6 +800,160 @@ export function useChangeInterviewer<
 	const queryOptions = getChangeInterviewerQueryOptions(
 		interviewId,
 		changeInterviewerRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Reschedule interview
+ */
+export const rescheduleInterview = (
+	interviewId: string,
+	rescheduleInterviewRequest: BodyType<RescheduleInterviewRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<InterviewRescheduled>(
+		{
+			url: `/api/interviews/${interviewId}/reschedule`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: rescheduleInterviewRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getRescheduleInterviewQueryKey = (
+	interviewId: string,
+	rescheduleInterviewRequest?: BodyType<RescheduleInterviewRequest>,
+) => {
+	return ["PUT", `/api/interviews/${interviewId}/reschedule`, rescheduleInterviewRequest] as const;
+};
+
+export const getRescheduleInterviewQueryOptions = <
+	TData = Awaited<ReturnType<typeof rescheduleInterview>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	rescheduleInterviewRequest: BodyType<RescheduleInterviewRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof rescheduleInterview>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getRescheduleInterviewQueryKey(interviewId, rescheduleInterviewRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof rescheduleInterview>>> = ({ signal }) =>
+		rescheduleInterview(interviewId, rescheduleInterviewRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: interviewId !== null && interviewId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof rescheduleInterview>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type RescheduleInterviewQueryResult = NonNullable<
+	Awaited<ReturnType<typeof rescheduleInterview>>
+>;
+export type RescheduleInterviewQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useRescheduleInterview<
+	TData = Awaited<ReturnType<typeof rescheduleInterview>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	rescheduleInterviewRequest: BodyType<RescheduleInterviewRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof rescheduleInterview>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof rescheduleInterview>>,
+					TError,
+					Awaited<ReturnType<typeof rescheduleInterview>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRescheduleInterview<
+	TData = Awaited<ReturnType<typeof rescheduleInterview>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	rescheduleInterviewRequest: BodyType<RescheduleInterviewRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof rescheduleInterview>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof rescheduleInterview>>,
+					TError,
+					Awaited<ReturnType<typeof rescheduleInterview>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRescheduleInterview<
+	TData = Awaited<ReturnType<typeof rescheduleInterview>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	rescheduleInterviewRequest: BodyType<RescheduleInterviewRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof rescheduleInterview>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Reschedule interview
+ */
+
+export function useRescheduleInterview<
+	TData = Awaited<ReturnType<typeof rescheduleInterview>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	interviewId: string,
+	rescheduleInterviewRequest: BodyType<RescheduleInterviewRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof rescheduleInterview>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getRescheduleInterviewQueryOptions(
+		interviewId,
+		rescheduleInterviewRequest,
 		options,
 	);
 

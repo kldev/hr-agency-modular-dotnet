@@ -31,7 +31,7 @@ public static class RescheduleInterviewHandler
         var @event = new InterviewRescheduled(
             command.InterviewId,
             command.OrganizationId,
-            command.ScheduledAt,
+            command.ScheduledAtInstant,
             command.ScheduledTimezone,
             shortNote!.Value,
             user,

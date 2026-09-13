@@ -8,14 +8,13 @@ import {
 	ItemMark,
 } from "@/components/ui";
 import { formatDateTime } from "@/utlis/dateUtils";
+import type { InterviewActionsType } from "../forms";
 import { InterviewActions } from "./InterviewActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, InterviewProjection>();
 
 export type Actions = {
-	onChangeForamt: (item: InterviewProjection) => void;
-	onChangeStatus: (item: InterviewProjection) => void;
-	onChangeInterviewer: (item: InterviewProjection) => void;
+	onAction: (action: InterviewActionsType, item: InterviewProjection) => void;
 };
 
 export function getColumns(actions: Actions) {
@@ -31,17 +30,7 @@ export function getColumns(actions: Actions) {
 
 				return (
 					<div className="table-cell-content">
-						<InterviewActions
-							onChangeForamt={(): void => {
-								actions.onChangeForamt(item);
-							}}
-							onChangeStatus={(): void => {
-								actions.onChangeStatus(item);
-							}}
-							onChangeInterviewer={(): void => {
-								actions.onChangeInterviewer(item);
-							}}
-						/>
+						<InterviewActions onAction={(val) => actions.onAction(val, item)} />
 					</div>
 				);
 			},
@@ -66,6 +55,10 @@ export function getColumns(actions: Actions) {
 				</div>
 			),
 		}),
+		columnHelper.accessor("scheduleAt", {
+			header: "Schedule at",
+			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
+		}),
 		columnHelper.accessor("applicantInfo.phoneNumber", {
 			header: "Phone",
 		}),
@@ -75,10 +68,7 @@ export function getColumns(actions: Actions) {
 			cell: ({ getValue }) => <InterviewStatusBadge status={getValue()} />,
 		}),
 
-		columnHelper.accessor("scheduleAt", {
-			header: "Schedule at",
-			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
-		}),
+
 
 		columnHelper.accessor("interviewer", {
 			header: "Interviewer",

@@ -87,4 +87,12 @@ public sealed record InterviewProjection(
             Interviewer = @event.NewInterviewer,
         };
     }
+    public InterviewProjection Apply(InterviewRescheduled @event)
+    {
+        return ApplyCommon(this, @event) with
+        {
+            ScheduleAt = @event.ScheduleAt,
+            Timezone = @event.Timezone
+        };
+    }
 }

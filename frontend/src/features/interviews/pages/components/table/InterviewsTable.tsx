@@ -4,13 +4,11 @@ import type { InterviewProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
 import {
-	type ChangeInterviewerCommand,
-	ChangeInterviewerDrawer,
-	type ChangeInterviewFormatCommand,
-	ChangeInterviewFormatDrawer,
-	type ChangeInterviewStatusCommand,
-	ChangeInterviewStatusDrawer,
+	InterviewActionDrawers,
+	type InterviewActionsRef,
+	type InterviewActionsType,
 } from "../forms";
+
 import { type Actions, getColumns } from "./InterviewsTableColumns";
 
 interface InterviewsTableProps {
@@ -19,20 +17,11 @@ interface InterviewsTableProps {
 }
 
 export function InterviewsTable({ items, onRefresh }: InterviewsTableProps) {
-	const interviewerRef = useRef<ChangeInterviewerCommand>(null);
-	const statusRef = useRef<ChangeInterviewStatusCommand>(null);
-
-	const formatRef = useRef<ChangeInterviewFormatCommand>(null);
+	const updateRef = useRef<InterviewActionsRef>(null);
 
 	const actionsHandler: Actions = {
-		onChangeForamt: (item: InterviewProjection): void => {
-			formatRef.current?.changeFormat(item.id);
-		},
-		onChangeStatus: (item: InterviewProjection): void => {
-			statusRef.current?.changeStatus(item.id);
-		},
-		onChangeInterviewer: (item: InterviewProjection): void => {
-			interviewerRef.current?.changeInterviewer(item.id);
+		onAction: (action: InterviewActionsType, item: InterviewProjection): void => {
+			updateRef?.current?.update(item.id, action);
 		},
 	};
 
@@ -52,9 +41,7 @@ export function InterviewsTable({ items, onRefresh }: InterviewsTableProps) {
 	return (
 		<>
 			<MainTable table={table} className="table-wide" />
-			<ChangeInterviewFormatDrawer ref={formatRef} onSuccess={onRefresh} />
-			<ChangeInterviewerDrawer ref={interviewerRef} onSuccess={onRefresh} />
-			<ChangeInterviewStatusDrawer ref={statusRef} onSuccess={onRefresh} />
+			<InterviewActionDrawers ref={updateRef} onSuccess={onRefresh} />
 		</>
 	);
 }

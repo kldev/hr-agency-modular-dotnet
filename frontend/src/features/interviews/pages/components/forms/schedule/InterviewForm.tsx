@@ -12,6 +12,7 @@ import {
 } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { interviewFormats, interviewTypes } from "@/features/interviews/type";
+import { parseScheduledAt } from "@/features/interviews/utils/parseScheduledAt";
 import { formatLocalDateTime, getBrowserTimezone } from "@/utlis/formatLocalDateTime";
 
 interface InterviewFormProps {
@@ -19,41 +20,6 @@ interface InterviewFormProps {
 	onSubmit: (value: ScheduleInterviewRequest) => void;
 	error?: Error | null;
 	isSubmitting?: boolean;
-}
-
-function parseScheduledAt(value: string): {
-	date: Date | null;
-	time: string;
-} {
-	if (!value) {
-		return {
-			date: null,
-			time: "",
-		};
-	}
-
-	const [datePart, timePart] = value.split("T");
-
-	if (!datePart) {
-		return {
-			date: null,
-			time: "",
-		};
-	}
-
-	const [year, month, day] = datePart.split("-").map(Number);
-
-	if (!year || !month || !day) {
-		return {
-			date: null,
-			time: "",
-		};
-	}
-
-	return {
-		date: new Date(year, month - 1, day),
-		time: timePart?.slice(0, 5) ?? "",
-	};
 }
 
 export const emptyScheduleInterview: ScheduleInterviewRequest = {

@@ -1,16 +1,11 @@
-import { MapPinMinus, PersonStanding, TrendingUp } from "lucide-react";
+import { MapPinMinus, PersonStanding, TimerReset, TrendingUp } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
+import type { InterviewActionsType } from "../forms";
 
 interface InterviewActionsProps {
-	onChangeForamt: () => void;
-	onChangeStatus: () => void;
-	onChangeInterviewer: () => void;
+	onAction: (action: InterviewActionsType) => void;
 }
-export function InterviewActions({
-	onChangeForamt,
-	onChangeStatus,
-	onChangeInterviewer,
-}: InterviewActionsProps) {
+export function InterviewActions({ onAction }: InterviewActionsProps) {
 	return (
 		<div className="table-actions">
 			<ActionMenu
@@ -18,10 +13,16 @@ export function InterviewActions({
 					{
 						label: "Change interviewer",
 						icon: PersonStanding,
-						action: onChangeInterviewer,
+						action: () => onAction("change-Interviewer"),
 					},
-					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
-					{ label: "Change format", icon: MapPinMinus, action: onChangeForamt },
+					{ label: "Change status", icon: TrendingUp, action: () => onAction("change-status") },
+					{
+						label: "Change format",
+						icon: MapPinMinus,
+						action: () => onAction("change-format"),
+						dividerAfter: true,
+					},
+					{ label: "Reschedule", icon: TimerReset, action: () => onAction("reschedule") },
 				]}
 			/>
 		</div>

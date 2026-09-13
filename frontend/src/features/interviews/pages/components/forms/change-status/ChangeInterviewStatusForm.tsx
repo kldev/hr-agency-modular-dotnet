@@ -9,7 +9,7 @@ interface ChangeInterviewStatusFormProps {
 	onSubmit: (value: ChangeInterviewStatusRequest) => void;
 	error?: Error | null;
 	formId: string;
-	isSubmitting: boolean
+	isSubmitting: boolean;
 }
 
 export const empty: ChangeInterviewStatusRequest = {
@@ -22,7 +22,7 @@ export function ChangeInterviewStatusForm({
 	onSubmit,
 	error,
 	formId,
-	isSubmitting
+	isSubmitting,
 }: ChangeInterviewStatusFormProps) {
 	const form = useForm({
 		defaultValues: initialValue,
@@ -93,7 +93,6 @@ export function ChangeInterviewStatusForm({
 					</div>
 				)}
 			</form.Field>
-
 
 			<ApiError error={error as unknown as Parameters<typeof ApiError>[0]["error"]} />
 		</form>

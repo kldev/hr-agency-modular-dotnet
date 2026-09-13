@@ -73,6 +73,13 @@ public sealed class Interview : IOrganizationDomain
         Interviewer = @event.NewInterviewer;
         ApplyCommon(@event);
     }
+
+    public void Apply(InterviewRescheduled @event)
+    {
+        ScheduleAt = @event.ScheduleAt;
+        Timezone = @event.Timezone;
+        ApplyCommon(@event);
+    }
     
     private void ApplyCommon(IInterviewEvent @event)
     {
