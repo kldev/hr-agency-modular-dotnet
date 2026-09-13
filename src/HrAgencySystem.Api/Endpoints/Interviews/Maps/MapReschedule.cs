@@ -35,7 +35,9 @@ internal static class MapReschedule
     internal sealed record RescheduleInterviewRequest(
         DateTime ScheduledAt,
         string Note,
-        string ScheduledTimezone = "Europe/Warsaw")
+        string ScheduledTimezone = "Europe/Warsaw",
+        string Location = "",
+        string MeetingUrl = "")
     {
         public RescheduleInterview ToCommand(
             Guid interviewId,
@@ -47,6 +49,8 @@ internal static class MapReschedule
                 Note,
                 ScheduledAt,
                 modifiedBy,
-                ScheduledTimezone);
+                ScheduledTimezone,
+                Location,
+                MeetingUrl);
     }
 }

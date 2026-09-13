@@ -111,7 +111,7 @@ function QuarterMonth({ date, interviews, onSelectInterview, onSelectDate }: Pro
 										key={interview.id}
 										interview={interview}
 										compact
-										onClick={onSelectInterview ?? (() => { })}
+										onClick={onSelectInterview ?? (() => {})}
 									/>
 								))}
 

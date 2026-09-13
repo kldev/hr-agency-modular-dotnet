@@ -18,4 +18,6 @@ export interface RescheduleInterviewRequest {
 	scheduledAt: string;
 	note: string;
 	scheduledTimezone?: string;
+	location?: string;
+	meetingUrl?: string;
 }

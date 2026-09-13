@@ -3,7 +3,6 @@ import {
 	endOfMonth,
 	endOfWeek,
 	format,
-	isSameDay,
 	isSameMonth,
 	isToday,
 	startOfMonth,
@@ -87,7 +86,7 @@ export function InterviewsMonthView({ date, interviews, onSelectInterview, onSel
 										<InterviewCalendarEvent
 											key={interview.id}
 											interview={interview}
-											onClick={onSelectInterview ?? (() => { })}
+											onClick={onSelectInterview ?? (() => {})}
 										/>
 									))}
 
@@ -112,5 +111,3 @@ export function InterviewsMonthView({ date, interviews, onSelectInterview, onSel
 		</div>
 	);
 }
-
-

@@ -6,6 +6,7 @@ import {
 	DatePicker,
 	EnumSelectFilter,
 	FieldError,
+	Input,
 	Textarea,
 	TimeInput,
 	UsersPicker,
@@ -30,6 +31,8 @@ export const emptyScheduleInterview: ScheduleInterviewRequest = {
 	note: "",
 	scheduledAt: "",
 	scheduledTimezone: getBrowserTimezone(),
+	location: "",
+	meetingUrl: "",
 };
 
 export function InterviewForm({
@@ -192,6 +195,48 @@ export function InterviewForm({
 									field.handleChange(value);
 								}
 							}}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field name="location">
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Location
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							value={field.state.value}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field name="meetingUrl">
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Meeting url
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							value={field.state.value}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
 						/>
 
 						<FieldError errors={field.state.meta.errors} />

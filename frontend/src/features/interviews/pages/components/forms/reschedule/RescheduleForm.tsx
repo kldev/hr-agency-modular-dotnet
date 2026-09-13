@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { useMemo, useState } from "react";
 import type { RescheduleInterviewRequest } from "@/api/models";
-import { DatePicker, FieldError, Textarea, TimeInput } from "@/components/ui";
+import { DatePicker, FieldError, Input, Textarea, TimeInput } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { parseScheduledAt } from "@/features/interviews/utils";
 import { formatLocalDateTime, getBrowserTimezone } from "@/utlis/formatLocalDateTime";
@@ -95,6 +95,48 @@ export function RescheduleForm({
 							onBlur={field.handleBlur}
 							onChange={(event) => field.handleChange(event.target.value)}
 							rows={7}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field name="location">
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Location
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							value={field.state.value}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field name="meetingUrl">
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Meeting url
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							value={field.state.value}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
 						/>
 
 						<FieldError errors={field.state.meta.errors} />

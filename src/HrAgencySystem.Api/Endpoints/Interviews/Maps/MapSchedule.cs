@@ -45,6 +45,6 @@ public sealed record ScheduleInterviewRequest(
         return new ScheduleInterview(JobApplicationId,
             organizationId,
             ScheduledAt, Format,
-            InterviewType, Note, InterviewerId, createdBy, ScheduledTimezone);
+            InterviewType, Note, InterviewerId, createdBy, ScheduledTimezone, Location, MeetingUrl);
     }
 }

@@ -6,7 +6,7 @@ import type { InterviewProjection, InterviewStatus } from "@/api/models";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/routes";
 import { type CalendarRange, InterviewsCalendar } from "./components";
-import "./interviews.css"
+import "./interviews.css";
 
 export default function InterviewsPage() {
 	const [range, setRange] = useState<CalendarRange>("week");

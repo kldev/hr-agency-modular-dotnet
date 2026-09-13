@@ -114,6 +114,8 @@ const RescheduleDrawer = forwardRef<RescheduleInterviewCommand, RescheduleDrawer
 							note: "",
 							scheduledAt: toLocalDateTimeInput(interview.scheduleAt),
 							scheduledTimezone: interview.timezone,
+							location: interview.location ?? "",
+							meetingUrl: interview.meetingUrl ?? "",
 						}}
 						formId="change-interviewer-from"
 						onSubmit={handleSave}

@@ -1,4 +1,4 @@
-import { eachDayOfInterval, endOfWeek, format, isSameDay, isToday, startOfWeek } from "date-fns";
+import { eachDayOfInterval, endOfWeek, format, isToday, startOfWeek } from "date-fns";
 import type { InterviewProjection } from "@/api/models";
 import { InterviewCalendarEvent } from "./InterviewCalendarEvent";
 import { getInterviewsForDay } from "./utils";
@@ -144,7 +144,7 @@ export function InterviewsWeekView({ date, interviews, onSelectInterview, onSele
 										<WeekEvent
 											key={interview.id}
 											interview={interview}
-											onClick={onSelectInterview ?? (() => { })}
+											onClick={onSelectInterview ?? (() => {})}
 										/>
 									))}
 								</div>

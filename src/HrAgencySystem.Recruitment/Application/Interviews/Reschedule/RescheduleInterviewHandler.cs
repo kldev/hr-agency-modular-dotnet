@@ -35,7 +35,9 @@ public static class RescheduleInterviewHandler
             command.ScheduledTimezone,
             shortNote!.Value,
             user,
-            clock.UtcNow
+            clock.UtcNow,
+            command.Location,
+            command.MeetingUrl
         );
 
         if (string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
