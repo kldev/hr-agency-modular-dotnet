@@ -8,37 +8,40 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using Wolverine.Marten;
 
-namespace HrAgencySystem.Recruitment.Application.Interviews.ChangeStatus;
+namespace HrAgencySystem.Recruitment.Application.Interviews.ChangeInterviewer;
 
-public static class ChangeInterviewStatusHandler
+public static class ChangeInterviewerHandler
 {
     [AggregateHandler]
-    public static async Task<(InterviewStatusChanged, Wolverine.Marten.Events)> Handle(
-        ChangeInterviewStatus command,
+    public static async Task<(InterviewerChanged, Wolverine.Marten.Events)> Handle(
+        ChangeInterviewer command,
         Interview aggregate,
-        IRecruitmentService service,
         IDocumentSession session,
+        IRecruitmentService service,
         IClock clock,
-        CancellationToken ct
-    )
+        CancellationToken ct)
     {
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
+        var interviewer = await service.GetUserAsync(command.InterviewerId, ct);
 
-        var @event = new InterviewStatusChanged(
-            command.InterviewId, aggregate.Status, command.Status, user, clock.UtcNow);
-        
-        
+        var @event =
+            new InterviewerChanged(command.InterviewId, 
+                aggregate.Interviewer, 
+                interviewer, 
+                user, 
+                clock.UtcNow);
+
         if (!string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
         
-        var application = await service.GetApplicationAsync(aggregate.JobApplicationId.Value, command.OrganizationId, ct);
+        var applicationInfo = await service.GetApplicationAsync(aggregate.JobApplicationId.Value, command.OrganizationId, ct);
         var (shortNote, error) = ShortNote.TryCreate(command.Note ??"", false);
         if (error != null) throw new ValidationException(error);
-        var noteEvent = new JobApplicationNoteAdded(aggregate.JobApplicationId.Value, application.CandidateId,
+        var noteEvent = new JobApplicationNoteAdded(aggregate.JobApplicationId.Value, applicationInfo.CandidateId,
             clock.UtcNow, shortNote!.Value, user);
 
-        session.Events.Append(aggregate.JobApplicationId.Value, @noteEvent);
+        session.Events.Append(aggregate.JobApplicationId.Value, noteEvent);
 
         return (@event, [@event]);
     }

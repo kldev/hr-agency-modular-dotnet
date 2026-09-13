@@ -47,6 +47,7 @@ public sealed record JobApplicationProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     CompanySnapshot Company,
     string ApplicantFirstName,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     string ApplicantLastName)
 {
     public static JobApplicationProjection Create(JobApplicationCreated @event)

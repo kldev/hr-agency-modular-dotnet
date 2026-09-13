@@ -55,10 +55,16 @@ public static class ScheduleInterviewHandler
         var jobApplicationEvent = new JobApplicationInterviewScheduled(command.JobApplicationId,
             clock.UtcNow, user, interviewId.Value
         );
-
+        
         session.Events.StartStream<Interview>(interviewId.Value, @event);
-
         session.Events.Append(jobApplicationEvent.JobApplicationId, jobApplicationEvent);
+        
+        if (!string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
+        
+        var noteEvent = new JobApplicationNoteAdded(command.JobApplicationId, application.CandidateId,
+            clock.UtcNow, shortNote!.Value, user);
+
+        session.Events.Append(command.JobApplicationId, noteEvent);
         
         return (@event, [@event]);
     }
