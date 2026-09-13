@@ -178,7 +178,12 @@ const JobApplicationDetailsPage: React.FC = () => {
 								</DetailItem>
 							</dl>
 						</section>
-						<NotesList id={application.id} />
+						<NotesList
+							id={application.id}
+							add={() => {
+								addNoteRef?.current?.addNote(application.id);
+							}}
+						/>
 					</>
 				}
 				sidebar={
@@ -208,7 +213,7 @@ const JobApplicationDetailsPage: React.FC = () => {
 							</dl>
 						</section>
 						<div className="data-content-lists ">
-							<DetailsListSection title="Tags" items={tags} className="short-items-section" />
+							<DetailsListSection title="Tags" items={tags} className="short-items-section" onAdd={() => { }} />
 						</div>
 					</>
 				}

@@ -9,11 +9,7 @@ interface Props {
 	onClose: () => void;
 }
 
-export const Dropdown: React.FC<Props> = ({
-	children,
-	placement = "right",
-	onClose,
-}) => {
+export const Dropdown: React.FC<Props> = ({ children, placement = "right", onClose }) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const [style, setStyle] = useState<React.CSSProperties>();
 
@@ -54,9 +50,7 @@ export const Dropdown: React.FC<Props> = ({
 			return;
 		}
 
-		const trigger = dropdown.parentElement?.querySelector(
-			".action-button-trigger",
-		);
+		const trigger = dropdown.parentElement?.querySelector(".action-button-trigger");
 
 		if (!(trigger instanceof HTMLElement)) {
 			return;
@@ -68,10 +62,7 @@ export const Dropdown: React.FC<Props> = ({
 		const gap = 6;
 
 		let top = rect.bottom + gap;
-		let left =
-			placement === "right"
-				? rect.right - dropdownRect.width
-				: rect.left;
+		let left = placement === "right" ? rect.right - dropdownRect.width : rect.left;
 
 		if (top + dropdownRect.height > window.innerHeight) {
 			top = rect.top - dropdownRect.height - gap;

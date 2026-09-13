@@ -3,8 +3,10 @@ import { getJobApplicationNotes } from "@/api/endpoints";
 import { MessagePreview } from "@/components/ui/MessagePreview";
 import { formatDateTimeIntl } from "@/utlis";
 import "./notes.css";
+import { PlusIcon } from "lucide-react";
+import { Button } from "@/components/ui";
 
-export function NotesList({ id }: { id: string }) {
+export function NotesList({ id, add }: { id: string; add: () => void }) {
 	const notesQuery = useQuery({
 		queryKey: ["job-application-notes", id],
 		queryFn: ({ signal }) => {
@@ -52,7 +54,10 @@ export function NotesList({ id }: { id: string }) {
 			<div className="data-details-section-header">
 				<h2>Notes</h2>
 
-				{notes.length > 0 && <span className="notes-count">{notes.length}</span>}
+				<div className="flex flex-row gap-2 items-center justify-items-end">
+					<Button variant="ghost" onClick={add} icon={<PlusIcon size={16} />}></Button>
+					{notes.length > 0 && <span className="notes-count">{notes.length}</span>}
+				</div>
 			</div>
 
 			{notes.length === 0 ? (

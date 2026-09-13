@@ -309,3 +309,24 @@
 		left: var(--space-3);
 	}
 }
+
+.data-details-list-count {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	min-width: 22px;
+	height: 20px;
+	padding: 0 var(--space-1);
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	background: var(--color-surface-subtle);
+
+	color: var(--color-text-muted);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+	line-height: 1;
+}
