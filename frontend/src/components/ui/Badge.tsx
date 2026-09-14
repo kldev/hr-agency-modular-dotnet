@@ -112,5 +112,5 @@ export function InterviewTypeBadge({ status }: { status: InterviewType }) {
 }
 
 export function CandidateSourceBadge({ source }: { source: CandidateSource }) {
-	return <span className={"badge-contacted"}>{applicationSources[source]}</span>;
+	return <span className="badge badge-contacted">{applicationSources[source]}</span>;
 }

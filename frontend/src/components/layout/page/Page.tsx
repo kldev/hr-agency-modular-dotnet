@@ -12,6 +12,7 @@ interface Props {
 	emptyState: React.ReactNode;
 	isEmpty?: boolean;
 	headerAddon?: React.ReactNode;
+	className?: string;
 }
 
 const Page: React.FC<Props> = ({
@@ -23,9 +24,10 @@ const Page: React.FC<Props> = ({
 	isEmpty,
 	emptyState,
 	headerAddon,
+	className,
 }) => {
 	return (
-		<main className="min-w-0 flex-1 overflow-auto">
+		<main className={["min-w-0 flex-1 overflow-auto", className].join(" ")}>
 			<div className="page">
 				<Breadcrumbs />
 				<header className="page-header">

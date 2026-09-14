@@ -128,3 +128,24 @@
 	overflow-wrap: break-word;
 	line-height: 1.2;
 }
+
+.data-mobile-view {
+	display: none;
+}
+
+@media (max-width: 960px) {
+	.data-mobile-view {
+		display: block;		
+	}
+  /*
+   * Mobile:
+   * Hide ERP table and use cards.
+   */
+  .has-mobile-view .table-container {
+    display: none;
+  }
+}
+
+.card-border{
+	border-color: var(--color-border-strong);
+}

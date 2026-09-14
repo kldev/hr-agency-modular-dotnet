@@ -56,10 +56,16 @@ export function getColumns(actions: Actions) {
 		}),
 		columnHelper.accessor("status", {
 			header: "Status",
+			meta: {
+				width: "sm",
+			},
 			cell: ({ getValue }) => <ApplicationBadge status={getValue()} />,
 		}),
 		columnHelper.accessor("source", {
 			header: "Source",
+			meta: {
+				width: "md",
+			},
 			cell: ({ getValue }) => <CandidateSourceBadge source={getValue()} />,
 		}),
 		columnHelper.accessor("applicantFullName", {
