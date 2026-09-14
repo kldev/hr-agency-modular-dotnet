@@ -19,7 +19,11 @@ export function CandidateActions({ onEdit, id }: CandidateActionsProps) {
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							navigate({ to: "/app/candidates/$id", params: { id } });
+							navigate({
+								to: "/app/candidates/$id",
+								params: { id },
+								search: { search: undefined, source: undefined },
+							});
 						},
 					},
 				]}

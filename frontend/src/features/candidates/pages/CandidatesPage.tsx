@@ -1,10 +1,10 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useCallback, useRef, useState } from "react";
-import { getCandidates } from "@/api/endpoints";
-import type { CandidateSource } from "@/api/models";
+import { useRef } from "react";
+import { Route } from "#/routes/app/candidates";
+
 import { Page } from "@/components/layout";
-import { usePaginatedData } from "@/components/table";
+
 import { EmptyState, LoadMore } from "@/components/ui";
 import {
 	CandidatesTable,
@@ -12,43 +12,27 @@ import {
 	CreateCandidateDrawer,
 	type CreateCandidateFormCommand,
 } from "../components";
+import { type CandidatesPageFillter, useGetCandidatesSlice } from "../hooks";
 
 const CandidatesPage: React.FC = () => {
-	const [source, setSource] = useState<CandidateSource | null>(null);
-	const [search, setSearch] = useState<string>("");
 	const formRef = useRef<CreateCandidateFormCommand>(null);
+	const navigate = Route.useNavigate();
 
-	const fetchPage = useCallback(
-		(page: number, pageSize: number) => {
-			return getCandidates({
-				page,
-				pageSize,
-				...(source ? { source: [source] } : {}),
-				search,
-			});
-		},
-		[source, search],
-	);
-
-	const {
-		data: items,
-		loading,
-		hasMore,
-		isEmpty,
-		loadMore,
-		refresh,
-	} = usePaginatedData({
-		pageSize: 15,
-		fetchPage: fetchPage,
-		queryKey: [source, search],
-	});
+	const search = Route.useSearch() as CandidatesPageFillter;
+	const query = useGetCandidatesSlice(search);
+	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
+	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
+	const isEmpty = query.isFetched && items.length === 0;
+	const onRefresh = () => {
+		query.refetch();
+	};
 
 	return (
 		<Page
 			title="Candidates"
 			description="Manage candidates and their recruitment profiles."
-			onRefresh={refresh}
-			loading={loading}
+			onRefresh={onRefresh}
+			loading={query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No candidates found">
@@ -57,23 +41,30 @@ const CandidatesPage: React.FC = () => {
 			}
 		>
 			<CandidatesToolbar
+				search={search.search ?? ""}
 				onClear={() => {
-					setSearch("");
-					setSource(null);
+					navigate({ search: {} });
 				}}
-				search={search}
-				onSearchChange={(s) => setSearch(s)}
-				source={source}
+				onSearchChange={(v) => {
+					navigate({ search: (previous) => ({ ...previous, search: v }) });
+				}}
+				source={search.source || null}
 				onSourceChange={(s) => {
-					setSource(s);
+					navigate({ search: (previous) => ({ ...previous, source: s }) });
 				}}
 				onAdd={() => {
 					formRef.current?.create();
 				}}
 			/>
-			<CandidatesTable items={items} onRefresh={refresh} />
-			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
-			<CreateCandidateDrawer ref={formRef} onSuccess={refresh} />
+			<CandidatesTable items={items} onRefresh={onRefresh} />
+			<LoadMore
+				loading={query.isPending}
+				hasNext={hasMore[0]}
+				onClick={() => {
+					query.fetchNextPage();
+				}}
+			/>
+			<CreateCandidateDrawer ref={formRef} onSuccess={onRefresh} />
 		</Page>
 	);
 };

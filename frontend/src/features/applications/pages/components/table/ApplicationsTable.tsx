@@ -4,14 +4,14 @@ import type { JobApplicationProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
 import { ApplicationsActionDrawers, type JobApplicationsRef } from "../forms";
-import { type Actions, getColumns } from "./AplicationsTableColumns";
+import { type Actions, getColumns } from "./ApplicationsTableColumns";
 
 interface AplicationsTableProps {
 	items: JobApplicationProjection[];
 	onRefresh: () => void;
 }
 
-export function AplicationsTable({ items, onRefresh }: AplicationsTableProps) {
+export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 	const formRef = useRef<JobApplicationsRef>(null);
 
 	const handleActions: Actions = {

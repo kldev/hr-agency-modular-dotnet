@@ -1,8 +1,8 @@
 import { useRef } from "react";
 
-import type { CandidateSource } from "@/api/models";
 import { ApplicationBadge, DataDetails, DetailsHeader, DetailsListSection } from "@/components/ui";
 import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
+import { applicationSources } from "../types";
 import { ApplicationsActionDrawers, DetailsActions, type JobApplicationsRef } from "./components";
 import { NotesList } from "./components/details";
 import { useGetApplicationDetails } from "./hooks";
@@ -14,23 +14,6 @@ function formatDate(value?: string | null) {
 		dateStyle: "medium",
 		timeStyle: "short",
 	}).format(new Date(value));
-}
-
-function getSourceLabel(source: CandidateSource) {
-	switch (source) {
-		case "PracujPl":
-			return "Pracuj.pl";
-		case "LinkedIn":
-			return "LinkedIn";
-		case "Indeed":
-			return "Indeed";
-		case "Olx":
-			return "OLX";
-		case "InternalDatabase":
-			return "Internal database";
-		default:
-			return source;
-	}
 }
 
 const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
@@ -79,7 +62,9 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 					<div className="data-details-header-meta">
 						<ApplicationBadge status={application.status} />
 
-						<span className="data-details-header-info">{getSourceLabel(application.source)}</span>
+						<span className="data-details-header-info">
+							{applicationSources[application.source]}
+						</span>
 					</div>
 				}
 				onEdit={() => {
@@ -120,7 +105,7 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 
 								<DetailItem label="Candidate ID">{application.candidateId}</DetailItem>
 
-								<DetailItem label="Source">{getSourceLabel(application.source)}</DetailItem>
+								<DetailItem label="Source">{applicationSources[application.source]}</DetailItem>
 							</dl>
 						</section>
 						<section className="data-details-section">

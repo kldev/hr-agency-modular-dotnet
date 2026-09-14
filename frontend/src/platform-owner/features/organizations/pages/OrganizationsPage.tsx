@@ -1,9 +1,8 @@
 import { Globe2 } from "lucide-react";
 import type React from "react";
-import { useCallback, useRef, useState } from "react";
-import { getOrganizations } from "@/api/endpoints";
+import { useRef } from "react";
+import { Route } from "#/routes/admin/organizations";
 import { Page } from "@/components/layout";
-import { usePaginatedData } from "@/components/table";
 import { EmptyState, LoadMore } from "@/components/ui";
 import {
 	type CreateOrganizationCommand,
@@ -11,39 +10,25 @@ import {
 	OrganizationsTable,
 	OrganizationsToolbar,
 } from "./components";
+import { useGetOrganizationsSlice } from "./hooks";
 
 const OrganizationsPage: React.FC = () => {
+	const navigate = Route.useNavigate();
 	const formRef = useRef<CreateOrganizationCommand>(null);
-	const [search, setSearch] = useState<string>("");
-	const fetchPage = useCallback(
-		(page: number, pageSize: number) => {
-			return getOrganizations({
-				page,
-				pageSize,
-				search: search ?? undefined,
-			});
-		},
-		[search],
-	);
-
-	const {
-		data: items,
-		loading,
-		hasMore,
-		isEmpty,
-		loadMore,
-		refresh,
-	} = usePaginatedData({
-		pageSize: 15,
-		fetchPage: fetchPage,
-		queryKey: [search],
-	});
+	const search = Route.useSearch() as { search?: string };
+	const query = useGetOrganizationsSlice(search.search);
+	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
+	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
+	const isEmpty = query.isFetched && items.length === 0;
+	const onRefresh = () => {
+		query.refetch();
+	};
 	return (
 		<Page
 			title="Organizations"
 			description="Manage organizations"
-			onRefresh={refresh}
-			loading={loading}
+			onRefresh={onRefresh}
+			loading={query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No organizations found">
@@ -52,18 +37,26 @@ const OrganizationsPage: React.FC = () => {
 			}
 		>
 			<OrganizationsToolbar
-				search={search}
-				onSearchChange={(s) => setSearch(s)}
+				search={search.search ?? ""}
 				onClear={() => {
-					setSearch("");
+					navigate({ search: {} });
+				}}
+				onSearchChange={(v) => {
+					navigate({ search: (previous) => ({ ...previous, search: v }) });
 				}}
 				onAdd={() => {
 					formRef.current?.create();
 				}}
 			/>
-			<OrganizationsTable items={items} onRefresh={refresh} />
-			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
-			<CreateOrganizationDrawer ref={formRef} onSuccess={refresh} />
+			<OrganizationsTable items={items} onRefresh={onRefresh} />
+			<LoadMore
+				loading={query.isPending}
+				hasNext={hasMore[0]}
+				onClick={() => {
+					query.fetchNextPage();
+				}}
+			/>
+			<CreateOrganizationDrawer ref={formRef} onSuccess={onRefresh} />
 		</Page>
 	);
 };

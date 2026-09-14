@@ -4,7 +4,7 @@ import type { CandidateSource, JobApplicationStatus } from "@/api/models";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { applicationStatuses } from "../types";
-import { AplicationsTable, ApplicationsToolbar } from "./components";
+import { ApplicationsTable, ApplicationsToolbar } from "./components";
 import { useGetApplicationsSlice } from "./hooks";
 
 export interface ApplicationFilters {
@@ -56,7 +56,7 @@ const AplicationsPage: React.FC = () => {
 				/>
 			</div>
 
-			<AplicationsTable items={items} onRefresh={() => applicationsQuery.refetch()} />
+			<ApplicationsTable items={items} onRefresh={() => applicationsQuery.refetch()} />
 			<LoadMore
 				loading={applicationsQuery.isPending}
 				hasNext={hasMore[0]}

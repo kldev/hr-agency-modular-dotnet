@@ -33,7 +33,7 @@ export function CandidatesTable({ items, onRefresh }: CandidatesTableProps) {
 
 	return (
 		<>
-			<MainTable table={table} />
+			<MainTable table={table} className="table-wide" />
 			<EditCandidateDrawer ref={formRef} onSuccess={onRefresh} />
 		</>
 	);

@@ -1,5 +1,10 @@
 import clsx from "clsx";
+import { applicationSources, applicationStatuses } from "#/features/applications/types";
+import { interviewFormats, interviewStatuses, interviewTypes } from "#/features/interviews/type";
+import { jobDescriptionStatuses } from "#/features/job-descriptions/type";
+import { jobPostsStatuses } from "#/features/job-posts/type";
 import type {
+	CandidateSource,
 	InterviewFormat,
 	InterviewStatus,
 	InterviewType,
@@ -35,7 +40,9 @@ const applicationsClass: Record<JobApplicationStatus, string> = {
 };
 
 export function ApplicationBadge({ status }: { status: JobApplicationStatus }) {
-	return <span className={clsx("badge", applicationsClass[status])}>{status}</span>;
+	return (
+		<span className={clsx("badge", applicationsClass[status])}>{applicationStatuses[status]}</span>
+	);
 }
 
 const jobPostsClass: Record<JobPostStatus, string> = {
@@ -46,7 +53,7 @@ const jobPostsClass: Record<JobPostStatus, string> = {
 };
 
 export function JobPostsBadge({ status }: { status: JobPostStatus }) {
-	return <span className={clsx("badge", jobPostsClass[status])}>{status}</span>;
+	return <span className={clsx("badge", jobPostsClass[status])}>{jobPostsStatuses[status]}</span>;
 }
 
 const jobDescriptionClass: Record<JobDescriptionStatus, string> = {
@@ -58,7 +65,11 @@ const jobDescriptionClass: Record<JobDescriptionStatus, string> = {
 };
 
 export function JobDescriptionBadge({ status }: { status: JobDescriptionStatus }) {
-	return <span className={clsx("badge", jobDescriptionClass[status])}>{status}</span>;
+	return (
+		<span className={clsx("badge", jobDescriptionClass[status])}>
+			{jobDescriptionStatuses[status]}
+		</span>
+	);
 }
 
 const interviewClass: Record<InterviewStatus, string> = {
@@ -72,17 +83,21 @@ const interviewClass: Record<InterviewStatus, string> = {
 };
 
 export function InterviewStatusBadge({ status }: { status: InterviewStatus }) {
-	return <span className={clsx("badge", interviewClass[status])}>{status}</span>;
+	return <span className={clsx("badge", interviewClass[status])}>{interviewStatuses[status]}</span>;
 }
 
-const interviewFormat: Record<InterviewFormat, string> = {
+const interviewFormatClasses: Record<InterviewFormat, string> = {
 	Online: "badge-new",
 	OnSite: "badge-contacted",
 	Phone: "badge-qualified",
 };
 
-export function InterviewFormatBadge({ status }: { status: InterviewFormat }) {
-	return <span className={clsx("badge", interviewFormat[status])}>{status}</span>;
+export function InterviewFormatBadge({ format }: { format: InterviewFormat }) {
+	return (
+		<span className={clsx("badge", interviewFormatClasses[format])}>
+			{interviewFormats[format]}
+		</span>
+	);
 }
 
 const interviewType: Record<InterviewType, string> = {
@@ -93,5 +108,9 @@ const interviewType: Record<InterviewType, string> = {
 };
 
 export function InterviewTypeBadge({ status }: { status: InterviewType }) {
-	return <span className={clsx("badge", interviewType[status])}>{status}</span>;
+	return <span className={clsx("badge", interviewType[status])}>{interviewTypes[status]}</span>;
+}
+
+export function CandidateSourceBadge({ source }: { source: CandidateSource }) {
+	return <span className={"badge-contacted"}>{applicationSources[source]}</span>;
 }

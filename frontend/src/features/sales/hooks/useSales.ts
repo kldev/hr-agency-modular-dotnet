@@ -13,7 +13,7 @@ export interface SalesPageFillters {
 	page?: number;
 	pageSize?: number;
 }
-export const getSingleServerFn = createServerFn({
+const getSingleServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { id: string }) => input)
@@ -21,7 +21,7 @@ export const getSingleServerFn = createServerFn({
 		return getJobDescription(data.id, getFnOptions());
 	});
 
-export const getSliceServerFn = createServerFn({
+const getSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: SalesPageFillters) => input)

@@ -1,1 +1,1 @@
-export * from "./AplicationsTable";
+export * from "./ApplicationsTable";

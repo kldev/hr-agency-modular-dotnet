@@ -8,7 +8,7 @@ interface AplicationsProps {
 	onAction: (action: JobApplicationsActionsType) => void;
 }
 
-export function AplicationsActions({ onAction, id }: AplicationsProps) {
+export function ApplicationsActions({ onAction, id }: AplicationsProps) {
 	const navigate = useNavigate();
 
 	return (

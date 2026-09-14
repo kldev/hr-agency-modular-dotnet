@@ -1,7 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import type { CandidateProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
-import { ItemMark } from "@/components/ui";
+import { CandidateSourceBadge, ItemMark } from "@/components/ui";
 import { formatDateTime } from "@/utlis/dateUtils";
 import { CandidateActions } from "./CandidateActions";
 
@@ -60,18 +60,21 @@ export function getColumns(onEdit: (company: CandidateProjection) => void) {
 		columnHelper.accessor("phoneNumber", {
 			header: "Phone",
 			cell: ({ getValue }) => (
-				<a href={`tel:${getValue()}`} className="table-number truncate">
+				<a href={`tel:${getValue()}`} className="table-number truncate table-header-xl">
 					{getValue()}
 				</a>
 			),
 		}),
 		columnHelper.accessor("source", {
 			header: "Source",
+			cell: ({ getValue }) => <CandidateSourceBadge source={getValue()} />,
 		}),
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
-			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
+			cell: ({ getValue }) => (
+				<span className="table-number truncate table-header-xl">{formatDateTime(getValue())}</span>
+			),
 		}),
 	]);
 	return columns;

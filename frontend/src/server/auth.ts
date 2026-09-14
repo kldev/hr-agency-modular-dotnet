@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { deleteCookie, getCookie, setCookie } from "@tanstack/react-start/server";
 import axios from "axios";
 import type { AppUserAuthenticated, OwnerAuthenticated } from "#/api/models";
+import { API_URL } from "#/routes/api/$";
 
 export const storeToken = createServerFn({ method: "POST" })
 	.validator((data: { token: string }) => data)
@@ -41,7 +42,7 @@ export const getUserAuth = createServerFn({
 		return null;
 	}
 
-	const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/me`, {
+	const response = await axios.get(`${API_URL}/api/user/me`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},
@@ -59,7 +60,7 @@ export const getOwnerAuth = createServerFn({
 		return null;
 	}
 
-	const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/owner/me`, {
+	const response = await axios.get(`${API_URL}/api/owner/me`, {
 		headers: {
 			Authorization: `Bearer ${token}`,
 		},

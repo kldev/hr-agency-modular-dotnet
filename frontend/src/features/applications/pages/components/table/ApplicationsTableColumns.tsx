@@ -2,10 +2,10 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import type { JobApplicationProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
-import { ApplicationBadge } from "@/components/ui/Badge";
+import { ApplicationBadge, CandidateSourceBadge } from "@/components/ui/Badge";
 import { formatDateTime } from "@/utlis/dateUtils";
 import type { JobApplicationsActionsType } from "../forms";
-import { AplicationsActions } from "./AplicationsActions";
+import { ApplicationsActions } from "./ApplicationsActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, JobApplicationProjection>();
 
@@ -26,7 +26,7 @@ export function getColumns(actions: Actions) {
 
 				return (
 					<div className="table-cell-content w-87.5">
-						<AplicationsActions id={item.id} onAction={(a) => actions.onAction(a, item)} />
+						<ApplicationsActions id={item.id} onAction={(a) => actions.onAction(a, item)} />
 					</div>
 				);
 			},
@@ -45,6 +45,9 @@ export function getColumns(actions: Actions) {
 		}),
 		columnHelper.accessor("applicantPhone", {
 			header: "Phone",
+			meta: {
+				width: "md",
+			},
 			cell: ({ getValue }) => (
 				<a href={`tel:${getValue()}`} className="table-number truncate">
 					{getValue()}
@@ -57,33 +60,41 @@ export function getColumns(actions: Actions) {
 		}),
 		columnHelper.accessor("source", {
 			header: "Source",
+			cell: ({ getValue }) => <CandidateSourceBadge source={getValue()} />,
 		}),
 		columnHelper.accessor("applicantFullName", {
 			header: "Name",
 			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
 			meta: {
-				width: "xl",
+				width: "md",
 			},
 		}),
-		columnHelper.accessor("createdAt", {
-			header: "Created at",
-			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
-		}),
+
 		columnHelper.accessor("jobPostTitle", {
 			header: "Job post",
+			meta: {
+				width: "xl",
+			},
 			cell: ({ getValue }) => (
-				<a href={`tel:${getValue()}`} className="table-number truncate">
+				<a href={`tel:${getValue()}`} className="table-number truncate max-w-">
 					{getValue()}
 				</a>
 			),
 		}),
 		columnHelper.accessor("company", {
 			header: "Company",
+			meta: {
+				width: "xl",
+			},
 			cell: ({ getValue }) => (
 				<a href={`tel:${getValue()}`} className="table-number truncate">
 					{getValue().name}
 				</a>
 			),
+		}),
+		columnHelper.accessor("createdAt", {
+			header: "Created at",
+			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
 	]);
 	return columns;
