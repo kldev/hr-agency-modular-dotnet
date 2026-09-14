@@ -1,48 +1,29 @@
 import { Building2 } from "lucide-react";
 import type React from "react";
-import { useCallback, useRef, useState } from "react";
-import { getCompanies } from "@/api/endpoints";
+import { useRef } from "react";
+import { Route } from "#/routes/app/companies";
 import { Page } from "@/components/layout";
-import { usePaginatedData } from "@/components/table/usePaginatedData";
 import { EmptyState, LoadMore } from "@/components/ui";
-import { CompaniesTable, CraeteCompanyDrawer } from "./components";
+import { CompaniesTable, CraeteCompanyDrawer, type CreateCompanyFormCommand } from "./components";
 import { CompaniesToolbar } from "./components/CompaniesToolbar";
-import type { CreateCompanyFormCommand } from "./components/CompanyFormCommand";
+import { useGetCompaniesSlice } from "./hooks";
 
 const CompaniesPage: React.FC = () => {
-	const [search, setSearch] = useState<string>("");
 	const formRef = useRef<CreateCompanyFormCommand>(null);
-	const fetchPage = useCallback(
-		(page: number, pageSize: number) => {
-			return getCompanies({
-				page,
-				pageSize,
-				search,
-			});
-		},
-		[search],
-	);
+	const navigate = Route.useNavigate();
+	const search = Route.useSearch() as { search: string };
 
-	const {
-		data: companies,
-		loading,
-		hasMore,
-		isEmpty,
-		loadMore,
-		refresh,
-	} = usePaginatedData({
-		pageSize: 15,
-		fetchPage: fetchPage,
-		queryKey: [search],
-	});
-
+	const query = useGetCompaniesSlice(search.search);
+	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
+	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
+	const isEmpty = query.isFetched && items.length === 0;
 	return (
 		<>
 			<Page
 				title="Companies"
 				description="Manage companies and their recruitment relationships."
-				onRefresh={refresh}
-				loading={loading}
+				onRefresh={() => query.refetch()}
+				loading={query.isPending}
 				page={0}
 				isEmpty={isEmpty}
 				emptyState={
@@ -55,19 +36,30 @@ const CompaniesPage: React.FC = () => {
 					onAdd={() => {
 						formRef.current?.create();
 					}}
-					search={search}
+					search={search.search ?? ""}
 					onClear={() => {
-						setSearch("");
+						navigate({ search: {} });
 					}}
-					onSearchChange={(s) => setSearch(s)}
+					onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
 				/>
-				<CompaniesTable companies={companies} onRefresh={refresh} />
-				<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+				<CompaniesTable
+					companies={items}
+					onRefresh={() => {
+						query.refetch();
+					}}
+				/>
+				<LoadMore
+					loading={query.isPending}
+					hasNext={hasMore[0]}
+					onClick={() => {
+						query.fetchNextPage();
+					}}
+				/>
 			</Page>
 			<CraeteCompanyDrawer
 				ref={formRef}
 				onSuccess={() => {
-					refresh();
+					query.refetch();
 				}}
 			/>
 		</>

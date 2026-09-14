@@ -32,6 +32,7 @@ import { Route as AppCompaniesIndexRouteImport } from './routes/app/companies/in
 import { Route as AppCompaniesIdRouteImport } from './routes/app/companies/$id'
 import { Route as AppDashboardIndexRouteImport } from './routes/app/dashboard/index'
 import { Route as AppInterviewsIndexRouteImport } from './routes/app/interviews/index'
+import { Route as AppInterviewsIdRouteImport } from './routes/app/interviews/$id'
 import { Route as AppJobDescriptionsIndexRouteImport } from './routes/app/job-descriptions/index'
 import { Route as AppJobDescriptionsIdRouteImport } from './routes/app/job-descriptions/$id'
 import { Route as AppJobDescriptionsAddRouteImport } from './routes/app/job-descriptions/add'
@@ -159,6 +160,11 @@ const AppInterviewsIndexRoute = AppInterviewsIndexRouteImport.update({
   path: '/interviews/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppInterviewsIdRoute = AppInterviewsIdRouteImport.update({
+  id: '/interviews/$id',
+  path: '/interviews/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppJobDescriptionsIndexRoute = AppJobDescriptionsIndexRouteImport.update({
   id: '/job-descriptions/',
   path: '/job-descriptions/',
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/app/applications/$id': typeof AppApplicationsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
+  '/app/interviews/$id': typeof AppInterviewsIdRoute
   '/app/job-descriptions/$id': typeof AppJobDescriptionsIdRoute
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
@@ -268,6 +275,7 @@ export interface FileRoutesByTo {
   '/app/applications/$id': typeof AppApplicationsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
+  '/app/interviews/$id': typeof AppInterviewsIdRoute
   '/app/job-descriptions/$id': typeof AppJobDescriptionsIdRoute
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
@@ -305,6 +313,7 @@ export interface FileRoutesById {
   '/app/applications/$id': typeof AppApplicationsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
+  '/app/interviews/$id': typeof AppInterviewsIdRoute
   '/app/job-descriptions/$id': typeof AppJobDescriptionsIdRoute
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
@@ -343,6 +352,7 @@ export interface FileRouteTypes {
     | '/app/applications/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
+    | '/app/interviews/$id'
     | '/app/job-descriptions/$id'
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
@@ -377,6 +387,7 @@ export interface FileRouteTypes {
     | '/app/applications/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
+    | '/app/interviews/$id'
     | '/app/job-descriptions/$id'
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
@@ -413,6 +424,7 @@ export interface FileRouteTypes {
     | '/app/applications/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
+    | '/app/interviews/$id'
     | '/app/job-descriptions/$id'
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
@@ -607,6 +619,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInterviewsIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/interviews/$id': {
+      id: '/app/interviews/$id'
+      path: '/interviews/$id'
+      fullPath: '/app/interviews/$id'
+      preLoaderRoute: typeof AppInterviewsIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/job-descriptions/': {
       id: '/app/job-descriptions/'
       path: '/job-descriptions'
@@ -710,6 +729,7 @@ interface AppRouteRouteChildren {
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppCandidatesIdRoute: typeof AppCandidatesIdRoute
   AppCompaniesIdRoute: typeof AppCompaniesIdRoute
+  AppInterviewsIdRoute: typeof AppInterviewsIdRoute
   AppJobDescriptionsIdRoute: typeof AppJobDescriptionsIdRoute
   AppJobDescriptionsAddRoute: typeof AppJobDescriptionsAddRoute
   AppJobsIdRoute: typeof AppJobsIdRoute
@@ -734,6 +754,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppCandidatesIdRoute: AppCandidatesIdRoute,
   AppCompaniesIdRoute: AppCompaniesIdRoute,
+  AppInterviewsIdRoute: AppInterviewsIdRoute,
   AppJobDescriptionsIdRoute: AppJobDescriptionsIdRoute,
   AppJobDescriptionsAddRoute: AppJobDescriptionsAddRoute,
   AppJobsIdRoute: AppJobsIdRoute,

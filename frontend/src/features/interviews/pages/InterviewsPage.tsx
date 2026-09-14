@@ -1,48 +1,28 @@
 import { MessageSquare } from "lucide-react";
 import type React from "react";
-import { useCallback, useState } from "react";
-import { getInterviews } from "@/api/endpoints";
-import type { InterviewStatus } from "@/api/models";
+
+import { Route } from "#/routes/app/interviews";
 import { Page } from "@/components/layout";
-import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { interviewStatuses } from "../type";
 import { InterviewsTable, InterviewToolbar } from "./components";
+import { type InterviewsFilters, useGetInterviewsSlice } from "./hooks/useInterviews";
 
 const InterviewsPage: React.FC = () => {
-	const [status, setStatus] = useState<InterviewStatus | null>(null);
-	const [search, setSearch] = useState<string>("");
+	const navigate = Route.useNavigate();
+	const search = Route.useSearch() as InterviewsFilters;
+	const query = useGetInterviewsSlice(search);
 
-	const fetchPage = useCallback(
-		(page: number, pageSize: number) => {
-			return getInterviews({
-				page,
-				pageSize,
-				status: status || undefined,
-				search: search,
-			});
-		},
-		[status, search],
-	);
+	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
+	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
+	const isEmpty = query.isFetched && items.length === 0;
 
-	const {
-		data: items,
-		loading,
-		hasMore,
-		isEmpty,
-		loadMore,
-		refresh,
-	} = usePaginatedData({
-		pageSize: 15,
-		fetchPage,
-		queryKey: [status, search],
-	});
 	return (
 		<Page
 			title="Interviews"
 			description="Schedule and manage interviews with job applicants."
-			onRefresh={refresh}
-			loading={loading}
+			onRefresh={() => query.refetch()}
+			loading={query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No interviews found">
@@ -51,17 +31,32 @@ const InterviewsPage: React.FC = () => {
 			}
 		>
 			<InterviewToolbar
-				search={search}
+				search={search.search ?? ""}
 				onClear={() => {
-					setSearch("");
+					navigate({ search: {} });
 				}}
-				onSearchChange={(s) => {
-					setSearch(s);
+				onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
+			/>
+			<EnumFilter
+				value={search.status ?? null}
+				options={interviewStatuses}
+				onChange={(s) => {
+					navigate({ search: (previous) => ({ ...previous, status: s }) });
 				}}
 			/>
-			<EnumFilter value={status} options={interviewStatuses} onChange={setStatus} />
-			<InterviewsTable items={items} onRefresh={refresh} />
-			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+			<InterviewsTable
+				items={items}
+				onRefresh={() => {
+					query.refetch();
+				}}
+			/>
+			<LoadMore
+				loading={query.isPending}
+				hasNext={hasMore[0]}
+				onClick={() => {
+					query.fetchNextPage();
+				}}
+			/>
 		</Page>
 	);
 };

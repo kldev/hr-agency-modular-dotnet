@@ -2,6 +2,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import NotFoundPage from "#/features/common/NotFoundPage";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles/global.css?url";
 
@@ -33,10 +34,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		],
 	}),
 	shellComponent: RootDocument,
+	notFoundComponent: NotFoundPage,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	console.log("font started");
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>

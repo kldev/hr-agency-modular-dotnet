@@ -3,6 +3,9 @@ import { CompanyDetailsPage } from "#/features/companies/pages/CompanyDetailsPag
 
 export const Route = createFileRoute("/app/companies/$id")({
 	component: RouteComponent,
+	validateSearch: (search) => ({
+		search: typeof search.search === "string" ? search.search : undefined,
+	}),
 });
 
 function RouteComponent() {

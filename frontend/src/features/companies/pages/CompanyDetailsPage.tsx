@@ -1,47 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 
 import "./components/details/company-details.css";
 
 import { useParams } from "@tanstack/react-router";
-import { getCompany, getCompanyContacts } from "@/api/endpoints";
 import type { CompanyContact } from "@/api/models";
 import { DetailsHeader } from "@/components/ui";
-import { DataDetails } from "@/components/ui/details/DataDetails";
+import { DataDetails, DataDetailsLayout } from "@/components/ui/details/DataDetails";
 import {
 	CompanyContacts,
 	CompanyOverview,
 	EditCompanyDrawer,
 	type EditCompanyFormCommand,
 } from "./components";
+import { useGetCompany, useGetCompanyContacts } from "./hooks";
 
 export function CompanyDetailsPage() {
 	const { id } = useParams({ from: "/app/companies/$id" });
 	const editRef = useRef<EditCompanyFormCommand>(null);
 
-	const companyQuery = useQuery({
-		queryKey: ["company", id],
-		queryFn: ({ signal }) => {
-			if (!id) {
-				throw new Error("Company id is required");
-			}
-
-			return getCompany(id, undefined, signal);
-		},
-		enabled: Boolean(id),
-	});
-
-	const contactsQuery = useQuery({
-		queryKey: ["company-contacts", id],
-		queryFn: ({ signal }) => {
-			if (!id) {
-				throw new Error("Company id is required");
-			}
-
-			return getCompanyContacts(id, undefined, signal);
-		},
-		enabled: Boolean(id),
-	});
+	const companyQuery = useGetCompany(id);
+	const contactsQuery = useGetCompanyContacts(id);
 
 	if (!id) {
 		return (
@@ -80,23 +58,27 @@ export function CompanyDetailsPage() {
 					onEdit={() => editRef.current?.edit(company.id)}
 				/>
 
-				<div className="company-details-grid">
-					<section className="data-details-section">
-						<CompanyOverview company={company} />
-					</section>
-
-					<section className="data-details-section">
-						<CompanyContacts
-							companyId={company.id}
-							contacts={contacts}
-							loading={contactsQuery.isLoading}
-							error={contactsQuery.isError}
-							onRefresh={async () => {
-								await contactsQuery.refetch();
-							}}
-						/>
-					</section>
-				</div>
+				<DataDetailsLayout
+					main={
+						<section className="data-details-section">
+							<CompanyOverview company={company} />
+						</section>
+					}
+					sidebar={
+						<section className="data-details-section">
+							<CompanyContacts
+								companyId={company.id}
+								contacts={contacts}
+								loading={contactsQuery.isLoading}
+								error={contactsQuery.isError}
+								onRefresh={async () => {
+									await contactsQuery.refetch();
+								}}
+							/>
+						</section>
+					}
+				/>
+				<div className="company-details-grid"></div>
 			</DataDetails>
 
 			<EditCompanyDrawer

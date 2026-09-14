@@ -15,7 +15,6 @@ export interface ApplicationFilters {
 
 const AplicationsPage: React.FC = () => {
 	const navigate = Route.useNavigate();
-
 	const search = Route.useSearch() as ApplicationFilters;
 	const applicationsQuery = useGetApplicationsSlice(search);
 
