@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostingChannelType } from "./postingChannelType";
+import type { PostingChannelType } from "./postingChannelType.ts";
 
 export interface ChannelPost {
 	channelType: PostingChannelType;

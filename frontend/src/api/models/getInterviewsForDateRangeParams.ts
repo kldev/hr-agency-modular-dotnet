@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { InterviewStatus } from "./interviewStatus";
+import type { InterviewStatus } from "./interviewStatus.ts";
 
 export type GetInterviewsForDateRangeParams = {
 	search?: string;

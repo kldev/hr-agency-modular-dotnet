@@ -13,8 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { ContactPerson } from "./contactPerson";
-import type { Industry } from "./industry";
+import type { ContactPerson } from "./contactPerson.ts";
+import type { Industry } from "./industry.ts";
 
 export interface CreateCompanyRequest {
 	name: string;

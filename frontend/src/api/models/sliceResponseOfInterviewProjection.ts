@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { InterviewProjection } from "./interviewProjection";
+import type { InterviewProjection } from "./interviewProjection.ts";
 
 export interface SliceResponseOfInterviewProjection {
 	content: InterviewProjection[];

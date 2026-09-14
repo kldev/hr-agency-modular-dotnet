@@ -22,7 +22,7 @@ export default function MainTable<TValue extends RowData>({
 
 				<tbody>
 					{table.getRowModel().rows.map((row) => (
-						<tr key={row.id}>
+						<tr key={row.id} data-id={row.id}>
 							{row.getAllCells().map((cell) => {
 								const meta = cell.column.columnDef.meta;
 								const className =
@@ -30,7 +30,7 @@ export default function MainTable<TValue extends RowData>({
 										? `table-number ${meta?.className}`
 										: `${meta?.className}`;
 								return (
-									<td key={cell.id} className={className}>
+									<td key={cell.id} data-id={cell.id} className={className}>
 										<table.FlexRender cell={cell} />
 									</td>
 								);

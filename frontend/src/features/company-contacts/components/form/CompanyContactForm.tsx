@@ -72,7 +72,7 @@ export function CompanyContactForm({
 						{field.state.meta.errors.length > 0 && (
 							<div className="form-field-error" role="alert">
 								{field.state.meta.errors.map((error, index) => (
-									<div key={index}>{String(error)}</div>
+									<div key={`${index}${field.name}`}>{String(error)}</div>
 								))}
 							</div>
 						)}

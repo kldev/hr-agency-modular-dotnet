@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { ContactPerson } from "./contactPerson";
+import type { ContactPerson } from "./contactPerson.ts";
 
 export interface CompanyContactRequest {
 	contact: ContactPerson;

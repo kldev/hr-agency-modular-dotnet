@@ -29,8 +29,8 @@ export function DetailsListSection({
 				<div className="data-content-empty">No items added.</div>
 			) : (
 				<ul className="data-content-list">
-					{items.map((item, index) => (
-						<li key={`${item}-${index}`}>{item}</li>
+					{items.map((item) => (
+						<li key={`${item}`}>{item}</li>
 					))}
 				</ul>
 			)}

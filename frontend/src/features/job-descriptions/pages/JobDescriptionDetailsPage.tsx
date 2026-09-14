@@ -1,7 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-
-import { getJobDescription } from "@/api/endpoints";
 import type { JobDescriptionProjection } from "@/api/models";
 import {
 	formatSalary,
@@ -84,47 +80,9 @@ function JobDescriptionDescription({
 	);
 }
 
-const JobDescriptionDetailsPage: React.FC = () => {
-	const { id } = useParams<{ id: string }>();
-
-	const jobDescriptionQuery = useQuery({
-		queryKey: ["job-description", id],
-		queryFn: ({ signal }) => {
-			if (!id) {
-				throw new Error("Job description id is required");
-			}
-
-			return getJobDescription(id, undefined, signal);
-		},
-		enabled: Boolean(id),
-	});
-
-	if (!id) {
-		return (
-			<div className="data-details-details">
-				<div className="data-details-empty">Job description not found.</div>
-			</div>
-		);
-	}
-
-	if (jobDescriptionQuery.isLoading) {
-		return (
-			<div className="data-details-details">
-				<div className="data-details-loading">Loading job description...</div>
-			</div>
-		);
-	}
-
-	if (jobDescriptionQuery.isError || !jobDescriptionQuery.data) {
-		return (
-			<div className="data-details-details">
-				<div className="data-details-error">Unable to load job description.</div>
-			</div>
-		);
-	}
-
-	const jobDescription = jobDescriptionQuery.data;
-
+const JobDescriptionDetailsPage: React.FC<{ jobDescription: JobDescriptionProjection }> = ({
+	jobDescription,
+}) => {
 	return (
 		<DataDetails>
 			<DetailsHeader

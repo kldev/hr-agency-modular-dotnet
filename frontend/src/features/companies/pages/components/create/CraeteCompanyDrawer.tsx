@@ -37,14 +37,14 @@ const CraeteCompanyDrawer = forwardRef<CreateCompanyFormCommand, CraeteCompanyDr
 					setIsOpen(true);
 				},
 			}),
-			[createCompany],
+			[createCompanyMutation],
 		);
 
 		const handleSave = useCallback(
 			(data: CreateCompanyRequest) => {
 				createCompanyMutation.mutate(data);
 			},
-			[createCompany],
+			[createCompanyMutation],
 		);
 
 		const handleClose = useCallback(() => {
@@ -54,7 +54,7 @@ const CraeteCompanyDrawer = forwardRef<CreateCompanyFormCommand, CraeteCompanyDr
 
 			createCompanyMutation.reset();
 			setIsOpen(false);
-		}, [createCompany]);
+		}, [createCompanyMutation]);
 
 		return (
 			<Drawer

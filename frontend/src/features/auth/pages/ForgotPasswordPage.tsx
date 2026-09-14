@@ -1,6 +1,6 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, CheckCircle2, Mail, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { AuthLayout } from "../layout";
 
 const ForgotPasswordPage: React.FC = () => {

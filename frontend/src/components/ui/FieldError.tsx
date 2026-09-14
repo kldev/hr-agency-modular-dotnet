@@ -5,8 +5,8 @@ export function FieldError({ errors }: { errors: Array<unknown> }) {
 
 	return (
 		<div className="form-field-error" role="alert">
-			{errors.map((error, index) => (
-				<div key={index}>{String(error)}</div>
+			{errors.map((error) => (
+				<div key={JSON.stringify(error)}>{String(error)}</div>
 			))}
 		</div>
 	);

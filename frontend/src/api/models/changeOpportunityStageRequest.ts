@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OpportunityStage } from "./opportunityStage";
+import type { OpportunityStage } from "./opportunityStage.ts";
 
 export interface ChangeOpportunityStageRequest {
 	stage: OpportunityStage;

@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationProjection } from "./organizationProjection";
+import type { OrganizationProjection } from "./organizationProjection.ts";
 
 export interface SliceResponseOfOrganizationProjection {
 	content: OrganizationProjection[];

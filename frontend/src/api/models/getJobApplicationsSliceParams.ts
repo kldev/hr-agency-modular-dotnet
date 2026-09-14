@@ -13,8 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CandidateSource } from "./candidateSource";
-import type { JobApplicationStatus } from "./jobApplicationStatus";
+import type { CandidateSource } from "./candidateSource.ts";
+import type { JobApplicationStatus } from "./jobApplicationStatus.ts";
 
 export type GetJobApplicationsSliceParams = {
 	search?: string;

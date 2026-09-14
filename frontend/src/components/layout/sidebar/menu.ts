@@ -9,35 +9,34 @@ import {
 	MessageSquare,
 	Users,
 } from "lucide-react";
-import { ROUTES } from "@/routes";
 import type { MenuGroup } from "./types/sidebar";
 
 const menuGroups: MenuGroup[] = [
 	{
 		title: "",
-		items: [{ label: "Dashboard", icon: LayoutDashboard, link: ROUTES.DASHBOARD }],
+		items: [{ label: "Dashboard", icon: LayoutDashboard, link: "/app/dashboard" }],
 	},
 	{
 		title: "Recruitment",
 		items: [
-			{ label: "Job postings", icon: BriefcaseBusiness, link: ROUTES.JOBS },
-			{ label: "Candidates", icon: Users, link: ROUTES.CANDIDATES },
-			{ label: "Applications", icon: ClipboardList, link: ROUTES.APPLICATIONS },
-			{ label: "Interviews", icon: MessageSquare, link: ROUTES.INTERVIEWS },
-			{ label: "Calendar", icon: CalendarDays, link: ROUTES.CALENDAR },
+			{ label: "Job postings", icon: BriefcaseBusiness, link: "/app/jobs" },
+			{ label: "Candidates", icon: Users, link: "/app/candidates" },
+			{ label: "Applications", icon: ClipboardList, link: "/app/applications" },
+			{ label: "Interviews", icon: MessageSquare, link: "/app/interviews" },
+			{ label: "Calendar", icon: CalendarDays, link: "/app/calendar" },
 		],
 	},
 	{
 		title: "Sales",
 		items: [
-			{ label: "Job descriptions", icon: ChessRook, link: ROUTES.JOBS_DESCRIPTION },
-			{ label: "Companies", icon: Building2, link: ROUTES.COMPANIES },
-			{ label: "Sales", icon: DollarSign, link: ROUTES.SALES },
+			{ label: "Job descriptions", icon: ChessRook, link: "/app/job-descriptions" },
+			{ label: "Companies", icon: Building2, link: "/app/companies" },
+			{ label: "Sales", icon: DollarSign, link: "/app/sales" },
 		],
 	},
 	{
 		title: "Users",
-		items: [{ label: "Users", icon: Users, link: ROUTES.USERS }],
+		items: [{ label: "Users", icon: Users, link: "/app/users" }],
 	},
 ];
 

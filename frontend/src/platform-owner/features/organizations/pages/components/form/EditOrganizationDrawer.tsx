@@ -58,14 +58,14 @@ const EditOrganizationDrawer = forwardRef<EditOrganizationCommand, EditOrganizat
 					setIsOpen(true);
 				},
 			}),
-			[updateMutation],
+			[updateMutation, queryClient],
 		);
 
 		const handleSave = useCallback(
 			(value: OrganizationRequest) => {
 				updateMutation.mutate({ id: organizationId, request: value });
 			},
-			[updateMutation],
+			[updateMutation, organizationId],
 		);
 
 		const handleClose = useCallback(() => {

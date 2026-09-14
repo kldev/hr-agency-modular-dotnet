@@ -13,8 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { InterviewFormat } from "./interviewFormat";
-import type { InterviewType } from "./interviewType";
+import type { InterviewFormat } from "./interviewFormat.ts";
+import type { InterviewType } from "./interviewType.ts";
 
 export interface ScheduleInterviewRequest {
 	jobApplicationId: string;

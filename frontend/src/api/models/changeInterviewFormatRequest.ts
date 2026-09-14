@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { InterviewFormat } from "./interviewFormat";
+import type { InterviewFormat } from "./interviewFormat.ts";
 
 export interface ChangeInterviewFormatRequest {
 	format: InterviewFormat;

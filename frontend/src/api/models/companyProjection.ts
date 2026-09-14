@@ -13,10 +13,10 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CompanyStatus } from "./companyStatus";
-import type { ContactPerson } from "./contactPerson";
-import type { Industry } from "./industry";
-import type { UserSnapshot } from "./userSnapshot";
+import type { CompanyStatus } from "./companyStatus.ts";
+import type { ContactPerson } from "./contactPerson.ts";
+import type { Industry } from "./industry.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface CompanyProjection {
 	id: string;

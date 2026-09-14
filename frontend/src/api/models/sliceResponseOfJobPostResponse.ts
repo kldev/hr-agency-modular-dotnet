@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { JobPostResponse } from "./jobPostResponse";
+import type { JobPostResponse } from "./jobPostResponse.ts";
 
 export interface SliceResponseOfJobPostResponse {
 	content: JobPostResponse[];

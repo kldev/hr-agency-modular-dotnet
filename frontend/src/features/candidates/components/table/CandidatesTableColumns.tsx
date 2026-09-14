@@ -68,13 +68,7 @@ export function getColumns(onEdit: (company: CandidateProjection) => void) {
 		columnHelper.accessor("source", {
 			header: "Source",
 		}),
-		columnHelper.accessor("fullName", {
-			header: "Name",
-			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
-			meta: {
-				width: "xl",
-			},
-		}),
+
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,

@@ -1,35 +1,30 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { getAuthenticatedOwner } from "@/api/endpoints";
+import { getOwnerAuth } from "#/server/auth";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
-import { OWNER_ROUTES } from "@/routes/OwnerRoutes";
 
 export function useCurrentOwner() {
 	const nav = useNavigate();
-	const { owner, setOwner, clear, setLoading, getToken } = useOwnerAuthStore();
-
-	const hasToken = !!getToken();
+	const { owner, setOwner, clear, setLoading } = useOwnerAuthStore();
 
 	const checkAuth = useCallback(async () => {
-		if (!hasToken) {
-			clear();
-			nav(OWNER_ROUTES.LOGIN);
-			return;
-		}
-
 		setLoading(true);
 		try {
-			const result = await getAuthenticatedOwner();
+			const result = await getOwnerAuth();
+			if (!result) {
+				clear();
+				nav({ to: "/admin" });
+				return;
+			}
 			setOwner(result);
 		} catch {
 			clear();
-			nav(OWNER_ROUTES.LOGIN);
+			nav({ to: "/admin" });
 		}
-	}, [hasToken, clear, setLoading]);
+	}, [clear, setLoading, nav, setOwner]);
 
 	return {
 		owner,
 		checkAuth,
-		getToken,
 	};
 }

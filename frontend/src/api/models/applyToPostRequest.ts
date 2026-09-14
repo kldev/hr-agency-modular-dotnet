@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CandidateSource } from "./candidateSource";
+import type { CandidateSource } from "./candidateSource.ts";
 
 export interface ApplyToPostRequest {
 	email: string;

@@ -13,8 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostingChannelType } from "./postingChannelType";
-import type { UserSnapshot } from "./userSnapshot";
+import type { PostingChannelType } from "./postingChannelType.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface JobPostedToChannel {
 	jobPostId: string;

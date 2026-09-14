@@ -1,12 +1,23 @@
+import { useRouter } from "@tanstack/react-router";
 import { Pencil, Settings2, TrendingUp } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
-import { RoutesNavigation } from "@/routes";
 
 interface JobsDescriptopnActionsProps {
 	id: string;
 	onChangeStatus: () => void;
 }
 export function JobsDescriptopnActions({ id, onChangeStatus }: JobsDescriptopnActionsProps) {
+	const router = useRouter();
+	const editUrl = router.buildLocation({
+		to: "/app/job-descriptions/edit/$id",
+		params: { id },
+	}).href;
+
+	const detailsUrl = router.buildLocation({
+		to: "/app/job-descriptions/$id",
+		params: { id },
+	}).href;
+
 	return (
 		<div className="table-actions">
 			<ActionMenu
@@ -15,22 +26,14 @@ export function JobsDescriptopnActions({ id, onChangeStatus }: JobsDescriptopnAc
 						label: "Edit",
 						icon: Pencil,
 						action: () => {
-							window.open(
-								RoutesNavigation.getJobsDescriptionEditPath(id),
-								"_blank",
-								"noopener,noreferrer",
-							);
+							window.open(editUrl, "_blank", "noopener,noreferrer");
 						},
 					},
 					{
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							window.open(
-								RoutesNavigation.getJobsDescriptionDetailsPath(id),
-								"_blank",
-								"noopener,noreferrer",
-							);
+							window.open(detailsUrl, "_blank", "noopener,noreferrer");
 						},
 						dividerAfter: true,
 					},

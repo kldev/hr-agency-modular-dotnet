@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { ActivityProjection } from "./activityProjection";
+import type { ActivityProjection } from "./activityProjection.ts";
 
 export interface SliceResponseOfActivityProjection {
 	content: ActivityProjection[];

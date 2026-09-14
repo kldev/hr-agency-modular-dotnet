@@ -57,14 +57,14 @@ const EditApplicantDrawer = forwardRef<EditApplicantCommand, EditApplicantDrawer
 					setIsOpen(true);
 				},
 			}),
-			[updateMutation],
+			[updateMutation, queryClient],
 		);
 
 		const handleSave = useCallback(
 			(value: UpdateApplicantRequest) => {
 				updateMutation.mutate({ id: applicationId, request: value });
 			},
-			[updateMutation],
+			[updateMutation, applicationId],
 		);
 
 		const handleClose = useCallback(() => {

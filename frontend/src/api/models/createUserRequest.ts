@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationRoleApi } from "./organizationRoleApi";
+import type { OrganizationRoleApi } from "./organizationRoleApi.ts";
 
 export interface CreateUserRequest {
 	email: string;

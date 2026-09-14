@@ -56,7 +56,7 @@ const ScheduletInterviewDrawer = forwardRef<ScheduleInterviewCommand, CreateUser
 			(value: ScheduleInterviewRequest) => {
 				createMutation.mutate({ jobApplicationId: jobApplicationId, request: value });
 			},
-			[createMutation],
+			[createMutation, jobApplicationId],
 		);
 
 		const handleClose = useCallback(() => {

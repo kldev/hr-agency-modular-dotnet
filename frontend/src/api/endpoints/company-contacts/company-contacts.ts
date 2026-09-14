@@ -37,8 +37,8 @@ import type {
 	CompanyContactRequest,
 	ProblemDetails,
 } from "../../models";
-import type { BodyType, ErrorType } from "../../mutator";
-import { customInstance } from "../../mutator";
+import type { BodyType, ErrorType } from "../../mutator.ts";
+import { customInstance } from "../../mutator.ts";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

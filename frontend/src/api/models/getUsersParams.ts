@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationRole } from "./organizationRole";
+import type { OrganizationRole } from "./organizationRole.ts";
 
 export type GetUsersParams = {
 	search?: string;

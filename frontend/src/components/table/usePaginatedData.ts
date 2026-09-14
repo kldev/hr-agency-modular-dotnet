@@ -52,6 +52,7 @@ export function usePaginatedData<T>({
 		[fetchPage, pageSize],
 	);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: ok
 	useEffect(() => {
 		setData([]);
 		setHasMore(false);

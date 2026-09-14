@@ -13,13 +13,13 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { ChannelPost } from "./channelPost";
-import type { CompanySnapshot } from "./companySnapshot";
-import type { CurrencyCode } from "./currencyCode";
-import type { EmploymentType } from "./employmentType";
-import type { JobPostStatus } from "./jobPostStatus";
-import type { UserSnapshot } from "./userSnapshot";
-import type { WorkMode } from "./workMode";
+import type { ChannelPost } from "./channelPost.ts";
+import type { CompanySnapshot } from "./companySnapshot.ts";
+import type { CurrencyCode } from "./currencyCode.ts";
+import type { EmploymentType } from "./employmentType.ts";
+import type { JobPostStatus } from "./jobPostStatus.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
+import type { WorkMode } from "./workMode.ts";
 
 export interface JobPostProjection {
 	id: string;

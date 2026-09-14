@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { Industry } from "./industry";
+import type { Industry } from "./industry.ts";
 
 export interface UpdateCompanyRequest {
 	name: string;

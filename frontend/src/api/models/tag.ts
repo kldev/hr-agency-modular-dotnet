@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { TagCategory } from "./tagCategory";
+import type { TagCategory } from "./tagCategory.ts";
 
 export interface Tag {
 	id: string;

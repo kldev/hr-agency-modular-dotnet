@@ -13,9 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CandidateInfo } from "./candidateInfo";
-import type { CandidateSource } from "./candidateSource";
-import type { CompanySnapshot } from "./companySnapshot";
+import type { CandidateInfo } from "./candidateInfo.ts";
+import type { CandidateSource } from "./candidateSource.ts";
+import type { CompanySnapshot } from "./companySnapshot.ts";
 
 export interface JobApplicationCreated {
 	jobApplicationId: string;

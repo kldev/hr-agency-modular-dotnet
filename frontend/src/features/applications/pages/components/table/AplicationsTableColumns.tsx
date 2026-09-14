@@ -2,19 +2,15 @@ import { createColumnHelper } from "@tanstack/react-table";
 
 import type { JobApplicationProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
-import { ItemMark } from "@/components/ui";
 import { ApplicationBadge } from "@/components/ui/Badge";
 import { formatDateTime } from "@/utlis/dateUtils";
+import type { JobApplicationsActionsType } from "../forms";
 import { AplicationsActions } from "./AplicationsActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, JobApplicationProjection>();
 
 export type Actions = {
-	onEdit: (item: JobApplicationProjection) => void;
-	onChangeStatus: (item: JobApplicationProjection) => void;
-	addNote: (item: JobApplicationProjection) => void;
-	addTag: (item: JobApplicationProjection) => void;
-	scheduleInterview: (item: JobApplicationProjection) => void;
+	onAction: (action: JobApplicationsActionsType, item: JobApplicationProjection) => void;
 };
 
 export function getColumns(actions: Actions) {
@@ -30,30 +26,12 @@ export function getColumns(actions: Actions) {
 
 				return (
 					<div className="table-cell-content w-87.5">
-						<AplicationsActions
-							id={item.id}
-							addNote={() => actions.addNote(item)}
-							onChangeStatus={() => actions.onChangeStatus(item)}
-							addTag={() => actions.addTag(item)}
-							onEdit={() => actions.onEdit(item)}
-							scheduleInterview={() => actions.scheduleInterview(item)}
-						/>
+						<AplicationsActions id={item.id} onAction={(a) => actions.onAction(a, item)} />
 					</div>
 				);
 			},
 		}),
-		columnHelper.accessor("applicantFullName", {
-			header: "",
-			meta: {
-				width: "xs",
-			},
 
-			cell: ({ row }) => (
-				<div className="table-cell-content w-87.5">
-					<ItemMark name={row.original.applicantFullName ?? row.original.applicantEmail} />
-				</div>
-			),
-		}),
 		columnHelper.accessor("applicantEmail", {
 			header: "Email",
 			cell: ({ getValue }) => (

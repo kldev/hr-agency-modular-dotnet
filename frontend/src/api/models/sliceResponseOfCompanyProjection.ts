@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CompanyProjection } from "./companyProjection";
+import type { CompanyProjection } from "./companyProjection.ts";
 
 export interface SliceResponseOfCompanyProjection {
 	content: CompanyProjection[];

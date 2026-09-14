@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CurrencyCode } from "./currencyCode";
+import type { CurrencyCode } from "./currencyCode.ts";
 
 export interface UpdateOpportunityRequest {
 	title: string;

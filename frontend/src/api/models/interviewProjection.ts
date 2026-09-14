@@ -13,11 +13,11 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CandidateInfo } from "./candidateInfo";
-import type { InterviewFormat } from "./interviewFormat";
-import type { InterviewStatus } from "./interviewStatus";
-import type { InterviewType } from "./interviewType";
-import type { UserSnapshot } from "./userSnapshot";
+import type { CandidateInfo } from "./candidateInfo.ts";
+import type { InterviewFormat } from "./interviewFormat.ts";
+import type { InterviewStatus } from "./interviewStatus.ts";
+import type { InterviewType } from "./interviewType.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface InterviewProjection {
 	id: string;

@@ -1,7 +1,6 @@
+import { useNavigate } from "@tanstack/react-router";
 import { Pencil, Settings2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { ActionMenu } from "@/components/ui/ActionMenu";
-import { RoutesNavigation } from "@/routes";
 
 interface CandidateActionsProps {
 	id: string;
@@ -20,7 +19,7 @@ export function CandidateActions({ onEdit, id }: CandidateActionsProps) {
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							navigate(RoutesNavigation.getCandidatePath(id));
+							navigate({ to: "/app/candidates/$id", params: { id } });
 						},
 					},
 				]}

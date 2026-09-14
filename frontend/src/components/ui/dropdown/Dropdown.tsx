@@ -6,7 +6,7 @@ import "./dropdown.css";
 interface Props {
 	children: React.ReactNode;
 	placement?: "left" | "right";
-	onClose: () => void;
+	onClose?: () => void;
 }
 
 export const Dropdown: React.FC<Props> = ({ children, placement = "right", onClose }) => {
@@ -25,12 +25,12 @@ export const Dropdown: React.FC<Props> = ({ children, placement = "right", onClo
 				return;
 			}
 
-			onClose();
+			onClose?.();
 		};
 
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key === "Escape") {
-				onClose();
+				onClose?.();
 			}
 		};
 

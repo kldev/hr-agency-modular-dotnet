@@ -1,7 +1,6 @@
+import { useNavigate } from "@tanstack/react-router";
 import { Pencil, PersonStanding, Settings2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { ActionMenu } from "@/components/ui/ActionMenu";
-import { RoutesNavigation } from "@/routes";
 
 interface CompanyActionsProps {
 	id: string;
@@ -22,7 +21,7 @@ export function CompanyActions({ onEdit, onAddContact, id }: CompanyActionsProps
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							navigate(RoutesNavigation.getCompanyPath(id));
+							navigate({ to: "/app/companies/$id", params: { id } });
 						},
 					},
 				]}

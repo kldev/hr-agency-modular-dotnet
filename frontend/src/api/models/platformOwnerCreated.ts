@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PlatformRole } from "./platformRole";
+import type { PlatformRole } from "./platformRole.ts";
 
 export interface PlatformOwnerCreated {
 	platformOwnerId: string;

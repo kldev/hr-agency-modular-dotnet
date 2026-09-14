@@ -54,7 +54,7 @@ const CreateJobApplicationsDrawer = forwardRef<
 		(value: ApplyToPostRequest) => {
 			updateMutation.mutate({ id: jobPostId, request: value });
 		},
-		[updateMutation],
+		[updateMutation, jobPostId],
 	);
 
 	const handleClose = useCallback(() => {

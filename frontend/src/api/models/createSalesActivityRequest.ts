@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { SalesActivityType } from "./salesActivityType";
+import type { SalesActivityType } from "./salesActivityType.ts";
 
 export interface CreateSalesActivityRequest {
 	opportunityId: string;

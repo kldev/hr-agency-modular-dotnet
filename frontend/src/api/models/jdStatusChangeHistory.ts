@@ -13,8 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { JobDescriptionStatus } from "./jobDescriptionStatus";
-import type { StatusChange } from "./statusChange";
+import type { JobDescriptionStatus } from "./jobDescriptionStatus.ts";
+import type { StatusChange } from "./statusChange.ts";
 
 export interface JdStatusChangeHistory {
 	id?: string;

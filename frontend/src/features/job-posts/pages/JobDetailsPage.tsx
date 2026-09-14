@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "@tanstack/react-router";
 import { Pencil, PlusIcon } from "lucide-react";
 import { useRef } from "react";
-import { useParams } from "react-router-dom";
 import { getJobPost } from "@/api/endpoints";
 import type { JobPostProjection } from "@/api/models";
 import {
@@ -86,7 +86,7 @@ function JobPostDescription({ jobPost }: { jobPost: JobPostProjection }) {
 }
 
 const JobPostDetailsPage: React.FC = () => {
-	const { id } = useParams<{ id: string }>();
+	const { id } = useParams({ from: "/app/jobs/$id" });
 	const addAppRef = useRef<CreateJobApplicationsCommand>(null);
 
 	const jobPostQuery = useQuery({

@@ -1,6 +1,6 @@
+import { useRouter } from "@tanstack/react-router";
 import { ClipboardList, Pencil, Rss, Settings2, TrendingUp } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
-import { RoutesNavigation } from "@/routes";
 
 interface JobPostsActionsProps {
 	id: string;
@@ -14,6 +14,17 @@ export function JobPostsActions({
 	onChangeStatus,
 	onPostToChannel,
 }: JobPostsActionsProps) {
+	const router = useRouter();
+	const detailsUrl = router.buildLocation({
+		to: "/app/jobs/$id",
+		params: { id: id },
+	}).href;
+
+	const editUrl = router.buildLocation({
+		to: "/app/jobs/edit/$id",
+		params: { id: id },
+	}).href;
+
 	return (
 		<div className="table-actions">
 			<ActionMenu
@@ -22,7 +33,7 @@ export function JobPostsActions({
 						label: "Edit",
 						icon: Pencil,
 						action: () => {
-							window.open(RoutesNavigation.getJobsEdit(id), "_blank", "noopener,noreferrer");
+							window.open(editUrl, "_blank", "noopener,noreferrer");
 						},
 					},
 					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
@@ -31,7 +42,7 @@ export function JobPostsActions({
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							window.open(RoutesNavigation.getJobsDetailsPath(id), "_blank", "noopener,noreferrer");
+							window.open(detailsUrl, "_blank", "noopener,noreferrer");
 						},
 						dividerAfter: true,
 					},

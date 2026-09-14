@@ -1,8 +1,7 @@
+import { useRouter } from "@tanstack/react-router";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
-import { ROUTES } from "@/routes";
 
 interface JobsPageToolbarProps {
 	search: string;
@@ -11,8 +10,10 @@ interface JobsPageToolbarProps {
 }
 
 export function JobsDescriptopnToolbar({ search, onSearchChange, onClear }: JobsPageToolbarProps) {
+	const router = useRouter();
+	const addUrl = router.buildLocation({ to: "/app/job-descriptions/add" }).href;
 	const handleAdd = () => {
-		window.open(ROUTES.JOBS_DESCRIPTION_ADD, "_blank", "noopener,noreferrer");
+		window.open(addUrl, "_blank", "noopener,noreferrer");
 	};
 
 	return (

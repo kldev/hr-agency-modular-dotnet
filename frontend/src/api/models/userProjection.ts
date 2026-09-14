@@ -13,9 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationInfo } from "./organizationInfo";
-import type { OrganizationRole } from "./organizationRole";
-import type { UserSnapshot } from "./userSnapshot";
+import type { OrganizationInfo } from "./organizationInfo.ts";
+import type { OrganizationRole } from "./organizationRole.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface UserProjection {
 	id: string;

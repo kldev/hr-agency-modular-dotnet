@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
-import { useParams } from "react-router-dom";
+
 import "./components/details/company-details.css";
 
+import { useParams } from "@tanstack/react-router";
 import { getCompany, getCompanyContacts } from "@/api/endpoints";
 import type { CompanyContact } from "@/api/models";
 import { DetailsHeader } from "@/components/ui";
@@ -15,7 +16,7 @@ import {
 } from "./components";
 
 export function CompanyDetailsPage() {
-	const { id } = useParams<{ id: string }>();
+	const { id } = useParams({ from: "/app/companies/$id" });
 	const editRef = useRef<EditCompanyFormCommand>(null);
 
 	const companyQuery = useQuery({

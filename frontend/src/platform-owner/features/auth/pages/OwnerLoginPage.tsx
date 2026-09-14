@@ -1,13 +1,12 @@
+import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { storeToken } from "#/server/auth";
 import { getAuthenticatedOwner, loginPlatformOwner } from "@/api/endpoints";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
-import { OWNER_ROUTES } from "@/routes/OwnerRoutes";
-
 import { AuthLayout } from "../layout";
 
-const LoginPage: React.FC = () => {
+const OwnerLoginPage: React.FC = () => {
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState(import.meta.env.VITE_DEFAULT_OWNER || "");
@@ -37,13 +36,14 @@ const LoginPage: React.FC = () => {
 		try {
 			const result = await loginPlatformOwner({ email: email, password: password });
 
-			store.setToken(result.token);
 			if (result.token) {
+				await storeToken({ data: result });
+
 				const owner = await getAuthenticatedOwner();
 				store.setOwner(owner);
 			}
 
-			navigate(OWNER_ROUTES.ORGANIZATIONS);
+			navigate({ to: "/admin/dashboard" });
 		} catch {
 			setError("Unable to sign in. Please try again.");
 		} finally {
@@ -136,4 +136,4 @@ const LoginPage: React.FC = () => {
 	);
 };
 
-export default LoginPage;
+export default OwnerLoginPage;

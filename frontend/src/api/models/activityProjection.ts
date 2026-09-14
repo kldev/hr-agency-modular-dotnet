@@ -13,9 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CompanySnapshot } from "./companySnapshot";
-import type { SalesActivityType } from "./salesActivityType";
-import type { UserSnapshot } from "./userSnapshot";
+import type { CompanySnapshot } from "./companySnapshot.ts";
+import type { SalesActivityType } from "./salesActivityType.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface ActivityProjection {
 	id: string;

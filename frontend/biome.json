@@ -1,22 +1,20 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.5.12/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
 	"vcs": {
-		"enabled": true,
+		"enabled": false,
 		"clientKind": "git",
-		"useIgnoreFile": true
+		"useIgnoreFile": false
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["src/**", "src/**/*.json", "src/**/*.ts", "src/**/*.tsx", "!!**/dist"]
-	},
-	"linter": {
-		"enabled": true,
-		"includes": ["**", "!test/**"],
-		"rules": {
-			"style": {
-				"noDescendingSpecificity": "warn"
-			}
-		}
+		"includes": [
+			"**/src/**/*",
+			"**/.vscode/**/*",
+			"**/index.html",
+			"**/vite.config.ts",
+			"!**/src/routeTree.gen.ts",
+			"!**/src/styles.css"
+		]
 	},
 	"formatter": {
 		"enabled": true,
@@ -25,30 +23,25 @@
 		"lineWidth": 100,
 		"attributePosition": "auto"
 	},
+	"assist": {
+		"enabled": true,
+		"actions": { "source": { "organizeImports": "on" } }
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"style": {
+				"noDescendingSpecificity": "warn"
+			},
+			"suspicious": {
+				"noArrayIndexKey": "off"
+			}
+		}
+	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
 		}
-	},
-	"assist": {
-		"enabled": true,
-		"actions": {
-			"source": {
-				"organizeImports": "on"
-			}
-		}
-	},
-	"overrides": [
-		{
-			"includes": ["src/api/**"],
-			"linter": {
-				"rules": {
-					"suspicious": {
-						"noExplicitAny": "off",
-						"noConfusingVoidType": "off"
-					}
-				}
-			}
-		}
-	]
+	}
 }

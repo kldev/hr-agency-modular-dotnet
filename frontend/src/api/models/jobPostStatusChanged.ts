@@ -13,8 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { JobPostStatus } from "./jobPostStatus";
-import type { UserSnapshot } from "./userSnapshot";
+import type { JobPostStatus } from "./jobPostStatus.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface JobPostStatusChanged {
 	jobPostId: string;

@@ -40,7 +40,6 @@ export function OrganizationForm({
 		defaultValues: initialValue,
 
 		onSubmit: async ({ value }) => {
-			console.log(`Submit: 1 ${JSON.stringify(value)}`);
 			onSubmit(value);
 		},
 	});

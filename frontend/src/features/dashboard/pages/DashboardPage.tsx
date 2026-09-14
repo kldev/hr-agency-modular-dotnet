@@ -1,9 +1,8 @@
+import { useNavigate } from "@tanstack/react-router";
 import { BriefcaseBusiness, Users } from "lucide-react";
 import type React from "react";
-import { useNavigate } from "react-router-dom";
 import { Page } from "@/components/layout";
 import { Button, WorkInProgress } from "@/components/ui";
-import { ROUTES } from "@/routes";
 import { DashboardMetrics } from "../components/ DashboardMetrics";
 
 const DashboardPage: React.FC = () => {
@@ -17,12 +16,12 @@ const DashboardPage: React.FC = () => {
 			emptyState={<div></div>}
 			headerAddon={
 				<div className="flex gap-2">
-					<Button variant="secondary" onClick={() => navigate(ROUTES.APPLICATIONS)}>
+					<Button variant="secondary" onClick={() => navigate({ to: "/app/applications" })}>
 						<Users className="size-4" />
 						Job applications
 					</Button>
 
-					<Button onClick={() => navigate(ROUTES.JOBS_DESCRIPTION)}>
+					<Button onClick={() => navigate({ to: "/app/job-descriptions" })}>
 						<BriefcaseBusiness className="size-4" />
 						New job posting
 					</Button>

@@ -1,51 +1,36 @@
 import { ClipboardList } from "lucide-react";
-import { useCallback, useState } from "react";
-import { getJobApplicationsSlice } from "@/api/endpoints";
+import { Route } from "#/routes/app/applications";
 import type { CandidateSource, JobApplicationStatus } from "@/api/models";
 import { Page } from "@/components/layout";
-import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { applicationStatuses } from "../types";
 import { AplicationsTable, ApplicationsToolbar } from "./components";
+import { useGetApplicationsSlice } from "./hooks";
+
+export interface ApplicationFilters {
+	status?: JobApplicationStatus;
+	source?: CandidateSource;
+	search?: string;
+}
 
 const AplicationsPage: React.FC = () => {
-	const [status, setStatus] = useState<JobApplicationStatus | null>(null);
-	const [source, setSource] = useState<CandidateSource | null>(null);
-	const [search, setSearch] = useState<string>("");
+	const navigate = Route.useNavigate();
 
-	const fetchPage = useCallback(
-		(page: number, pageSize: number) => {
-			return getJobApplicationsSlice({
-				page,
-				pageSize,
-				...(status ? { status: [status] } : {}),
-				search: search,
-				...(source ? { source: [source] } : {}),
-			});
-		},
-		[status, source, search],
-	);
+	const search = Route.useSearch() as ApplicationFilters;
+	const applicationsQuery = useGetApplicationsSlice(search);
 
-	const {
-		data: items,
-		loading,
-		hasMore,
-		isEmpty,
-		loadMore,
-		refresh,
-	} = usePaginatedData({
-		pageSize: 15,
-		fetchPage,
-		queryKey: [status, source, search],
-	});
+	const items = applicationsQuery.data?.pages.flatMap((page) => page.content ?? []) ?? [];
+	const hasMore = applicationsQuery.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [
+		false,
+	];
 
 	return (
 		<Page
 			title="Applications"
 			description="Track candidates through the recruitment process."
-			onRefresh={() => refresh()}
-			loading={loading}
-			isEmpty={isEmpty}
+			onRefresh={() => applicationsQuery.refetch()}
+			loading={applicationsQuery.isPending}
+			isEmpty={applicationsQuery.isFetched && items.length === 0}
 			emptyState={
 				<EmptyState title="No applications found">
 					<ClipboardList size={24} />
@@ -54,23 +39,32 @@ const AplicationsPage: React.FC = () => {
 		>
 			<ApplicationsToolbar
 				onClear={() => {
-					setSearch("");
-					setSource(null);
+					navigate({ search: {} });
 				}}
-				search={search}
-				onSearchChange={(s) => setSearch(s)}
-				source={source}
-				onSourceChange={(s) => {
-					setSource(s);
-				}}
+				search={search.search ?? ""}
+				onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
+				source={search.source ?? null}
+				onSourceChange={(s) => navigate({ search: (previous) => ({ ...previous, source: s }) })}
 			/>
 
 			<div className="flex-col">
-				<EnumFilter value={status} options={applicationStatuses} onChange={setStatus} />
+				<EnumFilter
+					value={search.status ?? null}
+					options={applicationStatuses}
+					onChange={(s) => {
+						navigate({ search: (previous) => ({ ...previous, status: s }) });
+					}}
+				/>
 			</div>
 
-			<AplicationsTable items={items} onRefresh={refresh} />
-			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+			<AplicationsTable items={items} onRefresh={() => applicationsQuery.refetch()} />
+			<LoadMore
+				loading={applicationsQuery.isPending}
+				hasNext={hasMore[0]}
+				onClick={() => {
+					applicationsQuery.fetchNextPage();
+				}}
+			/>
 		</Page>
 	);
 };

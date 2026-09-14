@@ -1,8 +1,7 @@
 import type React from "react";
 import "./common.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui";
-import { ROUTES } from "@/routes";
 
 const NotFoundPage: React.FC = () => {
 	const naviage = useNavigate();
@@ -17,7 +16,7 @@ const NotFoundPage: React.FC = () => {
 						<br />
 						Please check the URL or return to the previous page.
 					</p>
-					<Button variant="back" onClick={() => naviage(ROUTES.DASHBOARD)}>
+					<Button variant="back" onClick={() => naviage({ to: "/app/dashboard" })}>
 						Back to Home
 					</Button>
 				</div>

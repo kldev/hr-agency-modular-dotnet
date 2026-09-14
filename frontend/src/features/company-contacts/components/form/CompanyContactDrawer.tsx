@@ -79,7 +79,7 @@ const CompanyContactDrawer = forwardRef<CompanyContactCommand, CompanyContactDra
 
 			setIsOpen(false);
 			setMode(null);
-		}, [createContact, updateContact]);
+		}, [createContact, updateContact, contactQuery]);
 
 		useImperativeHandle(
 			ref,
@@ -152,22 +152,6 @@ const CompanyContactDrawer = forwardRef<CompanyContactCommand, CompanyContactDra
 				footer={
 					<SaveChangesButton form="company-contact-form" isPending={isPending} wait={waiting} />
 				}
-				// footer={
-				// 	<Button
-				// 		variant="primary"
-				// 		type="submit"
-				// 		form="company-contact-form"
-				// 		disabled={isLoading || createContact.isPending || updateContact.isPaused || !initialValue}
-				// 	>
-				// 		{createContact.isPending || updateContact.isPaused
-				// 			? isEdit
-				// 				? "Saving..."
-				// 				: "Creating..."
-				// 			: isEdit
-				// 				? "Save changes"
-				// 				: "Add contact"}
-				// 	</Button>
-				// }
 			>
 				{isLoading && <div className="form-loading">Loading contact...</div>}
 

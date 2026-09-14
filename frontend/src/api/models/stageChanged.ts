@@ -13,9 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CurrencyCode } from "./currencyCode";
-import type { OpportunityStage } from "./opportunityStage";
-import type { UserSnapshot } from "./userSnapshot";
+import type { CurrencyCode } from "./currencyCode.ts";
+import type { OpportunityStage } from "./opportunityStage.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface StageChanged {
 	opportunityId: string;

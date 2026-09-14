@@ -1,19 +1,26 @@
 import { ChevronRight } from "lucide-react";
-import { Link, useMatches } from "react-router-dom";
+
 import "./breadcrumbs.css";
+import { Link, useMatches } from "@tanstack/react-router";
 
 type BreadcrumbHandle = {
 	breadcrumb?: string;
 };
 
+declare module "@tanstack/react-router" {
+	interface StaticDataRouteOption {
+		breadcrumb?: string;
+	}
+}
+
 const Breadcrumbs = () => {
 	const matches = useMatches();
 
 	const breadcrumbs = matches
-		.filter((match) => (match.handle as BreadcrumbHandle)?.breadcrumb)
+		.filter((match) => (match?.staticData?.breadcrumb as BreadcrumbHandle)?.breadcrumb)
 		.map((match) => ({
 			// biome-ignore lint/style/noNonNullAssertion: false
-			label: (match.handle as BreadcrumbHandle).breadcrumb!,
+			label: (match.staticData as BreadcrumbHandle).breadcrumb!,
 			path: match.pathname,
 		}));
 

@@ -1,11 +1,10 @@
+import { useNavigate } from "@tanstack/react-router";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import type React from "react";
-import { useNavigate } from "react-router-dom";
 import Dropdown from "@/components/ui/dropdown/Dropdown";
 import DropdownDivider from "@/components/ui/dropdown/DropdownDivider";
 import DropdownItem from "@/components/ui/dropdown/DropdownItem";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
-import { OWNER_ROUTES } from "@/routes/OwnerRoutes";
 import { useUiStore } from "@/stores/uiStore";
 
 const OwnerMenu: React.FC = () => {
@@ -37,7 +36,7 @@ const OwnerMenu: React.FC = () => {
 			<DropdownItem
 				onClick={() => {
 					store.clear();
-					navigation(OWNER_ROUTES.LOGIN);
+					navigation({ to: "/admin" });
 				}}
 			>
 				<LogOut size={15} />

@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { JobPostStatusApi } from "./jobPostStatusApi";
+import type { JobPostStatusApi } from "./jobPostStatusApi.ts";
 
 export interface ChangeJobPostStatusRequest {
 	status: JobPostStatusApi;

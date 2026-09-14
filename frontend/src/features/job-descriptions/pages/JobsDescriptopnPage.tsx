@@ -9,6 +9,11 @@ import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { jobDescriptionStatuses } from "../type";
 import { JobsDescriptopnTable, JobsDescriptopnToolbar } from "./components";
 
+export interface JobsDescriptopnPageFilters {
+	status?: JobDescriptionStatus;
+	search?: string;
+}
+
 const JobsDescriptopnPage: React.FC = () => {
 	const [search, setSearch] = useState("");
 	const [status, setStatus] = useState<JobDescriptionStatus | null>(null);

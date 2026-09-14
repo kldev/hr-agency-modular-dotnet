@@ -13,11 +13,11 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CompanySnapshot } from "./companySnapshot";
-import type { CurrencyCode } from "./currencyCode";
-import type { EmploymentType } from "./employmentType";
-import type { UserSnapshot } from "./userSnapshot";
-import type { WorkMode } from "./workMode";
+import type { CompanySnapshot } from "./companySnapshot.ts";
+import type { CurrencyCode } from "./currencyCode.ts";
+import type { EmploymentType } from "./employmentType.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
+import type { WorkMode } from "./workMode.ts";
 
 export interface JobPostCreated {
 	jobPostId: string;

@@ -1,30 +1,19 @@
+import { redirect } from "@tanstack/router-core";
 import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 import type { BadRequestDetails } from "./models";
 
 const api = axios.create({
-	baseURL: import.meta.env.VITE_API_URL,
+	baseURL: "/",
 	paramsSerializer: {
 		indexes: null,
 	},
-});
-
-api.interceptors.request.use((config) => {
-	const token = localStorage.getItem("access_token");
-
-	if (token) {
-		config.headers.Authorization = `Bearer ${token}`;
-	}
-
-	return config;
 });
 
 api.interceptors.response.use(
 	(response) => response,
 	(error) => {
 		if (axios.isAxiosError(error) && error.response?.status === 401) {
-			localStorage.removeItem("access_token");
-
-			window.location.href = "/login";
+			throw redirect({ to: "/login" });
 		}
 
 		if (axios.isAxiosError(error) && error.response?.status === 400) {

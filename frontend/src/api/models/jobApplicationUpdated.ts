@@ -13,7 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { UserSnapshot } from "./userSnapshot";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface JobApplicationUpdated {
 	jobApplicationId: string;

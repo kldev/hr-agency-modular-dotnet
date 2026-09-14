@@ -54,6 +54,7 @@ export function CandidatesToolbar({
 				/>
 
 				<Button
+					className="min-w-25"
 					variant="ghost"
 					icon={<SlidersHorizontal size={15} />}
 					aria-label="Clear"

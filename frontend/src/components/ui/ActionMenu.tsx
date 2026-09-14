@@ -32,7 +32,6 @@ export function ActionMenu({
 				title={title}
 				aria-expanded={open}
 				onClick={() => {
-					console.log(`Set it to ${!open}`);
 					setOpen((prev) => !prev);
 				}}
 			>

@@ -59,7 +59,7 @@ const RescheduleDrawer = forwardRef<RescheduleInterviewCommand, RescheduleDrawer
 					setIsOpen(true);
 				},
 			}),
-			[mutation],
+			[mutation, queryClient],
 		);
 
 		const handleSave = useCallback(

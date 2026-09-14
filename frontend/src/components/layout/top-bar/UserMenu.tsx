@@ -1,10 +1,10 @@
+import { useNavigate } from "@tanstack/react-router";
 import { LogOut, Moon, Settings2, Sun, User } from "lucide-react";
 import type React from "react";
-import { useNavigate } from "react-router-dom";
+
 import Dropdown from "@/components/ui/dropdown/Dropdown";
 import DropdownDivider from "@/components/ui/dropdown/DropdownDivider";
 import DropdownItem from "@/components/ui/dropdown/DropdownItem";
-import { ROUTES } from "@/routes";
 import { useAuthStore } from "@/stores/authStore";
 import { useUiStore } from "@/stores/uiStore";
 
@@ -41,7 +41,7 @@ const UserMenu: React.FC = () => {
 			<DropdownItem
 				onClick={() => {
 					store.clearUser();
-					navigation(ROUTES.LOGIN);
+					navigation({ to: "/login" });
 				}}
 			>
 				<LogOut size={15} />

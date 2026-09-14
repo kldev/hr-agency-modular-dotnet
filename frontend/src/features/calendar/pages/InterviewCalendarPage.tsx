@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from "react";
 import { getInterviewsForDateRange } from "@/api/endpoints";
 import type { InterviewProjection, InterviewStatus } from "@/api/models";
 import { Button } from "@/components/ui/Button";
-import { ROUTES } from "@/routes";
+
 import { type CalendarRange, InterviewsCalendar } from "./components";
 import "./interviews.css";
+import { useNavigate } from "@tanstack/react-router";
 
-export default function InterviewsPage() {
+export default function InterviewCalendarPage() {
 	const [range, setRange] = useState<CalendarRange>("week");
 
 	const [date, setDate] = useState(new Date());
@@ -16,6 +17,7 @@ export default function InterviewsPage() {
 	const [interviews, setInterviews] = useState<InterviewProjection[]>([]);
 
 	const [loading, setLoading] = useState(false);
+	const naviagation = useNavigate();
 
 	useEffect(() => {
 		let active = true;
@@ -94,7 +96,7 @@ export default function InterviewsPage() {
 					<Button
 						variant="primary"
 						onClick={() => {
-							window.open(ROUTES.APPLICATIONS, "_blank", "noopener,noreferrer");
+							naviagation({ to: "/app/companies" });
 						}}
 					>
 						<Plus size={16} />

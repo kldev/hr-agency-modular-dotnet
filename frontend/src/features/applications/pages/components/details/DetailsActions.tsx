@@ -1,29 +1,21 @@
 import { MessageSquare, NotebookPen, TagPlus, TrendingUp } from "lucide-react";
 
 import { ActionMenu } from "@/components/ui/ActionMenu";
+import type { JobApplicationsActionsType } from "../forms";
 
 interface DetailsActionsProps {
-	onChangeStatus: () => void;
-	addNote: () => void;
-	addTag: () => void;
-	scheduleInterview: () => void;
+	onAction: (action: JobApplicationsActionsType) => void;
 }
 
-export function DetailsActions({
-	onChangeStatus,
-	addNote,
-	addTag,
-
-	scheduleInterview,
-}: DetailsActionsProps) {
+export function DetailsActions({ onAction }: DetailsActionsProps) {
 	return (
 		<div className="table-actions">
 			<ActionMenu
 				actions={[
-					{ label: "Add note", icon: NotebookPen, action: addNote },
-					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
-					{ label: "Add tag", icon: TagPlus, action: addTag, dividerAfter: true },
-					{ label: "Schedule interview", icon: MessageSquare, action: scheduleInterview },
+					{ label: "Add note", icon: NotebookPen, action: () => onAction("add-note") },
+					{ label: "Change status", icon: TrendingUp, action: () => onAction("change-status") },
+					{ label: "Add tag", icon: TagPlus, action: () => onAction("tag"), dividerAfter: true },
+					{ label: "Schedule interview", icon: MessageSquare, action: () => onAction("schedule") },
 				]}
 			/>
 		</div>

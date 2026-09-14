@@ -47,7 +47,7 @@ const EditCompanyDrawer = forwardRef<EditCompanyFormCommand, EditCompanyDrawerPr
 					setIsOpen(true);
 				},
 			}),
-			[updateCompany],
+			[updateCompany, queryClient],
 		);
 
 		const handleSuccess = async () => {

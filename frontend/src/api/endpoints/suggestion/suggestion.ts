@@ -34,8 +34,8 @@ import type {
 	Tag,
 	UserSuggestion,
 } from "../../models";
-import type { ErrorType } from "../../mutator";
-import { customInstance } from "../../mutator";
+import type { ErrorType } from "../../mutator.ts";
+import { customInstance } from "../../mutator.ts";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

@@ -1,6 +1,7 @@
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { storeToken } from "#/server/auth";
 import { getAuthenticatedUser, loginOrganizationUser } from "@/api/endpoints";
 import { useAuthStore } from "@/stores/authStore";
 import { AuthLayout } from "../layout";
@@ -36,13 +37,13 @@ const LoginPage: React.FC = () => {
 		try {
 			const result = await loginOrganizationUser({ email: email, password: password, slug: "" });
 
-			store.setToken(result.token);
 			if (result.token) {
+				await storeToken({ data: result });
 				const user = await getAuthenticatedUser();
 				store.setUser(user);
 			}
 
-			navigate("/");
+			navigate({ to: "/app/dashboard" });
 		} catch {
 			setError("Unable to sign in. Please try again.");
 		} finally {

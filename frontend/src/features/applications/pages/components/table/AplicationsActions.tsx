@@ -1,44 +1,37 @@
+import { useNavigate } from "@tanstack/react-router";
 import { MessageSquare, NotebookPen, Pencil, Settings2, TagPlus, TrendingUp } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { ActionMenu } from "@/components/ui/ActionMenu";
-import { RoutesNavigation } from "@/routes";
+import type { JobApplicationsActionsType } from "../forms";
 
 interface AplicationsProps {
 	id: string;
-	onEdit: () => void;
-	onChangeStatus: () => void;
-	addNote: () => void;
-	addTag: () => void;
-	scheduleInterview: () => void;
+	onAction: (action: JobApplicationsActionsType) => void;
 }
 
-export function AplicationsActions({
-	onEdit,
-	onChangeStatus,
-	addNote,
-	addTag,
-	id,
-	scheduleInterview,
-}: AplicationsProps) {
+export function AplicationsActions({ onAction, id }: AplicationsProps) {
 	const navigate = useNavigate();
 
 	return (
 		<div className="table-actions">
 			<ActionMenu
 				actions={[
-					{ label: "Edit", icon: Pencil, action: onEdit },
+					{ label: "Edit", icon: Pencil, action: () => onAction("edit") },
 					{
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							navigate(RoutesNavigation.getApplicationPath(id));
+							navigate({
+								to: "/app/applications/$id",
+								params: { id },
+								search: { status: undefined, search: undefined, source: undefined },
+							});
 						},
 						dividerAfter: true,
 					},
-					{ label: "Add note", icon: NotebookPen, action: addNote },
-					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
-					{ label: "Add tag", icon: TagPlus, action: addTag, dividerAfter: true },
-					{ label: "Schedule interview", icon: MessageSquare, action: scheduleInterview },
+					{ label: "Add note", icon: NotebookPen, action: () => onAction("add-note") },
+					{ label: "Change status", icon: TrendingUp, action: () => onAction("change-status") },
+					{ label: "Add tag", icon: TagPlus, action: () => onAction("tag"), dividerAfter: true },
+					{ label: "Schedule interview", icon: MessageSquare, action: () => onAction("schedule") },
 				]}
 			/>
 		</div>

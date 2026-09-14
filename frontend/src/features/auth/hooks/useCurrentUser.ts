@@ -1,35 +1,30 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { getAuthenticatedUser } from "@/api/endpoints";
-import { ROUTES } from "@/routes";
+import { getUserAuth } from "#/server/auth";
 import { useAuthStore } from "@/stores/authStore";
 
 export function useCurrentUser() {
 	const nav = useNavigate();
-	const { user, setUser, clearUser, setLoading, getToken } = useAuthStore();
-
-	const hasToken = !!getToken();
+	const { user, setUser, clearUser, setLoading } = useAuthStore();
 
 	const checkAuth = useCallback(async () => {
-		if (!hasToken) {
-			clearUser();
-			nav(ROUTES.LOGIN);
-			return;
-		}
-
 		setLoading(true);
 		try {
-			const result = await getAuthenticatedUser();
+			const result = await getUserAuth();
+			if (result === null) {
+				clearUser();
+				nav({ to: "/login" });
+				return;
+			}
 			setUser(result);
 		} catch {
 			clearUser();
-			nav(ROUTES.LOGIN);
+			nav({ to: "/login" });
 		}
-	}, [hasToken, clearUser, setLoading]);
+	}, [clearUser, setLoading, nav, setUser]);
 
 	return {
 		user,
 		checkAuth,
-		getToken,
 	};
 }
