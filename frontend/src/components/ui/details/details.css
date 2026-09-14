@@ -12,6 +12,16 @@
 	background: var(--color-surface);
 }
 
+.data-details-section-bg-none {
+
+	background: none;
+}
+
+.data-details-section-bg-none .data-content-section{
+	background: none;
+	border-top: transparent;
+}
+
 /* ---------------------------------------------------------
    Header
    --------------------------------------------------------- */

@@ -7,6 +7,7 @@ import { Page } from "@/components/layout";
 
 import { EmptyState, LoadMore } from "@/components/ui";
 import {
+	CandidatesCardList,
 	CandidatesTable,
 	CandidatesToolbar,
 	CreateCandidateDrawer,
@@ -29,6 +30,7 @@ const CandidatesPage: React.FC = () => {
 
 	return (
 		<Page
+			className="has-mobile-view"
 			title="Candidates"
 			description="Manage candidates and their recruitment profiles."
 			onRefresh={onRefresh}
@@ -57,6 +59,7 @@ const CandidatesPage: React.FC = () => {
 				}}
 			/>
 			<CandidatesTable items={items} onRefresh={onRefresh} />
+			<CandidatesCardList items={items} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

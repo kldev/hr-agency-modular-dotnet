@@ -1,6 +1,11 @@
 import { useRef } from "react";
 import type { JobApplicationProjection } from "#/api/models";
-import { ApplicationBadge, CandidateSourceBadge, DetailItem } from "#/components/ui";
+import {
+	ApplicationBadge,
+	CandidateSourceBadge,
+	DetailItem,
+	DetailsListSection,
+} from "#/components/ui";
 import { applicationSources } from "#/features/applications/types";
 import { formatDateTimeIntl } from "#/utlis";
 import type { JobApplicationsRef } from "../forms";
@@ -57,6 +62,14 @@ export function ApplicationCardList({ applications }: ApplicationCardListProps) 
 						<DetailItem label="Created at">{formatDateTimeIntl(application.createdAt)}</DetailItem>
 						<DetailItem label="">-</DetailItem>
 					</dl>
+					<div className="data-content-lists data-details-section-bg-none">
+						<DetailsListSection
+							title="Tags"
+							items={[...application.tags.flatMap((z) => z.name)]}
+							className="short-items-section bg-none!"
+							onAdd={() => {}}
+						/>
+					</div>
 				</div>
 			))}
 		</div>
