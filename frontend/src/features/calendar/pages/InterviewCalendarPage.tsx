@@ -96,7 +96,7 @@ export default function InterviewCalendarPage() {
 					<Button
 						variant="primary"
 						onClick={() => {
-							naviagation({ to: "/app/companies" });
+							naviagation({ to: "/app/applications" });
 						}}
 					>
 						<Plus size={16} />

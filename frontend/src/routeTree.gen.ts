@@ -20,6 +20,7 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminOrganizationsRouteImport } from './routes/admin/organizations'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as ApiHealthzRouteImport } from './routes/api/healthz'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as OwnerIndexRouteImport } from './routes/owner/index'
 import { Route as AppApplicationsIndexRouteImport } from './routes/app/applications/index'
@@ -96,6 +97,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiHealthzRoute = ApiHealthzRouteImport.update({
+  id: '/api/healthz',
+  path: '/api/healthz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/admin/organizations': typeof AdminOrganizationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/api/$': typeof ApiSplatRoute
+  '/api/healthz': typeof ApiHealthzRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/owner/': typeof OwnerIndexRoute
@@ -254,6 +261,7 @@ export interface FileRoutesByTo {
   '/admin/organizations': typeof AdminOrganizationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/api/$': typeof ApiSplatRoute
+  '/api/healthz': typeof ApiHealthzRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/owner': typeof OwnerIndexRoute
@@ -290,6 +298,7 @@ export interface FileRoutesById {
   '/admin/organizations': typeof AdminOrganizationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/api/$': typeof ApiSplatRoute
+  '/api/healthz': typeof ApiHealthzRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/owner/': typeof OwnerIndexRoute
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
     | '/admin/organizations'
     | '/admin/users'
     | '/api/$'
+    | '/api/healthz'
     | '/admin/'
     | '/app/'
     | '/owner/'
@@ -360,6 +370,7 @@ export interface FileRouteTypes {
     | '/admin/organizations'
     | '/admin/users'
     | '/api/$'
+    | '/api/healthz'
     | '/admin'
     | '/app'
     | '/owner'
@@ -395,6 +406,7 @@ export interface FileRouteTypes {
     | '/admin/organizations'
     | '/admin/users'
     | '/api/$'
+    | '/api/healthz'
     | '/admin/'
     | '/app/'
     | '/owner/'
@@ -428,6 +440,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   ApiSplatRoute: typeof ApiSplatRoute
+  ApiHealthzRoute: typeof ApiHealthzRoute
   OwnerIndexRoute: typeof OwnerIndexRoute
 }
 
@@ -508,6 +521,13 @@ declare module '@tanstack/react-router' {
       path: '/api/$'
       fullPath: '/api/$'
       preLoaderRoute: typeof ApiSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/healthz': {
+      id: '/api/healthz'
+      path: '/api/healthz'
+      fullPath: '/api/healthz'
+      preLoaderRoute: typeof ApiHealthzRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -745,6 +765,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   ApiSplatRoute: ApiSplatRoute,
+  ApiHealthzRoute: ApiHealthzRoute,
   OwnerIndexRoute: OwnerIndexRoute,
 }
 export const routeTree = rootRouteImport

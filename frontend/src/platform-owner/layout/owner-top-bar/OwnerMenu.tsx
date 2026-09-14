@@ -6,6 +6,7 @@ import DropdownDivider from "@/components/ui/dropdown/DropdownDivider";
 import DropdownItem from "@/components/ui/dropdown/DropdownItem";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
 import { useUiStore } from "@/stores/uiStore";
+import { logout } from "#/server/auth";
 
 const OwnerMenu: React.FC = () => {
 	const ui = useUiStore();
@@ -34,8 +35,9 @@ const OwnerMenu: React.FC = () => {
 			<DropdownDivider />
 
 			<DropdownItem
-				onClick={() => {
+				onClick={async () => {
 					store.clear();
+					await logout()
 					navigation({ to: "/admin" });
 				}}
 			>

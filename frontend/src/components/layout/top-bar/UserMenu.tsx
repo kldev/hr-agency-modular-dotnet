@@ -7,6 +7,7 @@ import DropdownDivider from "@/components/ui/dropdown/DropdownDivider";
 import DropdownItem from "@/components/ui/dropdown/DropdownItem";
 import { useAuthStore } from "@/stores/authStore";
 import { useUiStore } from "@/stores/uiStore";
+import { logout } from "#/server/auth";
 
 const UserMenu: React.FC = () => {
 	const ui = useUiStore();
@@ -39,8 +40,9 @@ const UserMenu: React.FC = () => {
 			<DropdownDivider />
 
 			<DropdownItem
-				onClick={() => {
+				onClick={async() => {
 					store.clearUser();
+					await logout()
 					navigation({ to: "/login" });
 				}}
 			>
