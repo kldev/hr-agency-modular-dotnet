@@ -1,19 +1,19 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import type { JobDescriptionStatus } from "#/api/models";
+import type { OpportunityStage } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
-import { getJobDescription, getJobDescriptionsSlice } from "@/api/endpoints";
-import { jobDescriptionKeys } from "@/api/query-keys";
+import { getJobDescription, getOpportunities } from "@/api/endpoints";
+import { salesKeys } from "@/api/query-keys";
 
 const PAGE_SIZE = 15;
 
-export interface JobDescriptionPageFillters {
+export interface SalesPageFillters {
 	search?: string;
-	status?: JobDescriptionStatus;
+	stage?: OpportunityStage;
 	page?: number;
 	pageSize?: number;
 }
-export const getJobDescriptionServerFn = createServerFn({
+export const getSingleServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { id: string }) => input)
@@ -21,15 +21,15 @@ export const getJobDescriptionServerFn = createServerFn({
 		return getJobDescription(data.id, getFnOptions());
 	});
 
-export const getJobDescriptionsSliceServerFn = createServerFn({
+export const getSliceServerFn = createServerFn({
 	method: "GET",
 })
-	.validator((input: JobDescriptionPageFillters) => input)
+	.validator((input: SalesPageFillters) => input)
 	.handler(({ data }) => {
-		return getJobDescriptionsSlice(
+		return getOpportunities(
 			{
 				search: data.search,
-				...(data.status ? { status: [data.status] } : {}),
+				stage: data.stage,
 				page: data.page,
 				pageSize: data.pageSize,
 			},
@@ -37,17 +37,17 @@ export const getJobDescriptionsSliceServerFn = createServerFn({
 		);
 	});
 
-export function useGetJobDescriptionSlice(fillter: JobDescriptionPageFillters) {
+export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
 	return useInfiniteQuery({
-		queryKey: jobDescriptionKeys.list(fillter),
+		queryKey: salesKeys.list(fillter),
 
 		initialPageParam: 1,
 
 		queryFn: ({ pageParam }) =>
-			getJobDescriptionsSliceServerFn({
+			getSliceServerFn({
 				data: {
 					search: fillter.search,
-					status: fillter.status,
+					stage: fillter.stage,
 					page: pageParam,
 					pageSize: PAGE_SIZE,
 				},
@@ -59,12 +59,12 @@ export function useGetJobDescriptionSlice(fillter: JobDescriptionPageFillters) {
 	});
 }
 
-export function useGetJobDescription(id: string) {
+export function useGetOpportunity(id: string) {
 	return useQuery({
-		queryKey: jobDescriptionKeys.details(id),
+		queryKey: salesKeys.opportunity(id),
 		enabled: Boolean(id),
 		queryFn: () =>
-			getJobDescriptionServerFn({
+			getSingleServerFn({
 				data: {
 					id,
 				},

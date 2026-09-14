@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
+using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Projections;
@@ -18,7 +19,8 @@ public sealed class RecruitmentService(
     IOrganizationChecker checker,
     IJobApplicationInfoQueryRepository applicationInfoQueryRepository,
     IDocumentSession session,
-    IClock clock
+    IClock clock,
+    INoteRepository noteRepository
     ) : IRecruitmentService
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
@@ -61,19 +63,27 @@ public sealed class RecruitmentService(
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
             throw new OrganizationAccessDeniedException();
     }
-    
-    public async Task AppendApplicationNoteToStream(JobApplicationId jobApplicationId, OrganizationId organizationId, string note, UserSnapshot user, CancellationToken ct)
+
+    public async Task AppendApplicationNoteToStream(JobApplicationId jobApplicationId, OrganizationId organizationId,
+        string note, UserSnapshot user, CancellationToken ct)
     {
         if (string.IsNullOrEmpty(note)) return;
 
         var (shortNote, error) = ShortNote.TryCreate(note, false);
         if (error != null) throw new ValidationException(error);
-        
+
         var application = await GetApplicationAsync(jobApplicationId.Value, organizationId.Value, ct);
         var noteEvent = new JobApplicationNoteAdded(jobApplicationId.Value, application.CandidateId,
             clock.UtcNow, shortNote!.Value, user);
 
         // save changes will be called by wolverine handler
         session.Events.Append(jobApplicationId.Value, @noteEvent);
+
+        await noteRepository.CreateNoteAsync(
+            new CreateNoteDocument(application.JobApplicationId,
+                organizationId.Value,
+                application.CandidateId, shortNote), user);
+
+        await session.SaveChangesAsync(ct);
     }
 }

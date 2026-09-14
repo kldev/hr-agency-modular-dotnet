@@ -1,17 +1,19 @@
-import { DollarSign } from "lucide-react";
+import { ChessRook } from "lucide-react";
 import type React from "react";
-import { Route } from "#/routes/app/sales";
-import { Page } from "@/components/layout";
-import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { SalesTable } from "../components/SalesTable";
-import { SalesToolbar } from "../components/SalesToolbar";
-import { type SalesPageFillters, useGetOpportunitesSlice } from "../hooks";
-import { salesStage } from "../types";
 
-const SalesPage: React.FC = () => {
+import { Route } from "#/routes/app/job-descriptions";
+
+import { Page } from "@/components/layout";
+
+import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
+import { jobDescriptionStatuses } from "../type";
+import { JobsDescriptopnTable, JobsDescriptopnToolbar } from "./components";
+import { type JobDescriptionPageFillters, useGetJobDescriptionSlice } from "./hooks";
+
+const JobDescriptionPage: React.FC = () => {
 	const navigate = Route.useNavigate();
-	const search = Route.useSearch() as SalesPageFillters;
-	const query = useGetOpportunitesSlice(search);
+	const search = Route.useSearch() as JobDescriptionPageFillters;
+	const query = useGetJobDescriptionSlice(search);
 	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
 	const isEmpty = query.isFetched && items.length === 0;
@@ -21,18 +23,18 @@ const SalesPage: React.FC = () => {
 
 	return (
 		<Page
-			title="Sales"
-			description="Manage your leads and sales opportunities THROUGH the pipeline."
+			title="Jobs description"
+			description=" Manage jobs description."
 			onRefresh={onRefresh}
 			loading={query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
-				<EmptyState title="No sales opportunities found">
-					<DollarSign size={24} />
+				<EmptyState title="No job description found">
+					<ChessRook />
 				</EmptyState>
 			}
 		>
-			<SalesToolbar
+			<JobsDescriptopnToolbar
 				search={search.search ?? ""}
 				onClear={() => {
 					navigate({ search: {} });
@@ -40,16 +42,15 @@ const SalesPage: React.FC = () => {
 				onSearchChange={(v) => {
 					navigate({ search: (previous) => ({ ...previous, search: v }) });
 				}}
-				onAdd={() => {}}
 			/>
 			<EnumFilter
-				value={search.stage || null}
-				options={salesStage}
+				value={search.status || null}
+				options={jobDescriptionStatuses}
 				onChange={(s) => {
-					navigate({ search: (previous) => ({ ...previous, stage: s }) });
+					navigate({ search: (previous) => ({ ...previous, status: s }) });
 				}}
 			/>
-			<SalesTable items={items} />
+			<JobsDescriptopnTable items={items} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}
@@ -61,4 +62,4 @@ const SalesPage: React.FC = () => {
 	);
 };
 
-export default SalesPage;
+export default JobDescriptionPage;
