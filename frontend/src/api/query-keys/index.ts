@@ -3,3 +3,7 @@ export * from "./candidatesKeys";
 export * from "./companiesKeys";
 export * from "./interviewKeys";
 export * from "./jobDescriptionKeys";
+export * from "./jobPostsKeys";
+export * from "./organizationKeys";
+export * from "./salesKeys";
+export * from "./usersKeys";
