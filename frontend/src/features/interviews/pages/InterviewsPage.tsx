@@ -5,7 +5,7 @@ import { Route } from "#/routes/app/interviews";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { interviewStatuses } from "../type";
-import { InterviewsTable, InterviewToolbar } from "./components";
+import { InterviewCardList, InterviewsTable, InterviewToolbar } from "./components";
 import { type InterviewsFilters, useGetInterviewsSlice } from "./hooks/useInterviews";
 
 const InterviewsPage: React.FC = () => {
@@ -17,8 +17,13 @@ const InterviewsPage: React.FC = () => {
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
 	const isEmpty = query.isFetched && items.length === 0;
 
+	const onRefresh = () => {
+		query.refetch();
+	};
+
 	return (
 		<Page
+			className="has-mobile-view"
 			title="Interviews"
 			description="Schedule and manage interviews with job applicants."
 			onRefresh={() => query.refetch()}
@@ -46,12 +51,8 @@ const InterviewsPage: React.FC = () => {
 					navigate({ search: (previous) => ({ ...previous, status: s }) });
 				}}
 			/>
-			<InterviewsTable
-				items={items}
-				onRefresh={() => {
-					query.refetch();
-				}}
-			/>
+			<InterviewsTable items={items} onRefresh={onRefresh} />
+			<InterviewCardList interviews={items} onRefresh={onRefresh} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

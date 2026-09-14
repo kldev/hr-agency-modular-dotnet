@@ -135,17 +135,32 @@
 
 @media (max-width: 960px) {
 	.data-mobile-view {
-		display: block;		
+		display: block;
 	}
-  /*
+
+	.data-mobile-view > * {
+		background: var(--color-surface);
+	}
+
+	.data-detail-item {
+		/* biome-ignore lint/complexity/noImportantStyles: t */
+		border: none !important;
+	}
+
+	.data-detail-item dt {
+		/* biome-ignore lint/complexity/noImportantStyles: t */
+		color: var(--color-success) !important;
+	}
+	/*
    * Mobile:
    * Hide ERP table and use cards.
    */
-  .has-mobile-view .table-container {
-    display: none;
-  }
+	.has-mobile-view .table-container {
+		display: none;
+	}
 }
 
-.card-border{
+.card-border {
 	border-color: var(--color-border-strong);
+	border-radius: var(--radius-md);
 }

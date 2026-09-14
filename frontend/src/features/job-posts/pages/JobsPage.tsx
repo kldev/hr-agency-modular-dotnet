@@ -6,7 +6,7 @@ import { Page } from "@/components/layout";
 
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { jobPostsStatuses } from "../type";
-import { JobPostsTable, JobsPageToolbar } from "./components";
+import { JobPostCardList, JobPostsTable, JobsPageToolbar } from "./components";
 import { type JobsFilters, useGetJobsSlice } from "./hooks";
 
 const JobsPage: React.FC = () => {
@@ -18,6 +18,7 @@ const JobsPage: React.FC = () => {
 	const isEmpty = query.isFetched && items.length === 0;
 	return (
 		<Page
+			className="has-mobile-view"
 			title="Job postings"
 			description=" Manage job posts."
 			onRefresh={() => query.refetch()}
@@ -52,6 +53,7 @@ const JobsPage: React.FC = () => {
 					query.refetch();
 				}}
 			/>
+			<JobPostCardList jobPosts={items} onRefresh={() => query.refetch()} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

@@ -1,6 +1,6 @@
 import type { CompanyProjection } from "@/api/models";
 import { DetailItem, DetailOverviewHeader } from "@/components/ui";
-import { formatDateTime } from "@/utlis/dateUtils";
+import { formatDateTimeIntl } from "@/utlis/dateUtils";
 
 interface CompanyOverviewProps {
 	company: CompanyProjection;
@@ -20,14 +20,6 @@ export function CompanyOverview({ company }: CompanyOverviewProps) {
 
 				<DetailItem label="Country">{company.countryCode}</DetailItem>
 
-				<DetailItem label="Website">
-					{company.website ? (
-						<a href={company.website} target="_blank" rel="noreferrer">
-							{company.website}
-						</a>
-					) : null}
-				</DetailItem>
-
 				<DetailItem label="Active job posts">
 					<span className="data-detail-number">{company.activeJobsPostCount}</span>
 				</DetailItem>
@@ -36,10 +28,28 @@ export function CompanyOverview({ company }: CompanyOverviewProps) {
 					<span className="data-detail-number">{company.applicantsCount}</span>
 				</DetailItem>
 				<DetailItem label="Registration number">{company.registrationNumber}</DetailItem>
-				<DetailItem label="Created">{formatDateTime(company.createdAt)}</DetailItem>
-
-				<DetailItem label="Updated">{formatDateTime(company.modifiedAt)}</DetailItem>
+				<DetailItem label="Created by">
+					<div>
+						<span>{company.createdBy?.fullname}</span>
+					</div>
+					{formatDateTimeIntl(company.createdAt)}
+				</DetailItem>
+				{company?.modifiedAt ? (
+					<DetailItem label="Modified">
+						<div>
+							<span>{company.modifiedBy?.fullname}</span>
+						</div>
+						<span>{formatDateTimeIntl(company?.modifiedAt ?? "")}</span>
+					</DetailItem>
+				) : null}
 			</dl>
+			<DetailItem label="Website">
+				{company.website ? (
+					<a href={company.website} target="_blank" rel="noreferrer">
+						{company.website}
+					</a>
+				) : null}
+			</DetailItem>
 		</div>
 	);
 }

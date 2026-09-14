@@ -162,7 +162,7 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 								<DetailItem label="Modified by">{application.modifiedBy?.fullname}</DetailItem>
 							</dl>
 						</section>
-						<div className="data-content-lists data-details-section-bg-none">
+						<div className="data-content-lists ">
 							<DetailsListSection
 								title="Tags"
 								items={tags}

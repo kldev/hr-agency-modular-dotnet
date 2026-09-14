@@ -1,9 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
-
+import { formatSalary } from "#/components/labels/enum-labels";
 import type { JobPostResponse } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { JobPostsBadge } from "@/components/ui";
-import { formatSalary } from "@/utlis";
 import { formatDateTime } from "@/utlis/dateUtils";
 import { JobPostsActions } from "./JobPostsActions";
 
@@ -92,26 +91,16 @@ export function getColumns(actions: Actions) {
 
 		columnHelper.accessor("salaryMin", {
 			header: "Salary min",
-			cell: ({ row, getValue }) => (
+			cell: ({ row }) => (
 				<span className="table-number">
-					{formatSalary(getValue() as number)} {row.original.currencyCode}
+					{formatSalary(row.original.salaryMin, row.original.salaryMax, row.original.currencyCode)}
 				</span>
 			),
 			meta: {
 				width: "sm",
 			},
 		}),
-		columnHelper.accessor("salaryMax", {
-			header: "Salary max",
-			cell: ({ row, getValue }) => (
-				<span className="table-number">
-					{formatSalary(getValue() as number)} {row.original.currencyCode}
-				</span>
-			),
-			meta: {
-				width: "sm",
-			},
-		}),
+
 		columnHelper.accessor("posts", {
 			header: "Posts to channel",
 			cell: ({ getValue }) => <span className="table-number">{getValue().length}</span>,

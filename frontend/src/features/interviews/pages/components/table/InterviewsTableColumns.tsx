@@ -60,13 +60,22 @@ export function getColumns(actions: Actions) {
 		}),
 		columnHelper.accessor("scheduleAt", {
 			header: "Schedule at",
+			meta: {
+				width: "md",
+			},
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
 		columnHelper.accessor("applicantInfo.phoneNumber", {
 			header: "Phone",
+			meta: {
+				width: "md",
+			},
 		}),
 		columnHelper.accessor("status", {
 			header: "Status",
+			meta: {
+				width: "sm",
+			},
 			//InterviewStatusBadge
 			cell: ({ getValue }) => <InterviewStatusBadge status={getValue()} />,
 		}),
@@ -74,7 +83,7 @@ export function getColumns(actions: Actions) {
 		columnHelper.accessor("interviewer", {
 			header: "Interviewer",
 			meta: {
-				width: "2xl",
+				width: "xl",
 			},
 
 			cell: ({ getValue }) => (
@@ -91,16 +100,25 @@ export function getColumns(actions: Actions) {
 
 		columnHelper.accessor("interviewType", {
 			header: "Type",
+			meta: {
+				width: "sm",
+			},
 			cell: ({ getValue }) => <InterviewTypeBadge status={getValue()} />,
 		}),
 
 		columnHelper.accessor("format", {
 			header: "Format",
-			cell: ({ getValue }) => <InterviewFormatBadge status={getValue()} />,
+			meta: {
+				width: "sm",
+			},
+			cell: ({ getValue }) => <InterviewFormatBadge format={getValue()} />,
 		}),
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
+			meta: {
+				width: "md",
+			},
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
 	]);

@@ -6,7 +6,6 @@ import {
 	DetailItem,
 	DetailsListSection,
 } from "#/components/ui";
-import { applicationSources } from "#/features/applications/types";
 import { formatDateTimeIntl } from "#/utlis";
 import type { JobApplicationsRef } from "../forms";
 import { ApplicationsActions } from "./ApplicationsActions";

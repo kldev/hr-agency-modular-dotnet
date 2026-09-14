@@ -4,7 +4,12 @@ import { useRef } from "react";
 import { Route } from "#/routes/app/companies";
 import { Page } from "@/components/layout";
 import { EmptyState, LoadMore } from "@/components/ui";
-import { CompaniesTable, CraeteCompanyDrawer, type CreateCompanyFormCommand } from "./components";
+import {
+	CompaniesCardList,
+	CompaniesTable,
+	CraeteCompanyDrawer,
+	type CreateCompanyFormCommand,
+} from "./components";
 import { CompaniesToolbar } from "./components/CompaniesToolbar";
 import { useGetCompaniesSlice } from "./hooks";
 
@@ -20,6 +25,7 @@ const CompaniesPage: React.FC = () => {
 	return (
 		<>
 			<Page
+				className="has-mobile-view"
 				title="Companies"
 				description="Manage companies and their recruitment relationships."
 				onRefresh={() => query.refetch()}
@@ -49,6 +55,7 @@ const CompaniesPage: React.FC = () => {
 						query.refetch();
 					}}
 				/>
+				<CompaniesCardList companies={items} />
 				<LoadMore
 					loading={query.isPending}
 					hasNext={hasMore[0]}
