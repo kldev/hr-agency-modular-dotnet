@@ -1,54 +1,34 @@
 import { addMonths, endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { CalendarDays, CheckCircle2, Plus, UserX } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { getInterviewsForDateRange } from "@/api/endpoints";
-import type { InterviewProjection, InterviewStatus } from "@/api/models";
+import type { InterviewStatus } from "@/api/models";
 import { Button } from "@/components/ui/Button";
 
 import { type CalendarRange, InterviewsCalendar } from "./components";
 import "./interviews.css";
 import { useNavigate } from "@tanstack/react-router";
+import { useGetInterviewsRange } from "./hooks/useCalendar";
 
 export default function InterviewCalendarPage() {
 	const [range, setRange] = useState<CalendarRange>("week");
 
 	const [date, setDate] = useState(new Date());
 
-	const [interviews, setInterviews] = useState<InterviewProjection[]>([]);
-
-	const [loading, setLoading] = useState(false);
 	const naviagation = useNavigate();
 
+	const [from, setFrom] = useState<string>("");
+	const [to, setTo] = useState<string>("");
+
+	const query = useGetInterviewsRange({ from: from, to: to });
+
 	useEffect(() => {
-		let active = true;
+		const { from, to } = getCalendarRange(date, range);
 
-		async function load() {
-			setLoading(true);
-
-			const { from, to } = getCalendarRange(date, range);
-
-			try {
-				const response = await getInterviewsForDateRange({
-					fromDate: from.toISOString().split("T")[0],
-					toDate: to.toISOString().split("T")[0],
-				});
-
-				if (active) {
-					setInterviews(response);
-				}
-			} finally {
-				if (active) {
-					setLoading(false);
-				}
-			}
-		}
-
-		void load();
-
-		return () => {
-			active = false;
-		};
+		setFrom(from.toISOString().split("T")[0]);
+		setTo(to.toISOString().split("T")[0]);
 	}, [date, range]);
+
+	const interviews = query.data ?? [];
 
 	const stats = useMemo(() => {
 		const now = new Date();
@@ -128,12 +108,12 @@ export default function InterviewCalendarPage() {
 				</div>
 
 				<section className="interviews-calendar-panel">
-					{loading && (
+					{query.isPending ? (
 						<div className="interviews-calendar-loading">
 							<span className="spinner" />
 							Loading interviews...
 						</div>
-					)}
+					) : null}
 
 					<InterviewsCalendar
 						range={range}

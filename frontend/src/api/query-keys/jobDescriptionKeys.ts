@@ -5,7 +5,5 @@ export const jobDescriptionKeys = {
 
 	list: (params?: unknown) => [...jobDescriptionKeys.lists(), params] as const,
 
-	details: () => [...jobDescriptionKeys.all, "detail"] as const,
-
-	detail: (id: string) => [...jobDescriptionKeys.details(), id] as const,
+	details: (id: string) => [...jobDescriptionKeys.all, "details", id] as const,
 };

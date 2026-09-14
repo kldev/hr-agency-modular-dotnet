@@ -36,7 +36,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-	console.log("font started")
+	console.log("font started");
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>

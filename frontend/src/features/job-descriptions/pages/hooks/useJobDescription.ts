@@ -59,7 +59,7 @@ export function useGetJobDescriptionSlice(fillter: JobsDescriptopnPageFilters) {
 
 export function useGetJobDescription(id: string) {
 	return useQuery({
-		queryKey: jobDescriptionKeys.detail(id),
+		queryKey: jobDescriptionKeys.details(id),
 		enabled: Boolean(id),
 		queryFn: () =>
 			getJobDescriptionServerFn({

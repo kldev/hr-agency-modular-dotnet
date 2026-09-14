@@ -1,12 +1,12 @@
 import { useNavigate } from "@tanstack/react-router";
 import { LogOut, Moon, Sun, User } from "lucide-react";
 import type React from "react";
+import { logout } from "#/server/auth";
 import Dropdown from "@/components/ui/dropdown/Dropdown";
 import DropdownDivider from "@/components/ui/dropdown/DropdownDivider";
 import DropdownItem from "@/components/ui/dropdown/DropdownItem";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
 import { useUiStore } from "@/stores/uiStore";
-import { logout } from "#/server/auth";
 
 const OwnerMenu: React.FC = () => {
 	const ui = useUiStore();
@@ -37,7 +37,7 @@ const OwnerMenu: React.FC = () => {
 			<DropdownItem
 				onClick={async () => {
 					store.clear();
-					await logout()
+					await logout();
 					navigation({ to: "/admin" });
 				}}
 			>

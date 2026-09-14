@@ -1,7 +1,6 @@
 import { RefreshCcw } from "lucide-react";
 import { Button } from "../../ui";
 import { Breadcrumbs } from "../breadcrumbs";
-import "./page.css";
 
 interface Props {
 	children: React.ReactNode;
