@@ -16,6 +16,7 @@ export function JobsDescriptopnActions({ id, onChangeStatus }: JobsDescriptopnAc
 	const detailsUrl = router.buildLocation({
 		to: "/app/job-descriptions/$id",
 		params: { id },
+		search: { search: undefined, status: undefined },
 	}).href;
 
 	return (

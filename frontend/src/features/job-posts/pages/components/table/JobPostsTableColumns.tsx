@@ -63,7 +63,7 @@ export function getColumns(actions: Actions) {
 		columnHelper.accessor("recruiter", {
 			header: "Responsible",
 			meta: {
-				width: "md",
+				width: "xl",
 			},
 
 			cell: ({ getValue }) => (
@@ -117,6 +117,7 @@ export function getColumns(actions: Actions) {
 			cell: ({ getValue }) => <span className="table-number">{getValue().length}</span>,
 			meta: {
 				width: "ssm",
+				className: "header-span",
 			},
 		}),
 		columnHelper.accessor("company.name", {

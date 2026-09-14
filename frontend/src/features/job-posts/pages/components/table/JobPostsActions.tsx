@@ -18,6 +18,7 @@ export function JobPostsActions({
 	const detailsUrl = router.buildLocation({
 		to: "/app/jobs/$id",
 		params: { id: id },
+		search: { search: "", status: undefined },
 	}).href;
 
 	const editUrl = router.buildLocation({

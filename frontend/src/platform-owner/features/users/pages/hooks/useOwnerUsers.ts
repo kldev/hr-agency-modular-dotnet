@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { getUsers } from "#/api/endpoints";
+import { getOrganizationsUsers } from "#/api/endpoints";
 import type { OrganizationRoleApi } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
 import { usersKeys } from "@/api/query-keys";
@@ -14,12 +14,12 @@ export type UsersFilters = {
 	pageSize?: number;
 };
 
-const getUsersliceServerFn = createServerFn({
+const getSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: UsersFilters) => input)
 	.handler(({ data }) => {
-		return getUsers(
+		return getOrganizationsUsers(
 			{
 				search: data.search ?? "",
 				...(data.role ? { roles: [data.role] } : { roles: [] }),
@@ -30,14 +30,14 @@ const getUsersliceServerFn = createServerFn({
 		);
 	});
 
-export function useGetUsersSlice(fillter: UsersFilters) {
+export function useGetOrganizationsUsersSlice(fillter: UsersFilters) {
 	return useInfiniteQuery({
 		queryKey: usersKeys.list(fillter),
 
 		initialPageParam: 1,
 
 		queryFn: ({ pageParam }) =>
-			getUsersliceServerFn({
+			getSliceServerFn({
 				data: {
 					...fillter,
 					page: pageParam,

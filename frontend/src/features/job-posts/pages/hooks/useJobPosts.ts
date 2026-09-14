@@ -1,28 +1,28 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { getUsers } from "#/api/endpoints";
-import type { OrganizationRoleApi } from "#/api/models";
+import { getJobPostsSlice } from "#/api/endpoints";
+import type { JobPostStatus } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
-import { usersKeys } from "@/api/query-keys";
+import { jobPostsKeys } from "@/api/query-keys";
 
 const PAGE_SIZE = 15;
 
-export type UsersFilters = {
+export type JobsFilters = {
 	search?: string;
-	role?: OrganizationRoleApi;
+	status?: JobPostStatus;
 	page?: number;
 	pageSize?: number;
 };
 
-const getUsersliceServerFn = createServerFn({
+const getJobsSliceServerFn = createServerFn({
 	method: "GET",
 })
-	.validator((input: UsersFilters) => input)
+	.validator((input: JobsFilters) => input)
 	.handler(({ data }) => {
-		return getUsers(
+		return getJobPostsSlice(
 			{
 				search: data.search ?? "",
-				...(data.role ? { roles: [data.role] } : { roles: [] }),
+				...(data.status ? { status: [data.status] } : { status: [] }),
 				page: data.page,
 				pageSize: data.pageSize,
 			},
@@ -30,14 +30,14 @@ const getUsersliceServerFn = createServerFn({
 		);
 	});
 
-export function useGetUsersSlice(fillter: UsersFilters) {
+export function useGetJobsSlice(fillter: JobsFilters) {
 	return useInfiniteQuery({
-		queryKey: usersKeys.list(fillter),
+		queryKey: jobPostsKeys.list(fillter),
 
 		initialPageParam: 1,
 
 		queryFn: ({ pageParam }) =>
-			getUsersliceServerFn({
+			getJobsSliceServerFn({
 				data: {
 					...fillter,
 					page: pageParam,

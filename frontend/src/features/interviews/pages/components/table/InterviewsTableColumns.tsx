@@ -30,7 +30,10 @@ export function getColumns(actions: Actions) {
 
 				return (
 					<div className="table-cell-content">
-						<InterviewActions onAction={(val) => actions.onAction(val, item)} />
+						<InterviewActions
+							onAction={(val) => actions.onAction(val, item)}
+							applicationId={item.applicationId}
+						/>
 					</div>
 				);
 			},

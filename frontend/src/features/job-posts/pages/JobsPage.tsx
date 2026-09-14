@@ -1,47 +1,27 @@
 import { BriefcaseBusiness } from "lucide-react";
 import type React from "react";
-import { useCallback, useState } from "react";
-import { getJobPostsSlice } from "@/api/endpoints";
-import type { JobPostStatus } from "@/api/models";
+
+import { Route } from "#/routes/app/jobs";
 import { Page } from "@/components/layout";
-import { usePaginatedData } from "@/components/table";
+
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { jobPostsStatuses } from "../type";
 import { JobPostsTable, JobsPageToolbar } from "./components";
+import { type JobsFilters, useGetJobsSlice } from "./hooks";
 
 const JobsPage: React.FC = () => {
-	const [search, setSearch] = useState("");
-	const [status, setStatus] = useState<JobPostStatus | null>(null);
-	const fetchPage = useCallback(
-		(page: number, pageSize: number) => {
-			return getJobPostsSlice({
-				page,
-				pageSize,
-				...(status ? { status: [status] } : {}),
-				search: search ?? undefined,
-			});
-		},
-		[search, status],
-	);
-
-	const {
-		data: items,
-		loading,
-		hasMore,
-		isEmpty,
-		loadMore,
-		refresh,
-	} = usePaginatedData({
-		pageSize: 15,
-		fetchPage: fetchPage,
-		queryKey: [search, status],
-	});
+	const navigate = Route.useNavigate();
+	const search = Route.useSearch() as JobsFilters;
+	const query = useGetJobsSlice(search);
+	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
+	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
+	const isEmpty = query.isFetched && items.length === 0;
 	return (
 		<Page
 			title="Job postings"
 			description=" Manage job posts."
-			onRefresh={refresh}
-			loading={loading}
+			onRefresh={() => query.refetch()}
+			loading={query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No job posts found">
@@ -50,16 +30,35 @@ const JobsPage: React.FC = () => {
 			}
 		>
 			<JobsPageToolbar
-				onClear={() => {}}
-				search={search}
+				search={search.search ?? ""}
+				onClear={() => {
+					navigate({ search: {} });
+				}}
 				onSearchChange={(v) => {
-					setSearch(v);
+					navigate({ search: (previous) => ({ ...previous, search: v }) });
 				}}
 			/>
 
-			<EnumFilter value={status} options={jobPostsStatuses} onChange={setStatus} />
-			<JobPostsTable items={items} onRefresh={refresh} />
-			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
+			<EnumFilter
+				value={search.status ?? null}
+				options={jobPostsStatuses}
+				onChange={(s) => {
+					navigate({ search: (previous) => ({ ...previous, status: s }) });
+				}}
+			/>
+			<JobPostsTable
+				items={items}
+				onRefresh={() => {
+					query.refetch();
+				}}
+			/>
+			<LoadMore
+				loading={query.isPending}
+				hasNext={hasMore[0]}
+				onClick={() => {
+					query.fetchNextPage();
+				}}
+			/>
 		</Page>
 	);
 };

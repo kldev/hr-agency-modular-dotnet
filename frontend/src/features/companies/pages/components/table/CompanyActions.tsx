@@ -21,7 +21,7 @@ export function CompanyActions({ onEdit, onAddContact, id }: CompanyActionsProps
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							navigate({ to: "/app/companies/$id", params: { id } });
+							navigate({ to: "/app/companies/$id", params: { id: id }, search: { search: "" } });
 						},
 					},
 				]}

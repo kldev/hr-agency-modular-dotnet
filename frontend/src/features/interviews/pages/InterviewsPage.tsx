@@ -35,7 +35,9 @@ const InterviewsPage: React.FC = () => {
 				onClear={() => {
 					navigate({ search: {} });
 				}}
-				onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
+				onSearchChange={(v) => {
+					navigate({ search: (previous) => ({ ...previous, search: v }) });
+				}}
 			/>
 			<EnumFilter
 				value={search.status ?? null}

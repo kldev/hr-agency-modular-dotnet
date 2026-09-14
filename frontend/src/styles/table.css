@@ -122,10 +122,9 @@
 	}
 }
 
-/* .table-header-label {
+.table-header-ssm .table-header-label {
 	min-width: 80px;
 	white-space: normal;
 	overflow-wrap: break-word;
 	line-height: 1.2;
-	
-} */
+}

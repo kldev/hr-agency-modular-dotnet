@@ -17,12 +17,14 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
-import { Route as AdminOrganizationsRouteImport } from './routes/admin/organizations'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as ApiHealthzRouteImport } from './routes/api/healthz'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as OwnerIndexRouteImport } from './routes/owner/index'
+import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
+import { Route as AdminOrganizationsIdRouteImport } from './routes/admin/organizations/$id'
+import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
+import { Route as AdminUsersIdRouteImport } from './routes/admin/users/$id'
 import { Route as AppApplicationsIndexRouteImport } from './routes/app/applications/index'
 import { Route as AppApplicationsIdRouteImport } from './routes/app/applications/$id'
 import { Route as AppCalendarIndexRouteImport } from './routes/app/calendar/index'
@@ -41,6 +43,7 @@ import { Route as AppJobsIdRouteImport } from './routes/app/jobs/$id'
 import { Route as AppJobsAddRouteImport } from './routes/app/jobs/add'
 import { Route as AppSalesIndexRouteImport } from './routes/app/sales/index'
 import { Route as AppUsersIndexRouteImport } from './routes/app/users/index'
+import { Route as AppUsersIdRouteImport } from './routes/app/users/$id'
 import { Route as AppJobDescriptionsEditIdRouteImport } from './routes/app/job-descriptions/edit.$id'
 import { Route as AppJobsEditIdRouteImport } from './routes/app/jobs/edit.$id'
 import { Route as AppSalesOpportunitiesIdRouteImport } from './routes/app/sales/opportunities.$id'
@@ -85,16 +88,6 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminOrganizationsRoute = AdminOrganizationsRouteImport.update({
-  id: '/organizations',
-  path: '/organizations',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
 const ApiSplatRoute = ApiSplatRouteImport.update({
   id: '/api/$',
   path: '/api/$',
@@ -114,6 +107,26 @@ const OwnerIndexRoute = OwnerIndexRouteImport.update({
   id: '/owner/',
   path: '/owner/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminOrganizationsIndexRoute = AdminOrganizationsIndexRouteImport.update({
+  id: '/organizations/',
+  path: '/organizations/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminOrganizationsIdRoute = AdminOrganizationsIdRouteImport.update({
+  id: '/organizations/$id',
+  path: '/organizations/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
+  id: '/users/',
+  path: '/users/',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminUsersIdRoute = AdminUsersIdRouteImport.update({
+  id: '/users/$id',
+  path: '/users/$id',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
   id: '/applications/',
@@ -205,6 +218,11 @@ const AppUsersIndexRoute = AppUsersIndexRouteImport.update({
   path: '/users/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppUsersIdRoute = AppUsersIdRouteImport.update({
+  id: '/users/$id',
+  path: '/users/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppJobDescriptionsEditIdRoute =
   AppJobDescriptionsEditIdRouteImport.update({
     id: '/job-descriptions/edit/$id',
@@ -230,13 +248,13 @@ export interface FileRoutesByFullPath {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/organizations': typeof AdminOrganizationsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/owner/': typeof OwnerIndexRoute
+  '/admin/organizations/$id': typeof AdminOrganizationsIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
   '/app/applications/$id': typeof AppApplicationsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
@@ -245,6 +263,9 @@ export interface FileRoutesByFullPath {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
+  '/app/users/$id': typeof AppUsersIdRoute
+  '/admin/organizations/': typeof AdminOrganizationsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
   '/app/calendar/': typeof AppCalendarIndexRoute
   '/app/candidates/': typeof AppCandidatesIndexRoute
@@ -265,13 +286,13 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/organizations': typeof AdminOrganizationsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/owner': typeof OwnerIndexRoute
+  '/admin/organizations/$id': typeof AdminOrganizationsIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
   '/app/applications/$id': typeof AppApplicationsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
@@ -280,6 +301,9 @@ export interface FileRoutesByTo {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
+  '/app/users/$id': typeof AppUsersIdRoute
+  '/admin/organizations': typeof AdminOrganizationsIndexRoute
+  '/admin/users': typeof AdminUsersIndexRoute
   '/app/applications': typeof AppApplicationsIndexRoute
   '/app/calendar': typeof AppCalendarIndexRoute
   '/app/candidates': typeof AppCandidatesIndexRoute
@@ -303,13 +327,13 @@ export interface FileRoutesById {
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/admin/dashboard': typeof AdminDashboardRoute
-  '/admin/organizations': typeof AdminOrganizationsRoute
-  '/admin/users': typeof AdminUsersRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/owner/': typeof OwnerIndexRoute
+  '/admin/organizations/$id': typeof AdminOrganizationsIdRoute
+  '/admin/users/$id': typeof AdminUsersIdRoute
   '/app/applications/$id': typeof AppApplicationsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
@@ -318,6 +342,9 @@ export interface FileRoutesById {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
+  '/app/users/$id': typeof AppUsersIdRoute
+  '/admin/organizations/': typeof AdminOrganizationsIndexRoute
+  '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
   '/app/calendar/': typeof AppCalendarIndexRoute
   '/app/candidates/': typeof AppCandidatesIndexRoute
@@ -342,13 +369,13 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/admin/dashboard'
-    | '/admin/organizations'
-    | '/admin/users'
     | '/api/$'
     | '/api/healthz'
     | '/admin/'
     | '/app/'
     | '/owner/'
+    | '/admin/organizations/$id'
+    | '/admin/users/$id'
     | '/app/applications/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
@@ -357,6 +384,9 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
+    | '/app/users/$id'
+    | '/admin/organizations/'
+    | '/admin/users/'
     | '/app/applications/'
     | '/app/calendar/'
     | '/app/candidates/'
@@ -377,13 +407,13 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/admin/dashboard'
-    | '/admin/organizations'
-    | '/admin/users'
     | '/api/$'
     | '/api/healthz'
     | '/admin'
     | '/app'
     | '/owner'
+    | '/admin/organizations/$id'
+    | '/admin/users/$id'
     | '/app/applications/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
@@ -392,6 +422,9 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
+    | '/app/users/$id'
+    | '/admin/organizations'
+    | '/admin/users'
     | '/app/applications'
     | '/app/calendar'
     | '/app/candidates'
@@ -414,13 +447,13 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/login'
     | '/admin/dashboard'
-    | '/admin/organizations'
-    | '/admin/users'
     | '/api/$'
     | '/api/healthz'
     | '/admin/'
     | '/app/'
     | '/owner/'
+    | '/admin/organizations/$id'
+    | '/admin/users/$id'
     | '/app/applications/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
@@ -429,6 +462,9 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
+    | '/app/users/$id'
+    | '/admin/organizations/'
+    | '/admin/users/'
     | '/app/applications/'
     | '/app/calendar/'
     | '/app/candidates/'
@@ -514,20 +550,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/admin/organizations': {
-      id: '/admin/organizations'
-      path: '/organizations'
-      fullPath: '/admin/organizations'
-      preLoaderRoute: typeof AdminOrganizationsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
     '/api/$': {
       id: '/api/$'
       path: '/api/$'
@@ -555,6 +577,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/owner/'
       preLoaderRoute: typeof OwnerIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/organizations/': {
+      id: '/admin/organizations/'
+      path: '/organizations'
+      fullPath: '/admin/organizations/'
+      preLoaderRoute: typeof AdminOrganizationsIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/organizations/$id': {
+      id: '/admin/organizations/$id'
+      path: '/organizations/$id'
+      fullPath: '/admin/organizations/$id'
+      preLoaderRoute: typeof AdminOrganizationsIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/users/': {
+      id: '/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users/'
+      preLoaderRoute: typeof AdminUsersIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/users/$id': {
+      id: '/admin/users/$id'
+      path: '/users/$id'
+      fullPath: '/admin/users/$id'
+      preLoaderRoute: typeof AdminUsersIdRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/app/applications/': {
       id: '/app/applications/'
@@ -682,6 +732,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppUsersIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/users/$id': {
+      id: '/app/users/$id'
+      path: '/users/$id'
+      fullPath: '/app/users/$id'
+      preLoaderRoute: typeof AppUsersIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/job-descriptions/edit/$id': {
       id: '/app/job-descriptions/edit/$id'
       path: '/job-descriptions/edit/$id'
@@ -708,16 +765,20 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
-  AdminOrganizationsRoute: typeof AdminOrganizationsRoute
-  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminOrganizationsIdRoute: typeof AdminOrganizationsIdRoute
+  AdminUsersIdRoute: typeof AdminUsersIdRoute
+  AdminOrganizationsIndexRoute: typeof AdminOrganizationsIndexRoute
+  AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
 const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
-  AdminOrganizationsRoute: AdminOrganizationsRoute,
-  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminOrganizationsIdRoute: AdminOrganizationsIdRoute,
+  AdminUsersIdRoute: AdminUsersIdRoute,
+  AdminOrganizationsIndexRoute: AdminOrganizationsIndexRoute,
+  AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 
 const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
@@ -734,6 +795,7 @@ interface AppRouteRouteChildren {
   AppJobDescriptionsAddRoute: typeof AppJobDescriptionsAddRoute
   AppJobsIdRoute: typeof AppJobsIdRoute
   AppJobsAddRoute: typeof AppJobsAddRoute
+  AppUsersIdRoute: typeof AppUsersIdRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
   AppCalendarIndexRoute: typeof AppCalendarIndexRoute
   AppCandidatesIndexRoute: typeof AppCandidatesIndexRoute
@@ -759,6 +821,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppJobDescriptionsAddRoute: AppJobDescriptionsAddRoute,
   AppJobsIdRoute: AppJobsIdRoute,
   AppJobsAddRoute: AppJobsAddRoute,
+  AppUsersIdRoute: AppUsersIdRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
   AppCalendarIndexRoute: AppCalendarIndexRoute,
   AppCandidatesIndexRoute: AppCandidatesIndexRoute,

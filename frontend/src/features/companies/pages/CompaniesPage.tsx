@@ -24,7 +24,6 @@ const CompaniesPage: React.FC = () => {
 				description="Manage companies and their recruitment relationships."
 				onRefresh={() => query.refetch()}
 				loading={query.isPending}
-				page={0}
 				isEmpty={isEmpty}
 				emptyState={
 					<EmptyState title="No companies found">
@@ -40,7 +39,9 @@ const CompaniesPage: React.FC = () => {
 					onClear={() => {
 						navigate({ search: {} });
 					}}
-					onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
+					onSearchChange={(v) => {
+						navigate({ search: (previous) => ({ ...previous, search: v }) });
+					}}
 				/>
 				<CompaniesTable
 					companies={items}

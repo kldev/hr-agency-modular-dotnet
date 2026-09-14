@@ -1,10 +1,9 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useCallback, useRef, useState } from "react";
-import { getUsers } from "@/api/endpoints";
-import type { OrganizationRoleApi } from "@/api/models";
+import { useRef } from "react";
+
+import { Route } from "#/routes/app/users";
 import { Page } from "@/components/layout";
-import { usePaginatedData } from "@/components/table";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import {
 	CreateUserDrawer,
@@ -12,45 +11,26 @@ import {
 	UseresTable,
 	UsersToolbar,
 } from "../components";
-
 import { organizationRoles } from "../types";
+import { type UsersFilters, useGetUsersSlice } from "./hooks";
 
 const UsersPage: React.FC = () => {
 	const formRef = useRef<CreateUserFormCommand>(null);
-	const [role, setRole] = useState<OrganizationRoleApi | null>(null);
-	const [search, setSearch] = useState<string>("");
-	const fetchPage = useCallback(
-		(page: number, pageSize: number) => {
-			return getUsers({
-				page,
-				pageSize,
-				search: search,
-				...(role ? { roles: [role] } : { roles: [] }),
-			});
-		},
-		[search, role],
-	);
 
-	const {
-		data: users,
-		loading,
-		hasMore,
-		isEmpty,
-		loadMore,
-		refresh,
-	} = usePaginatedData({
-		pageSize: 15,
-		fetchPage: fetchPage,
-		queryKey: [search, role],
-	});
+	const navigate = Route.useNavigate();
+	const search = Route.useSearch() as UsersFilters;
+
+	const query = useGetUsersSlice(search);
+	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
+	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
+	const isEmpty = query.isFetched && items.length === 0;
 
 	return (
 		<Page
 			title="Users"
 			description="People with access to the organization"
-			onRefresh={refresh}
-			loading={loading}
-			page={0}
+			onRefresh={() => query.refetch()}
+			loading={query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No users found">
@@ -59,25 +39,38 @@ const UsersPage: React.FC = () => {
 			}
 		>
 			<UsersToolbar
-				search={search}
-				onSearchChange={(s) => setSearch(s)}
+				search={search.search ?? ""}
 				onClear={() => {
-					setSearch("");
+					navigate({ search: {} });
+				}}
+				onSearchChange={(v) => {
+					navigate({ search: (previous) => ({ ...previous, search: v }) });
 				}}
 				onAdd={() => {
 					formRef.current?.create();
 				}}
 			/>
 			<EnumFilter
-				value={role}
+				value={search.role ?? null}
 				options={organizationRoles}
 				onChange={(s) => {
-					setRole(s);
+					navigate({ search: (previous) => ({ ...previous, role: s }) });
 				}}
 			/>
-			<UseresTable users={users} />
-			<LoadMore loading={loading} hasNext={hasMore} onClick={loadMore} />
-			<CreateUserDrawer ref={formRef} onSuccess={refresh} />
+			<UseresTable users={items} />
+			<LoadMore
+				loading={query.isPending}
+				hasNext={hasMore[0]}
+				onClick={() => {
+					query.fetchNextPage();
+				}}
+			/>
+			<CreateUserDrawer
+				ref={formRef}
+				onSuccess={() => {
+					query.refetch();
+				}}
+			/>
 		</Page>
 	);
 };
