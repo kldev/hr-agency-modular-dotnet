@@ -1,5 +1,7 @@
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Recruitment.Application.Interviews.Schedule;
+using HrAgencySystem.Recruitment.Application.JobApplications.ChangeStatus;
+using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Interviews;
@@ -25,10 +27,24 @@ public sealed class InterviewsScenario(
         var applications = await session.Query<JobApplicationCreated>()
             .Where(x => x.OrganizationId == organizationId)
             .ToListAsync();
-
+       
         var users = await session.Query<UserCreated>()
             .Where(x => x.OrganizationId == organizationId)
             .ToListAsync();
+
+        foreach (var application in applications)
+        {
+            var updateStatus = users[
+                Random.Shared.Next(users.Count)];
+
+            await bus.InvokeAsync<JobApplicationStatusChanged>(new ChangeJobApplicationStatus(
+                application.JobApplicationId,
+                application.OrganizationId,
+                "", JobApplicationUpdateStatus.Screening, null,
+                updateStatus.UserId));
+        }
+
+        await Task.Delay(TimeSpan.FromSeconds(5));
 
         if (applications.Count == 0)
             throw new InvalidOperationException(

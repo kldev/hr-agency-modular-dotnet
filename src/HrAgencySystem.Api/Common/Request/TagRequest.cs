@@ -1,4 +1,7 @@
 namespace HrAgencySystem.Api.Common.Request;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal record TagRequest(Guid TagId);
+internal sealed record TagRequest(Guid TagId);
+
+// ReSharper disable once ClassNeverInstantiated.Global
+internal sealed record TagRequestList(IReadOnlyList<Guid> TagIds);

@@ -1,10 +1,8 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 
@@ -30,7 +28,12 @@ public static class TagApplicationHandler
         var tag = await tagRepository.GetTag(command.TagId, ct);
         var user = await service.GetUserAsync(command.CreatedBy, ct);
 
-        var @event = new JobApplicationTagged(command.JobApplicationId, tag, user, clock.UtcNow);
+        var @event = new JobApplicationTagged(
+            command.JobApplicationId, 
+            tag, 
+            user, 
+            clock.UtcNow,
+            aggregate.Email.Value);
         
         return (@event, [@event]);
     }

@@ -9,7 +9,7 @@ public static class JobApplicationStatusChangePolicy
         if (currentStatus == newStatus)
             return false;
 
-        if ((newStatus == JobApplicationStatus.Rejected || newStatus == JobApplicationStatus.Withdrawn) &&
+        if (newStatus is JobApplicationStatus.Rejected or JobApplicationStatus.Withdrawn &&
             IsFinal(currentStatus))
         {
             return false;
@@ -18,7 +18,7 @@ public static class JobApplicationStatusChangePolicy
         return (currentStatus, newStatus) switch
         {
             (JobApplicationStatus.Applied, JobApplicationStatus.Screening) => true,
-
+            
             (JobApplicationStatus.Screening, JobApplicationStatus.Assessment) => true,
             (JobApplicationStatus.Screening, JobApplicationStatus.Interview) => true,
 
