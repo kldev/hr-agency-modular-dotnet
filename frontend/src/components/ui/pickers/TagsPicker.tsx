@@ -20,6 +20,7 @@ export function TagsPicker(props: Props) {
 			{...props}
 			placeholder={props.placeholder ?? "Search tags.."}
 			loadSuggestions={searchCompanies}
+			allowCustomValue={false}
 			getKey={(item) => item.id}
 			getLabel={(item) => item.name}
 			getDescription={(item) => `${item.category}`}
@@ -33,7 +34,7 @@ export function TagsPicker(props: Props) {
 						<div className="suggestion-picker-item-label">{item.name}</div>
 
 						<div className="suggestion-picker-company-meta">
-							<span>`${item.category}`</span>
+							<span>{item.category}</span>
 						</div>
 					</div>
 

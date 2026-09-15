@@ -59,7 +59,7 @@ const CandidatesPage: React.FC = () => {
 				}}
 			/>
 			<CandidatesTable items={items} onRefresh={onRefresh} />
-			<CandidatesCardList items={items} />
+			<CandidatesCardList items={items} onRefresh={onRefresh} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

@@ -42,6 +42,7 @@ import type {
 	ProblemDetails,
 	SliceResponseOfCandidateProjection,
 	TagRequest,
+	TagRequestList,
 	UpdateCandidateRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
@@ -748,6 +749,160 @@ export function useRemoveCandidateTag<
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 	const queryOptions = getRemoveCandidateTagQueryOptions(candidateId, tagId, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Add multiple tag
+ */
+export const addMultipleTagToCandidate = (
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<CandidateTagged>(
+		{
+			url: `/api/recruitment/candidates/${candidateId}/tag-list`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: tagRequestList,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getAddMultipleTagToCandidateQueryKey = (
+	candidateId: string,
+	tagRequestList?: BodyType<TagRequestList>,
+) => {
+	return ["PUT", `/api/recruitment/candidates/${candidateId}/tag-list`, tagRequestList] as const;
+};
+
+export const getAddMultipleTagToCandidateQueryOptions = <
+	TData = Awaited<ReturnType<typeof addMultipleTagToCandidate>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToCandidate>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getAddMultipleTagToCandidateQueryKey(candidateId, tagRequestList);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof addMultipleTagToCandidate>>> = ({
+		signal,
+	}) => addMultipleTagToCandidate(candidateId, tagRequestList, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: candidateId !== null && candidateId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToCandidate>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type AddMultipleTagToCandidateQueryResult = NonNullable<
+	Awaited<ReturnType<typeof addMultipleTagToCandidate>>
+>;
+export type AddMultipleTagToCandidateQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useAddMultipleTagToCandidate<
+	TData = Awaited<ReturnType<typeof addMultipleTagToCandidate>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToCandidate>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof addMultipleTagToCandidate>>,
+					TError,
+					Awaited<ReturnType<typeof addMultipleTagToCandidate>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAddMultipleTagToCandidate<
+	TData = Awaited<ReturnType<typeof addMultipleTagToCandidate>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToCandidate>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof addMultipleTagToCandidate>>,
+					TError,
+					Awaited<ReturnType<typeof addMultipleTagToCandidate>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAddMultipleTagToCandidate<
+	TData = Awaited<ReturnType<typeof addMultipleTagToCandidate>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToCandidate>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Add multiple tag
+ */
+
+export function useAddMultipleTagToCandidate<
+	TData = Awaited<ReturnType<typeof addMultipleTagToCandidate>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToCandidate>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getAddMultipleTagToCandidateQueryOptions(
+		candidateId,
+		tagRequestList,
+		options,
+	);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;

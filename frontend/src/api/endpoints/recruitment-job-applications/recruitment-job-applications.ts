@@ -46,6 +46,7 @@ import type {
 	ProblemDetails,
 	SliceResponseOfJobApplicationProjection,
 	TagRequest,
+	TagRequestList,
 	UpdateApplicantRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
@@ -1219,6 +1220,164 @@ export function useAddJobApplicationNote<
 	const queryOptions = getAddJobApplicationNoteQueryOptions(
 		applicationId,
 		createNoteRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Add multiple tag
+ */
+export const addMultipleTagToApplication = (
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<JobApplicationTagged>(
+		{
+			url: `/api/recruitment/job-applications/${applicationId}/tag-list`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: tagRequestList,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getAddMultipleTagToApplicationQueryKey = (
+	applicationId: string,
+	tagRequestList?: BodyType<TagRequestList>,
+) => {
+	return [
+		"PUT",
+		`/api/recruitment/job-applications/${applicationId}/tag-list`,
+		tagRequestList,
+	] as const;
+};
+
+export const getAddMultipleTagToApplicationQueryOptions = <
+	TData = Awaited<ReturnType<typeof addMultipleTagToApplication>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToApplication>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getAddMultipleTagToApplicationQueryKey(applicationId, tagRequestList);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof addMultipleTagToApplication>>> = ({
+		signal,
+	}) => addMultipleTagToApplication(applicationId, tagRequestList, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: applicationId !== null && applicationId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToApplication>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type AddMultipleTagToApplicationQueryResult = NonNullable<
+	Awaited<ReturnType<typeof addMultipleTagToApplication>>
+>;
+export type AddMultipleTagToApplicationQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useAddMultipleTagToApplication<
+	TData = Awaited<ReturnType<typeof addMultipleTagToApplication>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToApplication>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof addMultipleTagToApplication>>,
+					TError,
+					Awaited<ReturnType<typeof addMultipleTagToApplication>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAddMultipleTagToApplication<
+	TData = Awaited<ReturnType<typeof addMultipleTagToApplication>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToApplication>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof addMultipleTagToApplication>>,
+					TError,
+					Awaited<ReturnType<typeof addMultipleTagToApplication>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useAddMultipleTagToApplication<
+	TData = Awaited<ReturnType<typeof addMultipleTagToApplication>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToApplication>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Add multiple tag
+ */
+
+export function useAddMultipleTagToApplication<
+	TData = Awaited<ReturnType<typeof addMultipleTagToApplication>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof addMultipleTagToApplication>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getAddMultipleTagToApplicationQueryOptions(
+		applicationId,
+		tagRequestList,
 		options,
 	);
 

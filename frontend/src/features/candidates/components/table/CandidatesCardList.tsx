@@ -1,20 +1,27 @@
 import { useRef } from "react";
 import type { CandidateProjection } from "#/api/models";
 import { CandidateSourceBadge, DetailItem, DetailsListSection } from "#/components/ui";
-
+import {
+	type AddTagCommand,
+	AddTagsDrawer,
+} from "#/features/applications/pages/components/forms/add-tag";
 import { formatDateTimeIntl } from "#/utlis";
-import type { EditCandidateFormCommand } from "../form";
+import { EditCandidateDrawer, type EditCandidateFormCommand } from "../form";
 import { CandidateActions } from "./CandidateActions";
+import type { CanidateActions } from "./CandidatesTableColumns";
 
 interface CandidatesCardListProps {
 	items: CandidateProjection[];
+	onRefresh: () => void;
 }
 
-export function CandidatesCardList({ items }: CandidatesCardListProps) {
+export function CandidatesCardList({ items, onRefresh }: CandidatesCardListProps) {
 	const formRef = useRef<EditCandidateFormCommand>(null);
+	const tagRef = useRef<AddTagCommand>(null);
 
-	const handleOnEdit = (item: CandidateProjection) => {
-		formRef.current?.edit(item.id);
+	const actionsHandler: CanidateActions = {
+		onEdit: (it) => formRef.current?.edit(it.id),
+		onTag: (it) => tagRef.current?.addTag(it.id, it.fullName, "candidate"),
 	};
 	return (
 		<div className="data-mobile-view">
@@ -28,7 +35,11 @@ export function CandidatesCardList({ items }: CandidatesCardListProps) {
 							<dt>Full name</dt>
 							<dd>{item.fullName}</dd>
 						</div>
-						<CandidateActions id={item.id} onEdit={() => handleOnEdit(item)}></CandidateActions>
+						<CandidateActions
+							id={item.id}
+							onTag={() => actionsHandler.onTag(item)}
+							onEdit={() => actionsHandler.onEdit(item)}
+						></CandidateActions>
 					</div>
 
 					<dl className="data-details-list">
@@ -45,7 +56,9 @@ export function CandidatesCardList({ items }: CandidatesCardListProps) {
 						</DetailItem>
 
 						<DetailItem label="Created at">{formatDateTimeIntl(item.createdAt)}</DetailItem>
-						<DetailItem label="Modified at">{item.modifiedAt}</DetailItem>
+						<DetailItem label="Modified at">
+							{item.modifiedAt && formatDateTimeIntl(item.modifiedAt)}
+						</DetailItem>
 						<DetailItem label="Modified by">{item.modifiedBy?.fullname}</DetailItem>
 					</dl>
 					<div className="data-content-lists data-details-section-bg-none">
@@ -53,11 +66,15 @@ export function CandidatesCardList({ items }: CandidatesCardListProps) {
 							title="Tags"
 							items={item.tags.flatMap((z) => z.name) ?? []}
 							className="short-items-section"
-							onAdd={() => {}}
+							onAdd={() => {
+								tagRef.current?.addTag(item.id, item.fullName, "candidate");
+							}}
 						/>
 					</div>
 				</div>
 			))}
+			<EditCandidateDrawer ref={formRef} onSuccess={() => onRefresh()} />
+			<AddTagsDrawer ref={tagRef} onSuccess={() => onRefresh()} />
 		</div>
 	);
 }

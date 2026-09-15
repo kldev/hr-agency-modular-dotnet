@@ -1,37 +1,29 @@
-import { useMutation } from "@tanstack/react-query";
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-import { applyToJobPost } from "@/api/endpoints";
-import type { ApplyToPostRequest } from "@/api/models";
 import { DetailOverviewHeader, SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
-import { useProjectionWait } from "@/hooks";
+
 import type { CreateJobApplicationsCommand } from "../ApplicationsCommand";
 import { emptyJobApplications, JobApplicationsForm } from "./JobApplicationsForm";
+import { useApplyToJobPost } from "./useApplyToJobPost";
 
-interface CreateJobApplictionsDrawerProps {
+interface CreateJobApplicationsDrawerProps {
 	onSuccess: () => void;
 }
 
 const CreateJobApplicationsDrawer = forwardRef<
 	CreateJobApplicationsCommand,
-	CreateJobApplictionsDrawerProps
+	CreateJobApplicationsDrawerProps
 >(({ onSuccess }, ref) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [jobPostId, setJobPostId] = useState<string>("");
-	const [jobPostTitle, setJobPostTitle] = useState<string>("");
+	const [jobPostId, setJobPostId] = useState("");
+	const [jobPostTitle, setJobPostTitle] = useState("");
 
-	const { wait, waiting } = useProjectionWait();
-
-	const updateMutation = useMutation({
-		mutationFn: ({ id, request }: { id: string; request: ApplyToPostRequest }) =>
-			applyToJobPost(id, request),
-
-		onSuccess: async () => {
-			await wait();
-
-			setIsOpen(false);
+	const mutation = useApplyToJobPost({
+		onSuccess: () => {
 			setJobPostId("");
 			setJobPostTitle("");
+
+			setIsOpen(false);
 			onSuccess();
 		},
 	});
@@ -43,50 +35,53 @@ const CreateJobApplicationsDrawer = forwardRef<
 				setJobPostId(postId);
 				setJobPostTitle(postTitle);
 
-				updateMutation.reset();
+				mutation.reset();
 				setIsOpen(true);
 			},
 		}),
-		[updateMutation],
+		[mutation],
 	);
 
 	const handleSave = useCallback(
-		(value: ApplyToPostRequest) => {
-			updateMutation.mutate({ id: jobPostId, request: value });
+		(value: Parameters<typeof mutation.mutate>[0]["request"]) => {
+			mutation.mutate({
+				id: jobPostId,
+				request: value,
+			});
 		},
-		[updateMutation, jobPostId],
+		[mutation, jobPostId],
 	);
 
 	const handleClose = useCallback(() => {
-		if (updateMutation.isPending) {
+		if (mutation.isPending) {
 			return;
 		}
-
 		setJobPostId("");
 		setJobPostTitle("");
-		updateMutation.reset();
+
 		setIsOpen(false);
-	}, [updateMutation]);
+	}, [mutation]);
 
 	return (
 		<Drawer
 			open={isOpen}
-			title="Edit applicant"
+			title="Create job applications"
 			onClose={handleClose}
 			footer={
 				<SaveChangesButton
 					form="job-applications-form"
-					isPending={updateMutation.isPending}
-					wait={waiting}
+					isPending={mutation.isPending}
+					wait={mutation.waiting}
 				/>
 			}
 		>
 			<DetailOverviewHeader title={jobPostTitle} description="Create applications for job post" />
+
 			<JobApplicationsForm
 				initialValue={emptyJobApplications}
 				onSubmit={handleSave}
-				error={updateMutation.error}
-				isSubmitting={updateMutation.isPending}
+				error={mutation.error}
+				isSubmitting={mutation.isPending}
 			/>
 		</Drawer>
 	);

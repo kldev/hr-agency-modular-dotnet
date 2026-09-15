@@ -53,6 +53,7 @@ export type SuggestionPickerProps<T> = {
 	renderHeader?: (query: string) => ReactNode;
 
 	fieldClassName?: string;
+	closeOnSelect?: boolean;
 };
 
 type MenuPosition = {
@@ -91,6 +92,7 @@ export function SuggestionPicker<T>({
 	maxSuggestions = 8,
 	renderHeader,
 	fieldClassName = "",
+	closeOnSelect,
 }: SuggestionPickerProps<T>) {
 	const generatedId = useId();
 
@@ -113,6 +115,7 @@ export function SuggestionPicker<T>({
 	const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
 
 	const selectedItemRef = useRef<T | undefined>(undefined);
+	const clearInputAfterSelectRef = useRef(false);
 
 	/*
 	 * =========================================================
@@ -349,23 +352,56 @@ export function SuggestionPicker<T>({
 		};
 	}, []);
 
+	useEffect(() => {
+		if (!value) {
+			selectedItemRef.current = undefined;
+			return;
+		}
+
+		if (clearInputAfterSelectRef.current) {
+			clearInputAfterSelectRef.current = false;
+			selectedItemRef.current = undefined;
+			return;
+		}
+
+		const selectedItem = suggestions.find((item) => getKey(item) === value);
+
+		if (selectedItem) {
+			selectedItemRef.current = selectedItem;
+
+			const label = getLabel(selectedItem);
+
+			if (inputValue !== label) {
+				onInputChange(label);
+			}
+		}
+	}, [value, suggestions, getKey, getLabel, inputValue, onInputChange]);
+
 	/*
 	 * =========================================================
 	 * Actions
 	 * =========================================================
 	 */
-
 	const selectItem = (item: T) => {
 		const key = getKey(item);
-		const label = getLabel(item);
 
 		selectedItemRef.current = item;
 
 		onChange(key, item);
-		onInputChange(label);
 
-		setIsOpen(false);
+		if (closeOnSelect) {
+			clearInputAfterSelectRef.current = true;
+			onInputChange("");
+			setSuggestions([]);
+		} else {
+			onInputChange(getLabel(item));
+		}
+
 		setHighlightedIndex(-1);
+
+		if (closeOnSelect) {
+			setIsOpen(false);
+		}
 	};
 
 	const clear = () => {

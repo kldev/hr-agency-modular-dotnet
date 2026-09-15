@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: f */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: f */
 import {
 	eachDayOfInterval,
 	endOfMonth,
@@ -55,9 +57,7 @@ export function InterviewsMonthView({ date, interviews, onSelectInterview, onSel
 						const currentMonth = isSameMonth(day, date);
 
 						return (
-							/// div
-							<button
-								type="button"
+							<div
 								key={day.toISOString()}
 								className={["interviews-month-day", !currentMonth && "interviews-month-day-outside"]
 									.filter(Boolean)
@@ -103,7 +103,7 @@ export function InterviewsMonthView({ date, interviews, onSelectInterview, onSel
 										</button>
 									)}
 								</div>
-							</button>
+							</div>
 						);
 					})}
 				</div>

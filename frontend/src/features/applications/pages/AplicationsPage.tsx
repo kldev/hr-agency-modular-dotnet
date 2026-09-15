@@ -58,7 +58,7 @@ const AplicationsPage: React.FC = () => {
 			</div>
 
 			<ApplicationsTable items={items} onRefresh={() => applicationsQuery.refetch()} />
-			<ApplicationCardList applications={items} />
+			<ApplicationCardList applications={items} onRefresh={() => applicationsQuery.refetch()} />
 
 			<LoadMore
 				loading={applicationsQuery.isPending}

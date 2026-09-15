@@ -1,10 +1,14 @@
 import { useTable } from "@tanstack/react-table";
 import { useRef } from "react";
+import {
+	type AddTagCommand,
+	AddTagsDrawer,
+} from "#/features/applications/pages/components/forms/add-tag";
 import type { CandidateProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
 import { EditCandidateDrawer, type EditCandidateFormCommand } from "../form";
-import { getColumns } from "./CandidatesTableColumns";
+import { type CanidateActions, getColumns } from "./CandidatesTableColumns";
 
 interface CandidatesTableProps {
 	items: CandidateProjection[];
@@ -13,15 +17,17 @@ interface CandidatesTableProps {
 
 export function CandidatesTable({ items, onRefresh }: CandidatesTableProps) {
 	const formRef = useRef<EditCandidateFormCommand>(null);
+	const tagRef = useRef<AddTagCommand>(null);
 
-	const handleOnEdit = (item: CandidateProjection) => {
-		formRef.current?.edit(item.id);
+	const actionsHandler: CanidateActions = {
+		onEdit: (it) => formRef.current?.edit(it.id),
+		onTag: (it) => tagRef.current?.addTag(it.id, it.fullName, "candidate"),
 	};
 
 	const table = useTable(
 		{
 			features: appTableFeatures,
-			columns: getColumns(handleOnEdit),
+			columns: getColumns(actionsHandler),
 			data: items,
 			getRowId: (user) => user.id,
 			enableSorting: false,
@@ -35,6 +41,7 @@ export function CandidatesTable({ items, onRefresh }: CandidatesTableProps) {
 		<>
 			<MainTable table={table} className="table-wide" />
 			<EditCandidateDrawer ref={formRef} onSuccess={onRefresh} />
+			<AddTagsDrawer ref={tagRef} onSuccess={onRefresh} />
 		</>
 	);
 }

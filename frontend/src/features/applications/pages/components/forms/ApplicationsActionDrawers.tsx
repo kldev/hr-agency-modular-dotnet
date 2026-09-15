@@ -13,6 +13,7 @@ import {
 	EditApplicantDrawer,
 } from "../forms";
 import type { JobApplicationsActionsType, JobApplicationsRef } from ".";
+import { type AddTagCommand, AddTagsDrawer } from "./add-tag";
 
 interface ApplicationsActionDrawersProps {
 	onSuccess: () => void;
@@ -24,6 +25,7 @@ const ApplicationsActionDrawers = forwardRef<JobApplicationsRef, ApplicationsAct
 		const addNoteRef = useRef<AddJobApplicationNoteFormCommand>(null);
 		const editRef = useRef<EditApplicantCommand>(null);
 		const scheduleRef = useRef<ScheduleInterviewCommand>(null);
+		const tagRef = useRef<AddTagCommand>(null);
 
 		useImperativeHandle(
 			ref,
@@ -46,6 +48,8 @@ const ApplicationsActionDrawers = forwardRef<JobApplicationsRef, ApplicationsAct
 						case "schedule":
 							scheduleRef.current?.schedule(id);
 							break;
+						case "tag":
+							tagRef.current?.addTag(id, "", "application");
 					}
 				},
 			}),
@@ -58,6 +62,7 @@ const ApplicationsActionDrawers = forwardRef<JobApplicationsRef, ApplicationsAct
 				<ChangeJobApplicationStatusDrawer ref={changeStatusRef} onSuccess={onSuccess} />
 				<EditApplicantDrawer ref={editRef} onSuccess={onSuccess} />
 				<ScheduletInterviewDrawer ref={scheduleRef} onSuccess={onSuccess} />
+				<AddTagsDrawer ref={tagRef} onSuccess={onSuccess} />
 			</>
 		);
 	},

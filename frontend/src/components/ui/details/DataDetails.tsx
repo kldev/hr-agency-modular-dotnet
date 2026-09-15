@@ -15,13 +15,15 @@ export function DetailOverviewHeader({
 	title,
 	description,
 	onAdd,
+	className,
 }: {
 	title: string;
 	description: string;
 	onAdd?: () => void;
+	className?: string;
 }) {
 	return (
-		<div className="data-details-section-header">
+		<div className={`data-details-section-header ${className}`}>
 			<div>
 				<h2>{title}</h2>
 				<p>{description}</p>

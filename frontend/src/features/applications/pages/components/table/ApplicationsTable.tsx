@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useTable } from "@tanstack/react-table";
 import { useRef } from "react";
 import type { JobApplicationProjection } from "@/api/models";
@@ -13,11 +14,20 @@ interface AplicationsTableProps {
 
 export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 	const formRef = useRef<JobApplicationsRef>(null);
+	const navigate = useNavigate();
 
 	const handleActions: Actions = {
 		onAction: (action, item) => {
 			formRef.current?.update(item.id, action, item.status);
 		},
+	};
+
+	const handleRowClick = (value: JobApplicationProjection) => {
+		navigate({
+			to: "/app/applications/$id",
+			search: { status: undefined, search: undefined, source: undefined },
+			params: { id: value.id },
+		});
 	};
 
 	const table = useTable(
@@ -35,7 +45,7 @@ export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 
 	return (
 		<>
-			<MainTable table={table} className="table-wide" />
+			<MainTable table={table} className="table-wide" onRowClick={handleRowClick} />
 			<ApplicationsActionDrawers ref={formRef} onSuccess={onRefresh} />
 		</>
 	);

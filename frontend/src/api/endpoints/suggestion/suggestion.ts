@@ -28,8 +28,10 @@ import type {
 	CompanySuggestion,
 	GetCompaniesSuggestionsParams,
 	GetCompanyContactsSuggestionsParams,
+	GetJobPostSuggestionsParams,
 	GetTagsSuggestionsParams,
 	GetUsersSuggestionsParams,
+	JobPostSuggestion,
 	ProblemDetails,
 	Tag,
 	UserSuggestion,
@@ -379,4 +381,88 @@ export const useGetCompanyContactsSuggestions = <
 	TContext
 > => {
 	return useMutation(getGetCompanyContactsSuggestionsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get top 25 job posts
+ */
+export const getJobPostSuggestions = (
+	params?: GetJobPostSuggestionsParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<JobPostSuggestion[]>(
+		{ url: `/api/suggestion/job-posts`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getGetJobPostSuggestionsMutationKey = () => ["getJobPostSuggestions"] as const;
+
+export const getGetJobPostSuggestionsMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getJobPostSuggestions>>,
+		TError,
+		GetJobPostSuggestionsMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getJobPostSuggestions>>,
+	TError,
+	GetJobPostSuggestionsMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetJobPostSuggestionsMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getJobPostSuggestions>>,
+		GetJobPostSuggestionsMutationVariables
+	> = (props) => {
+		const { params } = props ?? {};
+
+		return getJobPostSuggestions(params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetJobPostSuggestionsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getJobPostSuggestions>>
+>;
+
+export type GetJobPostSuggestionsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetJobPostSuggestionsMutationVariables = { params?: GetJobPostSuggestionsParams };
+
+/**
+ * @summary Get top 25 job posts
+ */
+export const useGetJobPostSuggestions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getJobPostSuggestions>>,
+			TError,
+			GetJobPostSuggestionsMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getJobPostSuggestions>>,
+	TError,
+	GetJobPostSuggestionsMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetJobPostSuggestionsMutationOptions(options), queryClient);
 };

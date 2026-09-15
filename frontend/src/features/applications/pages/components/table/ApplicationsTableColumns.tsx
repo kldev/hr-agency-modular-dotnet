@@ -34,11 +34,7 @@ export function getColumns(actions: Actions) {
 
 		columnHelper.accessor("applicantEmail", {
 			header: "Email",
-			cell: ({ getValue }) => (
-				<a href={`email:${getValue()}`} className="table-number truncate">
-					{getValue()}
-				</a>
-			),
+			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
 			meta: {
 				width: "xl",
 			},
@@ -48,11 +44,7 @@ export function getColumns(actions: Actions) {
 			meta: {
 				width: "md",
 			},
-			cell: ({ getValue }) => (
-				<a href={`tel:${getValue()}`} className="table-number truncate">
-					{getValue()}
-				</a>
-			),
+			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
 		}),
 		columnHelper.accessor("status", {
 			header: "Status",
@@ -81,22 +73,14 @@ export function getColumns(actions: Actions) {
 			meta: {
 				width: "xl",
 			},
-			cell: ({ getValue }) => (
-				<a href={`tel:${getValue()}`} className="table-number truncate max-w-">
-					{getValue()}
-				</a>
-			),
+			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
 		}),
 		columnHelper.accessor("company", {
 			header: "Company",
 			meta: {
 				width: "xl",
 			},
-			cell: ({ getValue }) => (
-				<a href={`tel:${getValue()}`} className="table-number truncate">
-					{getValue().name}
-				</a>
-			),
+			cell: ({ getValue }) => <span className="table-number truncate">{getValue().name}</span>,
 		}),
 		columnHelper.accessor("createdAt", {
 			header: "Created at",

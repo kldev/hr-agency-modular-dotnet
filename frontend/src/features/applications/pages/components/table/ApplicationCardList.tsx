@@ -1,3 +1,4 @@
+import { Mail, Phone } from "lucide-react";
 import { useRef } from "react";
 import type { JobApplicationProjection } from "#/api/models";
 import {
@@ -7,20 +8,21 @@ import {
 	DetailsListSection,
 } from "#/components/ui";
 import { formatDateTimeIntl } from "#/utlis";
-import type { JobApplicationsRef } from "../forms";
+import { ApplicationsActionDrawers, type JobApplicationsRef } from "../forms";
 import { ApplicationsActions } from "./ApplicationsActions";
 import type { Actions } from "./ApplicationsTableColumns";
 
 interface ApplicationCardListProps {
 	applications: JobApplicationProjection[];
+	onRefresh: () => void;
 }
 
-export function ApplicationCardList({ applications }: ApplicationCardListProps) {
+export function ApplicationCardList({ applications, onRefresh }: ApplicationCardListProps) {
 	const formRef = useRef<JobApplicationsRef>(null);
 
 	const handleActions: Actions = {
 		onAction: (action, item) => {
-			formRef.current?.update(item.id, action, item.status);
+			formRef.current?.update(item.id, action, item.status, item.applicantFullName);
 		},
 	};
 	return (
@@ -43,11 +45,17 @@ export function ApplicationCardList({ applications }: ApplicationCardListProps) 
 
 					<dl className="data-details-list">
 						<DetailItem label="Email">
-							<a href={`mailto:${application.applicantEmail}`}>{application.applicantEmail}</a>
+							<div className="flex flex-1 gap-2 items-center">
+								<Mail size={12} />
+								<a href={`mailto:${application.applicantEmail}`}>{application.applicantEmail}</a>
+							</div>
 						</DetailItem>
 
 						<DetailItem label="Phone">
-							<a href={`tel:${application.applicantPhone}`}>{application.applicantPhone}</a>
+							<div className="flex flex-1 gap-2 items-center">
+								<Phone size={12} />
+								<a href={`tel:${application.applicantPhone}`}>{application.applicantPhone}</a>
+							</div>
 						</DetailItem>
 
 						<DetailItem label="Source">
@@ -66,11 +74,19 @@ export function ApplicationCardList({ applications }: ApplicationCardListProps) 
 							title="Tags"
 							items={[...application.tags.flatMap((z) => z.name)]}
 							className="short-items-section bg-none!"
-							onAdd={() => {}}
+							onAdd={() => {
+								formRef?.current?.update(
+									application.id,
+									"tag",
+									undefined,
+									application.applicantFullName,
+								);
+							}}
 						/>
 					</div>
 				</div>
 			))}
+			<ApplicationsActionDrawers ref={formRef} onSuccess={onRefresh} />
 		</div>
 	);
 }

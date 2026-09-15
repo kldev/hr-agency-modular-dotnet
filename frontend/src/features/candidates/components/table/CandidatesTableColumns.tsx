@@ -7,7 +7,12 @@ import { CandidateActions } from "./CandidateActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, CandidateProjection>();
 
-export function getColumns(onEdit: (company: CandidateProjection) => void) {
+export type CanidateActions = {
+	onEdit: (candidate: CandidateProjection) => void;
+	onTag: (candidate: CandidateProjection) => void;
+};
+
+export function getColumns(actions: CanidateActions) {
 	const columns = columnHelper.columns([
 		columnHelper.display({
 			id: "actions",
@@ -17,18 +22,17 @@ export function getColumns(onEdit: (company: CandidateProjection) => void) {
 				align: "right",
 			},
 			cell: ({ row }) => {
-				const user = row.original;
-
-				if (!onEdit) {
-					return null;
-				}
+				const candidate = row.original;
 
 				return (
 					<div className="table-cell-content">
 						<CandidateActions
-							id={user.id}
+							id={candidate.id}
 							onEdit={() => {
-								onEdit(user);
+								actions.onEdit(candidate);
+							}}
+							onTag={() => {
+								actions.onTag(candidate);
 							}}
 						/>
 					</div>
@@ -36,42 +40,42 @@ export function getColumns(onEdit: (company: CandidateProjection) => void) {
 			},
 		}),
 		columnHelper.accessor("fullName", {
-			header: "",
+			header: "Name",
 			meta: {
-				width: "xxs",
+				width: "xl",
 			},
 			cell: ({ row }) => (
-				<div className="table-cell-content w-87.5">
+				<div className="table-cell-content">
 					<ItemMark name={row.original.fullName ?? row.original.email} />
+					{row.original.fullName || "-"}
 				</div>
 			),
 		}),
 		columnHelper.accessor("email", {
 			header: "Email",
-			cell: ({ getValue }) => (
-				<a href={`email:${getValue()}`} className="table-number truncate">
-					{getValue()}
-				</a>
-			),
+			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
 			meta: {
 				width: "xl",
 			},
 		}),
 		columnHelper.accessor("phoneNumber", {
 			header: "Phone",
-			cell: ({ getValue }) => (
-				<a href={`tel:${getValue()}`} className="table-number truncate table-header-xl">
-					{getValue()}
-				</a>
-			),
+			meta: {
+				width: "md",
+			},
+			cell: ({ getValue }) => <span className="table-number truncate">{getValue()}</span>,
 		}),
 		columnHelper.accessor("source", {
 			header: "Source",
+			meta: {
+				width: "md",
+			},
 			cell: ({ getValue }) => <CandidateSourceBadge source={getValue()} />,
 		}),
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
+
 			cell: ({ getValue }) => (
 				<span className="table-number truncate table-header-xl">{formatDateTime(getValue())}</span>
 			),

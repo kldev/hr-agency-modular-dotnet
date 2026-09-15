@@ -50,9 +50,7 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 
 	const application = applicationQuery.data;
 
-	const tags = application?.tags?.length
-		? application.tags.map((z) => z.name)
-		: ["C#", "Java", "Postgres"];
+	const tags = application?.tags?.length ? application.tags.map((z) => z.name) : [];
 
 	return (
 		<DataDetails>

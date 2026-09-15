@@ -13,13 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { Tag } from "./tag.ts";
-import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface JobApplicationTagged {
-	jobApplicationId: string;
-	tag: Tag;
-	author: UserSnapshot;
-	createdAt: string;
-	applicantEmail?: string;
+export interface JobPostSuggestion {
+	id: string;
+	title: string;
+	company: string;
 }

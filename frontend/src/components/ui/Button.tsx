@@ -20,6 +20,7 @@ export function Button({
 	return (
 		<button
 			{...props}
+			type={props.type ?? "button"}
 			disabled={disabled || loading}
 			className={clsx("button", `button-${variant}`, className)}
 		>

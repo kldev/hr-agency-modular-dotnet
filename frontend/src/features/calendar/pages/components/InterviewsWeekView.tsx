@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: fff*/
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: fff */
 import { eachDayOfInterval, endOfWeek, format, isToday, startOfWeek } from "date-fns";
 import type { InterviewProjection } from "@/api/models";
 import { InterviewCalendarEvent } from "./InterviewCalendarEvent";
@@ -52,8 +54,7 @@ export function InterviewsWeekView({ date, interviews, onSelectInterview, onSele
 
 					{days.map((day) => (
 						/// div
-						<button
-							type="button"
+						<div
 							key={day.toISOString()}
 							className={[
 								"interviews-week-day-header",
@@ -66,7 +67,7 @@ export function InterviewsWeekView({ date, interviews, onSelectInterview, onSele
 							<span>{format(day, "EEE")}</span>
 
 							<strong>{format(day, "d")}</strong>
-						</button>
+						</div>
 					))}
 				</div>
 
@@ -102,8 +103,6 @@ export function InterviewsWeekView({ date, interviews, onSelectInterview, onSele
 								<div className="interviews-week-time">{formatHour(hour)}</div>
 
 								{days.map((day) => (
-									// biome-ignore lint/a11y/noStaticElementInteractions: false
-									// biome-ignore lint/a11y/useKeyWithClickEvents: false
 									<div
 										key={`${day.toISOString()}-${hour}`}
 										className="interviews-week-cell"

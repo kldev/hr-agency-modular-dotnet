@@ -22,5 +22,10 @@ export interface CreateJobApplicationsCommand {
 }
 
 export interface JobApplicationsRef {
-	update: (id: string, action: JobApplicationsActionsType, curent?: JobApplicationStatus) => void;
+	update: (
+		id: string,
+		action: JobApplicationsActionsType,
+		curent?: JobApplicationStatus,
+		display?: string,
+	) => void;
 }
