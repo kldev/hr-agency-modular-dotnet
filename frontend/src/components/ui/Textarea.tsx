@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import type { TextareaHTMLAttributes } from "react";
 
-type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
 	variant?: "default" | "error";
 };
 

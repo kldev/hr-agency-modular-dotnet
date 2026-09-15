@@ -1,7 +1,7 @@
-import { useForm } from "@tanstack/react-form";
 import { useMemo, useState } from "react";
+import { useAppForm } from "#/forms";
 import type { RescheduleInterviewRequest } from "@/api/models";
-import { DatePicker, FieldError, Input, Textarea, TimeInput } from "@/components/ui";
+import { DatePicker, TimeInput } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { parseScheduledAt } from "@/features/interviews/utils";
 import { formatLocalDateTime, getBrowserTimezone } from "@/utlis/formatLocalDateTime";
@@ -29,7 +29,7 @@ export function RescheduleForm({
 
 	const [scheduledTime, setScheduledTime] = useState<string>(initialScheduled.time);
 
-	const form = useForm({
+	const form = useAppForm({
 		defaultValues: initialValue,
 
 		onSubmit: async ({ value }) => {
@@ -80,69 +80,41 @@ export function RescheduleForm({
 				</div>
 			</div>
 
-			<form.Field name="note">
+			<form.AppField name="note">
 				{(field) => (
-					<div className="form-field">
-						<label className="form-label" htmlFor={field.name}>
-							Note
-						</label>
-
-						<Textarea
-							id={field.name}
-							name={field.name}
-							value={field.state.value}
-							disabled={isSubmitting}
-							onBlur={field.handleBlur}
-							onChange={(event) => field.handleChange(event.target.value)}
-							rows={7}
-						/>
-
-						<FieldError errors={field.state.meta.errors} />
-					</div>
+					<field.FormTextAreaInput
+						label="Description"
+						errors={field.state.meta.errors}
+						fieldName={field.name}
+						handleChange={(val) => field.handleChange(val)}
+						isSubmitting={isSubmitting}
+					/>
 				)}
-			</form.Field>
+			</form.AppField>
 
-			<form.Field name="location">
+			<form.AppField name="location">
 				{(field) => (
-					<div className="form-field">
-						<label className="form-label" htmlFor={field.name}>
-							Location
-						</label>
-
-						<Input
-							id={field.name}
-							name={field.name}
-							value={field.state.value}
-							disabled={isSubmitting}
-							onBlur={field.handleBlur}
-							onChange={(event) => field.handleChange(event.target.value)}
-						/>
-
-						<FieldError errors={field.state.meta.errors} />
-					</div>
+					<field.FormInput
+						label="Location"
+						errors={field.state.meta.errors}
+						fieldName={field.name}
+						handleChange={(val) => field.handleChange(val)}
+						isSubmitting={isSubmitting}
+					/>
 				)}
-			</form.Field>
+			</form.AppField>
 
-			<form.Field name="meetingUrl">
+			<form.AppField name="meetingUrl">
 				{(field) => (
-					<div className="form-field">
-						<label className="form-label" htmlFor={field.name}>
-							Meeting url
-						</label>
-
-						<Input
-							id={field.name}
-							name={field.name}
-							value={field.state.value}
-							disabled={isSubmitting}
-							onBlur={field.handleBlur}
-							onChange={(event) => field.handleChange(event.target.value)}
-						/>
-
-						<FieldError errors={field.state.meta.errors} />
-					</div>
+					<field.FormInput
+						label="Meeting url"
+						errors={field.state.meta.errors}
+						fieldName={field.name}
+						handleChange={(val) => field.handleChange(val)}
+						isSubmitting={isSubmitting}
+					/>
 				)}
-			</form.Field>
+			</form.AppField>
 
 			<ApiError error={error as unknown as Parameters<typeof ApiError>[0]["error"]} />
 		</form>

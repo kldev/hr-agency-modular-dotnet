@@ -50,7 +50,7 @@ export function CandidatesToolbar({
 				<EnumSelectFilter
 					options={applicationSources}
 					value={source}
-					onChange={(value) => onSourceChange(value)}
+					onChange={(value) => onSourceChange(value ?? null)}
 				/>
 
 				<Button

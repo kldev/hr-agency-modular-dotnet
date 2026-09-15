@@ -1,4 +1,4 @@
-import type { OpportunityStage } from "@/api/models";
+import type { CurrencyCode, OpportunityStage } from "@/api/models";
 
 export const salesStage: Record<OpportunityStage, string> = {
 	New: "New",
@@ -8,4 +8,11 @@ export const salesStage: Record<OpportunityStage, string> = {
 	Proposal: "Proposal",
 	Won: "Won",
 	Lost: "Lost",
+};
+
+export const currenciesOptions: Record<CurrencyCode, string> = {
+	PLN: "PLN",
+	EUR: "EUR",
+	USD: "USD",
+	GBP: "GBP",
 };

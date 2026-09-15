@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import type { InputHTMLAttributes } from "react";
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 	variant?: "default" | "error";
 };
 

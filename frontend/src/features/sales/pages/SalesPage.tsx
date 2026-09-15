@@ -3,7 +3,7 @@ import type React from "react";
 import { Route } from "#/routes/app/sales";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { SalesTable } from "../components/SalesTable";
+import { SalesTable } from "../components";
 import { SalesToolbar } from "../components/SalesToolbar";
 import { type SalesPageFillters, useGetOpportunitesSlice } from "../hooks";
 import { salesStage } from "../types";

@@ -1,6 +1,6 @@
 import type { InputHTMLAttributes } from "react";
 
-type ToggleProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
+export type ToggleProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
 export function Toggle(props: ToggleProps) {
 	return (

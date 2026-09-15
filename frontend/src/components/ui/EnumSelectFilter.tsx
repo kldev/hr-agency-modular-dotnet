@@ -3,7 +3,7 @@ import { Select } from "./Select";
 
 type EnumSelectFilterProps<T extends string> = {
 	value: T | null;
-	onChange: (value: T | null) => void;
+	onChange: (value: T | null | undefined) => void;
 	options: Record<T, string>;
 	allLabel?: string;
 	className?: string;
