@@ -1,4 +1,3 @@
-import { Mail, Phone } from "lucide-react";
 import { useRef } from "react";
 import type { JobApplicationProjection } from "#/api/models";
 import {

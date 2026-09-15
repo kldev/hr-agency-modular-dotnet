@@ -1,3 +1,4 @@
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Events;
 
 namespace HrAgencySystem.Organization.Projections;
@@ -10,7 +11,8 @@ public sealed record OrganizationProjection(
     DateTimeOffset CreatedAt, 
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset? ModifiedAt,
-    IReadOnlyList<string> EmailDomains)
+    IReadOnlyList<string> EmailDomains,
+    OrganizationInfoData Info)
 {
     public static OrganizationProjection Create(
         OrganizationCreated @event)
@@ -20,7 +22,8 @@ public sealed record OrganizationProjection(
             @event.Slug, 
             @event.CreatedAt,
             null,
-            @event.EmailDomains);
+            @event.EmailDomains,
+            @event.Info ?? OrganizationInfoData.NoInfo);
 
     }
 
@@ -40,6 +43,7 @@ public sealed record OrganizationProjection(
             Slug = @event.Slug,
             Name = @event.Name,
             EmailDomains = @event.EmailDomains,
+            Info = @event.Info ?? OrganizationInfoData.NoInfo,
             ModifiedAt = @event.ModifiedAt
         };
     }

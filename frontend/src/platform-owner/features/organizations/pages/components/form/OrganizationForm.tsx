@@ -2,7 +2,7 @@ import { useForm } from "@tanstack/react-form";
 import { RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import type { OrganizationRequest } from "@/api/models";
-import { ArrayField, Button, FieldError, Input } from "@/components/ui";
+import { ArrayField, Button, FieldError, Input, WebsiteInput } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 
 interface OrganizationFormProps {
@@ -27,6 +27,7 @@ export const emptyCreateOrganization: OrganizationRequest = {
 	emailDomains: [],
 	name: "",
 	slug: "",
+	info: {},
 };
 
 export function OrganizationForm({
@@ -173,6 +174,122 @@ export function OrganizationForm({
 							values={field.state.value}
 							label=""
 							onChange={(v) => field.handleChange(v)}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+			<form.Field
+				name="info.email"
+				validators={{
+					onChange: ({ value }) => {
+						if (!value?.trim()) {
+							return undefined;
+						}
+
+						if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+							return "Enter a valid email address";
+						}
+
+						return undefined;
+					},
+				}}
+			>
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Email
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							type="email"
+							value={field.state.value ?? ""}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field name="info.phone">
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Phone
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							type="tel"
+							value={field.state.value ?? ""}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field name="info.location">
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Location
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							value={field.state.value ?? ""}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field
+				name="info.website"
+				validators={{
+					onChange: ({ value }) => {
+						if (!value?.trim()) {
+							return undefined;
+						}
+
+						try {
+							new URL(value);
+							return undefined;
+						} catch {
+							return "Enter a valid website URL";
+						}
+					},
+				}}
+			>
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Website
+						</label>
+
+						<WebsiteInput
+							id={field.name}
+							name={field.name}
+							value={field.state.value ?? ""}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
 						/>
 
 						<FieldError errors={field.state.meta.errors} />

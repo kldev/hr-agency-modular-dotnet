@@ -1,4 +1,5 @@
 import { useForm } from "@tanstack/react-form";
+import { WebsiteInput } from "#/components/ui";
 import type { BadRequestDetails, Industry, UpdateCompanyRequest } from "@/api/models";
 import { CountrySelect, EnumSelectFilter, FieldError, Input } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
@@ -140,7 +141,7 @@ export function EditCompanyForm({
 							Website
 						</label>
 
-						<Input
+						<WebsiteInput
 							id={field.name}
 							name={field.name}
 							value={field.state.value}

@@ -7,6 +7,7 @@ import { EmptyState, LoadMore } from "@/components/ui";
 import {
 	type CreateOrganizationCommand,
 	CreateOrganizationDrawer,
+	OrganizationsCardList,
 	OrganizationsTable,
 	OrganizationsToolbar,
 } from "./components";
@@ -25,6 +26,7 @@ const OrganizationsPage: React.FC = () => {
 	};
 	return (
 		<Page
+			className="has-mobile-view"
 			title="Organizations"
 			description="Manage organizations"
 			onRefresh={onRefresh}
@@ -49,6 +51,7 @@ const OrganizationsPage: React.FC = () => {
 				}}
 			/>
 			<OrganizationsTable items={items} onRefresh={onRefresh} />
+			<OrganizationsCardList items={items} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

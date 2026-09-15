@@ -107,6 +107,7 @@ const EditOrganizationDrawer = forwardRef<EditOrganizationCommand, EditOrganizat
 							emailDomains: organizationData.emailDomains ?? [],
 							name: organizationData.name,
 							slug: organizationData.slug,
+							info: organizationData.info,
 						}}
 						onSubmit={handleSave}
 						error={updateMutation.error}

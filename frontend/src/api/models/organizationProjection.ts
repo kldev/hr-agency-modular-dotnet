@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { OrganizationInfoData } from "./organizationInfoData.ts";
 
 export interface OrganizationProjection {
 	id: string;
@@ -22,4 +23,5 @@ export interface OrganizationProjection {
 	/** @nullable */
 	modifiedAt: string | null;
 	emailDomains: string[];
+	info: OrganizationInfoData;
 }

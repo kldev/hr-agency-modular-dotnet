@@ -1,3 +1,4 @@
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.Organization.Events;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -24,12 +25,15 @@ public sealed class Organization
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset? ModifiedAt { get; private set; }
 
+    public OrganizationInfoData Info { get; private set; } = null!;
+
     public void Apply(OrganizationCreated @event)
     {
         Id = OrganizationId.From(@event.OrganizationId);
         Name = OrganizationName.Create(@event.Name);
         Slug = OrganizationSlug.Create(@event.Slug);
         CreatedAt = @event.CreatedAt;
+        Info = @event.Info ?? OrganizationInfoData.NoInfo;
     }
     
     public void Apply(OrganizationSlugUpdated @event)
@@ -41,6 +45,7 @@ public sealed class Organization
     {
         Name = OrganizationName.Create(@event.Name);
         Slug = OrganizationSlug.Create(@event.Slug);
+        Info = @event.Info ?? OrganizationInfoData.NoInfo;
         ModifiedAt = @event.ModifiedAt;
     }
 }

@@ -57,9 +57,36 @@ export function getColumns(actions: Actions) {
 				width: "xl",
 			},
 		}),
+		columnHelper.accessor("info.phone", {
+			header: "Phone",
+			meta: {
+				width: "md",
+			},
+		}),
+		columnHelper.accessor("info.email", {
+			header: "Email",
+			meta: {
+				width: "md",
+			},
+		}),
+		columnHelper.accessor("info.location", {
+			header: "Location",
+			meta: {
+				width: "md",
+			},
+		}),
+		columnHelper.accessor("info.website", {
+			header: "Website",
+			meta: {
+				width: "md",
+			},
+		}),
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
+			meta: {
+				width: "sm",
+			},
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
 		columnHelper.accessor("modifiedAt", {

@@ -29,7 +29,13 @@ internal static class MapCreate
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record OrganizationRequest(string Name, string Slug, IReadOnlyList<string> EmailDomains)
+internal sealed record OrganizationRequest(
+    string Name,
+    string Slug,
+    IReadOnlyList<string> EmailDomains,
+    OrganizationInfoData? Info)
 {
-    public CreateOrganization ToCommand(Guid createdBy) => new (Name, Slug, createdBy, EmailDomains);
+    public CreateOrganization ToCommand(Guid createdBy) =>
+        new(Name, Slug, createdBy, EmailDomains, Info);
 }
+

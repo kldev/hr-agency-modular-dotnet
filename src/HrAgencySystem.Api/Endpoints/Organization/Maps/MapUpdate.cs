@@ -1,5 +1,6 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
+using HrAgencySystem.Organization.Application.Create;
 using HrAgencySystem.Organization.Application.Update;
 using HrAgencySystem.Organization.Events;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,13 @@ public static class MapUpdate
         [FromBody]OrganizationRequest request,
         CancellationToken ct)
     {
-        var command = new UpdateOrganization(organizationId, request.Name, request.Slug, owner.Id, request.EmailDomains);
+        var command = new UpdateOrganization(
+            organizationId, 
+            request.Name, 
+            request.Slug, 
+            owner.Id, 
+            request.EmailDomains,
+            request.Info ?? OrganizationInfoData.NoInfo);
         var result = await bus.InvokeAsync<OrganizationUpdated>(command, ct);
 
         return TypedResults.Ok(result);

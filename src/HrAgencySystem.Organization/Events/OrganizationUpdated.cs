@@ -1,3 +1,5 @@
+using HrAgencySystem.Organization.Application.Create;
+
 namespace HrAgencySystem.Organization.Events;
 
 public sealed record OrganizationUpdated(
@@ -5,4 +7,5 @@ public sealed record OrganizationUpdated(
     string Name,
     string Slug,
     IReadOnlyList<string> EmailDomains,
-    DateTimeOffset ModifiedAt);
+    DateTimeOffset ModifiedAt,
+    OrganizationInfoData? Info = null);

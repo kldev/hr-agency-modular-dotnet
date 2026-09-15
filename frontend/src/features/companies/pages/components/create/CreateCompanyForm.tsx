@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
+import { WebsiteInput } from "#/components/ui";
 import {
 	type BadRequestDetails,
 	type ContactPerson,
@@ -208,7 +209,7 @@ export function CreateCompanyForm({
 							Website
 						</label>
 
-						<Input
+						<WebsiteInput
 							id={field.name}
 							name={field.name}
 							value={field.state.value}

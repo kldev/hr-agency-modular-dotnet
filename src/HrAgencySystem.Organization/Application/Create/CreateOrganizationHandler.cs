@@ -36,7 +36,8 @@ public static class CreateOrganizationHandler
             name.Value,
             slug.Value,
             [..command.EmailDomains.Where(z=>z.Trim().Length >0)],
-            clock.UtcNow);
+            clock.UtcNow,
+            command.Info ?? OrganizationInfoData.NoInfo);
 
         session.Events.StartStream<Domain.Organization>(organizationId.Value, @event);
         

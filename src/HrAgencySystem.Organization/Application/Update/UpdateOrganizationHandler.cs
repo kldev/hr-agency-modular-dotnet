@@ -35,11 +35,13 @@ public static class UpdateOrganizationHandler
             await repository.Reserve(organizationId, slug);
         }
 
-        var @event = new OrganizationUpdated(command.OrganizationId,
+        var @event = new OrganizationUpdated(
+            command.OrganizationId,
             name.Value, 
             slug.Value, 
             [..command.EmailDomains.Where(z=>z.Trim().Length >0)],
-            clock.UtcNow);
+            clock.UtcNow,
+            command.Info);
 
         return (@event, [@event]);
     }
@@ -47,7 +49,6 @@ public static class UpdateOrganizationHandler
 
 internal static partial class OrganizationLogs
 {
-
     [LoggerMessage(
         EventId = 1,
         Level = LogLevel.Information,

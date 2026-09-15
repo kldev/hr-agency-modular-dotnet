@@ -1,3 +1,5 @@
+using HrAgencySystem.Organization.Application.Create;
+
 namespace HrAgencySystem.Organization.Events;
 
 public sealed record OrganizationCreated(
@@ -5,4 +7,5 @@ public sealed record OrganizationCreated(
     string Name,
     string Slug,
     IReadOnlyList<string> EmailDomains,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    OrganizationInfoData? Info = null);

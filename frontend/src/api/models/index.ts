@@ -123,6 +123,7 @@ export * from "./opportunityStage.ts";
 export * from "./opportunityUpdated.ts";
 export * from "./organizationCreated.ts";
 export * from "./organizationInfo.ts";
+export * from "./organizationInfoData.ts";
 export * from "./organizationProjection.ts";
 export * from "./organizationRequest.ts";
 export * from "./organizationRole.ts";

@@ -8,4 +8,5 @@ public sealed record UpdateOrganization(
     string Name, 
     string Slug, 
     Guid ModifiedBy, 
-    IReadOnlyList<string> EmailDomains): IUpdateCommand, IOrganizationData;
+    IReadOnlyList<string> EmailDomains,
+    OrganizationInfoData  Info): IUpdateCommand, IOrganizationData;
