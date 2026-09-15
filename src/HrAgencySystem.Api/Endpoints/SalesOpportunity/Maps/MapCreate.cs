@@ -46,7 +46,7 @@ internal static class MapCreate
                 ExpectedValue,
                 IsHotLead,
                 Currency, 
-                ExpectedCloseDate.ToUtc(), 
+                ExpectedCloseDate,
                 ResponsibleId, 
                 createdBy);
     }

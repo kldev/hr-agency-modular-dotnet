@@ -3,6 +3,7 @@ using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.Sales.Services;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
@@ -68,7 +69,7 @@ public class CreateOpportunityHandlerTests : BaseTest
             0,
             0,
             0,
-            TimeSpan.Zero);
+            TimeSpan.Zero).Date.ToDateOnly();
 
         var command = CreateValidCommand(
             organizationId: OrganizationId,
@@ -595,7 +596,7 @@ public class CreateOpportunityHandlerTests : BaseTest
         string description = "Potential software development opportunity.",
         decimal expectedValue = 50000m,
         CurrencyCode currency = CurrencyCode.PLN,
-        DateTimeOffset? expectedCloseDate = null,
+        DateOnly? expectedCloseDate = null,
         Guid? ownerId = null,
         Guid? createdBy = null,
         bool? isHotLead = null)
@@ -609,14 +610,10 @@ public class CreateOpportunityHandlerTests : BaseTest
             isHotLead ?? false,
             currency,
             expectedCloseDate ??
-            new DateTimeOffset(
+            new DateOnly(
                 2026,
                 12,
-                31,
-                0,
-                0,
-                0,
-                TimeSpan.Zero),
+                31),
             ownerId,
             createdBy ?? CreatedById);
     }

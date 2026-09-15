@@ -26,7 +26,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
     public OpportunityStage Stage { get; private set; }
     public decimal ExpectedValue { get; private set; }
     public CurrencyCode CurrencyCode { get; private set; }
-    public DateTimeOffset? ExpectedCloseDate { get; private set; }
+    public DateOnly? ExpectedCloseDate { get; private set; }
     public ShortNote LostReason { get; private set; } = null!;
     public UserSnapshot ResponsiblePerson { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }

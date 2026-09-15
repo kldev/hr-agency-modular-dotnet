@@ -54,7 +54,7 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(_responsibleId, result.Responsible.Id);
         Assert.Equal(CurrencyCode.PLN, result.Currency);
         Assert.Equal(15_000, result.ExpectedValue);
-        Assert.Equal(date.ToUtc(), result.ExpectedCloseDate);
+        Assert.Equal(date, result.ExpectedCloseDate);
         Assert.Equal(createdBy, result.CreatedBy.Id);
         Assert.True(result.IsHotLead);
     }
@@ -82,7 +82,7 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(createdBy, result.Responsible.Id);
         Assert.Equal(CurrencyCode.PLN, result.Currency);
         Assert.Equal(15_000, result.ExpectedValue);
-        Assert.Equal(date.ToUtc("Europe/Warsaw"), result.ExpectedCloseDate);
+        Assert.Equal(date, result.ExpectedCloseDate);
         Assert.Equal(createdBy, result.CreatedBy.Id);
     }
 
@@ -126,7 +126,7 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(CurrencyCode.EUR, updatedResult.Currency);
         Assert.Equal(5_000, updatedResult.ExpectedValue);
         Assert.Equal(15_000, updatedResult.PreviousExpectedValue);
-        Assert.Equal(updatedDate.ToUtc(), updatedResult.ExpectedCloseDate);
+        Assert.Equal(updatedDate, updatedResult.ExpectedCloseDate);
         Assert.Equal(modifiedBy, updatedResult.ModifiedBy.Id);
         Assert.True(updatedResult.IsHotLead);
     }

@@ -1,22 +1,19 @@
 import { z } from "zod";
-import { type CreateOpportunityRequest, CurrencyCode } from "#/api/models";
+import { CurrencyCode, type UpdateOpportunityRequest } from "#/api/models";
 
 import { ApiError } from "#/components/ui/ApiError";
 import { currenciesOptions } from "#/features/sales/types";
 import { useAppForm } from "#/forms";
 
 interface OpportunityFormProps {
-	companyId?: string;
-	mode: "create" | "edit";
-	onSubmit: (value: CreateOpportunityRequest) => void;
+	onSubmit: (value: UpdateOpportunityRequest) => void;
 	error?: Error | null;
 	isSubmitting?: boolean;
 	formId: string;
+	initial: OpportunityEditFormValues;
 }
 
-const opportunitySchema = z.object({
-	companyId: z.string().trim().min(1, "Company is required"),
-
+const opportunityEditSchema = z.object({
 	currency: z.enum(CurrencyCode),
 
 	title: z
@@ -47,60 +44,44 @@ const opportunitySchema = z.object({
 
 	isHotLead: z.boolean(),
 
-	responsibleId: z.string().nullable(),
-
 	expectedCloseDate: z.string().nullable(),
 });
 
-export const empty: OpportunityFormValues = {
-	companyId: "",
-	currency: "PLN",
-	title: "",
-	description: "",
-	expectedCloseDate: null,
-	expectedValue: "",
-	isHotLead: false,
-	responsibleId: "",
-};
-
-type OpportunityFormValues = {
-	companyId: string;
+type OpportunityEditFormValues = {
 	title: string;
 	description: string;
 	expectedValue: string;
 	isHotLead: boolean;
 	currency: CurrencyCode;
 	expectedCloseDate: string | null;
-	responsibleId: string | null;
 };
 
-export function OpportunityForm({
+export function EditOpportunityForm({
 	onSubmit,
 	formId,
 	error,
 	isSubmitting = false,
-	companyId,
+
+	initial,
 }: OpportunityFormProps) {
 	const form = useAppForm({
-		defaultValues: {
-			...empty,
-			companyId: companyId ?? empty.companyId,
-		},
+		defaultValues: { ...initial, expectedValue: initial.expectedValue?.toString() || "" },
 
 		validators: {
-			onChange: opportunitySchema,
+			onChange: opportunityEditSchema,
 		},
 
 		onSubmit: async ({ value }) => {
+			console.log(`${JSON.stringify(value)}`);
 			onSubmit({
 				...value,
-				expectedCloseDate:
-					value.expectedCloseDate?.substring(0, value.expectedCloseDate.indexOf("T")) || null,
+				expectedCloseDate: value.expectedCloseDate,
 				expectedValue: Number(value.expectedValue.replace(",", ".")),
 			});
 		},
 	});
 
+	console.log(`initial ${initial.expectedCloseDate}`);
 	return (
 		<form
 			id={formId}
@@ -110,21 +91,6 @@ export function OpportunityForm({
 				void form.handleSubmit();
 			}}
 		>
-			{!companyId ? (
-				<form.AppField name="companyId">
-					{(field) => (
-						<field.FormCompanyPicker
-							label="Company"
-							fieldValue={{ id: field.state.value }}
-							errors={field.state.meta.errors}
-							fieldName={field.name}
-							handleChange={(val) => field.handleChange(val.id ?? "")}
-							isSubmitting={isSubmitting}
-						/>
-					)}
-				</form.AppField>
-			) : null}
-
 			<form.AppField name="title">
 				{(field) => (
 					<field.FormInput
@@ -186,19 +152,6 @@ export function OpportunityForm({
 						errors={field.state.meta.errors}
 						fieldName={field.name}
 						handleChange={(val) => field.handleChange(val)}
-						isSubmitting={isSubmitting}
-					/>
-				)}
-			</form.AppField>
-
-			<form.AppField name="responsibleId">
-				{(field) => (
-					<field.FormUserPicker
-						fieldValue={{ id: field.state.value }}
-						label="Responsible person"
-						errors={field.state.meta.errors}
-						fieldName={field.name}
-						handleChange={(val) => field.handleChange(val.id)}
 						isSubmitting={isSubmitting}
 					/>
 				)}

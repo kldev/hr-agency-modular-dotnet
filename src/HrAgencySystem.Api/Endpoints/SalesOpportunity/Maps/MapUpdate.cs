@@ -51,7 +51,7 @@ internal static class MapUpdate
                 ExpectedValue, 
                 IsHotLead,
                 Currency, 
-                ExpectedCloseDate.ToUtc(), 
+                ExpectedCloseDate, 
                 modifiedBy);
     }
 }

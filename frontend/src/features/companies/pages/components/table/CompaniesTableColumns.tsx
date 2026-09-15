@@ -60,8 +60,8 @@ export function getColumns(actions: companiesActions) {
 			},
 
 			cell: ({ getValue }) => (
-				<div className="table-cell-content">
-					<div>
+				<div className="table-cell-content max-w-87">
+					<div className="flex flex-col">
 						<div className="data-name">{getValue()?.fullname}</div>
 
 						<div className="data-meta truncate">{getValue()?.email}</div>
@@ -73,14 +73,16 @@ export function getColumns(actions: companiesActions) {
 
 		columnHelper.accessor("activeJobsPostCount", {
 			header: "Active job posts",
+
 			cell: ({ getValue }) => <span className="table-number">{getValue()}</span>,
-			meta: { align: "right" },
+			meta: { align: "right", width: "sm" },
 		}),
 
 		columnHelper.accessor("applicantsCount", {
 			header: "Applicants count",
 			cell: ({ getValue }) => <span className="table-number">{getValue()}</span>,
-			meta: { align: "right" },
+
+			meta: { align: "right", width: "sm" },
 		}),
 
 		columnHelper.accessor("modifiedAt", {

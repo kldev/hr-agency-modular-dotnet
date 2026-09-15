@@ -9,6 +9,7 @@ using HrAgencySystem.Sales.Domain.Activity;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.Sales.Services;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -409,15 +410,14 @@ public sealed class PlatformSalesSeeder(
         return from.AddTicks(randomTicks);
     }
 
-    private static DateTimeOffset GenerateExpectedCloseDate(
+    private static DateOnly GenerateExpectedCloseDate(
         DateTimeOffset opportunityCreatedAt)
     {
         var days = Random.Shared.Next(7, 61);
 
         return opportunityCreatedAt
-            .AddDays(days)
-            .Date
-            .AddHours(Random.Shared.Next(8, 18));
+            .AddDays(days).Date.ToDateOnly();
+
     }
 
     private static decimal GenerateExpectedValue()

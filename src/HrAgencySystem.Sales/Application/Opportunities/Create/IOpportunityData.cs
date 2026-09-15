@@ -8,5 +8,5 @@ public interface IOpportunityData
     string Description { get; }
     decimal ExpectedValue { get; }
     CurrencyCode Currency { get; }
-    DateTimeOffset? ExpectedCloseDate { get; }
+    DateOnly? ExpectedCloseDate { get; }
 }

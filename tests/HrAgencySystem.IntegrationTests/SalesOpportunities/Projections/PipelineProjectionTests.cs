@@ -2,6 +2,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.Sales.Projections;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
@@ -94,7 +95,7 @@ public sealed class PipelineProjectionTests(
                 IsHotLead: true,
                 PreviousCurrency: CurrencyCode.EUR,
                 Currency: CurrencyCode.EUR,
-                ExpectedCloseDate: DateTimeOffset.UtcNow.AddDays(30),
+                ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(30),
                 ModifiedBy: CreateUserSnapshot(),
                 ModifiedAt: DateTimeOffset.UtcNow));
 
@@ -209,7 +210,7 @@ public sealed class PipelineProjectionTests(
                 IsHotLead: true,
                 PreviousCurrency: CurrencyCode.EUR,
                 Currency: CurrencyCode.PLN,
-                ExpectedCloseDate: DateTimeOffset.UtcNow.AddDays(30),
+                ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(30),
                 ModifiedBy: CreateUserSnapshot(),
                 ModifiedAt: DateTimeOffset.UtcNow));
 
@@ -273,7 +274,7 @@ public sealed class PipelineProjectionTests(
                 IsHotLead: true,
                 PreviousCurrency: CurrencyCode.EUR,
                 Currency: CurrencyCode.EUR,
-                ExpectedCloseDate: DateTimeOffset.UtcNow.AddDays(60),
+                ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(60),
                 ModifiedBy: CreateUserSnapshot(),
                 ModifiedAt: DateTimeOffset.UtcNow));
 
@@ -342,7 +343,7 @@ public sealed class PipelineProjectionTests(
                 IsHotLead: true,
                 PreviousCurrency: CurrencyCode.EUR,
                 Currency: CurrencyCode.PLN,
-                ExpectedCloseDate: DateTimeOffset.UtcNow.AddDays(30),
+                ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(30),
                 ModifiedBy: CreateUserSnapshot(),
                 ModifiedAt: DateTimeOffset.UtcNow));
 

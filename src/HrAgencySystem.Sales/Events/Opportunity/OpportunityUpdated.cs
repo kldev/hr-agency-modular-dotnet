@@ -15,6 +15,6 @@ public sealed record OpportunityUpdated(
     decimal ExpectedValue,
     bool IsHotLead,
     CurrencyCode  Currency,
-    DateTimeOffset? ExpectedCloseDate,
+    DateOnly? ExpectedCloseDate,
     UserSnapshot ModifiedBy,
     DateTimeOffset ModifiedAt);

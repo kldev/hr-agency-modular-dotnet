@@ -14,7 +14,7 @@ public sealed record OpportunityCreated(
     decimal ExpectedValue,
     CurrencyCode  Currency,
     bool IsHotLead,
-    DateTimeOffset? ExpectedCloseDate, 
+    DateOnly? ExpectedCloseDate, 
     UserSnapshot Responsible,
     DateTimeOffset CreatedAt,
     UserSnapshot CreatedBy

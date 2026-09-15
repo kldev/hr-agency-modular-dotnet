@@ -1,11 +1,12 @@
 import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
 import { toast } from "sonner";
-import type { CreateOpportunityRequest } from "#/api/models";
+import type { UpdateOpportunityRequest } from "#/api/models";
 import { useGetOpportunity } from "#/features/sales/hooks";
 import { DetailOverviewHeader, SaveChangesButton } from "@/components/ui";
 import { Drawer } from "@/components/ui/Drawer";
 import type { EditOpportunityRef } from "../SalesCommand";
-import { OpportunityForm } from "./OpportunityForm";
+import { EditOpportunityForm } from "./EditOpportunityForm";
+
 import { useUpdateOpportuinity } from "./useOpportunityForm";
 
 interface EditOpportunityProps {
@@ -22,6 +23,10 @@ const EditOpportunityDrawer = forwardRef<EditOpportunityRef, EditOpportunityProp
 		const { mutation, waiting } = useUpdateOpportuinity({
 			onSuccess: () => {
 				onSuccess();
+				setOpportunityId("");
+
+				mutation.reset();
+				setIsOpen(false);
 			},
 		});
 
@@ -39,7 +44,7 @@ const EditOpportunityDrawer = forwardRef<EditOpportunityRef, EditOpportunityProp
 		);
 
 		const handleSave = useCallback(
-			(value: CreateOpportunityRequest) => {
+			(value: UpdateOpportunityRequest) => {
 				mutation.mutate({ id: opportunityId, request: { ...value } });
 			},
 			[mutation, opportunityId],
@@ -65,11 +70,11 @@ const EditOpportunityDrawer = forwardRef<EditOpportunityRef, EditOpportunityProp
 		return (
 			<Drawer
 				open={isOpen}
-				title="Create opportunity"
+				title="Edit opportunity"
 				onClose={handleClose}
 				footer={
 					<SaveChangesButton
-						form="create-opportunity"
+						form="edit-opportunity"
 						isPending={mutation.isPending}
 						wait={waiting}
 					/>
@@ -83,9 +88,16 @@ const EditOpportunityDrawer = forwardRef<EditOpportunityRef, EditOpportunityProp
 							description=""
 						></DetailOverviewHeader>
 
-						<OpportunityForm
+						<EditOpportunityForm
 							formId="edit-opportunity"
-							mode="edit"
+							initial={{
+								currency: opprotunity.currencyCode,
+								title: opprotunity.title,
+								description: opprotunity.description,
+								expectedCloseDate: opprotunity.expectedCloseDate,
+								expectedValue: opprotunity.expectedValue as string,
+								isHotLead: opprotunity.isHotLead,
+							}}
 							onSubmit={handleSave}
 							error={mutation.error}
 							isSubmitting={mutation.isPending}

@@ -55,7 +55,7 @@ const SalesPage: React.FC = () => {
 					navigate({ search: (previous) => ({ ...previous, stage: s }) });
 				}}
 			/>
-			<SalesTable items={items} />
+			<SalesTable items={items} onRefresh={onRefresh} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

@@ -21,7 +21,7 @@ export function MessagePreview({ message, maxLength = 100 }: MessagePreviewProps
 					<button
 						type="button"
 						onClick={() => setOpen(true)}
-						className="mt-1 cursor-pointer text-sm font-medium text-(--color-primary) hover:underline"
+						className="mt-1 cursor-pointer text-sm font-medium text-(--color-info)! hover:underline"
 					>
 						Show more
 					</button>

@@ -13,5 +13,5 @@ public sealed record UpdateOpportunity(
     decimal ExpectedValue,
     bool IsHotLead,
     CurrencyCode Currency,
-    DateTimeOffset? ExpectedCloseDate,
+    DateOnly? ExpectedCloseDate,
     Guid ModifiedBy): IOpportunityData, IUpdateCommand;

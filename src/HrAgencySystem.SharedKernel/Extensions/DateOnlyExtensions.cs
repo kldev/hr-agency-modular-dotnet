@@ -40,4 +40,10 @@ public static class DateOnlyExtensions
             return new DateTimeOffset(TimeZoneInfo.ConvertTimeToUtc(localDateTime, timeZone));
         }
     }
+
+    extension(DateTime date)
+    {
+        public DateOnly ToDateOnly()
+            => new (date.Year, date.Month, date.Day);
+    }
 }

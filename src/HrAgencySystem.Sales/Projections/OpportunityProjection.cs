@@ -23,7 +23,7 @@ public sealed record OpportunityProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     CurrencyCode CurrencyCode,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    DateTimeOffset? ExpectedCloseDate,
+    DateOnly? ExpectedCloseDate,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string LostReason,
     Guid ResponsibleId,
@@ -36,7 +36,6 @@ public sealed record OpportunityProjection(
     UserSnapshot? ModifiedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset? ModifiedAt
-    
 )
 {
     public static OpportunityProjection Create(
@@ -74,7 +73,7 @@ public sealed record OpportunityProjection(
             ExpectedCloseDate = @event.ExpectedCloseDate,
             CurrencyCode = @event.Currency,
             IsHotLead = @event.IsHotLead
-            
+
         };
     }
 

@@ -11,6 +11,6 @@ public sealed record CreateOpportunity(
     decimal ExpectedValue,
     bool IsHotLead,
     CurrencyCode Currency,
-    DateTimeOffset? ExpectedCloseDate,
+    DateOnly? ExpectedCloseDate,
     Guid? ResponsibleId,
     Guid CreatedBy) : IOpportunityData, ICreateCommand;

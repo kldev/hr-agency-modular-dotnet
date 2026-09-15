@@ -1,19 +1,44 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MessagePreview } from "#/components/ui/MessagePreview";
 import type { OpportunityProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
-
 import { formatDate, formatDateTime } from "@/utlis/dateUtils";
+import type { SalesActionTypes } from "../forms";
+import { SalesActions } from "./SalesActions";
+
+export type Actions = {
+	onAction: (action: SalesActionTypes, item: OpportunityProjection) => void;
+};
 
 const columnHelper = createColumnHelper<appTableFeaturesType, OpportunityProjection>();
 
-export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
+export function getColumns(actions: Actions) {
 	const columns = columnHelper.columns([
-		columnHelper.accessor("title", {
-			header: "",
+		columnHelper.display({
+			id: "actions",
+			header: () => null,
 			meta: {
-				width: "xl",
+				width: "xxs",
+			},
+			cell: ({ row }) => {
+				const item = row.original;
+
+				return (
+					<div className="table-cell-content">
+						<SalesActions
+							onAction={(val) => actions.onAction(val, item)}
+							mode="table"
+							opportunityId={item.id}
+						/>
+					</div>
+				);
+			},
+		}),
+		columnHelper.accessor("title", {
+			header: "Title",
+			meta: {
+				width: "2xl",
 			},
 
 			cell: ({ row }) => (
@@ -24,17 +49,23 @@ export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
 			),
 		}),
 		columnHelper.accessor("description", {
-			header: "Email",
-			cell: ({ getValue }) => <div className="data-meta truncate">{getValue()}</div>,
+			header: "Description",
+			cell: ({ getValue }) => <MessagePreview message={getValue()} />,
 			meta: {
 				width: "2xl",
 			},
 		}),
 		columnHelper.accessor("stage", {
 			header: "Stage",
+			meta: {
+				width: "sm",
+			},
 		}),
 		columnHelper.accessor("expectedValue", {
 			header: "Value",
+			meta: {
+				width: "sm",
+			},
 			cell: ({ row, getValue }) => (
 				<span className="table-number">
 					{getValue()} {row.original.currencyCode}
@@ -43,16 +74,25 @@ export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
 		}),
 		columnHelper.accessor("expectedCloseDate", {
 			header: "Expected close date",
+			meta: {
+				width: "sm",
+			},
 			cell: ({ getValue }) => <span className="table-number">{formatDate(getValue())}</span>,
 		}),
 
 		columnHelper.accessor("company.name", {
 			header: "Company",
+			meta: {
+				width: "md",
+			},
 			cell: ({ getValue }) => <div className="data-meta truncate">{getValue()}</div>,
 		}),
 
 		columnHelper.accessor("responsible", {
 			header: "Responsible",
+			meta: {
+				width: "md",
+			},
 			cell: ({ row }) => (
 				<div className="table-cell-content">
 					<div className="min-w-0">
@@ -66,30 +106,6 @@ export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
-		}),
-
-		columnHelper.display({
-			id: "actions",
-			header: () => null,
-			cell: ({ row }) => {
-				const user = row.original;
-
-				if (!onEdit) {
-					return null;
-				}
-
-				return (
-					<div className="table-actions">
-						<button
-							type="button"
-							className="table-action-button"
-							aria-label={`Actions for ${user.id}`}
-						>
-							<MoreHorizontal className="size-4" />
-						</button>
-					</div>
-				);
-			},
 		}),
 	]);
 	return columns;

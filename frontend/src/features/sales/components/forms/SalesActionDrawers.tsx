@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
-
+import { LogActivityDrawer } from "./activity";
 import { EditOpportunityDrawer } from "./opportunity";
 import type {
 	EditOpportunityRef,
@@ -34,7 +34,12 @@ const SalesActionDrawers = forwardRef<SalesActionRef, SalesActionDrawersProps>(
 			[],
 		);
 
-		return <EditOpportunityDrawer ref={editRef} onSuccess={onSuccess} />;
+		return (
+			<>
+				<EditOpportunityDrawer ref={editRef} onSuccess={onSuccess} />
+				<LogActivityDrawer ref={logAction} onSuccess={onSuccess} />
+			</>
+		);
 	},
 );
 
