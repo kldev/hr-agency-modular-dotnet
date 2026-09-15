@@ -1,10 +1,10 @@
 
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
-using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Recruitment.Application.Interviews.Queries;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.SharedKernel.Extensions;
 
 namespace HrAgencySystem.Api.Endpoints.Interviews.Maps;
 

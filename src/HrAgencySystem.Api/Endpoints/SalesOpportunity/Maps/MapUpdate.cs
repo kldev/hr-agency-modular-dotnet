@@ -1,7 +1,9 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
+using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Sales.Application.Opportunities.Update;
 using HrAgencySystem.Sales.Events.Opportunity;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
 
@@ -37,7 +39,7 @@ internal static class MapUpdate
         decimal ExpectedValue,
         bool IsHotLead,
         CurrencyCode Currency,
-        DateTimeOffset? ExpectedCloseDate
+        DateOnly? ExpectedCloseDate
         )
     {
         public UpdateOpportunity ToCommand(Guid organizationId, Guid opportunityId, Guid modifiedBy)
@@ -49,7 +51,7 @@ internal static class MapUpdate
                 ExpectedValue, 
                 IsHotLead,
                 Currency, 
-                ExpectedCloseDate, 
+                ExpectedCloseDate.ToUtc(), 
                 modifiedBy);
     }
 }

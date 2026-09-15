@@ -1,4 +1,5 @@
-import type { CreateOpportunityRequest } from "#/api/models";
+import { z } from "zod";
+import { type CreateOpportunityRequest, CurrencyCode } from "#/api/models";
 
 import { ApiError } from "#/components/ui/ApiError";
 import { currenciesOptions } from "#/features/sales/types";
@@ -11,32 +12,96 @@ interface OpportunityFormProps {
 	error?: Error | null;
 	isSubmitting?: boolean;
 	formId: string;
+	initial?: CreateOpportunityRequest;
 }
 
-const empty: CreateOpportunityRequest = {
+const opportunitySchema = z.object({
+	companyId: z.string().trim().min(1, "Company is required"),
+
+	currency: z.enum(CurrencyCode),
+
+	title: z
+		.string()
+		.trim()
+		.min(1, "Title is required")
+		.min(3, "Title should be at least 3 characters long")
+		.max(300, "Title cannot exceed 300 characters."),
+
+	description: z
+		.string()
+		.trim()
+		.refine(
+			(value) => value.length === 0 || value.length >= 3,
+			"Description should be at least 3 characters long",
+		)
+		.max(5000, "Description cannot exceed 5000 characters."),
+
+	expectedValue: z
+		.string()
+		.min(1, "Expected value is required")
+		.regex(/^\d+(,\d{1,4})?$/, "Expected value must be a valid amount")
+		.refine(
+			(value) => Number(value.replace(",", ".")) > 0,
+			"Expected value must be greater than zero",
+		)
+		.refine((value) => Number(value.replace(",", ".")) <= 100_000, "Max value is 100,000"),
+
+	isHotLead: z.boolean(),
+
+	responsibleId: z.string().nullable(),
+
+	expectedCloseDate: z.string().nullable(),
+});
+
+export const empty: OpportunityFormValues = {
 	companyId: "",
 	currency: "PLN",
 	title: "",
 	description: "",
 	expectedCloseDate: null,
-	expectedValue: 0,
+	expectedValue: "",
 	isHotLead: false,
 	responsibleId: "",
 };
 
-export function CreateOpportunityForm({
+type OpportunityFormValues = {
+	companyId: string;
+	title: string;
+	description: string;
+	expectedValue: string;
+	isHotLead: boolean;
+	currency: CurrencyCode;
+	expectedCloseDate: string | null;
+	responsibleId: string | null;
+};
+
+export function OpportunityForm({
 	onSubmit,
 	formId,
 	error,
 	isSubmitting = false,
 	mode = "create",
 	companyId,
+	initial = empty,
 }: OpportunityFormProps) {
 	const form = useAppForm({
-		defaultValues: empty,
+		defaultValues: {
+			...initial,
+			expectedValue: initial.expectedValue?.toString() || "",
+			companyId: companyId ?? empty.companyId,
+		},
+
+		validators: {
+			onChange: opportunitySchema,
+		},
 
 		onSubmit: async ({ value }) => {
-			onSubmit(value);
+			onSubmit({
+				...value,
+				expectedCloseDate:
+					value.expectedCloseDate?.substring(0, value.expectedCloseDate.indexOf("T")) || null,
+				expectedValue: Number(value.expectedValue.replace(",", ".")),
+			});
 		},
 	});
 
@@ -49,22 +114,12 @@ export function CreateOpportunityForm({
 				void form.handleSubmit();
 			}}
 		>
-			{mode === "create" && Boolean(companyId) === false ? (
-				<form.AppField
-					name="companyId"
-					validators={{
-						onChange: ({ value }) => {
-							if (!value.trim()) {
-								return "Company is required";
-							}
-
-							return undefined;
-						},
-					}}
-				>
+			{mode === "create" && !companyId ? (
+				<form.AppField name="companyId">
 					{(field) => (
 						<field.FormCompanyPicker
 							label="Company"
+							fieldValue={{ id: field.state.value }}
 							errors={field.state.meta.errors}
 							fieldName={field.name}
 							handleChange={(val) => field.handleChange(val.id ?? "")}
@@ -74,29 +129,11 @@ export function CreateOpportunityForm({
 				</form.AppField>
 			) : null}
 
-			<form.AppField
-				name="title"
-				validators={{
-					onChange: ({ value }) => {
-						if (!value.trim()) {
-							return "Title is required";
-						}
-
-						if (value.length < 3) {
-							return "Title should be at least 3 characters long";
-						}
-
-						if (value.length > 300) {
-							return "Title cannot exceed 300 characters.";
-						}
-
-						return undefined;
-					},
-				}}
-			>
+			<form.AppField name="title">
 				{(field) => (
 					<field.FormInput
 						label="Title"
+						fieldValue={field.state.value}
 						errors={field.state.meta.errors}
 						fieldName={field.name}
 						handleChange={(val) => field.handleChange(val)}
@@ -105,29 +142,11 @@ export function CreateOpportunityForm({
 				)}
 			</form.AppField>
 
-			<form.AppField
-				name="description"
-				validators={{
-					onChange: ({ value }) => {
-						if (!value.trim()) {
-							return undefined;
-						}
-
-						if (value.length < 3) {
-							return "Description should be at least 3 characters long";
-						}
-
-						if (value.length > 5000) {
-							return "Description cannot exceed 5000 characters.";
-						}
-
-						return undefined;
-					},
-				}}
-			>
+			<form.AppField name="description">
 				{(field) => (
 					<field.FormTextAreaInput
 						label="Description"
+						fieldValue={field.state.value}
 						errors={field.state.meta.errors}
 						fieldName={field.name}
 						handleChange={(val) => field.handleChange(val)}
@@ -136,33 +155,11 @@ export function CreateOpportunityForm({
 				)}
 			</form.AppField>
 
-			<form.AppField
-				name="expectedValue"
-				validators={{
-					onChange: ({ value }) => {
-						if (!value) {
-							return "Expected value is required";
-						}
-
-						if (Number.isNaN(value)) {
-							return "Expected value is required";
-						}
-
-						if ((value as number) < 0) {
-							return "Expected value must be greater then zero";
-						}
-
-						if ((value as number) > 1_000_00) {
-							return "Max value is 1, 000 00";
-						}
-
-						return undefined;
-					},
-				}}
-			>
+			<form.AppField name="expectedValue">
 				{(field) => (
-					<field.FormInput
+					<field.FormMoneyInput
 						label="Expected value"
+						fieldValue={Number.isNaN(field.state.value) ? "" : field.state.value.toString()}
 						errors={field.state.meta.errors}
 						fieldName={field.name}
 						handleChange={(val) => field.handleChange(val)}
@@ -171,20 +168,10 @@ export function CreateOpportunityForm({
 				)}
 			</form.AppField>
 
-			<form.AppField
-				name="currency"
-				validators={{
-					onChange: ({ value }) => {
-						if (!value) {
-							return "Currency type is required";
-						}
-
-						return undefined;
-					},
-				}}
-			>
+			<form.AppField name="currency">
 				{(field) => (
 					<field.FormSelectEnum
+						fieldValue={field.state.value}
 						options={currenciesOptions}
 						label="Currency"
 						errors={field.state.meta.errors}
@@ -198,7 +185,8 @@ export function CreateOpportunityForm({
 			<form.AppField name="isHotLead">
 				{(field) => (
 					<field.FormToggle
-						label="Currency"
+						fieldValue={field.state.value}
+						label="Hot lead"
 						errors={field.state.meta.errors}
 						fieldName={field.name}
 						handleChange={(val) => field.handleChange(val)}
@@ -207,26 +195,31 @@ export function CreateOpportunityForm({
 				)}
 			</form.AppField>
 
-			<form.AppField name="responsibleId">
-				{(field) => (
-					<field.FormUserPicker
-						label="Responsible person"
-						errors={field.state.meta.errors}
-						fieldName={field.name}
-						handleChange={(val) => field.handleChange(val.id)}
-						isSubmitting={isSubmitting}
-					/>
-				)}
-			</form.AppField>
+			{mode === "create" ? (
+				<form.AppField name="responsibleId">
+					{(field) => (
+						<field.FormUserPicker
+							fieldValue={{ id: field.state.value }}
+							label="Responsible person"
+							errors={field.state.meta.errors}
+							fieldName={field.name}
+							handleChange={(val) => field.handleChange(val.id)}
+							isSubmitting={isSubmitting}
+						/>
+					)}
+				</form.AppField>
+			) : null}
+
 			<form.AppField name="expectedCloseDate">
 				{(field) => (
 					<field.FormDatePicker
+						fieldValue={field.state.value}
 						minDate={new Date()}
-						label="Responsible person"
+						label="Expected close date"
 						errors={field.state.meta.errors}
 						fieldName={field.name}
 						onChange={() => {}}
-						handleChange={() => {}}
+						handleChange={(val) => field.handleChange(val)}
 						isSubmitting={isSubmitting}
 					/>
 				)}

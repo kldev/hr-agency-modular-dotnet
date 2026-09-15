@@ -156,7 +156,6 @@ export function DatePicker({
 
 	return (
 		<div ref={rootRef} className={clsx("relative w-full", className)}>
-			{/* Hidden native form value */}
 			{name && (
 				<input
 					type="hidden"
@@ -171,101 +170,90 @@ export function DatePicker({
 				/>
 			)}
 
-			<button
-				ref={buttonRef}
-				id={id}
-				type="button"
-				disabled={disabled}
-				aria-label={ariaLabel ?? placeholder}
-				aria-haspopup="dialog"
-				aria-expanded={open}
-				onClick={handleOpen}
+			<div
 				className={clsx(
 					"flex min-h-9.5 w-full items-center gap-2",
 					"rounded-[3px]",
 					"border",
 					"bg-(--color-surface)",
 					"px-3",
-					"text-left",
 					"transition-colors",
-
 					error ? "border-(--color-danger)" : "border-(--color-border)",
-
 					!disabled && !error && "hover:border-(--color-border-strong)",
-
-					!disabled && "focus:outline-none focus:ring-2 focus:ring-(--color-primary-soft)",
-
+					!disabled && "focus-within:ring-2 focus-within:ring-(--color-primary-soft)",
 					disabled && "cursor-not-allowed bg-(--color-surface-subtle) opacity-60",
 				)}
 			>
-				<CalendarDays size={16} strokeWidth={1.8} className="shrink-0 text-(--color-text-muted)" />
-
-				<span
-					className={clsx(
-						"min-w-0 flex-1 truncate text-sm",
-						value ? "text-(--color-text)" : "text-(--color-text-muted)",
-					)}
+				<button
+					ref={buttonRef}
+					id={id}
+					type="button"
+					disabled={disabled}
+					aria-label={ariaLabel ?? placeholder}
+					aria-haspopup="dialog"
+					aria-expanded={open}
+					onClick={handleOpen}
+					className="flex min-w-0 flex-1 items-center gap-2 text-left outline-none"
 				>
-					{formattedValue || placeholder}
-				</span>
+					<CalendarDays
+						size={16}
+						strokeWidth={1.8}
+						className="shrink-0 text-(--color-text-muted)"
+					/>
+
+					<span
+						className={clsx(
+							"min-w-0 flex-1 truncate text-sm",
+							value ? "text-(--color-text)" : "text-(--color-text-muted)",
+						)}
+					>
+						{formattedValue || placeholder}
+					</span>
+
+					<ChevronDown
+						size={16}
+						className={clsx(
+							"shrink-0 text-(--color-text-muted) transition-transform",
+							open && "rotate-180",
+						)}
+					/>
+				</button>
 
 				{value && clearable && !disabled && (
 					<button
 						type="button"
-						tabIndex={-1}
 						aria-label="Clear date"
-						onClick={(event) => {
-							event.stopPropagation();
-							handleClear();
-						}}
+						onClick={handleClear}
 						className="
-              inline-flex
-              h-6
-              w-6
-              shrink-0
-              items-center
-              justify-center
-              rounded-[3px]
-              text-(--color-text-muted)
-              transition-colors
-              hover:bg-(--color-surface-hover)
-              hover:text-(--color-text)
-            "
+					inline-flex
+					h-6
+					w-6
+					shrink-0
+					items-center
+					justify-center
+					rounded-[3px]
+					text-(--color-text-muted)
+					transition-colors
+					hover:bg-(--color-surface-hover)
+					hover:text-(--color-text)
+				"
 					>
 						<X size={14} />
 					</button>
 				)}
+			</div>
 
-				<ChevronDown
-					size={16}
-					className={clsx(
-						"shrink-0 text-(--color-text-muted) transition-transform",
-						open && "rotate-180",
-					)}
-				/>
-			</button>
-
-			{error && (
-				<div
-					className="
-            mt-1
-            text-xs
-            text-(--color-danger)
-          "
-				>
-					{error}
-				</div>
-			)}
+			{error && <div className="mt-1 text-xs text-(--color-danger)">{error}</div>}
 
 			{open && (
 				<div
 					className="
-            absolute
-            left-0
-            top-[calc(100%+6px)]
-            z-50
-            max-w-[calc(100vw-24px)]
-          "
+				absolute
+				left-0
+				top-[calc(100%+6px)]
+				z-50
+				max-w-[calc(100vw-24px)]
+			"
 				>
 					<DatePickerCalendar
 						month={visibleMonth}

@@ -8,6 +8,8 @@ import {
 	FieldError,
 	Input,
 	type InputProps,
+	MoneyInput,
+	type MoneyInputProps,
 	Textarea,
 	type TextareaProps,
 	Toggle,
@@ -20,7 +22,7 @@ import { formatLocalDateTime } from "#/utlis/formatLocalDateTime";
 type AppInputProps<T> = {
 	label: string;
 	fieldName: string;
-	fieldValue?: T | null;
+	fieldValue: T | null;
 	isSubmitting: boolean;
 	errors: Array<unknown>;
 	handleChange: (val: T) => void;
@@ -212,7 +214,7 @@ export function FormToggle({
 				{...props}
 				id={fieldName}
 				name={fieldName}
-				checked={fieldValue || undefined}
+				checked={fieldValue == null ? undefined : fieldValue}
 				disabled={isSubmitting}
 				onBlur={onBlur}
 				onChange={(event) => handleChange(event.target.checked)}
@@ -251,6 +253,38 @@ export function FormDatePicker({
 			/>
 
 			<FieldError errors={errors} />
+		</div>
+	);
+}
+
+type FormMoneyInputProps = MoneyInputProps & AppInputProps<string>;
+export function FormMoneyInput({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	onBlur,
+	handleChange,
+	errors,
+	...props
+}: FormMoneyInputProps) {
+	return (
+		<div className="form-field">
+			{" "}
+			<label className="form-label" htmlFor={fieldName}>
+				{" "}
+				{label}{" "}
+			</label>{" "}
+			<MoneyInput
+				{...props}
+				id={fieldName}
+				name={fieldName}
+				value={fieldValue ?? ""}
+				disabled={isSubmitting}
+				onBlur={onBlur}
+				onChange={(event) => handleChange(event.target.value)}
+			/>{" "}
+			<FieldError errors={errors} />{" "}
 		</div>
 	);
 }

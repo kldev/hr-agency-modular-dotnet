@@ -2,6 +2,7 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Opportunities.Create;
 using HrAgencySystem.Sales.Events.Opportunity;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
 
@@ -34,7 +35,7 @@ internal static class MapCreate
         decimal ExpectedValue,
         bool IsHotLead,
         CurrencyCode Currency,
-        DateTimeOffset? ExpectedCloseDate,
+        DateOnly? ExpectedCloseDate,
         Guid? ResponsibleId)
     {
         public CreateOpportunity ToCommand(Guid organizationId, Guid createdBy)
@@ -45,7 +46,7 @@ internal static class MapCreate
                 ExpectedValue,
                 IsHotLead,
                 Currency, 
-                ExpectedCloseDate, 
+                ExpectedCloseDate.ToUtc(), 
                 ResponsibleId, 
                 createdBy);
     }

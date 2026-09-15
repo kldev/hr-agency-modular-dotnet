@@ -18,7 +18,7 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         string? title = null,
         string? description = null,
         CurrencyCode? currency = null,
-        DateTimeOffset? expectedCloseDate = null,
+        DateOnly? expectedCloseDate = null,
         decimal? expectedValue = null,
         Guid? responsibleId = null
     )
@@ -37,7 +37,7 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         string? title = null,
         string? description = null,
         CurrencyCode? currency = null,
-        DateTimeOffset? expectedCloseDate = null,
+        DateOnly? expectedCloseDate = null,
         decimal? expectedValue = null
     )
         => new(
@@ -55,7 +55,7 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         string? title = null,
         string? description = null,
         CurrencyCode? currency = null,
-        DateTimeOffset? expectedCloseDate = null,
+        DateOnly? expectedCloseDate = null,
         decimal? expectedValue = null,
         Guid? responsibleId = null,
         Guid? createdById = null,
@@ -92,7 +92,7 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         string? title = null,
         string? description = null,
         CurrencyCode? currency = null,
-        DateTimeOffset? expectedCloseDate = null,
+        DateOnly? expectedCloseDate = null,
         decimal? expectedValue = null,
         Guid? modifiedBy = null,
         bool? isHotLead = null

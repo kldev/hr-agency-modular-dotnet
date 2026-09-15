@@ -1,5 +1,10 @@
+export type InitialCompanyOptions = {
+	companyId: string;
+	companyName?: string;
+};
+
 export interface CreateOpportunityRef {
-	create: (companyId: string, companyName?: string) => void;
+	create: (intial?: InitialCompanyOptions) => void;
 }
 
 export interface EditOpportunityRef {
@@ -7,7 +12,11 @@ export interface EditOpportunityRef {
 }
 
 export interface LogActionRef {
-	create: (companyId: string, companyName?: string) => void;
+	log: (opportunityId: string) => void;
 }
 
-export interface SalesRef extends EditOpportunityRef, LogActionRef {}
+export type SalesActionTypes = "edit-opportunity" | "log-activity";
+
+export interface SalesActionRef {
+	onAction: (id: string, action: SalesActionTypes) => void;
+}

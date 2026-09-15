@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { OpportunityStage } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
-import { getJobDescription, getOpportunities } from "@/api/endpoints";
+import { getOpportunities, getOpportunity } from "@/api/endpoints";
 import { salesKeys } from "@/api/query-keys";
 
 const PAGE_SIZE = 15;
@@ -18,7 +18,7 @@ const getSingleServerFn = createServerFn({
 })
 	.validator((input: { id: string }) => input)
 	.handler(({ data }) => {
-		return getJobDescription(data.id, getFnOptions());
+		return getOpportunity(data.id, getFnOptions());
 	});
 
 const getSliceServerFn = createServerFn({

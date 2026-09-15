@@ -8,6 +8,7 @@ type SaveChangesButtonProps = {
 	onClick?: () => void;
 	label?: string;
 	labelPending?: string;
+	disabled?: boolean;
 };
 
 export function SaveChangesButton({

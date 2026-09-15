@@ -7,6 +7,7 @@ using HrAgencySystem.Sales.Application.Opportunities.ChangeResponsible;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Domain.Opportunity.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;
@@ -32,7 +33,7 @@ public sealed class SalesOpportunityTests(
     [Fact]
     public async Task ShouldCreateOpportunity()
     {
-        var date = DateTimeOffset.UtcNow;
+        var date = DateOnly.FromDateTime(DateTime.UtcNow);
         var createdBy = Guid.NewGuid();
         var result = await OpportunityTestClient.Create(
             organizationId: _organizationId, 
@@ -53,7 +54,7 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(_responsibleId, result.Responsible.Id);
         Assert.Equal(CurrencyCode.PLN, result.Currency);
         Assert.Equal(15_000, result.ExpectedValue);
-        Assert.Equal(date, result.ExpectedCloseDate);
+        Assert.Equal(date.ToUtc(), result.ExpectedCloseDate);
         Assert.Equal(createdBy, result.CreatedBy.Id);
         Assert.True(result.IsHotLead);
     }
@@ -61,7 +62,7 @@ public sealed class SalesOpportunityTests(
     [Fact]
     public async Task ShouldCreateOpportunityWithoutResponsibleId()
     {
-        var date = DateTimeOffset.UtcNow;
+        var date = DateOnly.FromDateTime(DateTime.UtcNow);
         var createdBy = Guid.NewGuid();
         var result = await OpportunityTestClient.Create(
             organizationId: _organizationId, 
@@ -81,14 +82,14 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(createdBy, result.Responsible.Id);
         Assert.Equal(CurrencyCode.PLN, result.Currency);
         Assert.Equal(15_000, result.ExpectedValue);
-        Assert.Equal(date, result.ExpectedCloseDate);
+        Assert.Equal(date.ToUtc("Europe/Warsaw"), result.ExpectedCloseDate);
         Assert.Equal(createdBy, result.CreatedBy.Id);
     }
 
     [Fact]
     public async Task ShouldUpdateOpportunity()
     {
-        var date = DateTimeOffset.UtcNow;
+        var date = DateOnly.FromDateTime(DateTime.UtcNow);
         var createdBy = Guid.NewGuid();
         var result = await OpportunityTestClient.Create(
             organizationId: _organizationId,
@@ -101,7 +102,7 @@ public sealed class SalesOpportunityTests(
             responsibleId: _responsibleId,
             createdById: createdBy);
 
-        var updatedDate = date.AddHours(Random.Shared.Next(120));
+        var updatedDate = date.AddDays(Random.Shared.Next(120));
         var modifiedBy = Guid.NewGuid();
         
         Assert.Equal(_organizationId, result.OrganizationId);
@@ -125,7 +126,7 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(CurrencyCode.EUR, updatedResult.Currency);
         Assert.Equal(5_000, updatedResult.ExpectedValue);
         Assert.Equal(15_000, updatedResult.PreviousExpectedValue);
-        Assert.Equal(updatedDate, updatedResult.ExpectedCloseDate);
+        Assert.Equal(updatedDate.ToUtc(), updatedResult.ExpectedCloseDate);
         Assert.Equal(modifiedBy, updatedResult.ModifiedBy.Id);
         Assert.True(updatedResult.IsHotLead);
     }

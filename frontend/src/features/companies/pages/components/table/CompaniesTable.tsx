@@ -1,5 +1,6 @@
 import { useTable } from "@tanstack/react-table";
 import { useRef } from "react";
+import { CreateOpportunityDrawer, type CreateOpportunityRef } from "#/features/sales/components";
 import type { CompanyProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
@@ -17,6 +18,7 @@ interface CompaniesTableProps {
 export function CompaniesTable({ companies, onRefresh }: CompaniesTableProps) {
 	const editRef = useRef<EditCompanyFormCommand>(null);
 	const contactRef = useRef<CompanyContactCommand>(null);
+	const oppRef = useRef<CreateOpportunityRef>(null);
 
 	const table = useTable(
 		{
@@ -27,6 +29,9 @@ export function CompaniesTable({ companies, onRefresh }: CompaniesTableProps) {
 				},
 				onEdit: (c) => {
 					editRef.current?.edit(c.id);
+				},
+				onAddOpportunity: (c) => {
+					oppRef.current?.create({ companyId: c.id, companyName: c.name });
 				},
 			}),
 			data: companies,
@@ -48,6 +53,7 @@ export function CompaniesTable({ companies, onRefresh }: CompaniesTableProps) {
 				}}
 			/>
 			<CompanyContactDrawer ref={contactRef} onSuccess={() => {}} />
+			<CreateOpportunityDrawer ref={oppRef} onSuccess={onRefresh} />
 		</>
 	);
 }

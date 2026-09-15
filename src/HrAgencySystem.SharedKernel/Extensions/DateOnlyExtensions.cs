@@ -1,10 +1,10 @@
-namespace HrAgencySystem.Api.Common.Request;
+namespace HrAgencySystem.SharedKernel.Extensions;
 
 public static class DateOnlyExtensions
 {
     extension(DateOnly? date)
     {
-        public DateTimeOffset? ToUtc(string timezone)
+        public DateTimeOffset? ToUtc(string timezone = "Europe/Warsaw")
         {
             if (date == null) return null;
 
@@ -32,7 +32,7 @@ public static class DateOnlyExtensions
 
     extension(DateOnly date)
     {
-        public DateTimeOffset? ToUtc(string timezone)
+        public DateTimeOffset? ToUtc(string timezone= "Europe/Warsaw")
         {
 
             var timeZone = GetTimeZone(timezone);

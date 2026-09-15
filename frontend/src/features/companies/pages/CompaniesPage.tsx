@@ -55,7 +55,7 @@ const CompaniesPage: React.FC = () => {
 						query.refetch();
 					}}
 				/>
-				<CompaniesCardList companies={items} />
+				<CompaniesCardList companies={items} onRefresh={() => query.refetch()} />
 				<LoadMore
 					loading={query.isPending}
 					hasNext={hasMore[0]}

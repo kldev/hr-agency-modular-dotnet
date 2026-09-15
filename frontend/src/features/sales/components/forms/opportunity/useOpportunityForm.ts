@@ -64,9 +64,7 @@ export function useCreateOpportuinity({ onSuccess }: OpportunityOptions) {
 	});
 
 	return {
-		isPending: mutation.isPending,
-		isError: mutation.isError,
-		error: mutation.error,
+		mutation,
 		waiting,
 	};
 }
@@ -85,9 +83,7 @@ export function useUpdateOpportuinity({ onSuccess }: OpportunityOptions) {
 	});
 
 	return {
-		isPending: mutation.isPending,
-		isError: mutation.isError,
-		error: mutation.error,
+		mutation,
 		waiting,
 	};
 }
@@ -106,9 +102,7 @@ export function useLogActivity({ onSuccess }: OpportunityOptions) {
 	});
 
 	return {
-		isPending: mutation.isPending,
-		isError: mutation.isError,
-		error: mutation.error,
+		mutation,
 		waiting,
 	};
 }

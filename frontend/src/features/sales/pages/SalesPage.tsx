@@ -1,14 +1,18 @@
 import { DollarSign } from "lucide-react";
 import type React from "react";
+import { useRef } from "react";
 import { Route } from "#/routes/app/sales";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { SalesTable } from "../components";
+import { CreateOpportunityDrawer, type CreateOpportunityRef, SalesTable } from "../components";
+
 import { SalesToolbar } from "../components/SalesToolbar";
 import { type SalesPageFillters, useGetOpportunitesSlice } from "../hooks";
 import { salesStage } from "../types";
 
 const SalesPage: React.FC = () => {
+	const oppRef = useRef<CreateOpportunityRef>(null);
+
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch() as SalesPageFillters;
 	const query = useGetOpportunitesSlice(search);
@@ -40,7 +44,9 @@ const SalesPage: React.FC = () => {
 				onSearchChange={(v) => {
 					navigate({ search: (previous) => ({ ...previous, search: v }) });
 				}}
-				onAdd={() => {}}
+				onAdd={() => {
+					oppRef?.current?.create();
+				}}
 			/>
 			<EnumFilter
 				value={search.stage || null}
@@ -57,6 +63,7 @@ const SalesPage: React.FC = () => {
 					query.fetchNextPage();
 				}}
 			/>
+			<CreateOpportunityDrawer ref={oppRef} onSuccess={() => query.refetch()} />
 		</Page>
 	);
 };

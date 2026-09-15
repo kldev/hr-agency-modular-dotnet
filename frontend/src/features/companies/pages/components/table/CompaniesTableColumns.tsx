@@ -9,11 +9,12 @@ import { CompanyActions } from "./CompanyActions";
 const columnHelper = createColumnHelper<appTableFeaturesType, CompanyProjection>();
 
 type companiesActions = {
-	onEdit?: (company: CompanyProjection) => void;
-	onAddContact?: (company: CompanyProjection) => void;
+	onEdit: (company: CompanyProjection) => void;
+	onAddContact: (company: CompanyProjection) => void;
+	onAddOpportunity: (company: CompanyProjection) => void;
 };
 
-export function getColumns(actions: companiesActions = {}) {
+export function getColumns(actions: companiesActions) {
 	const columns = columnHelper.columns([
 		columnHelper.accessor("name", {
 			header: "Company",
@@ -27,8 +28,9 @@ export function getColumns(actions: companiesActions = {}) {
 					<div className="table-cell-content">
 						<CompanyActions
 							id={company.id}
-							onEdit={() => actions.onEdit?.(company)}
-							onAddContact={() => actions.onAddContact?.(company)}
+							onEdit={() => actions.onEdit(company)}
+							onAddContact={() => actions.onAddContact(company)}
+							onAddOpportunity={() => actions.onAddOpportunity(company)}
 						/>
 						<ItemMark name={row.original.name} />
 

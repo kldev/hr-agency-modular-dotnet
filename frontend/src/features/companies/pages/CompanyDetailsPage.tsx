@@ -3,8 +3,9 @@ import { useRef } from "react";
 import "./components/details/company-details.css";
 
 import { useParams } from "@tanstack/react-router";
+import type { CreateOpportunityRef } from "#/features/sales/components";
 import type { CompanyContact } from "@/api/models";
-import { DetailsHeader } from "@/components/ui";
+import { DetailsHeader, DetailsLoading } from "@/components/ui";
 import { DataDetails, DataDetailsLayout } from "@/components/ui/details/DataDetails";
 import {
 	CompanyContacts,
@@ -12,40 +13,24 @@ import {
 	EditCompanyDrawer,
 	type EditCompanyFormCommand,
 } from "./components";
+import { CompanyActions } from "./components/table/CompanyActions";
 import { useGetCompany, useGetCompanyContacts } from "./hooks";
 
 export function CompanyDetailsPage() {
 	const { id } = useParams({ from: "/app/companies/$id" });
 	const editRef = useRef<EditCompanyFormCommand>(null);
+	const oppRef = useRef<CreateOpportunityRef>(null);
 
-	const companyQuery = useGetCompany(id);
+	const query = useGetCompany(id);
 	const contactsQuery = useGetCompanyContacts(id);
 
-	if (!id) {
+	if (!id || query.isLoading || query.isError || !query.data) {
 		return (
-			<div className="company-details">
-				<div className="company-details-empty">Company not found.</div>
-			</div>
+			<DetailsLoading id={id} isLoading={query.isLoading} isError={query.isError || !query.data} />
 		);
 	}
 
-	if (companyQuery.isLoading) {
-		return (
-			<div className="company-details">
-				<div className="company-details-loading">Loading company...</div>
-			</div>
-		);
-	}
-
-	if (companyQuery.isError || !companyQuery.data) {
-		return (
-			<div className="company-details">
-				<div className="company-details-error">Unable to load company.</div>
-			</div>
-		);
-	}
-
-	const company = companyQuery.data;
+	const company = query.data;
 
 	const contacts: CompanyContact[] = contactsQuery.data ?? [];
 
@@ -56,6 +41,17 @@ export function CompanyDetailsPage() {
 					name={company.name}
 					website={company.website}
 					onEdit={() => editRef.current?.edit(company.id)}
+					detailsAddons={
+						<CompanyActions
+							mode="details"
+							id={company.id}
+							onAddContact={() => {}}
+							onEdit={() => {}}
+							onAddOpportunity={() => {
+								oppRef.current?.create({ companyId: company.id, companyName: company.name });
+							}}
+						/>
+					}
 				/>
 
 				<DataDetailsLayout
@@ -84,7 +80,7 @@ export function CompanyDetailsPage() {
 			<EditCompanyDrawer
 				ref={editRef}
 				onSuccess={() => {
-					void companyQuery.refetch();
+					void query.refetch();
 				}}
 			/>
 		</>

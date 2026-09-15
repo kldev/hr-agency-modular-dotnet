@@ -4,7 +4,7 @@ import type { OpportunityProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
 
-import { formatDateTime } from "@/utlis/dateUtils";
+import { formatDate, formatDateTime } from "@/utlis/dateUtils";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, OpportunityProjection>();
 
@@ -43,7 +43,7 @@ export function getColumns(onEdit?: (company: OpportunityProjection) => void) {
 		}),
 		columnHelper.accessor("expectedCloseDate", {
 			header: "Expected close date",
-			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
+			cell: ({ getValue }) => <span className="table-number">{formatDate(getValue())}</span>,
 		}),
 
 		columnHelper.accessor("company.name", {

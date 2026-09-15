@@ -83,6 +83,7 @@ export function RescheduleForm({
 			<form.AppField name="note">
 				{(field) => (
 					<field.FormTextAreaInput
+						fieldValue={field.state.value}
 						label="Description"
 						errors={field.state.meta.errors}
 						fieldName={field.name}
@@ -95,6 +96,7 @@ export function RescheduleForm({
 			<form.AppField name="location">
 				{(field) => (
 					<field.FormInput
+						fieldValue={field.state.value ?? ""}
 						label="Location"
 						errors={field.state.meta.errors}
 						fieldName={field.name}
@@ -107,6 +109,7 @@ export function RescheduleForm({
 			<form.AppField name="meetingUrl">
 				{(field) => (
 					<field.FormInput
+						fieldValue={field.state.value ?? ""}
 						label="Meeting url"
 						errors={field.state.meta.errors}
 						fieldName={field.name}
