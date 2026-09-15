@@ -75,7 +75,8 @@ internal class UserScenario(IMessageBus bus)
                 firstName,
                 lastName,
                 role,
-                userPassword, Guid.Empty));
+                userPassword, Guid.Empty,
+                faker.Phone.PhoneNumber()));
         }
 
         var ids = new List<Guid>();

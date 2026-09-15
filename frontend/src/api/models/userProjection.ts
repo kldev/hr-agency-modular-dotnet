@@ -28,6 +28,10 @@ export interface UserProjection {
 	createdBy: UserSnapshot;
 	createdAt: string;
 	organization: OrganizationInfo;
+	phone: string;
+	modifiedBy: null | UserSnapshot;
+	/** @nullable */
+	modifiedAt: string | null;
 	/** @nullable */
 	fullName?: string | null;
 }

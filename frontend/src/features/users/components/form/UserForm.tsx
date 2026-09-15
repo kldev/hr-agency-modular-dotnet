@@ -20,6 +20,7 @@ export const emptyCreateUser: CreateUserRequest = {
 	lastName: "",
 	role: OrganizationRoleApi.Recruiter,
 	password: "",
+	phone: "",
 };
 
 export function UserForm({ initialValue, onSubmit, error, isSubmitting = false }: UserFormProps) {
@@ -148,6 +149,28 @@ export function UserForm({ initialValue, onSubmit, error, isSubmitting = false }
 									field.handleChange(value);
 								}
 							}}
+						/>
+
+						<FieldError errors={field.state.meta.errors} />
+					</div>
+				)}
+			</form.Field>
+
+			<form.Field name="phone">
+				{(field) => (
+					<div className="form-field">
+						<label className="form-label" htmlFor={field.name}>
+							Phone
+						</label>
+
+						<Input
+							id={field.name}
+							name={field.name}
+							autoComplete="given-name"
+							value={field.state.value ?? ""}
+							disabled={isSubmitting}
+							onBlur={field.handleBlur}
+							onChange={(event) => field.handleChange(event.target.value)}
 						/>
 
 						<FieldError errors={field.state.meta.errors} />

@@ -1,6 +1,28 @@
-import { Plus } from "lucide-react";
+import { Mail, Phone, Plus } from "lucide-react";
 import { Button } from "../Button";
 import "./details.css";
+
+export function EmailItem({ email }: { email: string }) {
+	return (
+		<DetailItem label="Email">
+			<div className="flex flex-1 gap-2 items-center">
+				<Mail size={12} />
+				<a href={`mailto:${email}`}>{email}</a>
+			</div>
+		</DetailItem>
+	);
+}
+
+export function PhoneItem({ phone }: { phone?: string }) {
+	return (
+		<DetailItem label="Phone">
+			<div className="flex flex-1 gap-2 items-center">
+				<Phone size={12} />
+				<a href={`tel:${phone}`}>{phone ?? "-"}</a>
+			</div>
+		</DetailItem>
+	);
+}
 
 export function DetailItem({ label, children }: { label: string; children: React.ReactNode }) {
 	return (

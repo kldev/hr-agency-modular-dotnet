@@ -47,6 +47,10 @@ public static class LoginUserHandler
             var domain = email.Value.Split("@", StringSplitOptions.RemoveEmptyEntries)[1];
             var organization = await queryOrganizationRepository.GetByEmailDomainAsync(domain, ct);
             slug = organization?.Slug ?? "";
+            if (string.IsNullOrEmpty(slug))
+            {
+                throw new NotFoundException("Organization by domain", domain);
+            }
         }
         
         var reservation = await repository.FindUserByEmail(email, slug, ct);

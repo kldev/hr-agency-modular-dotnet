@@ -6,6 +6,8 @@ import {
 	CandidateSourceBadge,
 	DetailItem,
 	DetailsListSection,
+	EmailItem,
+	PhoneItem,
 } from "#/components/ui";
 import { formatDateTimeIntl } from "#/utlis";
 import { ApplicationsActionDrawers, type JobApplicationsRef } from "../forms";
@@ -44,20 +46,9 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 					</div>
 
 					<dl className="data-details-list">
-						<DetailItem label="Email">
-							<div className="flex flex-1 gap-2 items-center">
-								<Mail size={12} />
-								<a href={`mailto:${application.applicantEmail}`}>{application.applicantEmail}</a>
-							</div>
-						</DetailItem>
+						<EmailItem email={application.applicantEmail} />
 
-						<DetailItem label="Phone">
-							<div className="flex flex-1 gap-2 items-center">
-								<Phone size={12} />
-								<a href={`tel:${application.applicantPhone}`}>{application.applicantPhone}</a>
-							</div>
-						</DetailItem>
-
+						<PhoneItem phone={application.applicantPhone} />
 						<DetailItem label="Source">
 							<CandidateSourceBadge source={application.source} />
 						</DetailItem>

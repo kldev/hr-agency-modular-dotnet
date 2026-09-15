@@ -1,5 +1,6 @@
 using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.Organization.Events;
+using HrAgencySystem.Organization.Projections;
 using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Tenant;
 using Marten;
@@ -10,33 +11,33 @@ public class QueryOrganizationRepository(IQuerySession session) : IQueryOrganiza
 {
     public async Task<IReadOnlyList<OrganizationInfo>> GetActiveOrganizationsAsync(CancellationToken ct)
     {
-        return await session.Query<OrganizationCreated>()
-            .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
+        return await session.Query<OrganizationProjection>()
+            .Select(s => new OrganizationInfo(s.Id, s.Slug, s.Name))
             .ToListAsync(ct);
     }
 
     public async Task<OrganizationInfo?> GetBySlugAsync(string slug, CancellationToken ct)
     {
         var normalizeSlug = OrganizationSlug.Create(slug);
-        return await session.Query<OrganizationCreated>()
+        return await session.Query<OrganizationProjection>()
             .Where(z => z.Slug == normalizeSlug.Value)
-            .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
+            .Select(s => new OrganizationInfo(s.Id, s.Slug, s.Name))
             .FirstOrDefaultAsync(ct);
     }
 
     public async Task<OrganizationInfo?> GetByEmailDomainAsync(string emailDomain, CancellationToken ct)
     {
-        return await session.Query<OrganizationCreated>()
+        return await session.Query<OrganizationProjection>()
             .Where(z => z.EmailDomains.Contains(emailDomain, StringComparer.OrdinalIgnoreCase))
-            .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
+            .Select(s => new OrganizationInfo(s.Id, s.Slug, s.Name))
             .FirstOrDefaultAsync(ct);
     }
 
     public async Task<OrganizationInfo?> GetOrganization(OrganizationId organizationId, CancellationToken ct)
     {
-        return await session.Query<OrganizationCreated>()
-            .Where(z => z.OrganizationId == organizationId.Value)
-            .Select(s => new OrganizationInfo(s.OrganizationId, s.Slug, s.Name))
+        return await session.Query<OrganizationProjection>()
+            .Where(z => z.Id == organizationId.Value)
+            .Select(s => new OrganizationInfo(s.Id, s.Slug, s.Name))
             .FirstOrDefaultAsync(ct);
     }
 }

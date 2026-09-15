@@ -22,4 +22,6 @@ export interface CreateUserForOrganizationRequest {
 	role: OrganizationRoleApi;
 	organizationId: string;
 	password: string;
+	/** @nullable */
+	phone?: string | null;
 }

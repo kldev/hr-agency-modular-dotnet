@@ -1,5 +1,6 @@
 import { Users } from "lucide-react";
 import type React from "react";
+import { UsersCardList } from "#/features/users/components";
 import { Route } from "#/routes/admin/users";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
@@ -19,6 +20,7 @@ const UsersPage: React.FC = () => {
 
 	return (
 		<Page
+			className="has-mobile-view"
 			title="Users"
 			description="People with access to the organization"
 			onRefresh={() => query.refetch()}
@@ -47,6 +49,7 @@ const UsersPage: React.FC = () => {
 				}}
 			/>
 			<UseresTable users={items} />
+			<UsersCardList items={items} showOrg={true} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

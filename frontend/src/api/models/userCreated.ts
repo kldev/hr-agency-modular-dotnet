@@ -28,4 +28,6 @@ export interface UserCreated {
 	organization: OrganizationInfo;
 	createdBy: UserSnapshot;
 	createdAt: string;
+	/** @nullable */
+	phone?: string | null;
 }

@@ -21,4 +21,6 @@ export interface CreateUserRequest {
 	lastName: string;
 	role: OrganizationRoleApi;
 	password: string;
+	/** @nullable */
+	phone?: string | null;
 }

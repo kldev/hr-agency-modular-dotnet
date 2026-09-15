@@ -9,6 +9,7 @@ import {
 	CreateUserDrawer,
 	type CreateUserFormCommand,
 	UseresTable,
+	UsersCardList,
 	UsersToolbar,
 } from "../components";
 import { organizationRoles } from "../types";
@@ -27,6 +28,7 @@ const UsersPage: React.FC = () => {
 
 	return (
 		<Page
+			className="has-mobile-view"
 			title="Users"
 			description="People with access to the organization"
 			onRefresh={() => query.refetch()}
@@ -58,6 +60,7 @@ const UsersPage: React.FC = () => {
 				}}
 			/>
 			<UseresTable users={items} />
+			<UsersCardList items={items} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

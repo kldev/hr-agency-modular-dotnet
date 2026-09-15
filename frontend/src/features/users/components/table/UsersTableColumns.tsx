@@ -34,6 +34,15 @@ export function getColumns(onEdit?: (company: UserProjection) => void) {
 		}),
 		columnHelper.accessor("role", {
 			header: "Role",
+			meta: {
+				width: "sm",
+			},
+		}),
+		columnHelper.accessor("phone", {
+			header: "Phone",
+			meta: {
+				width: "md",
+			},
 		}),
 
 		columnHelper.accessor("createdAt", {

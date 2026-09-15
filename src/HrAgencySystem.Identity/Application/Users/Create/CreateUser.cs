@@ -9,4 +9,5 @@ public sealed record CreateUser(
     string LastName,
     OrganizationRole Role,
     string Password,
-    Guid CreatedBy);
+    Guid CreatedBy,
+    string? Phone = null);

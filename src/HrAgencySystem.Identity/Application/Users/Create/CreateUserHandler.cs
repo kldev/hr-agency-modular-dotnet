@@ -30,7 +30,8 @@ public static class CreateUserHandler
         var (
             email,
             firstName,
-            lastName
+            lastName,
+            phone
             ) = CreateValueObjects(command);
 
         PasswordPolicyValidator.Validate(command.Password);
@@ -58,7 +59,8 @@ public static class CreateUserHandler
             passwordHash,
             organizationInfo,
             user!,
-            clock.UtcNow);
+            clock.UtcNow,
+            phone.Value);
 
         session.Events.StartStream<User>(
             userId.Value,
@@ -97,17 +99,25 @@ public static class CreateUserHandler
         if (lastNameError is not null)
             errors.Add(lastNameError);
         
+        var (phone, phoneError) =
+            PersonPhone.TryCreate(command.Phone);
+
+        if (phoneError is not null)
+            errors.Add(phoneError);
+        
         if (errors.Count > 0)
             throw new ValidationException(errors);
 
         return new UserData(
             email!,
             firstName!,
-            lastName!);
+            lastName!,
+            phone!);
     }
 
     private sealed record UserData(
         Email Email,
         FirstName FirstName,
-        LastName LastName);
+        LastName LastName,
+        PersonPhone Phone);
 }

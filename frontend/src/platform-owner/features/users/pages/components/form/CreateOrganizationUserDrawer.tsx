@@ -64,6 +64,7 @@ const CreateOrganizationUserDrawer = forwardRef<
 				lastName: value.lastName,
 				role: value.role,
 				password: value.password,
+				phone: value.phone,
 				organizationId,
 			});
 		},
