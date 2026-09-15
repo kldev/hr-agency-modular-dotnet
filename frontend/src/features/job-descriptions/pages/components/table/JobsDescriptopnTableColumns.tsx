@@ -114,7 +114,7 @@ export function getColumns(actions: Actions) {
 			header: "Created at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
-		columnHelper.accessor("updatedAt", {
+		columnHelper.accessor("modifiedAt", {
 			header: "Updated at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),

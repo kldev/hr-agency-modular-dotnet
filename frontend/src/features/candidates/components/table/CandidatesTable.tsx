@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useTable } from "@tanstack/react-table";
 import { useRef } from "react";
 import {
@@ -24,6 +25,16 @@ export function CandidatesTable({ items, onRefresh }: CandidatesTableProps) {
 		onTag: (it) => tagRef.current?.addTag(it.id, it.fullName, "candidate"),
 	};
 
+	const navigate = useNavigate();
+
+	const handleRowClick = (value: CandidateProjection) => {
+		navigate({
+			to: "/app/candidates/$id",
+			search: { search: undefined, source: undefined },
+			params: { id: value.id },
+		});
+	};
+
 	const table = useTable(
 		{
 			features: appTableFeatures,
@@ -39,7 +50,7 @@ export function CandidatesTable({ items, onRefresh }: CandidatesTableProps) {
 
 	return (
 		<>
-			<MainTable table={table} className="table-wide" />
+			<MainTable onRowClick={handleRowClick} table={table} className="table-wide" />
 			<EditCandidateDrawer ref={formRef} onSuccess={onRefresh} />
 			<AddTagsDrawer ref={tagRef} onSuccess={onRefresh} />
 		</>

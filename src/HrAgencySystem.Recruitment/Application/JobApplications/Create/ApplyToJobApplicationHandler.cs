@@ -7,9 +7,11 @@ using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using JasperFx.CodeGeneration.Frames;
 using Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplications.Create;
@@ -42,6 +44,7 @@ public static class ApplyToJobApplicationHandler
         var candidate = await resolver.FindOrCreate(candidateCommand, post, ct);
 
         var company = await service.GetCompanyAsync(post.CompanyId, ct);
+        UserSnapshot? user = command.CreatedBy.IsInvalid() ? null : await service.GetUserAsync(command.CreatedBy!.Value, ct);
         
         var jobApplicationId = JobApplicationId.New();
         var @event = new JobApplicationCreated(
@@ -56,7 +59,8 @@ public static class ApplyToJobApplicationHandler
             phoneNumber.Value,
             firstName.Value,
             lastName.Value,
-            clock.UtcNow);
+            clock.UtcNow,
+            user);
 
         session.Events.StartStream<JobApplication>(jobApplicationId.Value, @event);
 

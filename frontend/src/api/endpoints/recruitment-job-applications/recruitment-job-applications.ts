@@ -1387,3 +1387,161 @@ export function useAddMultipleTagToApplication<
 
 	return withQueryKey(query, queryOptions.queryKey);
 }
+
+/**
+ * @summary Remove tag list
+ */
+export const removeApplicationsTagList = (
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<JobApplicationTagRemoved>(
+		{
+			url: `/api/recruitment/job-applications/${applicationId}/tag/remove`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: tagRequestList,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getRemoveApplicationsTagListQueryKey = (
+	applicationId: string,
+	tagRequestList?: BodyType<TagRequestList>,
+) => {
+	return [
+		"PUT",
+		`/api/recruitment/job-applications/${applicationId}/tag/remove`,
+		tagRequestList,
+	] as const;
+};
+
+export const getRemoveApplicationsTagListQueryOptions = <
+	TData = Awaited<ReturnType<typeof removeApplicationsTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeApplicationsTagList>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getRemoveApplicationsTagListQueryKey(applicationId, tagRequestList);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof removeApplicationsTagList>>> = ({
+		signal,
+	}) => removeApplicationsTagList(applicationId, tagRequestList, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: applicationId !== null && applicationId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof removeApplicationsTagList>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type RemoveApplicationsTagListQueryResult = NonNullable<
+	Awaited<ReturnType<typeof removeApplicationsTagList>>
+>;
+export type RemoveApplicationsTagListQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useRemoveApplicationsTagList<
+	TData = Awaited<ReturnType<typeof removeApplicationsTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeApplicationsTagList>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof removeApplicationsTagList>>,
+					TError,
+					Awaited<ReturnType<typeof removeApplicationsTagList>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRemoveApplicationsTagList<
+	TData = Awaited<ReturnType<typeof removeApplicationsTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeApplicationsTagList>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof removeApplicationsTagList>>,
+					TError,
+					Awaited<ReturnType<typeof removeApplicationsTagList>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRemoveApplicationsTagList<
+	TData = Awaited<ReturnType<typeof removeApplicationsTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeApplicationsTagList>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Remove tag list
+ */
+
+export function useRemoveApplicationsTagList<
+	TData = Awaited<ReturnType<typeof removeApplicationsTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	applicationId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeApplicationsTagList>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getRemoveApplicationsTagListQueryOptions(
+		applicationId,
+		tagRequestList,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}

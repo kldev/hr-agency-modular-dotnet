@@ -4,11 +4,12 @@ import { MessagePreview } from "@/components/ui/MessagePreview";
 import { formatDateTimeIntl } from "@/utlis";
 import "./notes.css";
 import { PlusIcon } from "lucide-react";
+import { jobDescriptionKeys } from "#/api";
 import { Button } from "@/components/ui";
 
 export function NotesList({ id, add }: { id: string; add: () => void }) {
 	const notesQuery = useQuery({
-		queryKey: ["job-application-notes", id],
+		queryKey: jobDescriptionKeys.notes(id),
 		queryFn: ({ signal }) => {
 			if (!id) {
 				throw new Error("Job application id is required");

@@ -14,13 +14,13 @@ interface AplicationsTableProps {
 
 export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 	const formRef = useRef<JobApplicationsRef>(null);
-	const navigate = useNavigate();
 
 	const handleActions: Actions = {
 		onAction: (action, item) => {
 			formRef.current?.update(item.id, action, item.status);
 		},
 	};
+	const navigate = useNavigate();
 
 	const handleRowClick = (value: JobApplicationProjection) => {
 		navigate({

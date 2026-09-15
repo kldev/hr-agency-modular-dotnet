@@ -1,7 +1,7 @@
 using HrAgencySystem.JobDescription.Domain;
-using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 
@@ -33,7 +33,7 @@ public sealed record JobDescriptionProjection(
     UserSnapshot? ModifiedBy,
     CompanySnapshot Company,
     DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt)
+    DateTimeOffset? ModifiedAt) : IAudit
 {
     public static JobDescriptionProjection Create(
         JobDescriptionCreated @event)
@@ -62,7 +62,7 @@ public sealed record JobDescriptionProjection(
             @event.CreatedBy, null, null,
             @event.Company,
             @event.CreatedAt,
-            @event.CreatedAt);
+            null);
     }
 
     public JobDescriptionProjection Apply(
@@ -83,7 +83,7 @@ public sealed record JobDescriptionProjection(
             CurrencyCode = @event.CurrencyCode,
             SalaryMin = @event.SalaryMin,
             SalaryMax = @event.SalaryMax,
-            UpdatedAt = @event.UpdatedAt,
+            ModifiedAt = @event.UpdatedAt,
             ModifiedById = @event.ModifiedBy.Id,
             ModifiedBy = @event.ModifiedBy
         };
@@ -95,7 +95,7 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.Open,
-            UpdatedAt = @event.OccurredAt,
+            ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
             ModifiedBy = @event.ModifiedBy
         };
@@ -107,7 +107,7 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.OnHold,
-            UpdatedAt = @event.OccurredAt,
+            ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
             ModifiedBy = @event.ModifiedBy
         };
@@ -119,7 +119,7 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.Closed,
-            UpdatedAt = @event.OccurredAt,
+            ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
             ModifiedBy = @event.ModifiedBy
         };
@@ -131,7 +131,7 @@ public sealed record JobDescriptionProjection(
         return this with
         {
             Status = JobDescriptionStatus.Cancelled,
-            UpdatedAt = @event.OccurredAt,
+            ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
             ModifiedBy = @event.ModifiedBy
         };
@@ -144,7 +144,7 @@ public sealed record JobDescriptionProjection(
         {
             RecruiterId = @event.Recruiter.Id,
             Recruiter = @event.Recruiter,
-            UpdatedAt = @event.OccurredAt,
+            ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
             ModifiedBy = @event.ModifiedBy
         };

@@ -18,4 +18,7 @@ public sealed record UserSnapshot(
     string Email)
 {
     public string Fullname => $"{FirstName} {LastName}".Trim();
+
+    public static UserSnapshot System
+        => new UserSnapshot(Guid.NewGuid(), "", "", "system");
 }

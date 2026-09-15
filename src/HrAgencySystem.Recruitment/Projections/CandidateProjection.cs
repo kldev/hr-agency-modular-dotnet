@@ -3,6 +3,7 @@ using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Recruitment.Projections;
 
@@ -26,7 +27,7 @@ public sealed record CandidateProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset CreatedAt,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    UserSnapshot? CreatedBy,
+    UserSnapshot CreatedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid? CreatedById,
     // ReSharper disable once NotAccessedPositionalProperty.Global
@@ -40,7 +41,7 @@ public sealed record CandidateProjection(
     DateTimeOffset? ModifiedAt,
     string Note,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    string FullName)
+    string FullName): IAudit
 {
     public static CandidateProjection Create(
         CandidateCreated @event)
@@ -54,7 +55,7 @@ public sealed record CandidateProjection(
             @event.Source,
             CandidateStatus.Active,
             @event.CreatedAt,
-            @event.CreatedBy,
+            @event.CreatedBy ?? new UserSnapshot(Guid.NewGuid(), "", "","system"),
             @event.CreatedBy?.Id,
             null,
             null,

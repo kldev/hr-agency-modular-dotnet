@@ -6,13 +6,15 @@ import {
 	getWorkModeLabel,
 } from "@/components";
 import {
+	AuditInformation,
 	DataDetails,
 	DetailsHeader,
 	DetailsListSection,
+	DetailsLoading,
 	JobDescriptionBadge,
 } from "@/components/ui";
 import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
-import { formatDateTime } from "@/utlis";
+import { useGetJobDescription } from "./hooks";
 
 function JobDescriptionOverview({ jobDescription }: { jobDescription: JobDescriptionProjection }) {
 	return (
@@ -80,9 +82,16 @@ function JobDescriptionDescription({
 	);
 }
 
-const JobDescriptionDetailsPage: React.FC<{ jobDescription: JobDescriptionProjection }> = ({
-	jobDescription,
-}) => {
+const JobDescriptionDetailsPage: React.FC<{ id: string }> = ({ id }) => {
+	var query = useGetJobDescription(id);
+	if (!id || query.isLoading || query.isError || !query.data) {
+		return (
+			<DetailsLoading id={id} isLoading={query.isLoading} isError={query.isError || !query.data} />
+		);
+	}
+
+	const jobDescription = query.data;
+
 	return (
 		<DataDetails>
 			<DetailsHeader
@@ -124,24 +133,12 @@ const JobDescriptionDetailsPage: React.FC<{ jobDescription: JobDescriptionProjec
 					<>
 						<JobDescriptionOverview jobDescription={jobDescription} />
 
-						<section className="data-details-section">
-							<div className="data-details-section-header">
-								<div>
-									<h2>Audit</h2>
-									<p>Record information</p>
-								</div>
-							</div>
-
-							<dl className="data-details-list">
-								<DetailItem label="Created">{formatDateTime(jobDescription.createdAt)}</DetailItem>
-
-								<DetailItem label="Created by">{jobDescription.createdBy.fullname}</DetailItem>
-
-								<DetailItem label="Updated">{formatDateTime(jobDescription.updatedAt)}</DetailItem>
-
-								<DetailItem label="Modified by">{jobDescription.modifiedBy?.fullname}</DetailItem>
-							</dl>
-						</section>
+						<AuditInformation
+							createdAt={jobDescription.createdAt}
+							createdBy={jobDescription.createdBy}
+							modifiedAt={jobDescription.modifiedAt}
+							modifiedBy={jobDescription.modifiedBy}
+						/>
 					</>
 				}
 			/>

@@ -517,7 +517,7 @@ public sealed class JobApplicationTests
             EmailAddress,
             "+1 112 123 124",
             "Test", "Last",
-            createdAt ?? DateTimeOffset.UtcNow);
+            createdAt ?? DateTimeOffset.UtcNow, null);
     }
 
     private static JobApplicationScreeningStarted CreateScreeningStarted(

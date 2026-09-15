@@ -17,5 +17,6 @@ internal static class Endpoint
         Maps.MapCreateNote.Map(group);
         Maps.MapUpdate.Map(group);
         Maps.MapTagList.Map(group);
+        Maps.MapRemoveTagList.Map(group);
     }
 }

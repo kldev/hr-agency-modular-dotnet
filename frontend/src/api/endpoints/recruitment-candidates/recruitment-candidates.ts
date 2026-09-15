@@ -910,3 +910,152 @@ export function useAddMultipleTagToCandidate<
 
 	return withQueryKey(query, queryOptions.queryKey);
 }
+
+/**
+ * @summary Remove tag list
+ */
+export const removeCandidateTagList = (
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<CandidateTagRemoved>(
+		{
+			url: `/api/recruitment/candidates/${candidateId}/tag/remove`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: tagRequestList,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getRemoveCandidateTagListQueryKey = (
+	candidateId: string,
+	tagRequestList?: BodyType<TagRequestList>,
+) => {
+	return ["PUT", `/api/recruitment/candidates/${candidateId}/tag/remove`, tagRequestList] as const;
+};
+
+export const getRemoveCandidateTagListQueryOptions = <
+	TData = Awaited<ReturnType<typeof removeCandidateTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeCandidateTagList>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getRemoveCandidateTagListQueryKey(candidateId, tagRequestList);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof removeCandidateTagList>>> = ({ signal }) =>
+		removeCandidateTagList(candidateId, tagRequestList, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: candidateId !== null && candidateId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof removeCandidateTagList>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type RemoveCandidateTagListQueryResult = NonNullable<
+	Awaited<ReturnType<typeof removeCandidateTagList>>
+>;
+export type RemoveCandidateTagListQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useRemoveCandidateTagList<
+	TData = Awaited<ReturnType<typeof removeCandidateTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeCandidateTagList>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof removeCandidateTagList>>,
+					TError,
+					Awaited<ReturnType<typeof removeCandidateTagList>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRemoveCandidateTagList<
+	TData = Awaited<ReturnType<typeof removeCandidateTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeCandidateTagList>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof removeCandidateTagList>>,
+					TError,
+					Awaited<ReturnType<typeof removeCandidateTagList>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRemoveCandidateTagList<
+	TData = Awaited<ReturnType<typeof removeCandidateTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeCandidateTagList>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Remove tag list
+ */
+
+export function useRemoveCandidateTagList<
+	TData = Awaited<ReturnType<typeof removeCandidateTagList>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	candidateId: string,
+	tagRequestList: BodyType<TagRequestList>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof removeCandidateTagList>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getRemoveCandidateTagListQueryOptions(candidateId, tagRequestList, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}

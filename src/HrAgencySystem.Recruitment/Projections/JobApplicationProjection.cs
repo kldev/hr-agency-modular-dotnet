@@ -4,6 +4,7 @@ using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Recruitment.Projections;
 
@@ -37,7 +38,7 @@ public sealed record JobApplicationProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset CreatedAt,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    DateTimeOffset UpdatedAt,
+    DateTimeOffset? ModifiedAt,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     IReadOnlyList<Tag> Tags,
     // ReSharper disable once NotAccessedPositionalProperty.Global
@@ -49,7 +50,8 @@ public sealed record JobApplicationProjection(
     string ApplicantFirstName,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string ApplicantLastName,
-    Guid JobPostId)
+    Guid JobPostId,
+    UserSnapshot CreatedBy): IAudit
 {
     public static JobApplicationProjection Create(JobApplicationCreated @event)
     {
@@ -75,7 +77,8 @@ public sealed record JobApplicationProjection(
             @event.Company,
             @event.ApplicantFirstName,
             @event.ApplicantLastName,
-            @event.JobPostId);
+            @event.JobPostId,
+            @event.CreatedBy ?? UserSnapshot.System);
     }
 
     public static JobApplicationProjection Apply(
@@ -168,7 +171,7 @@ public sealed record JobApplicationProjection(
         {
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author,
-            UpdatedAt = @event.OccurredAt
+            ModifiedAt = @event.OccurredAt
         };
     }
     

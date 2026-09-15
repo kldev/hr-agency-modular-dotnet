@@ -37,7 +37,8 @@ export interface JobApplicationProjection {
 	modifiedById: string | null;
 	modifiedBy: null | UserSnapshot;
 	createdAt: string;
-	updatedAt: string;
+	/** @nullable */
+	modifiedAt: string | null;
 	tags: Tag[];
 	tagsIds: string[];
 	companyId: string;
@@ -45,4 +46,5 @@ export interface JobApplicationProjection {
 	applicantFirstName: string;
 	applicantLastName: string;
 	jobPostId: string;
+	createdBy: UserSnapshot;
 }

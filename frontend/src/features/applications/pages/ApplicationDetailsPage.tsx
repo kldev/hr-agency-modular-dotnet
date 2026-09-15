@@ -1,49 +1,34 @@
 import { useRef } from "react";
 
-import { ApplicationBadge, DataDetails, DetailsHeader, DetailsListSection } from "@/components/ui";
+import {
+	ApplicationBadge,
+	AuditInformation,
+	DataDetails,
+	DetailsHeader,
+	DetailsListSection,
+	DetailsLoading,
+} from "@/components/ui";
 import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
 import { applicationSources } from "../types";
 import { ApplicationsActionDrawers, DetailsActions, type JobApplicationsRef } from "./components";
 import { NotesList } from "./components/details";
 import { useGetApplicationDetails } from "./hooks";
 
-function formatDate(value?: string | null) {
-	if (!value) return "—";
-
-	return new Intl.DateTimeFormat("pl-PL", {
-		dateStyle: "medium",
-		timeStyle: "short",
-	}).format(new Date(value));
-}
-
 const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 	const formRef = useRef<JobApplicationsRef>(null);
 
 	const applicationQuery = useGetApplicationDetails(id);
 
-	if (!id) {
+	if (!id || applicationQuery.isLoading || applicationQuery.isError || !applicationQuery.data) {
 		return (
-			<div className="job-application-details">
-				<div className="data-details-empty">Application not found.</div>
-			</div>
+			<DetailsLoading
+				id={id}
+				isLoading={applicationQuery.isLoading}
+				isError={applicationQuery.isError || !applicationQuery.data}
+			/>
 		);
 	}
 
-	if (applicationQuery.isLoading) {
-		return (
-			<div className="job-application-details">
-				<div className="data-details-loading">Loading application...</div>
-			</div>
-		);
-	}
-
-	if (applicationQuery.isError || !applicationQuery.data) {
-		return (
-			<div className="job-application-details">
-				<div className="data-details-error">Unable to load application.</div>
-			</div>
-		);
-	}
 	const refetch = () => {
 		applicationQuery.refetch();
 	};
@@ -109,36 +94,6 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 						<section className="data-details-section">
 							<div className="data-details-section-header">
 								<div>
-									<h2>Candidate</h2>
-									<p>Candidate profile</p>
-								</div>
-							</div>
-
-							<dl className="data-details-list">
-								<DetailItem label="Candidate">
-									{application.candidateInfo?.fullName ?? application.applicantFullName}
-								</DetailItem>
-
-								<DetailItem label="Candidate ID">{application.candidateId}</DetailItem>
-
-								<DetailItem label="Latest interview">
-									{application.latestInterviewId ? <span>Scheduled</span> : "—"}
-								</DetailItem>
-							</dl>
-						</section>
-						<NotesList
-							id={application.id}
-							add={() => {
-								formRef?.current?.update(application.id, "add-note");
-							}}
-						/>
-					</>
-				}
-				sidebar={
-					<>
-						<section className="data-details-section">
-							<div className="data-details-section-header">
-								<div>
 									<h2>Application</h2>
 									<p>Application and recruitment details</p>
 								</div>
@@ -152,20 +107,38 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 								<DetailItem label="Status">
 									<ApplicationBadge status={application.status} />
 								</DetailItem>
-
-								<DetailItem label="Created">{formatDate(application.createdAt)}</DetailItem>
-
-								<DetailItem label="Last modified">{formatDate(application.updatedAt)}</DetailItem>
-
-								<DetailItem label="Modified by">{application.modifiedBy?.fullname}</DetailItem>
 							</dl>
 						</section>
+
+						<NotesList
+							id={application.id}
+							add={() => {
+								formRef?.current?.update(application.id, "add-note");
+							}}
+						/>
+					</>
+				}
+				sidebar={
+					<>
+						<AuditInformation
+							createdAt={application.createdAt}
+							createdBy={application.createdBy}
+							modifiedAt={application.modifiedAt}
+							modifiedBy={application.modifiedBy}
+						/>
 						<div className="data-content-lists ">
 							<DetailsListSection
 								title="Tags"
 								items={tags}
 								className="short-items-section"
-								onAdd={() => {}}
+								onAdd={() => {
+									formRef.current?.update(
+										application.id,
+										"tag",
+										undefined,
+										application.applicantFullName,
+									);
+								}}
 							/>
 						</div>
 					</>

@@ -16,6 +16,7 @@
 import type { CandidateInfo } from "./candidateInfo.ts";
 import type { CandidateSource } from "./candidateSource.ts";
 import type { CompanySnapshot } from "./companySnapshot.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface JobApplicationCreated {
 	jobApplicationId: string;
@@ -30,6 +31,7 @@ export interface JobApplicationCreated {
 	applicantFirstName: string;
 	applicantLastName: string;
 	createdAt: string;
+	createdBy?: null | UserSnapshot;
 	/** @nullable */
 	fullName?: string | null;
 }

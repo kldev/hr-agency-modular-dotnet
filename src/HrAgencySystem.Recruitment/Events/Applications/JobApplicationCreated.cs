@@ -16,7 +16,8 @@ public sealed record JobApplicationCreated(
     string ApplicantPhone,
     string ApplicantFirstName,
     string ApplicantLastName,
-    DateTimeOffset CreatedAt)
+    DateTimeOffset CreatedAt,
+    UserSnapshot? CreatedBy = null)
 {
     public string FullName => $"{ApplicantFirstName} {ApplicantLastName}".Trim();
 }

@@ -50,5 +50,6 @@ export interface JobDescriptionProjection {
 	modifiedBy: null | UserSnapshot;
 	company: CompanySnapshot;
 	createdAt: string;
-	updatedAt: string;
+	/** @nullable */
+	modifiedAt: string | null;
 }

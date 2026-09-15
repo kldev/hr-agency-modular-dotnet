@@ -28,7 +28,7 @@ export interface CandidateProjection {
 	source: CandidateSource;
 	status: CandidateStatus;
 	createdAt: string;
-	createdBy: null | UserSnapshot;
+	createdBy: UserSnapshot;
 	/** @nullable */
 	createdById: string | null;
 	modifiedBy: null | UserSnapshot;
