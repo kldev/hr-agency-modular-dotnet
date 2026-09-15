@@ -57,6 +57,7 @@ public static class RecruitmentServiceCollectionExtensions
             services.AddScoped<IInterviewsQueryRepository, InterviewsQueryRepository>();
             services.AddScoped<IJobApplicationInfoQueryRepository, JobApplicationInfoQueryRepository>();
             services.AddScoped<IRecruitmentService, RecruitmentService>();
+            services.AddScoped<IJobPostSuggestionRepository, JobPostSuggestionRepository>();
 
             services.AddHostedService<JobFeedSchedulerWorker>();
             services.AddHostedService<JobFeedGenerationWorker>();

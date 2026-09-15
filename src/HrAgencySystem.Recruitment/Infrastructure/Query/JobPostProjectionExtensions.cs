@@ -1,5 +1,6 @@
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.SharedKernel.Extensions;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Query;
 
@@ -19,9 +20,7 @@ internal static class JobPostProjectionExtensions
 
         internal IQueryable<JobPostProjection> WithCompanyId(Guid? companyId)
         {
-            if (!companyId.HasValue || companyId.Value == Guid.Empty) return query;
-        
-            return query.Where(q => q.CompanyId == companyId);
+            return companyId.IsInvalid() ? query : query.Where(q => q.CompanyId == companyId);
         }
 
         internal IQueryable<JobPostProjection> WithRecruiterId(Guid? recruiterId)
@@ -57,6 +56,11 @@ internal static class JobPostProjectionExtensions
         internal IQueryable<JobPostProjection> WithPostId(Guid postId)
         {
             return query.Where(q => q.Id == postId);
+        }
+        
+        internal IQueryable<JobPostProjection> WithStatus(JobPostStatus? status)
+        {
+            return !status.HasValue ? query : query.Where(q => q.Status == status);
         }
     }
 }

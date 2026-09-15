@@ -13,6 +13,7 @@ using Marten;
 
 namespace HrAgencySystem.Recruitment.Services;
 
+// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class RecruitmentService(
     IUserSnapshotRepository userSnapshotRepository,
     ICompanySnapshotRepository companySnapshotRepository,
@@ -75,8 +76,7 @@ public sealed class RecruitmentService(
         var application = await GetApplicationAsync(jobApplicationId.Value, organizationId.Value, ct);
         var noteEvent = new JobApplicationNoteAdded(jobApplicationId.Value, application.CandidateId,
             clock.UtcNow, shortNote!.Value, user);
-
-        // save changes will be called by wolverine handler
+        
         session.Events.Append(jobApplicationId.Value, @noteEvent);
 
         await noteRepository.CreateNoteAsync(

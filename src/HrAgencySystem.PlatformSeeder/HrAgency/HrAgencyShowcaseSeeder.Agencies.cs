@@ -105,6 +105,8 @@ public sealed partial class HrAgencyShowcaseSeeder
             "Agency seed completed: {Slug} ({OrganizationId})",
             organization.Slug,
             organization.OrganizationId);
+
+        await new TagsScenario(bus, session).Seed(organization.OrganizationId, userIds);
     }
 
     private async Task SeedMinimalAgency(
@@ -129,6 +131,10 @@ public sealed partial class HrAgencyShowcaseSeeder
             companyIds);
 
         await PostToChannel(userIds);
+        
+        await GenerateApplicants(20);
+        
+        await new TagsScenario(bus, session).Seed(organization.OrganizationId, userIds);
     }
 
     private async Task<IReadOnlyList<Guid>> CreateUsers(

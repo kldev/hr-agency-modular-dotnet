@@ -27,10 +27,11 @@ internal static class MapGetSlice
         Guid[]? tag,
         JobApplicationStatus[]? status,
         CandidateSource[]? source,
+        Guid? jobPostId,
         int page = 1, int pageSize = 100,
         CancellationToken ct = default)
     {
-        var query = new JobApplicationQuery(search ?? "", companyId, tag ?? [], status, source ?? [], page, pageSize);
+        var query = new JobApplicationQuery(search ?? "", companyId, tag ?? [], status, source ?? [], jobPostId, page, pageSize);
         var result = await repository.GetJobApplications(user.OrganizationId, query, ct);
         
         return TypedResults.Ok(result);

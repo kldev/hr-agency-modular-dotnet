@@ -17,6 +17,7 @@ public sealed class JobApplicationQueryRepository(IQuerySession session) : IJobA
             .WithStatus(query.Status ?? [])
             .WithTags(query.Tags)
             .WithSearch(query.Search)
+            .WithJobPostId(query.JobPostId)
             .OrderByDescending(z=>z.CreatedAt)
             .ToSlice(query, ct);
     }

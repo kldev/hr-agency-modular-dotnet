@@ -1,6 +1,7 @@
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.SharedKernel.Extensions;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Query;
 
@@ -18,12 +19,15 @@ internal static class JobApplicationProjectionExtensions
         {
             return query.Where(q => q.OrgId == organizationId);
         }
+        
+        internal IQueryable<JobApplicationProjection> WithJobPostId(Guid? jobPostId)
+        {
+            return jobPostId.IsInvalid() ? query : query.Where(q => q.JobPostId == jobPostId);
+        }
 
         internal IQueryable<JobApplicationProjection> WithCompanyId(Guid? companyId)
         {
-            if (!companyId.HasValue || companyId.Value == Guid.Empty) return query;
-        
-            return query.Where(q => q.CompanyId == companyId.Value);
+            return companyId.IsInvalid() ? query : query.Where(q => q.CompanyId == companyId);
         }
 
         internal IQueryable<JobApplicationProjection> WithStatus(IReadOnlyList<JobApplicationStatus> statuses)
@@ -38,10 +42,7 @@ internal static class JobApplicationProjectionExtensions
 
         internal IQueryable<JobApplicationProjection> WithTags(IReadOnlyList<Guid> tags)
         {
-            if (tags.Count == 0)
-                return query;
-
-            return tags.Aggregate(query, (current, tag) => current.Where(q => q.TagsIds.Contains(tag)));
+            return tags.Count == 0 ? query : tags.Aggregate(query, (current, tag) => current.Where(q => q.TagsIds.Contains(tag)));
         }
 
         internal IQueryable<JobApplicationProjection> WithSearch(string search)
