@@ -1,3 +1,5 @@
+import type { PersonInfo } from "#/types";
+
 export type InterviewActionsType =
 	| "change-format"
 	| "change-status"
@@ -5,7 +7,7 @@ export type InterviewActionsType =
 	| "reschedule";
 
 export interface ScheduleInterviewCommand {
-	schedule: (jobApplicationId: string) => void;
+	schedule: (jobApplicationId: string, applicant: PersonInfo) => void;
 }
 
 export interface ChangeInterviewFormatCommand {

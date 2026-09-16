@@ -8,7 +8,7 @@ import { clampDate, normalizeDate } from "./datePickerUtils";
 
 export interface DatePickerProps {
 	value?: Date | null;
-	onChange: (value: Date | null) => void;
+	onChange?: (value: Date | null) => void;
 
 	placeholder?: string;
 
@@ -112,7 +112,7 @@ export function DatePicker({
 	const handleSelect = (date: Date) => {
 		const normalized = normalizeDate(date);
 
-		onChange(normalized);
+		onChange?.(normalized);
 		setVisibleMonth(normalized);
 		setOpen(false);
 
@@ -122,7 +122,7 @@ export function DatePicker({
 	};
 
 	const handleClear = () => {
-		onChange(null);
+		onChange?.(null);
 		setOpen(false);
 
 		requestAnimationFrame(() => {
@@ -133,7 +133,7 @@ export function DatePicker({
 	const handleToday = () => {
 		const today = clampDate(new Date(), minDate, maxDate);
 
-		onChange(today);
+		onChange?.(today);
 		setVisibleMonth(today);
 		setOpen(false);
 

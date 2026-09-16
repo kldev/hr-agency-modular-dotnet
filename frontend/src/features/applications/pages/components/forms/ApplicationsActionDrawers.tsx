@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef } from "react";
-import type { JobApplicationStatus } from "#/api/models";
+
 import {
 	type ScheduleInterviewCommand,
 	ScheduletInterviewDrawer,
@@ -12,7 +12,7 @@ import {
 	type EditApplicantCommand,
 	EditApplicantDrawer,
 } from "../forms";
-import type { JobApplicationsActionsType, JobApplicationsRef } from ".";
+import type { JobApplicationsRef } from ".";
 import { type AddTagCommand, AddTagsDrawer } from "./add-tag";
 
 interface ApplicationsActionDrawersProps {
@@ -30,11 +30,7 @@ const ApplicationsActionDrawers = forwardRef<JobApplicationsRef, ApplicationsAct
 		useImperativeHandle(
 			ref,
 			() => ({
-				update: (
-					id: string,
-					action: JobApplicationsActionsType,
-					current?: JobApplicationStatus,
-				) => {
+				update: (id, action, current, info) => {
 					switch (action) {
 						case "add-note":
 							addNoteRef.current?.addNote(id);
@@ -46,7 +42,7 @@ const ApplicationsActionDrawers = forwardRef<JobApplicationsRef, ApplicationsAct
 							changeStatusRef.current?.changeStatus(id, current ?? "Applied");
 							break;
 						case "schedule":
-							scheduleRef.current?.schedule(id);
+							scheduleRef.current?.schedule(id, info ?? {});
 							break;
 						case "tag":
 							tagRef.current?.addTag(id, "", "application");

@@ -1,12 +1,10 @@
 using HrAgencySystem.Recruitment.Domain.Interviews;
-using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Interviews;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using Marten;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.Interviews.Reschedule;

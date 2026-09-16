@@ -12,12 +12,14 @@ import {
 	type MoneyInputProps,
 	Textarea,
 	type TextareaProps,
+	TimeInput,
 	Toggle,
 	type ToggleProps,
 	UsersPicker,
 } from "#/components/ui";
 import { parseScheduledAt } from "#/features/interviews/utils";
 import { formatLocalDateTime } from "#/utlis/formatLocalDateTime";
+import type { FormDateTimeValue } from ".";
 
 type AppInputProps<T> = {
 	label: string;
@@ -96,6 +98,7 @@ export function FormTextAreaInput({
 
 type FormUserPickerProps = {
 	role?: OrganizationRole;
+	placeholder?: string;
 } & AppInputProps<{ id: string | null; user?: UserSuggestion | null }>;
 
 export function FormUserPicker({
@@ -106,6 +109,7 @@ export function FormUserPicker({
 	handleChange,
 	role,
 	errors,
+	placeholder,
 }: FormUserPickerProps) {
 	const [input, setInput] = useState("");
 
@@ -115,6 +119,7 @@ export function FormUserPicker({
 				{label}
 			</label>
 			<UsersPicker
+				placeholder={placeholder}
 				disabled={isSubmitting}
 				value={fieldValue?.id ?? ""}
 				inputValue={input}
@@ -270,11 +275,10 @@ export function FormMoneyInput({
 }: FormMoneyInputProps) {
 	return (
 		<div className="form-field">
-			{" "}
 			<label className="form-label" htmlFor={fieldName}>
 				{" "}
-				{label}{" "}
-			</label>{" "}
+				{label}
+			</label>
 			<MoneyInput
 				{...props}
 				id={fieldName}
@@ -285,6 +289,55 @@ export function FormMoneyInput({
 				onChange={(event) => handleChange(event.target.value)}
 			/>{" "}
 			<FieldError errors={errors} />{" "}
+		</div>
+	);
+}
+
+type FormDateTimeProps = DatePickerProps & AppInputProps<FormDateTimeValue>;
+
+export function FormDateTime({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	handleChange,
+	errors,
+}: FormDateTimeProps) {
+	const datePart = fieldValue ? fieldValue.date : null;
+	const timePart = fieldValue ? fieldValue.time : null;
+
+	return (
+		<div className="form-field">
+			<label className="form-label" htmlFor={fieldName}>
+				{label}
+			</label>
+
+			<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+				<div className="form-field">
+					<span className="form-label">Date</span>
+
+					<DatePicker
+						value={datePart}
+						onChange={(v) => {
+							handleChange({ date: v, time: timePart ?? "" });
+						}}
+						disabled={isSubmitting}
+						clearable
+					/>
+				</div>
+
+				<div className="form-field">
+					<span className="form-label">Time</span>
+
+					<TimeInput
+						value={timePart ?? undefined}
+						onChange={(v) => handleChange({ date: datePart, time: v })}
+						disabled={isSubmitting}
+					/>
+				</div>
+			</div>
+
+			<FieldError errors={errors} />
 		</div>
 	);
 }

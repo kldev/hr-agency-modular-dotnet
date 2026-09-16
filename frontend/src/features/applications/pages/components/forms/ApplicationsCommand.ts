@@ -1,3 +1,4 @@
+import type { PersonInfo } from "#/types";
 import type { JobApplicationStatus } from "@/api/models";
 
 export type JobApplicationsActionsType =
@@ -26,6 +27,6 @@ export interface JobApplicationsRef {
 		id: string,
 		action: JobApplicationsActionsType,
 		curent?: JobApplicationStatus,
-		display?: string,
+		info?: PersonInfo,
 	) => void;
 }

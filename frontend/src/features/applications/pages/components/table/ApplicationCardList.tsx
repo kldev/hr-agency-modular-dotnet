@@ -23,7 +23,10 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 
 	const handleActions: Actions = {
 		onAction: (action, item) => {
-			formRef.current?.update(item.id, action, item.status, item.applicantFullName);
+			formRef.current?.update(item.id, action, item.status, {
+				email: item.applicantEmail,
+				fullName: item.applicantFullName,
+			});
 		},
 	};
 	return (
@@ -65,12 +68,10 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 							items={[...application.tags.flatMap((z) => z.name)]}
 							className="short-items-section bg-none!"
 							onAdd={() => {
-								formRef?.current?.update(
-									application.id,
-									"tag",
-									undefined,
-									application.applicantFullName,
-								);
+								formRef?.current?.update(application.id, "tag", undefined, {
+									email: application.applicantEmail,
+									fullName: application.applicantFullName,
+								});
 							}}
 						/>
 					</div>

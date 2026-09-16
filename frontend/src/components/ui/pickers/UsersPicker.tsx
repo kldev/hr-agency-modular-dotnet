@@ -25,7 +25,7 @@ export function UsersPicker(props: Props) {
 	return (
 		<SuggestionPicker<UserSuggestion>
 			{...props}
-			placeholder={props.placeholder ?? "Search recruiter..."}
+			placeholder={props.placeholder ?? "Search ..."}
 			loadSuggestions={searchUsers}
 			getKey={(user) => user.id}
 			getLabel={(user) => user.fullName}

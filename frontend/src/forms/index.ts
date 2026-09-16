@@ -2,9 +2,12 @@ import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 
 const { fieldContext, formContext } = createFormHookContexts();
 
+export type FormDateTimeValue = { date: Date | null; time: string };
+
 import {
 	FormCompanyPicker,
 	FormDatePicker,
+	FormDateTime,
 	FormInput,
 	FormMoneyInput,
 	FormSelectEnum,
@@ -23,6 +26,7 @@ export const { useAppForm } = createFormHook({
 		FormToggle,
 		FormDatePicker,
 		FormMoneyInput,
+		FormDateTime,
 	},
 	formComponents: {},
 	fieldContext,

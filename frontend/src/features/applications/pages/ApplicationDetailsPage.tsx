@@ -132,12 +132,10 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 								items={tags}
 								className="short-items-section"
 								onAdd={() => {
-									formRef.current?.update(
-										application.id,
-										"tag",
-										undefined,
-										application.applicantFullName,
-									);
+									formRef.current?.update(application.id, "tag", undefined, {
+										fullName: application.applicantFullName,
+										email: application.applicantEmail,
+									});
 								}}
 							/>
 						</div>

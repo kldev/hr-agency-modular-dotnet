@@ -78,6 +78,8 @@ public sealed class Interview : IOrganizationDomain
     {
         ScheduleAt = @event.ScheduleAt;
         Timezone = @event.Timezone;
+        Note = ShortNote.Create(@event.Note, false);
+        Status = InterviewStatus.Rescheduled;
         ApplyCommon(@event);
     }
     

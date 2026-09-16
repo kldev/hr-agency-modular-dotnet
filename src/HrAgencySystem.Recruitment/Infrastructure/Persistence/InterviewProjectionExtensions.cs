@@ -89,6 +89,7 @@ internal static class InterviewProjectionExtensions
             : query.Where(i => i.ApplicantInfo.Email.Contains(search, StringComparison.OrdinalIgnoreCase)
                                || i.ApplicantInfo.FirstName.Contains(search, StringComparison.OrdinalIgnoreCase)
                                || i.ApplicantInfo.LastName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                               || i.ApplicantInfo.FullName.Contains(search, StringComparison.OrdinalIgnoreCase)
                                || i.ApplicantInfo.PhoneNumber.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 }

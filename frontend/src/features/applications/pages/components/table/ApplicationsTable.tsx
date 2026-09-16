@@ -17,7 +17,10 @@ export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 
 	const handleActions: Actions = {
 		onAction: (action, item) => {
-			formRef.current?.update(item.id, action, item.status);
+			formRef.current?.update(item.id, action, item.status, {
+				fullName: item.applicantFullName,
+				email: item.applicantEmail,
+			});
 		},
 	};
 	const navigate = useNavigate();

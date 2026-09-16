@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
-import { useAppForm } from "#/forms";
+import { useMemo } from "react";
+import { type FormDateTimeValue, useAppForm } from "#/forms";
 import type { RescheduleInterviewRequest } from "@/api/models";
-import { DatePicker, TimeInput } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { parseScheduledAt } from "@/features/interviews/utils";
 import { formatLocalDateTime, getBrowserTimezone } from "@/utlis/formatLocalDateTime";
@@ -12,6 +11,14 @@ interface RescheduleFormProps {
 	error?: Error | null;
 	formId: string;
 	isSubmitting: boolean;
+}
+
+interface RescheduleIntervieFormValues {
+	scheduledAt: FormDateTimeValue;
+	note: string;
+	scheduledTimezone?: string;
+	location?: string;
+	meetingUrl?: string;
 }
 
 export function RescheduleForm({
@@ -25,22 +32,26 @@ export function RescheduleForm({
 		() => parseScheduledAt(initialValue.scheduledAt),
 		[initialValue.scheduledAt],
 	);
-	const [scheduledDate, setScheduledDate] = useState<Date | null>(initialScheduled.date);
 
-	const [scheduledTime, setScheduledTime] = useState<string>(initialScheduled.time);
+	const intialFormValue: RescheduleIntervieFormValues = {
+		note: initialValue.note,
+		meetingUrl: initialValue.meetingUrl,
+		scheduledAt: {
+			date: initialScheduled.date,
+			time: initialScheduled.time,
+		},
+		location: initialValue.location,
+	};
 
 	const form = useAppForm({
-		defaultValues: initialValue,
+		defaultValues: intialFormValue,
 
 		onSubmit: async ({ value }) => {
-			if (!scheduledDate || !scheduledTime) {
-				return;
-			}
-
+			console.log(`On submit ${JSON.stringify(value.scheduledAt)}`);
 			onSubmit({
 				...value,
-				scheduledAt: formatLocalDateTime(scheduledDate, scheduledTime),
-				scheduledTimezone: value.scheduledTimezone || getBrowserTimezone(),
+				scheduledAt: formatLocalDateTime(value.scheduledAt.date as Date, value.scheduledAt.time),
+				scheduledTimezone: getBrowserTimezone(),
 			});
 		},
 	});
@@ -53,38 +64,34 @@ export function RescheduleForm({
 				void form.handleSubmit();
 			}}
 		>
-			<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-				<div className="form-field">
-					<span className="form-label">Date</span>
+			<form.AppField
+				name="scheduledAt"
+				validators={{
+					onChange: ({ value }) => {
+						if (!value.date) return "Date is required";
+						if (!value.time) return "Time is required";
 
-					<DatePicker
-						value={scheduledDate}
-						onChange={setScheduledDate}
-						disabled={isSubmitting}
-						clearable
+						return undefined;
+					},
+				}}
+			>
+				{(field) => (
+					<field.FormDateTime
+						fieldValue={field.state.value}
+						label="Schedule at"
+						errors={field.state.meta.errors}
+						fieldName={field.name}
+						handleChange={(val) => field.handleChange(val)}
+						isSubmitting={isSubmitting}
 					/>
-
-					{!scheduledDate && (
-						<div className="mt-1 text-xs text-(--color-danger)">Date is required</div>
-					)}
-				</div>
-
-				<div className="form-field">
-					<span className="form-label">Time</span>
-
-					<TimeInput value={scheduledTime} onChange={setScheduledTime} disabled={isSubmitting} />
-
-					{!scheduledTime && (
-						<div className="mt-1 text-xs text-(--color-danger)">Time is required</div>
-					)}
-				</div>
-			</div>
+				)}
+			</form.AppField>
 
 			<form.AppField name="note">
 				{(field) => (
 					<field.FormTextAreaInput
 						fieldValue={field.state.value}
-						label="Description"
+						label="Note"
 						errors={field.state.meta.errors}
 						fieldName={field.name}
 						handleChange={(val) => field.handleChange(val)}

@@ -97,12 +97,15 @@ public sealed record InterviewProjection(
     }
     public InterviewProjection Apply(InterviewRescheduled @event)
     {
+        Console.WriteLine("Change status: Rescheduled, " + ApplicantInfo.FullName);
         return ApplyCommon(this, @event) with
         {
             ScheduleAt = @event.ScheduleAt,
             Timezone = @event.Timezone,
             Location = @event.Location,
-            MeetingUrl =@event.MeetingUrl
+            MeetingUrl =@event.MeetingUrl,
+            Status = InterviewStatus.Rescheduled,
+            Note = @event.Note
         };
     }
 }
