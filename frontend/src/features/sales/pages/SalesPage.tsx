@@ -6,7 +6,12 @@ import { Route } from "#/routes/app/sales";
 
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { CreateOpportunityDrawer, type CreateOpportunityRef, SalesTable } from "../components";
+import {
+	CreateOpportunityDrawer,
+	type CreateOpportunityRef,
+	SalesCardList,
+	SalesTable,
+} from "../components";
 import { SalesToolbar } from "../components/SalesToolbar";
 import { type SalesPageFillters, useGetOpportunitesSlice } from "../hooks";
 import { salesStageOptions } from "../types";
@@ -30,6 +35,7 @@ const SalesPage: React.FC = () => {
 
 	return (
 		<Page
+			className="has-mobile-view"
 			title="Sales"
 			description="Manage your leads and sales opportunities THROUGH the pipeline."
 			onRefresh={onRefresh}
@@ -66,6 +72,7 @@ const SalesPage: React.FC = () => {
 				}}
 			/>
 			<SalesTable items={items} onRefresh={onRefresh} />
+			<SalesCardList items={items} onRefresh={onRefresh} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

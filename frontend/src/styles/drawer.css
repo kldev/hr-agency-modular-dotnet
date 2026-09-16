@@ -64,7 +64,7 @@
 	flex-direction: column;
 	gap: var(--space-4);
 	box-sizing: border-box;
-	padding: vaR(--space-3)
+	padding: vaR(--space-3);
 }
 
 .drawer-form-invalid {
@@ -78,7 +78,6 @@
 .form-field-error {
 	color: var(--color-danger);
 }
-
 
 .drawer-footer {
 	display: flex;

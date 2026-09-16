@@ -1,6 +1,7 @@
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Sales.Projections;
@@ -36,7 +37,7 @@ public sealed record OpportunityProjection(
     UserSnapshot? ModifiedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset? ModifiedAt
-)
+) : IAudit
 {
     public static OpportunityProjection Create(
         OpportunityCreated @event)

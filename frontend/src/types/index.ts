@@ -6,3 +6,7 @@ export type PersonInfo = {
 	fullName?: string;
 	email?: string;
 };
+export type CardListProps<T> = {
+	items: T[];
+	onRefresh: () => void;
+};

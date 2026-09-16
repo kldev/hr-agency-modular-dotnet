@@ -108,6 +108,16 @@ export function getColumns(actions: Actions) {
 		}),
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
+			meta: {
+				width: "md",
+			},
+			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
+		}),
+		columnHelper.accessor("modifiedAt", {
+			meta: {
+				width: "md",
+			},
+			header: "Modified at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
 		}),
 	]);
