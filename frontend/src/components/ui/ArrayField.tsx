@@ -1,19 +1,15 @@
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "./Button";
 
-export function ArrayField({
-	label,
-	description,
-	values,
-	placeholder,
-	onChange,
-}: {
-	label: string;
+export type ArrayFieldProps = {
+	label?: string;
 	description?: string;
 	values: string[];
 	placeholder?: string;
 	onChange: (values: string[]) => void;
-}) {
+};
+
+export function ArrayField({ label, description, values, placeholder, onChange }: ArrayFieldProps) {
 	const update = (index: number, value: string) =>
 		onChange(values.map((item, i) => (i === index ? value : item)));
 
@@ -25,7 +21,7 @@ export function ArrayField({
 	return (
 		<div>
 			<div className="mb-3">
-				<h3 className="text-sm font-semibold">{label}</h3>
+				{label ? <h3 className="text-sm font-semibold">{label}</h3> : null}
 				{description && <p className="mt-1 text-xs text-(--color-text-muted)">{description}</p>}
 			</div>
 
@@ -45,7 +41,7 @@ export function ArrayField({
 						/>
 						<button
 							type="button"
-							aria-label={`Remove ${label.toLowerCase()} ${index + 1}`}
+							aria-label={`Remove ${label?.toLowerCase()} ${index + 1}`}
 							onClick={() => remove(index)}
 							className={[
 								"flex h-9 w-9 shrink-0 items-center justify-center",

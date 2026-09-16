@@ -25,7 +25,8 @@ internal static class UserProjectionExtensions
         var querySearch = search.Trim();
         return query.Where(u => u.Email.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
                                 || u.FirstName.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
-                                || u.LastName.Contains(querySearch, StringComparison.OrdinalIgnoreCase));
+                                || u.LastName.Contains(querySearch, StringComparison.OrdinalIgnoreCase)
+                                || u.FullName.Contains(querySearch, StringComparison.OrdinalIgnoreCase));
     }
 
     internal static IQueryable<UserProjection> WithRoles(this IQueryable<UserProjection> query, IReadOnlyList<OrganizationRole> roles)

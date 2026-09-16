@@ -11,7 +11,10 @@ interface JobsPageToolbarProps {
 
 export function JobsDescriptopnToolbar({ search, onSearchChange, onClear }: JobsPageToolbarProps) {
 	const router = useRouter();
-	const addUrl = router.buildLocation({ to: "/app/job-descriptions/add" }).href;
+	const addUrl = router.buildLocation({
+		to: "/app/job-descriptions/add",
+		search: { companyId: "" },
+	}).href;
 	const handleAdd = () => {
 		window.open(addUrl, "_blank", "noopener,noreferrer");
 	};

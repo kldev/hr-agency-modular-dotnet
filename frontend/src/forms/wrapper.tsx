@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import type { CompanySuggestion, OrganizationRole, UserSuggestion } from "#/api/models";
 import {
+	ArrayField,
+	type ArrayFieldProps,
 	CompaniesPicker,
+	CountrySelect,
 	DatePicker,
 	type DatePickerProps,
 	EnumSelectFilter,
@@ -25,7 +28,7 @@ type AppInputProps<T> = {
 	label: string;
 	fieldName: string;
 	fieldValue: T | null;
-	isSubmitting: boolean;
+	isSubmitting?: boolean;
 	errors: Array<unknown>;
 	handleChange: (val: T) => void;
 };
@@ -339,6 +342,68 @@ export function FormDateTime({
 			</div>
 
 			<FieldError errors={errors} />
+		</div>
+	);
+}
+
+type FormCountrySelectProps = {
+	label: string;
+	fieldName: string;
+	fieldValue: string | null;
+	isSubmitting: boolean;
+	errors: Array<unknown>;
+	handleChange: (value: string) => void;
+};
+
+export function FormCountrySelect({
+	label,
+	fieldName,
+	fieldValue,
+	isSubmitting,
+	errors,
+	handleChange,
+}: FormCountrySelectProps) {
+	return (
+		<div className="form-field">
+			<label className="form-label" htmlFor={fieldName}>
+				{label}
+			</label>
+
+			<CountrySelect
+				id={fieldName}
+				value={fieldValue ?? ""}
+				onChange={(event) => handleChange(event.target.value)}
+				disabled={isSubmitting}
+			/>
+
+			<FieldError errors={errors} />
+		</div>
+	);
+}
+
+type FormArrayFieldProps = ArrayFieldProps & AppInputProps<string[]>;
+export function FormArrayField({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	handleChange,
+	errors,
+	values = [],
+	...props
+}: FormArrayFieldProps) {
+	return (
+		<div className="form-field">
+			<label className="form-label" htmlFor={fieldName}>
+				{label}
+			</label>
+			<ArrayField
+				{...props}
+				values={fieldValue ?? []}
+				label={undefined}
+				onChange={(values) => handleChange(values)}
+			/>
+			<FieldError errors={errors} />{" "}
 		</div>
 	);
 }
