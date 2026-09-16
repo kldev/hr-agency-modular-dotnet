@@ -17,6 +17,10 @@ export function SalesTable({ items, onRefresh }: SalesTableProps) {
 
 	const actionsHandler: Actions = {
 		onAction: (action: SalesActionTypes, item: OpportunityProjection): void => {
+			if (action === "change-stage") {
+				salesRef.current?.changeStage({ id: item.id, stage: item.stage, title: item.title });
+				return;
+			}
 			salesRef?.current?.onAction(item.id, action);
 		},
 	};

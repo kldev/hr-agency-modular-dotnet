@@ -1,10 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { getFnOptions } from "#/server/axios";
-import { createOpportunity, logSalesActivity, updateOpportunity } from "@/api/endpoints";
+import {
+	changeOpportunityStage,
+	createOpportunity,
+	logSalesActivity,
+	updateOpportunity,
+} from "@/api/endpoints";
 import type {
+	ChangeOpportunityStageRequest,
 	CreateOpportunityRequest,
 	CreateSalesActivityRequest,
+	OpportunityStage,
 	UpdateOpportunityRequest,
 } from "@/api/models";
 import { useProjectionWait } from "@/hooks";
@@ -104,5 +111,34 @@ export function useLogActivity({ onSuccess }: OpportunityOptions) {
 	return {
 		mutation,
 		waiting,
+	};
+}
+
+export function useChangeStage({ onSuccess }: OpportunityOptions) {
+	const { wait, waiting } = useProjectionWait();
+
+	const mutation = useMutation({
+		mutationFn: ({
+			oppotunityId,
+			request,
+		}: {
+			oppotunityId: string;
+			request: ChangeOpportunityStageRequest;
+		}) => changeOpportunityStage(oppotunityId, request),
+
+		onSuccess: async () => {
+			await wait();
+			onSuccess();
+		},
+	});
+
+	const changeStage = (oppotunityId: string, stage: OpportunityStage, lostReason?: string) => {
+		mutation.mutate({ oppotunityId, request: { stage: stage, lostReason } });
+	};
+
+	return {
+		mutation,
+		waiting,
+		changeStage,
 	};
 }

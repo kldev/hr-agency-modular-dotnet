@@ -9,7 +9,7 @@ import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { CreateOpportunityDrawer, type CreateOpportunityRef, SalesTable } from "../components";
 import { SalesToolbar } from "../components/SalesToolbar";
 import { type SalesPageFillters, useGetOpportunitesSlice } from "../hooks";
-import { salesStage } from "../types";
+import { salesStageOptions } from "../types";
 
 const SalesPage: React.FC = () => {
 	const oppRef = useRef<CreateOpportunityRef>(null);
@@ -60,7 +60,7 @@ const SalesPage: React.FC = () => {
 			/>
 			<EnumFilter
 				value={search.stage || null}
-				options={salesStage}
+				options={salesStageOptions}
 				onChange={(s) => {
 					navigate({ search: (previous) => ({ ...previous, stage: s }) });
 				}}

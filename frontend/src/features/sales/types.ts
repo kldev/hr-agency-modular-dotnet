@@ -1,6 +1,6 @@
 import type { CurrencyCode, OpportunityStage, SalesActivityType } from "@/api/models";
 
-export const salesStage: Record<OpportunityStage, string> = {
+export const salesStageOptions: Record<OpportunityStage, string> = {
 	New: "New",
 	Viewed: "Viewed",
 	Contacted: "Contacted",

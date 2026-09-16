@@ -3,7 +3,7 @@ import { MessagePreview } from "#/components/ui/MessagePreview";
 import { formatSalary } from "#/utlis";
 import type { OpportunityProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
-import { ItemMark, OpportunityStageBadge } from "@/components/ui";
+import { ItemMark } from "@/components/ui";
 import { formatDate, formatDateTime } from "@/utlis/dateUtils";
 import type { SalesActionTypes } from "../forms";
 import { SalesStageBadge } from "../sales-stage-badge";

@@ -29,7 +29,7 @@ export function FieldError({ errors }: { errors: Array<unknown> }) {
 	}
 
 	return (
-		<div className="form-field-error" role="alert">
+		<div className="form-field-error  font-medium" role="alert">
 			{errors.map((error, index) => {
 				const message = getErrorMessage(error);
 

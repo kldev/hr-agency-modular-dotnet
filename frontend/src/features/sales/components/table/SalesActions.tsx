@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ClockArrowRight, Pencil, Settings2 } from "lucide-react";
+import { ClockArrowRight, Pencil, Settings2, TrendingUp } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import type { SalesActionTypes } from "../forms";
 
@@ -19,6 +19,11 @@ export function SalesActions({ onAction, opportunityId }: SalesActionsProps) {
 						label: "Log activity",
 						icon: ClockArrowRight,
 						action: () => onAction("log-activity"),
+					},
+					{
+						label: "Change stage",
+						icon: TrendingUp,
+						action: () => onAction("change-stage"),
 					},
 					{ label: "Edit", icon: Pencil, action: () => onAction("edit-opportunity") },
 
