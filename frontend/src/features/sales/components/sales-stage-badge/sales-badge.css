@@ -1,0 +1,48 @@
+
+/* =========================================================
+   Stage badges
+   ========================================================= */
+
+.sales-stage-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  min-height: 22px;
+
+  padding: 0 7px;
+
+  border-radius: var(--radius-md);
+
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+
+  white-space: nowrap;
+}
+
+.sales-stage-new,
+.sales-stage-contacted {
+  background: var(--color-info-soft);
+  color: var(--color-info);
+}
+
+.sales-stage-viewed {
+    background: var(--color-cyan-soft);
+	color: var(--color-cyan);
+}
+
+.sales-stage-qualified,
+.sales-stage-proposal {
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
+}
+
+.sales-stage-won {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.sales-stage-lost {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}

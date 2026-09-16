@@ -12,6 +12,7 @@ export interface SalesPageFillters {
 	stage?: OpportunityStage;
 	page?: number;
 	pageSize?: number;
+	responsibleId?: string;
 }
 const getSingleServerFn = createServerFn({
 	method: "GET",
@@ -32,6 +33,7 @@ const getSliceServerFn = createServerFn({
 				stage: data.stage,
 				page: data.page,
 				pageSize: data.pageSize,
+				responsibleId: data.responsibleId,
 			},
 			getFnOptions(),
 		);
@@ -46,8 +48,7 @@ export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
 		queryFn: ({ pageParam }) =>
 			getSliceServerFn({
 				data: {
-					search: fillter.search,
-					stage: fillter.stage,
+					...fillter,
 					page: pageParam,
 					pageSize: PAGE_SIZE,
 				},

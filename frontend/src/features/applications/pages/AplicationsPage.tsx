@@ -38,10 +38,10 @@ const AplicationsPage: React.FC = () => {
 			}
 		>
 			<ApplicationsToolbar
-				onClear={() => {
-					navigate({ search: {} });
-				}}
 				search={search.search ?? ""}
+				onClear={() => {
+					navigate({ search: (previous) => ({ ...previous, search: "" }) });
+				}}
 				onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
 				source={search.source ?? null}
 				onSourceChange={(s) => navigate({ search: (previous) => ({ ...previous, source: s }) })}

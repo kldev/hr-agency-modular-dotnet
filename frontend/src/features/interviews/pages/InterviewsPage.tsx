@@ -38,7 +38,7 @@ const InterviewsPage: React.FC = () => {
 			<InterviewToolbar
 				search={search.search ?? ""}
 				onClear={() => {
-					navigate({ search: {} });
+					navigate({ search: (previous) => ({ ...previous, search: "" }) });
 				}}
 				onSearchChange={(v) => {
 					navigate({ search: (previous) => ({ ...previous, search: v }) });

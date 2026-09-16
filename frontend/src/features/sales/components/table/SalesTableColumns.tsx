@@ -1,10 +1,12 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { MessagePreview } from "#/components/ui/MessagePreview";
+import { formatSalary } from "#/utlis";
 import type { OpportunityProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
-import { ItemMark } from "@/components/ui";
+import { ItemMark, OpportunityStageBadge } from "@/components/ui";
 import { formatDate, formatDateTime } from "@/utlis/dateUtils";
 import type { SalesActionTypes } from "../forms";
+import { SalesStageBadge } from "../sales-stage-badge";
 import { SalesActions } from "./SalesActions";
 
 export type Actions = {
@@ -48,18 +50,27 @@ export function getColumns(actions: Actions) {
 				</div>
 			),
 		}),
-		columnHelper.accessor("description", {
-			header: "Description",
-			cell: ({ getValue }) => <MessagePreview message={getValue()} />,
+		columnHelper.accessor("responsible", {
+			header: "Responsible",
 			meta: {
-				width: "2xl",
+				width: "md",
 			},
+			cell: ({ row }) => (
+				<div className="table-cell-content">
+					<div className="min-w-0">
+						<div className="data-name">{row.original.responsible.fullname ?? ""}</div>
+
+						<div className="data-meta">{row.original.responsible.email}</div>
+					</div>
+				</div>
+			),
 		}),
 		columnHelper.accessor("stage", {
 			header: "Stage",
 			meta: {
 				width: "sm",
 			},
+			cell: ({ getValue }) => <SalesStageBadge stage={getValue()} />,
 		}),
 		columnHelper.accessor("expectedValue", {
 			header: "Value",
@@ -67,8 +78,8 @@ export function getColumns(actions: Actions) {
 				width: "sm",
 			},
 			cell: ({ row, getValue }) => (
-				<span className="table-number">
-					{getValue()} {row.original.currencyCode}
+				<span className="table-number font-medium">
+					{formatSalary(getValue() as number)} {row.original.currencyCode}
 				</span>
 			),
 		}),
@@ -88,20 +99,12 @@ export function getColumns(actions: Actions) {
 			cell: ({ getValue }) => <div className="data-meta truncate">{getValue()}</div>,
 		}),
 
-		columnHelper.accessor("responsible", {
-			header: "Responsible",
+		columnHelper.accessor("description", {
+			header: "Description",
+			cell: ({ getValue }) => <MessagePreview message={getValue()} />,
 			meta: {
-				width: "md",
+				width: "2xl",
 			},
-			cell: ({ row }) => (
-				<div className="table-cell-content">
-					<div className="min-w-0">
-						<div className="data-name">{row.original.responsible.fullname ?? ""}</div>
-
-						<div className="data-meta">{row.original.responsible.email}</div>
-					</div>
-				</div>
-			),
 		}),
 		columnHelper.accessor("createdAt", {
 			header: "Created at",

@@ -1,21 +1,26 @@
 import { DollarSign } from "lucide-react";
 import type React from "react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import { useGetOnlyMine } from "#/hooks";
 import { Route } from "#/routes/app/sales";
+
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import { CreateOpportunityDrawer, type CreateOpportunityRef, SalesTable } from "../components";
-
 import { SalesToolbar } from "../components/SalesToolbar";
 import { type SalesPageFillters, useGetOpportunitesSlice } from "../hooks";
 import { salesStage } from "../types";
 
 const SalesPage: React.FC = () => {
 	const oppRef = useRef<CreateOpportunityRef>(null);
+	const [onlyMine, setOnlyMine] = useState<boolean>(false);
 
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch() as SalesPageFillters;
-	const query = useGetOpportunitesSlice(search);
+
+	const { userId } = useGetOnlyMine(onlyMine);
+
+	const query = useGetOpportunitesSlice({ ...search, responsibleId: userId });
 	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
 	const isEmpty = query.isFetched && items.length === 0;
@@ -46,6 +51,11 @@ const SalesPage: React.FC = () => {
 				}}
 				onAdd={() => {
 					oppRef?.current?.create();
+				}}
+				onlyMine={onlyMine}
+				onlyMineOnChange={(val) => {
+					setOnlyMine(val);
+					onRefresh();
 				}}
 			/>
 			<EnumFilter

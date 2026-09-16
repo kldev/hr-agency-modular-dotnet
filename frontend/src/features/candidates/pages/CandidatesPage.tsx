@@ -45,7 +45,7 @@ const CandidatesPage: React.FC = () => {
 			<CandidatesToolbar
 				search={search.search ?? ""}
 				onClear={() => {
-					navigate({ search: {} });
+					navigate({ search: (previous) => ({ ...previous, search: "" }) });
 				}}
 				onSearchChange={(v) => {
 					navigate({ search: (previous) => ({ ...previous, search: v }) });

@@ -1,6 +1,6 @@
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui";
+import { Button, OnlyMine } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
 
 interface SalesToolbarProps {
@@ -10,9 +10,18 @@ interface SalesToolbarProps {
 	onCompanyChange?: (value: string) => void;
 	onClear: () => void;
 	onAdd: () => void;
+	onlyMine: boolean;
+	onlyMineOnChange: (val: boolean) => void;
 }
 
-export function SalesToolbar({ search, onSearchChange, onAdd, onClear }: SalesToolbarProps) {
+export function SalesToolbar({
+	search,
+	onSearchChange,
+	onAdd,
+	onClear,
+	onlyMine,
+	onlyMineOnChange,
+}: SalesToolbarProps) {
 	return (
 		<div className="toolbar">
 			<div className="toolbar-left">
@@ -35,7 +44,7 @@ export function SalesToolbar({ search, onSearchChange, onAdd, onClear }: SalesTo
 						onChange={(event) => onSearchChange(event.target.value)}
 					/>
 				</span>
-
+				<OnlyMine onChange={onlyMineOnChange} checked={onlyMine} />
 				<Button
 					variant="ghost"
 					icon={<SlidersHorizontal size={15} />}
