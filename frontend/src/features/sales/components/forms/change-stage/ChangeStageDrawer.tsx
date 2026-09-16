@@ -1,75 +1,103 @@
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-import type { ChangeOpportunityStageRequest } from "#/api/models";
+import { forwardRef, useImperativeHandle, useState } from "react";
+
+import { useAppForm } from "#/forms";
 import type { OnSucess } from "#/types";
-import { SaveChangesButton } from "@/components/ui";
-import { Drawer } from "@/components/ui/Drawer";
+import { FormDrawer } from "@/components/ui/FormDrawer";
 import { useChangeStage } from "../opportunity/useOpportunityForm";
 import type { ChangeStageRef, OpportunityInfo } from "../SalesCommand";
-import { ChangeStageForm } from "./ChangeStageForm";
+import { ChangeStageForm, type ChangeStageFormValues, changeStageSchema } from "./ChangeStageForm";
 
-const ChangeStageDrawer = forwardRef<ChangeStageRef, OnSucess>(({ onSuccess }, ref) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [opportunityInfo, setOpportunityInfo] = useState<OpportunityInfo | null>(null);
+type RenderFormType = {
+	opportunityInfo: OpportunityInfo;
+	onSuccess: () => void;
+	handleClose: () => void;
+};
+
+const ChangeStageContent: React.FC<RenderFormType> = ({
+	opportunityInfo,
+	onSuccess,
+	handleClose,
+}) => {
 	const { mutation, waiting, changeStage } = useChangeStage({
 		onSuccess: () => {
 			onSuccess();
-
-			setOpportunityInfo(null);
 			mutation.reset();
-			setIsOpen(false);
 		},
 	});
+
+	const formValues: ChangeStageFormValues = {
+		stage: opportunityInfo.stage,
+		lostReason: "",
+	};
+
+	const form = useAppForm({
+		defaultValues: formValues,
+
+		validators: {
+			onChange: changeStageSchema,
+		},
+
+		onSubmit: async ({ value }) => {
+			changeStage(opportunityInfo.id, value.stage, value.lostReason);
+		},
+	});
+
+	return (
+		<form.AppForm>
+			<FormDrawer
+				open={true}
+				title="Change opportunity stage"
+				onClose={handleClose}
+				onSubmit={(event) => {
+					event.preventDefault();
+					void form.handleSubmit();
+				}}
+			>
+				<FormDrawer.Content>
+					<div className="drawer-form">
+						<ChangeStageForm
+							form={form}
+							info={opportunityInfo}
+							error={mutation.error}
+							isSubmitting={mutation.isPending}
+						/>
+					</div>
+				</FormDrawer.Content>
+
+				<FormDrawer.Footer>
+					<form.FormSaveChangesButton wait={waiting} isPending={mutation.isPending} />
+				</FormDrawer.Footer>
+			</FormDrawer>
+		</form.AppForm>
+	);
+};
+
+const ChangeStageDrawer = forwardRef<ChangeStageRef, OnSucess>(({ onSuccess }, ref) => {
+	const [opportunityInfo, setOpportunityInfo] = useState<OpportunityInfo | null>(null);
 
 	useImperativeHandle(
 		ref,
 		() => ({
 			changeStage: (info) => {
 				setOpportunityInfo(info);
-
-				mutation.reset();
-				setIsOpen(true);
 			},
 		}),
-		[mutation],
+		[],
 	);
 
-	const handleSave = useCallback(
-		(value: ChangeOpportunityStageRequest) => {
-			changeStage(opportunityInfo?.id ?? "", value.stage, value.lostReason ?? "");
-		},
-		[changeStage, opportunityInfo],
-	);
-
-	const handleClose = useCallback(() => {
-		if (mutation.isPending) {
-			return;
-		}
-
-		setOpportunityInfo(null);
-
-		mutation.reset();
-		setIsOpen(false);
-	}, [mutation]);
+	if (!opportunityInfo) return null;
 
 	return (
-		<Drawer
-			open={isOpen}
-			title="Change opportunity stage"
-			onClose={handleClose}
-			footer={
-				<SaveChangesButton form="change-stage" isPending={mutation.isPending} wait={waiting} />
-			}
-		>
-			{opportunityInfo ? (
-				<ChangeStageForm
-					info={opportunityInfo}
-					formId="change-stage"
-					onSubmit={handleSave}
-					error={mutation.error}
-					isSubmitting={mutation.isPending}
-				/>
-			) : null}
-		</Drawer>
+		<ChangeStageContent
+			onSuccess={() => {
+				setOpportunityInfo(null);
+				onSuccess();
+			}}
+			opportunityInfo={opportunityInfo}
+			handleClose={() => {
+				setOpportunityInfo(null);
+			}}
+		/>
 	);
 });
 

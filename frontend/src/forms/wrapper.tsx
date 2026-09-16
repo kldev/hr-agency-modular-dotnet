@@ -188,6 +188,7 @@ export function FormSelectEnum<T extends string>({
 				{label}
 			</label>
 			<EnumSelectFilter
+				hideAll={true}
 				value={fieldValue ? (fieldValue as T) : null}
 				options={options}
 				onChange={(val) => handleChange(val as T)}

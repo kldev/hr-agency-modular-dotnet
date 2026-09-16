@@ -1,9 +1,11 @@
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 
-const { fieldContext, formContext } = createFormHookContexts();
+const { fieldContext, formContext, useFormContext, useFieldContext } = createFormHookContexts();
 
 export type FormDateTimeValue = { date: Date | null; time: string };
+export { useFieldContext, useFormContext };
 
+import { FormSaveChangesButton } from "#/components/ui";
 import {
 	FormCompanyPicker,
 	FormDatePicker,
@@ -16,7 +18,7 @@ import {
 	FormUserPicker,
 } from "./wrapper";
 
-export const { useAppForm } = createFormHook({
+export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 	fieldComponents: {
 		FormInput,
 		FormTextAreaInput,
@@ -28,7 +30,7 @@ export const { useAppForm } = createFormHook({
 		FormMoneyInput,
 		FormDateTime,
 	},
-	formComponents: {},
+	formComponents: { FormSaveChangesButton },
 	fieldContext,
 	formContext,
 });

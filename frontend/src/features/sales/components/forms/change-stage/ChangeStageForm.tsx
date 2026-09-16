@@ -1,26 +1,23 @@
 import { z } from "zod";
-import { type ChangeOpportunityStageRequest, OpportunityStage } from "#/api/models";
+import { OpportunityStage } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
 import { salesStageOptions } from "#/features/sales/types";
-import { useAppForm } from "#/forms";
+import { withForm } from "#/forms";
 import { FormTextAreaInput } from "#/forms/wrapper";
 import type { OpportunityInfo } from "../SalesCommand";
 
-interface ChangeStageFormProps {
-	onSubmit: (value: ChangeOpportunityStageRequest) => void;
-	error?: Error | null;
-	isSubmitting?: boolean;
-	formId: string;
-	info: OpportunityInfo;
-}
+export type ChangeStageFormValues = {
+	stage: OpportunityStage;
+	lostReason: string;
+};
 
-const schema = z
+export const changeStageSchema = z
 	.object({
 		stage: z.enum(OpportunityStage),
 		lostReason: z.string(),
 	})
 	.superRefine((data, ctx) => {
-		if (data.stage === "Lost" && !data.lostReason?.trim()) {
+		if (data.stage === "Lost" && !data.lostReason.trim()) {
 			ctx.addIssue({
 				code: "custom",
 				path: ["lostReason"],
@@ -28,87 +25,62 @@ const schema = z
 			});
 		}
 	});
-
-type FormValues = {
-	stage: OpportunityStage;
-	lostReason: string;
+const emptyForm: ChangeStageFormValues = {
+	stage: "Proposal",
+	lostReason: "",
 };
 
-export function ChangeStageForm({
-	onSubmit,
-	formId,
-	error,
-	isSubmitting = false,
-	info,
-}: ChangeStageFormProps) {
-	const initial: FormValues = {
-		stage: info.stage,
-		lostReason: "",
-	};
+export const ChangeStageForm = withForm({
+	defaultValues: emptyForm,
 
-	const form = useAppForm({
-		defaultValues: initial,
+	props: {
+		info: {} as OpportunityInfo,
+		error: null as Error | null,
+		isSubmitting: false,
+	},
 
-		validators: {
-			onChange: schema,
-		},
+	render: function Render({ form, info, error, isSubmitting }) {
+		return (
+			<>
+				<form.AppField name="stage">
+					{(field) => (
+						<field.FormSelectEnum
+							fieldValue={field.state.value}
+							options={salesStageOptions}
+							label="Stage"
+							errors={field.state.meta.errors}
+							fieldName={field.name}
+							handleChange={field.handleChange}
+							isSubmitting={isSubmitting}
+						/>
+					)}
+				</form.AppField>
 
-		onSubmit: async ({ value }) => {
-			onSubmit(value);
-		},
-	});
+				<form.AppField name="lostReason">
+					{(field) => (
+						<field.FormTextAreaInput
+							fieldValue={field.state.value}
+							label="Lost reason"
+							errors={field.state.meta.errors}
+							fieldName={field.name}
+							handleChange={field.handleChange}
+							isSubmitting={isSubmitting}
+						/>
+					)}
+				</form.AppField>
 
-	return (
-		<form.Subscribe selector={(state) => state.isValid}>
-			{(isValid) => (
-				<form
-					id={formId}
-					className={["drawer-form", isValid ? "" : "drawer-form-invalid"].join(" ")}
-					onSubmit={(event) => {
-						event.preventDefault();
-						void form.handleSubmit();
-					}}
-				>
-					<form.AppField name="stage">
-						{(field) => (
-							<field.FormSelectEnum
-								fieldValue={field.state.value}
-								options={salesStageOptions}
-								label="Type"
-								errors={field.state.meta.errors}
-								fieldName={field.name}
-								handleChange={(val) => field.handleChange(val)}
-								isSubmitting={isSubmitting}
-							/>
-						)}
-					</form.AppField>
+				<FormTextAreaInput
+					isSubmitting
+					fieldName="title"
+					errors={[]}
+					label="Title"
+					fieldValue={info.title}
+					disabled
+					handleChange={() => {}}
+				/>
 
-					<form.AppField name="lostReason">
-						{(field) => (
-							<field.FormTextAreaInput
-								fieldValue={field.state.value}
-								label="Lost reason"
-								errors={field.state.meta.errors}
-								fieldName={field.name}
-								handleChange={(val) => field.handleChange(val)}
-								isSubmitting={isSubmitting}
-							/>
-						)}
-					</form.AppField>
-
-					<FormTextAreaInput
-						isSubmitting={true}
-						fieldName="title"
-						errors={[]}
-						label="Title"
-						fieldValue={info.title}
-						disabled={true}
-						handleChange={() => {}}
-					></FormTextAreaInput>
-
-					<ApiError error={error as unknown as Parameters<typeof ApiError>[0]["error"]} />
-				</form>
-			)}
-		</form.Subscribe>
-	);
-}
+				<ApiError error={error as unknown as Parameters<typeof ApiError>[0]["error"]} />
+			</>
+		);
+	},
+});
