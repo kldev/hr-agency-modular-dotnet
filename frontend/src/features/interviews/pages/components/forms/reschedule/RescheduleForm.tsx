@@ -47,7 +47,6 @@ export function RescheduleForm({
 		defaultValues: intialFormValue,
 
 		onSubmit: async ({ value }) => {
-			console.log(`On submit ${JSON.stringify(value.scheduledAt)}`);
 			onSubmit({
 				...value,
 				scheduledAt: formatLocalDateTime(value.scheduledAt.date as Date, value.scheduledAt.time),

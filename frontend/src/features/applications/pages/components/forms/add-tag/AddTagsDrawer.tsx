@@ -27,7 +27,6 @@ const AddTagsDrawer = forwardRef<AddTagCommand, AddTagDrawerProps>(({ onSuccess 
 		ref,
 		() => ({
 			addTag: (id: string, display: string, target: TagTarget) => {
-				console.log(`Add tag ${id}, ${target}`);
 				setId(id);
 				setDisplay(display);
 				setTagTarget(target);

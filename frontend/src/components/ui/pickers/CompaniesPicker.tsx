@@ -37,7 +37,7 @@ export function CompaniesPicker(props: Props) {
 
 						<div className="suggestion-picker-company-meta">
 							<span>
-								`${item.taxNumber}, ${item.countryCode}`
+								{item.taxNumber}, {item.countryCode}
 							</span>
 						</div>
 					</div>

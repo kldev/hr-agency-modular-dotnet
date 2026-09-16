@@ -43,10 +43,10 @@ export function CompanyContactsPicker(props: Props) {
 						</div>
 
 						<div className="suggestion-picker-company-meta">
-							<span>`${item.contact.email}`</span>
+							<span>{item.contact.email}</span>
 						</div>
 						<div className="suggestion-picker-company-meta">
-							<span>`${item.companyName}`</span>
+							<span>{item.companyName}</span>
 						</div>
 					</div>
 

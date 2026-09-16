@@ -15,6 +15,7 @@ public static class SalesModule
     public static void ConfigureMarten(
         StoreOptions options)
     {
+        options.ConfigureSalesDocuments();
         options.ConfigureSalesEvents();
         options.ConfigureSalesProjections();
     }

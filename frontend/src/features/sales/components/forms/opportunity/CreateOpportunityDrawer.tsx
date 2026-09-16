@@ -1,30 +1,92 @@
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { FormDrawer } from "#/components/ui/FormDrawer";
+import { useAppForm } from "#/forms";
 import type { CreateOpportunityRequest } from "@/api/models";
-import { DetailOverviewHeader, SaveChangesButton } from "@/components/ui";
-import { Drawer } from "@/components/ui/Drawer";
+import { DetailOverviewHeader } from "@/components/ui";
+
 import type { CreateOpportunityRef, InitialCompanyOptions } from "../SalesCommand";
-import { OpportunityForm } from "./OpportunityForm";
+import { empty, OpportunityForm, opportunitySchema } from "./OpportunityForm";
 import { useCreateOpportuinity } from "./useOpportunityForm";
 
 interface CreateOpportunityDrawerProps {
 	onSuccess: () => void;
 }
 
+type RenderFormType = {
+	info?: InitialCompanyOptions;
+	onSuccess: () => void;
+	handleClose: () => void;
+};
+
+const FormContent: React.FC<RenderFormType> = ({ info, onSuccess, handleClose }) => {
+	const { mutation, waiting } = useCreateOpportuinity({
+		onSuccess: () => {
+			mutation.reset();
+			onSuccess();
+			handleClose();
+		},
+	});
+
+	const form = useAppForm({
+		defaultValues: { ...empty, companyId: info?.companyId || "" },
+
+		validators: {
+			onChange: opportunitySchema,
+		},
+
+		onSubmit: async ({ value }) => {
+			const request: CreateOpportunityRequest = {
+				...value,
+				responsibleId: value.responsibleId || null,
+				expectedCloseDate:
+					value.expectedCloseDate?.substring(0, value.expectedCloseDate.indexOf("T")) || null,
+				expectedValue: Number(value.expectedValue.replace(",", ".")),
+			};
+			mutation.mutate({ request });
+		},
+	});
+
+	return (
+		<form.AppForm>
+			<FormDrawer
+				open={true}
+				title="Create opportunity"
+				onClose={handleClose}
+				onSubmit={(event) => {
+					event.preventDefault();
+					void form.handleSubmit();
+				}}
+			>
+				<FormDrawer.Content>
+					<div className="drawer-form">
+						{info?.companyName?.length ? (
+							<DetailOverviewHeader
+								className=" mb-4"
+								title={info?.companyName}
+								description=""
+							></DetailOverviewHeader>
+						) : null}
+						<OpportunityForm
+							companyId={info?.companyId}
+							form={form}
+							error={mutation.error}
+							isSubmitting={mutation.isPending}
+						/>
+					</div>
+				</FormDrawer.Content>
+
+				<FormDrawer.Footer>
+					<form.FormSaveChangesButton wait={waiting} isPending={mutation.isPending} />
+				</FormDrawer.Footer>
+			</FormDrawer>
+		</form.AppForm>
+	);
+};
+
 const CreateOpportunityDrawer = forwardRef<CreateOpportunityRef, CreateOpportunityDrawerProps>(
 	({ onSuccess }, ref) => {
 		const [isOpen, setIsOpen] = useState(false);
 		const [initial, setInitial] = useState<InitialCompanyOptions | null>(null);
-
-		const { mutation, waiting } = useCreateOpportuinity({
-			onSuccess: () => {
-				onSuccess();
-				setInitial(null);
-
-				mutation.reset();
-				setIsOpen(false);
-			},
-		});
 
 		useImperativeHandle(
 			ref,
@@ -32,61 +94,23 @@ const CreateOpportunityDrawer = forwardRef<CreateOpportunityRef, CreateOpportuni
 				create: (initial?: InitialCompanyOptions) => {
 					setInitial(initial || null);
 
-					mutation.reset();
 					setIsOpen(true);
 				},
 			}),
-			[mutation],
+			[],
 		);
 
-		const handleSave = useCallback(
-			(value: CreateOpportunityRequest) => {
-				mutation.mutate({ request: value });
-			},
-			[mutation],
-		);
-
-		const handleClose = useCallback(() => {
-			if (mutation.isPending) {
-				return;
-			}
-
-			setInitial(null);
-
-			mutation.reset();
-			setIsOpen(false);
-		}, [mutation]);
+		if (!isOpen) return null;
 
 		return (
-			<Drawer
-				open={isOpen}
-				title="Create opportunity"
-				onClose={handleClose}
-				footer={
-					<SaveChangesButton
-						form="create-opportunity"
-						isPending={mutation.isPending}
-						wait={waiting}
-					/>
-				}
-			>
-				{initial?.companyName?.length ? (
-					<DetailOverviewHeader
-						className=" mb-4"
-						title={initial?.companyName}
-						description=""
-					></DetailOverviewHeader>
-				) : null}
-
-				<OpportunityForm
-					companyId={initial?.companyId ?? undefined}
-					formId="create-opportunity"
-					mode="create"
-					onSubmit={handleSave}
-					error={mutation.error}
-					isSubmitting={mutation.isPending}
-				/>
-			</Drawer>
+			<FormContent
+				info={initial || undefined}
+				onSuccess={onSuccess}
+				handleClose={() => {
+					setInitial(null);
+					setIsOpen(false);
+				}}
+			/>
 		);
 	},
 );

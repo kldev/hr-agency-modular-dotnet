@@ -17,6 +17,7 @@ public sealed class GlobalExceptionHandler(
     {
         switch (exception)
         {
+           
             case OrganizationAccessDeniedException:
                 return await WriteErrorAsync(httpContext, StatusCodes.Status403Forbidden, OrganizationAccessDeniedException.ProblemTitle,
                     exception.Message, exception);
@@ -50,6 +51,10 @@ public sealed class GlobalExceptionHandler(
                 return await WriteErrorAsync(httpContext, StatusCodes.Status404NotFound, "Not found", exception.Message,
                     exception);
             case BadHttpRequestException:
+                logger.LogError(
+                    exception,
+                    "BadHttpRequestException TraceId: {TraceId}",
+                    httpContext.TraceIdentifier);
                 return await WriteErrorAsync(httpContext, StatusCodes.Status400BadRequest, "Invalid request", exception.Message,
                     exception);
             default:
