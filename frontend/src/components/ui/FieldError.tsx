@@ -7,7 +7,7 @@ type FieldErrorValue =
 	  }
 	| unknown;
 
-function getErrorMessage(error: FieldErrorValue): string {
+export function getErrorMessage(error: FieldErrorValue): string {
 	if (typeof error === "string") {
 		return error;
 	}

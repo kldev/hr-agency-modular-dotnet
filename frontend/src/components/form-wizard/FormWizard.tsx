@@ -63,6 +63,7 @@ type WizardFooterProps = {
 
 	canGoBack?: boolean;
 	canGoNext?: boolean;
+	canSubmit?: boolean;
 
 	isSubmitting?: boolean;
 
@@ -215,6 +216,7 @@ function WizardFooter({
 
 	canGoBack = currentStep > 0,
 	canGoNext = currentStep < stepCount - 1,
+	canSubmit = true,
 	isSubmitting = false,
 	nextLabel = "Continue",
 	submitLabel = "Create",
@@ -244,7 +246,12 @@ function WizardFooter({
 
 				{isLastStep
 					? onSubmit && (
-							<Button variant="primary" onClick={onSubmit} loading={isSubmitting}>
+							<Button
+								variant="primary"
+								onClick={onSubmit}
+								loading={isSubmitting}
+								disabled={!canSubmit}
+							>
 								{submitLabel}
 							</Button>
 						)

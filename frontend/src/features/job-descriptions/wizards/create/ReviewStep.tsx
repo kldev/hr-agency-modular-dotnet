@@ -1,6 +1,8 @@
 import { FormWizard } from "#/components/form-wizard/FormWizard";
+import { getErrorMessage } from "#/components/ui";
 import { withForm } from "#/forms";
-import type { JobDescriptionFormValues } from "./schema";
+import type { JobDescriptionField, JobDescriptionFormValues } from "./schema";
+import { findStepForField } from "./steps";
 
 export const ReviewStep = withForm({
 	defaultValues: {} as JobDescriptionFormValues,
@@ -13,6 +15,10 @@ export const ReviewStep = withForm({
 					title="Review"
 					description="Review the job description before creating it."
 				/>
+
+				<form.Subscribe selector={(state) => state.fieldMeta}>
+					{(fieldMeta) => <ReviewErrors fieldMeta={fieldMeta} />}
+				</form.Subscribe>
 
 				<div className="form-wizard__summary">
 					<div className="form-wizard__summary-section">
@@ -62,6 +68,43 @@ export const ReviewStep = withForm({
 		);
 	},
 });
+
+type ReviewErrorsProps = {
+	fieldMeta: Partial<Record<JobDescriptionField, { errors: Array<unknown> }>>;
+};
+
+function ReviewErrors({ fieldMeta }: ReviewErrorsProps) {
+	const problems = (
+		Object.entries(fieldMeta) as Array<[JobDescriptionField, { errors: unknown[] }]>
+	).flatMap(([field, meta]) =>
+		(meta?.errors ?? []).map((error) => ({
+			field,
+			step: findStepForField(field)?.title,
+			message: getErrorMessage(error),
+		})),
+	);
+
+	if (problems.length === 0) {
+		return null;
+	}
+
+	return (
+		<div className="wizard-review-error">
+			<div className="form-error" role="alert">
+				<strong>Fix the following before creating the job description:</strong>
+
+				<ul className="form-wizard__summary-list">
+					{problems.map((problem) => (
+						<li key={`${problem.field}-${problem.message}`}>
+							{problem.step ? `${problem.step}: ` : ""}
+							{problem.message}
+						</li>
+					))}
+				</ul>
+			</div>
+		</div>
+	);
+}
 
 function SummaryItem({ label, value }: { label: string; value: string }) {
 	return (

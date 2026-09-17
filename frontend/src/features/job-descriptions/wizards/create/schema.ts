@@ -7,39 +7,62 @@ const requiredTextList = (label: string) =>
 		.transform((items) => items.filter(Boolean))
 		.pipe(
 			z
-				.array(z.string().min(5, `${label} must be at least 5 characters`))
+				.array(z.string().min(2, `${label} must be at least 2 characters`))
 				.min(1, `Add at least one ${label.toLowerCase()}`),
 		);
 
-export const jobDescriptionSchema = z.object({
-	companyId: z.string().min(1, "Company is required"),
+const salaryAmount = (label: string) =>
+	z
+		.string()
+		.min(1, `${label} salary is required`)
+		.regex(/^\d+([.,]\d{1,4})?$/, `${label} salary must be a number`);
 
-	title: z.string().trim().min(2, "Title is required"),
+export const parseSalary = (value: string) => Number(value.replace(",", "."));
 
-	summary: z.string().trim().max(1000, "Summary cannot exceed 1000 characters").nullable(),
+export const jobDescriptionSchema = z
+	.object({
+		companyId: z.string().min(1, "Company is required"),
 
-	description: z.string().trim().min(10, "Description is required"),
+		title: z.string().trim().min(2, "Title is required"),
 
-	responsibilities: requiredTextList("Responsibility"),
-	requirements: requiredTextList("Requirement"),
-	skills: requiredTextList("Skill"),
+		summary: z.string().trim().max(1000, "Summary cannot exceed 1000 characters").nullable(),
 
-	location: z.string().trim().min(1, "Location is required"),
+		description: z.string().trim().min(10, "Description is required"),
 
-	countryCode: z.string().length(2, "Select a country"),
+		responsibilities: requiredTextList("Responsibility"),
+		requirements: requiredTextList("Requirement"),
+		skills: requiredTextList("Skill"),
 
-	employmentType: z.enum(Object.values(EmploymentType) as [EmploymentType, ...EmploymentType[]]),
+		location: z.string().trim().min(1, "Location is required"),
 
-	workMode: z.enum(Object.values(WorkMode) as [WorkMode, ...WorkMode[]]),
+		countryCode: z.string().length(2, "Select a country"),
 
-	currencyCode: z.enum(CurrencyCode),
+		employmentType: z.enum(Object.values(EmploymentType) as [EmploymentType, ...EmploymentType[]]),
 
-	salaryMin: z.string().min(1, "Minimum salary is required"),
+		workMode: z.enum(Object.values(WorkMode) as [WorkMode, ...WorkMode[]]),
 
-	salaryMax: z.string().min(1, "Maximum salary is required"),
+		currencyCode: z.enum(CurrencyCode),
 
-	recruiterId: z.string().min(1, "Recruiter is required"),
-});
+		salaryMin: salaryAmount("Minimum"),
+
+		salaryMax: salaryAmount("Maximum"),
+
+		recruiterId: z.string().min(1, "Recruiter is required"),
+	})
+	.superRefine((values, ctx) => {
+		const min = parseSalary(values.salaryMin);
+		const max = parseSalary(values.salaryMax);
+
+		if (Number.isNaN(min) || Number.isNaN(max) || max >= min) {
+			return;
+		}
+
+		ctx.addIssue({
+			code: "custom",
+			path: ["salaryMax"],
+			message: "Maximum salary cannot be lower than the minimum",
+		});
+	});
 
 export type JobDescriptionFormValues = z.infer<typeof jobDescriptionSchema>;
 

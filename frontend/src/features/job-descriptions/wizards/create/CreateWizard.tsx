@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
+import type { BadRequestDetails } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
+import { ApiError } from "#/components/ui/ApiError";
 import { useGetCompany } from "#/features/companies/pages/hooks";
 import { useAppForm } from "#/forms";
 import { Route } from "#/routes/app/job-descriptions/add";
@@ -11,27 +13,27 @@ import { EmploymentStep } from "./Employment";
 import { PositionStep } from "./PositionStep";
 import { RequirementsStep } from "./Requirements";
 import { ReviewStep } from "./ReviewStep";
-import { type JobDescriptionFormValues, jobDescriptionSchema } from "./schema";
+import { type JobDescriptionFormValues, jobDescriptionSchema, parseSalary } from "./schema";
 import { jobDescriptionSteps } from "./steps";
 
 export type JobDescriptionField = keyof JobDescriptionFormValues;
 
 export function CreateJobDescriptionWizard() {
 	const navigate = Route.useNavigate();
-	const { companyId } = Route.useSearch() as { companyId: string };
+	const { companyId } = Route.useSearch();
 
 	const [currentStep, setCurrentStep] = useState(0);
 
 	const companyQuery = useGetCompany(companyId ?? "");
 	const { mutation } = useCreateJobDescription({
 		onSuccess: () => {
-			toast.success("Form saved");
+			toast.success("Job description created");
 		},
 	});
 
 	const empty: JobDescriptionFormValues = {
 		companyId: companyId ?? "",
-		countryCode: "pl",
+		countryCode: "PL",
 		currencyCode: "PLN",
 		description: "",
 		employmentType: "FullTime",
@@ -54,25 +56,33 @@ export function CreateJobDescriptionWizard() {
 		},
 
 		onSubmit: async ({ value }) => {
-			await mutation.mutateAsync({
-				request: {
-					companyId: value.companyId,
-					title: value.title,
-					summary: value.summary || null,
-					description: value.description,
-					responsibilities: value.responsibilities.filter(Boolean),
-					requirements: value.requirements.filter(Boolean),
-					skills: value.skills.filter(Boolean),
-					location: value.location,
-					countryCode: value.countryCode,
-					employmentType: value.employmentType,
-					workMode: value.workMode,
-					currencyCode: value.currencyCode,
-					salaryMin: value.salaryMin,
-					salaryMax: value.salaryMax,
-					recruiterId: value.recruiterId,
-				},
-			});
+			try {
+				await mutation.mutateAsync({
+					request: {
+						companyId: value.companyId,
+						title: value.title,
+						summary: value.summary || null,
+						description: value.description,
+						responsibilities: value.responsibilities.filter(Boolean),
+						requirements: value.requirements.filter(Boolean),
+						skills: value.skills.filter(Boolean),
+						location: value.location,
+						countryCode: value.countryCode,
+						employmentType: value.employmentType,
+						workMode: value.workMode,
+						currencyCode: value.currencyCode,
+						salaryMin: parseSalary(value.salaryMin),
+						salaryMax: parseSalary(value.salaryMax),
+						recruiterId: value.recruiterId,
+					},
+				});
+			} catch (error) {
+				const details = error as BadRequestDetails;
+
+				toast.error(details?.title ?? "Unable to create the job description");
+
+				return;
+			}
 
 			navigate({
 				to: "/app/job-descriptions",
@@ -84,18 +94,14 @@ export function CreateJobDescriptionWizard() {
 
 	const handleNext = async () => {
 		const fields = jobDescriptionSteps[currentStep].fields;
-		console.log(fields);
 
 		for (const field of fields) {
 			await form.validateField(field, "submit");
-			console.log(form.getFieldMeta(field)?.errors);
 		}
 
 		const hasErrors = fields.some((field) => form.getFieldMeta(field)?.errors.length);
 
 		if (hasErrors) {
-			console.log("Has erros sorry");
-
 			return;
 		}
 
@@ -107,7 +113,7 @@ export function CreateJobDescriptionWizard() {
 	};
 
 	const handleSubmit = () => {
-		form.handleSubmit();
+		void form.handleSubmit();
 	};
 
 	const company = companyQuery.data;
@@ -136,20 +142,27 @@ export function CreateJobDescriptionWizard() {
 
 					{currentStep === 4 && <ReviewStep form={form} />}
 				</FormWizard.Content>
-				<FormWizard.Footer
-					currentStep={currentStep}
-					stepCount={jobDescriptionSteps.length}
-					onBack={handleBack}
-					onNext={handleNext}
-					onSubmit={handleSubmit}
-					onCancel={() =>
-						navigate({
-							to: "/app/job-descriptions",
-						})
-					}
-					isSubmitting={isSubmitting}
-					submitLabel="Create job description"
-				/>
+				<ApiError error={(mutation.error as unknown as BadRequestDetails) ?? null} />
+
+				<form.Subscribe selector={(state) => state.canSubmit}>
+					{(canSubmit) => (
+						<FormWizard.Footer
+							currentStep={currentStep}
+							stepCount={jobDescriptionSteps.length}
+							onBack={handleBack}
+							onNext={handleNext}
+							onSubmit={handleSubmit}
+							onCancel={() =>
+								navigate({
+									to: "/app/job-descriptions",
+								})
+							}
+							canSubmit={canSubmit}
+							isSubmitting={isSubmitting}
+							submitLabel="Create job description"
+						/>
+					)}
+				</form.Subscribe>
 			</FormWizard.Body>
 		</FormWizard>
 	);

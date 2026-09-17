@@ -486,3 +486,18 @@
 .form-field {
 	margin-bottom: var(--space-4);
 }
+
+.wizard-review-error{
+		
+	background: var(--color-surface-subtle);
+	box-sizing: border-box;
+	padding: var(--space-3);
+	border: 1px solid;
+	border-color: var(---color-warning-soft);
+	
+
+}
+
+.wizard-review-error .form-error {
+	font-size: var(--font-size-md);
+}
