@@ -126,6 +126,90 @@ export const useGetCompaniesSuggestions = <
 	return useMutation(getGetCompaniesSuggestionsMutationOptions(options), queryClient);
 };
 /**
+ * @summary Get a single company suggestion by id
+ */
+export const getCompanySuggestion = (
+	companyId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<CompanySuggestion>(
+		{ url: `/api/suggestion/companies/${companyId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetCompanySuggestionMutationKey = () => ["getCompanySuggestion"] as const;
+
+export const getGetCompanySuggestionMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getCompanySuggestion>>,
+		TError,
+		GetCompanySuggestionMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getCompanySuggestion>>,
+	TError,
+	GetCompanySuggestionMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetCompanySuggestionMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getCompanySuggestion>>,
+		GetCompanySuggestionMutationVariables
+	> = (props) => {
+		const { companyId } = props ?? {};
+
+		return getCompanySuggestion(companyId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetCompanySuggestionMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getCompanySuggestion>>
+>;
+
+export type GetCompanySuggestionMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCompanySuggestionMutationVariables = { companyId: string };
+
+/**
+ * @summary Get a single company suggestion by id
+ */
+export const useGetCompanySuggestion = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getCompanySuggestion>>,
+			TError,
+			GetCompanySuggestionMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getCompanySuggestion>>,
+	TError,
+	GetCompanySuggestionMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetCompanySuggestionMutationOptions(options), queryClient);
+};
+/**
  * @summary Get top 25 users
  */
 export const getUsersSuggestions = (
@@ -208,6 +292,90 @@ export const useGetUsersSuggestions = <
 	TContext
 > => {
 	return useMutation(getGetUsersSuggestionsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get a single user suggestion by id
+ */
+export const getUserSuggestion = (
+	userId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<UserSuggestion>(
+		{ url: `/api/suggestion/users/${userId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetUserSuggestionMutationKey = () => ["getUserSuggestion"] as const;
+
+export const getGetUserSuggestionMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getUserSuggestion>>,
+		TError,
+		GetUserSuggestionMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getUserSuggestion>>,
+	TError,
+	GetUserSuggestionMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetUserSuggestionMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getUserSuggestion>>,
+		GetUserSuggestionMutationVariables
+	> = (props) => {
+		const { userId } = props ?? {};
+
+		return getUserSuggestion(userId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetUserSuggestionMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getUserSuggestion>>
+>;
+
+export type GetUserSuggestionMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetUserSuggestionMutationVariables = { userId: string };
+
+/**
+ * @summary Get a single user suggestion by id
+ */
+export const useGetUserSuggestion = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getUserSuggestion>>,
+			TError,
+			GetUserSuggestionMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getUserSuggestion>>,
+	TError,
+	GetUserSuggestionMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetUserSuggestionMutationOptions(options), queryClient);
 };
 /**
  * @summary Get tags (limit 25)
