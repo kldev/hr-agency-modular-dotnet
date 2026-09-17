@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using HrAgencySystem.Recruitment.Feeds.ReadModel;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
@@ -63,6 +64,41 @@ public sealed class JobJson
     [JsonPropertyName("applyUrl")]
     public string PostingSlug { get; set; } = string.Empty;
 
+    public static JobJson FromRow(JobPostFeedRow row, string feedUrl)
+    {
+        return new JobJson
+        {
+            Id = row.Id,
+
+            Title = row.Title,
+            Summary = row.Summary,
+            Description = row.Description,
+
+            Responsibilities = [.. row.Responsibilities],
+            Requirements = [.. row.Requirements],
+            Skills = [.. row.Skills],
+
+            Location = row.Location,
+            LanguageCode = row.LanguageCode,
+            CountryCode = row.CountryCode,
+
+            EmploymentType = row.EmploymentType,
+            WorkMode = row.WorkMode,
+            CurrencyCode = row.CurrencyCode,
+
+            SalaryMin = row.SalaryMin,
+            SalaryMax = row.SalaryMax,
+
+            CreatedAt = row.CreatedAt,
+
+            PostingSlug = feedUrl + "/" + row.PostingSlug
+        };
+    }
+
+    /// <summary>
+    /// Used by the public job board pages, which still render from the UI projection.
+    /// The feed itself is built from <see cref="FromRow"/>.
+    /// </summary>
     public static JobJson FromProjection(JobPostProjection projection)
     {
         return new JobJson

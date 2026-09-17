@@ -68,6 +68,11 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<CandidateProjection>("recruitment");
     }
 
+    public async Task CleanJobPostFeedRows()
+    {
+        await TruncateTable("truncate table feeds.job_posts");
+    }
+
     public async Task CleanSales()
     {
         await CleanTable<ActivityProjection>("sales");

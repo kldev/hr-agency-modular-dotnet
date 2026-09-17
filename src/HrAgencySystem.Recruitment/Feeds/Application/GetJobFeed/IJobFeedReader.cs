@@ -1,8 +1,8 @@
-using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.Recruitment.Feeds.ReadModel;
 
 namespace HrAgencySystem.Recruitment.Feeds.Application.GetJobFeed;
 
 public interface IJobFeedReader
 {
-    Task<IReadOnlyList<JobPostProjection>> GetJobsFeed(Guid organizationId, CancellationToken ct);
+    Task<IReadOnlyList<JobPostFeedRow>> GetJobsFeed(Guid organizationId, CancellationToken ct);
 }

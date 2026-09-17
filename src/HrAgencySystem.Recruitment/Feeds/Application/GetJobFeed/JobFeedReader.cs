@@ -1,27 +1,52 @@
-using HrAgencySystem.Recruitment.Config;
-using HrAgencySystem.Recruitment.Domain.JobPostings;
-using HrAgencySystem.Recruitment.Infrastructure.Query;
-using HrAgencySystem.Recruitment.Projections;
-using Marten;
-using Microsoft.Extensions.Options;
+using Dapper;
+using HrAgencySystem.Recruitment.Feeds.ReadModel;
+using Npgsql;
 
 namespace HrAgencySystem.Recruitment.Feeds.Application.GetJobFeed;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-sealed class JobFeedReader(IQuerySession session, IOptions<RecruitmentConfig> config) : IJobFeedReader
+internal sealed class JobFeedReader(NpgsqlDataSource dataSource) : IJobFeedReader
 {
-    public async Task<IReadOnlyList<JobPostProjection>> GetJobsFeed(Guid organizationId, CancellationToken ct)
+    private const string SelectPublishedSql = """
+                                              select id               as "Id",
+                                                     organization_id  as "OrganizationId",
+                                                     is_published     as "IsPublished",
+                                                     title            as "Title",
+                                                     summary          as "Summary",
+                                                     description      as "Description",
+                                                     responsibilities as "Responsibilities",
+                                                     requirements     as "Requirements",
+                                                     skills           as "Skills",
+                                                     location         as "Location",
+                                                     language_code    as "LanguageCode",
+                                                     country_code     as "CountryCode",
+                                                     employment_type  as "EmploymentType",
+                                                     work_mode        as "WorkMode",
+                                                     currency_code    as "CurrencyCode",
+                                                     salary_min       as "SalaryMin",
+                                                     salary_max       as "SalaryMax",
+                                                     posting_slug     as "PostingSlug",
+                                                     created_at       as "CreatedAt",
+                                                     updated_at       as "UpdatedAt"
+                                              from feeds.job_posts
+                                              where organization_id = @organizationId
+                                                and is_published = true
+                                              order by created_at desc
+                                              """;
+
+    public async Task<IReadOnlyList<JobPostFeedRow>> GetJobsFeed(
+        Guid organizationId,
+        CancellationToken ct)
     {
+        await using var connection = await dataSource.OpenConnectionAsync(ct);
 
-        if (string.IsNullOrEmpty(config.Value.FeedUrl))
-            throw new ArgumentException("FeedsUrl must be provided. Check AppSettings.json -> Application -> FeedUrl value.");
-        
+        var command = new CommandDefinition(
+            SelectPublishedSql,
+            new { organizationId },
+            cancellationToken: ct);
 
-        var jobs = await session.Query<JobPostProjection>().WithStatuses([JobPostStatus.Published])
-            .WithOrganizationId(organizationId).ToListAsync(ct);
+        var rows = await connection.QueryAsync<JobPostFeedRow>(command);
 
-        var updatedJobs = jobs.Select(z => z.UpdatePostSlug(config.Value.FeedUrl)).ToList();
-        
-        return updatedJobs;
+        return [.. rows];
     }
 }

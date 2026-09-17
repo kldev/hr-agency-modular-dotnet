@@ -1,6 +1,8 @@
+using HrAgencySystem.Recruitment.Feeds.ReadModel;
 using HrAgencySystem.Recruitment.Projections;
 using JasperFx.Events.Projections;
 using Marten;
+using Marten.EntityFrameworkCore;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Configuration;
 
@@ -16,6 +18,7 @@ internal static class RecruitmentProjectionConfiguration
             ConfigureJobPostProjection(options);
             ConfigureCandidateProjection(options);
             ConfigureInterviewProjection(options);
+            ConfigureJobPostFeedProjection(options);
         }
 
         public void ConfigureRecruitmentProjectionsMinimal()
@@ -23,6 +26,17 @@ internal static class RecruitmentProjectionConfiguration
             ConfigureJobPostProjection(options, true);
             ConfigureCandidateProjection(options, true);
         }
+    }
+
+    /*
+     * Feed read model.
+     *
+     * Not part of the minimal configuration: the public web app only serves feed files
+     * from object storage, it neither generates them nor runs the projection daemon.
+     */
+    private static void ConfigureJobPostFeedProjection(StoreOptions options)
+    {
+        options.Add(new JobPostFeedProjection(), ProjectionLifecycle.Async);
     }
 
     private static void ConfigureJobApplicationProjection(

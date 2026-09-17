@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.JobPosting.Maps;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Projections;
 
@@ -44,4 +45,39 @@ public sealed class JobPostingTestClient(
         return result;
     }
 
+    internal async Task<JobPostStatusChanged> ChangeStatusAsync(
+        Guid jobPostId,
+        JobPostStatusApi status)
+    {
+        var response = await client.PutAsJsonAsync(
+            $"{RestUrl}/{jobPostId}/status",
+            new ChangeJobPostStatusRequest(status));
+
+        response.EnsureSuccessStatusCode();
+
+        var result =
+            await response.ReadWithJson<JobPostStatusChanged>();
+
+        Assert.NotNull(result);
+
+        return result;
+    }
+
+    internal async Task<JobPostUpdated> UpdateAsync(
+        Guid jobPostId,
+        UpdateJobPostRequest request)
+    {
+        var response = await client.PutAsJsonAsync(
+            $"{RestUrl}/{jobPostId}",
+            request);
+
+        response.EnsureSuccessStatusCode();
+
+        var result =
+            await response.ReadWithJson<JobPostUpdated>();
+
+        Assert.NotNull(result);
+
+        return result;
+    }
 }

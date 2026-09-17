@@ -1,5 +1,5 @@
 using System.Xml.Serialization;
-using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.Recruitment.Feeds.ReadModel;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Feeds.Serialization;
@@ -67,33 +67,33 @@ public sealed class JobFeedXmlItem
     [XmlElement("applyUrl")]
     public string PostingSlug { get; set; } = string.Empty;
 
-    public static JobFeedXmlItem FromProjection(JobPostProjection projection)
+    public static JobFeedXmlItem FromRow(JobPostFeedRow row, string feedUrl)
     {
         return new JobFeedXmlItem
         {
-            Id = projection.Id,
-            Title = projection.Title,
-            Summary = projection.Summary,
-            Description = projection.Description,
+            Id = row.Id,
+            Title = row.Title,
+            Summary = row.Summary,
+            Description = row.Description,
 
-            Responsibilities = [.. projection.Responsibilities],
-            Requirements = [.. projection.Requirements],
-            Skills = [.. projection.Skills],
+            Responsibilities = [.. row.Responsibilities],
+            Requirements = [.. row.Requirements],
+            Skills = [.. row.Skills],
 
-            Location = projection.Location,
-            LanguageCode = projection.LanguageCode,
-            CountryCode = projection.CountryCode,
+            Location = row.Location,
+            LanguageCode = row.LanguageCode,
+            CountryCode = row.CountryCode,
 
-            EmploymentType = projection.EmploymentType,
-            WorkMode = projection.WorkMode,
-            CurrencyCode = projection.CurrencyCode,
+            EmploymentType = row.EmploymentType,
+            WorkMode = row.WorkMode,
+            CurrencyCode = row.CurrencyCode,
 
-            SalaryMin = projection.SalaryMin,
-            SalaryMax = projection.SalaryMax,
-            
-            CreatedAt = projection.CreatedAt,
-            
-            PostingSlug = projection.PostingSlug
+            SalaryMin = row.SalaryMin,
+            SalaryMax = row.SalaryMax,
+
+            CreatedAt = row.CreatedAt,
+
+            PostingSlug = feedUrl + "/" + row.PostingSlug
         };
     }
 }

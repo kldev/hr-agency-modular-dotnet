@@ -8,7 +8,9 @@
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.S3" />
+        <PackageReference Include="Dapper" />
         <PackageReference Include="Marten" />
+        <PackageReference Include="Marten.EntityFrameworkCore" />
         <PackageReference Include="WolverineFx" />
         <PackageReference Include="WolverineFx.Marten" />
         <PackageReference Include="Microsoft.Extensions.Configuration" />
