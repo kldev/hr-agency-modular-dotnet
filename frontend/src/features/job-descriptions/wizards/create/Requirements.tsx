@@ -1,7 +1,7 @@
 import { ListChecks } from "lucide-react";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { withForm } from "#/forms";
-import type { JobDescriptionFormValues } from "./schema";
+import { type JobDescriptionFormValues, MIN_LIST_ITEM_LENGTH } from "./schema";
 
 export const RequirementsStep = withForm({
 	defaultValues: {} as JobDescriptionFormValues,
@@ -17,6 +17,7 @@ export const RequirementsStep = withForm({
 				<form.AppField name="requirements">
 					{(field) => (
 						<field.FormArrayField
+							minLength={MIN_LIST_ITEM_LENGTH}
 							fieldValue={field.state.value}
 							values={field.state.value}
 							fieldName={field.name}
@@ -34,6 +35,7 @@ export const RequirementsStep = withForm({
 				<form.AppField name="skills">
 					{(field) => (
 						<field.FormArrayField
+							minLength={MIN_LIST_ITEM_LENGTH}
 							fieldValue={field.state.value}
 							values={field.state.value}
 							fieldName={field.name}

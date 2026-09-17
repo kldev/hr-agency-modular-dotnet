@@ -4,8 +4,8 @@ import { toast } from "sonner";
 import type { BadRequestDetails } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { ApiError } from "#/components/ui/ApiError";
-import { useGetCompany } from "#/features/companies/pages/hooks";
 import { useAppForm } from "#/forms";
+import { useCompanySuggestion } from "#/hooks";
 import { Route } from "#/routes/app/job-descriptions/add";
 import { useCreateJobDescription } from "../../hooks";
 import { ContentStep } from "./ContentStep";
@@ -18,13 +18,14 @@ import { jobDescriptionSteps } from "./steps";
 
 export type JobDescriptionField = keyof JobDescriptionFormValues;
 
+const cleanList = (values: string[]) => values.map((value) => value.trim()).filter(Boolean);
+
 export function CreateJobDescriptionWizard() {
 	const navigate = Route.useNavigate();
 	const { companyId } = Route.useSearch();
 
 	const [currentStep, setCurrentStep] = useState(0);
 
-	const companyQuery = useGetCompany(companyId ?? "");
 	const { mutation } = useCreateJobDescription({
 		onSuccess: () => {
 			toast.success("Job description created");
@@ -63,9 +64,9 @@ export function CreateJobDescriptionWizard() {
 						title: value.title,
 						summary: value.summary || null,
 						description: value.description,
-						responsibilities: value.responsibilities.filter(Boolean),
-						requirements: value.requirements.filter(Boolean),
-						skills: value.skills.filter(Boolean),
+						responsibilities: cleanList(value.responsibilities),
+						requirements: cleanList(value.requirements),
+						skills: cleanList(value.skills),
 						location: value.location,
 						countryCode: value.countryCode,
 						employmentType: value.employmentType,
@@ -99,7 +100,19 @@ export function CreateJobDescriptionWizard() {
 			await form.validateField(field, "submit");
 		}
 
-		const hasErrors = fields.some((field) => form.getFieldMeta(field)?.errors.length);
+		/*
+		 * A schema issue can land on a nested path (`responsibilities[0]`), which `getFieldMeta` of
+		 * the array itself does not see - hence the prefix match.
+		 */
+		const fieldMeta = form.state.fieldMeta as Record<string, { errors: Array<unknown> }>;
+
+		const hasErrors = Object.entries(fieldMeta).some(
+			([name, meta]) =>
+				meta.errors.length > 0 &&
+				fields.some(
+					(field) => name === field || name.startsWith(`${field}[`) || name.startsWith(`${field}.`),
+				),
+		);
 
 		if (hasErrors) {
 			return;
@@ -116,19 +129,11 @@ export function CreateJobDescriptionWizard() {
 		void form.handleSubmit();
 	};
 
-	const company = companyQuery.data;
-
 	return (
 		<FormWizard>
-			<FormWizard.Title
-				module="Sales"
-				title={
-					company
-						? `Create job description for company: ${company.name} `
-						: "Create job description"
-				}
-				description="  Create a structured job posting ready for your recruitment pipeline."
-			/>
+			<form.Subscribe selector={(state) => state.values.companyId}>
+				{(selectedCompanyId) => <WizardTitle companyId={selectedCompanyId} />}
+			</form.Subscribe>
 			<FormWizard.Header steps={jobDescriptionSteps} currentStep={currentStep} />
 
 			<FormWizard.Body>
@@ -165,5 +170,19 @@ export function CreateJobDescriptionWizard() {
 				</form.Subscribe>
 			</FormWizard.Body>
 		</FormWizard>
+	);
+}
+
+function WizardTitle({ companyId }: { companyId: string }) {
+	const { data: company } = useCompanySuggestion(companyId);
+
+	return (
+		<FormWizard.Title
+			module="Sales"
+			title={
+				company ? `Create job description for company: ${company.name}` : "Create job description"
+			}
+			description="Create a structured job posting ready for your recruitment pipeline."
+		/>
 	);
 }

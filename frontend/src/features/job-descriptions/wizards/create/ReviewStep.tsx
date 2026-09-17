@@ -69,6 +69,11 @@ export const ReviewStep = withForm({
 	},
 });
 
+/** `responsibilities[0]` -> `responsibilities`, so the error can still be traced back to its step. */
+function baseFieldName(field: string) {
+	return field.split(/[[.]/)[0] as JobDescriptionField;
+}
+
 type ReviewErrorsProps = {
 	fieldMeta: Partial<Record<JobDescriptionField, { errors: Array<unknown> }>>;
 };
@@ -79,7 +84,7 @@ function ReviewErrors({ fieldMeta }: ReviewErrorsProps) {
 	).flatMap(([field, meta]) =>
 		(meta?.errors ?? []).map((error) => ({
 			field,
-			step: findStepForField(field)?.title,
+			step: findStepForField(baseFieldName(field))?.title,
 			message: getErrorMessage(error),
 		})),
 	);

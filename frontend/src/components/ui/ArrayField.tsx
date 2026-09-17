@@ -6,17 +6,48 @@ export type ArrayFieldProps = {
 	description?: string;
 	values: string[];
 	placeholder?: string;
+	/** Rows shorter than this are marked right away, without waiting for schema validation. */
+	minLength?: number;
+	disabled?: boolean;
 	onChange: (values: string[]) => void;
 };
 
-export function ArrayField({ label, description, values, placeholder, onChange }: ArrayFieldProps) {
+export function ArrayField({
+	label,
+	description,
+	values,
+	placeholder,
+	minLength,
+	disabled,
+	onChange,
+}: ArrayFieldProps) {
+	const items = values ?? [];
+
 	const update = (index: number, value: string) =>
-		onChange(values.map((item, i) => (i === index ? value : item)));
+		onChange(items.map((item, i) => (i === index ? value : item)));
+
+	/*
+	 * Trimming happens on blur, not on change - trimming while typing would eat the space between
+	 * two words. It keeps whitespace-only rows from reaching the form value.
+	 */
+	const normalize = (index: number) => {
+		const current = items[index] ?? "";
+		const trimmed = current.trim();
+
+		if (trimmed === current) {
+			return;
+		}
+
+		update(index, trimmed);
+	};
 
 	const remove = (index: number) => {
-		const next = values.filter((_, i) => i !== index);
+		const next = items.filter((_, i) => i !== index);
 		onChange(next.length ? next : [""]);
 	};
+
+	const lastItem = items.at(-1) ?? "";
+	const canAdd = items.length === 0 || lastItem.trim().length > 0;
 
 	return (
 		<div>
@@ -26,35 +57,58 @@ export function ArrayField({ label, description, values, placeholder, onChange }
 			</div>
 
 			<div className="space-y-2">
-				{values?.map((item, index) => (
-					<div key={index} className="flex items-center gap-2">
-						<input
-							value={item}
-							aria-label={`${label} ${index + 1}`}
-							placeholder={placeholder}
-							onChange={(event) => update(index, event.target.value)}
-							className={[
-								"h-9 min-w-0 flex-1 rounded-md border border-(--color-border-strong) bg-(--color-surface) px-3",
-								"text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus:border-(--color-primary)",
-								" focus:ring-2 focus:ring-(--color-primary-soft)",
-							].join(" ")}
-						/>
-						<button
-							type="button"
-							aria-label={`Remove ${label?.toLowerCase()} ${index + 1}`}
-							onClick={() => remove(index)}
-							className={[
-								"flex h-9 w-9 shrink-0 items-center justify-center",
-								"rounded-md text-(--color-text-muted)",
-								"hover:bg-(--color-danger-soft) hover:text-(--color-danger)",
-							].join(" ")}
-						>
-							<Trash2 size={15} />
-						</button>
-					</div>
-				))}
+				{items.map((item, index) => {
+					const value = item.trim();
+					const tooShort = minLength !== undefined && value.length > 0 && value.length < minLength;
 
-				<Button type="button" variant="secondary" onClick={() => onChange([...values, ""])}>
+					return (
+						<div key={index}>
+							<div className="flex items-center gap-2">
+								<input
+									value={item}
+									aria-label={`${label} ${index + 1}`}
+									aria-invalid={tooShort}
+									placeholder={placeholder}
+									disabled={disabled}
+									onChange={(event) => update(index, event.target.value)}
+									onBlur={() => normalize(index)}
+									className={[
+										"h-9 min-w-0 flex-1 rounded-md border bg-(--color-surface) px-3",
+										tooShort ? "border-(--color-danger)" : "border-(--color-border-strong)",
+										"text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus:border-(--color-primary)",
+										" focus:ring-2 focus:ring-(--color-primary-soft)",
+									].join(" ")}
+								/>
+								<button
+									type="button"
+									aria-label={`Remove ${label?.toLowerCase()} ${index + 1}`}
+									disabled={disabled}
+									onClick={() => remove(index)}
+									className={[
+										"flex h-9 w-9 shrink-0 items-center justify-center",
+										"rounded-md text-(--color-text-muted)",
+										"hover:bg-(--color-danger-soft) hover:text-(--color-danger)",
+									].join(" ")}
+								>
+									<Trash2 size={15} />
+								</button>
+							</div>
+
+							{tooShort && (
+								<p className="mt-1 text-xs text-(--color-danger)">
+									At least {minLength} characters.
+								</p>
+							)}
+						</div>
+					);
+				})}
+
+				<Button
+					type="button"
+					variant="secondary"
+					disabled={disabled || !canAdd}
+					onClick={() => onChange([...items, ""])}
+				>
 					<Plus size={15} />
 					Add item
 				</Button>

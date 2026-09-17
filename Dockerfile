@@ -24,7 +24,6 @@ COPY src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj HrAgencySy
 COPY src/HrAgencySystem.Recruitment.Contracts/HrAgencySystem.Recruitment.Contracts.csproj HrAgencySystem.Recruitment.Contracts/
 COPY src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj HrAgencySystem.Sales/
 COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
-COPY src/HrAgencySystem.Suggestion/HrAgencySystem.Suggestion.csproj HrAgencySystem.Suggestion/
 
 RUN dotnet restore HrAgencySystem.Api/HrAgencySystem.Api.csproj
 

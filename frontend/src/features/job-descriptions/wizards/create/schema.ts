@@ -1,15 +1,42 @@
 import { z } from "zod";
 import { CurrencyCode, EmploymentType, WorkMode } from "@/api/models";
 
+export const MIN_LIST_ITEM_LENGTH = 2;
+
+/*
+ * Issues are reported on the array itself, never on `list[index]`.
+ *
+ * A zod issue with the path `["responsibilities", 0]` is mapped by TanStack Form onto the field
+ * `responsibilities[0]`, which no step validates and no `FieldError` renders - the wizard would let
+ * the user walk past a too short item and only fail on submit. The row number goes into the message
+ * instead, so the error stays on the field the form actually knows about.
+ */
 const requiredTextList = (label: string) =>
-	z
-		.array(z.string().trim())
-		.transform((items) => items.filter(Boolean))
-		.pipe(
-			z
-				.array(z.string().min(2, `${label} must be at least 2 characters`))
-				.min(1, `Add at least one ${label.toLowerCase()}`),
-		);
+	z.array(z.string()).superRefine((items, ctx) => {
+		const filled = items.filter((item) => item.trim().length > 0);
+
+		if (filled.length === 0) {
+			ctx.addIssue({
+				code: "custom",
+				message: `Add at least one ${label.toLowerCase()}`,
+			});
+
+			return;
+		}
+
+		items.forEach((item, index) => {
+			const value = item.trim();
+
+			if (value.length === 0 || value.length >= MIN_LIST_ITEM_LENGTH) {
+				return;
+			}
+
+			ctx.addIssue({
+				code: "custom",
+				message: `${label} ${index + 1} must be at least ${MIN_LIST_ITEM_LENGTH} characters`,
+			});
+		});
+	});
 
 const salaryAmount = (label: string) =>
 	z

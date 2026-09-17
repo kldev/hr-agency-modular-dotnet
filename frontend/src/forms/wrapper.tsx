@@ -402,6 +402,7 @@ export function FormArrayField({
 				{...props}
 				values={fieldValue ?? []}
 				label={undefined}
+				disabled={isSubmitting}
 				onChange={(values) => handleChange(values)}
 			/>
 			<FieldError errors={errors} />{" "}
