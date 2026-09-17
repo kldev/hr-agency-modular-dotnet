@@ -8,8 +8,10 @@ import {
 } from "#/features/applications/pages/components";
 import { formatDateTimeIntl } from "#/utlis";
 import {
+	type ChangeJobPostRecruiterCommand,
 	type ChangeJobPostStatusCommand,
 	ChangeJobPostStatusDrawer,
+	ChangeRecruiterDrawer,
 	type PostToChannelCommand,
 	PostToChannelDrawer,
 } from "../forms";
@@ -25,6 +27,7 @@ export function JobPostCardList({ jobPosts, onRefresh }: JobPostCardListProps) {
 	const applicationRef = useRef<CreateJobApplicationsCommand>(null);
 	const statusRef = useRef<ChangeJobPostStatusCommand>(null);
 	const channelRef = useRef<PostToChannelCommand>(null);
+	const recruiterRef = useRef<ChangeJobPostRecruiterCommand>(null);
 
 	const actionsHandler: Actions = {
 		onAddApplication: (it) => {
@@ -35,6 +38,9 @@ export function JobPostCardList({ jobPosts, onRefresh }: JobPostCardListProps) {
 		},
 		onPostToChannel: (it) => {
 			channelRef.current?.postToChannel(it.id);
+		},
+		onChangeRecruiter: (it) => {
+			recruiterRef.current?.changeRecruiter(it.id, it.recruiterId);
 		},
 	};
 	return (
@@ -54,6 +60,7 @@ export function JobPostCardList({ jobPosts, onRefresh }: JobPostCardListProps) {
 							onAddApplication={() => actionsHandler.onAddApplication(jobPost)}
 							onChangeStatus={() => actionsHandler.onChangeStatus(jobPost)}
 							onPostToChannel={() => actionsHandler.onPostToChannel(jobPost)}
+							onChangeRecruiter={() => actionsHandler.onChangeRecruiter(jobPost)}
 						></JobPostsActions>
 					</div>
 
@@ -62,7 +69,7 @@ export function JobPostCardList({ jobPosts, onRefresh }: JobPostCardListProps) {
 							<JobPostsBadge status={jobPost.status} />
 						</DetailItem>
 
-						<DetailItem label="Language">{jobPost.countryCode}</DetailItem>
+						<DetailItem label="Language">{jobPost.languageCode}</DetailItem>
 						<DetailItem label="Type">{jobPost.employmentType}</DetailItem>
 						<DetailItem label="Work">{jobPost.workMode}</DetailItem>
 						<DetailItem label="Location">{jobPost.location}</DetailItem>
@@ -100,6 +107,7 @@ export function JobPostCardList({ jobPosts, onRefresh }: JobPostCardListProps) {
 			<CreateJobApplicationsDrawer ref={applicationRef} onSuccess={onRefresh} />
 			<PostToChannelDrawer ref={channelRef} onSuccess={onRefresh} />
 			<ChangeJobPostStatusDrawer ref={statusRef} onSuccess={onRefresh} />
+			<ChangeRecruiterDrawer ref={recruiterRef} onSuccess={onRefresh} />
 		</div>
 	);
 }

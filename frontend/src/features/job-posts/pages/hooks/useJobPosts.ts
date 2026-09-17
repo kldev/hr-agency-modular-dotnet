@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { getJobPostsSlice } from "#/api/endpoints";
+import { getJobPost, getJobPostsSlice } from "#/api/endpoints";
 import type { JobPostStatus } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
 import { jobPostsKeys } from "@/api/query-keys";
@@ -13,6 +13,14 @@ export type JobsFilters = {
 	page?: number;
 	pageSize?: number;
 };
+
+const getJobPostServerFn = createServerFn({
+	method: "GET",
+})
+	.validator((input: { id: string }) => input)
+	.handler(({ data }) => {
+		return getJobPost(data.id, getFnOptions());
+	});
 
 const getJobsSliceServerFn = createServerFn({
 	method: "GET",
@@ -48,5 +56,22 @@ export function useGetJobsSlice(fillter: JobsFilters) {
 		getNextPageParam: (lastPage, _pages, lastPageParam) => {
 			return lastPage.hasMore ? lastPageParam + 1 : undefined;
 		},
+	});
+}
+
+/*
+ * The details screen, the edit wizard and every mutation share `jobPostsKeys.details(id)` - without
+ * one key an invalidation after saving leaves the details page on stale data.
+ */
+export function useGetJobPost(id: string) {
+	return useQuery({
+		queryKey: jobPostsKeys.details(id),
+		enabled: Boolean(id),
+		queryFn: () =>
+			getJobPostServerFn({
+				data: {
+					id,
+				},
+			}),
 	});
 }

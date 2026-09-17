@@ -8,8 +8,10 @@ import {
 	CreateJobApplicationsDrawer,
 } from "@/features/applications/pages/components";
 import {
+	type ChangeJobPostRecruiterCommand,
 	type ChangeJobPostStatusCommand,
 	ChangeJobPostStatusDrawer,
+	ChangeRecruiterDrawer,
 	type PostToChannelCommand,
 	PostToChannelDrawer,
 } from "../forms";
@@ -24,6 +26,7 @@ export function JobPostsTable({ items, onRefresh }: JobPostsTableProps) {
 	const applicationRef = useRef<CreateJobApplicationsCommand>(null);
 	const statusRef = useRef<ChangeJobPostStatusCommand>(null);
 	const channelRef = useRef<PostToChannelCommand>(null);
+	const recruiterRef = useRef<ChangeJobPostRecruiterCommand>(null);
 
 	const actionsHandler: Actions = {
 		onAddApplication: (it) => {
@@ -34,6 +37,9 @@ export function JobPostsTable({ items, onRefresh }: JobPostsTableProps) {
 		},
 		onPostToChannel: (it) => {
 			channelRef.current?.postToChannel(it.id);
+		},
+		onChangeRecruiter: (it) => {
+			recruiterRef.current?.changeRecruiter(it.id, it.recruiterId);
 		},
 	};
 
@@ -56,6 +62,7 @@ export function JobPostsTable({ items, onRefresh }: JobPostsTableProps) {
 			<CreateJobApplicationsDrawer ref={applicationRef} onSuccess={onRefresh} />
 			<PostToChannelDrawer ref={channelRef} onSuccess={onRefresh} />
 			<ChangeJobPostStatusDrawer ref={statusRef} onSuccess={onRefresh} />
+			<ChangeRecruiterDrawer ref={recruiterRef} onSuccess={onRefresh} />
 		</>
 	);
 }

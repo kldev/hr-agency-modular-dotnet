@@ -213,6 +213,7 @@ function WizardFooter({
 	onBack,
 	onNext,
 	onSubmit,
+	onCancel,
 
 	canGoBack = currentStep > 0,
 	canGoNext = currentStep < stepCount - 1,
@@ -243,6 +244,12 @@ function WizardFooter({
 
 			<div className="form-wizard__footer-right">
 				{children}
+
+				{onCancel && (
+					<Button variant="ghost" onClick={onCancel} disabled={isSubmitting}>
+						<span className="button-label">Cancel</span>
+					</Button>
+				)}
 
 				{isLastStep
 					? onSubmit && (

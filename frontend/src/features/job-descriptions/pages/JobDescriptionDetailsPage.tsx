@@ -1,3 +1,5 @@
+import { useNavigate } from "@tanstack/react-router";
+import { FilePlus2 } from "lucide-react";
 import type { JobDescriptionProjection } from "@/api/models";
 import {
 	formatSalary,
@@ -7,6 +9,7 @@ import {
 } from "@/components";
 import {
 	AuditInformation,
+	Button,
 	DataDetails,
 	DetailsHeader,
 	DetailsListSection,
@@ -83,6 +86,8 @@ function JobDescriptionDescription({
 }
 
 const JobDescriptionDetailsPage: React.FC<{ id: string }> = ({ id }) => {
+	const navigate = useNavigate();
+
 	var query = useGetJobDescription(id);
 	if (!id || query.isLoading || query.isError || !query.data) {
 		return (
@@ -101,6 +106,23 @@ const JobDescriptionDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 						<JobDescriptionBadge status={jobDescription.status} />
 
 						<span className="data-details-header-info">{jobDescription.company.name}</span>
+					</div>
+				}
+				extraAdd={
+					<div className="flex justify-end flex-row gap-2">
+						<Button
+							variant="ghost"
+							title="Create job post"
+							onClick={() =>
+								navigate({
+									to: "/app/jobs/add",
+									search: { jobDescriptionId: jobDescription.id, fromJobPostId: undefined },
+								})
+							}
+						>
+							<FilePlus2 size={15} />
+							<span>Create job post</span>
+						</Button>
 					</div>
 				}
 				onEdit={() => {

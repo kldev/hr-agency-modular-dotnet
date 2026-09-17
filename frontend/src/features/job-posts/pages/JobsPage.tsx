@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { BriefcaseBusiness } from "lucide-react";
 import type React from "react";
 
@@ -25,8 +26,13 @@ const JobsPage: React.FC = () => {
 			loading={query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
-				<EmptyState title="No job posts found">
+				<EmptyState
+					title="No job posts found"
+					description="A job post is always created from a job description - there is no way to start one from this list."
+				>
 					<BriefcaseBusiness />
+
+					<Link to="/app/job-descriptions">Go to job descriptions</Link>
 				</EmptyState>
 			}
 		>

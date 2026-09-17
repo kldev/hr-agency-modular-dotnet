@@ -17,6 +17,7 @@ export * from "./empty-state";
 export * from "./FieldError";
 export * from "./Input";
 export * from "./ItemMark";
+export * from "./LanguageSelect";
 export * from "./LoadMore";
 export * from "./MetricCard";
 export * from "./OnlyMine";

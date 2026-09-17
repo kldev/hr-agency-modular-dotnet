@@ -12,6 +12,7 @@ export type Actions = {
 	onAddApplication: (item: JobPostResponse) => void;
 	onChangeStatus: (item: JobPostResponse) => void;
 	onPostToChannel: (item: JobPostResponse) => void;
+	onChangeRecruiter: (item: JobPostResponse) => void;
 };
 
 export function getColumns(actions: Actions) {
@@ -32,6 +33,7 @@ export function getColumns(actions: Actions) {
 							onAddApplication={() => actions.onAddApplication(item)}
 							onChangeStatus={() => actions.onChangeStatus(item)}
 							onPostToChannel={() => actions.onPostToChannel(item)}
+							onChangeRecruiter={() => actions.onChangeRecruiter(item)}
 						/>
 					</div>
 				);
@@ -53,7 +55,7 @@ export function getColumns(actions: Actions) {
 			},
 		}),
 		columnHelper.accessor("languageCode", {
-			header: "",
+			header: "Lang",
 			meta: {
 				width: "xs",
 			},

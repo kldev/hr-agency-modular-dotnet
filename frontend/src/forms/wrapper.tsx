@@ -12,6 +12,7 @@ import {
 	FieldError,
 	Input,
 	type InputProps,
+	LanguageSelect,
 	MoneyInput,
 	type MoneyInputProps,
 	Textarea,
@@ -376,6 +377,45 @@ export function FormCountrySelect({
 				onChange={(event) => handleChange(event.target.value)}
 				disabled={isSubmitting}
 			/>
+
+			<FieldError errors={errors} />
+		</div>
+	);
+}
+
+type FormLanguageSelectProps = {
+	label: string;
+	fieldName: string;
+	fieldValue: string | null;
+	isSubmitting: boolean;
+	errors: Array<unknown>;
+	handleChange: (value: string) => void;
+	hint?: string;
+};
+
+export function FormLanguageSelect({
+	label,
+	fieldName,
+	fieldValue,
+	isSubmitting,
+	errors,
+	handleChange,
+	hint,
+}: FormLanguageSelectProps) {
+	return (
+		<div className="form-field">
+			<label className="form-label" htmlFor={fieldName}>
+				{label}
+			</label>
+
+			<LanguageSelect
+				id={fieldName}
+				value={fieldValue ?? ""}
+				onChange={(event) => handleChange(event.target.value)}
+				disabled={isSubmitting}
+			/>
+
+			{hint && <p className="text-xs text-(--color-text-muted)">{hint}</p>}
 
 			<FieldError errors={errors} />
 		</div>

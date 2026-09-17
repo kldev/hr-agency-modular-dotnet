@@ -1,8 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
-import { Pencil, PlusIcon } from "lucide-react";
+import { useNavigate, useParams } from "@tanstack/react-router";
+import { Languages, Pencil, PlusIcon } from "lucide-react";
 import { useRef } from "react";
-import { getJobPost } from "@/api/endpoints";
 import type { JobPostProjection } from "@/api/models";
 import {
 	formatSalary,
@@ -24,6 +22,7 @@ import {
 	CreateJobApplicationsDrawer,
 } from "@/features/applications/pages/components";
 import { formatDateTime } from "@/utlis";
+import { useGetJobPost } from "./hooks";
 
 function JobPostOverview({ jobPost }: { jobPost: JobPostProjection }) {
 	return (
@@ -87,19 +86,14 @@ function JobPostDescription({ jobPost }: { jobPost: JobPostProjection }) {
 
 const JobPostDetailsPage: React.FC = () => {
 	const { id } = useParams({ from: "/app/jobs/$id" });
+	const navigate = useNavigate();
 	const addAppRef = useRef<CreateJobApplicationsCommand>(null);
 
-	const jobPostQuery = useQuery({
-		queryKey: ["job-post", id],
-		queryFn: ({ signal }) => {
-			if (!id) {
-				throw new Error("Job post id is required");
-			}
-
-			return getJobPost(id, undefined, signal);
-		},
-		enabled: Boolean(id),
-	});
+	/*
+	 * The same key the edit wizard and the mutations invalidate - fetching inline left this screen
+	 * with its own, never invalidated cache entry, so a save showed stale data on the way back.
+	 */
+	const jobPostQuery = useGetJobPost(id);
 
 	if (!id) {
 		return (
@@ -150,7 +144,29 @@ const JobPostDetailsPage: React.FC = () => {
 							<PlusIcon size={15} />
 							<span>Add application</span>
 						</Button>
-						<Button variant="ghost" title="Edit data">
+						<Button
+							variant="ghost"
+							title="Copy to new language"
+							onClick={() =>
+								navigate({
+									to: "/app/jobs/add",
+									search: { fromJobPostId: jobPost.id, jobDescriptionId: undefined },
+								})
+							}
+						>
+							<Languages size={15} />
+							<span>Copy to new language</span>
+						</Button>
+						<Button
+							variant="ghost"
+							title="Edit data"
+							onClick={() =>
+								navigate({
+									to: "/app/jobs/edit/$id",
+									params: { id: jobPost.id },
+								})
+							}
+						>
 							<Pencil size={15} />
 							<span>Edit</span>
 						</Button>

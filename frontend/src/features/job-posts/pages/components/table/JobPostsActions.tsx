@@ -1,5 +1,13 @@
 import { useRouter } from "@tanstack/react-router";
-import { ClipboardList, Pencil, Rss, Settings2, TrendingUp } from "lucide-react";
+import {
+	ClipboardList,
+	Languages,
+	Pencil,
+	Rss,
+	Settings2,
+	TrendingUp,
+	UserRoundCog,
+} from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 
 interface JobPostsActionsProps {
@@ -7,12 +15,14 @@ interface JobPostsActionsProps {
 	onAddApplication: () => void;
 	onChangeStatus: () => void;
 	onPostToChannel: () => void;
+	onChangeRecruiter: () => void;
 }
 export function JobPostsActions({
 	id,
 	onAddApplication,
 	onChangeStatus,
 	onPostToChannel,
+	onChangeRecruiter,
 }: JobPostsActionsProps) {
 	const router = useRouter();
 	const detailsUrl = router.buildLocation({
@@ -26,6 +36,12 @@ export function JobPostsActions({
 		params: { id: id },
 	}).href;
 
+	/* The copy is a translation into another language, so it starts from this post, not from scratch. */
+	const copyUrl = router.buildLocation({
+		to: "/app/jobs/add",
+		search: { fromJobPostId: id, jobDescriptionId: undefined },
+	}).href;
+
 	return (
 		<div className="table-actions">
 			<ActionMenu
@@ -37,7 +53,15 @@ export function JobPostsActions({
 							window.open(editUrl, "_blank", "noopener,noreferrer");
 						},
 					},
+					{
+						label: "Copy to new language",
+						icon: Languages,
+						action: () => {
+							window.open(copyUrl, "_blank", "noopener,noreferrer");
+						},
+					},
 					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
+					{ label: "Change recruiter", icon: UserRoundCog, action: onChangeRecruiter },
 					{ label: "Post to channel", icon: Rss, action: onPostToChannel },
 					{
 						label: "Open details",
