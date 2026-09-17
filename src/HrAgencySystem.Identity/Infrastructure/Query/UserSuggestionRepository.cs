@@ -19,4 +19,15 @@ public sealed class UserSuggestionRepository(IDocumentSession session) : IUserSu
             .Select(z => new UserSuggestion(z.Id, z.FullName, z.Email))
             .ToListAsync(ct);
     }
+
+    // No role filter here on purpose: the picker has to be able to show a user that is already
+    // stored on an aggregate, even when their role changed in the meantime.
+    public async Task<UserSuggestion?> GetUserSuggestion(Guid organizationId, Guid userId, CancellationToken ct)
+    {
+        return await session.Query<UserProjection>()
+            .WithOrganizationId(organizationId)
+            .WithUserId(userId)
+            .Select(z => new UserSuggestion(z.Id, z.FullName, z.Email))
+            .FirstOrDefaultAsync(ct);
+    }
 }

@@ -18,4 +18,15 @@ public sealed class CompanySuggestionRepository(IDocumentSession session) : ICom
 
         return [.. result.Select(z => z.ToSuggestion()).ToList()];
     }
+
+    public async Task<CompanySuggestion?> GetCompanySuggestion(Guid organizationId, Guid companyId,
+        CancellationToken ct)
+    {
+        var result = await session.Query<CompanyProjection>()
+            .WithOrganizationId(organizationId)
+            .WithCompanyId(companyId)
+            .FirstOrDefaultAsync(ct);
+
+        return result?.ToSuggestion();
+    }
 }
