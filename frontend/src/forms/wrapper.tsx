@@ -3,6 +3,7 @@ import type { CompanySuggestion, OrganizationRole, UserSuggestion } from "#/api/
 import {
 	ArrayField,
 	type ArrayFieldProps,
+	ChoiceGroup,
 	CompaniesPicker,
 	CountrySelect,
 	DatePicker,
@@ -404,6 +405,41 @@ export function FormArrayField({
 				onChange={(values) => handleChange(values)}
 			/>
 			<FieldError errors={errors} />{" "}
+		</div>
+	);
+}
+
+type FormChoiceGroupProps<T extends string> = {
+	options: Record<T, string>;
+	descriptions?: Partial<Record<T, string>>;
+	columns?: 1 | 2 | 3;
+} & AppInputProps<T>;
+
+export function FormChoiceGroup<T extends string>({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	handleChange,
+	options,
+	descriptions,
+	columns,
+	errors,
+}: FormChoiceGroupProps<T>) {
+	return (
+		<div className="form-field">
+			<ChoiceGroup
+				label={label}
+				name={fieldName}
+				value={fieldValue ? (fieldValue as T) : null}
+				options={options}
+				descriptions={descriptions}
+				columns={columns}
+				disabled={isSubmitting}
+				onChange={(value) => handleChange(value as T)}
+			/>
+
+			<FieldError errors={errors} />
 		</div>
 	);
 }

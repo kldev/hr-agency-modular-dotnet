@@ -51,9 +51,9 @@ export function getColumns(actions: Actions) {
 		}),
 
 		columnHelper.accessor("recruiter", {
-			header: "Recruiter",
+			header: "Responsible",
 			meta: {
-				width: "md",
+				width: "xl",
 			},
 
 			cell: ({ getValue }) => (

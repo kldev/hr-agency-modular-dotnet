@@ -2,6 +2,7 @@ export * from "./ArrayField";
 export * from "./AuditInformation";
 export * from "./Badge";
 export * from "./Button";
+export * from "./ChoiceGroup";
 export * from "./ConfirmDialog";
 export * from "./CountrySelect";
 export * from "./DetailsLoading";
