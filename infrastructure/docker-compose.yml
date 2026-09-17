@@ -80,32 +80,30 @@ services:
     depends_on:      
       postgres:
         condition: service_healthy   
-  # Feeds worker - background generation of job feeds (no HTTP surface).
-  # Commented out until src/HrAgencySystem.FeedsWorker exists: an active service
-  # pointing at a missing build target breaks ./infrastructure/start.sh --build.
-  # Enable together with plan .plans/002 (etap 6 + dedykowany projekt workera).
-  # feeds-worker:
-  #   build:
-  #     context: ../
-  #     dockerfile: ./Dockerfile.feeds-worker
-  #   container_name: hr-agency-feeds-worker
-  #   networks:
-  #     - inner-cluster-communication
-  #   environment:
-  #     DOTNET_ENVIRONMENT: docker
-  #     ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
-  #     RustFs__Endpoint: "http://hr-agency-api-s3:9000"
-  #     RustFs__AccessKey: ${RustFsAccessKey}
-  #     RustFs__SecretKey: ${RustFsSecretKey}
-  #     Application__FeedUrl: "http://localhost:8080"
-  #   restart: on-failure
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     rustfs:
-  #       condition: service_healthy
-  #     webapi:
-  #       condition: service_healthy
+  feeds-worker:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.feeds-worker
+    container_name: hr-agency-feeds-worker
+    networks:
+      - inner-cluster-communication
+    environment:
+      DOTNET_ENVIRONMENT: docker
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
+      RustFs__Endpoint: "http://hr-agency-api-s3:9000"
+      RustFs__AccessKey: ${RustFsAccessKey}
+      RustFs__SecretKey: ${RustFsSecretKey}
+      # Must match webapi - this value is prepended to every apply url in the generated feeds.
+      Application__FeedUrl: "http://localhost:8080"
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rustfs:
+        condition: service_healthy
+      # Not a functional dependency: the API owns schema creation, the worker runs with AutoCreate.None.
+      webapi:
+        condition: service_healthy
   front:
     build:
       context: ../frontend

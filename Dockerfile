@@ -15,6 +15,7 @@ COPY Directory.Packages.props .
 COPY src/HrAgencySystem.Api/HrAgencySystem.Api.csproj HrAgencySystem.Api/
 COPY src/HrAgencySystem.Audit/HrAgencySystem.Audit.csproj HrAgencySystem.Audit/
 COPY src/HrAgencySystem.Company/HrAgencySystem.Company.csproj HrAgencySystem.Company/
+COPY src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj HrAgencySystem.Feeds/
 COPY src/HrAgencySystem.Files/HrAgencySystem.Files.csproj HrAgencySystem.Files/
 COPY src/HrAgencySystem.Identity/HrAgencySystem.Identity.csproj HrAgencySystem.Identity/
 COPY src/HrAgencySystem.JobDescription/HrAgencySystem.JobDescription.csproj HrAgencySystem.JobDescription/

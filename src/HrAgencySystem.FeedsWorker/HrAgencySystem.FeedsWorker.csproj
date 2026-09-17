@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <UserSecretsId>hr-agency-feeds-worker</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Marten" />
+        <PackageReference Include="Npgsql.DependencyInjection" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
+        <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
+        <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj" />
+        <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
+    </ItemGroup>
+
+</Project>

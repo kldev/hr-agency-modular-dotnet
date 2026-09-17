@@ -39,6 +39,10 @@ while [[ $# -gt 0 ]]; do
             docker-compose logs -f webapi           
             exit 0
             ;;
+        --logs-worker)
+            docker-compose logs -f feeds-worker
+            exit 0
+            ;;
         --stop)
             docker-compose down
             exit 0
@@ -65,6 +69,8 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  --build       Force rebuild of all images"
             echo "  --foreground  Run in foreground (see logs)"
+            echo "  --logs        Follow webapi logs"
+            echo "  --logs-worker Follow feeds worker logs"
             echo "  --clean       Remove all containers and volumes"
             echo "  --help        Show this help"
             echo ""

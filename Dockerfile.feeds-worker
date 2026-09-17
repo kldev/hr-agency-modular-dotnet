@@ -1,0 +1,35 @@
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
+
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+WORKDIR /src
+
+COPY Directory.Packages.props .
+
+COPY src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj HrAgencySystem.Feeds/
+COPY src/HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj HrAgencySystem.FeedsWorker/
+COPY src/HrAgencySystem.Files/HrAgencySystem.Files.csproj HrAgencySystem.Files/
+COPY src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj HrAgencySystem.Organization/
+COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
+
+RUN dotnet restore HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj
+
+COPY src .
+
+RUN dotnet publish HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj \
+    --configuration Release \
+    --no-restore \
+    --output /app/publish \
+    /p:UseAppHost=false
+
+FROM runtime AS final
+
+WORKDIR /app
+
+COPY --from=build --chown=app:app /app/publish .
+
+USER app
+
+ENTRYPOINT ["dotnet", "HrAgencySystem.FeedsWorker.dll"]

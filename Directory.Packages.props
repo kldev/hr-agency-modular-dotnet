@@ -24,6 +24,7 @@
     <PackageVersion Include="Testcontainers" Version="4.15.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="4.15.0" />
     <PackageVersion Include="Npgsql" Version="10.0.0" />
+    <PackageVersion Include="Npgsql.DependencyInjection" Version="10.0.0" />
     <PackageVersion Include="Weasel.Postgresql" Version="9.31.1" />
     <PackageVersion Include="WolverineFx" Version="6.35.0" />
     <PackageVersion Include="WolverineFx.Http" Version="6.33.0" />
