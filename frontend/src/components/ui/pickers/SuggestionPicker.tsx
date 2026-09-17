@@ -62,7 +62,22 @@ export type SuggestionPickerProps<T> = {
 	renderHeader?: (query: string) => ReactNode;
 
 	fieldClassName?: string;
+
+	/**
+	 * Closes the menu after a selection. Defaults to true.
+	 *
+	 * Leaving it open re-runs the search for the label that was just written into the input, so the
+	 * user is shown a spinner and has to click elsewhere to get rid of the list.
+	 */
 	closeOnSelect?: boolean;
+
+	/**
+	 * Clears the query instead of writing the selected label into the input.
+	 *
+	 * For pickers that collect several items and keep their own list below the field, where the
+	 * input is a search box rather than the display of the current value.
+	 */
+	clearInputOnSelect?: boolean;
 };
 
 type MenuPosition = {
@@ -102,7 +117,8 @@ export function SuggestionPicker<T>({
 	maxSuggestions = 8,
 	renderHeader,
 	fieldClassName = "",
-	closeOnSelect,
+	closeOnSelect = true,
+	clearInputOnSelect = false,
 }: SuggestionPickerProps<T>) {
 	const generatedId = useId();
 
@@ -409,7 +425,7 @@ export function SuggestionPicker<T>({
 
 		onChange(key, item);
 
-		if (closeOnSelect) {
+		if (clearInputOnSelect) {
 			clearInputAfterSelectRef.current = true;
 			onInputChange("");
 			setSuggestions([]);
@@ -583,7 +599,7 @@ export function SuggestionPicker<T>({
 						onKeyDown={handleKeyDown}
 					/>
 
-					{!isLoading && inputValue && (
+					{inputValue && (
 						<button
 							type="button"
 							className="suggestion-picker-clear"

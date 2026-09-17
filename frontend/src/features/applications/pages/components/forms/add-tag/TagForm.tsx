@@ -66,7 +66,7 @@ export function TagForm({ onSubmit, error, isSubmitting }: TagFormProps) {
 							disabled={isSubmitting}
 							value={null}
 							inputValue={input}
-							closeOnSelect={true}
+							clearInputOnSelect={true}
 							onInputChange={(v) => setInput(v)}
 							onChange={(value, item) => {
 								if (!item) {
