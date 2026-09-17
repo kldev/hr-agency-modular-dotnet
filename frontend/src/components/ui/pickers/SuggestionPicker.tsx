@@ -24,6 +24,15 @@ export type SuggestionPickerProps<T> = {
 
 	loadSuggestions: (query: string, signal: AbortSignal) => Promise<T[]>;
 
+	/**
+	 * The item behind the current `value`, resolved by the parent.
+	 *
+	 * Needed whenever the picker is mounted with a value but without a label - a wizard step that
+	 * was unmounted and mounted again, or an edit form seeded from a record. Without it the input
+	 * stays empty although the form holds a valid id.
+	 */
+	selectedItem?: T | null;
+
 	getKey: (item: T) => string;
 
 	getLabel: (item: T) => string;
@@ -76,6 +85,7 @@ export function SuggestionPicker<T>({
 	onChange,
 	onInputChange,
 	loadSuggestions,
+	selectedItem,
 	getKey,
 	getLabel,
 	renderItem,
@@ -116,6 +126,8 @@ export function SuggestionPicker<T>({
 
 	const selectedItemRef = useRef<T | undefined>(undefined);
 	const clearInputAfterSelectRef = useRef(false);
+	const inputValueRef = useRef(inputValue);
+	const syncRef = useRef({ getKey, getLabel, onInputChange });
 
 	/*
 	 * =========================================================
@@ -231,31 +243,6 @@ export function SuggestionPicker<T>({
 
 	/*
 	 * =========================================================
-	 * Selected item synchronization
-	 * =========================================================
-	 */
-
-	useEffect(() => {
-		if (!value) {
-			selectedItemRef.current = undefined;
-			return;
-		}
-
-		const selectedItem = suggestions.find((item) => getKey(item) === value);
-
-		if (selectedItem) {
-			selectedItemRef.current = selectedItem;
-
-			const label = getLabel(selectedItem);
-
-			if (inputValue !== label) {
-				onInputChange(label);
-			}
-		}
-	}, [value, suggestions, getKey, getLabel, inputValue, onInputChange]);
-
-	/*
-	 * =========================================================
 	 * Click outside
 	 * =========================================================
 	 *
@@ -364,18 +351,51 @@ export function SuggestionPicker<T>({
 			return;
 		}
 
-		const selectedItem = suggestions.find((item) => getKey(item) === value);
+		const matched = suggestions.find((item) => getKey(item) === value);
 
-		if (selectedItem) {
-			selectedItemRef.current = selectedItem;
+		if (matched) {
+			selectedItemRef.current = matched;
 
-			const label = getLabel(selectedItem);
+			const label = getLabel(matched);
 
 			if (inputValue !== label) {
 				onInputChange(label);
 			}
 		}
 	}, [value, suggestions, getKey, getLabel, inputValue, onInputChange]);
+
+	/*
+	 * =========================================================
+	 * Mirror the resolved selection into the input
+	 * =========================================================
+	 *
+	 * The parent resolves `value` into `selectedItem` (a cached query), so this only has to copy
+	 * its label into an input that has none yet. The callbacks are read through a ref so a new
+	 * inline function on every parent render cannot re-run it.
+	 */
+
+	useEffect(() => {
+		syncRef.current = { getKey, getLabel, onInputChange };
+		inputValueRef.current = inputValue;
+	});
+
+	useEffect(() => {
+		if (!value || !selectedItem) {
+			return;
+		}
+
+		const sync = syncRef.current;
+
+		if (sync.getKey(selectedItem) !== value) {
+			return;
+		}
+
+		selectedItemRef.current = selectedItem;
+
+		if (!inputValueRef.current) {
+			sync.onInputChange(sync.getLabel(selectedItem));
+		}
+	}, [value, selectedItem]);
 
 	/*
 	 * =========================================================
