@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <PackageReference Include="AWSSDK.S3" />
-        <PackageReference Include="Dapper" />
         <PackageReference Include="Marten" />
         <PackageReference Include="Marten.EntityFrameworkCore" />
         <PackageReference Include="WolverineFx" />
@@ -17,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
         <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
         <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />
         <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>

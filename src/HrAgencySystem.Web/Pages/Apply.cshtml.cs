@@ -4,7 +4,6 @@ using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Applications;
-using HrAgencySystem.Recruitment.Feeds.Serialization;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +14,7 @@ namespace HrAgencySystem.Web.Pages;
 
 public partial class Apply(IMessageBus bus, IQueryOrganizationRepository repository, IJobPostQueryRepository jobPostQueryRepository, ILogger<Apply> logger) : PageModel
 {
-    public JobJson Job { get; private set; } = null!;
+    public JobView Job { get; private set; } = null!;
     public string Slug { get; set; } = "";
     
     public async Task<IActionResult> OnGetAsync(string slug, string postslug, CancellationToken ct)
@@ -25,7 +24,7 @@ public partial class Apply(IMessageBus bus, IQueryOrganizationRepository reposit
         if (job is null)
             return NotFound();
 
-        Job = JobJson.FromProjection(job);
+        Job = JobView.FromProjection(job);
         Slug = slug;
 
         return Page();
@@ -61,7 +60,7 @@ public partial class Apply(IMessageBus bus, IQueryOrganizationRepository reposit
         if (job is null)
             return NotFound();
 
-        Job = JobJson.FromProjection(job);
+        Job = JobView.FromProjection(job);
 
         if (!ModelState.IsValid)
             return Page();

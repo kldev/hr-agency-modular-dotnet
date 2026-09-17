@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Xml.Linq;
-using HrAgencySystem.Recruitment.Feeds.Application.GenerateJobFeed;
-using HrAgencySystem.Recruitment.Feeds.ReadModel;
+using HrAgencySystem.Feeds.Application.GenerateJobFeed;
+using HrAgencySystem.Feeds.ReadModel;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.UnitTests.Feeds;

@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Company;
+using HrAgencySystem.Feeds;
 using HrAgencySystem.Company.Infrastructure;
 using HrAgencySystem.Files;
 using HrAgencySystem.Identity;
@@ -29,6 +30,7 @@ public static class SetupApplicationModulesExtensions
             services.AddIdentityModule();
             services.AddJobDescriptionModule();
             services.AddRecruitmentModule(configuration);
+            services.AddFeedsModule(configuration);
             services.AddFilesModule(configuration);
             services.AddSalesModule();
         }

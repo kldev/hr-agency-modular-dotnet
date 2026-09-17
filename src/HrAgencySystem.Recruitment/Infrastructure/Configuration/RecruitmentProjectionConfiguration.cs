@@ -1,4 +1,3 @@
-using HrAgencySystem.Recruitment.Feeds.ReadModel;
 using HrAgencySystem.Recruitment.Projections;
 using JasperFx.Events.Projections;
 using Marten;

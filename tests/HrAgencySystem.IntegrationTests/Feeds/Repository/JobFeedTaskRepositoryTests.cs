@@ -1,7 +1,7 @@
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.Recruitment.Feeds.Model;
-using HrAgencySystem.Recruitment.Feeds.Persistence;
-using HrAgencySystem.Recruitment.Feeds.Port;
+using HrAgencySystem.Feeds.Model;
+using HrAgencySystem.Feeds.Persistence;
+using HrAgencySystem.Feeds.Port;
 using Npgsql;
 
 namespace HrAgencySystem.IntegrationTests.Feeds.Repository;

@@ -28,6 +28,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj"/>
         <ProjectReference Include="..\..\src\HrAgencySystem.Company\HrAgencySystem.Company.csproj"/>
+        <ProjectReference Include="..\..\src\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj"/>
         <ProjectReference Include="..\..\src\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj"/>
         <ProjectReference Include="..\..\src\HrAgencySystem.JobDescription\HrAgencySystem.JobDescription.csproj"/>
         <ProjectReference Include="..\..\src\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj"/>
