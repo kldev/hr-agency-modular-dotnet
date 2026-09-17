@@ -1,12 +1,17 @@
 import { useRouter } from "@tanstack/react-router";
-import { Pencil, Settings2, TrendingUp } from "lucide-react";
+import { Pencil, Settings2, TrendingUp, UserRoundCog } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 
 interface JobsDescriptopnActionsProps {
 	id: string;
 	onChangeStatus: () => void;
+	onChangeRecruiter: () => void;
 }
-export function JobsDescriptopnActions({ id, onChangeStatus }: JobsDescriptopnActionsProps) {
+export function JobsDescriptopnActions({
+	id,
+	onChangeStatus,
+	onChangeRecruiter,
+}: JobsDescriptopnActionsProps) {
 	const router = useRouter();
 	const editUrl = router.buildLocation({
 		to: "/app/job-descriptions/edit/$id",
@@ -39,6 +44,7 @@ export function JobsDescriptopnActions({ id, onChangeStatus }: JobsDescriptopnAc
 						dividerAfter: true,
 					},
 					{ label: "Change status", icon: TrendingUp, action: onChangeStatus },
+					{ label: "Change recruiter", icon: UserRoundCog, action: onChangeRecruiter },
 				]}
 			/>
 		</div>

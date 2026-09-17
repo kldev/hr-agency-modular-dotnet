@@ -50,7 +50,7 @@ const JobDescriptionPage: React.FC = () => {
 					navigate({ search: (previous) => ({ ...previous, status: s }) });
 				}}
 			/>
-			<JobsDescriptopnTable items={items} />
+			<JobsDescriptopnTable items={items} onRefresh={onRefresh} />
 			<LoadMore
 				loading={query.isPending}
 				hasNext={hasMore[0]}

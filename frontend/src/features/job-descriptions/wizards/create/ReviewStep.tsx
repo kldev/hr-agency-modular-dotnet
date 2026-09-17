@@ -7,14 +7,15 @@ import { findStepForField } from "./steps";
 export const ReviewStep = withForm({
 	defaultValues: {} as JobDescriptionFormValues,
 
-	render: function Render({ form }) {
+	props: {
+		description: "Review the job description before creating it.",
+	} as { description?: string },
+
+	render: function Render({ form, description }) {
 		const values = form.state.values;
 		return (
 			<FormWizard.Section>
-				<FormWizard.SectionHeader
-					title="Review"
-					description="Review the job description before creating it."
-				/>
+				<FormWizard.SectionHeader title="Review" description={description} />
 
 				<form.Subscribe selector={(state) => state.fieldMeta}>
 					{(fieldMeta) => <ReviewErrors fieldMeta={fieldMeta} />}

@@ -8,7 +8,7 @@ export function DetailsLoading({ id, isError, isLoading }: DetailsLoadingProps) 
 	if (!id) {
 		return (
 			<div className="job-application-details">
-				<div className="data-details-empty">Candidate not found.</div>
+				<div className="data-details-empty">Record not found.</div>
 			</div>
 		);
 	}
@@ -24,7 +24,7 @@ export function DetailsLoading({ id, isError, isLoading }: DetailsLoadingProps) 
 	if (isError) {
 		return (
 			<div className="job-application-details">
-				<div className="data-details-error">Unable to load candidate data.</div>
+				<div className="data-details-error">Unable to load the data.</div>
 			</div>
 		);
 	}

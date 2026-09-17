@@ -11,6 +11,7 @@ const columnHelper = createColumnHelper<appTableFeaturesType, JobDescriptionProj
 
 export type Actions = {
 	onChangeStatus: (item: JobDescriptionProjection) => void;
+	onChangeRecruiter: (item: JobDescriptionProjection) => void;
 };
 
 export function getColumns(actions: Actions) {
@@ -29,6 +30,7 @@ export function getColumns(actions: Actions) {
 						<JobsDescriptopnActions
 							id={item.id}
 							onChangeStatus={() => actions.onChangeStatus(item)}
+							onChangeRecruiter={() => actions.onChangeRecruiter(item)}
 						/>
 					</div>
 				);

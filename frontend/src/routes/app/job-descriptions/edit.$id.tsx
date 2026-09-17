@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { EditJobDescriptionWizard } from "#/features/job-descriptions/wizards";
 
 export const Route = createFileRoute("/app/job-descriptions/edit/$id")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	return <div>Hello "/job-descriptions/edit/$id"!</div>;
+	const { id } = Route.useParams();
+
+	return <EditJobDescriptionWizard id={id} />;
 }
