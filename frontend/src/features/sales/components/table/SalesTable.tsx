@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useTable } from "@tanstack/react-table";
 import { useRef } from "react";
 import type { OpportunityProjection } from "@/api/models";
@@ -14,6 +15,14 @@ interface SalesTableProps {
 
 export function SalesTable({ items, onRefresh }: SalesTableProps) {
 	const salesRef = useRef<SalesActionRef>(null);
+	const navigate = useNavigate();
+
+	const handleRowClick = (value: OpportunityProjection) => {
+		navigate({
+			to: "/app/sales/opportunities/$id",
+			params: { id: value.id },
+		});
+	};
 
 	const actionsHandler: Actions = {
 		onAction: (action: SalesActionTypes, item: OpportunityProjection): void => {
@@ -39,7 +48,7 @@ export function SalesTable({ items, onRefresh }: SalesTableProps) {
 
 	return (
 		<>
-			<MainTable table={table} className="table-wide" />
+			<MainTable onRowClick={handleRowClick} table={table} className="table-wide" />
 			<SalesActionDrawers ref={salesRef} onSuccess={onRefresh} />
 		</>
 	);

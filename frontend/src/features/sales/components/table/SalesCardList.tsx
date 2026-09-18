@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import type { OpportunityProjection } from "#/api/models";
 
@@ -30,7 +31,11 @@ export function SalesCardList({ items, onRefresh }: CardListProps<OpportunityPro
 					<div className="data-detail-item  flex flex-row">
 						<div className="grow">
 							<dt>Title</dt>
-							<dd>{item.title}</dd>
+							<dd>
+								<Link to="/app/sales/opportunities/$id" params={{ id: item.id }}>
+									{item.title}
+								</Link>
+							</dd>
 						</div>
 						<SalesActions
 							onAction={(val) => handleAction(val, item)}
