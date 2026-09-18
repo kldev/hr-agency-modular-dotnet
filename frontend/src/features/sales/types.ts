@@ -1,5 +1,7 @@
 import type { CurrencyCode, OpportunityStage, SalesActivityType } from "@/api/models";
 
+export type SalesView = "table" | "kanban";
+
 export const salesStageOptions: Record<OpportunityStage, string> = {
 	New: "New",
 	Viewed: "Viewed",

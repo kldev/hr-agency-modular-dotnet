@@ -17,7 +17,7 @@ export function Metrics({ children, columns = 5 }: MetricsProps) {
 interface MetricCardProps {
 	icon: React.ReactNode;
 	label: string;
-	value: number;
+	value: React.ReactNode;
 	className?: string;
 }
 

@@ -2,8 +2,14 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { OpportunityStage } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
-import { getOpportunities, getOpportunity, getSalesActivities } from "@/api/endpoints";
+import {
+	getOpportunities,
+	getOpportunitiesPipelineTotals,
+	getOpportunity,
+	getSalesActivities,
+} from "@/api/endpoints";
 import { salesKeys } from "@/api/query-keys";
+import { groupPipelineTotals } from "./pipelineTotals";
 
 const PAGE_SIZE = 15;
 const ACTIVITY_PAGE_SIZE = 10;
@@ -55,9 +61,33 @@ const getActivitiesSliceServerFn = createServerFn({
 		);
 	});
 
-export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
+const getPipelineTotalsServerFn = createServerFn({
+	method: "GET",
+})
+	.validator((input: SalesPageFillters) => input)
+	.handler(({ data }) => {
+		return getOpportunitiesPipelineTotals(
+			{
+				search: data.search,
+				responsibleId: data.responsibleId,
+			},
+			getFnOptions(),
+		);
+	});
+
+export type SliceOptions = {
+	pageSize?: number;
+	enabled?: boolean;
+};
+
+export function useGetOpportunitesSlice(
+	fillter: SalesPageFillters,
+	{ pageSize = PAGE_SIZE, enabled = true }: SliceOptions = {},
+) {
 	return useInfiniteQuery({
-		queryKey: salesKeys.list(fillter),
+		queryKey: salesKeys.list({ ...fillter, pageSize }),
+
+		enabled,
 
 		initialPageParam: 1,
 
@@ -66,7 +96,7 @@ export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
 				data: {
 					...fillter,
 					page: pageParam,
-					pageSize: PAGE_SIZE,
+					pageSize,
 				},
 			}),
 
@@ -74,6 +104,19 @@ export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
 			return lastPage.hasMore ? lastPageParam + 1 : undefined;
 		},
 	});
+}
+
+export function useGetPipelineTotals(fillter: SalesPageFillters, enabled = true) {
+	const query = useQuery({
+		queryKey: salesKeys.totals(fillter),
+		enabled,
+		queryFn: () => getPipelineTotalsServerFn({ data: fillter }),
+	});
+
+	return {
+		query,
+		totals: groupPipelineTotals(query.data),
+	};
 }
 
 export function useGetActivitiesSlice(opportunityId: string) {
