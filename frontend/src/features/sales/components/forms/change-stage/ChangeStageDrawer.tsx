@@ -26,7 +26,7 @@ const ChangeStageContent: React.FC<RenderFormType> = ({
 	});
 
 	const formValues: ChangeStageFormValues = {
-		stage: opportunityInfo.stage,
+		stage: opportunityInfo.targetStage ?? opportunityInfo.stage,
 		lostReason: "",
 	};
 

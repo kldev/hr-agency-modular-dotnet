@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { createColumnHelper } from "@tanstack/react-table";
 import { MessagePreview } from "#/components/ui/MessagePreview";
 import { formatSalary } from "#/utlis";
@@ -46,7 +47,14 @@ export function getColumns(actions: Actions) {
 			cell: ({ row }) => (
 				<div className="table-cell-content">
 					<ItemMark name={row.original.title} />
-					<div className="data-meta truncate">{row.original.title}</div>
+
+					<Link
+						to="/app/sales/opportunities/$id"
+						params={{ id: row.original.id }}
+						className="data-meta truncate"
+					>
+						{row.original.title}
+					</Link>
 				</div>
 			),
 		}),
