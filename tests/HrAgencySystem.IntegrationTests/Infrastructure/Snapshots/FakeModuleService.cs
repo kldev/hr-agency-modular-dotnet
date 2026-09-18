@@ -5,8 +5,6 @@ using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Services;
-using HrAgencySystem.Sales.Application.Queries;
-using HrAgencySystem.Sales.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -14,7 +12,7 @@ using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
-public class FakeModuleService : ISalesService, IRecruitmentService, ICompanyService, IJobDescriptionService, IIdentityService
+public class FakeModuleService : IRecruitmentService, ICompanyService, IJobDescriptionService, IIdentityService
 {
     public Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {
@@ -63,12 +61,6 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
         return Task.FromResult("Slug");
     }
 
-    public Task<OpportunitySnapshot> GetOpportunityAsync(Guid organizationId, Guid opportunityId, CancellationToken ct)
-    {
-        var result = new OpportunitySnapshot(opportunityId, organizationId, Guid.NewGuid());
-        return Task.FromResult(result);
-    }
-
     public void ValidateAggregateUpdate(IOrganizationDomain? aggregate, Guid commandOrganizationId)
     {
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId) throw new OrganizationAccessDeniedException();
@@ -78,10 +70,5 @@ public class FakeModuleService : ISalesService, IRecruitmentService, ICompanySer
         UserSnapshot user, CancellationToken ct)
     {
         return Task.CompletedTask;
-    }
-
-    public Task<OrganizationId> GetBySlugAsync(string slug, CancellationToken ct)
-    {
-        return Task.FromResult(OrganizationId.From(Guid.NewGuid()));
     }
 }

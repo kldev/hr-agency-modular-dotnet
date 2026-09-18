@@ -1,4 +1,5 @@
 using HrAgencySystem.Sales.Events.Activity;
+using HrAgencySystem.Sales.Events.FollowUp;
 using HrAgencySystem.Sales.Events.Opportunity;
 using Marten;
 
@@ -12,6 +13,7 @@ internal static class SalesEventsConfiguration
         {
             ConfigureActivityEvents(options);
             ConfigureOpportunityEvents(options);
+            ConfigureFollowUpActionEvents(options);
         }
     }
 
@@ -26,5 +28,11 @@ internal static class SalesEventsConfiguration
         options.Events.AddEventType<OpportunityUpdated>();
         options.Events.AddEventType<ResponsiblePersonChanged>();
         options.Events.AddEventType<StageChanged>();
+    }
+
+    private static void ConfigureFollowUpActionEvents(StoreOptions options)
+    {
+        options.Events.AddEventType<FollowUpActionCreated>();
+        options.Events.AddEventType<FollowUpActionUpdated>();
     }
 }

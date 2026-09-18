@@ -1,4 +1,5 @@
 using HrAgencySystem.Sales.Domain.Opportunity;
+using HrAgencySystem.Sales.Events.FollowUp;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -36,7 +37,12 @@ public sealed record OpportunityProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     UserSnapshot? ModifiedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    DateTimeOffset? ModifiedAt
+    DateTimeOffset? ModifiedAt,
+    // the latest follow up action of the opportunity, kept in sync from the follow up events
+    Guid? FollowUpActionId,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
+    string? FollowUpContent,
+    DateTimeOffset? FollowUpDateTime
 ) : IAudit
 {
     public static OpportunityProjection Create(
@@ -59,6 +65,9 @@ public sealed record OpportunityProjection(
             @event.Responsible,
             @event.CreatedAt,
             @event.CreatedBy,
+            null,
+            null,
+            null,
             null,
             null
         );
@@ -98,5 +107,38 @@ public sealed record OpportunityProjection(
             ModifiedAt = @event.ChangedAt,
             ModifiedBy = @event.ChangedBy
         };
+    }
+
+    public OpportunityProjection Apply(FollowUpActionCreated @event)
+    {
+        return TrackFollowUpAction(@event.FollowUpActionId, @event.Content, @event.FollowDateTime);
+    }
+
+    public OpportunityProjection Apply(FollowUpActionUpdated @event)
+    {
+        return TrackFollowUpAction(@event.FollowUpActionId, @event.Content, @event.FollowDateTime);
+    }
+
+    private OpportunityProjection TrackFollowUpAction(
+        Guid followUpActionId, string content, DateTimeOffset followDateTime)
+    {
+        return IsLatestFollowUpAction(followUpActionId, followDateTime)
+            ? this with
+            {
+                FollowUpActionId = followUpActionId,
+                FollowUpContent = content,
+                FollowUpDateTime = followDateTime
+            }
+            : this;
+    }
+
+    // the salesperson only edits the current entry, so the entry with the latest
+    // follow up date wins - an edit of the tracked entry always wins
+    private bool IsLatestFollowUpAction(Guid followUpActionId, DateTimeOffset followDateTime)
+    {
+        if (FollowUpActionId is null) return true;
+
+        return FollowUpActionId == followUpActionId
+               || followDateTime >= FollowUpDateTime.GetValueOrDefault();
     }
 }

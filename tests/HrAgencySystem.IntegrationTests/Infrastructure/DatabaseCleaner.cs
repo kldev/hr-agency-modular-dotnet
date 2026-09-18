@@ -6,6 +6,7 @@ using HrAgencySystem.JobDescription.Projections;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.Sales.Documents;
 using HrAgencySystem.Sales.Projections;
 using Npgsql;
 
@@ -77,6 +78,7 @@ public sealed class DatabaseCleaner(string connectionString)
     {
         await CleanTable<ActivityProjection>("sales");
         await CleanTable<OpportunityProjection>("sales");
+        await CleanTable<FollowUpAction>("sales");
     }
 
 private async Task TruncateTable(string sql)

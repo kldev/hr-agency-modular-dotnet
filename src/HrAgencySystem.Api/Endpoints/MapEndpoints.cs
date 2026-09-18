@@ -9,6 +9,7 @@ public static class MapEndpoints
         CompanyContacts.Endpoint.Map(app);
         Sales.Endpoint.Map(app);
         SalesOpportunity.Endpoint.Map(app);
+        SalesFollowUpAction.Endpoint.Map(app);
         Owner.Endpoint.Map(app);
         User.Endpoint.Map(app);
         JobDescription.Endpoint.Map(app);

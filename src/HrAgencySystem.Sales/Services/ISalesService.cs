@@ -1,4 +1,7 @@
 using HrAgencySystem.Sales.Application.Queries;
+using HrAgencySystem.Sales.Domain.FollowUp;
+using HrAgencySystem.Sales.Domain.Opportunity;
+using HrAgencySystem.Sales.Events.FollowUp;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 
@@ -12,4 +15,20 @@ public interface ISalesService
     Task<OpportunitySnapshot> GetOpportunityAsync(Guid organizationId, Guid opportunityId, CancellationToken ct);
     void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId);
     Task<OrganizationId> GetBySlugAsync(string slug, CancellationToken ct);
+
+    Task<FollowUpActionCreated> AppendFollowUpActionToStream(
+        SalesOpportunityId opportunityId,
+        OrganizationId organizationId,
+        string content,
+        DateTimeOffset followDateTime,
+        UserSnapshot user,
+        CancellationToken ct);
+
+    Task<FollowUpActionUpdated> AppendFollowUpActionUpdateToStream(
+        FollowUpActionId followUpActionId,
+        OrganizationId organizationId,
+        string content,
+        DateTimeOffset followDateTime,
+        UserSnapshot user,
+        CancellationToken ct);
 }

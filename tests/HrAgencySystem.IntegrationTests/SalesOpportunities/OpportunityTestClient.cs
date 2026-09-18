@@ -4,6 +4,7 @@ using HrAgencySystem.Api.Endpoints.SalesOpportunity.Maps;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
+using HrAgencySystem.Sales.Projections;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Xunit.Abstractions;
 
@@ -119,6 +120,19 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         return result;
     }
     
+    internal async Task<OpportunityProjection> Get(
+        Guid organizationId,
+        Guid opportunityId)
+    {
+        client.WithOrganizationId(organizationId);
+
+        var response = await client.GetAsync(BaseUrl + $"/{opportunityId}");
+
+        response.EnsureSuccessStatusCode();
+
+        return (await response.ReadWithJson<OpportunityProjection>())!;
+    }
+
     internal async Task<ResponsiblePersonChanged> ChangeResponsible(
         Guid? organizationId = null,
         Guid? opportunityId = null,
