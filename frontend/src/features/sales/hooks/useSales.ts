@@ -75,9 +75,19 @@ const getPipelineTotalsServerFn = createServerFn({
 		);
 	});
 
-export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
+export type SliceOptions = {
+	pageSize?: number;
+	enabled?: boolean;
+};
+
+export function useGetOpportunitesSlice(
+	fillter: SalesPageFillters,
+	{ pageSize = PAGE_SIZE, enabled = true }: SliceOptions = {},
+) {
 	return useInfiniteQuery({
-		queryKey: salesKeys.list(fillter),
+		queryKey: salesKeys.list({ ...fillter, pageSize }),
+
+		enabled,
 
 		initialPageParam: 1,
 
@@ -86,7 +96,7 @@ export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
 				data: {
 					...fillter,
 					page: pageParam,
-					pageSize: PAGE_SIZE,
+					pageSize,
 				},
 			}),
 

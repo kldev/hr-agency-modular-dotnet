@@ -26,3 +26,22 @@
 		flex: 1;
 	}
 }
+
+/* Opportunity card ---------------------------------------- */
+.sales-card-title {
+	overflow: hidden;
+	color: var(--color-text);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.sales-card-company {
+	margin-top: 2px;
+	overflow: hidden;
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

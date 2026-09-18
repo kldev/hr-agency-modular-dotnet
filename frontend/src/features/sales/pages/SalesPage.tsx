@@ -1,15 +1,18 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { DollarSign } from "lucide-react";
 import type React from "react";
 import { useRef, useState } from "react";
 import { useGetOnlyMine } from "#/hooks";
 import { Route } from "#/routes/app/sales";
 
+import { salesKeys } from "@/api/query-keys";
 import { Page } from "@/components/layout";
-import { EmptyState, EnumFilter, LoadMore, WorkInProgress } from "@/components/ui";
+import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
 import {
 	CreateOpportunityDrawer,
 	type CreateOpportunityRef,
 	SalesCardList,
+	SalesKanban,
 	SalesTable,
 } from "../components";
 import { SalesToolbar } from "../components/SalesToolbar";
@@ -21,6 +24,7 @@ const SalesPage: React.FC = () => {
 	const oppRef = useRef<CreateOpportunityRef>(null);
 	const [onlyMine, setOnlyMine] = useState<boolean>(false);
 
+	const client = useQueryClient();
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
 
@@ -29,16 +33,22 @@ const SalesPage: React.FC = () => {
 
 	const { userId } = useGetOnlyMine(onlyMine);
 
-	const query = useGetOpportunitesSlice({
+	const filters = {
 		search: search.search,
-		stage: search.stage,
 		responsibleId: userId,
-	});
+	};
+
+	const query = useGetOpportunitesSlice({ ...filters, stage: search.stage }, { enabled: isTable });
 	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
-	const isEmpty = query.isFetched && items.length === 0;
+	const isEmpty = isTable && query.isFetched && items.length === 0;
 	const onRefresh = () => {
-		query.refetch();
+		if (isTable) {
+			query.refetch();
+			return;
+		}
+
+		client.invalidateQueries({ queryKey: salesKeys.all });
 	};
 
 	return (
@@ -47,7 +57,7 @@ const SalesPage: React.FC = () => {
 			title="Sales"
 			description="Manage your leads and sales opportunities THROUGH the pipeline."
 			onRefresh={onRefresh}
-			loading={query.isPending}
+			loading={isTable && query.isPending}
 			isEmpty={isEmpty}
 			emptyState={
 				<EmptyState title="No sales opportunities found">
@@ -101,7 +111,7 @@ const SalesPage: React.FC = () => {
 					/>
 				</>
 			) : (
-				<WorkInProgress />
+				<SalesKanban filters={filters} />
 			)}
 			<CreateOpportunityDrawer ref={oppRef} onSuccess={() => query.refetch()} />
 		</Page>
