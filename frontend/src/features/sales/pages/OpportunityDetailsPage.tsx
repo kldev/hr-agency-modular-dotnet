@@ -1,7 +1,9 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import type { OpportunityStage } from "#/api/models";
 import { MessagePreview } from "#/components/ui/MessagePreview";
 import { formatDate, formatSalary } from "#/utlis";
+import { salesKeys } from "@/api/query-keys";
 import { AuditInformation, DataDetails, DetailsHeader, DetailsLoading } from "@/components/ui";
 import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
 import { SalesActions, SalesStageBadge } from "../components";
@@ -9,11 +11,12 @@ import type { SalesActionRef, SalesActionTypes } from "../components/forms";
 import SalesActionDrawers from "../components/forms/SalesActionDrawers";
 import { useGetOpportunity } from "../hooks";
 import { salesStageOptions } from "../types";
-import { OpportunityPipeline } from "./components";
+import { OpportunityActivity, OpportunityPipeline } from "./components";
 import "./sales-details.css";
 
 const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 	const salesRef = useRef<SalesActionRef>(null);
+	const client = useQueryClient();
 
 	const query = useGetOpportunity(id);
 
@@ -27,6 +30,7 @@ const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 
 	const refetch = () => {
 		query.refetch();
+		client.invalidateQueries({ queryKey: salesKeys.activities(id) });
 	};
 
 	const handleAction = (action: SalesActionTypes) => {
@@ -72,40 +76,49 @@ const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 
 			<DataDetailsLayout
 				main={
-					<section className="data-details-section">
-						<div className="data-details-section-header">
-							<div>
-								<h2>Opportunity</h2>
-								<p>Sales opportunity information</p>
+					<>
+						<section className="data-details-section">
+							<div className="data-details-section-header">
+								<div>
+									<h2>Opportunity</h2>
+									<p>Sales opportunity information</p>
+								</div>
 							</div>
-						</div>
 
-						<dl className="data-details-list">
-							<DetailItem label="Title">{opportunity.title || "-"}</DetailItem>
+							<dl className="data-details-list">
+								<DetailItem label="Title">{opportunity.title || "-"}</DetailItem>
 
-							<DetailItem label="Company">{opportunity.company?.name || "-"}</DetailItem>
+								<DetailItem label="Company">{opportunity.company?.name || "-"}</DetailItem>
 
-							<DetailItem label="Value">
-								{`${formatSalary(Number(opportunity.expectedValue))} ${opportunity.currencyCode}`}
+								<DetailItem label="Value">
+									{`${formatSalary(Number(opportunity.expectedValue))} ${opportunity.currencyCode}`}
+								</DetailItem>
+
+								<DetailItem label="Expected close date">
+									{formatDate(opportunity.expectedCloseDate)}
+								</DetailItem>
+
+								<DetailItem label="Stage">{salesStageOptions[opportunity.stage]}</DetailItem>
+
+								<DetailItem label="Hot lead">{opportunity.isHotLead ? "Yes" : "No"}</DetailItem>
+
+								{opportunity.stage === "Lost" ? (
+									<DetailItem label="Lost reason">{opportunity.lostReason || "-"}</DetailItem>
+								) : null}
+							</dl>
+
+							<DetailItem label="Description">
+								<MessagePreview message={opportunity.description} />
 							</DetailItem>
+						</section>
 
-							<DetailItem label="Expected close date">
-								{formatDate(opportunity.expectedCloseDate)}
-							</DetailItem>
-
-							<DetailItem label="Stage">{salesStageOptions[opportunity.stage]}</DetailItem>
-
-							<DetailItem label="Hot lead">{opportunity.isHotLead ? "Yes" : "No"}</DetailItem>
-
-							{opportunity.stage === "Lost" ? (
-								<DetailItem label="Lost reason">{opportunity.lostReason || "-"}</DetailItem>
-							) : null}
-						</dl>
-
-						<DetailItem label="Description">
-							<MessagePreview message={opportunity.description} />
-						</DetailItem>
-					</section>
+						<OpportunityActivity
+							opportunityId={opportunity.id}
+							onLogActivity={() => {
+								salesRef.current?.onAction(opportunity.id, "log-activity");
+							}}
+						/>
+					</>
 				}
 				sidebar={
 					<>

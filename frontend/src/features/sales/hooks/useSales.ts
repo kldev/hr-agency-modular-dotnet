@@ -2,10 +2,11 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import type { OpportunityStage } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
-import { getOpportunities, getOpportunity } from "@/api/endpoints";
+import { getOpportunities, getOpportunity, getSalesActivities } from "@/api/endpoints";
 import { salesKeys } from "@/api/query-keys";
 
 const PAGE_SIZE = 15;
+const ACTIVITY_PAGE_SIZE = 10;
 
 export interface SalesPageFillters {
 	search?: string;
@@ -39,6 +40,21 @@ const getSliceServerFn = createServerFn({
 		);
 	});
 
+const getActivitiesSliceServerFn = createServerFn({
+	method: "GET",
+})
+	.validator((input: { opportunityId: string; page: number }) => input)
+	.handler(({ data }) => {
+		return getSalesActivities(
+			{
+				opportunityId: data.opportunityId,
+				page: data.page,
+				pageSize: ACTIVITY_PAGE_SIZE,
+			},
+			getFnOptions(),
+		);
+	});
+
 export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
 	return useInfiniteQuery({
 		queryKey: salesKeys.list(fillter),
@@ -51,6 +67,28 @@ export function useGetOpportunitesSlice(fillter: SalesPageFillters) {
 					...fillter,
 					page: pageParam,
 					pageSize: PAGE_SIZE,
+				},
+			}),
+
+		getNextPageParam: (lastPage, _pages, lastPageParam) => {
+			return lastPage.hasMore ? lastPageParam + 1 : undefined;
+		},
+	});
+}
+
+export function useGetActivitiesSlice(opportunityId: string) {
+	return useInfiniteQuery({
+		queryKey: salesKeys.activities(opportunityId),
+
+		enabled: Boolean(opportunityId),
+
+		initialPageParam: 1,
+
+		queryFn: ({ pageParam }) =>
+			getActivitiesSliceServerFn({
+				data: {
+					opportunityId,
+					page: pageParam,
 				},
 			}),
 
