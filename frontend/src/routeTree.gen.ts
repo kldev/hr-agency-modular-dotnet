@@ -42,7 +42,6 @@ import { Route as AppJobsIndexRouteImport } from './routes/app/jobs/index'
 import { Route as AppJobsIdRouteImport } from './routes/app/jobs/$id'
 import { Route as AppJobsAddRouteImport } from './routes/app/jobs/add'
 import { Route as AppSalesIndexRouteImport } from './routes/app/sales/index'
-import { Route as AppSalesIdRouteImport } from './routes/app/sales/$id'
 import { Route as AppUsersIndexRouteImport } from './routes/app/users/index'
 import { Route as AppUsersIdRouteImport } from './routes/app/users/$id'
 import { Route as AppJobDescriptionsEditIdRouteImport } from './routes/app/job-descriptions/edit.$id'
@@ -214,11 +213,6 @@ const AppSalesIndexRoute = AppSalesIndexRouteImport.update({
   path: '/sales/',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppSalesIdRoute = AppSalesIdRouteImport.update({
-  id: '/sales/$id',
-  path: '/sales/$id',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const AppUsersIndexRoute = AppUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
@@ -269,7 +263,6 @@ export interface FileRoutesByFullPath {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
-  '/app/sales/$id': typeof AppSalesIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
@@ -308,7 +301,6 @@ export interface FileRoutesByTo {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
-  '/app/sales/$id': typeof AppSalesIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/admin/organizations': typeof AdminOrganizationsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
@@ -350,7 +342,6 @@ export interface FileRoutesById {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
-  '/app/sales/$id': typeof AppSalesIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
@@ -393,7 +384,6 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
-    | '/app/sales/$id'
     | '/app/users/$id'
     | '/admin/organizations/'
     | '/admin/users/'
@@ -432,7 +422,6 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
-    | '/app/sales/$id'
     | '/app/users/$id'
     | '/admin/organizations'
     | '/admin/users'
@@ -473,7 +462,6 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
-    | '/app/sales/$id'
     | '/app/users/$id'
     | '/admin/organizations/'
     | '/admin/users/'
@@ -737,13 +725,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSalesIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/app/sales/$id': {
-      id: '/app/sales/$id'
-      path: '/sales/$id'
-      fullPath: '/app/sales/$id'
-      preLoaderRoute: typeof AppSalesIdRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/app/users/': {
       id: '/app/users/'
       path: '/users'
@@ -814,7 +795,6 @@ interface AppRouteRouteChildren {
   AppJobDescriptionsAddRoute: typeof AppJobDescriptionsAddRoute
   AppJobsIdRoute: typeof AppJobsIdRoute
   AppJobsAddRoute: typeof AppJobsAddRoute
-  AppSalesIdRoute: typeof AppSalesIdRoute
   AppUsersIdRoute: typeof AppUsersIdRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
   AppCalendarIndexRoute: typeof AppCalendarIndexRoute
@@ -841,7 +821,6 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppJobDescriptionsAddRoute: AppJobDescriptionsAddRoute,
   AppJobsIdRoute: AppJobsIdRoute,
   AppJobsAddRoute: AppJobsAddRoute,
-  AppSalesIdRoute: AppSalesIdRoute,
   AppUsersIdRoute: AppUsersIdRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
   AppCalendarIndexRoute: AppCalendarIndexRoute,
