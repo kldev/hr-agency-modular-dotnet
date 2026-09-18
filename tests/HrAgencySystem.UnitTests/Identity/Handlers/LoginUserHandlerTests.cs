@@ -286,7 +286,7 @@ public sealed class LoginUserHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldUseEmptySlug_WhenOrganizationCannotBeResolved()
+    public async Task? Handle_Should_ThrowException_WhenOrganizationNotResolvedByEmailDomain()
     {
         // Arrange
         var command = new LoginUser(
@@ -325,23 +325,19 @@ public sealed class LoginUserHandlerTests
             .Returns("jwt-token");
 
         // Act
-        var result = await LoginUserHandler.Handle(
-            command,
-            _logger,
-            _hasher,
-            _repository,
-            _tokenService,
-            _queryOrganizationRepository,
-            CancellationToken.None);
-
-        // Assert
-        Assert.Equal("jwt-token", result.Token);
-
-        await _repository.Received(1)
-            .FindUserByEmail(
-                Arg.Any<Email>(),
-                "",
-                Arg.Any<CancellationToken>());
+        var exception = await Assert.ThrowsAsync<NotFoundException>(async () =>
+        {
+            await LoginUserHandler.Handle(
+                command,
+                _logger,
+                _hasher,
+                _repository,
+                _tokenService,
+                _queryOrganizationRepository,
+                CancellationToken.None);
+        });
+        
+        Assert.Equal("Organization by domain not found by example.com", exception.Message);
     }
 
     [Fact]

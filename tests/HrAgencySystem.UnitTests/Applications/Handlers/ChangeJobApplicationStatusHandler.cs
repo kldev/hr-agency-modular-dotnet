@@ -8,6 +8,7 @@ using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -313,10 +314,14 @@ public class ChangeJobApplicationStatusHandlerTests
             JobApplicationUpdateStatus.Screening,
             organizationId: Guid.NewGuid());
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command, aggregate));
+
+        _service.When(x => x.ValidateAggregateUpdate(aggregate, command.OrganizationId))
+            .Throws<OrganizationAccessDeniedException>();
+        
+        var exception = await Assert.ThrowsAsync<OrganizationAccessDeniedException>(() => Handle(command, aggregate));
 
         Assert.Equal(
-            IOrganizationChecker.OrganizationCheckMessage,
+            OrganizationAccessDeniedException.ProblemMessage,
             exception.Message);
 
         await _snapshotRepository
