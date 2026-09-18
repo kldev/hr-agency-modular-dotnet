@@ -13,12 +13,17 @@ public static class MapDocumentErrors
 {
     private static readonly IReadOnlyCollection<DocumentMap> Maps =
     [
-        new(nameof(CompanyTaxIdReservation), "Business rule",
-            CreateCompanyHandler.TaxIdAlreadyExistsMessage),
-        new(nameof(UserEmailReservation), "Business rule",
-            CreateUserHandler.UserWithEmailMessage),
-        new(nameof(CompanyContact), "Business rule",
-        CreateCompanyContactHandler.ContactWithEmailMessage)
+        new(
+            nameof(CompanyTaxIdReservation),
+            "Business rule",
+            CreateCompanyHandler.TaxIdAlreadyExistsMessage
+        ),
+        new(nameof(UserEmailReservation), "Business rule", CreateUserHandler.UserWithEmailMessage),
+        new(
+            nameof(CompanyContact),
+            "Business rule",
+            CreateCompanyContactHandler.ContactWithEmailMessage
+        ),
     ];
 
     public static string Title(string name)
@@ -28,7 +33,7 @@ public static class MapDocumentErrors
 
     public static string Details(string name)
     {
-        return Maps.SingleOrDefault(x => x.Name.Contains(name))?.Details ??
-               "Data with provided request is already stored in database";
+        return Maps.SingleOrDefault(x => x.Name.Contains(name))?.Details
+            ?? "Data with provided request is already stored in database";
     }
 }

@@ -8,39 +8,54 @@ using Microsoft.Extensions.Logging;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Persistence;
 
-public partial class JobApplicationInfoQueryRepository(IQuerySession session, ILogger<JobApplicationInfoQueryRepository> logger) : IJobApplicationInfoQueryRepository
+public partial class JobApplicationInfoQueryRepository(
+    IQuerySession session,
+    ILogger<JobApplicationInfoQueryRepository> logger
+) : IJobApplicationInfoQueryRepository
 {
-    public async Task<JobApplicationInfo?> GetAsync(Guid jobApplicationId, OrganizationId organizationId, CancellationToken ct)
+    public async Task<JobApplicationInfo?> GetAsync(
+        Guid jobApplicationId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
     {
-        var result = await session.Query<JobApplicationProjection>()
+        var result = await session
+            .Query<JobApplicationProjection>()
             .WithOrganizationId(organizationId.Value)
             .WithJobApplicationId(jobApplicationId)
-            .Select(z => 
-                new JobApplicationInfo(z.Id, 
-                    z.OrgId, 
-                    z.CandidateId, 
-                    z.CompanyId, 
-                    z.CandidateInfo, 
-                    z.JobPostTitle, 
-                    z.JobPostId))
+            .Select(z => new JobApplicationInfo(
+                z.Id,
+                z.OrgId,
+                z.CandidateId,
+                z.CompanyId,
+                z.CandidateInfo,
+                z.JobPostTitle,
+                z.JobPostId
+            ))
             .FirstOrDefaultAsync(ct);
 
-        if (result != null) return result;
+        if (result != null)
+            return result;
 
         LogFindJobApplicationInfoById(jobApplicationId);
-        var data = await session.Query<JobApplicationCreated>()
-            .Where(z => z.OrganizationId == organizationId.Value && z.JobApplicationId == jobApplicationId)
-            .Select(z =>
-                new JobApplicationInfo(z.JobApplicationId, 
-                    z.OrganizationId, 
-                    z.CandidateInfo.CandidateId, 
-                    z.Company.Id, 
-                    z.CandidateInfo, 
-                    z.JobPostTitle, 
-                    z.JobPostId))
+        var data = await session
+            .Query<JobApplicationCreated>()
+            .Where(z =>
+                z.OrganizationId == organizationId.Value && z.JobApplicationId == jobApplicationId
+            )
+            .Select(z => new JobApplicationInfo(
+                z.JobApplicationId,
+                z.OrganizationId,
+                z.CandidateInfo.CandidateId,
+                z.Company.Id,
+                z.CandidateInfo,
+                z.JobPostTitle,
+                z.JobPostId
+            ))
             .SingleOrDefaultAsync(ct);
 
-        if (data == null) return null;
+        if (data == null)
+            return null;
         LogJobApplicationFoundInEvents(jobApplicationId);
 
         return data;
@@ -51,6 +66,4 @@ public partial class JobApplicationInfoQueryRepository(IQuerySession session, IL
 
     [LoggerMessage(LogLevel.Information, "Job application {JobApplicationId} found in events")]
     partial void LogJobApplicationFoundInEvents(Guid jobApplicationId);
-
-    
 }

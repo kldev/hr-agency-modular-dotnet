@@ -5,16 +5,17 @@ using Marten;
 
 namespace HrAgencySystem.Company.Infrastructure.Query;
 
-public sealed class CompaniesQueryRepository(IQuerySession session)
-    : ICompaniesQueryRepository
+public sealed class CompaniesQueryRepository(IQuerySession session) : ICompaniesQueryRepository
 {
     public async Task<SliceResponse<CompanyProjection>> GetCompanies(
         string search,
         Guid organizationId,
         int page = 1,
-        int pageSize = 10)
+        int pageSize = 10
+    )
     {
-        var query = session.Query<CompanyProjection>()
+        var query = session
+            .Query<CompanyProjection>()
             .WithOrganizationId(organizationId)
             .WithSearch(search)
             .OrderByDescending(c => c.CreatedAt)
@@ -23,11 +24,18 @@ public sealed class CompaniesQueryRepository(IQuerySession session)
         return await query.ToSlice(page, pageSize);
     }
 
-    public async Task<CompanyProjection?> GetCompany(Guid organizationId, Guid? companyId, string taxId, CancellationToken ct)
+    public async Task<CompanyProjection?> GetCompany(
+        Guid organizationId,
+        Guid? companyId,
+        string taxId,
+        CancellationToken ct
+    )
     {
-        return await session.Query<CompanyProjection>().
-            WithOrganizationId(organizationId)
+        return await session
+            .Query<CompanyProjection>()
+            .WithOrganizationId(organizationId)
             .WithCompanyId(companyId)
-            .WithTax(taxId).SingleOrDefaultAsync(ct);
+            .WithTax(taxId)
+            .SingleOrDefaultAsync(ct);
     }
 }

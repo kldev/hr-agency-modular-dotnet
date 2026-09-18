@@ -1,20 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Marten" />
+    <PackageReference Include="WolverineFx" />
+    <PackageReference Include="WolverineFx.Marten" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Marten"/>
-        <PackageReference Include="WolverineFx"/>
-        <PackageReference Include="WolverineFx.Marten"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />
-        <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
-    </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
+  </ItemGroup>
 </Project>

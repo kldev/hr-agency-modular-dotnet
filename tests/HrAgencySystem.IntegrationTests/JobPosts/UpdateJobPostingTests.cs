@@ -9,22 +9,20 @@ namespace HrAgencySystem.IntegrationTests.JobPosts;
 [Collection(IntegrationCollection.Name)]
 public sealed class UpdateJobPostingTests(
     IntegrationEnvironment env,
-    ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(env, outputHelper)
+    ITestOutputHelper outputHelper
+) : BaseIntegrationTest(env, outputHelper)
 {
     [Fact]
     public async Task ShouldUpdateJobPosting()
     {
         var organizationId = Guid.NewGuid();
         // Arrange
-        JobPostingClient
-            .WithOrganizationId(organizationId);
+        JobPostingClient.WithOrganizationId(organizationId);
         Client.WithOrganizationId(organizationId);
 
         var createRequest = JobPostingTestData.CreateRequest();
-        
-        var created = await JobPostingClient.CreateAsync(
-            createRequest);
+
+        var created = await JobPostingClient.CreateAsync(createRequest);
 
         Assert.NotNull(created);
 
@@ -33,7 +31,8 @@ public sealed class UpdateJobPostingTests(
         // Act
         var response = await Client.PutAsJsonAsync(
             $"/api/recruitment/job-posting/{created.JobPostId}",
-            updateRequest);
+            updateRequest
+        );
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -56,8 +55,7 @@ public sealed class UpdateJobPostingTests(
 
         await Eventually.AssertAsync(async () =>
         {
-            var projection = await JobPostingClient.GetSingle(
-                created.JobPostId);
+            var projection = await JobPostingClient.GetSingle(created.JobPostId);
 
             Assert.Equal(updateRequest.Title, projection.Title);
             Assert.Equal(updateRequest.Summary, projection.Summary);
@@ -77,25 +75,21 @@ public sealed class UpdateJobPostingTests(
     public async Task ShouldReturnBadRequestWhenRequestIsInvalid()
     {
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
+        Client.WithOrganizationId(Guid.NewGuid());
 
         var createRequest = JobPostingTestData.CreateRequest();
 
-        var created = await JobPostingClient.CreateAsync(
-            createRequest);
+        var created = await JobPostingClient.CreateAsync(createRequest);
 
         Assert.NotNull(created);
 
-        var updateRequest = JobPostingTestData.UpdateRequest() with
-        {
-            Title = string.Empty
-        };
+        var updateRequest = JobPostingTestData.UpdateRequest() with { Title = string.Empty };
 
         // Act
         var response = await Client.PutAsJsonAsync(
             $"/api/recruitment/job-posting/{created.JobPostId}",
-            updateRequest);
+            updateRequest
+        );
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

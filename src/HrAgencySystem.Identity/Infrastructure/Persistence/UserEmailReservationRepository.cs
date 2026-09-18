@@ -6,19 +6,37 @@ using Marten;
 
 namespace HrAgencySystem.Identity.Infrastructure.Persistence;
 
-public sealed class UserEmailReservationRepository(
-    IDocumentSession session) : IUserEmailReservationRepository
+public sealed class UserEmailReservationRepository(IDocumentSession session)
+    : IUserEmailReservationRepository
 {
-    public async Task<bool> ExistAsync(OrganizationId organizationId, Email email, CancellationToken ct)
+    public async Task<bool> ExistAsync(
+        OrganizationId organizationId,
+        Email email,
+        CancellationToken ct
+    )
     {
-        return await session.Query<UserEmailReservation>().WithEmail(organizationId, email).AnyAsync(ct);
+        return await session
+            .Query<UserEmailReservation>()
+            .WithEmail(organizationId, email)
+            .AnyAsync(ct);
     }
 
-    public Task ReserveAsync(OrganizationId organizationId, Email email, UserId userId, string passwordHash)
+    public Task ReserveAsync(
+        OrganizationId organizationId,
+        Email email,
+        UserId userId,
+        string passwordHash
+    )
     {
-        var reservation = new UserEmailReservation(Guid.NewGuid(), userId.Value, organizationId.Value, email.Value, passwordHash);
+        var reservation = new UserEmailReservation(
+            Guid.NewGuid(),
+            userId.Value,
+            organizationId.Value,
+            email.Value,
+            passwordHash
+        );
         session.Insert(reservation);
-        
+
         return Task.CompletedTask;
     }
 }

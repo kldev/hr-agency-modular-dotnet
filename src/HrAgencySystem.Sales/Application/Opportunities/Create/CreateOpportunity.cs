@@ -13,4 +13,5 @@ public sealed record CreateOpportunity(
     CurrencyCode Currency,
     DateOnly? ExpectedCloseDate,
     Guid? ResponsibleId,
-    Guid CreatedBy) : IOpportunityData, ICreateCommand;
+    Guid CreatedBy
+) : IOpportunityData, ICreateCommand;

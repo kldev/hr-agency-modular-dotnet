@@ -9,12 +9,9 @@ public sealed record PlatformOwnerId
 
     public Guid Value { get; }
 
-    public static PlatformOwnerId New()
-        => new(Guid.NewGuid());
+    public static PlatformOwnerId New() => new(Guid.NewGuid());
 
-    public static PlatformOwnerId From(Guid value)
-        => new(value);
+    public static PlatformOwnerId From(Guid value) => new(value);
 
-    public override string ToString()
-        => Value.ToString();
+    public override string ToString() => Value.ToString();
 }

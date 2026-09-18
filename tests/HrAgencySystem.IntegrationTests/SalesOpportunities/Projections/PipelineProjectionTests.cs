@@ -12,9 +12,7 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.SalesOpportunities.Projections;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class PipelineProjectionTests(
-    IntegrationEnvironment env,
-    ITestOutputHelper output)
+public sealed class PipelineProjectionTests(IntegrationEnvironment env, ITestOutputHelper output)
     : BaseIntegrationTest(env, output)
 {
     [Fact]
@@ -38,16 +36,15 @@ public sealed class PipelineProjectionTests(
                 null,
                 CreateUserSnapshot(),
                 DateTimeOffset.UtcNow,
-                CreateUserSnapshot()));
+                CreateUserSnapshot()
+            )
+        );
 
         // Act
         await WaitForProjectionAsync();
 
         // Assert
-        var summary = await GetSummaryAsync(
-            organizationId,
-            OpportunityStage.New,
-            CurrencyCode.EUR);
+        var summary = await GetSummaryAsync(organizationId, OpportunityStage.New, CurrencyCode.EUR);
 
         Assert.NotNull(summary);
         Assert.Equal(organizationId, summary.OrgId);
@@ -78,7 +75,9 @@ public sealed class PipelineProjectionTests(
                 null,
                 CreateUserSnapshot(),
                 DateTimeOffset.UtcNow,
-                CreateUserSnapshot()));
+                CreateUserSnapshot()
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -97,15 +96,14 @@ public sealed class PipelineProjectionTests(
                 Currency: CurrencyCode.EUR,
                 ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(30),
                 ModifiedBy: CreateUserSnapshot(),
-                ModifiedAt: DateTimeOffset.UtcNow));
+                ModifiedAt: DateTimeOffset.UtcNow
+            )
+        );
 
         await WaitForProjectionAsync();
 
         // Assert
-        var summary = await GetSummaryAsync(
-            organizationId,
-            OpportunityStage.New,
-            CurrencyCode.EUR);
+        var summary = await GetSummaryAsync(organizationId, OpportunityStage.New, CurrencyCode.EUR);
 
         Assert.NotNull(summary);
         Assert.Equal(1, summary.OpportunityCount);
@@ -133,7 +131,9 @@ public sealed class PipelineProjectionTests(
                 null,
                 CreateUserSnapshot(),
                 DateTimeOffset.UtcNow,
-                CreateUserSnapshot()));
+                CreateUserSnapshot()
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -148,7 +148,9 @@ public sealed class PipelineProjectionTests(
                 ChangedAt: DateTimeOffset.UtcNow,
                 LostReason: string.Empty,
                 ExpectedValue: 10_000m,
-                CurrencyCode: CurrencyCode.EUR));
+                CurrencyCode: CurrencyCode.EUR
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -156,12 +158,14 @@ public sealed class PipelineProjectionTests(
         var previousStage = await GetSummaryAsync(
             organizationId,
             OpportunityStage.New,
-            CurrencyCode.EUR);
+            CurrencyCode.EUR
+        );
 
         var newStage = await GetSummaryAsync(
             organizationId,
             OpportunityStage.Qualified,
-            CurrencyCode.EUR);
+            CurrencyCode.EUR
+        );
 
         Assert.NotNull(previousStage);
         Assert.Equal(0, previousStage.OpportunityCount);
@@ -193,7 +197,9 @@ public sealed class PipelineProjectionTests(
                 null,
                 CreateUserSnapshot(),
                 DateTimeOffset.UtcNow,
-                CreateUserSnapshot()));
+                CreateUserSnapshot()
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -212,20 +218,16 @@ public sealed class PipelineProjectionTests(
                 Currency: CurrencyCode.PLN,
                 ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(30),
                 ModifiedBy: CreateUserSnapshot(),
-                ModifiedAt: DateTimeOffset.UtcNow));
+                ModifiedAt: DateTimeOffset.UtcNow
+            )
+        );
 
         await WaitForProjectionAsync();
 
         // Assert
-        var eur = await GetSummaryAsync(
-            organizationId,
-            OpportunityStage.New,
-            CurrencyCode.EUR);
+        var eur = await GetSummaryAsync(organizationId, OpportunityStage.New, CurrencyCode.EUR);
 
-        var pln = await GetSummaryAsync(
-            organizationId,
-            OpportunityStage.New,
-            CurrencyCode.PLN);
+        var pln = await GetSummaryAsync(organizationId, OpportunityStage.New, CurrencyCode.PLN);
 
         Assert.NotNull(eur);
         Assert.Equal(0, eur.OpportunityCount);
@@ -257,7 +259,9 @@ public sealed class PipelineProjectionTests(
                 null,
                 CreateUserSnapshot(),
                 DateTimeOffset.UtcNow,
-                CreateUserSnapshot()));
+                CreateUserSnapshot()
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -276,15 +280,14 @@ public sealed class PipelineProjectionTests(
                 Currency: CurrencyCode.EUR,
                 ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(60),
                 ModifiedBy: CreateUserSnapshot(),
-                ModifiedAt: DateTimeOffset.UtcNow));
+                ModifiedAt: DateTimeOffset.UtcNow
+            )
+        );
 
         await WaitForProjectionAsync();
 
         // Assert
-        var summary = await GetSummaryAsync(
-            organizationId,
-            OpportunityStage.New,
-            CurrencyCode.EUR);
+        var summary = await GetSummaryAsync(organizationId, OpportunityStage.New, CurrencyCode.EUR);
 
         Assert.NotNull(summary);
         Assert.Equal(1, summary.OpportunityCount);
@@ -312,7 +315,9 @@ public sealed class PipelineProjectionTests(
                 null,
                 CreateUserSnapshot(),
                 DateTimeOffset.UtcNow,
-                CreateUserSnapshot()));
+                CreateUserSnapshot()
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -327,7 +332,9 @@ public sealed class PipelineProjectionTests(
                 ChangedAt: DateTimeOffset.UtcNow,
                 LostReason: string.Empty,
                 ExpectedValue: 10_000m,
-                CurrencyCode: CurrencyCode.EUR));
+                CurrencyCode: CurrencyCode.EUR
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -345,7 +352,9 @@ public sealed class PipelineProjectionTests(
                 Currency: CurrencyCode.PLN,
                 ExpectedCloseDate: DateTime.Now.Date.ToDateOnly().AddDays(30),
                 ModifiedBy: CreateUserSnapshot(),
-                ModifiedAt: DateTimeOffset.UtcNow));
+                ModifiedAt: DateTimeOffset.UtcNow
+            )
+        );
 
         await WaitForProjectionAsync();
 
@@ -353,12 +362,14 @@ public sealed class PipelineProjectionTests(
         var oldBucket = await GetSummaryAsync(
             organizationId,
             OpportunityStage.Qualified,
-            CurrencyCode.EUR);
+            CurrencyCode.EUR
+        );
 
         var newBucket = await GetSummaryAsync(
             organizationId,
             OpportunityStage.Qualified,
-            CurrencyCode.PLN);
+            CurrencyCode.PLN
+        );
 
         Assert.NotNull(oldBucket);
         Assert.Equal(0, oldBucket.OpportunityCount);
@@ -373,14 +384,11 @@ public sealed class PipelineProjectionTests(
     {
         await using var scope = Services.CreateAsyncScope();
 
-        var store = scope.ServiceProvider
-            .GetRequiredService<IDocumentStore>();
+        var store = scope.ServiceProvider.GetRequiredService<IDocumentStore>();
 
         await using var session = store.LightweightSession();
 
-        session.Events.Append(
-            Guid.NewGuid(),
-            @event!);
+        session.Events.Append(Guid.NewGuid(), @event!);
 
         await session.SaveChangesAsync();
     }
@@ -388,12 +396,12 @@ public sealed class PipelineProjectionTests(
     private async Task<PipelineStageSummary?> GetSummaryAsync(
         Guid organizationId,
         OpportunityStage stage,
-        CurrencyCode currency)
+        CurrencyCode currency
+    )
     {
         await using var scope = Services.CreateAsyncScope();
 
-        var store = scope.ServiceProvider
-            .GetRequiredService<IDocumentStore>();
+        var store = scope.ServiceProvider.GetRequiredService<IDocumentStore>();
 
         await using var session = store.QuerySession();
 
@@ -409,17 +417,11 @@ public sealed class PipelineProjectionTests(
 
     private static CompanySnapshot CreateCompanySnapshot()
     {
-        return new CompanySnapshot(
-            Guid.NewGuid(),
-            "Test Company", "Tax Id");
+        return new CompanySnapshot(Guid.NewGuid(), "Test Company", "Tax Id");
     }
 
     private static UserSnapshot CreateUserSnapshot()
     {
-        return new UserSnapshot(
-            Guid.NewGuid(),
-            "John",
-            "Doe",
-            "john.doe@test.com");
+        return new UserSnapshot(Guid.NewGuid(), "John", "Doe", "john.doe@test.com");
     }
 }

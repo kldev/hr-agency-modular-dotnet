@@ -6,8 +6,7 @@ public sealed record WebSite
 {
     public const int MaxLength = 250;
 
-    public const string MaxLengthMessage =
-        "Website url cannot exceed 250 characters.";
+    public const string MaxLengthMessage = "Website url cannot exceed 250 characters.";
 
     private WebSite(string value)
     {
@@ -20,13 +19,10 @@ public sealed record WebSite
     {
         var (website, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : website!;
+        return error is not null ? throw new InValidValueException(error) : website!;
     }
 
-    public static (WebSite? website, string? error) TryCreate(
-        string? value)
+    public static (WebSite? website, string? error) TryCreate(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (new WebSite(string.Empty), null);

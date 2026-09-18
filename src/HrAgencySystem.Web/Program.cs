@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
-    
     app.MapApplicationEndpoints();
     if (!app.Environment.IsDevelopment())
     {
@@ -25,8 +24,7 @@ var app = builder.Build();
     app.UseRouting();
 
     app.MapStaticAssets();
-    app.MapRazorPages()
-        .WithStaticAssets();
+    app.MapRazorPages().WithStaticAssets();
     app.MapGet("/", () => "HR Agency Web").ExcludeFromDescription();
     app.Run();
 }

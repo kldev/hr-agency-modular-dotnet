@@ -8,5 +8,5 @@ public enum InterviewStatus
     Completed,
     Canceled,
     NoShow,
-    Rescheduled
+    Rescheduled,
 }

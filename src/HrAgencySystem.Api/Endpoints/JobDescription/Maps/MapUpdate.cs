@@ -11,23 +11,33 @@ internal static class MapUpdate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/job-description/{jobDescriptionId}", Handler)
+        group
+            .MapPut("/api/job-description/{jobDescriptionId}", Handler)
             .ProducesStandardErrors()
             .Produces<JobDescriptionUpdated>()
             .WithSummary("Update job description")
             .WithName("Update job description");
     }
-    
-    private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobDescriptionId,
-        UpdateJobDescriptionRequest request, CancellationToken ct)
+
+    private static async Task<IResult> Handler(
+        IMessageBus bus,
+        AppUserAuthenticated user,
+        Guid jobDescriptionId,
+        UpdateJobDescriptionRequest request,
+        CancellationToken ct
+    )
     {
-        var result = await bus.InvokeAsync<JobDescriptionUpdated>(request.ToCommand(jobDescriptionId, user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<JobDescriptionUpdated>(
+            request.ToCommand(jobDescriptionId, user.OrganizationId, user.UserId),
+            ct
+        );
         return TypedResults.Ok(result);
     }
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record UpdateJobDescriptionRequest(string Title,
+internal sealed record UpdateJobDescriptionRequest(
+    string Title,
     string? Summary,
     string Description,
     IReadOnlyList<string> Responsibilities,
@@ -37,15 +47,21 @@ internal sealed record UpdateJobDescriptionRequest(string Title,
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode CurrencyCode,
     decimal SalaryMin,
-    decimal SalaryMax)
+    decimal SalaryMax
+)
 {
-    public UpdateJobDescription ToCommand(Guid jobDescriptionId, Guid organizationId, Guid modifiedBy) =>
-        new (jobDescriptionId, 
-            organizationId, 
-            Title, 
-            Summary, 
+    public UpdateJobDescription ToCommand(
+        Guid jobDescriptionId,
+        Guid organizationId,
+        Guid modifiedBy
+    ) =>
+        new(
+            jobDescriptionId,
+            organizationId,
+            Title,
+            Summary,
             Description,
             Responsibilities,
             Requirements,
@@ -57,5 +73,6 @@ internal sealed record UpdateJobDescriptionRequest(string Title,
             CurrencyCode,
             SalaryMin,
             SalaryMax,
-            modifiedBy);
+            modifiedBy
+        );
 }

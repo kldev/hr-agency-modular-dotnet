@@ -14,33 +14,27 @@ using Marten;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
-
 namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
 public class ApplyToJobApplicationHandlerTests : BaseTest
 {
-    private readonly IDocumentSession _documentSession =
-        Substitute.For<IDocumentSession>();
+    private readonly IDocumentSession _documentSession = Substitute.For<IDocumentSession>();
 
-    private readonly ICandidateResolver _candidateResolver =
-        Substitute.For<ICandidateResolver>();
+    private readonly ICandidateResolver _candidateResolver = Substitute.For<ICandidateResolver>();
 
     private readonly IJobPostQueryRepository _jobPostQueryRepository =
         Substitute.For<IJobPostQueryRepository>();
 
-    private readonly IRecruitmentService _service =
-        Substitute.For<IRecruitmentService>();
-    
-    private readonly IClock _clock =
-        Substitute.For<IClock>();
+    private readonly IRecruitmentService _service = Substitute.For<IRecruitmentService>();
+
+    private readonly IClock _clock = Substitute.For<IClock>();
 
     private static readonly Guid JobPostId = Guid.NewGuid();
     private static readonly Guid OrganizationId = Guid.NewGuid();
     private static readonly Guid CompanyId = Guid.NewGuid();
     private static readonly Guid EventId = Guid.NewGuid();
 
-    private static readonly DateTimeOffset Now =
-        new(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+    private static readonly DateTimeOffset Now = new(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobApplicationCreated()
@@ -55,7 +49,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
         SetupCompany(company);
 
         _clock.UtcNow.Returns(Now);
-        
+
         var command = CreateValidCommand();
 
         var result = await Handle(command, clock: _clock);
@@ -70,41 +64,37 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
         Assert.Equal(command.Email, result.ApplicantEmail);
         Assert.Equal(command.Phone, result.ApplicantPhone);
         Assert.Equal(command.ToFullName(), result.FullName);
-        
+
         Assert.Equal(Now, result.CreatedAt);
 
         await _jobPostQueryRepository
             .Received(1)
-            .GetJobPostInfo(
-                JobPostId,
-                Arg.Any<CancellationToken>());
+            .GetJobPostInfo(JobPostId, Arg.Any<CancellationToken>());
 
         await _candidateResolver
             .Received(1)
             .FindOrCreate(
                 Arg.Is<CreateCandidate>(x =>
-                    x.OrganizationId == OrganizationId &&
-                    x.Email == command.Email &&
-                    x.Source == command.Source &&
-                    x.Phone == command.Phone &&
-                    x.FirstName == command.FirstName &&
-                    x.LastName == command.LastName &&
-                    x.CompanyId == CompanyId),
+                    x.OrganizationId == OrganizationId
+                    && x.Email == command.Email
+                    && x.Source == command.Source
+                    && x.Phone == command.Phone
+                    && x.FirstName == command.FirstName
+                    && x.LastName == command.LastName
+                    && x.CompanyId == CompanyId
+                ),
                 post,
-                Arg.Any<CancellationToken>());
+                Arg.Any<CancellationToken>()
+            );
 
-        await _service
-            .Received(1)
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>());
+        await _service.Received(1).GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>());
 
-        _documentSession.Events
-            .Received(1)
+        _documentSession
+            .Events.Received(1)
             .StartStream<JobApplication>(
                 result.JobApplicationId,
-                Arg.Is<JobApplicationCreated>(
-                    x => x.JobApplicationId == result.JobApplicationId));
+                Arg.Is<JobApplicationCreated>(x => x.JobApplicationId == result.JobApplicationId)
+            );
     }
 
     [Theory]
@@ -112,24 +102,22 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     [InlineData(JobPostStatus.Closed)]
     [InlineData(JobPostStatus.Archived)]
     public async Task Handle_WithJobPostNotPublished_ThrowsBusinessRuleException(
-        JobPostStatus status)
+        JobPostStatus status
+    )
     {
         var post = CreateJobPostInfo(status);
 
         SetupJobPost(post);
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(
-            () => Handle(CreateValidCommand()));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(CreateValidCommand())
+        );
 
-        Assert.Equal(
-            "Applications are only allowed for published job posts.",
-            exception.Message);
+        Assert.Equal("Applications are only allowed for published job posts.", exception.Message);
 
         await _jobPostQueryRepository
             .Received(1)
-            .GetJobPostInfo(
-                JobPostId,
-                Arg.Any<CancellationToken>());
+            .GetJobPostInfo(JobPostId, Arg.Any<CancellationToken>());
 
         AssertNoCandidateLookup();
         AssertNoCompanyLookup();
@@ -139,11 +127,9 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidEmail_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            email: "invalid-email");
+        var command = CreateValidCommand(email: "invalid-email");
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(
-            () => Handle(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
         Assert.NotEmpty(exception.Errors);
 
@@ -156,11 +142,9 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidPhone_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            phone: new string('1', 51));
+        var command = CreateValidCommand(phone: new string('1', 51));
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(
-            () => Handle(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
         Assert.NotEmpty(exception.Errors);
 
@@ -179,23 +163,16 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
         SetupCandidate(CreateCandidate());
 
         _service
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>())
+            .GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>())
             .Throws(new NotFoundException("Company", ""));
 
-        var exception = await Assert.ThrowsAsync<NotFoundException>(
-            () => Handle(CreateValidCommand()));
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
+            Handle(CreateValidCommand())
+        );
 
-        Assert.Contains(
-            "Company not found",
-            exception.Message);
+        Assert.Contains("Company not found", exception.Message);
 
-        await _service
-            .Received(1)
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>());
+        await _service.Received(1).GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>());
 
         AssertNoStream();
     }
@@ -213,23 +190,25 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
 
         var result = await Handle(CreateValidCommand());
 
-        _documentSession.Events
-            .Received(1)
+        _documentSession
+            .Events.Received(1)
             .StartStream<JobApplication>(
                 result.JobApplicationId,
-                Arg.Is<JobApplicationCreated>(
-                    x =>
-                        x.JobApplicationId == result.JobApplicationId &&
-                        x.OrganizationId == OrganizationId &&
-                        x.JobPostId == JobPostId &&
-                        x.JobPostTitle == "Senior .NET Developer" &&
-                        x.CandidateInfo == candidate &&
-                        x.Company == company));
+                Arg.Is<JobApplicationCreated>(x =>
+                    x.JobApplicationId == result.JobApplicationId
+                    && x.OrganizationId == OrganizationId
+                    && x.JobPostId == JobPostId
+                    && x.JobPostTitle == "Senior .NET Developer"
+                    && x.CandidateInfo == candidate
+                    && x.Company == company
+                )
+            );
     }
 
     private async Task<JobApplicationCreated> Handle(
         ApplyToJobApplication command,
-        IClock? clock = null)
+        IClock? clock = null
+    )
     {
         return await ApplyToJobApplicationHandler.Handle(
             command,
@@ -238,47 +217,36 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             _service,
             _documentSession,
             clock ?? TestClock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
     }
 
-    private void SetupJobPost(
-        JobPostInfo post)
+    private void SetupJobPost(JobPostInfo post)
     {
-        _jobPostQueryRepository
-            .GetJobPostInfo(
-                post.Id,
-                Arg.Any<CancellationToken>())
-            .Returns(post);
+        _jobPostQueryRepository.GetJobPostInfo(post.Id, Arg.Any<CancellationToken>()).Returns(post);
     }
 
-    private void SetupCandidate(
-        CandidateInfo candidate)
+    private void SetupCandidate(CandidateInfo candidate)
     {
         _candidateResolver
             .FindOrCreate(
                 Arg.Any<CreateCandidate>(),
                 Arg.Any<JobPostInfo>(),
-                Arg.Any<CancellationToken>())
+                Arg.Any<CancellationToken>()
+            )
             .Returns(candidate);
     }
 
-    private void SetupCompany(
-        CompanySnapshot company)
+    private void SetupCompany(CompanySnapshot company)
     {
-        _service
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>())
-            .Returns(company);
+        _service.GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>()).Returns(company);
     }
 
     private void AssertNoJobPostLookup()
     {
         _jobPostQueryRepository
             .DidNotReceive()
-            .GetJobPostInfo(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+            .GetJobPostInfo(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoCandidateLookup()
@@ -288,25 +256,20 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             .FindOrCreate(
                 Arg.Any<CreateCandidate>(),
                 Arg.Any<JobPostInfo>(),
-                Arg.Any<CancellationToken>());
+                Arg.Any<CancellationToken>()
+            );
     }
 
     private void AssertNoCompanyLookup()
     {
-        _service
-            .DidNotReceive()
-            .GetCompanyAsync(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        _service.DidNotReceive().GetCompanyAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoStream()
     {
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<JobApplication>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<JobApplication>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     private static ApplyToJobApplication CreateValidCommand(
@@ -314,34 +277,26 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
         string phone = "+48 500 600 700",
         CandidateSource source = CandidateSource.RocketJobs,
         string? firstName = "John",
-        string? lastName = "Doe")
+        string? lastName = "Doe"
+    )
     {
-        return new ApplyToJobApplication(
-            JobPostId,
-            email,
-            phone,
-            source,
-            firstName,
-            lastName);
+        return new ApplyToJobApplication(JobPostId, email, phone, source, firstName, lastName);
     }
 
-    private static JobPostInfo CreateJobPostInfo(
-        JobPostStatus status = JobPostStatus.Published)
+    private static JobPostInfo CreateJobPostInfo(JobPostStatus status = JobPostStatus.Published)
     {
         return new JobPostInfo(
             JobPostId,
             OrganizationId,
             CompanyId,
             "Senior .NET Developer",
-            status);
+            status
+        );
     }
 
     private static CompanySnapshot CreateCompany()
     {
-        return new CompanySnapshot(
-            CompanyId,
-            "Company A",
-            "TX-100-101");
+        return new CompanySnapshot(CompanyId, "Company A", "TX-100-101");
     }
 
     private static CandidateInfo CreateCandidate()
@@ -351,7 +306,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             "john.doe@example.com",
             "+48 500 600 700",
             "John",
-            "Doe");
-
+            "Doe"
+        );
     }
 }

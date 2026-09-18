@@ -81,7 +81,7 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<FollowUpAction>("sales");
     }
 
-private async Task TruncateTable(string sql)
+    private async Task TruncateTable(string sql)
     {
         try
         {

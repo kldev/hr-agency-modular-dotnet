@@ -12,26 +12,25 @@ public sealed class TestLoggerProvider : ILoggerProvider
         _output = output;
     }
 
-    public ILogger CreateLogger(string categoryName)
-        => new TestLogger(categoryName, this);
+    public ILogger CreateLogger(string categoryName) => new TestLogger(categoryName, this);
 
     internal void Write(
         LogLevel logLevel,
         string categoryName,
         string message,
-        Exception? exception)
+        Exception? exception
+    )
     {
         _output?.WriteLine(
-            $"[{DateTimeOffset.Now:HH:mm:ss.fff}] " +
-            $"[{logLevel}] " +
-            $"[{categoryName}] " +
-            message);
+            $"[{DateTimeOffset.Now:HH:mm:ss.fff}] "
+                + $"[{logLevel}] "
+                + $"[{categoryName}] "
+                + message
+        );
 
         if (exception is not null)
             _output?.WriteLine(exception.ToString());
     }
 
-    public void Dispose()
-    {
-    }
+    public void Dispose() { }
 }

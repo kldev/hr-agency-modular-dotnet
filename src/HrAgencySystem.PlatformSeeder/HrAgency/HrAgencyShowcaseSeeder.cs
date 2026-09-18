@@ -10,7 +10,8 @@ namespace HrAgencySystem.PlatformSeeder.HrAgency;
 public sealed partial class HrAgencyShowcaseSeeder(
     IMessageBus bus,
     IDocumentSession session,
-    ILogger<HrAgency.HrAgencyShowcaseSeeder> logger) : IPlatformSeeder
+    ILogger<HrAgency.HrAgencyShowcaseSeeder> logger
+) : IPlatformSeeder
 {
     public async Task Seed()
     {
@@ -20,9 +21,7 @@ public sealed partial class HrAgencyShowcaseSeeder(
 
         var owner = await new OwnerScenario(bus).Create();
 
-        logger.LogInformation(
-            "Platform owner created: {PlatformOwnerId}",
-            owner.PlatformOwnerId);
+        logger.LogInformation("Platform owner created: {PlatformOwnerId}", owner.PlatformOwnerId);
 
         await SeedAgency(owner.PlatformOwnerId, new SeedConfig());
 
@@ -32,24 +31,25 @@ public sealed partial class HrAgencyShowcaseSeeder(
                 Name: "Flex Jobs",
                 Slug: "flex-jobs",
                 UsersCount: 50,
-                CompaniesCount: 999));
+                CompaniesCount: 999
+            )
+        );
 
         await SeedMinimalAgency(
             owner.PlatformOwnerId,
-            new SeedConfig(
-                Name: "Tech Jobs",
-                Slug: "tech-jobs",
-                UsersCount: 5,
-                CompaniesCount: 20));
+            new SeedConfig(Name: "Tech Jobs", Slug: "tech-jobs", UsersCount: 5, CompaniesCount: 20)
+        );
 
         logger.LogInformation(
             "HR Agency showcase seeding completed in {Elapsed}",
-            stopwatch.Elapsed);
+            stopwatch.Elapsed
+        );
     }
 
     private sealed record SeedConfig(
         string Name = "Hr Agency",
         string Slug = "hr-agency",
         int UsersCount = 20,
-        int CompaniesCount = 101);
+        int CompaniesCount = 101
+    );
 }

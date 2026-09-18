@@ -15,7 +15,7 @@ public sealed class JobFeedXmlItem
 {
     [XmlElement("id")]
     public Guid Id { get; set; }
-    
+
     [XmlElement("title")]
     public string Title { get; set; } = string.Empty;
 
@@ -60,10 +60,10 @@ public sealed class JobFeedXmlItem
 
     [XmlElement("salaryMax")]
     public decimal SalaryMax { get; set; }
-    
+
     [XmlElement("createdAt")]
     public DateTimeOffset CreatedAt { get; set; }
-    
+
     [XmlElement("applyUrl")]
     public string PostingSlug { get; set; } = string.Empty;
 
@@ -93,7 +93,7 @@ public sealed class JobFeedXmlItem
 
             CreatedAt = row.CreatedAt,
 
-            PostingSlug = feedUrl + "/" + row.PostingSlug
+            PostingSlug = feedUrl + "/" + row.PostingSlug,
         };
     }
 }

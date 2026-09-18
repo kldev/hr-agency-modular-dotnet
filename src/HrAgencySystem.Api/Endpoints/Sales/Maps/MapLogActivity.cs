@@ -11,7 +11,8 @@ internal static class MapLogActivity
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/activity", Handler)
+        group
+            .MapPost("/activity", Handler)
             .WithSummary("Log activity")
             .WithName("Log sales activity")
             .Produces<ActivityCreated>()
@@ -21,24 +22,27 @@ internal static class MapLogActivity
     private static async Task<IResult> Handler(
         IMessageBus bus,
         AppUserAuthenticated user,
-        CreateSalesActivityRequest request, CancellationToken ct)
+        CreateSalesActivityRequest request,
+        CancellationToken ct
+    )
     {
-        var result = await bus.InvokeAsync<ActivityCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
-        
-        return TypedResults.Created($"/api/sales/activities?opportunityId={result.SalesOpportunityId}", result);
+        var result = await bus.InvokeAsync<ActivityCreated>(
+            request.ToCommand(user.OrganizationId, user.UserId),
+            ct
+        );
+
+        return TypedResults.Created(
+            $"/api/sales/activities?opportunityId={result.SalesOpportunityId}",
+            result
+        );
     }
-    
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal record CreateSalesActivityRequest(
-    Guid OpportunityId,
-    SalesActivityType Type,
-    string Note)
+internal record CreateSalesActivityRequest(Guid OpportunityId, SalesActivityType Type, string Note)
 {
     public CreateActivity ToCommand(Guid organizationId, Guid createdBy)
     {
         return new CreateActivity(organizationId, OpportunityId, Type, Note, createdBy);
-
     }
 }

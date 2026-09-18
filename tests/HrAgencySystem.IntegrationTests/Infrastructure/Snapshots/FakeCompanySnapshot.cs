@@ -7,9 +7,8 @@ public sealed class FakeCompanySnapshot : ICompanySnapshotRepository
     public Task<CompanySnapshot?> GetCompanyAsync(Guid companyId, CancellationToken ct)
     {
         var suffix = companyId.ToString().Substring(4);
-        var result = new CompanySnapshot(companyId, "Company  " + suffix,
-            "TXT 101-200" + suffix);
-        
+        var result = new CompanySnapshot(companyId, "Company  " + suffix, "TXT 101-200" + suffix);
+
         return Task.FromResult((CompanySnapshot?)result);
     }
 }

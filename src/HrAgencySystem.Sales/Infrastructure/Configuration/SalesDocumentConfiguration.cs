@@ -14,17 +14,22 @@ internal static class SalesDocumentConfiguration
             ConfigureFollowUpAction(options);
         }
     }
-    
+
     private static void ConfigureFollowUpAction(StoreOptions options)
     {
-        options.Schema
-            .For<FollowUpAction>()
+        options
+            .Schema.For<FollowUpAction>()
             .DatabaseSchemaName(SchemaName)
             .Index(x => x.OrganizationId)
             .Index(x => x.OpportunityId)
             .Index(x => x.CreatedBy.Id)
             .Index(x => x.FollowDateTime)
-            .Index(x => new { x.OpportunityId, x.FollowDateTime },
-                idx => { idx.IsUnique = true; });
+            .Index(
+                x => new { x.OpportunityId, x.FollowDateTime },
+                idx =>
+                {
+                    idx.IsUnique = true;
+                }
+            );
     }
 }

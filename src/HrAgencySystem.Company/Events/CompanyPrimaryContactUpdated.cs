@@ -7,4 +7,5 @@ public sealed record CompanyPrimaryContactUpdated(
     Guid OrganizationId,
     ContactPerson Contact,
     Guid ContactPersonId,
-    DateTimeOffset ModifiedAt);
+    DateTimeOffset ModifiedAt
+);

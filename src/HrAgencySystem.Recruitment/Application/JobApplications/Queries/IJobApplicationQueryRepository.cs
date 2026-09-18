@@ -7,19 +7,27 @@ namespace HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 
 public interface IJobApplicationQueryRepository
 {
-    Task<SliceResponse<JobApplicationProjection>> GetJobApplications(Guid organizationId, JobApplicationQuery query,
-        CancellationToken ct);
+    Task<SliceResponse<JobApplicationProjection>> GetJobApplications(
+        Guid organizationId,
+        JobApplicationQuery query,
+        CancellationToken ct
+    );
 
-    Task<JobApplicationProjection?> GetJobApplication(Guid organizationId, Guid jobApplicationId, CancellationToken ct);
+    Task<JobApplicationProjection?> GetJobApplication(
+        Guid organizationId,
+        Guid jobApplicationId,
+        CancellationToken ct
+    );
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed record JobApplicationQuery(
-    string Search, 
-    Guid? CompanyId, 
-    Guid[] Tags, 
+    string Search,
+    Guid? CompanyId,
+    Guid[] Tags,
     JobApplicationStatus[]? Status,
     CandidateSource[] Sources,
     Guid? JobPostId,
-    int Page, 
-    int PageSize) : IPagedQuery;
+    int Page,
+    int PageSize
+) : IPagedQuery;

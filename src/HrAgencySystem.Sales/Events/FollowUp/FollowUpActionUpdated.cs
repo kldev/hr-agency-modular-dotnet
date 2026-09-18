@@ -9,4 +9,5 @@ public sealed record FollowUpActionUpdated(
     string Content,
     DateTimeOffset FollowDateTime,
     DateTimeOffset ModifiedAt,
-    UserSnapshot ModifiedBy);
+    UserSnapshot ModifiedBy
+);

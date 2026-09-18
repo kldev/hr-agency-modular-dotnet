@@ -19,17 +19,21 @@ public sealed class CompanyContactRepository(IDocumentSession session) : ICompan
         session.Update(contact);
         return Task.CompletedTask;
     }
-    
+
     public Task Delete(CompanyContact contact)
     {
         session.Delete(contact);
         return Task.CompletedTask;
     }
 
-
-    public async Task<CompanyContact?> GetById(Guid contactId, Guid organizationId, CancellationToken ct)
+    public async Task<CompanyContact?> GetById(
+        Guid contactId,
+        Guid organizationId,
+        CancellationToken ct
+    )
     {
-        return await session.Query<CompanyContact>()
+        return await session
+            .Query<CompanyContact>()
             .WithOrganizationId(OrganizationId.From(organizationId))
             .WithContactId(contactId)
             .SingleOrDefaultAsync(ct);

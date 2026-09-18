@@ -5,5 +5,5 @@ public enum JobPostPublicationStatus
     Pending,
     Published,
     Failed,
-    Unpublished
+    Unpublished,
 }

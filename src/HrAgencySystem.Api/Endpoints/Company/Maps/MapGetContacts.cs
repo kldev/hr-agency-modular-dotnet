@@ -9,20 +9,22 @@ internal static class MapGetContacts
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("{companyId:guid}/contacts", Handler)
+        group
+            .MapGet("{companyId:guid}/contacts", Handler)
             .WithSummary("Get contacts")
             .WithName("Get company contacts")
             .Produces<IReadOnlyList<CompanyContact>>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user,
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
         ICompanyContactQueryRepository repository,
         Guid companyId,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var result = 
-            await repository.GetAllAsync(user.OrganizationId, companyId, ct);
+        var result = await repository.GetAllAsync(user.OrganizationId, companyId, ct);
         return TypedResults.Ok(result);
     }
 }

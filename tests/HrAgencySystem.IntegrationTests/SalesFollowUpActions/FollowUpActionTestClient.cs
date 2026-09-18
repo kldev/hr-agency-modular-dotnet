@@ -17,7 +17,8 @@ public sealed class FollowUpActionTestClient(HttpClient client, ITestOutputHelpe
         Guid? opportunityId = null,
         string? content = null,
         DateTimeOffset? followDateTime = null,
-        Guid? createdById = null)
+        Guid? createdById = null
+    )
     {
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
         client.WithUserId(createdById ?? Guid.NewGuid());
@@ -25,9 +26,12 @@ public sealed class FollowUpActionTestClient(HttpClient client, ITestOutputHelpe
         var request = new MapCreate.CreateFollowUpActionRequest(
             OpportunityId: opportunityId ?? Guid.NewGuid(),
             Content: content ?? "Call the client back",
-            FollowDateTime: followDateTime ?? DateTimeOffset.UtcNow.AddDays(1));
+            FollowDateTime: followDateTime ?? DateTimeOffset.UtcNow.AddDays(1)
+        );
 
-        output.WriteLine($"Create follow up action {request.OpportunityId} {request.FollowDateTime:O}");
+        output.WriteLine(
+            $"Create follow up action {request.OpportunityId} {request.FollowDateTime:O}"
+        );
 
         return await client.PostAsJsonAsync(BaseUrl, request);
     }
@@ -37,9 +41,16 @@ public sealed class FollowUpActionTestClient(HttpClient client, ITestOutputHelpe
         Guid? opportunityId = null,
         string? content = null,
         DateTimeOffset? followDateTime = null,
-        Guid? createdById = null)
+        Guid? createdById = null
+    )
     {
-        var response = await CreateResponse(organizationId, opportunityId, content, followDateTime, createdById);
+        var response = await CreateResponse(
+            organizationId,
+            opportunityId,
+            content,
+            followDateTime,
+            createdById
+        );
         response.EnsureSuccessStatusCode();
 
         var result = (await response.ReadWithJson<FollowUpActionCreated>())!;
@@ -53,16 +64,21 @@ public sealed class FollowUpActionTestClient(HttpClient client, ITestOutputHelpe
         Guid? followUpActionId = null,
         string? content = null,
         DateTimeOffset? followDateTime = null,
-        Guid? modifiedById = null)
+        Guid? modifiedById = null
+    )
     {
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
         client.WithUserId(modifiedById ?? Guid.NewGuid());
 
         var request = new MapUpdate.UpdateFollowUpActionRequest(
             Content: content ?? "Call the client back",
-            FollowDateTime: followDateTime ?? DateTimeOffset.UtcNow.AddDays(2));
+            FollowDateTime: followDateTime ?? DateTimeOffset.UtcNow.AddDays(2)
+        );
 
-        return await client.PutAsJsonAsync($"{BaseUrl}/{followUpActionId ?? Guid.NewGuid()}", request);
+        return await client.PutAsJsonAsync(
+            $"{BaseUrl}/{followUpActionId ?? Guid.NewGuid()}",
+            request
+        );
     }
 
     internal async Task<FollowUpActionUpdated> Update(
@@ -70,9 +86,16 @@ public sealed class FollowUpActionTestClient(HttpClient client, ITestOutputHelpe
         Guid? followUpActionId = null,
         string? content = null,
         DateTimeOffset? followDateTime = null,
-        Guid? modifiedById = null)
+        Guid? modifiedById = null
+    )
     {
-        var response = await UpdateResponse(organizationId, followUpActionId, content, followDateTime, modifiedById);
+        var response = await UpdateResponse(
+            organizationId,
+            followUpActionId,
+            content,
+            followDateTime,
+            modifiedById
+        );
         response.EnsureSuccessStatusCode();
 
         return (await response.ReadWithJson<FollowUpActionUpdated>())!;
@@ -98,7 +121,8 @@ public sealed class FollowUpActionTestClient(HttpClient client, ITestOutputHelpe
         Guid? opportunityId = null,
         Guid? companyId = null,
         int page = 1,
-        int pageSize = 100)
+        int pageSize = 100
+    )
     {
         var query = new List<string>();
 

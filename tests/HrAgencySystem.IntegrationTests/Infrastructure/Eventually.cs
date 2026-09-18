@@ -8,7 +8,8 @@ public static class Eventually
         Func<Task> assertion,
         TimeSpan? timeout = null,
         TimeSpan? interval = null,
-        ITestOutputHelper? output = null)
+        ITestOutputHelper? output = null
+    )
     {
         var timeoutValue = timeout ?? TimeSpan.FromSeconds(5);
         var intervalValue = interval ?? TimeSpan.FromMilliseconds(100);
@@ -34,6 +35,7 @@ public static class Eventually
 
         throw new TimeoutException(
             $"Assertion did not succeed within {timeoutValue}.",
-            lastException);
+            lastException
+        );
     }
 }

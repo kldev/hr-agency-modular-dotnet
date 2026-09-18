@@ -6,9 +6,8 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Users;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class GetUsersTests(
-    IntegrationEnvironment environment,
-    ITestOutputHelper output) : BaseIntegrationTest(environment, output)
+public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutputHelper output)
+    : BaseIntegrationTest(environment, output)
 {
     [Fact]
     public async Task Should_return_users_from_authenticated_user_organization()
@@ -17,33 +16,28 @@ public sealed class GetUsersTests(
         var organizationId = Guid.NewGuid();
         var otherOrganizationId = Guid.NewGuid();
 
-        var firstUser = await UserClient.CreateAsync(
-            organizationId,
-            "first@test.com");
+        var firstUser = await UserClient.CreateAsync(organizationId, "first@test.com");
 
-        var secondUser = await UserClient.CreateAsync(
-            organizationId,
-            "second@test.com");
+        var secondUser = await UserClient.CreateAsync(organizationId, "second@test.com");
 
-        await UserClient.CreateAsync(
-            otherOrganizationId,
-            "other@test.com");
+        await UserClient.CreateAsync(otherOrganizationId, "other@test.com");
 
         Client.WithOrganizationId(organizationId);
 
-        await Eventually.AssertAsync(
-            async () =>
-            {
-                var response = await Client.GetAsync("/api/users");
+        await Eventually.AssertAsync(async () =>
+        {
+            var response = await Client.GetAsync("/api/users");
 
-                response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
 
-                var users = (await response.ReadWithJson<SliceResponse<UserProjection>>(OutputHelper))!.Content;
-                
-                Assert.Contains(users, x => x.Id == firstUser.Id);
-                Assert.Contains(users, x => x.Id == secondUser.Id);
-                Assert.DoesNotContain(users, x => x.Email == "other@test.com");
-            });
+            var users = (
+                await response.ReadWithJson<SliceResponse<UserProjection>>(OutputHelper)
+            )!.Content;
+
+            Assert.Contains(users, x => x.Id == firstUser.Id);
+            Assert.Contains(users, x => x.Id == secondUser.Id);
+            Assert.DoesNotContain(users, x => x.Email == "other@test.com");
+        });
     }
 
     [Fact]
@@ -60,8 +54,9 @@ public sealed class GetUsersTests(
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var result = (await response.ReadWithJson<SliceResponse<UserProjection>>(
-            OutputHelper))!.Content;
+        var result = (
+            await response.ReadWithJson<SliceResponse<UserProjection>>(OutputHelper)
+        )!.Content;
 
         Assert.NotNull(result);
         Assert.Empty(result);

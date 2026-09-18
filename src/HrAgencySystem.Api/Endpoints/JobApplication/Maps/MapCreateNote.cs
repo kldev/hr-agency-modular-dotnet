@@ -11,21 +11,31 @@ internal static class MapCreateNote
     internal static void Map(RouteGroupBuilder group)
     {
         // /api/recruitment/job-applications/{applicationId}/{noteId}/note
-        group.MapPost("{applicationId:guid}/note", Handler)
+        group
+            .MapPost("{applicationId:guid}/note", Handler)
             .WithSummary("Add note")
             .WithName("Add job application note")
             .Produces<JobApplicationNoteAdded>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, Guid applicationId,
-        CreateNoteRequest request, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IMessageBus bus,
+        Guid applicationId,
+        CreateNoteRequest request,
+        CancellationToken ct
+    )
     {
-        var result =
-            await bus.InvokeAsync<JobApplicationNoteAdded>(
-                new CreateNote(applicationId, user.OrganizationId, request.Note, user.UserId), ct);
+        var result = await bus.InvokeAsync<JobApplicationNoteAdded>(
+            new CreateNote(applicationId, user.OrganizationId, request.Note, user.UserId),
+            ct
+        );
 
-        return TypedResults.Created($"/api/recruitment/job-applications/{applicationId}/notes", result);
+        return TypedResults.Created(
+            $"/api/recruitment/job-applications/{applicationId}/notes",
+            result
+        );
     }
 }
 

@@ -9,4 +9,4 @@ public sealed record InterviewStatusChanged(
     InterviewStatus NewStatus,
     UserSnapshot Author,
     DateTimeOffset OccurredAt
-    ) : IInterviewEvent;
+) : IInterviewEvent;

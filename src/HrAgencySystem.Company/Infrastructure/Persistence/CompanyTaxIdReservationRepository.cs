@@ -6,14 +6,18 @@ using Marten;
 
 namespace HrAgencySystem.Company.Infrastructure.Persistence;
 
-public sealed class CompanyTaxIdReservationRepository(
-    IDocumentSession session)
+public sealed class CompanyTaxIdReservationRepository(IDocumentSession session)
     : ICompanyTaxIdReservationRepository
 {
-    public async Task<bool> ExitsAsync(OrganizationId organizationId, TaxId taxId,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> ExitsAsync(
+        OrganizationId organizationId,
+        TaxId taxId,
+        CancellationToken cancellationToken = default
+    )
     {
-        return await session.Query<CompanyTaxIdReservation>().WithTaxId(organizationId, taxId)
+        return await session
+            .Query<CompanyTaxIdReservation>()
+            .WithTaxId(organizationId, taxId)
             .AnyAsync(cancellationToken);
     }
 
@@ -21,14 +25,16 @@ public sealed class CompanyTaxIdReservationRepository(
         OrganizationId organizationId,
         TaxId taxId,
         CompanyId companyId,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var reservation = new CompanyTaxIdReservation(
             Guid.NewGuid(),
             organizationId.Value,
             taxId.Value,
-            companyId.Value);
-        
+            companyId.Value
+        );
+
         session.Insert(reservation);
 
         return Task.CompletedTask;

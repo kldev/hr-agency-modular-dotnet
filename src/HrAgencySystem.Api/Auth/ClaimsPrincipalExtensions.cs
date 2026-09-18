@@ -6,8 +6,7 @@ namespace HrAgencySystem.Api.Auth;
 
 public static class ClaimsPrincipalExtensions
 {
-    public static AppUserAuthenticated GetAuthenticatedUser(
-        this ClaimsPrincipal principal)
+    public static AppUserAuthenticated GetAuthenticatedUser(this ClaimsPrincipal principal)
     {
         var id = principal.FindFirst(AppClaims.UserId)?.Value;
         var email = principal.FindFirst(AppClaims.Email)?.Value;
@@ -15,7 +14,9 @@ public static class ClaimsPrincipalExtensions
         var fullName = principal.FindFirst(AppClaims.FullName)?.Value;
 
         if (!Guid.TryParse(id, out var userId))
-            throw new InvalidOperationException("Authenticated user id claim is missing or invalid.");
+            throw new InvalidOperationException(
+                "Authenticated user id claim is missing or invalid."
+            );
 
         if (!Guid.TryParse(organizationId, out var orgId))
             throw new InvalidOperationException("Organization id claim is missing or invalid.");
@@ -28,7 +29,8 @@ public static class ClaimsPrincipalExtensions
             email,
             orgId,
             principal.GetOrganizationRole(),
-            fullName ?? "");
+            fullName ?? ""
+        );
     }
 
     public static OwnerAuthenticated GetOwner(this ClaimsPrincipal principal)
@@ -37,13 +39,14 @@ public static class ClaimsPrincipalExtensions
         var email = principal.FindFirst(AppClaims.Email)?.Value;
 
         if (!Guid.TryParse(id, out var userId))
-            throw new InvalidOperationException("Authenticated user id claim is missing or invalid.");
+            throw new InvalidOperationException(
+                "Authenticated user id claim is missing or invalid."
+            );
 
         if (string.IsNullOrWhiteSpace(email))
             throw new InvalidOperationException("Authenticated user email claim is missing.");
 
-        return new OwnerAuthenticated(userId,
-            email, principal.GetPlatformRole());
+        return new OwnerAuthenticated(userId, email, principal.GetPlatformRole());
     }
 
     private static OrganizationRole GetOrganizationRole(this ClaimsPrincipal principal)
@@ -51,19 +54,17 @@ public static class ClaimsPrincipalExtensions
         var role = principal.FindFirst(AppClaims.Role)?.Value;
 
         if (!Enum.TryParse<OrganizationRole>(role, ignoreCase: true, out var result))
-            throw new UnauthorizedAccessException(
-                $"Invalid organization role: '{role}'.");
+            throw new UnauthorizedAccessException($"Invalid organization role: '{role}'.");
 
         return result;
     }
-    
+
     private static PlatformRole GetPlatformRole(this ClaimsPrincipal principal)
     {
         var role = principal.FindFirst(AppClaims.Role)?.Value;
 
         if (!Enum.TryParse<PlatformRole>(role, ignoreCase: true, out var result))
-            throw new UnauthorizedAccessException(
-                $"Invalid platform role: '{role}'.");
+            throw new UnauthorizedAccessException($"Invalid platform role: '{role}'.");
 
         return result;
     }

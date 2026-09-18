@@ -12,15 +12,21 @@ internal static class MapApplyTo
     internal static void Map(RouteGroupBuilder group)
     {
         // POST /api/recruitment/job-posting/{jobPostId}/apply
-        group.MapPost("/{jobPostId:guid}/apply", Handler)
+        group
+            .MapPost("/{jobPostId:guid}/apply", Handler)
             .Produces<JobApplicationCreated>()
             .ProducesStandardErrors()
             .WithSummary("Apply to job post")
             .WithName("Apply to job post");
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, Guid jobPostId, ApplyToPostRequest request,
-        CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IMessageBus bus,
+        Guid jobPostId,
+        ApplyToPostRequest request,
+        CancellationToken ct
+    )
     {
         var result = await bus.InvokeAsync<JobApplicationCreated>(request.ToCommand(jobPostId), ct);
         return TypedResults.Ok(result);
@@ -29,15 +35,22 @@ internal static class MapApplyTo
 
 // ReSharper disable once ClassNeverInstantiated.Global
 internal sealed record ApplyToPostRequest(
-    string Email, 
-    string PhoneNumber, 
-    CandidateSource Source = CandidateSource.Direct, 
-    string FirstName = "", 
-    string LastName = "")
+    string Email,
+    string PhoneNumber,
+    CandidateSource Source = CandidateSource.Direct,
+    string FirstName = "",
+    string LastName = ""
+)
 {
     public ApplyToJobApplication ToCommand(Guid jobPostId)
     {
-        return new ApplyToJobApplication(jobPostId,  Email, PhoneNumber, Source, FirstName, LastName);
+        return new ApplyToJobApplication(
+            jobPostId,
+            Email,
+            PhoneNumber,
+            Source,
+            FirstName,
+            LastName
+        );
     }
 }
- 

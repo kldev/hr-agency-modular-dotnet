@@ -8,6 +8,7 @@ public sealed record CandidateUpdated(
     string Phone,
     string FirstName,
     string LastName,
-    string Note, 
+    string Note,
     UserSnapshot ModifiedBy,
-    DateTimeOffset ModifiedAt);
+    DateTimeOffset ModifiedAt
+);

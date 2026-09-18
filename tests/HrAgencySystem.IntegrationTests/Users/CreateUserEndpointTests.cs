@@ -11,9 +11,8 @@ namespace HrAgencySystem.IntegrationTests.Users;
 [Collection(IntegrationCollection.Name)]
 public sealed class CreateUserEndpointTests : BaseIntegrationTest
 {
-    public CreateUserEndpointTests(
-        IntegrationEnvironment env,
-        ITestOutputHelper outputHelper) : base(env, outputHelper)
+    public CreateUserEndpointTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)
+        : base(env, outputHelper)
     {
         Cleaner.CleanUserEmailReservation().Wait();
     }
@@ -23,20 +22,18 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
     {
         var organizationId = Guid.NewGuid();
         Client.WithOrganizationId(organizationId);
-        
+
         // Arrange
         var request = new CreateUserRequest(
-            
             Email: "user@test.com",
             FirstName: "John",
             LastName: "Doe",
             Role: OrganizationRoleApi.Interviewer,
-            Password: "Password123!");
+            Password: "Password123!"
+        );
 
         // Act
-        var response = await Client.PostAsJsonAsync(
-            "/api/users",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/users", request);
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -61,12 +58,11 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
             FirstName: "John",
             LastName: "Doe",
             Role: OrganizationRoleApi.HiringManager,
-            Password: "Password123!");
+            Password: "Password123!"
+        );
 
         // Act
-        var firstResponse = await Client.PostAsJsonAsync(
-            "/api/users",
-            request);
+        var firstResponse = await Client.PostAsJsonAsync("/api/users", request);
 
         var secondResponse = await Client.PostAsJsonAsync(
             "/api/users",
@@ -74,8 +70,9 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
             {
                 FirstName = "Jane",
                 LastName = "Smith",
-                Password = "AnotherPassword123!"
-            });
+                Password = "AnotherPassword123!",
+            }
+        );
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
@@ -88,31 +85,29 @@ public sealed class CreateUserEndpointTests : BaseIntegrationTest
         // Arrange
         var organizationIdA = Guid.NewGuid();
         var organizationIdB = Guid.NewGuid();
-        
+
         var firstRequest = new CreateUserRequest(
             Email: "user1@test.com",
             FirstName: "John",
             LastName: "Doe",
             Role: OrganizationRoleApi.Sales,
-            Password: "Password123!");
+            Password: "Password123!"
+        );
 
         var secondRequest = new CreateUserRequest(
             Email: "user2@test.com",
             FirstName: "Jane",
             LastName: "Smith",
             Role: OrganizationRoleApi.Sales,
-            Password: "Password123!");
+            Password: "Password123!"
+        );
 
         // Act
         Client.WithOrganizationId(organizationIdA);
-        var firstResponse = await Client.PostAsJsonAsync(
-            "/api/users",
-            firstRequest);
+        var firstResponse = await Client.PostAsJsonAsync("/api/users", firstRequest);
 
         Client.WithOrganizationId(organizationIdB);
-        var secondResponse = await Client.PostAsJsonAsync(
-            "/api/users",
-            secondRequest);
+        var secondResponse = await Client.PostAsJsonAsync("/api/users", secondRequest);
 
         // Assert
         firstResponse.EnsureSuccessStatusCode();

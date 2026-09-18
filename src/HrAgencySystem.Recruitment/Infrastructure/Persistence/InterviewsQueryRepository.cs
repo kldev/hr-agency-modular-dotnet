@@ -7,25 +7,40 @@ namespace HrAgencySystem.Recruitment.Infrastructure.Persistence;
 
 public class InterviewsQueryRepository(IQuerySession session) : IInterviewsQueryRepository
 {
-    public async Task<SliceResponse<InterviewProjection>> GetSlice(Guid organizationId, InterviewsQuery query, CancellationToken ct)
+    public async Task<SliceResponse<InterviewProjection>> GetSlice(
+        Guid organizationId,
+        InterviewsQuery query,
+        CancellationToken ct
+    )
     {
-        return await session.Query<InterviewProjection>()
+        return await session
+            .Query<InterviewProjection>()
             .WithQuery(organizationId, query)
-            .OrderByDescending(z=>z.ScheduleAt)
+            .OrderByDescending(z => z.ScheduleAt)
             .ToSlice(query, ct);
     }
 
-    public async Task<InterviewProjection?> Get(Guid organizationId, Guid interviewId, CancellationToken ct)
+    public async Task<InterviewProjection?> Get(
+        Guid organizationId,
+        Guid interviewId,
+        CancellationToken ct
+    )
     {
-        return await session.Query<InterviewProjection>()
+        return await session
+            .Query<InterviewProjection>()
             .WithOrganizationId(organizationId)
-            .WithInterviewId(interviewId).SingleOrDefaultAsync(ct);
+            .WithInterviewId(interviewId)
+            .SingleOrDefaultAsync(ct);
     }
 
-    public async Task<IReadOnlyList<InterviewProjection>> GetRange(Guid organizationId, InterviewsQuery query,
-        CancellationToken ct)
+    public async Task<IReadOnlyList<InterviewProjection>> GetRange(
+        Guid organizationId,
+        InterviewsQuery query,
+        CancellationToken ct
+    )
     {
-        return await session.Query<InterviewProjection>()
+        return await session
+            .Query<InterviewProjection>()
             .WithQuery(organizationId, query)
             .OrderByDescending(z => z.ScheduleAt)
             .ToListAsync(ct);

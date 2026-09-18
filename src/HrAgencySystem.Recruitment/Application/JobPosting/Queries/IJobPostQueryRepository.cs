@@ -8,20 +8,33 @@ namespace HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 
 public interface IJobPostQueryRepository
 {
-    Task<SliceResponse<JobPostResponse>> GetJobPosts(Guid organizationId, JobPostQuery query, CancellationToken ct);
+    Task<SliceResponse<JobPostResponse>> GetJobPosts(
+        Guid organizationId,
+        JobPostQuery query,
+        CancellationToken ct
+    );
     Task<JobPostInfo> GetJobPostInfo(Guid jobPostId, CancellationToken ct);
-    Task<JobPostProjection?>  GetJobPost(Guid organizationId, Guid jobPostId, CancellationToken ct);
-    Task<JobPostProjection?>  GetJobPost(Guid organizationId, string postSlug, CancellationToken ct);
+    Task<JobPostProjection?> GetJobPost(Guid organizationId, Guid jobPostId, CancellationToken ct);
+    Task<JobPostProjection?> GetJobPost(Guid organizationId, string postSlug, CancellationToken ct);
 }
 
-public sealed record JobPostInfo(Guid Id, Guid OrganizationId, Guid CompanyId, string JobTitle, JobPostStatus Status);
+public sealed record JobPostInfo(
+    Guid Id,
+    Guid OrganizationId,
+    Guid CompanyId,
+    string JobTitle,
+    JobPostStatus Status
+);
 
-public sealed record JobPostQuery(string Search, 
-    Guid? CompanyId, 
-    Guid? RecruiterId, 
-    IReadOnlyList<JobPostStatus> Statuses, 
+public sealed record JobPostQuery(
+    string Search,
+    Guid? CompanyId,
+    Guid? RecruiterId,
+    IReadOnlyList<JobPostStatus> Statuses,
     IReadOnlyList<string> Languages,
-int Page, int PageSize) : IPagedQuery;
+    int Page,
+    int PageSize
+) : IPagedQuery;
 
 public sealed record JobPostResponse(
     // ReSharper disable once NotAccessedPositionalProperty.Global
@@ -85,8 +98,7 @@ public sealed record JobPostResponse(
     DateTimeOffset UpdatedAt
 )
 {
-    public static JobPostResponse From(
-        JobPostProjection projection)
+    public static JobPostResponse From(JobPostProjection projection)
     {
         return new JobPostResponse(
             projection.Id,
@@ -119,6 +131,6 @@ public sealed record JobPostResponse(
             projection.Posts,
             projection.CreatedAt,
             projection.CreatedAt
-         );
+        );
     }
 }

@@ -9,24 +9,22 @@ namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 [Collection(IntegrationCollection.Name)]
 public sealed class UpdateJobDescriptionTests(
     IntegrationEnvironment env,
-    ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(env, outputHelper)
+    ITestOutputHelper outputHelper
+) : BaseIntegrationTest(env, outputHelper)
 {
     [Fact]
     public async Task ShouldUpdateJobDescription()
     {
         // Arrange
         var organizationId = Guid.NewGuid();
-        JobDescriptionClient
-            .WithOrganizationId(organizationId);
-        
+        JobDescriptionClient.WithOrganizationId(organizationId);
+
         Client.WithOrganizationId(organizationId);
 
         var createRequest = JobDescriptionTestData.CreateRequest();
 
-        var created = await JobDescriptionClient.CreateAsync(
-            createRequest);
-        
+        var created = await JobDescriptionClient.CreateAsync(createRequest);
+
         Assert.NotNull(created);
 
         var updateRequest = JobDescriptionTestData.UpdateRequest();
@@ -34,7 +32,8 @@ public sealed class UpdateJobDescriptionTests(
         // Act
         var response = await Client.PutAsJsonAsync(
             $"/api/job-description/{created.JobDescriptionId}",
-            updateRequest);
+            updateRequest
+        );
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -47,7 +46,6 @@ public sealed class UpdateJobDescriptionTests(
         Assert.Equal(result.WorkMode, updateRequest.WorkMode);
         Assert.Equal(result.Summary, updateRequest.Summary);
         Assert.Equal(result.Description, updateRequest.Description);
-
 
         await Eventually.AssertAsync(async () =>
         {

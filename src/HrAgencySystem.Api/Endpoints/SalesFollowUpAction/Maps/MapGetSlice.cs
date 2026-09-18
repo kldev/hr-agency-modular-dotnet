@@ -11,7 +11,8 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/follow-up
-        group.MapGet("", Handler)
+        group
+            .MapGet("", Handler)
             .WithSummary("Get follow up actions")
             .WithName("Get follow up actions")
             .Produces<SliceResponse<FollowUpAction>>()
@@ -25,7 +26,8 @@ internal static class MapGetSlice
         Guid? companyId,
         int page = 1,
         int pageSize = 100,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
         var query = new FollowUpActionQuery(opportunityId, companyId, page, pageSize);
         var result = await repository.GetSlicesAsync(user.OrganizationId, query, ct);

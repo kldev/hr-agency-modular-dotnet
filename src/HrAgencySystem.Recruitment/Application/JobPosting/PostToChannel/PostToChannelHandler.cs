@@ -12,10 +12,12 @@ public static class PostToChannelHandler
 {
     [AggregateHandler]
     public static async Task<(JobPostedToChannel, Wolverine.Marten.Events)> Handle(
-        PostToChannel command, JobPost aggregate,
+        PostToChannel command,
+        JobPost aggregate,
         IRecruitmentService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         await service.ValidateOrganization(command.OrganizationId, ct);
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
@@ -25,19 +27,22 @@ public static class PostToChannelHandler
 
         if (JobPostStatusChangePolicy.IsFinal(aggregate.Status))
             throw new BusinessRuleException(
-                "Job post in final status. Change status to published before posting to channel.");
+                "Job post in final status. Change status to published before posting to channel."
+            );
 
-        if (!IsPostToChannelChangingStatusToPublished(aggregate.Status)) return (@event, [.. events]);
-        
+        if (!IsPostToChannelChangingStatusToPublished(aggregate.Status))
+            return (@event, [.. events]);
+
         var jobPostStatusChanged = new JobPostStatusChanged(
-            aggregate.Id.Value, 
+            aggregate.Id.Value,
             aggregate.CompanyId.Value,
-            aggregate.OrganizationId.Value, 
-            aggregate.Status, 
-            JobPostStatus.Published, 
-            clock.UtcNow, 
-            user);
-        
+            aggregate.OrganizationId.Value,
+            aggregate.Status,
+            JobPostStatus.Published,
+            clock.UtcNow,
+            user
+        );
+
         events.Add(jobPostStatusChanged);
 
         return (@event, [.. events]);
@@ -45,8 +50,7 @@ public static class PostToChannelHandler
 
     private static bool IsPostToChannelChangingStatusToPublished(JobPostStatus currentStatus)
     {
-        return currentStatus != JobPostStatus.Published &&
-               JobPostStatusChangePolicy.Allow(currentStatus, JobPostStatus.Published);
+        return currentStatus != JobPostStatus.Published
+            && JobPostStatusChangePolicy.Allow(currentStatus, JobPostStatus.Published);
     }
-    
 }

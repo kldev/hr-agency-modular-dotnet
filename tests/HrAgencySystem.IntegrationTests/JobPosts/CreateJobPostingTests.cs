@@ -7,24 +7,19 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.JobPosts;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class CreateJobPostingTests(
-    IntegrationEnvironment env,
-    ITestOutputHelper output)
+public sealed class CreateJobPostingTests(IntegrationEnvironment env, ITestOutputHelper output)
     : BaseIntegrationTest(env, output)
 {
     [Fact]
     public async Task ShouldCreateJobPosting()
     {
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
+        Client.WithOrganizationId(Guid.NewGuid());
 
         var request = JobPostingTestData.CreateRequest();
 
         // Act
-        var response = await Client.PostAsJsonAsync(
-            "/api/recruitment/job-posting",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/recruitment/job-posting", request);
 
         // Assert
         var result = await response.ReadWithJson<JobPostCreated>(OutputHelper);
@@ -40,18 +35,15 @@ public sealed class CreateJobPostingTests(
     public async Task ShouldReturnBadRequestWhenRequestIsInvalid()
     {
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
+        Client.WithOrganizationId(Guid.NewGuid());
 
         var request = JobPostingTestData.CreateRequest() with
         {
-            Title = JobPostingTestData.InvalidTitle
+            Title = JobPostingTestData.InvalidTitle,
         };
 
         // Act
-        var response = await Client.PostAsJsonAsync(
-            "/api/recruitment/job-posting",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/recruitment/job-posting", request);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

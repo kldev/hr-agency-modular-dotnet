@@ -8,4 +8,5 @@ public sealed record CreateActivity(
     Guid SalesOpportunityId,
     SalesActivityType ActivityType,
     string Note,
-    Guid CreatedBy):ICreateCommand;
+    Guid CreatedBy
+) : ICreateCommand;

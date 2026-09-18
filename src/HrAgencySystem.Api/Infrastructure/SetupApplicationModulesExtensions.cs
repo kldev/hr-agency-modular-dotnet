@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Company;
-using HrAgencySystem.Feeds;
 using HrAgencySystem.Company.Infrastructure;
+using HrAgencySystem.Feeds;
 using HrAgencySystem.Files;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
@@ -21,8 +21,9 @@ public static class SetupApplicationModulesExtensions
         {
             services.AddOptions<ApplicationConfig>();
             services.Configure<ApplicationConfig>(
-                configuration.GetSection(ApplicationConfig.Section));
-            
+                configuration.GetSection(ApplicationConfig.Section)
+            );
+
             services.ConfigureJson();
             services.AddTransient<IClock, SystemClock>();
             services.AddCompanyModule();

@@ -10,12 +10,14 @@ namespace HrAgencySystem.Identity.Application.Handlers;
 
 public static class LoginOwnerHandler
 {
-    public static async Task<LoginOwnerResult> Handle(LoginOwner command,
+    public static async Task<LoginOwnerResult> Handle(
+        LoginOwner command,
         ILogger logger,
         IPasswordHasher hasher,
         IAccountRepository repository,
         IJwtTokenService tokenService,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var email = Email.Create(command.Email);
         var reservation = await FindEmailReservation(repository, ct, email);
@@ -29,7 +31,11 @@ public static class LoginOwnerHandler
         return new LoginOwnerResult(token);
     }
 
-    private static void ValidatePassword(LoginOwner command, IPasswordHasher hasher, OwnerEmailReservation reservation)
+    private static void ValidatePassword(
+        LoginOwner command,
+        IPasswordHasher hasher,
+        OwnerEmailReservation reservation
+    )
     {
         var match = hasher.Matches(command.Password, reservation.PasswordHash);
 
@@ -37,7 +43,11 @@ public static class LoginOwnerHandler
             throw new AuthorizationException("Invalid login or password");
     }
 
-    private static async Task<OwnerEmailReservation> FindEmailReservation(IAccountRepository repository, CancellationToken ct, Email email)
+    private static async Task<OwnerEmailReservation> FindEmailReservation(
+        IAccountRepository repository,
+        CancellationToken ct,
+        Email email
+    )
     {
         var reservation = await repository.FindOwnerByEmail(email, ct);
 

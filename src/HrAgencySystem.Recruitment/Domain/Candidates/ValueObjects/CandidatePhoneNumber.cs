@@ -6,8 +6,7 @@ public sealed record CandidatePhoneNumber
 {
     public const int MaxLength = 40;
 
-    public const string MaxLengthMessage =
-        "Phone number cannot exceed 40 characters.";
+    public const string MaxLengthMessage = "Phone number cannot exceed 40 characters.";
 
     private CandidatePhoneNumber(string value)
     {
@@ -20,13 +19,10 @@ public sealed record CandidatePhoneNumber
     {
         var (phone, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : phone!;
+        return error is not null ? throw new InValidValueException(error) : phone!;
     }
 
-    public static (CandidatePhoneNumber? summary, string? error) TryCreate(
-        string? value)
+    public static (CandidatePhoneNumber? summary, string? error) TryCreate(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (new CandidatePhoneNumber(string.Empty), null);

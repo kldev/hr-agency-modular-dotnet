@@ -20,7 +20,8 @@ public sealed class SalesService(
     IQueryFollowUpAction followUpActionQuery,
     IDocumentSession session,
     IClock clock,
-    IOrganizationChecker checker) : ISalesService
+    IOrganizationChecker checker
+) : ISalesService
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {
@@ -41,13 +42,21 @@ public sealed class SalesService(
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
     }
 
-    public async Task<OpportunitySnapshot> GetOpportunityAsync(Guid organizationId, Guid opportunityId, CancellationToken ct)
+    public async Task<OpportunitySnapshot> GetOpportunityAsync(
+        Guid organizationId,
+        Guid opportunityId,
+        CancellationToken ct
+    )
     {
-        var opportunity = await salesOpportunitySnapshotRepository.GetSnapshot(opportunityId, organizationId,ct);
-        
+        var opportunity = await salesOpportunitySnapshotRepository.GetSnapshot(
+            opportunityId,
+            organizationId,
+            ct
+        );
+
         return opportunity ?? throw new NotFoundException("Sales opportunity", opportunityId);
     }
-    
+
     public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
     {
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
@@ -65,7 +74,8 @@ public sealed class SalesService(
         string content,
         DateTimeOffset followDateTime,
         UserSnapshot user,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var text = CreateContent(content);
 
@@ -80,7 +90,8 @@ public sealed class SalesService(
             followDateTime,
             clock.UtcNow,
             company,
-            user);
+            user
+        );
 
         var @event = new FollowUpActionCreated(
             document.Id,
@@ -89,7 +100,8 @@ public sealed class SalesService(
             document.Content,
             document.FollowDateTime,
             document.CreatedAt,
-            user);
+            user
+        );
 
         session.Events.Append(document.OpportunityId, @event);
         session.Insert(document);
@@ -105,12 +117,14 @@ public sealed class SalesService(
         string content,
         DateTimeOffset followDateTime,
         UserSnapshot user,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var text = CreateContent(content);
 
-        var current = await followUpActionQuery.GetByIdAsync(organizationId.Value, followUpActionId.Value, ct)
-                      ?? throw new NotFoundException("Follow up action", followUpActionId.Value);
+        var current =
+            await followUpActionQuery.GetByIdAsync(organizationId.Value, followUpActionId.Value, ct)
+            ?? throw new NotFoundException("Follow up action", followUpActionId.Value);
 
         var document = current.Update(text, followDateTime);
 
@@ -121,7 +135,8 @@ public sealed class SalesService(
             document.Content,
             document.FollowDateTime,
             clock.UtcNow,
-            user);
+            user
+        );
 
         session.Events.Append(document.OpportunityId, @event);
         session.Store(document);

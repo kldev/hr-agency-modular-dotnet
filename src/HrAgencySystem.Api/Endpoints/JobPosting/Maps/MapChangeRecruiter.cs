@@ -12,18 +12,31 @@ internal static class MapChangeRecruiter
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/recruitment/job-posting/{jobPostId:guid}/change-recruiter
-        group.MapPut("/{jobPostId:guid}/change-recruiter", Handler)
+        group
+            .MapPut("/{jobPostId:guid}/change-recruiter", Handler)
             .WithSummary("Change recruiter")
             .WithName("Change job post responsible recruiter")
             .Produces<JobPostRecruiterChanged>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobPostId, AssignRecruiterRequest request,
-        IMessageBus bus, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        Guid jobPostId,
+        AssignRecruiterRequest request,
+        IMessageBus bus,
+        CancellationToken ct
+    )
     {
         var result = await bus.InvokeAsync<JobPostRecruiterChanged>(
-            new ChangeJobPostRecruiter(jobPostId,  user.OrganizationId, request.RecruiterId, user.UserId), ct);
+            new ChangeJobPostRecruiter(
+                jobPostId,
+                user.OrganizationId,
+                request.RecruiterId,
+                user.UserId
+            ),
+            ct
+        );
 
         return TypedResults.Ok(result);
     }

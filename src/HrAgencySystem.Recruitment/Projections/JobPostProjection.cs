@@ -41,12 +41,10 @@ public sealed record JobPostProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset UpdatedAt,
     string PostingSlug,
-    string SearchText)
+    string SearchText
+)
 {
-
-    
-    public static JobPostProjection Create(
-        JobPostCreated @event)
+    public static JobPostProjection Create(JobPostCreated @event)
     {
         return new JobPostProjection(
             @event.JobPostId,
@@ -79,18 +77,19 @@ public sealed record JobPostProjection(
             @event.CreatedAt,
             @event.CreatedAt,
             @event.OrgSlug + "/" + @event.PostingSlug,
-            string.Join(",",@event.Responsibilities)
-            + string.Join(",",@event.Requirements)
-            + string.Join(",",@event.Skills));
+            string.Join(",", @event.Responsibilities)
+                + string.Join(",", @event.Requirements)
+                + string.Join(",", @event.Skills)
+        );
     }
 
-    public JobPostProjection Apply(
-        JobPostUpdated @event)
+    public JobPostProjection Apply(JobPostUpdated @event)
     {
-        var searchText = string.Join(",", @event.Responsibilities)
-                         + string.Join(",", @event.Requirements)
-                         + string.Join(",", @event.Skills);
-        
+        var searchText =
+            string.Join(",", @event.Responsibilities)
+            + string.Join(",", @event.Requirements)
+            + string.Join(",", @event.Skills);
+
         return this with
         {
             Title = @event.Title,
@@ -109,19 +108,13 @@ public sealed record JobPostProjection(
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author,
-            SearchText = searchText
+            SearchText = searchText,
         };
     }
 
-    public JobPostProjection Apply(
-        JobPostedToChannel @event)
+    public JobPostProjection Apply(JobPostedToChannel @event)
     {
-        
-        var posts = Posts
-            .Append(new ChannelPost(
-                @event.ChannelType,
-                @event.OccurredAt))
-            .ToArray();
+        var posts = Posts.Append(new ChannelPost(@event.ChannelType, @event.OccurredAt)).ToArray();
 
         return ApplyCommon(this, @event) with
         {
@@ -129,35 +122,22 @@ public sealed record JobPostProjection(
         };
     }
 
-    public JobPostProjection Apply(
-        JobPostPublished @event)
+    public JobPostProjection Apply(JobPostPublished @event)
     {
-        return ApplyCommon(this, @event) with
-        {
-            Status = JobPostStatus.Published,
-        };
+        return ApplyCommon(this, @event) with { Status = JobPostStatus.Published };
     }
 
-    public JobPostProjection Apply(
-        JobPostClosed @event)
+    public JobPostProjection Apply(JobPostClosed @event)
     {
-        return ApplyCommon(this,@event) with
-        {
-            Status = JobPostStatus.Closed,
-        };
+        return ApplyCommon(this, @event) with { Status = JobPostStatus.Closed };
     }
 
-    public JobPostProjection Apply(
-        JobPostArchived @event)
+    public JobPostProjection Apply(JobPostArchived @event)
     {
-        return ApplyCommon(this, @event) with
-        {
-            Status = JobPostStatus.Archived,
-        };
+        return ApplyCommon(this, @event) with { Status = JobPostStatus.Archived };
     }
 
-    public JobPostProjection Apply(
-        JobPostRecruiterChanged @event)
+    public JobPostProjection Apply(JobPostRecruiterChanged @event)
     {
         return ApplyCommon(this, @event) with
         {
@@ -165,14 +145,10 @@ public sealed record JobPostProjection(
             Recruiter = @event.Recruiter,
         };
     }
-    
-    public JobPostProjection Apply(
-        JobPostStatusChanged @event)
+
+    public JobPostProjection Apply(JobPostStatusChanged @event)
     {
-        return ApplyCommon(this, @event) with
-        {
-            Status = @event.NewStatus,
-        };
+        return ApplyCommon(this, @event) with { Status = @event.NewStatus };
     }
 
     private JobPostProjection ApplyCommon(JobPostProjection post, IJobPostEvent @event)
@@ -181,7 +157,7 @@ public sealed record JobPostProjection(
         {
             UpdatedAt = @event.OccurredAt,
             ModifiedById = @event.Author.Id,
-            ModifiedBy = @event.Author
+            ModifiedBy = @event.Author,
         };
     }
 }

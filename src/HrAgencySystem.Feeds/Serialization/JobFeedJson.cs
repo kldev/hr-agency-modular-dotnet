@@ -14,7 +14,7 @@ public sealed class JobJson
 {
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
-    
+
     [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
 
@@ -90,7 +90,7 @@ public sealed class JobJson
 
             CreatedAt = row.CreatedAt,
 
-            PostingSlug = feedUrl + "/" + row.PostingSlug
+            PostingSlug = feedUrl + "/" + row.PostingSlug,
         };
     }
 }

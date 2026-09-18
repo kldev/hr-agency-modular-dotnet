@@ -11,29 +11,30 @@ namespace HrAgencySystem.Api.Endpoints.Company.Maps;
 
 internal static class MapCreate
 {
-    internal static void Map(
-        RouteGroupBuilder endpoints)
+    internal static void Map(RouteGroupBuilder endpoints)
     {
         // POST /api/companies
-        endpoints.MapPost("", Handler)
+        endpoints
+            .MapPost("", Handler)
             .WithSummary("Create company")
             .WithName("Create company")
             .ProducesStandardErrors()
             .Produces<CompanyCreated>();
     }
-    
-    private static async Task<IResult> Handler(AppUserAuthenticated user, CreateCompanyRequest request,
-        IMessageBus bus,
-        CancellationToken ct)
-    {
-        var result =
-            await bus.InvokeAsync<CompanyCreated>(
-                request.ToCommand(user.GetOrganization, user.UserId),
-                ct);
 
-        return TypedResults.Created(
-            $"/api/companies/{result.CompanyId}",
-            result);
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        CreateCompanyRequest request,
+        IMessageBus bus,
+        CancellationToken ct
+    )
+    {
+        var result = await bus.InvokeAsync<CompanyCreated>(
+            request.ToCommand(user.GetOrganization, user.UserId),
+            ct
+        );
+
+        return TypedResults.Created($"/api/companies/{result.CompanyId}", result);
     }
 
     internal record CreateCompanyRequest(
@@ -43,11 +44,22 @@ internal static class MapCreate
         string RegistrationNumber,
         string Website,
         Industry Industry,
-        ContactPerson? Contact = null)
+        ContactPerson? Contact = null
+    )
     {
-        public CreateCompany ToCommand(OrganizationId  organizationId, Guid createdBy)
+        public CreateCompany ToCommand(OrganizationId organizationId, Guid createdBy)
         {
-            return new CreateCompany(organizationId.Value, Name, CountryCode, TaxId, RegistrationNumber, createdBy, Industry, Website, Contact);
+            return new CreateCompany(
+                organizationId.Value,
+                Name,
+                CountryCode,
+                TaxId,
+                RegistrationNumber,
+                createdBy,
+                Industry,
+                Website,
+                Contact
+            );
         }
     }
 }

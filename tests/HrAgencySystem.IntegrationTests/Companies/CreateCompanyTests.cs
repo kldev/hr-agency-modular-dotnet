@@ -31,19 +31,23 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
         string registrationNumber = "KRS-200"
     )
     {
-        return new MapCreate.CreateCompanyRequest(name, countryCode, taxId,
-            registrationNumber, "", Industry.Other);
+        return new MapCreate.CreateCompanyRequest(
+            name,
+            countryCode,
+            taxId,
+            registrationNumber,
+            "",
+            Industry.Other
+        );
     }
-
 
     [Fact]
     public async Task Post_valid_company_creates_company()
     {
         Guid organizationId = Guid.NewGuid();
         Client.WithOrganizationId(organizationId);
-        
-        var request =
-            CreateCompanyRequest();
+
+        var request = CreateCompanyRequest();
 
         var response = await Client.PostAsJsonAsync("/api/companies", request);
 
@@ -60,8 +64,7 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     [Fact]
     public async Task Post_company_without_name_returns_bad_request()
     {
-        var request =
-            CreateCompanyRequest( " ");
+        var request = CreateCompanyRequest(" ");
 
         var response = await Client.PostAsJsonAsync("/api/companies", request);
 
@@ -77,8 +80,7 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
     [Fact]
     public async Task Post_company_with_invalid_fields_returns_all_validation_errors()
     {
-        var request =
-            CreateCompanyRequest(" ", "wrong country", " ", "");
+        var request = CreateCompanyRequest(" ", "wrong country", " ", "");
 
         var response = await Client.PostAsJsonAsync("/api/companies", request);
 
@@ -90,37 +92,28 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
 
         Assert.Equal(CompanyName.RequiredMessage, result.ValidationErrors.First());
 
-        Assert.Contains(
-            CompanyName.RequiredMessage,
-            result.ValidationErrors);
+        Assert.Contains(CompanyName.RequiredMessage, result.ValidationErrors);
 
-        Assert.Contains(
-            CountryCode.InvalidFormatMessage,
-            result.ValidationErrors);
+        Assert.Contains(CountryCode.InvalidFormatMessage, result.ValidationErrors);
 
-        Assert.Contains(
-            TaxId.RequiredMessage,
-            result.ValidationErrors);
+        Assert.Contains(TaxId.RequiredMessage, result.ValidationErrors);
 
-        Assert.Contains(
-            RegistrationNumber.RequiredMessage,
-            result.ValidationErrors);
+        Assert.Contains(RegistrationNumber.RequiredMessage, result.ValidationErrors);
     }
 
     [Fact]
     public async Task Post_company_with_duplicate_tax_id_returns_bad_request()
     {
-        var request =
-            CreateCompanyRequest();
-        
-       var responseFirst = await Client.PostAsJsonAsync("/api/companies", request);
-        
+        var request = CreateCompanyRequest();
+
+        var responseFirst = await Client.PostAsJsonAsync("/api/companies", request);
+
         OutputHelper.WriteLine(await responseFirst.Content.ReadAsStringAsync());
-        
+
         Assert.Equal(HttpStatusCode.Created, responseFirst.StatusCode);
-        
+
         var response = await Client.PostAsJsonAsync("/api/companies", request);
-        
+
         var result = await response.ReadWithJson<ProblemDetails>(OutputHelper);
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -137,7 +130,7 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
 
         Client.WithOrganizationId(organizationIdA);
         var responseA = await Client.PostAsJsonAsync("/api/companies", CreateCompanyRequest());
-        
+
         Client.WithOrganizationId(organizationIdB);
         var responseB = await Client.PostAsJsonAsync("/api/companies", CreateCompanyRequest());
 
@@ -145,39 +138,36 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
         Assert.Equal(HttpStatusCode.Created, responseB.StatusCode);
     }
 
-
     [Fact]
     public async Task Post_concurrent_calls_with_same_tax_id_allow_only_one_company()
     {
         var organizationId = Guid.NewGuid();
         Client.WithOrganizationId(organizationId);
-        
-        var request =
-            CreateCompanyRequest();
+
+        var request = CreateCompanyRequest();
 
         var tasks = new[]
         {
             Client.PostAsJsonAsync("/api/companies", request),
-            Client.PostAsJsonAsync("/api/companies", request)
+            Client.PostAsJsonAsync("/api/companies", request),
         };
 
         var responses = await Task.WhenAll(tasks);
 
         Assert.Equal(2, responses.Length);
 
-        Assert.Contains(
-            responses,
-            response => response.IsSuccessStatusCode);
+        Assert.Contains(responses, response => response.IsSuccessStatusCode);
 
         Assert.Contains(
             responses,
-            response => response.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.BadRequest);
+            response => response.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.BadRequest
+        );
 
         var conflict = responses.Single(x =>
-            x.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.BadRequest);
+            x.StatusCode is HttpStatusCode.Conflict or HttpStatusCode.BadRequest
+        );
 
-        var problem = await conflict.Content
-            .ReadFromJsonAsync<ProblemDetails>();
+        var problem = await conflict.Content.ReadFromJsonAsync<ProblemDetails>();
 
         Assert.NotNull(problem);
 
@@ -185,15 +175,11 @@ public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper ou
         {
             case nameof(DocumentAlreadyExistsException):
                 OutputHelper.WriteLine("Catch database unique constrain");
-                Assert.Equal(
-                    nameof(DocumentAlreadyExistsException),
-                    problem.Type);
+                Assert.Equal(nameof(DocumentAlreadyExistsException), problem.Type);
                 break;
             case nameof(BusinessRuleException):
                 OutputHelper.WriteLine("Catch with exists query");
-                Assert.Equal(
-                    nameof(BusinessRuleException),
-                    problem.Type);
+                Assert.Equal(nameof(BusinessRuleException), problem.Type);
                 break;
         }
     }

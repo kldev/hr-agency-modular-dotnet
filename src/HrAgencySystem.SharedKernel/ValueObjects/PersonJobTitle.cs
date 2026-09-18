@@ -5,10 +5,9 @@ namespace HrAgencySystem.SharedKernel.ValueObjects;
 public sealed record PersonJobTitle
 {
     private const int MaxLength = 200;
-    
-    private const string MaxLengthMessage =
-        "Job title cannot exceed 200 characters.";
-    
+
+    private const string MaxLengthMessage = "Job title cannot exceed 200 characters.";
+
     private const string RequiredMessage = "Job title is required.";
 
     private PersonJobTitle(string value)
@@ -22,17 +21,16 @@ public sealed record PersonJobTitle
     {
         var (jobTitle, error) = TryCreate(value, isRequired);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : jobTitle!;
+        return error is not null ? throw new InValidValueException(error) : jobTitle!;
     }
 
     public static (PersonJobTitle? jobTitle, string? error) TryCreate(
-        string? value, bool isRequired = false)
+        string? value,
+        bool isRequired = false
+    )
     {
         if (string.IsNullOrWhiteSpace(value))
-            return isRequired ? (null, RequiredMessage) :
-                (new PersonJobTitle(string.Empty), null);
+            return isRequired ? (null, RequiredMessage) : (new PersonJobTitle(string.Empty), null);
 
         var normalized = value.Trim();
 

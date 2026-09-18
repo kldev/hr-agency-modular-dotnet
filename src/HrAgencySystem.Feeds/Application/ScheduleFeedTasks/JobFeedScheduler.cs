@@ -8,13 +8,13 @@ namespace HrAgencySystem.Feeds.Application.ScheduleFeedTasks;
 internal sealed class JobFeedScheduler(
     IQueryOrganizationRepository queryOrganizationRepository,
     IJobFeedTaskRepository repository,
-    IClock clock) : IJobFeedScheduler
+    IClock clock
+) : IJobFeedScheduler
 {
     public async Task ScheduleAsync(CancellationToken ct)
     {
         var organizations = await queryOrganizationRepository.GetActiveOrganizationsAsync(ct);
-        var saveBatch =
-            organizations.Select(o => JobFeedTask.Create(o.Id, clock.UtcNow));
+        var saveBatch = organizations.Select(o => JobFeedTask.Create(o.Id, clock.UtcNow));
 
         await repository.BatchSave([.. saveBatch], ct);
     }

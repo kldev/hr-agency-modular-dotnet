@@ -5,8 +5,8 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Interviews;
 
 using System.Net.Http.Json;
-using Infrastructure;
 using HrAgencySystem.Recruitment.Domain.Interviews;
+using Infrastructure;
 using Recruitment.Projections;
 using SharedKernel.Web;
 
@@ -18,11 +18,11 @@ public sealed class InterviewTestClient(HttpClient client, ITestOutputHelper out
         DateTime scheduledAt,
         Guid interviewerId,
         Guid createdByUserId,
-        string scheduledTimezone = "Europe/Warsaw")
+        string scheduledTimezone = "Europe/Warsaw"
+    )
     {
         client.WithUserId(createdByUserId);
         client.WithOrganizationId(organizationId);
-
 
         var command = new ScheduleInterviewRequest(
             jobApplicationId,
@@ -31,26 +31,22 @@ public sealed class InterviewTestClient(HttpClient client, ITestOutputHelper out
             InterviewType.Technical,
             "",
             interviewerId,
-            scheduledTimezone);
+            scheduledTimezone
+        );
 
-        var response = await client.PostAsJsonAsync(
-            "/api/interviews/schedule",
-            command);
+        var response = await client.PostAsJsonAsync("/api/interviews/schedule", command);
 
         var result = await response.ReadWithJson<InterviewCreated>();
-        
+
         response.EnsureSuccessStatusCode();
         return result!;
     }
 
-    public async Task<InterviewProjection?> GetAsync(
-        Guid organizationId,
-        Guid interviewId)
+    public async Task<InterviewProjection?> GetAsync(Guid organizationId, Guid interviewId)
     {
         client.WithOrganizationId(organizationId);
 
-        var response = await client.GetAsync(
-            $"/api/interviews/{interviewId}");
+        var response = await client.GetAsync($"/api/interviews/{interviewId}");
 
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             return null;
@@ -71,7 +67,8 @@ public sealed class InterviewTestClient(HttpClient client, ITestOutputHelper out
         DateOnly? toDate = null,
         string timezone = "Europe/Warsaw",
         int page = 1,
-        int pageSize = 100)
+        int pageSize = 100
+    )
     {
         client.WithOrganizationId(organizationId);
 
@@ -104,16 +101,14 @@ public sealed class InterviewTestClient(HttpClient client, ITestOutputHelper out
         query.Add($"page={page}");
         query.Add($"pageSize={pageSize}");
 
-        var url = query.Count == 0
-            ? "/api/interviews"
-            : $"/api/interviews?{string.Join("&", query)}";
+        var url =
+            query.Count == 0 ? "/api/interviews" : $"/api/interviews?{string.Join("&", query)}";
 
         var response = await client.GetAsync(url);
 
         response.EnsureSuccessStatusCode();
 
-        var result =
-            await response.ReadWithJson<SliceResponse<InterviewProjection>>(output);
+        var result = await response.ReadWithJson<SliceResponse<InterviewProjection>>(output);
 
         Assert.NotNull(result);
 

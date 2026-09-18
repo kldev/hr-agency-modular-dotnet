@@ -22,7 +22,12 @@ public static class ChangeInterviewFormatHandler
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 
         var @event = new InterviewFormatChanged(
-            command.InterviewId, aggregate.Format, command.Format, user, clock.UtcNow);
+            command.InterviewId,
+            aggregate.Format,
+            command.Format,
+            user,
+            clock.UtcNow
+        );
 
         return (@event, [@event]);
     }

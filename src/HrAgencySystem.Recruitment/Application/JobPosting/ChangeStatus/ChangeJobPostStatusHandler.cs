@@ -33,23 +33,33 @@ public static class ChangeJobPostStatusHandler
 
         ValidatePolicy(aggregate, newStatus);
 
-        var @event = new JobPostStatusChanged(aggregate.Id.Value, aggregate.CompanyId.Value,
-            aggregate.OrganizationId.Value, oldStatus,
-            newStatus, clock.UtcNow, user);
+        var @event = new JobPostStatusChanged(
+            aggregate.Id.Value,
+            aggregate.CompanyId.Value,
+            aggregate.OrganizationId.Value,
+            oldStatus,
+            newStatus,
+            clock.UtcNow,
+            user
+        );
 
         return (@event, [concreteEvent, @event]);
     }
-    
+
     private static void ValidatePolicy(JobPost aggregate, JobPostStatus newStatus)
     {
         var changeAllowed = JobPostStatusChangePolicy.Allow(aggregate.Status, newStatus);
         if (!changeAllowed)
             throw new BusinessRuleException(
-                $"Not allowed to change job post status form {aggregate.Status} to {newStatus}");
+                $"Not allowed to change job post status form {aggregate.Status} to {newStatus}"
+            );
     }
 
-    private static IJobPostEvent GetConcreteEvent(ChangeJobPostStatus command, DateTimeOffset now,
-        UserSnapshot user)
+    private static IJobPostEvent GetConcreteEvent(
+        ChangeJobPostStatus command,
+        DateTimeOffset now,
+        UserSnapshot user
+    )
     {
         var newStatus = command.Status.ToDomain();
 
@@ -58,9 +68,12 @@ public static class ChangeJobPostStatusHandler
             JobPostStatus.Published => new JobPostPublished(command.JobPostId, now, user),
             JobPostStatus.Archived => new JobPostArchived(command.JobPostId, now, user),
             JobPostStatus.Closed => new JobPostClosed(command.JobPostId, now, user),
-            JobPostStatus.Draft =>
-                throw new BusinessRuleException("A job application cannot return to its initial status."),
-            _ => throw new BusinessRuleException("Unexpected job application status: " + command.Status)
+            JobPostStatus.Draft => throw new BusinessRuleException(
+                "A job application cannot return to its initial status."
+            ),
+            _ => throw new BusinessRuleException(
+                "Unexpected job application status: " + command.Status
+            ),
         };
     }
 }

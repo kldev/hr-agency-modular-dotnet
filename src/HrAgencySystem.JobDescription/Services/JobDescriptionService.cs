@@ -7,7 +7,8 @@ namespace HrAgencySystem.JobDescription.Services;
 public sealed class JobDescriptionService(
     IUserSnapshotRepository userSnapshotRepository,
     ICompanySnapshotRepository companySnapshotRepository,
-    IOrganizationChecker checker) : IJobDescriptionService
+    IOrganizationChecker checker
+) : IJobDescriptionService
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {

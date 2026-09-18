@@ -7,9 +7,7 @@ namespace HrAgencySystem.Company.Domain;
 
 public sealed class Company
 {
-    private Company()
-    {
-    }
+    private Company() { }
 
     public CompanyId Id { get; private set; }
 
@@ -26,9 +24,9 @@ public sealed class Company
     public CompanyStatus Status { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
-    
+
     public Guid CreatedById { get; private set; }
-    
+
     public Industry Industry { get; private set; }
 
     public WebSite WebSite { get; private set; } = null!;
@@ -37,7 +35,7 @@ public sealed class Company
     {
         return new Company();
     }
-    
+
     public void Apply(CompanyCreated @event)
     {
         Id = CompanyId.From(@event.CompanyId);

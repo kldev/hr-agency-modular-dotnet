@@ -25,13 +25,23 @@ public static class ChangeInterviewStatusHandler
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 
         var @event = new InterviewStatusChanged(
-            command.InterviewId, aggregate.Status, command.Status, user, clock.UtcNow);
-        
-        
-        if (string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
-        
-        await service.AppendApplicationNoteToStream(aggregate.JobApplicationId,
-            OrganizationId.From(command.OrganizationId), command.Note, user, ct);
+            command.InterviewId,
+            aggregate.Status,
+            command.Status,
+            user,
+            clock.UtcNow
+        );
+
+        if (string.IsNullOrEmpty(command.Note))
+            return (@event, [@event]);
+
+        await service.AppendApplicationNoteToStream(
+            aggregate.JobApplicationId,
+            OrganizationId.From(command.OrganizationId),
+            command.Note,
+            user,
+            ct
+        );
 
         return (@event, [@event]);
     }

@@ -10,65 +10,65 @@ using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder.Scenario;
 
-public sealed class InterviewsScenario(
-    IMessageBus bus,
-    IQuerySession session)
+public sealed class InterviewsScenario(IMessageBus bus, IQuerySession session)
 {
     private const int DaysBefore = 31;
     private const int DaysAfter = 31;
 
-    public async Task SeedAsync(
-        Guid organizationId,
-        int count = 50)
+    public async Task SeedAsync(Guid organizationId, int count = 50)
     {
         if (count <= 0)
             return;
 
-        var applications = await session.Query<JobApplicationCreated>()
+        var applications = await session
+            .Query<JobApplicationCreated>()
             .Where(x => x.OrganizationId == organizationId)
             .ToListAsync();
-       
-        var users = await session.Query<UserCreated>()
+
+        var users = await session
+            .Query<UserCreated>()
             .Where(x => x.OrganizationId == organizationId)
             .ToListAsync();
 
         foreach (var application in applications)
         {
-            var updateStatus = users[
-                Random.Shared.Next(users.Count)];
+            var updateStatus = users[Random.Shared.Next(users.Count)];
 
-            await bus.InvokeAsync<JobApplicationStatusChanged>(new ChangeJobApplicationStatus(
-                application.JobApplicationId,
-                application.OrganizationId,
-                "", JobApplicationUpdateStatus.Screening, null,
-                updateStatus.UserId));
+            await bus.InvokeAsync<JobApplicationStatusChanged>(
+                new ChangeJobApplicationStatus(
+                    application.JobApplicationId,
+                    application.OrganizationId,
+                    "",
+                    JobApplicationUpdateStatus.Screening,
+                    null,
+                    updateStatus.UserId
+                )
+            );
         }
 
         await Task.Delay(TimeSpan.FromSeconds(5));
 
         if (applications.Count == 0)
             throw new InvalidOperationException(
-                $"No job applications found for organization {organizationId}.");
+                $"No job applications found for organization {organizationId}."
+            );
 
         if (users.Count == 0)
             throw new InvalidOperationException(
-                $"No users found for organization {organizationId}.");
+                $"No users found for organization {organizationId}."
+            );
 
         for (var i = 0; i < count; i++)
         {
-            var application = applications[
-                Random.Shared.Next(applications.Count)];
+            var application = applications[Random.Shared.Next(applications.Count)];
 
-            var user = users[
-                Random.Shared.Next(users.Count)];
+            var user = users[Random.Shared.Next(users.Count)];
 
             await CreateInterview(application, user);
         }
     }
 
-    private async Task CreateInterview(
-        JobApplicationCreated application,
-        UserCreated user)
+    private async Task CreateInterview(JobApplicationCreated application, UserCreated user)
     {
         var scheduleAt = RandomScheduleDate();
 
@@ -81,7 +81,8 @@ public sealed class InterviewsScenario(
             RandomNote(),
             user.UserId,
             user.UserId,
-            "Europe/Warsaw");
+            "Europe/Warsaw"
+        );
 
         try
         {
@@ -97,17 +98,12 @@ public sealed class InterviewsScenario(
     {
         var today = DateTime.Today;
 
-        var dayOffset = Random.Shared.Next(
-            -DaysBefore,
-            DaysAfter + 1);
+        var dayOffset = Random.Shared.Next(-DaysBefore, DaysAfter + 1);
 
         var hour = Random.Shared.Next(8, 18);
         var minute = Random.Shared.Next(0, 4) * 15;
 
-        return today
-            .AddDays(dayOffset)
-            .AddHours(hour)
-            .AddMinutes(minute);
+        return today.AddDays(dayOffset).AddHours(hour).AddMinutes(minute);
     }
 
     private static TEnum RandomEnum<TEnum>()
@@ -125,7 +121,7 @@ public sealed class InterviewsScenario(
             0 => "Initial technical interview",
             1 => "Candidate screening interview",
             2 => "Interview with hiring manager",
-            _ => "Follow-up interview"
+            _ => "Follow-up interview",
         };
     }
 }

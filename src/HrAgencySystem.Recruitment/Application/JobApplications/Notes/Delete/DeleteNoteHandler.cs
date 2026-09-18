@@ -11,7 +11,6 @@ using Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplications.Notes.Delete;
 
-
 // ReSharper disable once UnusedType.Global
 public static class DeleteNoteHandler
 {
@@ -20,28 +19,39 @@ public static class DeleteNoteHandler
         IRecruitmentService service,
         IClock clock,
         IDocumentSession session,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var user = await service.GetUserAsync(command.RemovedBy, ct);
-        var application = await service.GetApplicationAsync(command.JobApplicationId, command.OrganizationId, ct);
+        var application = await service.GetApplicationAsync(
+            command.JobApplicationId,
+            command.OrganizationId,
+            ct
+        );
 
         var document = await GetNoteDocument(command, session, ct);
 
         var deletedDocument = document!.Delete(user, clock.UtcNow);
-        
+
         session.Update(deletedDocument);
 
         var @event = new JobApplicationNoteDeleted(
-            application.JobApplicationId, 
+            application.JobApplicationId,
             application.CandidateId,
-            user, 
-            clock.UtcNow);
+            user,
+            clock.UtcNow
+        );
         return @event;
     }
 
-    private static async Task<JobApplicationNote?> GetNoteDocument(DeleteNote command, IDocumentSession session, CancellationToken ct)
+    private static async Task<JobApplicationNote?> GetNoteDocument(
+        DeleteNote command,
+        IDocumentSession session,
+        CancellationToken ct
+    )
     {
-        var document = await session.Query<JobApplicationNote>()
+        var document = await session
+            .Query<JobApplicationNote>()
             .Where(z => z.Id == command.NoteId && z.JobApplicationId == command.JobApplicationId)
             .FirstOrDefaultAsync(ct);
 

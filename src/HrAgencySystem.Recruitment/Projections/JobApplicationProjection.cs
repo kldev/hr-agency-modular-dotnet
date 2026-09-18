@@ -51,7 +51,8 @@ public sealed record JobApplicationProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string ApplicantLastName,
     Guid JobPostId,
-    UserSnapshot CreatedBy): IAudit
+    UserSnapshot CreatedBy
+) : IAudit
 {
     public static JobApplicationProjection Create(JobApplicationCreated @event)
     {
@@ -78,117 +79,104 @@ public sealed record JobApplicationProjection(
             @event.ApplicantFirstName,
             @event.ApplicantLastName,
             @event.JobPostId,
-            @event.CreatedBy ?? UserSnapshot.System);
+            @event.CreatedBy ?? UserSnapshot.System
+        );
     }
 
     public static JobApplicationProjection Apply(
         JobApplicationProjection projection,
-        JobApplicationScreeningStarted @event)
+        JobApplicationScreeningStarted @event
+    )
     {
-        return ApplyCommon(projection, @event) with
-        {
-            Status = JobApplicationStatus.Screening
-        };
+        return ApplyCommon(projection, @event) with { Status = JobApplicationStatus.Screening };
     }
 
     public static JobApplicationProjection Apply(
         JobApplicationProjection projection,
-        JobApplicationAssessmentStarted @event)
+        JobApplicationAssessmentStarted @event
+    )
     {
-        return ApplyCommon(projection, @event) with
-        {
-            Status = JobApplicationStatus.Assessment
-        };
+        return ApplyCommon(projection, @event) with { Status = JobApplicationStatus.Assessment };
     }
 
     public static JobApplicationProjection Apply(
         JobApplicationProjection projection,
-        JobApplicationInterviewScheduled @event)
+        JobApplicationInterviewScheduled @event
+    )
     {
         return ApplyCommon(projection, @event) with
         {
             Status = JobApplicationStatus.Interview,
-            LatestInterviewId = @event.InterviewId
+            LatestInterviewId = @event.InterviewId,
         };
     }
 
     public static JobApplicationProjection Apply(
         JobApplicationProjection projection,
-        JobApplicationOfferMade @event)
+        JobApplicationOfferMade @event
+    )
     {
-        return ApplyCommon(projection, @event) with
-        {
-            Status = JobApplicationStatus.Offer
-        };
+        return ApplyCommon(projection, @event) with { Status = JobApplicationStatus.Offer };
     }
 
     public static JobApplicationProjection Apply(
         JobApplicationProjection projection,
-        JobApplicationHired @event)
+        JobApplicationHired @event
+    )
     {
-        return ApplyCommon(projection, @event) with
-        {
-            Status = JobApplicationStatus.Hired
-        };
+        return ApplyCommon(projection, @event) with { Status = JobApplicationStatus.Hired };
     }
 
     public static JobApplicationProjection Apply(
         JobApplicationProjection projection,
-        JobApplicationRejected @event)
+        JobApplicationRejected @event
+    )
     {
-        return ApplyCommon(projection, @event) with
-        {
-            Status = JobApplicationStatus.Rejected
-        };
+        return ApplyCommon(projection, @event) with { Status = JobApplicationStatus.Rejected };
     }
 
     public static JobApplicationProjection Apply(
         JobApplicationProjection projection,
-        JobApplicationWithdrawn @event)
+        JobApplicationWithdrawn @event
+    )
     {
-        return ApplyCommon(projection, @event) with
-        {
-            Status = JobApplicationStatus.Withdrawn
-        };
-    }
-    
-    public static JobApplicationProjection Apply(
-        JobApplicationProjection projection,
-        JobApplicationReactivated @event)
-    {
-        return ApplyCommon(projection, @event) with
-        {
-            Status = JobApplicationStatus.Screening
-        };
+        return ApplyCommon(projection, @event) with { Status = JobApplicationStatus.Withdrawn };
     }
 
-    
+    public static JobApplicationProjection Apply(
+        JobApplicationProjection projection,
+        JobApplicationReactivated @event
+    )
+    {
+        return ApplyCommon(projection, @event) with { Status = JobApplicationStatus.Screening };
+    }
+
     private static JobApplicationProjection ApplyCommon(
         JobApplicationProjection projection,
-        IJobApplicationEvent @event)
+        IJobApplicationEvent @event
+    )
     {
         return projection with
         {
             ModifiedById = @event.Author.Id,
             ModifiedBy = @event.Author,
-            ModifiedAt = @event.OccurredAt
+            ModifiedAt = @event.OccurredAt,
         };
     }
-    
+
     public JobApplicationProjection Apply(JobApplicationTagged @event)
     {
-        if (TagsIds.Contains(@event.Tag.Id)) return this;
-        
-        var tags = Tags
-            .Append(@event.Tag)
-            .ToArray();
+        if (TagsIds.Contains(@event.Tag.Id))
+            return this;
+
+        var tags = Tags.Append(@event.Tag).ToArray();
         var tagIds = TagsIds.Append(@event.Tag.Id).ToArray();
-        
+
         return this with
         {
             ModifiedBy = @event.Author,
             Tags = tags,
-            TagsIds = tagIds
+            TagsIds = tagIds,
         };
     }
 
@@ -196,14 +184,9 @@ public sealed record JobApplicationProjection(
     {
         var tags = Tags.Where(z => z.Id != @event.Tag.Id).ToArray();
         var tagIds = tags.Select(t => t.Id).ToArray();
-        return this with
-        {
-            ModifiedBy = @event.RemovedBy,
-            Tags = tags,
-            TagsIds = tagIds
-        };
+        return this with { ModifiedBy = @event.RemovedBy, Tags = tags, TagsIds = tagIds };
     }
-    
+
     public JobApplicationProjection Apply(JobApplicationUpdated @event)
     {
         return ApplyCommon(this, @event) with
@@ -211,7 +194,7 @@ public sealed record JobApplicationProjection(
             ApplicantFullName = @event.FullName,
             ApplicantFirstName = @event.FirstName,
             ApplicantLastName = @event.LastName,
-            ApplicantPhone = @event.Phone
+            ApplicantPhone = @event.Phone,
         };
     }
 }

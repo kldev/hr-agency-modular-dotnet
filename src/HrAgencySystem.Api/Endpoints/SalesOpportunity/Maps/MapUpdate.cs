@@ -14,25 +14,30 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/sales/opportunity/{id}
-        group.MapPut("{opportunityId:guid}", Handler)
+        group
+            .MapPut("{opportunityId:guid}", Handler)
             .WithSummary("Update opportunity")
             .WithName("Update opportunity")
             .Produces<OpportunityUpdated>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(IMessageBus bus,
+    private static async Task<IResult> Handler(
+        IMessageBus bus,
         AppUserAuthenticated user,
-        Guid opportunityId, UpdateOpportunityRequest request, CancellationToken ct)
+        Guid opportunityId,
+        UpdateOpportunityRequest request,
+        CancellationToken ct
+    )
     {
-        var result =
-            await bus.InvokeAsync<OpportunityUpdated>(
-                request.ToCommand(user.OrganizationId, opportunityId, user.UserId), ct);
+        var result = await bus.InvokeAsync<OpportunityUpdated>(
+            request.ToCommand(user.OrganizationId, opportunityId, user.UserId),
+            ct
+        );
 
         return TypedResults.Ok(result);
     }
-    
-    
+
     internal sealed record UpdateOpportunityRequest(
         string Title,
         string Description,
@@ -40,18 +45,23 @@ internal static class MapUpdate
         bool IsHotLead,
         CurrencyCode Currency,
         DateOnly? ExpectedCloseDate
-        )
+    )
     {
-        public UpdateOpportunity ToCommand(Guid organizationId, Guid opportunityId, Guid modifiedBy)
-            => new (
+        public UpdateOpportunity ToCommand(
+            Guid organizationId,
+            Guid opportunityId,
+            Guid modifiedBy
+        ) =>
+            new(
                 opportunityId,
                 organizationId,
-                Title, 
-                Description, 
-                ExpectedValue, 
+                Title,
+                Description,
+                ExpectedValue,
                 IsHotLead,
-                Currency, 
-                ExpectedCloseDate, 
-                modifiedBy);
+                Currency,
+                ExpectedCloseDate,
+                modifiedBy
+            );
     }
 }

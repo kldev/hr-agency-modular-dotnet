@@ -12,10 +12,14 @@ public class NoteRepository(IDocumentSession session, IClock clock) : INoteRepos
 {
     public Task CreateNoteAsync(CreateNoteDocument note, UserSnapshot user)
     {
-        var noteDocument = JobApplicationNote.Create(note.JobApplicationId,
+        var noteDocument = JobApplicationNote.Create(
+            note.JobApplicationId,
             note.OrganizationId,
-            note.CandidateId, note.Text,
-            user, clock.UtcNow);
+            note.CandidateId,
+            note.Text,
+            user,
+            clock.UtcNow
+        );
 
         session.Insert(noteDocument);
 

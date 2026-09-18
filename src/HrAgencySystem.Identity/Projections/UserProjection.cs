@@ -6,7 +6,9 @@ using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Identity.Projections;
 
-public sealed record UserProjection(Guid Id, Guid OrganizationId,
+public sealed record UserProjection(
+    Guid Id,
+    Guid OrganizationId,
     string Email,
     string FirstName,
     string LastName,
@@ -18,11 +20,13 @@ public sealed record UserProjection(Guid Id, Guid OrganizationId,
     OrganizationInfo Organization,
     string Phone = "",
     UserSnapshot? ModifiedBy = null,
-    DateTimeOffset? ModifiedAt = null) : IAudit
+    DateTimeOffset? ModifiedAt = null
+) : IAudit
 {
     public static UserProjection Create(UserCreated @event)
     {
-        return new UserProjection(@event.UserId,
+        return new UserProjection(
+            @event.UserId,
             @event.OrganizationId,
             @event.Email,
             @event.FirstName,
@@ -33,7 +37,9 @@ public sealed record UserProjection(Guid Id, Guid OrganizationId,
             @event.CreatedAt,
             @event.Organization,
             @event.Phone ?? "",
-            null, null);
+            null,
+            null
+        );
     }
 
     public string FullName => $"{FirstName} {LastName}";

@@ -12,19 +12,26 @@ internal static class MapTag
     internal static void Map(RouteGroupBuilder group)
     {
         // api/recruitment/candidates/{id}/tag
-        group.MapPut("{candidateId:guid}/tag", Handler)
+        group
+            .MapPut("{candidateId:guid}/tag", Handler)
             .WithSummary("Tag candidate")
             .WithName("Tag candidate")
             .ProducesStandardErrors()
             .Produces<CandidateTagged>();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, 
-        IMessageBus bus, 
-        Guid candidateId,TagRequest request, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IMessageBus bus,
+        Guid candidateId,
+        TagRequest request,
+        CancellationToken ct
+    )
     {
-        var result = await bus.InvokeAsync<CandidateTagged>(new TagCandidate(request.TagId, candidateId, user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<CandidateTagged>(
+            new TagCandidate(request.TagId, candidateId, user.OrganizationId, user.UserId),
+            ct
+        );
         return TypedResults.Ok(result);
     }
 }
-

@@ -15,11 +15,21 @@ internal sealed record CreateUserRequest(
     string LastName,
     OrganizationRoleApi Role,
     string Password,
-    string? Phone = null)
+    string? Phone = null
+)
 {
     internal CreateUser ToCommand(OrganizationId organizationId, Guid createdBy)
     {
-        return new CreateUser(organizationId.Value, Email, FirstName, LastName, Role.ToDomainRole(), Password, createdBy, Phone);
+        return new CreateUser(
+            organizationId.Value,
+            Email,
+            FirstName,
+            LastName,
+            Role.ToDomainRole(),
+            Password,
+            createdBy,
+            Phone
+        );
     }
 }
 
@@ -27,17 +37,24 @@ internal static class MapCreate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/api/users", Handler)
+        group
+            .MapPost("/api/users", Handler)
             .WithSummary("Create user")
             .WithName("Create user")
             .Produces<UserCreated>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreateUserRequest request)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IMessageBus bus,
+        CreateUserRequest request
+    )
     {
-        var result = await bus.InvokeAsync<UserCreated>(request.ToCommand(user.GetOrganization, user.UserId));
-        
+        var result = await bus.InvokeAsync<UserCreated>(
+            request.ToCommand(user.GetOrganization, user.UserId)
+        );
+
         return TypedResults.Created($"/api/users/{result.UserId}", UserProjection.Create(result));
     }
 }

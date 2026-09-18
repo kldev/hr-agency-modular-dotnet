@@ -24,7 +24,10 @@ public static class RecruitmentServiceCollectionExtensions
 
             services.AddScoped<IJobPostQueryRepository, JobPostQueryRepository>();
             services.AddScoped<ITagSuggestionRepository, TagSuggestionRepository>();
-            services.AddScoped<ICandidateEmailReservationRepository, CandidateEmailReservationRepository>();
+            services.AddScoped<
+                ICandidateEmailReservationRepository,
+                CandidateEmailReservationRepository
+            >();
             services.AddScoped<ICandidateQueryRepository, CandidateQueryRepository>();
             services.AddScoped<ICandidateResolver, CandidateResolver>();
             services.AddScoped<ITagRepository, TagRepository>();
@@ -33,17 +36,21 @@ public static class RecruitmentServiceCollectionExtensions
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<INoteQueryRepository, NoteQueryRepository>();
             services.AddScoped<IInterviewsQueryRepository, InterviewsQueryRepository>();
-            services.AddScoped<IJobApplicationInfoQueryRepository, JobApplicationInfoQueryRepository>();
+            services.AddScoped<
+                IJobApplicationInfoQueryRepository,
+                JobApplicationInfoQueryRepository
+            >();
             services.AddScoped<IRecruitmentService, RecruitmentService>();
             services.AddScoped<IJobPostSuggestionRepository, JobPostSuggestionRepository>();
-
-            
         }
-        
+
         public void AddRecruitmentServicesMinimal()
         {
             services.AddScoped<ICandidateResolver, CandidateResolver>();
-            services.AddScoped<ICandidateEmailReservationRepository, CandidateEmailReservationRepository>();
+            services.AddScoped<
+                ICandidateEmailReservationRepository,
+                CandidateEmailReservationRepository
+            >();
             services.AddScoped<IJobPostQueryRepository, JobPostQueryRepository>();
         }
     }

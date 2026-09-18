@@ -15,22 +15,28 @@ public static class RemoveApplicationTagHandler
 {
     [AggregateHandler]
     public static async Task<(JobApplicationTagRemoved, Wolverine.Marten.Events)> Handle(
-        RemoveApplicationTag command, 
+        RemoveApplicationTag command,
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Global
         Domain.Applications.JobApplication aggregate,
         ITagRepository tagRepository,
         IRecruitmentService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
-        
+
         var tag = await tagRepository.GetTag(command.TagId, ct);
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 
-        var @event = new JobApplicationTagRemoved(command.JobApplicationId, tag, user, clock.UtcNow);
-        
+        var @event = new JobApplicationTagRemoved(
+            command.JobApplicationId,
+            tag,
+            user,
+            clock.UtcNow
+        );
+
         return (@event, [@event]);
     }
 }

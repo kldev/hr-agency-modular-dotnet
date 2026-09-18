@@ -24,7 +24,8 @@ public static class RescheduleInterviewHandler
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var (shortNote, error) = ShortNote.TryCreate(command.Note ?? "", false);
-        if (error != null) throw new ValidationException(error);
+        if (error != null)
+            throw new ValidationException(error);
 
         var @event = new InterviewRescheduled(
             command.InterviewId,
@@ -38,10 +39,16 @@ public static class RescheduleInterviewHandler
             command.MeetingUrl
         );
 
-        if (string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
+        if (string.IsNullOrEmpty(command.Note))
+            return (@event, [@event]);
 
-        await service.AppendApplicationNoteToStream(aggregate.JobApplicationId,
-            OrganizationId.From(command.OrganizationId), command.Note, user, ct);
+        await service.AppendApplicationNoteToStream(
+            aggregate.JobApplicationId,
+            OrganizationId.From(command.OrganizationId),
+            command.Note,
+            user,
+            ct
+        );
 
         return (@event, [@event]);
     }

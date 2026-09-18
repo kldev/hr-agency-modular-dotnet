@@ -15,15 +15,15 @@ public static class UpdateOpportunityHandler
         SalesOpportunity aggregate,
         ISalesService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        
         ArgumentNullException.ThrowIfNull(aggregate);
-        
+
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var (title, description) = OpportunityDataFactory.Create(command);
-        
+
         var @event = new OpportunityUpdated(
             aggregate.Id.Value,
             aggregate.OrganizationId.Value,
@@ -38,9 +38,8 @@ public static class UpdateOpportunityHandler
             command.ExpectedCloseDate,
             user,
             clock.UtcNow
-            );
-        
+        );
+
         return (@event, [@event]);
     }
-    
 }

@@ -7,21 +7,21 @@ namespace HrAgencySystem.Recruitment.Domain.Candidates;
 
 public sealed class Candidate
 {
-    private Candidate(){}
-    
+    private Candidate() { }
+
     public CandidateId Id { get; private set; }
-    
+
     public OrganizationId OrganizationId { get; private set; }
     public Email Email { get; private set; } = null!;
     public CandidatePhoneNumber PhoneNumber { get; private set; } = null!;
     public CandidateSource Source { get; private set; }
     public CandidateStatus Status { get; private set; }
-    
-    public FirstName  FirstName { get; private set; } = null!;
+
+    public FirstName FirstName { get; private set; } = null!;
     public LastName LastName { get; private set; } = null!;
 
     public LongText Note { get; private set; } = null!;
-    
+
     public static Candidate Empty()
     {
         return new Candidate();
@@ -47,5 +47,4 @@ public sealed class Candidate
         LastName = LastName.Create(@event.LastName, false);
         Note = LongText.Create(@event.Note, false);
     }
-    
 }

@@ -8,7 +8,6 @@ public sealed record RegistrationNumber
     public const string RequiredMessage = "Registration number is required.";
     public const string MaxLengthMessage = "Registration number cannot exceed 100 characters.";
 
-
     private RegistrationNumber(string value)
     {
         Value = value;
@@ -23,14 +22,15 @@ public sealed record RegistrationNumber
         return error is not null ? throw new InValidValueException(error) : registrationNumber!;
     }
 
-    public static (RegistrationNumber? registrationNumber, string? error) TryCreate(
-        string value)
+    public static (RegistrationNumber? registrationNumber, string? error) TryCreate(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return (null, RequiredMessage);
+        if (string.IsNullOrWhiteSpace(value))
+            return (null, RequiredMessage);
 
         var normalized = value.Trim();
 
-        if (normalized.Length > MaxLength) return (null, MaxLengthMessage);
+        if (normalized.Length > MaxLength)
+            return (null, MaxLengthMessage);
 
         return (new RegistrationNumber(normalized), null);
     }

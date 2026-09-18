@@ -9,27 +9,34 @@ namespace HrAgencySystem.IntegrationTests.Companies;
 public sealed class CompanyTestClient(HttpClient client)
 {
     private static readonly Random _random = new Random();
+
     public async Task<CompanyCreated> CreateAsync(
         Guid organizationId,
         string name = "",
         string countryCode = "pl",
         string taxId = "",
-        string registrationNumber = "")
+        string registrationNumber = ""
+    )
     {
         if (string.IsNullOrWhiteSpace(name))
-            name  = "Company "  + _random.Next(9999);
-        
+            name = "Company " + _random.Next(9999);
+
         if (string.IsNullOrWhiteSpace(taxId))
-            taxId  = "TX"  + _random.Next(9999) + "-" + _random.Next(9999);
+            taxId = "TX" + _random.Next(9999) + "-" + _random.Next(9999);
 
         if (string.IsNullOrWhiteSpace(registrationNumber))
-            registrationNumber  = "REG"  + _random.Next(9999);
-        
-        var request = new MapCreate.CreateCompanyRequest(name, countryCode, taxId, registrationNumber, "", Industry.Accounting);
+            registrationNumber = "REG" + _random.Next(9999);
+
+        var request = new MapCreate.CreateCompanyRequest(
+            name,
+            countryCode,
+            taxId,
+            registrationNumber,
+            "",
+            Industry.Accounting
+        );
         client.WithOrganizationId(organizationId);
-        var response = await client.PostAsJsonAsync(
-            "/api/companies", 
-            request);
+        var response = await client.PostAsJsonAsync("/api/companies", request);
 
         response.EnsureSuccessStatusCode();
 
@@ -39,5 +46,4 @@ public sealed class CompanyTestClient(HttpClient client)
 
         return result;
     }
-    
 }

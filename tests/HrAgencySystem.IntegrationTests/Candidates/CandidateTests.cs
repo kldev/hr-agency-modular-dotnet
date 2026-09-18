@@ -12,15 +12,14 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Candidates;
 
 [Collection(IntegrationCollection.Name)]
-public class CandidateTests(
-    IntegrationEnvironment environment,
-    ITestOutputHelper output)
+public class CandidateTests(IntegrationEnvironment environment, ITestOutputHelper output)
     : BaseIntegrationTest(environment, output)
 {
     private readonly Guid _organizationId = Guid.NewGuid();
     private readonly Guid _authorId = Guid.NewGuid();
     private readonly string _note = "Has been without work for 6 months.";
-    private readonly string _updatedNote = "Has been without work for 6 months. Lets help him. Nothing new";
+    private readonly string _updatedNote =
+        "Has been without work for 6 months. Lets help him. Nothing new";
 
     protected override async Task BeforeEachAsync()
     {
@@ -54,7 +53,8 @@ public class CandidateTests(
             LastName: "Henderson",
             Note: _updatedNote,
             Phone: "+49 909 123 321",
-            modifiedByUserId: modifiedBy);
+            modifiedByUserId: modifiedBy
+        );
 
         Assert.Equal(_organizationId, updateResult.OrganizationId);
         Assert.Equal("Paul", updateResult.FirstName);
@@ -62,22 +62,17 @@ public class CandidateTests(
         Assert.Equal(_updatedNote, updateResult.Note);
         Assert.Equal("+49 909 123 321", updateResult.Phone);
 
-
         Assert.Equal(modifiedBy, updateResult.ModifiedBy!.Id);
 
         await Eventually.AssertAsync(async () =>
         {
-            var candidate = await CandidateClient.GetAsync(
-                _organizationId,
-                created.CandidateId);
+            var candidate = await CandidateClient.GetAsync(_organizationId, created.CandidateId);
 
             Assert.NotNull(candidate);
             Assert.Equal("Paul", candidate.FirstName);
             Assert.Equal("james@newtest.com", candidate.Email);
             Assert.Equal("Henderson", candidate.LastName);
-            Assert.Equal(
-                _updatedNote,
-                candidate.Note);
+            Assert.Equal(_updatedNote, candidate.Note);
             Assert.Equal("+49 909 123 321", candidate.PhoneNumber);
             Assert.Equal(modifiedBy, candidate.ModifiedBy!.Id);
         });
@@ -110,7 +105,7 @@ public class CandidateTests(
         var result = await CreateCandidate();
 
         var otherOrganization = Guid.NewGuid();
-        
+
         var projection = await CandidateClient.GetAsync(otherOrganization, result.CandidateId);
         Assert.Null(projection);
     }
@@ -118,38 +113,45 @@ public class CandidateTests(
     [Fact]
     public async Task ShouldNotCreateCandidateWithDuplicateEmail()
     {
-        await CreateCandidate(organizationId :_organizationId);
+        await CreateCandidate(organizationId: _organizationId);
 
         var request = new CreateCandidateRequest(
-            "james@newtest.com", "", "", "", CandidateSource.JustJoinIt, "");
+            "james@newtest.com",
+            "",
+            "",
+            "",
+            CandidateSource.JustJoinIt,
+            ""
+        );
 
         Client.WithOrganizationId(_organizationId);
-        
-        var response =
-            await Client.PostAsJsonAsync(CandidateTestClient.BaseUrl, request);
+
+        var response = await Client.PostAsJsonAsync(CandidateTestClient.BaseUrl, request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         var problem = await response.ReadWithJson<ProblemDetails>();
         Assert.NotNull(problem);
-        Assert.Equal(ICandidateEmailReservationRepository.EmailAlreadyExistsMessage, problem.Detail);
+        Assert.Equal(
+            ICandidateEmailReservationRepository.EmailAlreadyExistsMessage,
+            problem.Detail
+        );
     }
 
-
-    [Fact] 
+    [Fact]
     public async Task ShouldAllowSameCandidateEmailForDifferentOrganizations()
     {
-        var result = await CreateCandidate(organizationId :_organizationId);
+        var result = await CreateCandidate(organizationId: _organizationId);
 
         Assert.Equal(_organizationId, result.OrganizationId);
-        
-        var otherOrganization  = Guid.NewGuid();
-        var resultOther = await CreateCandidate(organizationId :otherOrganization);
+
+        var otherOrganization = Guid.NewGuid();
+        var resultOther = await CreateCandidate(organizationId: otherOrganization);
         Assert.Equal(otherOrganization, resultOther.OrganizationId);
-        
+
         Assert.Equal(result.Email, resultOther.Email);
     }
-    
+
     [Fact]
     public async Task ShouldNotUpdateCandidateFromOtherOrganization()
     {
@@ -161,7 +163,8 @@ public class CandidateTests(
             Note: _note,
             Phone: "+49 909 123 123",
             source: CandidateSource.Indeed,
-            createdByUserId: _authorId);
+            createdByUserId: _authorId
+        );
 
         var otherOrganizationId = Guid.NewGuid();
         var modifiedBy = Guid.NewGuid();
@@ -170,13 +173,15 @@ public class CandidateTests(
             "+49 999 999 999",
             "Hacked",
             "Candidate",
-            "This should not be saved");
-
+            "This should not be saved"
+        );
 
         Client.WithOrganizationId(otherOrganizationId);
         Client.WithUserId(modifiedBy);
-        var response =
-            await Client.PutAsJsonAsync(CandidateTestClient.BaseUrl + "/" + created.CandidateId, updateRequest);
+        var response = await Client.PutAsJsonAsync(
+            CandidateTestClient.BaseUrl + "/" + created.CandidateId,
+            updateRequest
+        );
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -185,21 +190,16 @@ public class CandidateTests(
 
         Assert.Equal(IOrganizationChecker.OrganizationCheckMessage, problemDetails.Detail);
 
-
         await Eventually.AssertAsync(async () =>
         {
-            var candidate = await CandidateClient.GetAsync(
-                _organizationId,
-                created.CandidateId);
+            var candidate = await CandidateClient.GetAsync(_organizationId, created.CandidateId);
 
             Assert.NotNull(candidate);
 
             Assert.Equal(_organizationId, candidate.OrgId);
             Assert.Equal("James", candidate.FirstName);
             Assert.Equal("Connor", candidate.LastName);
-            Assert.Equal(
-                _note,
-                candidate.Note);
+            Assert.Equal(_note, candidate.Note);
             Assert.Equal("+49 909 123 123", candidate.PhoneNumber);
             Assert.Equal(CandidateSource.Indeed, candidate.Source);
             Assert.Equal(_authorId, candidate.CreatedBy!.Id);
@@ -208,7 +208,8 @@ public class CandidateTests(
 
     private async Task<CandidateCreated> CreateCandidate(
         Guid? organizationId = null,
-        Guid? createdByUserId = null)
+        Guid? createdByUserId = null
+    )
     {
         return await CandidateClient.Create(
             organizationId ?? _organizationId,
@@ -218,6 +219,7 @@ public class CandidateTests(
             Note: _note,
             Phone: "+49 909 123 123",
             source: CandidateSource.Indeed,
-            createdByUserId: createdByUserId ?? _authorId);
+            createdByUserId: createdByUserId ?? _authorId
+        );
     }
 }

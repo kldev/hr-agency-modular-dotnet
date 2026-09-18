@@ -7,8 +7,7 @@ public sealed record ShortNote
     public const int MaxLength = 500;
 
     public const string RequiredMessage = "Note is required.";
-    public const string MaxLengthMessage =
-        "Note cannot exceed 500 characters.";
+    public const string MaxLengthMessage = "Note cannot exceed 500 characters.";
 
     private ShortNote(string value)
     {
@@ -21,17 +20,13 @@ public sealed record ShortNote
     {
         var (title, error) = TryCreate(value, isRequired);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : title!;
+        return error is not null ? throw new InValidValueException(error) : title!;
     }
 
-    public static (ShortNote? title, string? error) TryCreate(
-        string value, bool isRequired = true)
+    public static (ShortNote? title, string? error) TryCreate(string value, bool isRequired = true)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return isRequired ? (null, RequiredMessage) 
-                : (new ShortNote(""), null);
+            return isRequired ? (null, RequiredMessage) : (new ShortNote(""), null);
 
         var normalized = value.Trim();
 

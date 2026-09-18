@@ -2,8 +2,8 @@ using System.Text;
 using System.Text.Json;
 using System.Xml;
 using System.Xml.Serialization;
-using HrAgencySystem.Feeds.Config;
 using HrAgencySystem.Feeds.Application.GetJobFeed;
+using HrAgencySystem.Feeds.Config;
 using HrAgencySystem.Feeds.ReadModel;
 using HrAgencySystem.Feeds.Serialization;
 using Microsoft.Extensions.Options;
@@ -11,9 +11,8 @@ using Microsoft.Extensions.Options;
 namespace HrAgencySystem.Feeds.Application.GenerateJobFeed;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal class JobFeedGenerator(
-    IJobFeedReader reader,
-    IOptions<FeedsConfig> config) : IJobFeedGenerator
+internal class JobFeedGenerator(IJobFeedReader reader, IOptions<FeedsConfig> config)
+    : IJobFeedGenerator
 {
     public async Task<JobFeedContent> GenerateAsync(Guid organizationId, CancellationToken ct)
     {
@@ -21,7 +20,8 @@ internal class JobFeedGenerator(
 
         if (string.IsNullOrEmpty(feedUrl))
             throw new ArgumentException(
-                "FeedsUrl must be provided. Check AppSettings.json -> Application -> FeedUrl value.");
+                "FeedsUrl must be provided. Check AppSettings.json -> Application -> FeedUrl value."
+            );
 
         var jobs = await reader.GetJobsFeed(organizationId, ct);
 
@@ -35,29 +35,27 @@ internal class JobFeedGenerator(
         var options = JsonSerializerOptions.Web;
         var jsonFeed = new JobFeedJson()
         {
-            Jobs = [.. jobs.Select(job => JobJson.FromRow(job, feedUrl))]
+            Jobs = [.. jobs.Select(job => JobJson.FromRow(job, feedUrl))],
         };
-        
+
         var json = JsonSerializer.Serialize(jsonFeed, options);
         return json;
     }
 
-    internal static string SerializeXml(
-        IReadOnlyList<JobPostFeedRow> jobs, string feedUrl)
+    internal static string SerializeXml(IReadOnlyList<JobPostFeedRow> jobs, string feedUrl)
     {
-        var serializer = new XmlSerializer(
-            typeof(JobFeedXml));
+        var serializer = new XmlSerializer(typeof(JobFeedXml));
 
         var feed = new JobFeedXml
         {
-            Jobs = [.. jobs.Select(job => JobFeedXmlItem.FromRow(job, feedUrl))]
+            Jobs = [.. jobs.Select(job => JobFeedXmlItem.FromRow(job, feedUrl))],
         };
 
         var settings = new XmlWriterSettings
         {
             Encoding = new UTF8Encoding(false),
             Indent = true,
-            OmitXmlDeclaration = false
+            OmitXmlDeclaration = false,
         };
 
         using var stream = new MemoryStream();
@@ -69,8 +67,6 @@ internal class JobFeedGenerator(
 
         return Encoding.UTF8.GetString(stream.ToArray());
     }
-    
-    internal sealed record JobFeedContent(
-        string Json,
-        string Xml);
+
+    internal sealed record JobFeedContent(string Json, string Xml);
 }

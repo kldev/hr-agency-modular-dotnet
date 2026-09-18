@@ -13,147 +13,90 @@ namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
 public class UpdateJobPostHandlerTests : BaseTest
 {
-    private readonly IRecruitmentService _service =
-        Substitute.For<IRecruitmentService>();
+    private readonly IRecruitmentService _service = Substitute.For<IRecruitmentService>();
 
     private static UserSnapshot ModifiedBy { get; } =
-        new(
-            Guid.NewGuid(),
-            "Test",
-            "User",
-            "test@test.io");
+        new(Guid.NewGuid(), "Test", "User", "test@test.io");
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobPostUpdated()
     {
         var jobPostId = Guid.NewGuid();
 
-        var now = new DateTimeOffset(
-            2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+        var now = new DateTimeOffset(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
         var command = CreateValidCommand(
             jobPostId: jobPostId,
             title: "  Senior .NET Developer  ",
             summary: "  Senior developer position  ",
             description: "  We are looking for an experienced .NET developer.  ",
-            responsibilities:
-            [
-                "  Design and develop backend services.  ",
-                "  Review code.  "
-            ],
-            requirements:
-            [
-                "  5+ years of .NET experience.  ",
-                "  Experience with PostgreSQL.  "
-            ],
-            skills:
-            [
-                "  C#  ",
-                "  ASP.NET Core  "
-            ],
+            responsibilities: ["  Design and develop backend services.  ", "  Review code.  "],
+            requirements: ["  5+ years of .NET experience.  ", "  Experience with PostgreSQL.  "],
+            skills: ["  C#  ", "  ASP.NET Core  "],
             location: "  Opole  ",
             countryCode: "pl",
             employmentType: EmploymentType.FullTime,
             workMode: WorkMode.Hybrid,
             currencyCode: CurrencyCode.PLN,
             salaryMin: 15000m,
-            salaryMax: 22000m);
+            salaryMax: 22000m
+        );
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
         var clock = new FixedClock(now);
 
-        _service
-            .GetUserAsync(
-                command.ModifiedBy,
-                Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
+        _service.GetUserAsync(command.ModifiedBy, Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
-        var result = (await UpdateJobPostHandler.Handle(
-            command,
-            aggregate,
-            _service,
-            clock,
-            CancellationToken.None)).Item1;
+        var result = (
+            await UpdateJobPostHandler.Handle(
+                command,
+                aggregate,
+                _service,
+                clock,
+                CancellationToken.None
+            )
+        ).Item1;
 
-        Assert.Equal(
-            jobPostId,
-            result.JobPostId);
+        Assert.Equal(jobPostId, result.JobPostId);
 
-        Assert.Equal(
-            "Senior .NET Developer",
-            result.Title);
+        Assert.Equal("Senior .NET Developer", result.Title);
 
-        Assert.Equal(
-            "Senior developer position",
-            result.Summary);
+        Assert.Equal("Senior developer position", result.Summary);
+
+        Assert.Equal("We are looking for an experienced .NET developer.", result.Description);
 
         Assert.Equal(
-            "We are looking for an experienced .NET developer.",
-            result.Description);
+            ["Design and develop backend services.", "Review code."],
+            result.Responsibilities
+        );
 
         Assert.Equal(
-            [
-                "Design and develop backend services.",
-                "Review code."
-            ],
-            result.Responsibilities);
+            ["5+ years of .NET experience.", "Experience with PostgreSQL."],
+            result.Requirements
+        );
 
-        Assert.Equal(
-            [
-                "5+ years of .NET experience.",
-                "Experience with PostgreSQL."
-            ],
-            result.Requirements);
+        Assert.Equal(["C#", "ASP.NET Core"], result.Skills);
 
-        Assert.Equal(
-            [
-                "C#",
-                "ASP.NET Core"
-            ],
-            result.Skills);
+        Assert.Equal("Opole", result.Location);
 
-        Assert.Equal(
-            "Opole",
-            result.Location);
+        Assert.Equal("PL", result.CountryCode);
 
-        Assert.Equal(
-            "PL",
-            result.CountryCode);
+        Assert.Equal(EmploymentType.FullTime, result.EmploymentType);
 
-        Assert.Equal(
-            EmploymentType.FullTime,
-            result.EmploymentType);
+        Assert.Equal(WorkMode.Hybrid, result.WorkMode);
 
-        Assert.Equal(
-            WorkMode.Hybrid,
-            result.WorkMode);
+        Assert.Equal(CurrencyCode.PLN, result.CurrencyCode);
 
-        Assert.Equal(
-            CurrencyCode.PLN,
-            result.CurrencyCode);
+        Assert.Equal(15000m, result.SalaryMin);
 
-        Assert.Equal(
-            15000m,
-            result.SalaryMin);
+        Assert.Equal(22000m, result.SalaryMax);
 
-        Assert.Equal(
-            22000m,
-            result.SalaryMax);
+        Assert.Same(ModifiedBy, result.Author);
 
-        Assert.Same(
-            ModifiedBy,
-            result.Author);
+        Assert.Equal(now, result.OccurredAt);
 
-        Assert.Equal(
-            now,
-            result.OccurredAt);
-
-        await _service
-            .Received(1)
-            .GetUserAsync(
-                command.ModifiedBy,
-                Arg.Any<CancellationToken>());
+        await _service.Received(1).GetUserAsync(command.ModifiedBy, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -165,18 +108,9 @@ public class UpdateJobPostHandlerTests : BaseTest
             "",
             new string('A', LongText.MaxLength + 1),
             "",
-            [
-                "",
-                new string('A', EntryText.MaxLength + 1)
-            ],
-            [
-                "",
-                new string('B', EntryText.MaxLength + 1)
-            ],
-            [
-                "",
-                new string('C', EntryText.MaxLength + 1)
-            ],
+            ["", new string('A', EntryText.MaxLength + 1)],
+            ["", new string('B', EntryText.MaxLength + 1)],
+            ["", new string('C', EntryText.MaxLength + 1)],
             new string('A', JobLocation.MaxLength + 1),
             "POL",
             "001",
@@ -185,7 +119,8 @@ public class UpdateJobPostHandlerTests : BaseTest
             CurrencyCode.EUR,
             -1m,
             -2m,
-            Guid.NewGuid());
+            Guid.NewGuid()
+        );
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
@@ -195,7 +130,9 @@ public class UpdateJobPostHandlerTests : BaseTest
                 aggregate,
                 _service,
                 TestClock,
-                CancellationToken.None));
+                CancellationToken.None
+            )
+        );
 
         Assert.Equal(
             [
@@ -211,15 +148,12 @@ public class UpdateJobPostHandlerTests : BaseTest
                 EntryText.MaxLengthMessage,
                 SalaryRange.NegativeSalaryMessage,
                 CountryCode.InvalidFormatMessage,
-                LanguageCode.InvalidFormatMessage
+                LanguageCode.InvalidFormatMessage,
             ],
-            exception.Errors);
+            exception.Errors
+        );
 
-        await _service
-            .DidNotReceive()
-            .GetUserAsync(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await _service.DidNotReceive().GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -227,15 +161,12 @@ public class UpdateJobPostHandlerTests : BaseTest
     {
         var modifiedBy = Guid.NewGuid();
 
-        var command = CreateValidCommand(
-            modifiedBy: modifiedBy);
+        var command = CreateValidCommand(modifiedBy: modifiedBy);
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
         _service
-            .GetUserAsync(
-                modifiedBy,
-                Arg.Any<CancellationToken>())
+            .GetUserAsync(modifiedBy, Arg.Any<CancellationToken>())
             .ThrowsAsync(new NotFoundException("User", modifiedBy));
 
         var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
@@ -244,17 +175,13 @@ public class UpdateJobPostHandlerTests : BaseTest
                 aggregate,
                 _service,
                 TestClock,
-                CancellationToken.None));
+                CancellationToken.None
+            )
+        );
 
-        Assert.Contains(
-            "User not found",
-            exception.Message);
+        Assert.Contains("User not found", exception.Message);
 
-        await _service
-            .Received(1)
-            .GetUserAsync(
-                modifiedBy,
-                Arg.Any<CancellationToken>());
+        await _service.Received(1).GetUserAsync(modifiedBy, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -262,30 +189,26 @@ public class UpdateJobPostHandlerTests : BaseTest
     {
         var command = CreateValidCommand(
             employmentType: EmploymentType.PartTime,
-            workMode: WorkMode.Remote);
+            workMode: WorkMode.Remote
+        );
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
-        _service
-            .GetUserAsync(
-                command.ModifiedBy,
-                Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
+        _service.GetUserAsync(command.ModifiedBy, Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
-        var result = (await UpdateJobPostHandler.Handle(
-            command,
-            aggregate,
-            _service,
-            TestClock,
-            CancellationToken.None)).Item1;
+        var result = (
+            await UpdateJobPostHandler.Handle(
+                command,
+                aggregate,
+                _service,
+                TestClock,
+                CancellationToken.None
+            )
+        ).Item1;
 
-        Assert.Equal(
-            EmploymentType.PartTime,
-            result.EmploymentType);
+        Assert.Equal(EmploymentType.PartTime, result.EmploymentType);
 
-        Assert.Equal(
-            WorkMode.Remote,
-            result.WorkMode);
+        Assert.Equal(WorkMode.Remote, result.WorkMode);
     }
 
     [Fact]
@@ -294,41 +217,34 @@ public class UpdateJobPostHandlerTests : BaseTest
         var command = CreateValidCommand(
             currencyCode: CurrencyCode.EUR,
             salaryMin: 5000m,
-            salaryMax: 8000m);
+            salaryMax: 8000m
+        );
 
         var aggregate = JobPost.WithOrganization(command.OrganizationId);
 
-        _service
-            .GetUserAsync(
-                command.ModifiedBy,
-                Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
+        _service.GetUserAsync(command.ModifiedBy, Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
-        var result = (await UpdateJobPostHandler.Handle(
-            command,
-            aggregate,
-            _service,
-            TestClock,
-            CancellationToken.None)).Item1;
+        var result = (
+            await UpdateJobPostHandler.Handle(
+                command,
+                aggregate,
+                _service,
+                TestClock,
+                CancellationToken.None
+            )
+        ).Item1;
 
-        Assert.Equal(
-            CurrencyCode.EUR,
-            result.CurrencyCode);
+        Assert.Equal(CurrencyCode.EUR, result.CurrencyCode);
 
-        Assert.Equal(
-            5000m,
-            result.SalaryMin);
+        Assert.Equal(5000m, result.SalaryMin);
 
-        Assert.Equal(
-            8000m,
-            result.SalaryMax);
+        Assert.Equal(8000m, result.SalaryMax);
     }
 
     [Fact]
     public async Task Handle_WithClock_ReturnsEventWithCurrentTime()
     {
-        var now = new DateTimeOffset(
-            2026, 9, 2, 8, 30, 45, TimeSpan.FromHours(2));
+        var now = new DateTimeOffset(2026, 9, 2, 8, 30, 45, TimeSpan.FromHours(2));
 
         var command = CreateValidCommand();
 
@@ -336,22 +252,19 @@ public class UpdateJobPostHandlerTests : BaseTest
 
         var clock = new FixedClock(now);
 
-        _service
-            .GetUserAsync(
-                command.ModifiedBy,
-                Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
+        _service.GetUserAsync(command.ModifiedBy, Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
-        var result = (await UpdateJobPostHandler.Handle(
-            command,
-            aggregate,
-            _service,
-            clock,
-            CancellationToken.None)).Item1;
+        var result = (
+            await UpdateJobPostHandler.Handle(
+                command,
+                aggregate,
+                _service,
+                clock,
+                CancellationToken.None
+            )
+        ).Item1;
 
-        Assert.Equal(
-            now,
-            result.OccurredAt);
+        Assert.Equal(now, result.OccurredAt);
     }
 
     private static UpdateJobPost CreateValidCommand(
@@ -359,8 +272,7 @@ public class UpdateJobPostHandlerTests : BaseTest
         Guid? organizationId = null,
         string title = "Senior .NET Developer",
         string? summary = "Senior developer position",
-        string description =
-            "We are looking for an experienced .NET developer.",
+        string description = "We are looking for an experienced .NET developer.",
         IReadOnlyList<string>? responsibilities = null,
         IReadOnlyList<string>? requirements = null,
         IReadOnlyList<string>? skills = null,
@@ -372,7 +284,8 @@ public class UpdateJobPostHandlerTests : BaseTest
         CurrencyCode currencyCode = CurrencyCode.PLN,
         decimal salaryMin = 15000m,
         decimal salaryMax = 22000m,
-        Guid? modifiedBy = null)
+        Guid? modifiedBy = null
+    )
     {
         return new UpdateJobPost(
             jobPostId ?? Guid.NewGuid(),
@@ -380,19 +293,9 @@ public class UpdateJobPostHandlerTests : BaseTest
             title,
             summary,
             description,
-            responsibilities ??
-            [
-                "Design and develop backend services."
-            ],
-            requirements ??
-            [
-                "5+ years of .NET experience."
-            ],
-            skills ??
-            [
-                "C#",
-                "ASP.NET Core"
-            ],
+            responsibilities ?? ["Design and develop backend services."],
+            requirements ?? ["5+ years of .NET experience."],
+            skills ?? ["C#", "ASP.NET Core"],
             location,
             countryCode,
             languageCode,
@@ -401,6 +304,7 @@ public class UpdateJobPostHandlerTests : BaseTest
             currencyCode,
             salaryMin,
             salaryMax,
-            modifiedBy ?? ModifiedBy.Id);
+            modifiedBy ?? ModifiedBy.Id
+        );
     }
 }

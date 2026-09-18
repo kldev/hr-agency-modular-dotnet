@@ -7,4 +7,5 @@ public sealed record PlatformOwnerCreated(
     string Email,
     PlatformRole Role,
     string PasswordHash,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt
+);

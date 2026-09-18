@@ -17,24 +17,9 @@ public sealed class JobPostDataFactoryTests
             Title: "Senior .NET Developer",
             Summary: "Senior .NET developer position.",
             Description: "Development of recruitment platform.",
-            Responsibilities:
-            [
-                "Develop backend services",
-                "Review code",
-                "Design solutions"
-            ],
-            Requirements:
-            [
-                "C#",
-                ".NET",
-                "PostgreSQL"
-            ],
-            Skills:
-            [
-                "Clean Architecture",
-                "DDD",
-                "Marten"
-            ],
+            Responsibilities: ["Develop backend services", "Review code", "Design solutions"],
+            Requirements: ["C#", ".NET", "PostgreSQL"],
+            Skills: ["Clean Architecture", "DDD", "Marten"],
             Location: "Opole",
             CountryCode: "pl",
             LanguageCode: "en",
@@ -43,54 +28,36 @@ public sealed class JobPostDataFactoryTests
             CurrencyCode: CurrencyCode.PLN,
             SalaryMin: 15000m,
             SalaryMax: 22000m,
-            ModifiedBy: Guid.NewGuid());
+            ModifiedBy: Guid.NewGuid()
+        );
 
         var result = JobPostDataFactory.Create(command);
 
         Assert.Equal("Senior .NET Developer", result.Title.Value);
-        Assert.Equal(
-            "Senior .NET developer position.",
-            result.Summary.Value);
+        Assert.Equal("Senior .NET developer position.", result.Summary.Value);
 
-        Assert.Equal(
-            "Development of recruitment platform.",
-            result.Description.Value);
+        Assert.Equal("Development of recruitment platform.", result.Description.Value);
 
-        Assert.Equal(
-            "Opole",
-            result.JobLocation.Value);
+        Assert.Equal("Opole", result.JobLocation.Value);
 
         Assert.Equal(
             ["Develop backend services", "Review code", "Design solutions"],
-            result.Responsibilities.Select(x => x.Value));
+            result.Responsibilities.Select(x => x.Value)
+        );
 
-        Assert.Equal(
-            ["C#", ".NET", "PostgreSQL"],
-            result.Requirements.Select(x => x.Value));
+        Assert.Equal(["C#", ".NET", "PostgreSQL"], result.Requirements.Select(x => x.Value));
 
-        Assert.Equal(
-            ["Clean Architecture", "DDD", "Marten"],
-            result.Skills.Select(x => x.Value));
+        Assert.Equal(["Clean Architecture", "DDD", "Marten"], result.Skills.Select(x => x.Value));
 
-        Assert.Equal(
-            "PL",
-            result.CountryCode.Value);
+        Assert.Equal("PL", result.CountryCode.Value);
 
-        Assert.Equal(
-            "EN",
-            result.LanguageCode.Value);
+        Assert.Equal("EN", result.LanguageCode.Value);
 
-        Assert.Equal(
-            15000m,
-            result.SalaryRange.Min);
+        Assert.Equal(15000m, result.SalaryRange.Min);
 
-        Assert.Equal(
-            22000m,
-            result.SalaryRange.Max);
+        Assert.Equal(22000m, result.SalaryRange.Max);
 
-        Assert.Equal(
-            CurrencyCode.PLN,
-            result.SalaryRange.Currency);
+        Assert.Equal(CurrencyCode.PLN, result.SalaryRange.Currency);
     }
 
     [Fact]
@@ -102,18 +69,9 @@ public sealed class JobPostDataFactoryTests
             Title: "",
             Summary: new string('x', 5001),
             Description: new string('x', 5001),
-            Responsibilities:
-            [
-                ""
-            ],
-            Requirements:
-            [
-                ""
-            ],
-            Skills:
-            [
-                ""
-            ],
+            Responsibilities: [""],
+            Requirements: [""],
+            Skills: [""],
             Location: new string('x', 301),
             CountryCode: "",
             LanguageCode: "",
@@ -122,39 +80,27 @@ public sealed class JobPostDataFactoryTests
             CurrencyCode: CurrencyCode.PLN,
             SalaryMin: 22000m,
             SalaryMax: 15000m,
-            ModifiedBy: Guid.NewGuid());
+            ModifiedBy: Guid.NewGuid()
+        );
 
-        var exception = Assert.Throws<ValidationException>(
-            () => JobPostDataFactory.Create(command));
+        var exception = Assert.Throws<ValidationException>(() =>
+            JobPostDataFactory.Create(command)
+        );
 
         Assert.NotEmpty(exception.Errors);
 
-        Assert.Contains(
-            PostTitle.RequiredMessage,
-            exception.Errors);
+        Assert.Contains(PostTitle.RequiredMessage, exception.Errors);
 
-        Assert.Contains(
-            LongText.MaxLengthMessage,
-            exception.Errors);
+        Assert.Contains(LongText.MaxLengthMessage, exception.Errors);
 
-        Assert.Contains(
-            JobLocation.MaxLengthMessage,
-            exception.Errors);
+        Assert.Contains(JobLocation.MaxLengthMessage, exception.Errors);
 
-        Assert.Contains(
-            EntryText.RequiredMessage,
-            exception.Errors);
+        Assert.Contains(EntryText.RequiredMessage, exception.Errors);
 
-        Assert.Contains(
-            SalaryRange.MinimumExceedsMaximumMessage,
-            exception.Errors);
+        Assert.Contains(SalaryRange.MinimumExceedsMaximumMessage, exception.Errors);
 
-        Assert.Contains(
-            CountryCode.RequiredMessage,
-            exception.Errors);
+        Assert.Contains(CountryCode.RequiredMessage, exception.Errors);
 
-        Assert.Contains(
-            LanguageCode.RequiredMessage,
-            exception.Errors);
+        Assert.Contains(LanguageCode.RequiredMessage, exception.Errors);
     }
 }

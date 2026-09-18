@@ -6,12 +6,9 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Sales.Domain.Opportunity;
 
-public sealed class SalesOpportunity  : IOrganizationDomain
+public sealed class SalesOpportunity : IOrganizationDomain
 {
-    private SalesOpportunity()
-    {
-
-    }
+    private SalesOpportunity() { }
 
     public static SalesOpportunity Empty()
     {
@@ -30,7 +27,7 @@ public sealed class SalesOpportunity  : IOrganizationDomain
     public ShortNote LostReason { get; private set; } = null!;
     public UserSnapshot ResponsiblePerson { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }
-    
+
     public bool IsHotLead { get; private set; }
 
     public void Apply(OpportunityCreated @event)
@@ -72,5 +69,4 @@ public sealed class SalesOpportunity  : IOrganizationDomain
     {
         ResponsiblePerson = @event.Responsible;
     }
-
 }

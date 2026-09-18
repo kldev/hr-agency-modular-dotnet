@@ -1,29 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" />
+    <PackageReference Include="Marten" />
+    <PackageReference Include="Marten.EntityFrameworkCore" />
+    <PackageReference Include="WolverineFx" />
+    <PackageReference Include="WolverineFx.Marten" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="AWSSDK.S3" />
-        <PackageReference Include="Marten" />
-        <PackageReference Include="Marten.EntityFrameworkCore" />
-        <PackageReference Include="WolverineFx" />
-        <PackageReference Include="WolverineFx.Marten" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
-        <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
-        <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />
-        <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
-        <InternalsVisibleTo Include="HrAgencySystem.UnitTests"/>
-        <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests"/>
-    </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="HrAgencySystem.UnitTests" />
+    <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests" />
+  </ItemGroup>
 </Project>

@@ -8,4 +8,5 @@ public sealed record ChangeInterviewFormat(
     Guid OrganizationId,
     string Note,
     InterviewFormat Format,
-    Guid ModifiedBy) : IUpdateCommand;
+    Guid ModifiedBy
+) : IUpdateCommand;

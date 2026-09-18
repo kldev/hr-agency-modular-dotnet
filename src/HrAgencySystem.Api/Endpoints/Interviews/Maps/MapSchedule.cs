@@ -12,18 +12,25 @@ internal static class MapSchedule
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/interviews/schedule
-        group.MapPost("schedule", Handler)
+        group
+            .MapPost("schedule", Handler)
             .WithSummary("Schedule interview")
             .WithName("Schedule interview")
             .Produces<InterviewCreated>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user,
-        IMessageBus bus, ScheduleInterviewRequest request, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IMessageBus bus,
+        ScheduleInterviewRequest request,
+        CancellationToken ct
+    )
     {
         var result = await bus.InvokeAsync<InterviewCreated>(
-            request.ToCommand(user.OrganizationId, user.UserId), ct);
+            request.ToCommand(user.OrganizationId, user.UserId),
+            ct
+        );
         return TypedResults.Created($"/api/interviews/{result.InterviewId}", result);
     }
 }
@@ -38,13 +45,23 @@ public sealed record ScheduleInterviewRequest(
     Guid InterviewerId,
     string ScheduledTimezone = "Europe/Warsaw",
     string Location = "",
-    string MeetingUrl = "")
+    string MeetingUrl = ""
+)
 {
     public ScheduleInterview ToCommand(Guid organizationId, Guid createdBy)
     {
-        return new ScheduleInterview(JobApplicationId,
+        return new ScheduleInterview(
+            JobApplicationId,
             organizationId,
-            ScheduledAt, Format,
-            InterviewType, Note, InterviewerId, createdBy, ScheduledTimezone, Location, MeetingUrl);
+            ScheduledAt,
+            Format,
+            InterviewType,
+            Note,
+            InterviewerId,
+            createdBy,
+            ScheduledTimezone,
+            Location,
+            MeetingUrl
+        );
     }
 }

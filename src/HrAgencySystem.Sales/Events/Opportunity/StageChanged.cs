@@ -14,4 +14,4 @@ public sealed record StageChanged(
     string LostReason,
     decimal ExpectedValue,
     CurrencyCode CurrencyCode
-    );
+);

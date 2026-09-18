@@ -16,21 +16,26 @@ internal static class ContactDataFactory
         var (jobTitle, jobTitleError) = PersonJobTitle.TryCreate(data.Contact.JobTitle);
         var (phone, phoneError) = PersonPhone.TryCreate(data.Contact.Phone);
 
-        if (emailError != null) errors.Add(emailError);
-        if (firstNameError != null) errors.Add(firstNameError);
-        if (lastNameError != null) errors.Add(lastNameError);
-        if (jobTitleError != null) errors.Add(jobTitleError);
-        if (phoneError != null) errors.Add(phoneError);
-        
+        if (emailError != null)
+            errors.Add(emailError);
+        if (firstNameError != null)
+            errors.Add(firstNameError);
+        if (lastNameError != null)
+            errors.Add(lastNameError);
+        if (jobTitleError != null)
+            errors.Add(jobTitleError);
+        if (phoneError != null)
+            errors.Add(phoneError);
+
         if (errors.Count > 0)
             throw new ValidationException(errors);
 
         return new ContactPerson(
-            email!.Value, 
-            firstName!.Value, 
-            lastName!.Value, 
-            jobTitle!.Value, 
-            phone!.Value);
+            email!.Value,
+            firstName!.Value,
+            lastName!.Value,
+            jobTitle!.Value,
+            phone!.Value
+        );
     }
-    
 }

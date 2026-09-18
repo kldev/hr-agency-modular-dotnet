@@ -10,7 +10,8 @@ internal static class MapCreate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/api/owners", Handler)
+        group
+            .MapPost("/api/owners", Handler)
             .WithSummary("Create owner")
             .Produces<PlatformOwnerCreated>()
             .ProducesStandardErrors();
@@ -19,7 +20,10 @@ internal static class MapCreate
     private static async Task<IResult> Handler(IMessageBus bus, CreatePlatformOwner command)
     {
         var result = await bus.InvokeAsync<PlatformOwnerCreated>(command);
-        
-        return TypedResults.Created($"/api/owner/{result.PlatformOwnerId}", OwnerProjection.Create(result));
+
+        return TypedResults.Created(
+            $"/api/owner/{result.PlatformOwnerId}",
+            OwnerProjection.Create(result)
+        );
     }
 }

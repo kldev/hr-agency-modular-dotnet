@@ -11,25 +11,36 @@ internal static class MapGetSlice
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/job-description", Handler)
+        group
+            .MapGet("/api/job-description", Handler)
             .ProducesStandardErrors()
             .Produces<SliceResponse<JobDescriptionProjection>>()
             .WithSummary("Get job descriptions")
             .WithName("Get job descriptions slice");
     }
 
-    private static async Task<IResult> Handler(IJobDescriptionQueryRepository repository,
+    private static async Task<IResult> Handler(
+        IJobDescriptionQueryRepository repository,
         AppUserAuthenticated user,
         string? search,
         Guid? companyId,
         Guid? recruiterId,
         JobDescriptionStatus[]? status,
-        int page = 1, int pageSize = 100,
-        CancellationToken ct = default)
+        int page = 1,
+        int pageSize = 100,
+        CancellationToken ct = default
+    )
     {
-        var query = new JobDescriptionQuery(search ?? "", companyId, recruiterId, status ?? [], page, pageSize);
+        var query = new JobDescriptionQuery(
+            search ?? "",
+            companyId,
+            recruiterId,
+            status ?? [],
+            page,
+            pageSize
+        );
         var result = await repository.GetJobDescriptions(user.OrganizationId, query, ct);
-        
+
         return TypedResults.Ok(result);
     }
 }

@@ -6,11 +6,9 @@ public sealed record OrganizationSlug
 {
     private const int MaxLength = 100;
 
-    public const string RequiredMessage =
-        "Organization slug is required.";
+    public const string RequiredMessage = "Organization slug is required.";
 
-    public const string MaxLengthMessage =
-        "Organization slug cannot exceed 100 characters.";
+    public const string MaxLengthMessage = "Organization slug cannot exceed 100 characters.";
 
     private OrganizationSlug(string value)
     {
@@ -26,14 +24,15 @@ public sealed record OrganizationSlug
         return error is not null ? throw new InValidValueException(error) : slug!;
     }
 
-    public static (OrganizationSlug? slug, string? error) TryCreate(
-        string value)
+    public static (OrganizationSlug? slug, string? error) TryCreate(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return (null, RequiredMessage);
+        if (string.IsNullOrWhiteSpace(value))
+            return (null, RequiredMessage);
 
         var normalized = value.Trim().ToLowerInvariant();
 
-        if (normalized.Length > MaxLength) return (null, MaxLengthMessage);
+        if (normalized.Length > MaxLength)
+            return (null, MaxLengthMessage);
 
         return (new OrganizationSlug(normalized), null);
     }

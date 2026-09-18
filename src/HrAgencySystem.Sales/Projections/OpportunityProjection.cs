@@ -45,8 +45,7 @@ public sealed record OpportunityProjection(
     DateTimeOffset? FollowUpDateTime
 ) : IAudit
 {
-    public static OpportunityProjection Create(
-        OpportunityCreated @event)
+    public static OpportunityProjection Create(OpportunityCreated @event)
     {
         return new OpportunityProjection(
             @event.OpportunityId,
@@ -82,20 +81,18 @@ public sealed record OpportunityProjection(
             ExpectedValue = @event.ExpectedValue,
             ExpectedCloseDate = @event.ExpectedCloseDate,
             CurrencyCode = @event.Currency,
-            IsHotLead = @event.IsHotLead
-
+            IsHotLead = @event.IsHotLead,
         };
     }
 
     public OpportunityProjection Apply(StageChanged @event)
     {
-
         return this with
         {
             Stage = @event.Stage,
             LostReason = @event.LostReason,
             ModifiedAt = @event.ChangedAt,
-            ModifiedBy = @event.ChangedBy
+            ModifiedBy = @event.ChangedBy,
         };
     }
 
@@ -105,7 +102,7 @@ public sealed record OpportunityProjection(
         {
             Responsible = @event.Responsible,
             ModifiedAt = @event.ChangedAt,
-            ModifiedBy = @event.ChangedBy
+            ModifiedBy = @event.ChangedBy,
         };
     }
 
@@ -120,14 +117,17 @@ public sealed record OpportunityProjection(
     }
 
     private OpportunityProjection TrackFollowUpAction(
-        Guid followUpActionId, string content, DateTimeOffset followDateTime)
+        Guid followUpActionId,
+        string content,
+        DateTimeOffset followDateTime
+    )
     {
         return IsLatestFollowUpAction(followUpActionId, followDateTime)
             ? this with
             {
                 FollowUpActionId = followUpActionId,
                 FollowUpContent = content,
-                FollowUpDateTime = followDateTime
+                FollowUpDateTime = followDateTime,
             }
             : this;
     }
@@ -136,9 +136,10 @@ public sealed record OpportunityProjection(
     // follow up date wins - an edit of the tracked entry always wins
     private bool IsLatestFollowUpAction(Guid followUpActionId, DateTimeOffset followDateTime)
     {
-        if (FollowUpActionId is null) return true;
+        if (FollowUpActionId is null)
+            return true;
 
         return FollowUpActionId == followUpActionId
-               || followDateTime >= FollowUpDateTime.GetValueOrDefault();
+            || followDateTime >= FollowUpDateTime.GetValueOrDefault();
     }
 }

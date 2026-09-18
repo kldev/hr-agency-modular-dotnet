@@ -21,4 +21,5 @@ public sealed record CreateJobPost(
     decimal SalaryMin,
     decimal SalaryMax,
     Guid RecruiterId,
-    Guid CreatedBy) : IJobPostData, ICreateCommand;
+    Guid CreatedBy
+) : IJobPostData, ICreateCommand;

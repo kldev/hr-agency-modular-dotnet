@@ -15,28 +15,25 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.SalesOpportunities;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class SalesOpportunityTests(
-    IntegrationEnvironment env,
-    ITestOutputHelper output)
+public sealed class SalesOpportunityTests(IntegrationEnvironment env, ITestOutputHelper output)
     : BaseIntegrationTest(env, output)
 {
     private readonly Guid _organizationId = Guid.NewGuid();
     private readonly Guid _companyId = Guid.NewGuid();
     private readonly Guid _responsibleId = Guid.NewGuid();
-    
+
     protected override async Task BeforeEachAsync()
     {
-        
         await Cleaner.CleanSales();
     }
-    
+
     [Fact]
     public async Task ShouldCreateOpportunity()
     {
         var date = DateOnly.FromDateTime(DateTime.UtcNow);
         var createdBy = Guid.NewGuid();
         var result = await OpportunityTestClient.Create(
-            organizationId: _organizationId, 
+            organizationId: _organizationId,
             companyId: _companyId,
             title: "FullStack Developer",
             description: "2x fullstack Developer",
@@ -45,10 +42,11 @@ public sealed class SalesOpportunityTests(
             expectedValue: 15_000,
             responsibleId: _responsibleId,
             createdById: createdBy,
-            isHotLead: true);
-        
-        Assert.Equal(_organizationId, result.OrganizationId );
-        Assert.Equal(_companyId, result.Company.Id );
+            isHotLead: true
+        );
+
+        Assert.Equal(_organizationId, result.OrganizationId);
+        Assert.Equal(_companyId, result.Company.Id);
         Assert.Equal("FullStack Developer", result.Title);
         Assert.Equal("2x fullstack Developer", result.Description);
         Assert.Equal(_responsibleId, result.Responsible.Id);
@@ -58,14 +56,14 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(createdBy, result.CreatedBy.Id);
         Assert.True(result.IsHotLead);
     }
-    
+
     [Fact]
     public async Task ShouldCreateOpportunityWithoutResponsibleId()
     {
         var date = DateOnly.FromDateTime(DateTime.UtcNow);
         var createdBy = Guid.NewGuid();
         var result = await OpportunityTestClient.Create(
-            organizationId: _organizationId, 
+            organizationId: _organizationId,
             companyId: _companyId,
             title: "FullStack Developer",
             description: "2x fullstack Developer",
@@ -73,10 +71,11 @@ public sealed class SalesOpportunityTests(
             expectedCloseDate: date,
             expectedValue: 15_000,
             responsibleId: null,
-            createdById: createdBy);
-        
-        Assert.Equal(_organizationId, result.OrganizationId );
-        Assert.Equal(_companyId, result.Company.Id );
+            createdById: createdBy
+        );
+
+        Assert.Equal(_organizationId, result.OrganizationId);
+        Assert.Equal(_companyId, result.Company.Id);
         Assert.Equal("FullStack Developer", result.Title);
         Assert.Equal("2x fullstack Developer", result.Description);
         Assert.Equal(createdBy, result.Responsible.Id);
@@ -100,14 +99,15 @@ public sealed class SalesOpportunityTests(
             expectedCloseDate: date,
             expectedValue: 15_000,
             responsibleId: _responsibleId,
-            createdById: createdBy);
+            createdById: createdBy
+        );
 
         var updatedDate = date.AddDays(Random.Shared.Next(120));
         var modifiedBy = Guid.NewGuid();
-        
+
         Assert.Equal(_organizationId, result.OrganizationId);
         Assert.False(result.IsHotLead);
-        
+
         var updatedResult = await OpportunityTestClient.Update(
             opportunityId: result.OpportunityId,
             organizationId: _organizationId,
@@ -117,8 +117,8 @@ public sealed class SalesOpportunityTests(
             expectedCloseDate: updatedDate,
             expectedValue: 5_000,
             modifiedBy: modifiedBy,
-            isHotLead: true);
-
+            isHotLead: true
+        );
 
         Assert.Equal(_organizationId, updatedResult.OrganizationId);
         Assert.Equal("FullStack Developer + DBA Administrator", updatedResult.Title);
@@ -130,48 +130,38 @@ public sealed class SalesOpportunityTests(
         Assert.Equal(modifiedBy, updatedResult.ModifiedBy.Id);
         Assert.True(updatedResult.IsHotLead);
     }
-    
+
     [Fact]
     public async Task ShouldCreateOpportunityWithoutExpectedCloseDate()
     {
-        var result = await OpportunityTestClient.Create(
-            expectedCloseDate: null);
-        
+        var result = await OpportunityTestClient.Create(expectedCloseDate: null);
+
         Assert.Null(result.ExpectedCloseDate);
-        
     }
-    
+
     [Fact]
     public async Task ShouldNotCreateOpportunityWithoutTitle()
     {
-        var request = OpportunityTestClient.CreateValidRequest() with
-        {
-            Title = ""
-        };
+        var request = OpportunityTestClient.CreateValidRequest() with { Title = "" };
 
         var response = await Client.PostAsJsonAsync(OpportunityTestClient.BaseUrl, request);
-        
+
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         var problem = await response.ReadWithJson<BadRequestDetails>();
 
         Assert.NotNull(problem);
         Assert.Single(problem.ValidationErrors);
-        Assert.Contains(OpportunityTitle.RequiredMessage,  problem.ValidationErrors);
-
+        Assert.Contains(OpportunityTitle.RequiredMessage, problem.ValidationErrors);
     }
-    
-    
+
     [Fact]
     public async Task ShouldReturnValidationErrorWithExpectedValueInvalid()
     {
-        var request = OpportunityTestClient.CreateValidRequest() with
-        {
-            ExpectedValue = -1
-        };
+        var request = OpportunityTestClient.CreateValidRequest() with { ExpectedValue = -1 };
 
         var response = await Client.PostAsJsonAsync(OpportunityTestClient.BaseUrl, request);
-        
+
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         var problem = await response.ReadWithJson<BadRequestDetails>();
@@ -179,91 +169,94 @@ public sealed class SalesOpportunityTests(
         Assert.NotNull(problem);
         Assert.Single(problem.ValidationErrors);
     }
-    
+
     [Fact]
     public async Task ShouldNotUpdateOtherOrganizationOpportunity()
     {
-        var result = await OpportunityTestClient.Create(
-            organizationId: _organizationId);
+        var result = await OpportunityTestClient.Create(organizationId: _organizationId);
 
         var otherOrganizationId = Guid.NewGuid();
 
         var request = OpportunityTestClient.CreateValidUpdateRequest();
 
         Client.WithOrganizationId(otherOrganizationId);
-        var response = await Client.PutAsJsonAsync(OpportunityTestClient.BaseUrl + $"/{result.OpportunityId}", request);
-       
-        
+        var response = await Client.PutAsJsonAsync(
+            OpportunityTestClient.BaseUrl + $"/{result.OpportunityId}",
+            request
+        );
+
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
 
         var problem = await response.ReadWithJson<ProblemDetails>(OutputHelper);
         Assert.NotNull(problem);
-        
+
         Assert.Equal(OrganizationAccessDeniedException.ProblemTitle, problem.Title);
         Assert.Equal(OrganizationAccessDeniedException.ProblemMessage, problem.Detail);
     }
-    
-      
+
     [Fact]
     public async Task ShouldChangeResponsiblePerson()
     {
-        var result = await OpportunityTestClient.Create(
-            organizationId: _organizationId);
-        
+        var result = await OpportunityTestClient.Create(organizationId: _organizationId);
+
         Assert.Equal(result.OrganizationId, _organizationId);
-        OutputHelper.WriteLine($"Opportunity created person for {result.OpportunityId} {result.OrganizationId}");
-        
+        OutputHelper.WriteLine(
+            $"Opportunity created person for {result.OpportunityId} {result.OrganizationId}"
+        );
+
         var newResponsiblePersonId = Guid.NewGuid();
         var updateResult = await OpportunityTestClient.ChangeResponsible(
             organizationId: _organizationId,
             opportunityId: result.OpportunityId,
-            responsible: newResponsiblePersonId);
-        
+            responsible: newResponsiblePersonId
+        );
+
         Assert.Equal(newResponsiblePersonId, updateResult.Responsible.Id);
         Assert.NotEqual(result.Responsible.Id, updateResult.Responsible.Id);
     }
-    
-      
+
     [Fact]
     public async Task ShouldReturnBusinessRuleErrorWhenAssignSameResponsiblePerson()
     {
         var responsiblePersonId = Guid.NewGuid();
-        
+
         var result = await OpportunityTestClient.Create(
             organizationId: _organizationId,
-            responsibleId: responsiblePersonId);
-
+            responsibleId: responsiblePersonId
+        );
 
         Client.WithOrganizationId(_organizationId);
         var changeRequest = new ChangeResponsiblePersonRequest(responsiblePersonId);
-        var response =
-            await Client.PutAsJsonAsync(OpportunityTestClient.BaseUrl + $"/{result.OpportunityId}/responsible",
-                changeRequest);
-    
+        var response = await Client.PutAsJsonAsync(
+            OpportunityTestClient.BaseUrl + $"/{result.OpportunityId}/responsible",
+            changeRequest
+        );
+
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         var problem = await response.ReadWithJson<ProblemDetails>();
 
         Assert.NotNull(problem);
         Assert.Equal(ChangeResponsiblePersonHandler.AlreadyAssignedError, problem.Detail);
     }
-    
+
     [Fact]
     public async Task ShouldChangeStage()
     {
-        var result = await OpportunityTestClient.Create(
-            organizationId: _organizationId);
-        
+        var result = await OpportunityTestClient.Create(organizationId: _organizationId);
+
         Assert.Equal(result.OrganizationId, _organizationId);
-        OutputHelper.WriteLine($"Opportunity created person for {result.OpportunityId} {result.OrganizationId} {result.Stage}");
+        OutputHelper.WriteLine(
+            $"Opportunity created person for {result.OpportunityId} {result.OrganizationId} {result.Stage}"
+        );
 
         var newStage = OpportunityStage.Viewed;
-    
+
         var updateResult = await OpportunityTestClient.ChangeStage(
             organizationId: _organizationId,
             opportunityId: result.OpportunityId,
-            stage: newStage);
-        
+            stage: newStage
+        );
+
         Assert.Equal(newStage, updateResult.Stage);
-        
     }
 }

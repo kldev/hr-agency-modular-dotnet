@@ -2,8 +2,7 @@ namespace HrAgencySystem.Api.Endpoints.Company;
 
 public static class Endpoint
 {
-    public static void Map(
-        this IEndpointRouteBuilder endpoints)
+    public static void Map(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/companies").WithTags("Company");
 

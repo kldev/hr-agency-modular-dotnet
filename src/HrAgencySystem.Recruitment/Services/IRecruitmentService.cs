@@ -13,12 +13,20 @@ public interface IRecruitmentService
     Task ValidateOrganization(Guid organizationId, CancellationToken ct);
 
     Task<JobApplicationInfo> GetApplicationAsync(
-        Guid jobApplicationId, Guid organizationId,
-        CancellationToken ct);
-    
+        Guid jobApplicationId,
+        Guid organizationId,
+        CancellationToken ct
+    );
+
     public Task<string> GetOrganizationSlug(OrganizationId organizationId, CancellationToken ct);
-    
+
     void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId);
 
-    Task AppendApplicationNoteToStream(JobApplicationId jobApplicationId, OrganizationId organizationId, string note, UserSnapshot user, CancellationToken ct);
+    Task AppendApplicationNoteToStream(
+        JobApplicationId jobApplicationId,
+        OrganizationId organizationId,
+        string note,
+        UserSnapshot user,
+        CancellationToken ct
+    );
 }

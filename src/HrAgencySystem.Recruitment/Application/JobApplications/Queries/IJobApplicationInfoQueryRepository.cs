@@ -5,16 +5,19 @@ namespace HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 
 public interface IJobApplicationInfoQueryRepository
 {
-    Task<JobApplicationInfo?> GetAsync(Guid jobApplicationId, OrganizationId organizationId, CancellationToken ct);   
+    Task<JobApplicationInfo?> GetAsync(
+        Guid jobApplicationId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    );
 }
 
 public sealed record JobApplicationInfo(
     Guid JobApplicationId,
-    Guid OrganizationId, 
-    Guid CandidateId, 
-    Guid CompanyId, 
+    Guid OrganizationId,
+    Guid CandidateId,
+    Guid CompanyId,
     CandidateInfo Candidate,
     string JobPostTitle,
     Guid JobPostId
-   );
-
+);

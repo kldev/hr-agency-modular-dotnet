@@ -22,8 +22,7 @@ public sealed class JobFeedSerializationTests
         // Assert
         using var document = JsonDocument.Parse(json);
 
-        var job = Assert.Single(
-            document.RootElement.GetProperty("jobs").EnumerateArray());
+        var job = Assert.Single(document.RootElement.GetProperty("jobs").EnumerateArray());
 
         Assert.Equal(row.Id, job.GetProperty("id").GetGuid());
         Assert.Equal(row.Title, job.GetProperty("title").GetString());
@@ -37,7 +36,8 @@ public sealed class JobFeedSerializationTests
 
         Assert.Equal(
             row.Skills,
-            job.GetProperty("skills").EnumerateArray().Select(x => x.GetString()).ToArray());
+            job.GetProperty("skills").EnumerateArray().Select(x => x.GetString()).ToArray()
+        );
     }
 
     [Fact]
@@ -52,12 +52,12 @@ public sealed class JobFeedSerializationTests
         // Assert
         using var document = JsonDocument.Parse(json);
 
-        var job = Assert.Single(
-            document.RootElement.GetProperty("jobs").EnumerateArray());
+        var job = Assert.Single(document.RootElement.GetProperty("jobs").EnumerateArray());
 
         Assert.Equal(
             $"{FeedUrl}/acme/senior-net-developer",
-            job.GetProperty("applyUrl").GetString());
+            job.GetProperty("applyUrl").GetString()
+        );
     }
 
     [Fact]
@@ -74,9 +74,7 @@ public sealed class JobFeedSerializationTests
 
         var job = Assert.Single(document.Root!.Elements("job"));
 
-        Assert.Equal(
-            $"{FeedUrl}/acme/senior-net-developer",
-            job.Element("applyUrl")!.Value);
+        Assert.Equal($"{FeedUrl}/acme/senior-net-developer", job.Element("applyUrl")!.Value);
 
         Assert.Equal(row.Title, job.Element("title")!.Value);
         Assert.Equal("FullTime", job.Element("employmentType")!.Value);
@@ -118,7 +116,7 @@ public sealed class JobFeedSerializationTests
             SalaryMax = 22_000,
             PostingSlug = "acme/senior-net-developer",
             CreatedAt = DateTimeOffset.UtcNow,
-            UpdatedAt = DateTimeOffset.UtcNow
+            UpdatedAt = DateTimeOffset.UtcNow,
         };
     }
 }

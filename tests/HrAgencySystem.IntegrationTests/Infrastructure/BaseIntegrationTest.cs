@@ -21,24 +21,43 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         _environment = environment;
         OutputHelper = output;
         Client.AsOrganizationRoles();
-        JobDescriptionClient = new JobDescriptionTestClient(environment.CreateClient().AsOrganizationRoles());
-        UserClient = new UserTestClient(environment.CreateClient().AsOrganizationRoles(), OutputHelper);
+        JobDescriptionClient = new JobDescriptionTestClient(
+            environment.CreateClient().AsOrganizationRoles()
+        );
+        UserClient = new UserTestClient(
+            environment.CreateClient().AsOrganizationRoles(),
+            OutputHelper
+        );
         CompanyClient = new CompanyTestClient(_environment.CreateClient().AsOrganizationRoles());
-        JobPostingClient = new JobPostingTestClient(_environment.CreateClient().AsOrganizationRoles());
-        InterviewClient = new InterviewTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
-        CandidateClient = new CandidateTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
-        SalesActivityTestClient =
-            new SalesActivityTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
+        JobPostingClient = new JobPostingTestClient(
+            _environment.CreateClient().AsOrganizationRoles()
+        );
+        InterviewClient = new InterviewTestClient(
+            _environment.CreateClient().AsOrganizationRoles(),
+            output
+        );
+        CandidateClient = new CandidateTestClient(
+            _environment.CreateClient().AsOrganizationRoles(),
+            output
+        );
+        SalesActivityTestClient = new SalesActivityTestClient(
+            _environment.CreateClient().AsOrganizationRoles(),
+            output
+        );
 
-        OpportunityTestClient = new OpportunityTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
-        FollowUpActionTestClient =
-            new FollowUpActionTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
-     //   _environment.SetOutputHelper(output);
-
+        OpportunityTestClient = new OpportunityTestClient(
+            _environment.CreateClient().AsOrganizationRoles(),
+            output
+        );
+        FollowUpActionTestClient = new FollowUpActionTestClient(
+            _environment.CreateClient().AsOrganizationRoles(),
+            output
+        );
+        //   _environment.SetOutputHelper(output);
     }
 
     protected HttpClient Client => _environment.Client;
-    
+
     protected DatabaseCleaner Cleaner => _environment.Cleaner;
     protected ITestOutputHelper OutputHelper { get; }
 
@@ -48,13 +67,14 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     protected JobPostingTestClient JobPostingClient { get; }
     protected InterviewTestClient InterviewClient { get; }
     protected CandidateTestClient CandidateClient { get; }
-    
+
     protected SalesActivityTestClient SalesActivityTestClient { get; }
-    
-    protected OpportunityTestClient OpportunityTestClient { get;  }
+
+    protected OpportunityTestClient OpportunityTestClient { get; }
 
     protected FollowUpActionTestClient FollowUpActionTestClient { get; }
-    public async  Task InitializeAsync()
+
+    public async Task InitializeAsync()
     {
         await BeforeEachAsync();
     }
@@ -68,7 +88,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     {
         _environment.SetOutputHelper(output);
     }
-    
+
     protected virtual Task BeforeEachAsync() => Task.CompletedTask;
 
     public IServiceProvider Services => _environment.Services;

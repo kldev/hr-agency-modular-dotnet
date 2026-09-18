@@ -10,17 +10,26 @@ internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.Map("/api/users/{userId:guid}", Handler)
+        group
+            .Map("/api/users/{userId:guid}", Handler)
             .WithSummary("Get user")
             .WithName("Get user")
             .Produces<UserProjection>()
-            .ProducesStandardErrors();;
+            .ProducesStandardErrors();
+        ;
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, IDocumentSession session, Guid userId, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IDocumentSession session,
+        Guid userId,
+        CancellationToken ct
+    )
     {
-        var result = await session.Query<UserProjection>()
-            .Where(z => z.Id == userId && z.OrganizationId == user.OrganizationId).SingleOrDefaultAsync(ct);
+        var result = await session
+            .Query<UserProjection>()
+            .Where(z => z.Id == userId && z.OrganizationId == user.OrganizationId)
+            .SingleOrDefaultAsync(ct);
 
         if (result == null)
         {

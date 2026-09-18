@@ -4,8 +4,5 @@ namespace HrAgencySystem.Company.Application.Contacts.Create;
 
 public interface IContactData
 {
-    ContactPerson Contact
-    {
-        get;
-    }
+    ContactPerson Contact { get; }
 }

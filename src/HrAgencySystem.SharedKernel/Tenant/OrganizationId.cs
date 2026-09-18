@@ -4,12 +4,11 @@ public readonly record struct OrganizationId(Guid Value)
 {
     public const string OrganizationCheckMessage = "Non existing organization.";
     public const string OrganizationNotMatchMessage = "Organization not match.";
-    
+
     public static OrganizationId From(Guid value)
     {
         if (value == Guid.Empty)
-            throw new ArgumentException("Organization ID cannot be empty.",
-                nameof(value));
+            throw new ArgumentException("Organization ID cannot be empty.", nameof(value));
 
         return new OrganizationId(value);
     }

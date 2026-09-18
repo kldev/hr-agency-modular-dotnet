@@ -12,8 +12,8 @@ namespace HrAgencySystem.IntegrationTests.Infrastructure;
 internal class TestAuthHandler(
     IOptionsMonitor<TestAuthHandlerOptions> options,
     ILoggerFactory logger,
-    UrlEncoder encoder)
-    : AuthenticationHandler<TestAuthHandlerOptions>(options, logger, encoder)
+    UrlEncoder encoder
+) : AuthenticationHandler<TestAuthHandlerOptions>(options, logger, encoder)
 {
     internal const string AuthenticationScheme = "TestScheme";
 
@@ -24,39 +24,37 @@ internal class TestAuthHandler(
         UseUserId(claims);
         UseTestOrganizationId(claims);
         UseTestRoles(claims);
-        
+
         var identity = new ClaimsIdentity(claims, AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, AuthenticationScheme);
 
         return Task.FromResult(AuthenticateResult.Success(ticket));
     }
-    
+
     private void UseUserId(List<Claim> claims)
     {
         var testUserId = Request.Headers["X-Test-User-Id"];
-        if (!Guid.TryParse(testUserId, out var userId)) return;
+        if (!Guid.TryParse(testUserId, out var userId))
+            return;
         claims.RemoveAll(x => x.Type == AppClaims.UserId);
-        claims.Add(new Claim(
-            AppClaims.UserId,
-            userId.ToString()));
+        claims.Add(new Claim(AppClaims.UserId, userId.ToString()));
     }
 
     private void UseTestOrganizationId(List<Claim> claims)
     {
         var testOrganizationId = Request.Headers["X-Test-OrganizationId"];
-        if (!Guid.TryParse(testOrganizationId, out var organizationId)) return;
+        if (!Guid.TryParse(testOrganizationId, out var organizationId))
+            return;
         claims.RemoveAll(x => x.Type == AppClaims.OrganizationId);
-        claims.Add(new Claim(
-            AppClaims.OrganizationId,
-            organizationId.ToString()));
+        claims.Add(new Claim(AppClaims.OrganizationId, organizationId.ToString()));
     }
 
     private void UseTestRoles(List<Claim> claims)
     {
-        var testRoles = Request.Headers
-            .GetCommaSeparatedValues("X-Test-Roles");
-        if (testRoles.Length <= 0) return;
+        var testRoles = Request.Headers.GetCommaSeparatedValues("X-Test-Roles");
+        if (testRoles.Length <= 0)
+            return;
         claims.RemoveAll(c => c.Type == AppClaims.Role);
         claims.AddRange(testRoles.Select(role => new Claim(AppClaims.Role, role)));
     }

@@ -26,9 +26,10 @@ public class CompanyNameTests
     [Fact]
     public void Create_WithEmptyValue_ThrowsInValidValueException()
     {
-        var exception = Assert
-            .Throws<InValidValueException>(() => CompanyName.Create(string.Empty));
-        
+        var exception = Assert.Throws<InValidValueException>(() =>
+            CompanyName.Create(string.Empty)
+        );
+
         Assert.Contains(CompanyName.RequiredMessage, exception.Message);
     }
 
@@ -37,9 +38,8 @@ public class CompanyNameTests
     {
         var value = new string('A', 251);
 
-        var exception = Assert
-            .Throws<InValidValueException>(() => CompanyName.Create(value));
-        
+        var exception = Assert.Throws<InValidValueException>(() => CompanyName.Create(value));
+
         Assert.Contains(CompanyName.MaxLengthMessage, exception.Message);
     }
 

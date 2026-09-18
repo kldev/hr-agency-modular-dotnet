@@ -26,12 +26,10 @@ public static class CompanyModule
         options.ConfigureCompanyProjections();
     }
 
-    public static void ConfigureMarten(
-        StoreOptions options)
+    public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureDocuments();
         options.ConfigureEvents();
         options.ConfigureProjections();
     }
-    
 }

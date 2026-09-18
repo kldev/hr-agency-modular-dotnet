@@ -18,33 +18,25 @@ namespace HrAgencySystem.UnitTests.Identity.Handlers;
 
 public class CreateUserHandlerTests : BaseTest
 {
-    private readonly IDocumentSession _documentSession =
-        Substitute.For<IDocumentSession>();
+    private readonly IDocumentSession _documentSession = Substitute.For<IDocumentSession>();
 
-    private readonly IIdentityService _service =
-        Substitute.For<IIdentityService>();
+    private readonly IIdentityService _service = Substitute.For<IIdentityService>();
 
-    private readonly IPasswordHasher _hasher =
-        Substitute.For<IPasswordHasher>();
+    private readonly IPasswordHasher _hasher = Substitute.For<IPasswordHasher>();
 
-    private readonly IUserEmailReservationRepository _emailReservationRepository
-        = Substitute.For<IUserEmailReservationRepository>();
-    
+    private readonly IUserEmailReservationRepository _emailReservationRepository =
+        Substitute.For<IUserEmailReservationRepository>();
+
     private static readonly Guid AdminId = Guid.NewGuid();
 
     private static UserSnapshot Admin { get; } =
-        new(
-            AdminId,
-            "Alice",
-            "Wells",
-            "alice-wells@hr-agency.com");
+        new(AdminId, "Alice", "Wells", "alice-wells@hr-agency.com");
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsUserCreated()
     {
         var organizationId = Guid.NewGuid();
-        var now = new DateTimeOffset(
-            2026, 8, 31, 10, 0, 0, TimeSpan.Zero);
+        var now = new DateTimeOffset(2026, 8, 31, 10, 0, 0, TimeSpan.Zero);
 
         const string password = "Password123!";
         const string passwordHash = "hashed-password";
@@ -55,21 +47,22 @@ public class CreateUserHandlerTests : BaseTest
             "  John  ",
             "  Doe  ",
             OrganizationRole.Admin,
-            password, Guid.NewGuid());
+            password,
+            Guid.NewGuid()
+        );
 
-        _hasher
-            .Hash(password)
-            .Returns(passwordHash);
-        
+        _hasher.Hash(password).Returns(passwordHash);
+
         _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _documentSession
-            .Events
-            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>())
+            .Events.StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
-        _emailReservationRepository.ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(false);
-        
+        _emailReservationRepository
+            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(false);
+
         var clock = new FixedClock(now);
 
         var result = await CreateUserHandler.Handle(
@@ -79,7 +72,8 @@ public class CreateUserHandlerTests : BaseTest
             _emailReservationRepository,
             _service,
             clock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         Assert.NotEqual(Guid.Empty, result.UserId);
         Assert.Equal(organizationId, result.OrganizationId);
@@ -92,16 +86,12 @@ public class CreateUserHandlerTests : BaseTest
 
         await _service
             .Received(1)
-            .ValidateOrganization(
-                organizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(organizationId, Arg.Any<CancellationToken>());
 
-        _hasher
-            .Received(1)
-            .Hash(password);
+        _hasher.Received(1).Hash(password);
 
-        var call = _documentSession.Events
-            .ReceivedCalls()
+        var call = _documentSession
+            .Events.ReceivedCalls()
             .Single(x => x.GetMethodInfo().Name == nameof(_documentSession.Events.StartStream));
 
         var arguments = call.GetArguments();
@@ -127,29 +117,22 @@ public class CreateUserHandlerTests : BaseTest
             "",
             "",
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid()
-            );
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            HandleCommand(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
         Assert.Equal(
-            [
-                "Email is required.",
-                "First name is required.",
-                "Last name is required."
-            ],
-            exception.Errors);
+            ["Email is required.", "First name is required.", "Last name is required."],
+            exception.Errors
+        );
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -161,25 +144,19 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid()
-            );
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            HandleCommand(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
-        Assert.Equal(
-            ["Email is required."],
-            exception.Errors);
+        Assert.Equal(["Email is required."], exception.Errors);
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -191,25 +168,19 @@ public class CreateUserHandlerTests : BaseTest
             "",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!",Guid.NewGuid()
-            );
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            HandleCommand(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
-        Assert.Equal(
-            ["First name is required."],
-            exception.Errors);
+        Assert.Equal(["First name is required."], exception.Errors);
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -221,24 +192,19 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "",
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid());
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            HandleCommand(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
-        Assert.Equal(
-            ["Last name is required."],
-            exception.Errors);
+        Assert.Equal(["Last name is required."], exception.Errors);
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -250,25 +216,19 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid()
-            );
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            HandleCommand(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
-        Assert.Contains(
-            exception.Errors,
-            error => error.Contains("Email"));
+        Assert.Contains(exception.Errors, error => error.Contains("Email"));
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -280,25 +240,19 @@ public class CreateUserHandlerTests : BaseTest
             new string('A', 101),
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid()
-            );
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            HandleCommand(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
-        Assert.Contains(
-            exception.Errors,
-            error => error.Contains("First name"));
+        Assert.Contains(exception.Errors, error => error.Contains("First name"));
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -310,25 +264,19 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             new string('A', 101),
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid()
-            );
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(() =>
-            HandleCommand(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
-        Assert.Contains(
-            exception.Errors,
-            error => error.Contains("Last name"));
+        Assert.Contains(exception.Errors, error => error.Contains("Last name"));
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -340,25 +288,23 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "123", Guid.NewGuid()
-            );
+            "123",
+            Guid.NewGuid()
+        );
 
         var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            HandleCommand(command));
+            HandleCommand(command)
+        );
 
         Assert.NotEmpty(exception.Message);
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
-    
+
     [Fact]
     public async Task Handle_WhenOrganizationDoesNotExist_DoesNotCreateUser()
     {
@@ -370,25 +316,21 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid()
-            );
+            "Password123!",
+            Guid.NewGuid()
+        );
 
-        _service.ValidateOrganization(organizationId, Arg.Any<CancellationToken>())
+        _service
+            .ValidateOrganization(organizationId, Arg.Any<CancellationToken>())
             .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
 
-        await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            HandleCommand(command));
+        await Assert.ThrowsAsync<BusinessRuleException>(() => HandleCommand(command));
 
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
 
-        _hasher
-            .DidNotReceive()
-            .Hash(Arg.Any<string>());
-
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<User>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     [Fact]
@@ -403,29 +345,26 @@ public class CreateUserHandlerTests : BaseTest
             "John",
             "Doe",
             OrganizationRole.Recruiter,
-            "Password123!", Guid.NewGuid());
-
+            "Password123!",
+            Guid.NewGuid()
+        );
 
         _emailReservationRepository
-            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(false);
+            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(false);
 
         _service.ValidateOrganization(organizationId, cts.Token).Returns(Task.CompletedTask);
 
         await HandleCommand(command, ct: cts.Token);
-        
-        await _service
-            .Received(1)
-            .ValidateOrganization(
-                organizationId,
-                cts.Token);
+
+        await _service.Received(1).ValidateOrganization(organizationId, cts.Token);
     }
 
     [Fact]
     public async Task Handle_ExistEmailInOrganization_ThrowsBusinessRuleException()
     {
         var organizationId = Guid.NewGuid();
-        var now = new DateTimeOffset(
-            2026, 8, 31, 10, 0, 0, TimeSpan.Zero);
+        var now = new DateTimeOffset(2026, 8, 31, 10, 0, 0, TimeSpan.Zero);
 
         const string password = "Password123!";
         const string passwordHash = "hashed-password";
@@ -436,28 +375,34 @@ public class CreateUserHandlerTests : BaseTest
             "  John  ",
             "  Doe  ",
             OrganizationRole.Admin,
-            password, Guid.NewGuid());
-        
+            password,
+            Guid.NewGuid()
+        );
+
         _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
-        _hasher
-            .Hash(password)
-            .Returns(passwordHash);
+        _hasher.Hash(password).Returns(passwordHash);
 
         _documentSession
-            .Events
-            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>())
+            .Events.StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
         _emailReservationRepository
-            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>()).Returns(true);
+            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(true);
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>( async () => await HandleCommand(command));
-        
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(async () =>
+            await HandleCommand(command)
+        );
+
         Assert.Equal(CreateUserHandler.UserWithEmailMessage, exception.Message);
     }
 
-    private async Task HandleCommand(CreateUser command, IClock? clock = null, CancellationToken? ct = null)
+    private async Task HandleCommand(
+        CreateUser command,
+        IClock? clock = null,
+        CancellationToken? ct = null
+    )
     {
         await CreateUserHandler.Handle(
             command,
@@ -466,6 +411,7 @@ public class CreateUserHandlerTests : BaseTest
             _emailReservationRepository,
             _service,
             clock ?? new FixedClock(DateTimeOffset.Now),
-            ct ?? CancellationToken.None);
+            ct ?? CancellationToken.None
+        );
     }
 }

@@ -3,7 +3,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Company.Events;
 
-public sealed record CompanyUpdated ( 
+public sealed record CompanyUpdated(
     Guid CompanyId,
     Guid OrganizationId,
     string Name,
@@ -12,4 +12,5 @@ public sealed record CompanyUpdated (
     string RegistrationNumber,
     string CountryCode,
     UserSnapshot ModifiedBy,
-    DateTimeOffset ModifiedAt);
+    DateTimeOffset ModifiedAt
+);

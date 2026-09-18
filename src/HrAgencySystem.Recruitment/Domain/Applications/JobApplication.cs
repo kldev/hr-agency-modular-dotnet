@@ -9,9 +9,7 @@ namespace HrAgencySystem.Recruitment.Domain.Applications;
 
 public sealed class JobApplication : IOrganizationDomain
 {
-    private JobApplication()
-    {
-    }
+    private JobApplication() { }
 
     public static JobApplication Empty()
     {
@@ -33,7 +31,7 @@ public sealed class JobApplication : IOrganizationDomain
 
     public Guid? LastModifiedByUserId { get; private set; }
     public UserSnapshot? LastModifiedByUser { get; private set; }
-    
+
     public Guid? LatestInterviewId { get; private set; }
 
     public void Apply(JobApplicationCreated @event)
@@ -59,11 +57,11 @@ public sealed class JobApplication : IOrganizationDomain
     public void Apply(JobApplicationAssessmentStarted @event)
     {
         CheckStatusChangeAllowed(JobApplicationStatus.Assessment);
-        
+
         Status = JobApplicationStatus.Assessment;
         ApplyCommon(@event);
     }
-    
+
     public void Apply(JobApplicationInterviewScheduled @event)
     {
         if (Status == JobApplicationStatus.Interview)
@@ -72,7 +70,7 @@ public sealed class JobApplication : IOrganizationDomain
             ApplyCommon(@event);
             return;
         }
-        
+
         CheckStatusChangeAllowed(JobApplicationStatus.Interview);
 
         Status = JobApplicationStatus.Interview;
@@ -92,7 +90,7 @@ public sealed class JobApplication : IOrganizationDomain
     {
         CheckStatusChangeAllowed(JobApplicationStatus.Hired);
         Status = JobApplicationStatus.Hired;
-     
+
         ApplyCommon(@event);
     }
 
@@ -109,32 +107,31 @@ public sealed class JobApplication : IOrganizationDomain
         CheckStatusChangeAllowed(JobApplicationStatus.Withdrawn);
 
         Status = JobApplicationStatus.Withdrawn;
-        
+
         ApplyCommon(@event);
     }
-    
+
     public void Apply(JobApplicationReactivated @event)
     {
         Status = JobApplicationStatus.Screening;
         ApplyCommon(@event);
     }
-    
+
     public void Apply(JobApplicationUpdated @event)
     {
-        
         ApplyCommon(@event);
     }
-
 
     private void CheckStatusChangeAllowed(JobApplicationStatus newStatus)
     {
         if (!JobApplicationStatusChangePolicy.Allow(Status, newStatus))
         {
-            throw new InvalidOperationException($"Not allowed to change job application status form {Status} to {newStatus}");
+            throw new InvalidOperationException(
+                $"Not allowed to change job application status form {Status} to {newStatus}"
+            );
         }
-            
     }
-    
+
     private void ApplyCommon(IJobApplicationEvent @event)
     {
         UpdatedAt = @event.OccurredAt;

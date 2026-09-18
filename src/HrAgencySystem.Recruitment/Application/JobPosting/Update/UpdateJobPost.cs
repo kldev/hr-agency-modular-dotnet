@@ -21,4 +21,5 @@ public sealed record UpdateJobPost(
     CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    Guid ModifiedBy) : IJobPostData, IUpdateCommand;
+    Guid ModifiedBy
+) : IJobPostData, IUpdateCommand;

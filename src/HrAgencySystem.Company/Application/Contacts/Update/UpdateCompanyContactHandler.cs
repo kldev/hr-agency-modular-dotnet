@@ -14,7 +14,9 @@ public static class UpdateCompanyContactHandler
         UpdateCompanyContact command,
         ICompanyContactRepository repository,
         IMessageBus bus,
-        IClock clock, CancellationToken ct)
+        IClock clock,
+        CancellationToken ct
+    )
     {
         var data = ContactDataFactory.Create(command);
         var contact = await repository.GetById(command.ContactId, command.OrganizationId, ct);
@@ -22,20 +24,21 @@ public static class UpdateCompanyContactHandler
         if (contact == null)
             throw new NotFoundException("Company contact", command.ContactId);
 
-        var updateContact = contact with
-        {
-            Contact = data,
-            ModifiedAt = clock.UtcNow
-        };
+        var updateContact = contact with { Contact = data, ModifiedAt = clock.UtcNow };
 
         await repository.Update(updateContact);
 
-        if (!command.UpdatePrimary) return (updateContact, []);
-        
-        var @event = new CompanyPrimaryContactUpdated(contact.CompanyId, contact.OrganizationId, data, contact.Id,
-            clock.UtcNow);
+        if (!command.UpdatePrimary)
+            return (updateContact, []);
+
+        var @event = new CompanyPrimaryContactUpdated(
+            contact.CompanyId,
+            contact.OrganizationId,
+            data,
+            contact.Id,
+            clock.UtcNow
+        );
 
         return (updateContact, [@event]);
-
     }
 }

@@ -11,11 +11,10 @@ public class CompanyTests
     {
         var companyId = Guid.NewGuid();
         var organizationId = Guid.NewGuid();
-        var createdAt = new DateTimeOffset(
-            2026, 8, 30, 12, 0, 0, TimeSpan.Zero);
+        var createdAt = new DateTimeOffset(2026, 8, 30, 12, 0, 0, TimeSpan.Zero);
 
         var user = new UserSnapshot(Guid.NewGuid(), "Test", "Tester", "test@test.io");
-        
+
         var @event = new CompanyCreated(
             companyId,
             organizationId,
@@ -26,7 +25,8 @@ public class CompanyTests
             D.Industry.Agriculture,
             "acme.com",
             user,
-            createdAt);
+            createdAt
+        );
 
         var company = D.Company.Empty();
         company.Apply(@event);

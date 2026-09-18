@@ -8,7 +8,9 @@ namespace HrAgencySystem.Files;
 public static class FilesModule
 {
     public static void AddFilesModule(
-        this IServiceCollection services, IConfiguration configuration)
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
         var section = configuration.GetSection(S3Config.SectionName);
         services.Configure<S3Config>(ops =>

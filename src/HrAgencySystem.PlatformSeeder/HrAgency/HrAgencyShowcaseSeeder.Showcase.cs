@@ -13,22 +13,20 @@ public sealed partial class HrAgencyShowcaseSeeder
     {
         logger.LogInformation(
             "Starting applicant seeding: {Count} applicants per organization",
-            count);
+            count
+        );
 
-        var organizations = await session
-            .Query<OrganizationCreated>()
-            .ToListAsync();
+        var organizations = await session.Query<OrganizationCreated>().ToListAsync();
 
-        logger.LogInformation(
-            "Found {OrganizationCount} organizations",
-            organizations.Count);
+        logger.LogInformation("Found {OrganizationCount} organizations", organizations.Count);
 
         foreach (var organization in organizations)
         {
             logger.LogInformation(
                 "Generating {Count} applicants for organization {OrganizationId}",
                 count,
-                organization.OrganizationId);
+                organization.OrganizationId
+            );
 
             await GenerateApplicants(count);
         }
@@ -40,19 +38,19 @@ public sealed partial class HrAgencyShowcaseSeeder
     {
         logger.LogInformation("Starting showcase seeding");
 
-        var organizations = await session
-            .Query<OrganizationCreated>()
-            .ToListAsync();
+        var organizations = await session.Query<OrganizationCreated>().ToListAsync();
 
         logger.LogInformation(
             "Found {OrganizationCount} organizations for showcase",
-            organizations.Count);
+            organizations.Count
+        );
 
         foreach (var organization in organizations)
         {
             logger.LogInformation(
                 "Creating showcase data for organization {OrganizationId}",
-                organization.OrganizationId);
+                organization.OrganizationId
+            );
 
             var userIds = await session
                 .Query<UserCreated>()
@@ -70,19 +68,19 @@ public sealed partial class HrAgencyShowcaseSeeder
                 "Organization {OrganizationId}: found {UserCount} users and {CompanyCount} companies",
                 organization.OrganizationId,
                 userIds.Count,
-                companyIds.Count);
+                companyIds.Count
+            );
 
-            await new ModernWebDeveloperScenario(bus)
-                .Create(
-                    organization.OrganizationId,
-                    userIds,
-                    companyIds);
+            await new ModernWebDeveloperScenario(bus).Create(
+                organization.OrganizationId,
+                userIds,
+                companyIds
+            );
         }
 
         logger.LogInformation("Creating showcase job applications");
 
-        await new ApplyToJobPostScenario(bus, session)
-            .ExecuteShowcase();
+        await new ApplyToJobPostScenario(bus, session).ExecuteShowcase();
 
         logger.LogInformation("Showcase seeding completed");
     }

@@ -9,19 +9,17 @@ using HrAgencySystem.SharedKernel.Web;
 
 namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
-public sealed class JobDescriptionTestClient(
-    HttpClient client)
+public sealed class JobDescriptionTestClient(HttpClient client)
 {
-
     internal void WithOrganizationId(Guid organizationId)
     {
         client.WithOrganizationId(organizationId);
     }
-    
+
     internal async Task<JobDescriptionProjection> GetSingle(Guid jobDescriptionId)
     {
         var response = await client.GetAsync($"/api/job-description/{jobDescriptionId}");
-        
+
         response.EnsureSuccessStatusCode();
 
         var result = await response.ReadWithJson<JobDescriptionProjection>();
@@ -29,45 +27,40 @@ public sealed class JobDescriptionTestClient(
         Assert.NotNull(result);
         return result;
     }
-    
-    internal async Task<JobDescriptionCreated> CreateAsync(
-        CreateJobDescriptionRequest request)
+
+    internal async Task<JobDescriptionCreated> CreateAsync(CreateJobDescriptionRequest request)
     {
-        var response = await client.PostAsJsonAsync(
-            $"/api/job-description",
-            request);
+        var response = await client.PostAsJsonAsync($"/api/job-description", request);
 
         response.EnsureSuccessStatusCode();
 
-        var result =
-            await response.ReadWithJson<JobDescriptionCreated>();
+        var result = await response.ReadWithJson<JobDescriptionCreated>();
 
         Assert.NotNull(result);
 
         return result;
     }
-    
+
     internal async Task<UpdateJobDescriptionStatusResult> ChangeStatusAsync(
-        
         Guid jobDescriptionId,
-        JobDescriptionStatus status)
+        JobDescriptionStatus status
+    )
     {
         var response = await client.PutAsync(
             $"/api/job-description/{jobDescriptionId}/{status}",
-            null);
+            null
+        );
 
         response.EnsureSuccessStatusCode();
 
-        var result =
-            await response.ReadWithJson<UpdateJobDescriptionStatusResult>();
+        var result = await response.ReadWithJson<UpdateJobDescriptionStatusResult>();
 
         Assert.NotNull(result);
 
         return result;
     }
 
-    internal async Task<HttpResponseMessage> GetStatusHistoryAsync(
-        Guid? jobDescriptionId = null)
+    internal async Task<HttpResponseMessage> GetStatusHistoryAsync(Guid? jobDescriptionId = null)
     {
         var url = "/api/job-description/status";
 

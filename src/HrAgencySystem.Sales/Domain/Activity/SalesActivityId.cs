@@ -1,6 +1,5 @@
 namespace HrAgencySystem.Sales.Domain.Activity;
 
-
 public readonly record struct SalesActivityId(Guid Value)
 {
     public static SalesActivityId New()

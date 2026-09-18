@@ -16,13 +16,23 @@ public static class UpdateJobDescriptionHandler
         Domain.JobDescription aggregate,
         IJobDescriptionService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
-        
-        var (title, summary, description,
-            location, responsibilities,
-            requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
+        if (aggregate == null)
+            throw new NotFoundException("Job description", command.JobDescriptionId);
+
+        var (
+            title,
+            summary,
+            description,
+            location,
+            responsibilities,
+            requirements,
+            skills,
+            salaryRange,
+            countryCode
+        ) = JobDescriptionDataFactory.Create(command);
 
         var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
 
@@ -45,11 +55,14 @@ public static class UpdateJobDescriptionHandler
             modifiedBy,
             clock.UtcNow
         );
-        
+
         return (@event, [@event]);
     }
 
-    private static void ValidateOrganization(UpdateJobDescription command, Domain.JobDescription aggregate)
+    private static void ValidateOrganization(
+        UpdateJobDescription command,
+        Domain.JobDescription aggregate
+    )
     {
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException("Invalid organization id");

@@ -10,17 +10,24 @@ namespace HrAgencySystem.Identity.Application.Users.Login;
 
 public static class LoginUserHandler
 {
-    public static async Task<LoginUserResult> Handle(LoginUser command,
+    public static async Task<LoginUserResult> Handle(
+        LoginUser command,
         ILogger logger,
         IPasswordHasher hasher,
         IAccountRepository repository,
         IJwtTokenService tokenService,
         IQueryOrganizationRepository queryOrganizationRepository,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-
         var email = Email.Create(command.Email);
-        var reservation = await GetEmailReservation(command, repository, email, queryOrganizationRepository, ct);
+        var reservation = await GetEmailReservation(
+            command,
+            repository,
+            email,
+            queryOrganizationRepository,
+            ct
+        );
 
         ValidatePassword(command, hasher, reservation);
 
@@ -31,7 +38,11 @@ public static class LoginUserHandler
         return new LoginUserResult(token);
     }
 
-    private static void ValidatePassword(LoginUser command, IPasswordHasher hasher, UserEmailReservation reservation)
+    private static void ValidatePassword(
+        LoginUser command,
+        IPasswordHasher hasher,
+        UserEmailReservation reservation
+    )
     {
         var match = hasher.Matches(command.Password, reservation.PasswordHash);
 
@@ -39,7 +50,13 @@ public static class LoginUserHandler
             throw new AuthorizationException("Invalid login or password");
     }
 
-    private static async Task<UserEmailReservation> GetEmailReservation(LoginUser command, IAccountRepository repository, Email email, IQueryOrganizationRepository queryOrganizationRepository, CancellationToken ct)
+    private static async Task<UserEmailReservation> GetEmailReservation(
+        LoginUser command,
+        IAccountRepository repository,
+        Email email,
+        IQueryOrganizationRepository queryOrganizationRepository,
+        CancellationToken ct
+    )
     {
         var slug = command.Slug;
         if (string.IsNullOrEmpty(command.Slug))
@@ -52,7 +69,7 @@ public static class LoginUserHandler
                 throw new NotFoundException("Organization by domain", domain);
             }
         }
-        
+
         var reservation = await repository.FindUserByEmail(email, slug, ct);
 
         return reservation ?? throw new AuthorizationException("Invalid login or password");

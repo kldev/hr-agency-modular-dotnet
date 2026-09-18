@@ -15,17 +15,20 @@ namespace HrAgencySystem.Api.Infrastructure;
 
 public static class SetupMartenExtensions
 {
-    public static void SetupMartenForApplication(this IServiceCollection services, IConfiguration configuration)
+    public static void SetupMartenForApplication(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
-        services.AddMarten(options =>
+        services
+            .AddMarten(options =>
             {
                 var connectionString = configuration.GetConnectionString("Postgres");
-                
+
                 options.Connection(connectionString!);
-                
+
                 options.Events.DatabaseSchemaName = "events";
-                options.Events.StreamIdentity =
-                    StreamIdentity.AsGuid;
+                options.Events.StreamIdentity = StreamIdentity.AsGuid;
 
                 CompanyModule.ConfigureMarten(options);
                 OrganizationModule.ConfigureMarten(options);
@@ -35,7 +38,6 @@ public static class SetupMartenExtensions
                 SalesModule.ConfigureMarten(options);
 
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
-                
             })
             .AddAsyncDaemon(DaemonMode.HotCold)
             .IntegrateWithWolverine();
@@ -43,31 +45,20 @@ public static class SetupMartenExtensions
 
     public static void SetupWolverineForApplication(this ConfigureHostBuilder builder)
     {
-        builder.UseWolverine(options =>
-        {
-            options.Discovery.IncludeAssembly(
-                typeof(CompanyModule)
-                    .Assembly);
-            options.Discovery.IncludeAssembly(
-                typeof(OrganizationModule)
-                    .Assembly);
-            options.Discovery.IncludeAssembly(
-                typeof(IdentityModule)
-                    .Assembly);
-            options.Discovery.IncludeAssembly(
-                typeof(JobDescriptionModule)
-                    .Assembly);
-            
-            options.Discovery.IncludeAssembly(
-                typeof(RecruitmentModule)
-                    .Assembly);
-            
-            options.Discovery.IncludeAssembly(
-                typeof(SalesModule)
-                    .Assembly);
+        builder
+            .UseWolverine(options =>
+            {
+                options.Discovery.IncludeAssembly(typeof(CompanyModule).Assembly);
+                options.Discovery.IncludeAssembly(typeof(OrganizationModule).Assembly);
+                options.Discovery.IncludeAssembly(typeof(IdentityModule).Assembly);
+                options.Discovery.IncludeAssembly(typeof(JobDescriptionModule).Assembly);
 
-            
-            options.Policies.AutoApplyTransactions();
-        }).StartAsync();
+                options.Discovery.IncludeAssembly(typeof(RecruitmentModule).Assembly);
+
+                options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
+
+                options.Policies.AutoApplyTransactions();
+            })
+            .StartAsync();
     }
 }

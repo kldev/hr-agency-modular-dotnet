@@ -37,7 +37,6 @@ public sealed class TagSeeder(IDocumentSession session) : ISeeder
         CreateTag("HU", "Hungarian", TagCategory.Language);
     }
 
-
     private void CreateItSkillTags()
     {
         // Languages
@@ -282,7 +281,6 @@ public sealed class TagSeeder(IDocumentSession session) : ISeeder
         CreateTag("SONARQUBE", "SonarQube", TagCategory.SkillIt);
         CreateTag("SENTRY", "Sentry", TagCategory.SkillIt);
         CreateTag("POSTMAN", "Postman", TagCategory.SkillIt);
-
     }
 
     private void CreateProductionSkillTags()
@@ -300,15 +298,9 @@ public sealed class TagSeeder(IDocumentSession session) : ISeeder
         CreateTag("PRODUCTION_LINE", "Production line", TagCategory.ProductionSkill);
         CreateTag("QUALITY_CONTROL", "Quality control", TagCategory.ProductionSkill);
         CreateTag("MACHINE_OPERATION", "Machine operation", TagCategory.ProductionSkill);
-        CreateTag(
-            "READING_TECHNICAL_DRAWINGS",
-            "Technical drawing",
-            TagCategory.ProductionSkill);
+        CreateTag("READING_TECHNICAL_DRAWINGS", "Technical drawing", TagCategory.ProductionSkill);
 
-        CreateTag(
-            "MEASURING_INSTRUMENTS",
-            "Measuring instruments",
-            TagCategory.ProductionSkill);
+        CreateTag("MEASURING_INSTRUMENTS", "Measuring instruments", TagCategory.ProductionSkill);
 
         CreateTag("PACKING", "Packing", TagCategory.ProductionSkill);
         CreateTag("WAREHOUSE", "Warehouse operations", TagCategory.ProductionSkill);
@@ -330,16 +322,8 @@ public sealed class TagSeeder(IDocumentSession session) : ISeeder
         CreateTag("T", "Driving license T", TagCategory.DrivingLicense);
     }
 
-    private void CreateTag(
-        string code,
-        string name,
-        TagCategory category)
+    private void CreateTag(string code, string name, TagCategory category)
     {
-        session.Store(
-            new Tag(
-                Guid.NewGuid(),
-                category,
-                code,
-                name));
+        session.Store(new Tag(Guid.NewGuid(), category, code, name));
     }
 }

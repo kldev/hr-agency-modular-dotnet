@@ -22,7 +22,7 @@ public sealed class RecruitmentService(
     IDocumentSession session,
     IClock clock,
     INoteRepository noteRepository
-    ) : IRecruitmentService
+) : IRecruitmentService
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {
@@ -42,47 +42,77 @@ public sealed class RecruitmentService(
         if (!checkOrganization)
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
     }
-    
-    public async Task<JobApplicationInfo> GetApplicationAsync( 
-        Guid jobApplicationId, Guid organizationId,
-        CancellationToken ct)
+
+    public async Task<JobApplicationInfo> GetApplicationAsync(
+        Guid jobApplicationId,
+        Guid organizationId,
+        CancellationToken ct
+    )
     {
-        var application = await applicationInfoQueryRepository.GetAsync(jobApplicationId, OrganizationId.From(organizationId), ct);
+        var application = await applicationInfoQueryRepository.GetAsync(
+            jobApplicationId,
+            OrganizationId.From(organizationId),
+            ct
+        );
         return application ?? throw new NotFoundException("Job application", jobApplicationId);
     }
 
-    public async Task<string> GetOrganizationSlug(OrganizationId organizationId, CancellationToken ct)
+    public async Task<string> GetOrganizationSlug(
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
     {
         var slug = await checker.GetSlug(organizationId.Value, ct);
         return string.IsNullOrEmpty(slug)
             ? throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage)
             : slug;
     }
-    
+
     public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
     {
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
             throw new OrganizationAccessDeniedException();
     }
 
-    public async Task AppendApplicationNoteToStream(JobApplicationId jobApplicationId, OrganizationId organizationId,
-        string note, UserSnapshot user, CancellationToken ct)
+    public async Task AppendApplicationNoteToStream(
+        JobApplicationId jobApplicationId,
+        OrganizationId organizationId,
+        string note,
+        UserSnapshot user,
+        CancellationToken ct
+    )
     {
-        if (string.IsNullOrEmpty(note)) return;
+        if (string.IsNullOrEmpty(note))
+            return;
 
         var (shortNote, error) = ShortNote.TryCreate(note, false);
-        if (error != null) throw new ValidationException(error);
+        if (error != null)
+            throw new ValidationException(error);
 
-        var application = await GetApplicationAsync(jobApplicationId.Value, organizationId.Value, ct);
-        var noteEvent = new JobApplicationNoteAdded(jobApplicationId.Value, application.CandidateId,
-            clock.UtcNow, shortNote!.Value, user);
-        
+        var application = await GetApplicationAsync(
+            jobApplicationId.Value,
+            organizationId.Value,
+            ct
+        );
+        var noteEvent = new JobApplicationNoteAdded(
+            jobApplicationId.Value,
+            application.CandidateId,
+            clock.UtcNow,
+            shortNote!.Value,
+            user
+        );
+
         session.Events.Append(jobApplicationId.Value, @noteEvent);
 
         await noteRepository.CreateNoteAsync(
-            new CreateNoteDocument(application.JobApplicationId,
+            new CreateNoteDocument(
+                application.JobApplicationId,
                 organizationId.Value,
-                application.CandidateId, shortNote), user);
+                application.CandidateId,
+                shortNote
+            ),
+            user
+        );
 
         await session.SaveChangesAsync(ct);
     }

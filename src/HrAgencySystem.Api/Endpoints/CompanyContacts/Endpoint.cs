@@ -12,5 +12,4 @@ internal static class Endpoint
         Maps.MapGet.Map(group);
         Maps.MapDelete.Map(group);
     }
-    
 }

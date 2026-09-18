@@ -8,10 +8,8 @@ public sealed record Email
     private const int MaxLength = 320;
 
     public const string RequiredMessage = "Email is required.";
-    public const string MaxLengthMessage =
-        "Email cannot exceed 320 characters.";
-    public const string InvalidEmail =
-        "Invalid email address";
+    public const string MaxLengthMessage = "Email cannot exceed 320 characters.";
+    public const string InvalidEmail = "Invalid email address";
 
     private Email(string value)
     {
@@ -24,13 +22,10 @@ public sealed record Email
     {
         var (email, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : email!;
+        return error is not null ? throw new InValidValueException(error) : email!;
     }
 
-    public static (Email? email, string? error) TryCreate(
-        string value)
+    public static (Email? email, string? error) TryCreate(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (null, RequiredMessage);
@@ -43,8 +38,8 @@ public sealed record Email
         try
         {
             // ReSharper disable once ObjectCreationAsStatement
-           var email = new MailAddress(normalized);
-           normalized = email.Address;
+            var email = new MailAddress(normalized);
+            normalized = email.Address;
         }
         catch (FormatException)
         {
@@ -54,6 +49,5 @@ public sealed record Email
         return (new Email(normalized), null);
     }
 
-    public override string ToString()
-        => Value;
+    public override string ToString() => Value;
 }

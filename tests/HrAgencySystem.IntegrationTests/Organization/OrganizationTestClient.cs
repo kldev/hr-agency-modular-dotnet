@@ -6,27 +6,25 @@ using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Organization;
 
-public sealed class OrganizationTestClient(
-    HttpClient client,
-    ITestOutputHelper output)
+public sealed class OrganizationTestClient(HttpClient client, ITestOutputHelper output)
 {
     public async Task<OrganizationCreated> CreateAsync(
         string name = "HR Agency",
-        string slug = "hr-agency")
+        string slug = "hr-agency"
+    )
     {
         var request = new CreateOrganization(
             name,
             slug,
-            Guid.NewGuid(), [slug +".com", slug+ "com.pl"]);
+            Guid.NewGuid(),
+            [slug + ".com", slug + "com.pl"]
+        );
 
-        var response = await client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await client.PostAsJsonAsync("/api/organization", request);
 
         response.EnsureSuccessStatusCode();
 
-        var result = await response.ReadWithJson<OrganizationCreated>(
-            output);
+        var result = await response.ReadWithJson<OrganizationCreated>(output);
 
         Assert.NotNull(result);
 

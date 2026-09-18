@@ -5,21 +5,19 @@ using JasperFx;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    
     builder.Services.AddGlobalExceptionHandler();
     builder.Services.AddDataSource();
     builder.Services.SetupApplicationModules(builder.Configuration);
     builder.Services.SetupMartenForApplication(builder.Configuration);
     builder.Host.SetupWolverineForApplication();
     builder.Services.AddAppOpenApi();
-    builder.Services.SetupAppAuthorization(builder.Configuration,builder.Environment);
+    builder.Services.SetupAppAuthorization(builder.Configuration, builder.Environment);
     if (builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName == "docker")
     {
         builder.Services.AddPlatformSeederModule();
     }
-    
+
     builder.Host.ApplyJasperFxExtensions();
-    
 }
 
 var app = builder.Build();
@@ -38,6 +36,6 @@ var app = builder.Build();
 
     Console.WriteLine("HR agency API started");
     Console.WriteLine("Environment: " + app.Environment.EnvironmentName);
-    
+
     await app.RunJasperFxCommands(args);
 }

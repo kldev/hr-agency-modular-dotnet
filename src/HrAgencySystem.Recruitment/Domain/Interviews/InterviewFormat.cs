@@ -4,5 +4,5 @@ public enum InterviewFormat
 {
     Online,
     OnSite,
-    Phone
+    Phone,
 }

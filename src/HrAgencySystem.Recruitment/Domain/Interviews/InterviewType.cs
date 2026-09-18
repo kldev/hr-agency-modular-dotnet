@@ -5,5 +5,5 @@ public enum InterviewType
     Hr,
     Technical,
     Client,
-    Final
+    Final,
 }

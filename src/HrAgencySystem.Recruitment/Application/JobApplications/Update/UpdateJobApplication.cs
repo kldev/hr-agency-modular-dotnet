@@ -11,4 +11,5 @@ public sealed record UpdateJobApplication(
     string Phone,
     string FirstName,
     string LastName,
-    Guid ModifiedBy) : IUpdateCommand;
+    Guid ModifiedBy
+) : IUpdateCommand;

@@ -39,6 +39,7 @@ public sealed record ActivityProjection(
             @event.CreatedBy.Id,
             @event.CreatedBy,
             @event.Company.Id,
-            @event.Company);
+            @event.Company
+        );
     }
 }

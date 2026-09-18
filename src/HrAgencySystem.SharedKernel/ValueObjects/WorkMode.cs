@@ -4,5 +4,5 @@ public enum WorkMode
 {
     OnSite,
     Hybrid,
-    Remote
+    Remote,
 }

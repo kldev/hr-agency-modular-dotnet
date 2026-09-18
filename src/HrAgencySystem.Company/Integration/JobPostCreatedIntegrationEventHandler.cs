@@ -10,8 +10,11 @@ namespace HrAgencySystem.Company.Integration;
 [WolverineHandler]
 public class JobPostCreatedIntegrationEventHandler
 {
-    public async Task HandleAsync(JobPostCreatedIntegrationEvent message, IMessageBus bus,
-        ILogger<JobPostCreatedIntegrationEvent> logger)
+    public async Task HandleAsync(
+        JobPostCreatedIntegrationEvent message,
+        IMessageBus bus,
+        ILogger<JobPostCreatedIntegrationEvent> logger
+    )
     {
         logger.LogInformation("Handling JobPostCreatedIntegrationEvent  event");
         var @event = new CompanyJobPostCreated(message.CompanyId, message.JobPostId);
@@ -22,7 +25,10 @@ public class JobPostCreatedIntegrationEventHandler
 public static class JobPostCreatedHandler
 {
     [AggregateHandler]
-    public static Task<CompanyJobPostCreated> Handle(CompanyJobPostCreated command, Domain.Company aggregate)
+    public static Task<CompanyJobPostCreated> Handle(
+        CompanyJobPostCreated command,
+        Domain.Company aggregate
+    )
     {
         return Task.FromResult(command);
     }

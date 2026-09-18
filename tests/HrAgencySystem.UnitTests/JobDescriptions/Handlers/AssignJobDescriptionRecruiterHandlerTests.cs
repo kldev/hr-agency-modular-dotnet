@@ -16,7 +16,7 @@ public sealed class AssignJobDescriptionRecruiterHandlerTests
 {
     private readonly IJobDescriptionService _service = Substitute.For<IJobDescriptionService>();
     private readonly IClock _clock = Substitute.For<IClock>();
-    
+
     [Fact]
     public async Task Should_assign_recruiter()
     {
@@ -25,35 +25,33 @@ public sealed class AssignJobDescriptionRecruiterHandlerTests
         var recruiterId = Guid.NewGuid();
         var modifiedId = Guid.NewGuid();
         var organizationId = Guid.NewGuid();
-        
+
         var now = new DateTimeOffset(2026, 9, 2, 10, 0, 0, TimeSpan.Zero);
 
         var command = new AssignJobDescriptionRecruiter(
             jobDescriptionId,
-            recruiterId, modifiedId, organizationId);
+            recruiterId,
+            modifiedId,
+            organizationId
+        );
 
-        var aggregate = D.JobDescription.EmptyWithOrganizationId(new OrganizationId(organizationId));
+        var aggregate = D.JobDescription.EmptyWithOrganizationId(
+            new OrganizationId(organizationId)
+        );
         ;
 
         var recruiter = new UserSnapshot(
             recruiterId,
             "Anna",
             "Kowalska",
-            "anna.kowalska@example.com");
-        
-        var modifyBy = new UserSnapshot(
-            recruiterId,
-            "Greg",
-            "Loon",
-            "greg.loon@example.com");
+            "anna.kowalska@example.com"
+        );
 
-        _service
-            .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
-            .Returns(recruiter);
-        
-        _service
-            .GetUserAsync(modifiedId, Arg.Any<CancellationToken>())
-            .Returns(modifyBy);
+        var modifyBy = new UserSnapshot(recruiterId, "Greg", "Loon", "greg.loon@example.com");
+
+        _service.GetUserAsync(recruiterId, Arg.Any<CancellationToken>()).Returns(recruiter);
+
+        _service.GetUserAsync(modifiedId, Arg.Any<CancellationToken>()).Returns(modifyBy);
 
         _clock.UtcNow.Returns(now);
 
@@ -63,7 +61,8 @@ public sealed class AssignJobDescriptionRecruiterHandlerTests
             aggregate,
             _service,
             _clock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.IsType<JobDescriptionRecruiterAssigned>(result);
@@ -82,24 +81,25 @@ public sealed class AssignJobDescriptionRecruiterHandlerTests
         // Arrange
         var command = new AssignJobDescriptionRecruiter(
             Guid.NewGuid(),
-            Guid.NewGuid(), modifiedId, organizationId);
-        
+            Guid.NewGuid(),
+            modifiedId,
+            organizationId
+        );
+
         // Assert
-        var exception = await Assert
-            .ThrowsAsync<NotFoundException>( async () => await AssignJobDescriptionRecruiterHandler.Handle(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(async () =>
+            await AssignJobDescriptionRecruiterHandler.Handle(
                 command,
                 null!,
                 _service,
                 _clock,
-                CancellationToken.None));
-        
+                CancellationToken.None
+            )
+        );
+
         Assert.Contains("not found", exception.Message);
 
-        await _service
-            .DidNotReceive()
-            .GetUserAsync(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        await _service.DidNotReceive().GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -112,7 +112,10 @@ public sealed class AssignJobDescriptionRecruiterHandlerTests
 
         var command = new AssignJobDescriptionRecruiter(
             Guid.NewGuid(),
-            recruiterId, modifiedId, organizationId);
+            recruiterId,
+            modifiedId,
+            organizationId
+        );
 
         _service
             .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
@@ -120,12 +123,16 @@ public sealed class AssignJobDescriptionRecruiterHandlerTests
 
         // Act
         Task<(JobDescriptionRecruiterAssigned, Events)> Act() =>
-            AssignJobDescriptionRecruiterHandler.Handle(command, D.JobDescription.Empty(), _service, _clock,
-                CancellationToken.None);
+            AssignJobDescriptionRecruiterHandler.Handle(
+                command,
+                D.JobDescription.Empty(),
+                _service,
+                _clock,
+                CancellationToken.None
+            );
 
         // Assert
-        var exception = await Assert
-            .ThrowsAsync<NotFoundException>(async () => await Act());
+        var exception = await Assert.ThrowsAsync<NotFoundException>(async () => await Act());
 
         Assert.Contains("User not found", exception.Message);
     }

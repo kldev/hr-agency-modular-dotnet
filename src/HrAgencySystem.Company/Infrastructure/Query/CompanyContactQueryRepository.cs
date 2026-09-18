@@ -6,21 +6,32 @@ using Marten;
 
 namespace HrAgencySystem.Company.Infrastructure.Query;
 
-public sealed class CompanyContactQueryRepository(IQuerySession session) : ICompanyContactQueryRepository
+public sealed class CompanyContactQueryRepository(IQuerySession session)
+    : ICompanyContactQueryRepository
 {
-    public async Task<IReadOnlyList<CompanyContact>> GetAllAsync(Guid organizationId, Guid companyId, CancellationToken ct)
+    public async Task<IReadOnlyList<CompanyContact>> GetAllAsync(
+        Guid organizationId,
+        Guid companyId,
+        CancellationToken ct
+    )
     {
-        return await session.Query<CompanyContact>()
+        return await session
+            .Query<CompanyContact>()
             .WithOrganizationId(OrganizationId.From(organizationId))
             .WithCompanyId(CompanyId.From(companyId))
-            .OrderBy(z=>z.Contact.FirstName)
-            .ThenByDescending(z=>z.CreatedAt)
+            .OrderBy(z => z.Contact.FirstName)
+            .ThenByDescending(z => z.CreatedAt)
             .ToListAsync(ct);
     }
 
-    public async Task<CompanyContact?> GetAsync(Guid organizationId, Guid contactId, CancellationToken ct)
+    public async Task<CompanyContact?> GetAsync(
+        Guid organizationId,
+        Guid contactId,
+        CancellationToken ct
+    )
     {
-        return await session.Query<CompanyContact>()
+        return await session
+            .Query<CompanyContact>()
             .WithOrganizationId(OrganizationId.From(organizationId))
             .WithContactId(contactId)
             .FirstOrDefaultAsync(ct);

@@ -10,5 +10,5 @@ public sealed record JobPostStatusChanged(
     JobPostStatus OldStatus,
     JobPostStatus NewStatus,
     DateTimeOffset OccurredAt,
-    UserSnapshot Author) : IJobPostEvent;
-
+    UserSnapshot Author
+) : IJobPostEvent;

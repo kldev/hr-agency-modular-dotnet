@@ -12,10 +12,10 @@ public sealed record OpportunityCreated(
     string Description,
     OpportunityStage Stage,
     decimal ExpectedValue,
-    CurrencyCode  Currency,
+    CurrencyCode Currency,
     bool IsHotLead,
-    DateOnly? ExpectedCloseDate, 
+    DateOnly? ExpectedCloseDate,
     UserSnapshot Responsible,
     DateTimeOffset CreatedAt,
     UserSnapshot CreatedBy
-    );
+);

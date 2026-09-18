@@ -21,7 +21,7 @@ public enum JobApplicationStatus
      * Candidate is completing an assessment, test or other evaluation.
      */
     Assessment,
-    
+
     /**
      * An employment offer has been made to the candidate.
      */
@@ -41,7 +41,7 @@ public enum JobApplicationStatus
      * Candidate has withdrawn their application.
      */
     Withdrawn,
-    
+
     // TODO: candidate change his mind, back to pipeline
 }
 

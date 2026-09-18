@@ -8,4 +8,5 @@ public sealed record ChangeInterviewStatus(
     Guid OrganizationId,
     string Note,
     InterviewStatus Status,
-    Guid ModifiedBy) : IUpdateCommand;
+    Guid ModifiedBy
+) : IUpdateCommand;

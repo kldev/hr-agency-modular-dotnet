@@ -7,19 +7,19 @@ using HrAgencySystem.Recruitment.Projections;
 
 namespace HrAgencySystem.IntegrationTests.JobPosts;
 
-public sealed class JobPostingTestClient(
-    HttpClient client)
+public sealed class JobPostingTestClient(HttpClient client)
 {
     private const string RestUrl = "/api/recruitment/job-posting";
+
     internal void WithOrganizationId(Guid organizationId)
     {
         client.WithOrganizationId(organizationId);
     }
-    
+
     internal async Task<JobPostProjection> GetSingle(Guid jobPostId)
     {
         var response = await client.GetAsync($"{RestUrl}/{jobPostId}");
-        
+
         response.EnsureSuccessStatusCode();
 
         var result = await response.ReadWithJson<JobPostProjection>();
@@ -27,18 +27,14 @@ public sealed class JobPostingTestClient(
         Assert.NotNull(result);
         return result;
     }
-    
-    internal async Task<JobPostCreated> CreateAsync(
-        CreatePostRequest request)
+
+    internal async Task<JobPostCreated> CreateAsync(CreatePostRequest request)
     {
-        var response = await client.PostAsJsonAsync(
-            RestUrl,
-            request);
+        var response = await client.PostAsJsonAsync(RestUrl, request);
 
         response.EnsureSuccessStatusCode();
 
-        var result =
-            await response.ReadWithJson<JobPostCreated>();
+        var result = await response.ReadWithJson<JobPostCreated>();
 
         Assert.NotNull(result);
 
@@ -47,34 +43,30 @@ public sealed class JobPostingTestClient(
 
     internal async Task<JobPostStatusChanged> ChangeStatusAsync(
         Guid jobPostId,
-        JobPostStatusApi status)
+        JobPostStatusApi status
+    )
     {
         var response = await client.PutAsJsonAsync(
             $"{RestUrl}/{jobPostId}/status",
-            new ChangeJobPostStatusRequest(status));
+            new ChangeJobPostStatusRequest(status)
+        );
 
         response.EnsureSuccessStatusCode();
 
-        var result =
-            await response.ReadWithJson<JobPostStatusChanged>();
+        var result = await response.ReadWithJson<JobPostStatusChanged>();
 
         Assert.NotNull(result);
 
         return result;
     }
 
-    internal async Task<JobPostUpdated> UpdateAsync(
-        Guid jobPostId,
-        UpdateJobPostRequest request)
+    internal async Task<JobPostUpdated> UpdateAsync(Guid jobPostId, UpdateJobPostRequest request)
     {
-        var response = await client.PutAsJsonAsync(
-            $"{RestUrl}/{jobPostId}",
-            request);
+        var response = await client.PutAsJsonAsync($"{RestUrl}/{jobPostId}", request);
 
         response.EnsureSuccessStatusCode();
 
-        var result =
-            await response.ReadWithJson<JobPostUpdated>();
+        var result = await response.ReadWithJson<JobPostUpdated>();
 
         Assert.NotNull(result);
 

@@ -12,4 +12,5 @@ public sealed record UpdateCompany(
     Industry Industry,
     string WebSite,
     string CountryCode,
-    Guid ModifiedBy) : IUpdateCommand, ICompanyData;
+    Guid ModifiedBy
+) : IUpdateCommand, ICompanyData;

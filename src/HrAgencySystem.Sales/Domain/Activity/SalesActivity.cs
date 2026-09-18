@@ -9,8 +9,8 @@ namespace HrAgencySystem.Sales.Domain.Activity;
 // ReSharper disable once ClassCannotBeInstantiated
 public sealed class SalesActivity : IOrganizationDomain
 {
-    private SalesActivity(){}
-    
+    private SalesActivity() { }
+
     public SalesActivityId Id { get; private set; }
     public OrganizationId OrganizationId { get; private set; }
     public SalesOpportunityId SalesOpportunityId { get; private set; }

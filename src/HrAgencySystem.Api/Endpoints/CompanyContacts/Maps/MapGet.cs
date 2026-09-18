@@ -10,23 +10,26 @@ internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("{contactId:guid}", Handler)
+        group
+            .MapGet("{contactId:guid}", Handler)
             .WithSummary("Get contact")
             .WithName("Get company contact")
             .Produces<CompanyContact>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user,
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
         ICompanyContactQueryRepository repository,
         Guid contactId,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var result = 
-            await repository.GetAsync(user.OrganizationId, contactId, ct);
+        var result = await repository.GetAsync(user.OrganizationId, contactId, ct);
 
-        if (result == null) return TypedResults.NotFound(DomainObjectNotFound.NotFound("Contact", contactId));
-        
+        if (result == null)
+            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Contact", contactId));
+
         return TypedResults.Ok(result);
     }
 }

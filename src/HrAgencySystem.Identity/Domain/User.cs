@@ -7,9 +7,7 @@ namespace HrAgencySystem.Identity.Domain;
 
 public sealed class User
 {
-    private User()
-    {
-    }
+    private User() { }
 
     public UserId Id { get; private set; } = null!;
 

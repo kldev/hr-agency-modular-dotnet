@@ -27,8 +27,13 @@ public sealed class GetUserByIdTests(IntegrationEnvironment environment, ITestOu
     [Fact]
     public async Task ShouldGetUserSuggestionById()
     {
-        var created = await UserClient.CreateAsync(OrganizationId, "recruiter@test.com",
-            firstName: "Tom", lastName: "Moore", role: OrganizationRoleApi.Recruiter);
+        var created = await UserClient.CreateAsync(
+            OrganizationId,
+            "recruiter@test.com",
+            firstName: "Tom",
+            lastName: "Moore",
+            role: OrganizationRoleApi.Recruiter
+        );
 
         Client.WithOrganizationId(OrganizationId);
 

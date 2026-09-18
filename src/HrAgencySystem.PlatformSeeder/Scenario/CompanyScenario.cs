@@ -30,10 +30,14 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
         new("PT", "PT", "VAT"),
         new("IE", "IE", "VAT"),
         new("RO", "RO", "VAT"),
-        new("HU", "HU", "VAT")
+        new("HU", "HU", "VAT"),
     ];
 
-    internal async Task<IReadOnlyList<Guid>> Create(Guid organizationId, IReadOnlyList<Guid> userIds, int seedCount = 101)
+    internal async Task<IReadOnlyList<Guid>> Create(
+        Guid organizationId,
+        IReadOnlyList<Guid> userIds,
+        int seedCount = 101
+    )
     {
         var faker = new Faker();
 
@@ -44,9 +48,13 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
                 var country = faker.PickRandom(Countries);
                 var name = GenerateCompanyName(country, index);
                 var userId = userIds[index % userIds.Count];
-                var website = "https://"+name.Replace(" ", "-").Replace(",", "").ToLower() +faker.Internet.DomainName() + ".com";
+                var website =
+                    "https://"
+                    + name.Replace(" ", "-").Replace(",", "").ToLower()
+                    + faker.Internet.DomainName()
+                    + ".com";
                 var primaryContact = CreateContactPerson(faker);
-                
+
                 return new CreateCompany(
                     organizationId,
                     name,
@@ -57,7 +65,7 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
                     GetRandomIndustry(),
                     website,
                     primaryContact
-                    );
+                );
             });
 
         var list = new List<Guid>();
@@ -81,38 +89,42 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
     {
         var firstName = faker.Name.FirstName();
         var lastName = faker.Name.LastName() + Random.Shared.Next(9999);
-        var email = faker.Internet.Email(firstName, lastName,  provider: faker.Internet.DomainName() + ".co").ToLower();
+        var email = faker
+            .Internet.Email(firstName, lastName, provider: faker.Internet.DomainName() + ".co")
+            .ToLower();
         var jobTitle = faker.Name.JobTitle();
         var phone = faker.Phone.PhoneNumber();
 
         return new ContactPerson(email, firstName, lastName, jobTitle, phone);
-    } 
-    
-    private async Task AddCompanyContacts(Faker faker, Guid organizationId, Guid companyId, string companyName)
+    }
+
+    private async Task AddCompanyContacts(
+        Faker faker,
+        Guid organizationId,
+        Guid companyId,
+        string companyName
+    )
     {
         var contacts = new List<CompanyContact>();
         for (var i = 0; i < 5; i++)
         {
             var contactPerson = CreateContactPerson(faker);
-            
+
             var contact = new CompanyContact(
-                Guid.NewGuid(), 
+                Guid.NewGuid(),
                 organizationId,
                 companyId,
                 contactPerson,
                 companyName,
-                DateTimeOffset.Now);
+                DateTimeOffset.Now
+            );
             contacts.Add(contact);
         }
-        session.Insert([..contacts]);
+        session.Insert([.. contacts]);
         await session.SaveChangesAsync();
-
     }
-    
 
-    private static string GenerateCompanyName(
-        CountryDefinition country,
-        int index)
+    private static string GenerateCompanyName(CountryDefinition country, int index)
     {
         var name = country.Code switch
         {
@@ -126,9 +138,7 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
         return $"{name} {index:000}";
     }
 
-    private static string GenerateTaxId(
-        Faker faker,
-        CountryDefinition country)
+    private static string GenerateTaxId(Faker faker, CountryDefinition country)
     {
         return country.Code switch
         {
@@ -140,7 +150,8 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
 
             "NL" => $"NL{faker.Random.ReplaceNumbers("#########")}B{faker.Random.Number(0, 9)}",
 
-            "FR" => $"FR{faker.Random.AlphaNumeric(2).ToUpperInvariant()}{faker.Random.ReplaceNumbers("#########")}",
+            "FR" =>
+                $"FR{faker.Random.AlphaNumeric(2).ToUpperInvariant()}{faker.Random.ReplaceNumbers("#########")}",
 
             "AT" => $"ATU{faker.Random.ReplaceNumbers("########")}",
 
@@ -162,19 +173,18 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
 
             "PT" => $"PT{faker.Random.ReplaceNumbers("#########")}",
 
-            "IE" => $"IE{faker.Random.AlphaNumeric(1).ToUpperInvariant()}{faker.Random.ReplaceNumbers("########")}",
+            "IE" =>
+                $"IE{faker.Random.AlphaNumeric(1).ToUpperInvariant()}{faker.Random.ReplaceNumbers("########")}",
 
             "RO" => $"RO{faker.Random.ReplaceNumbers("#########")}",
 
             "HU" => $"HU{faker.Random.ReplaceNumbers("########")}",
 
-            _ => faker.Random.ReplaceNumbers("############")
+            _ => faker.Random.ReplaceNumbers("############"),
         };
     }
 
-    private static string GenerateRegistrationNumber(
-        Faker faker,
-        CountryDefinition country)
+    private static string GenerateRegistrationNumber(Faker faker, CountryDefinition country)
     {
         return country.Code switch
         {
@@ -210,16 +220,14 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
 
             "IE" => faker.Random.ReplaceNumbers("########"),
 
-            "RO" => $"J{faker.Random.Number(1, 52)}/{faker.Random.Number(100, 9999)}/{faker.Random.Number(2000, 2026)}",
+            "RO" =>
+                $"J{faker.Random.Number(1, 52)}/{faker.Random.Number(100, 9999)}/{faker.Random.Number(2000, 2026)}",
 
             "HU" => faker.Random.ReplaceNumbers("########-#"),
 
-            _ => faker.Random.ReplaceNumbers("##########")
+            _ => faker.Random.ReplaceNumbers("##########"),
         };
     }
 
-    private sealed record CountryDefinition(
-        string Code,
-        string TaxPrefix,
-        string TaxType);
+    private sealed record CountryDefinition(string Code, string TaxPrefix, string TaxType);
 }

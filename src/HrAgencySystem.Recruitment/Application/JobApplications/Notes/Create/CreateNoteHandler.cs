@@ -15,25 +15,34 @@ public static class CreateNoteHandler
         IRecruitmentService service,
         IClock clock,
         INoteRepository noteRepository,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var user = await service.GetUserAsync(command.AddedBy, ct);
-        var application = await service.GetApplicationAsync(command.JobApplicationId, command.OrganizationId, ct);
+        var application = await service.GetApplicationAsync(
+            command.JobApplicationId,
+            command.OrganizationId,
+            ct
+        );
 
         var (shortNote, error) = ShortNote.TryCreate(command.Text);
-        if (error != null) throw new ValidationException(error);
+        if (error != null)
+            throw new ValidationException(error);
 
         var @event = new JobApplicationNoteAdded(
-            application.JobApplicationId, 
-            application.CandidateId, 
+            application.JobApplicationId,
+            application.CandidateId,
             clock.UtcNow,
-            shortNote!.Value, user);
+            shortNote!.Value,
+            user
+        );
 
         var createNote = new CreateNoteDocument(
-            application.JobApplicationId, 
+            application.JobApplicationId,
             application.OrganizationId,
             application.CandidateId,
-            shortNote!);
+            shortNote!
+        );
 
         await noteRepository.CreateNoteAsync(createNote, user);
 

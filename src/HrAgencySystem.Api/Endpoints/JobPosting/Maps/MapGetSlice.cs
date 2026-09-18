@@ -13,31 +13,45 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/recruitment/job-posting
-        group.MapGet("", Handler)
+        group
+            .MapGet("", Handler)
             .WithSummary("Get job posts")
             .WithName("Get job posts slice")
             .Produces<SliceResponse<JobPostResponse>>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(IJobPostQueryRepository repository, IOptions<ApplicationConfig> config,
+    private static async Task<IResult> Handler(
+        IJobPostQueryRepository repository,
+        IOptions<ApplicationConfig> config,
         AppUserAuthenticated user,
         string? search,
         Guid? companyId,
         Guid? recruiterId,
         JobPostStatus[]? status,
         string[]? lang,
-        int page = 1, int pageSize = 100,
-        CancellationToken ct = default)
+        int page = 1,
+        int pageSize = 100,
+        CancellationToken ct = default
+    )
     {
         var appUrl = config.Value.FedUrl;
 
-        var query = new JobPostQuery(search ?? "", companyId, recruiterId, status ?? [], lang ?? [], page, pageSize);
+        var query = new JobPostQuery(
+            search ?? "",
+            companyId,
+            recruiterId,
+            status ?? [],
+            lang ?? [],
+            page,
+            pageSize
+        );
         var result = await repository.GetJobPosts(user.OrganizationId, query, ct);
 
-        var content = result.Content.Select(z => z with { JobUrl = $"{appUrl}/{z.JobUrl}" }).ToList();
+        var content = result
+            .Content.Select(z => z with { JobUrl = $"{appUrl}/{z.JobUrl}" })
+            .ToList();
 
         return Results.Ok(result with { Content = content });
-
     }
 }

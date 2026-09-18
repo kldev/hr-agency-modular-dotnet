@@ -19,18 +19,19 @@ public static class SetupApplicationModulesExtensions
         {
             services.AddOptions<ApplicationConfig>();
             services.Configure<ApplicationConfig>(
-                configuration.GetSection(ApplicationConfig.Section));
+                configuration.GetSection(ApplicationConfig.Section)
+            );
             services.ConfigureJson();
             services.AddTransient<IClock, SystemClock>();
 
             services.AddScoped<IUserSnapshotRepository, WebUserSnapshotRepository>();
-            
+
             services.AddOrganizationModule(configuration);
             services.AddRecruitmentModuleMinimal();
             services.AddCompanyMinimalModule();
             services.AddFilesModule(configuration);
         }
-        
+
         private void ConfigureJson()
         {
             services.ConfigureHttpJsonOptions(options =>
@@ -39,5 +40,4 @@ public static class SetupApplicationModulesExtensions
             });
         }
     }
-
 }

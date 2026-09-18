@@ -11,7 +11,8 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
     public async Task<Guid> Create(
         Guid organizationId,
         IReadOnlyList<Guid> userIds,
-        IReadOnlyList<Guid> companyIds)
+        IReadOnlyList<Guid> companyIds
+    )
     {
         if (companyIds.Count == 0 || userIds.Count == 0)
             return Guid.Empty;
@@ -19,7 +20,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
         var companyIndex = 0;
         var userIndex = 0;
 
-       var firstJobDescriptionId= await Create(
+        var firstJobDescriptionId = await Create(
             userIds[userIndex++ % userIds.Count],
             new CreateJobDescription(
                 organizationId,
@@ -33,7 +34,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Write unit and integration tests",
                     "Participate in code reviews",
                     "Cooperate with frontend developers",
-                    "Monitor and improve application performance"
+                    "Monitor and improve application performance",
                 ],
                 [
                     "At least 3 years of experience with Java",
@@ -41,16 +42,9 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Good knowledge of relational databases",
                     "Experience with REST APIs",
                     "Ability to work in a team",
-                    "Good English"
+                    "Good English",
                 ],
-                [
-                    "Java 21",
-                    "Spring Boot",
-                    "PostgreSQL",
-                    "REST API",
-                    "Docker",
-                    "Git"
-                ],
+                ["Java 21", "Spring Boot", "PostgreSQL", "REST API", "Docker", "Git"],
                 "Opole",
                 "PL",
                 EmploymentType.FullTime,
@@ -77,7 +71,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Implement new business features",
                     "Review pull requests",
                     "Participate in technical discussions",
-                    "Maintain application quality"
+                    "Maintain application quality",
                 ],
                 [
                     "At least 4 years of commercial software development",
@@ -85,16 +79,9 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Experience with React and TypeScript",
                     "Good understanding of REST architecture",
                     "Knowledge of PostgreSQL",
-                    "Ability to work independently"
+                    "Ability to work independently",
                 ],
-                [
-                    "Java",
-                    "Spring Boot",
-                    "React",
-                    "TypeScript",
-                    "PostgreSQL",
-                    "Docker"
-                ],
+                ["Java", "Spring Boot", "React", "TypeScript", "PostgreSQL", "Docker"],
                 "Wrocław",
                 "PL",
                 EmploymentType.FullTime,
@@ -102,7 +89,8 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                 CurrencyCode.PLN,
                 14000m,
                 24000m,
-                userIds[1 % userIds.Count],userIds[1 % userIds.Count]
+                userIds[1 % userIds.Count],
+                userIds[1 % userIds.Count]
             )
         );
 
@@ -120,7 +108,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Integrate applications with REST APIs",
                     "Write automated tests",
                     "Optimize application performance",
-                    "Cooperate with UX and backend teams"
+                    "Cooperate with UX and backend teams",
                 ],
                 [
                     "At least 2 years of experience with React",
@@ -128,16 +116,9 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Good understanding of HTML and CSS",
                     "Experience with REST APIs",
                     "Knowledge of Git",
-                    "English at communicative level"
+                    "English at communicative level",
                 ],
-                [
-                    "TypeScript",
-                    "React",
-                    "HTML",
-                    "CSS",
-                    "REST API",
-                    "Git"
-                ],
+                ["TypeScript", "React", "HTML", "CSS", "REST API", "Git"],
                 "Katowice",
                 "PL",
                 EmploymentType.FullTime,
@@ -151,7 +132,6 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
         );
 
         await Create(
-            
             userIds[userIndex++ % userIds.Count],
             new CreateJobDescription(
                 organizationId,
@@ -165,7 +145,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Automate deployment processes",
                     "Monitor production environments",
                     "Improve system reliability",
-                    "Cooperate with development teams"
+                    "Cooperate with development teams",
                 ],
                 [
                     "Experience with Kubernetes",
@@ -173,16 +153,9 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Experience with Azure or another cloud platform",
                     "Knowledge of Terraform",
                     "Experience with CI/CD",
-                    "Good Linux knowledge"
+                    "Good Linux knowledge",
                 ],
-                [
-                    "Kubernetes",
-                    "Docker",
-                    "Azure",
-                    "Terraform",
-                    "CI/CD",
-                    "Linux"
-                ],
+                ["Kubernetes", "Docker", "Azure", "Terraform", "CI/CD", "Linux"],
                 "Warsaw",
                 "PL",
                 EmploymentType.FullTime,
@@ -209,7 +182,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Test REST APIs",
                     "Analyze test results",
                     "Report and verify defects",
-                    "Cooperate with developers"
+                    "Cooperate with developers",
                 ],
                 [
                     "At least 2 years of experience in test automation",
@@ -217,16 +190,9 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Experience with Selenium or Playwright",
                     "Experience with REST API testing",
                     "Knowledge of JUnit",
-                    "Analytical thinking"
+                    "Analytical thinking",
                 ],
-                [
-                    "Java",
-                    "Selenium",
-                    "Playwright",
-                    "REST Assured",
-                    "JUnit",
-                    "CI/CD"
-                ],
+                ["Java", "Selenium", "Playwright", "REST Assured", "JUnit", "CI/CD"],
                 "Poznań",
                 "PL",
                 EmploymentType.FullTime,
@@ -253,7 +219,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Model business processes",
                     "Cooperate with stakeholders",
                     "Support development teams",
-                    "Participate in acceptance testing"
+                    "Participate in acceptance testing",
                 ],
                 [
                     "Experience in business analysis",
@@ -261,16 +227,9 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Good SQL knowledge",
                     "Experience with Jira and Confluence",
                     "Strong communication skills",
-                    "Ability to translate business needs into technical requirements"
+                    "Ability to translate business needs into technical requirements",
                 ],
-                [
-                    "Requirements analysis",
-                    "UML",
-                    "BPMN",
-                    "SQL",
-                    "Jira",
-                    "Confluence"
-                ],
+                ["Requirements analysis", "UML", "BPMN", "SQL", "Jira", "Confluence"],
                 "Wrocław",
                 "PL",
                 EmploymentType.FullTime,
@@ -297,7 +256,7 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Optimize SQL queries",
                     "Integrate data from multiple sources",
                     "Monitor data quality",
-                    "Cooperate with data analysts"
+                    "Cooperate with data analysts",
                 ],
                 [
                     "Experience with Python",
@@ -305,16 +264,9 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
                     "Experience with PostgreSQL",
                     "Knowledge of ETL processes",
                     "Experience with Airflow or similar tools",
-                    "Analytical thinking"
+                    "Analytical thinking",
                 ],
-                [
-                    "Python",
-                    "SQL",
-                    "PostgreSQL",
-                    "Apache Kafka",
-                    "ETL",
-                    "Airflow"
-                ],
+                ["Python", "SQL", "PostgreSQL", "Apache Kafka", "ETL", "Airflow"],
                 "Kraków",
                 "PL",
                 EmploymentType.FullTime,
@@ -330,14 +282,10 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
         return firstJobDescriptionId;
     }
 
-    private async Task<Guid> Create(
-        Guid userId,
-        CreateJobDescription request)
+    private async Task<Guid> Create(Guid userId, CreateJobDescription request)
     {
-        return (await bus.InvokeAsync<JobDescriptionCreated>(
-            request with
-            { 
-                RecruiterId = userId
-            })).JobDescriptionId;
+        return (
+            await bus.InvokeAsync<JobDescriptionCreated>(request with { RecruiterId = userId })
+        ).JobDescriptionId;
     }
 }

@@ -13,7 +13,8 @@ public static class MapUpdateSlug
     public static void Map(RouteGroupBuilder group)
     {
         // PUT /api/organization/{organizationId}/slug
-        group.MapPut("{organizationId}/slug", Handler)
+        group
+            .MapPut("{organizationId}/slug", Handler)
             .WithSummary("Update organization slug")
             .WithName("Update organization slug")
             .Produces<OrganizationSlugUpdated>()
@@ -24,7 +25,8 @@ public static class MapUpdateSlug
         IMessageBus bus,
         Guid organizationId,
         [FromBody] UpdateSlug request,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var command = new UpdateOrganizationSlug(request.Slug, organizationId);
         var result = await bus.InvokeAsync<OrganizationSlugUpdated>(command, ct);

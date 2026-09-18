@@ -23,12 +23,11 @@ public class RegistrationNumberTests
     [InlineData("   ")]
     public void Create_WithMissingValue_ThrowsInValidValueException(string value)
     {
-        var exception = Assert
-            .Throws<InValidValueException>(() => RegistrationNumber.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() =>
+            RegistrationNumber.Create(value)
+        );
 
-        Assert.Contains(
-            RegistrationNumber.RequiredMessage,
-            exception.Message);
+        Assert.Contains(RegistrationNumber.RequiredMessage, exception.Message);
     }
 
     [Fact]
@@ -36,12 +35,11 @@ public class RegistrationNumberTests
     {
         var value = new string('A', 101);
 
-        var exception = Assert
-            .Throws<InValidValueException>(() => RegistrationNumber.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() =>
+            RegistrationNumber.Create(value)
+        );
 
-        Assert.Contains(
-            RegistrationNumber.MaxLengthMessage,
-            exception.Message);
+        Assert.Contains(RegistrationNumber.MaxLengthMessage, exception.Message);
     }
 
     [Fact]

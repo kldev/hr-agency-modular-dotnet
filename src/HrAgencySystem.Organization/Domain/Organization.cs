@@ -7,15 +7,13 @@ namespace HrAgencySystem.Organization.Domain;
 
 public sealed class Organization
 {
-    private Organization()
-    {
-    }
+    private Organization() { }
 
     public static Organization Empty()
     {
         return new Organization();
     }
-    
+
     public OrganizationId Id { get; private set; }
 
     public OrganizationName Name { get; private set; } = null!;
@@ -35,7 +33,7 @@ public sealed class Organization
         CreatedAt = @event.CreatedAt;
         Info = @event.Info ?? OrganizationInfoData.NoInfo;
     }
-    
+
     public void Apply(OrganizationSlugUpdated @event)
     {
         Slug = OrganizationSlug.Create(@event.Slug);

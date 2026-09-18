@@ -4,7 +4,6 @@ using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Web.Common;
 
-
 namespace HrAgencySystem.Company.Projections;
 
 public sealed record CompanyProjection(
@@ -19,20 +18,21 @@ public sealed record CompanyProjection(
     CompanyStatus Status,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string Website,
-    Industry Industry,    
+    Industry Industry,
     Guid CreatedId,
     UserSnapshot CreatedBy,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     DateTimeOffset CreatedAt,
     Guid? ModifiedById,
-    UserSnapshot?  ModifiedBy,
+    UserSnapshot? ModifiedBy,
     DateTimeOffset? ModifiedAt,
     int JobsPostCount,
     int ActiveJobsPostCount,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     int ApplicantsCount,
     ContactPerson? Contact,
-    Guid? ContactPersonId)
+    Guid? ContactPersonId
+)
 {
     public static CompanyProjection Create(CompanyCreated @event)
     {
@@ -59,47 +59,41 @@ public sealed record CompanyProjection(
             @event.ContactPersonId
         );
     }
-    
+
     public CompanyProjection Apply(CompanyJobPostCreated @event)
     {
-        return this with
-        {
-            JobsPostCount = JobsPostCount + 1
-        };
+        return this with { JobsPostCount = JobsPostCount + 1 };
     }
-    
+
     public CompanyProjection Apply(CompanyJobPostActiveChanged @event)
     {
-        return this with
-        {
-            ActiveJobsPostCount = ActiveJobsPostCount + @event.ChangeBy
-        };
+        return this with { ActiveJobsPostCount = ActiveJobsPostCount + @event.ChangeBy };
     }
 
     public CompanyProjection Apply(CompanyUpdated @event)
     {
         return this with
         {
-            Name   = @event.Name,
+            Name = @event.Name,
             Industry = @event.Industry,
             Website = @event.Website,
             RegistrationNumber = @event.RegistrationNumber,
             CountryCode = @event.CountryCode,
             ModifiedBy = @event.ModifiedBy,
             ModifiedById = @event.ModifiedBy.Id,
-            ModifiedAt = @event.ModifiedAt
+            ModifiedAt = @event.ModifiedAt,
         };
     }
-    
+
     public CompanyProjection Apply(CompanyPrimaryContactUpdated @event)
     {
         return this with
         {
             Contact = @event.Contact,
             ContactPersonId = @event.ContactPersonId,
-            ModifiedAt = @event.ModifiedAt
+            ModifiedAt = @event.ModifiedAt,
         };
     }
-    
-    public CompanySuggestion ToSuggestion() => new (Id, Name, TaxId, CountryCode);
+
+    public CompanySuggestion ToSuggestion() => new(Id, Name, TaxId, CountryCode);
 }

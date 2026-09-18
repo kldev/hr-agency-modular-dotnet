@@ -11,7 +11,8 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/follow-up/{followUpActionId}
-        group.MapGet("{followUpActionId:guid}", Handler)
+        group
+            .MapGet("{followUpActionId:guid}", Handler)
             .WithSummary("Get follow up action")
             .WithName("Get follow up action")
             .Produces<FollowUpAction>()
@@ -22,13 +23,15 @@ internal static class MapGet
         IQueryFollowUpAction repository,
         AppUserAuthenticated user,
         Guid followUpActionId,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var result = await repository.GetByIdAsync(user.OrganizationId, followUpActionId, ct);
 
         if (result is null)
             return TypedResults.NotFound(
-                DomainObjectNotFound.NotFound("Follow up action", followUpActionId));
+                DomainObjectNotFound.NotFound("Follow up action", followUpActionId)
+            );
 
         return TypedResults.Ok(result);
     }

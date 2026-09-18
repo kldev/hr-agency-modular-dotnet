@@ -86,5 +86,5 @@ public enum CandidateSource
     /// <summary>
     /// Candidate came from a direct source.
     /// </summary>
-    Direct
+    Direct,
 }

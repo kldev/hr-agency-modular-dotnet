@@ -10,11 +10,18 @@ namespace HrAgencySystem.Company.Integration;
 [WolverineHandler]
 public class JobPostActiveChangedIntegrationEventHandler
 {
-    public async Task HandleAsync(JobPostActiveChangedIntegrationEvent message, IMessageBus bus,
-        ILogger<JobPostCreatedIntegrationEvent> logger)
+    public async Task HandleAsync(
+        JobPostActiveChangedIntegrationEvent message,
+        IMessageBus bus,
+        ILogger<JobPostCreatedIntegrationEvent> logger
+    )
     {
         logger.LogInformation("Handling JobPostActiveChangedIntegrationEvent  event");
-        var @event = new CompanyJobPostActiveChanged(message.JobPostId, message.CompanyId, message.ChangeBy);
+        var @event = new CompanyJobPostActiveChanged(
+            message.JobPostId,
+            message.CompanyId,
+            message.ChangeBy
+        );
         await bus.InvokeAsync(@event);
     }
 }
@@ -22,7 +29,10 @@ public class JobPostActiveChangedIntegrationEventHandler
 public static class CompanyJobPostActiveChangedHandler
 {
     [AggregateHandler]
-    public static Task<CompanyJobPostActiveChanged> Handle(CompanyJobPostActiveChanged command, Domain.Company aggregate)
+    public static Task<CompanyJobPostActiveChanged> Handle(
+        CompanyJobPostActiveChanged command,
+        Domain.Company aggregate
+    )
     {
         return Task.FromResult(command);
     }

@@ -7,4 +7,5 @@ public sealed record ChangeResponsiblePerson(
     [property: Identity] Guid OpportunityId,
     Guid OrganizationId,
     Guid ResponsibleId,
-    Guid ModifiedBy) : IUpdateCommand;
+    Guid ModifiedBy
+) : IUpdateCommand;

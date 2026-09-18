@@ -1,24 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Company\HrAgencySystem.Company.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.JobDescription\HrAgencySystem.JobDescription.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.Company\HrAgencySystem.Company.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.JobDescription\HrAgencySystem.JobDescription.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
-      <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Bogus" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Bogus" />
+  </ItemGroup>
 </Project>

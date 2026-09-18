@@ -6,14 +6,12 @@ namespace HrAgencySystem.Sales;
 
 public static class SalesModule
 {
-    public static void AddSalesModule(
-        this IServiceCollection services)
+    public static void AddSalesModule(this IServiceCollection services)
     {
         services.AddSalesServices();
     }
 
-    public static void ConfigureMarten(
-        StoreOptions options)
+    public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureSalesDocuments();
         options.ConfigureSalesEvents();

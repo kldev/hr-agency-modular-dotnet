@@ -10,9 +10,7 @@ public readonly record struct CompanyId(Guid Value)
     public static CompanyId From(Guid value)
     {
         if (value == Guid.Empty)
-            throw new ArgumentException(
-                "Company ID cannot be empty.",
-                nameof(value));
+            throw new ArgumentException("Company ID cannot be empty.", nameof(value));
 
         return new CompanyId(value);
     }

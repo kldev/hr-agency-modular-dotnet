@@ -10,17 +10,28 @@ internal static class MapUsers
 {
     internal static void Map(this RouteGroupBuilder group)
     {
-        group.MapGet("/api/suggestion/users", Handler)
+        group
+            .MapGet("/api/suggestion/users", Handler)
             .Produces<IReadOnlyList<UserSuggestion>>()
             .WithSummary("Get top 25 users")
             .WithName("Get users suggestions")
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user,IUserSuggestionRepository repository,
-        [FromQuery] string? search, [FromQuery] OrganizationRole[] roles,   CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IUserSuggestionRepository repository,
+        [FromQuery] string? search,
+        [FromQuery] OrganizationRole[] roles,
+        CancellationToken ct
+    )
     {
-        var result = await repository.GetUserSuggestions(user.OrganizationId, search ?? "", roles, ct);
+        var result = await repository.GetUserSuggestions(
+            user.OrganizationId,
+            search ?? "",
+            roles,
+            ct
+        );
         return TypedResults.Ok(result);
     }
 }

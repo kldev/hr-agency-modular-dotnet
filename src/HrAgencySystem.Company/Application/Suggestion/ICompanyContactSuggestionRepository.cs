@@ -4,5 +4,10 @@ namespace HrAgencySystem.Company.Application.Suggestion;
 
 public interface ICompanyContactSuggestionRepository
 {
-    Task<IReadOnlyList<CompanyContact>> GetSuggestionAsync(Guid organizationId, string search, Guid? companyId, CancellationToken ct);
+    Task<IReadOnlyList<CompanyContact>> GetSuggestionAsync(
+        Guid organizationId,
+        string search,
+        Guid? companyId,
+        CancellationToken ct
+    );
 }

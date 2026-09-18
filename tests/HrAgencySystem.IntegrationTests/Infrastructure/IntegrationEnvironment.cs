@@ -16,8 +16,7 @@ public sealed class IntegrationEnvironment() : IAsyncLifetime
     public HttpClient Client { get; private set; } = null!;
     public DatabaseCleaner Cleaner { get; private set; } = null!;
 
-    private string ConnectionString =>
-        _postgres.GetConnectionString();
+    private string ConnectionString => _postgres.GetConnectionString();
 
     public async Task InitializeAsync()
     {
@@ -33,7 +32,7 @@ public sealed class IntegrationEnvironment() : IAsyncLifetime
     }
 
     public HttpClient CreateClient() => Factory.CreateClient();
-    
+
     public async Task DisposeAsync()
     {
         Client.Dispose();

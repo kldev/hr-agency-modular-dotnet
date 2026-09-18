@@ -9,18 +9,23 @@ internal static class MapGetStatusHistory
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/job-description/status", Handler)
+        group
+            .MapGet("/api/job-description/status", Handler)
             .Produces<IReadOnlyList<JdStatusChangeHistory>>()
             .ProducesStandardErrors()
             .WithSummary("Get statuses history")
             .WithName("Get job-description statuses history");
     }
 
-    private static async Task<IResult> Handler(IDocumentSession session, AppUserAuthenticated user,
+    private static async Task<IResult> Handler(
+        IDocumentSession session,
+        AppUserAuthenticated user,
         Guid? jobDescriptionId,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var query = session.Query<JdStatusChangeHistory>()
+        var query = session
+            .Query<JdStatusChangeHistory>()
             .Where(z => z.OrgId == user.OrganizationId);
 
         if (jobDescriptionId.HasValue && jobDescriptionId != Guid.Empty)

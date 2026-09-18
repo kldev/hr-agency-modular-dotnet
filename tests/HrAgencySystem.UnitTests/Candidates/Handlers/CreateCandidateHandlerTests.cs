@@ -17,15 +17,11 @@ namespace HrAgencySystem.UnitTests.Candidates.Handlers;
 
 public class CreateCandidateHandlerTests : BaseTest
 {
-    private readonly IDocumentSession _documentSession =
-        Substitute.For<IDocumentSession>();
+    private readonly IDocumentSession _documentSession = Substitute.For<IDocumentSession>();
 
-    private readonly IOrganizationChecker _checker =
-        Substitute.For<IOrganizationChecker>();
+    private readonly IOrganizationChecker _checker = Substitute.For<IOrganizationChecker>();
 
-    private readonly IRecruitmentService _service =
-        Substitute.For<IRecruitmentService>();
-    
+    private readonly IRecruitmentService _service = Substitute.For<IRecruitmentService>();
 
     private readonly ICandidateEmailReservationRepository _emailReservationRepository =
         Substitute.For<ICandidateEmailReservationRepository>();
@@ -34,22 +30,19 @@ public class CreateCandidateHandlerTests : BaseTest
     private static readonly Guid CreatedById = Guid.NewGuid();
     private static readonly Guid CompanyId = Guid.NewGuid();
 
-    private static readonly DateTimeOffset Now =
-        new(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+    private static readonly DateTimeOffset Now = new(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
     private void SetupCheckOrganization()
     {
-        _checker
-            .Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(true);
+        _checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
     }
-    
+
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsCandidateCreated()
     {
         var command = CreateValidCommand();
         SetupCheckOrganization();
-        
+
         var result = await Handle(command);
 
         Assert.NotEqual(Guid.Empty, result.CandidateId);
@@ -65,162 +58,127 @@ public class CreateCandidateHandlerTests : BaseTest
 
         await _service
             .Received(1)
-            .ValidateOrganization(
-                OrganizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
 
         await _emailReservationRepository
             .Received(1)
             .ExistsAsync(
-                Arg.Is<OrganizationId>(
-                    x => x.Value == OrganizationId),
-                Arg.Is<Email>(
-                    x => x.Value == "john.doe@example.com"),
-                Arg.Any<CancellationToken>());
+                Arg.Is<OrganizationId>(x => x.Value == OrganizationId),
+                Arg.Is<Email>(x => x.Value == "john.doe@example.com"),
+                Arg.Any<CancellationToken>()
+            );
 
         await _emailReservationRepository
             .Received(1)
             .ReserveAsync(
-                Arg.Is<OrganizationId>(
-                    x => x.Value == OrganizationId),
-                Arg.Is<Email>(
-                    x => x.Value == "john.doe@example.com"),
+                Arg.Is<OrganizationId>(x => x.Value == OrganizationId),
+                Arg.Is<Email>(x => x.Value == "john.doe@example.com"),
                 new CandidateId(result.CandidateId)
-                );
+            );
 
         AssertNoCreatedByLookup();
 
-        _documentSession.Events
-            .Received(1)
+        _documentSession
+            .Events.Received(1)
             .StartStream<Candidate>(
                 result.CandidateId,
-                Arg.Is<CandidateCreated>(
-                    x =>
-                        x.CandidateId == result.CandidateId &&
-                        x.OrganizationId == OrganizationId &&
-                        x.Email == "john.doe@example.com" &&
-                        x.Phone == "+48 500 600 700" &&
-                        x.Source == command.Source &&
-                        x.CompanyId == CompanyId &&
-                        x.FirstName == "John" &&
-                        x.LastName == "Doe" &&
-                        x.CreatedBy == null &&
-                        x.CreatedAt == Now));
+                Arg.Is<CandidateCreated>(x =>
+                    x.CandidateId == result.CandidateId
+                    && x.OrganizationId == OrganizationId
+                    && x.Email == "john.doe@example.com"
+                    && x.Phone == "+48 500 600 700"
+                    && x.Source == command.Source
+                    && x.CompanyId == CompanyId
+                    && x.FirstName == "John"
+                    && x.LastName == "Doe"
+                    && x.CreatedBy == null
+                    && x.CreatedAt == Now
+                )
+            );
     }
 
     [Fact]
     public async Task Handle_WithCreatedBy_LoadsUserAndIncludesItInEvent()
     {
-        var command = CreateValidCommand(
-            createdBy: CreatedById);
+        var command = CreateValidCommand(createdBy: CreatedById);
 
         SetupCheckOrganization();
-        var createdBy = new UserSnapshot(
-            CreatedById,
-            "Alice",
-            "Wells",
-            "alice@hr-agency.com");
+        var createdBy = new UserSnapshot(CreatedById, "Alice", "Wells", "alice@hr-agency.com");
 
-        _service
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>())
-            .Returns(createdBy);
+        _service.GetUserAsync(CreatedById, Arg.Any<CancellationToken>()).Returns(createdBy);
 
         var result = await Handle(command);
 
         Assert.Equal(CreatedById, result.CreatedBy?.Id);
 
-        await _service
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _service.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
-        _documentSession.Events
-            .Received(1)
+        _documentSession
+            .Events.Received(1)
             .StartStream<Candidate>(
                 result.CandidateId,
-                Arg.Is<CandidateCreated>(
-                    x =>
-                        x.CandidateId == result.CandidateId &&
-                        x.CreatedBy!.Id == CreatedById));
+                Arg.Is<CandidateCreated>(x =>
+                    x.CandidateId == result.CandidateId && x.CreatedBy!.Id == CreatedById
+                )
+            );
     }
 
     [Fact]
     public async Task Handle_WithCreatedByUserNotFound_ReturnsEventWithoutCreatedBy()
     {
-        var command = CreateValidCommand(
-            createdBy: CreatedById);
-        
+        var command = CreateValidCommand(createdBy: CreatedById);
+
         SetupCheckOrganization();
-        
+
         var result = await Handle(command);
 
         Assert.Null(result.CreatedBy);
 
-        await _service
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _service.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
         Assert.NotEqual(Guid.Empty, result.CandidateId);
 
-        _documentSession.Events
-            .Received(1)
-            .StartStream<Candidate>(
-                result.CandidateId,
-                Arg.Any<CandidateCreated>());
+        _documentSession
+            .Events.Received(1)
+            .StartStream<Candidate>(result.CandidateId, Arg.Any<CandidateCreated>());
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task Handle_WithoutCreatedBy_DoesNotLookupUser(
-        string? createdBy)
+    public async Task Handle_WithoutCreatedBy_DoesNotLookupUser(string? createdBy)
     {
-        var command = CreateValidCommand(
-            createdBy: createdBy == null
-                ? null
-                : Guid.Empty);
+        var command = CreateValidCommand(createdBy: createdBy == null ? null : Guid.Empty);
 
         SetupCheckOrganization();
-        
+
         var result = await Handle(command);
 
         Assert.Null(result.CreatedBy);
 
         AssertNoCreatedByLookup();
 
-        _documentSession.Events
-            .Received(1)
-            .StartStream<Candidate>(
-                result.CandidateId,
-                Arg.Any<CandidateCreated>());
+        _documentSession
+            .Events.Received(1)
+            .StartStream<Candidate>(result.CandidateId, Arg.Any<CandidateCreated>());
     }
 
     [Fact]
     public async Task Handle_WithNonExistingOrganization_ThrowsBusinessRuleException()
     {
         _service
-            .ValidateOrganization(
-                OrganizationId,
-                Arg.Any<CancellationToken>())
-            .Throws( new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
+            .ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>())
+            .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(
-            () => Handle(CreateValidCommand(OrganizationId)));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(CreateValidCommand(OrganizationId))
+        );
 
-        Assert.Equal(
-            IOrganizationChecker.OrganizationCheckMessage,
-            exception.Message);
+        Assert.Equal(IOrganizationChecker.OrganizationCheckMessage, exception.Message);
 
         await _service
             .Received(1)
-            .ValidateOrganization(
-                OrganizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
 
         AssertNoEmailReservationCheck();
         AssertNoEmailReservation();
@@ -232,35 +190,31 @@ public class CreateCandidateHandlerTests : BaseTest
     public async Task Handle_WithAlreadyReservedEmail_ThrowsBusinessRuleException()
     {
         _emailReservationRepository
-            .ExistsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<Email>(),
-                Arg.Any<CancellationToken>())
+            .ExistsAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>())
             .Returns(true);
 
         SetupCheckOrganization();
-        
-        
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(
-            () => Handle(CreateValidCommand()));
+
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(CreateValidCommand())
+        );
 
         Assert.Equal(
             ICandidateEmailReservationRepository.EmailAlreadyExistsMessage,
-            exception.Message);
+            exception.Message
+        );
 
         await _service
             .Received(1)
-            .ValidateOrganization(
-                OrganizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
 
         await _emailReservationRepository
             .Received(1)
             .ExistsAsync(
-                Arg.Is<OrganizationId>(
-                    x => x.Value == OrganizationId),
+                Arg.Is<OrganizationId>(x => x.Value == OrganizationId),
                 Arg.Any<Email>(),
-                Arg.Any<CancellationToken>());
+                Arg.Any<CancellationToken>()
+            );
 
         AssertNoEmailReservation();
         AssertNoCreatedByLookup();
@@ -270,11 +224,9 @@ public class CreateCandidateHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidEmail_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            email: "invalid-email");
+        var command = CreateValidCommand(email: "invalid-email");
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(
-            () => Handle(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
         Assert.NotEmpty(exception.Errors);
 
@@ -288,11 +240,9 @@ public class CreateCandidateHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidPhone_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            phone: new string('A', 51));
+        var command = CreateValidCommand(phone: new string('A', 51));
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(
-            () => Handle(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
         Assert.NotEmpty(exception.Errors);
 
@@ -306,12 +256,9 @@ public class CreateCandidateHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidEmailAndPhone_ThrowsValidationExceptionWithBothErrors()
     {
-        var command = CreateValidCommand(
-            email: "invalid-email",
-            phone: ""); // not phone allowed
+        var command = CreateValidCommand(email: "invalid-email", phone: ""); // not phone allowed
 
-        var exception = await Assert.ThrowsAsync<ValidationException>(
-            () => Handle(command));
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
         Assert.Single(exception.Errors);
 
@@ -325,79 +272,57 @@ public class CreateCandidateHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithNullFirstNameAndLastName_CreatesCandidateWithEmptyNames()
     {
-        var command = CreateValidCommand(
-            firstName: null,
-            lastName: null);
+        var command = CreateValidCommand(firstName: null, lastName: null);
 
         SetupCheckOrganization();
-        
+
         var result = await Handle(command);
 
         Assert.Equal("", result.FirstName);
         Assert.Equal("", result.LastName);
 
-        _documentSession.Events
-            .Received(1)
+        _documentSession
+            .Events.Received(1)
             .StartStream<Candidate>(
                 result.CandidateId,
-                Arg.Is<CandidateCreated>(
-                    x =>
-                        x.FirstName == "" &&
-                        x.LastName == ""));
+                Arg.Is<CandidateCreated>(x => x.FirstName == "" && x.LastName == "")
+            );
     }
 
     [Fact]
     public async Task Handle_ReservesEmailBeforeLoadingCreatedBy()
     {
-        var command = CreateValidCommand(
-            createdBy: CreatedById);
+        var command = CreateValidCommand(createdBy: CreatedById);
 
-        var createdBy = new UserSnapshot(
-            CreatedById,
-            "Alice",
-            "Wells",
-            "alice@hr-agency.com");
+        var createdBy = new UserSnapshot(CreatedById, "Alice", "Wells", "alice@hr-agency.com");
 
         SetupCheckOrganization();
-        
-        _service
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>())
-            .Returns(createdBy);
+
+        _service.GetUserAsync(CreatedById, Arg.Any<CancellationToken>()).Returns(createdBy);
 
         var result = await Handle(command);
 
         Received.InOrder(async () =>
         {
-            await _service
-                .ValidateOrganization(
-                    OrganizationId,
-                    Arg.Any<CancellationToken>());
+            await _service.ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
 
-            await _emailReservationRepository
-                .ExistsAsync(
-                    Arg.Any<OrganizationId>(),
-                    Arg.Any<Email>(),
-                    Arg.Any<CancellationToken>());
+            await _emailReservationRepository.ExistsAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<Email>(),
+                Arg.Any<CancellationToken>()
+            );
 
-            await _emailReservationRepository
-                .ReserveAsync(
-                    Arg.Any<OrganizationId>(),
-                    Arg.Any<Email>(),
-                    new CandidateId(result.CandidateId)
-                    );
+            await _emailReservationRepository.ReserveAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<Email>(),
+                new CandidateId(result.CandidateId)
+            );
 
-            await _service
-                .GetUserAsync(
-                    CreatedById,
-                    Arg.Any<CancellationToken>());
+            await _service.GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
         });
     }
 
-    private async Task<CandidateCreated> Handle(
-        CreateCandidate command,
-        IClock? clock = null)
+    private async Task<CandidateCreated> Handle(CreateCandidate command, IClock? clock = null)
     {
         return await CreateCandidateHandler.Handle(
             command,
@@ -405,7 +330,8 @@ public class CreateCandidateHandlerTests : BaseTest
             _emailReservationRepository,
             _documentSession,
             clock ?? new FixedClock(Now),
-            CancellationToken.None);
+            CancellationToken.None
+        );
     }
 
     private static CreateCandidate CreateValidCommand(
@@ -416,7 +342,8 @@ public class CreateCandidateHandlerTests : BaseTest
         string? firstName = "John",
         string? lastName = "Doe",
         Guid? createdBy = null,
-        Guid? companyId = null)
+        Guid? companyId = null
+    )
     {
         return new CreateCandidate(
             organizationId ?? OrganizationId,
@@ -426,54 +353,38 @@ public class CreateCandidateHandlerTests : BaseTest
             firstName ?? "",
             lastName ?? "",
             createdBy,
-            companyId ?? CompanyId);
+            companyId ?? CompanyId
+        );
     }
 
     private void AssertNoOrganizationCheck()
     {
-        _checker
-            .DidNotReceive()
-            .Exists(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        _checker.DidNotReceive().Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoEmailReservationCheck()
     {
         _emailReservationRepository
             .DidNotReceive()
-            .ExistsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<Email>(),
-                Arg.Any<CancellationToken>());
+            .ExistsAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoEmailReservation()
     {
         _emailReservationRepository
             .DidNotReceive()
-            .ReserveAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<Email>(),
-                Arg.Any<CandidateId>()
-                );
+            .ReserveAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CandidateId>());
     }
 
     private void AssertNoCreatedByLookup()
     {
-        _service
-            .DidNotReceive()
-            .GetUserAsync(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        _service.DidNotReceive().GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoStream()
     {
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<Candidate>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<Candidate>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 }

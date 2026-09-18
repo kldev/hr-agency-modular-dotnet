@@ -19,8 +19,9 @@ internal static class CandidateProjectionExtensions
 
         internal IQueryable<CandidateProjection> WithCompanyId(Guid? companyId)
         {
-            if (!companyId.HasValue || companyId.Value == Guid.Empty) return query;
-        
+            if (!companyId.HasValue || companyId.Value == Guid.Empty)
+                return query;
+
             return query.Where(q => q.CompanyIds.Contains(companyId.Value));
         }
 
@@ -39,17 +40,22 @@ internal static class CandidateProjectionExtensions
             if (tags.Count == 0)
                 return query;
 
-            return tags.Aggregate(query, (current, tag) => current.Where(q => q.TagsIds.Contains(tag)));
+            return tags.Aggregate(
+                query,
+                (current, tag) => current.Where(q => q.TagsIds.Contains(tag))
+            );
         }
 
         internal IQueryable<CandidateProjection> WithSearch(string search)
         {
-            return  string.IsNullOrWhiteSpace(search) ? query : query.Where(q => 
-                q.Email.Contains(search, StringComparison.OrdinalIgnoreCase)
-                || q.FirstName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                || q.LastName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                || q.PhoneNumber.Contains(search, StringComparison.OrdinalIgnoreCase)
-            );
+            return string.IsNullOrWhiteSpace(search)
+                ? query
+                : query.Where(q =>
+                    q.Email.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || q.FirstName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || q.LastName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || q.PhoneNumber.Contains(search, StringComparison.OrdinalIgnoreCase)
+                );
         }
     }
 }

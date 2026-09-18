@@ -9,4 +9,3 @@ public interface IAudit
     UserSnapshot? ModifiedBy { get; }
     DateTimeOffset? ModifiedAt { get; }
 }
-

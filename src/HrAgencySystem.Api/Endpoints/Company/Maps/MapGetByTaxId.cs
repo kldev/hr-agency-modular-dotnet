@@ -11,14 +11,20 @@ internal static class MapGetByTaxId
     internal static void Map(RouteGroupBuilder group)
     {
         // /api/companies/find-by-tax/{taxId}
-        group.MapGet("find-by-tax/{taxId}", Handler)
+        group
+            .MapGet("find-by-tax/{taxId}", Handler)
             .WithSummary("Get company by tax")
             .WithName("Get company by tax")
             .Produces<CompanyProjection>()
             .ProducesStandardErrors();
     }
-    
-    private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository, string taxId, CancellationToken ct)
+
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        ICompaniesQueryRepository repository,
+        string taxId,
+        CancellationToken ct
+    )
     {
         var result = await repository.GetCompany(user.OrganizationId, null, taxId, ct);
 

@@ -1,6 +1,6 @@
-using HrAgencySystem.Api.Common.Response;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
+using HrAgencySystem.Api.Common.Response;
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Projections;
 
@@ -11,15 +11,20 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/companies/{companyId:guid}
-        group.MapGet("{companyId:guid}", Handler)
+        group
+            .MapGet("{companyId:guid}", Handler)
             .WithSummary("Get company")
             .WithName("Get company")
             .Produces<CompanyProjection>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, ICompaniesQueryRepository repository, Guid companyId,
-        CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        ICompaniesQueryRepository repository,
+        Guid companyId,
+        CancellationToken ct
+    )
     {
         var result = await repository.GetCompany(user.OrganizationId, companyId, "", ct);
 
@@ -27,7 +32,7 @@ internal static class MapGet
         {
             return TypedResults.NotFound(DomainObjectNotFound.NotFound("Company", companyId));
         }
-        
+
         return TypedResults.Ok(result);
     }
 }

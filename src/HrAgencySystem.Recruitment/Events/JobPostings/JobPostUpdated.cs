@@ -4,7 +4,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Events.JobPostings;
 
-public sealed record JobPostUpdated(    
+public sealed record JobPostUpdated(
     Guid JobPostId,
     string Title,
     string? Summary,
@@ -21,4 +21,5 @@ public sealed record JobPostUpdated(
     decimal SalaryMin,
     decimal SalaryMax,
     UserSnapshot Author,
-    DateTimeOffset OccurredAt) : IJobPostData, IJobPostEvent;
+    DateTimeOffset OccurredAt
+) : IJobPostData, IJobPostEvent;

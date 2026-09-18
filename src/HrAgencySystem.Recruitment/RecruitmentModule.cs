@@ -7,30 +7,29 @@ namespace HrAgencySystem.Recruitment;
 
 public static class RecruitmentModule
 {
-     private const string SchemaName = "recruitment";
+    private const string SchemaName = "recruitment";
 
     public static void AddRecruitmentModule(
-        this IServiceCollection services, IConfiguration configuration)
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
         services.AddRecruitmentServices(configuration);
     }
-    
-    public static void AddRecruitmentModuleMinimal(
-        this IServiceCollection services)
+
+    public static void AddRecruitmentModuleMinimal(this IServiceCollection services)
     {
         services.AddRecruitmentServicesMinimal();
     }
-    
-    public static void ConfigureMartenMinimal(
-        StoreOptions options)
+
+    public static void ConfigureMartenMinimal(StoreOptions options)
     {
         options.ConfigureRecruitmentDocumentsMinimal();
         options.ConfigureRecruitmentEventsMinimal();
         options.ConfigureRecruitmentProjectionsMinimal();
     }
 
-    public static void ConfigureMarten(
-        StoreOptions options)
+    public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureRecruitmentDocuments();
         options.ConfigureRecruitmentEvents();

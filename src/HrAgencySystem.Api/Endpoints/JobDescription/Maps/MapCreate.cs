@@ -11,18 +11,25 @@ internal static class MapCreate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/api/job-description", Handler)
+        group
+            .MapPost("/api/job-description", Handler)
             .Produces<JobDescriptionCreated>()
             .ProducesStandardErrors()
             .WithSummary("Create job description")
             .WithName("Create job description");
     }
 
-    private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user,
-        CreateJobDescriptionRequest request, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        IMessageBus bus,
+        AppUserAuthenticated user,
+        CreateJobDescriptionRequest request,
+        CancellationToken ct
+    )
     {
-        var result =
-            await bus.InvokeAsync<JobDescriptionCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<JobDescriptionCreated>(
+            request.ToCommand(user.OrganizationId, user.UserId),
+            ct
+        );
         return TypedResults.Created($"/api/job-description/{result.JobDescriptionId}", result);
     }
 }
@@ -40,17 +47,18 @@ internal sealed record CreateJobDescriptionRequest(
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    Guid RecruiterId)
+    Guid RecruiterId
+)
 {
     public CreateJobDescription ToCommand(Guid organizationId, Guid createdBy) =>
-        new ( 
-            organizationId, 
+        new(
+            organizationId,
             CompanyId,
-            Title, 
-            Summary, 
+            Title,
+            Summary,
             Description,
             Responsibilities,
             Requirements,
@@ -63,5 +71,6 @@ internal sealed record CreateJobDescriptionRequest(
             SalaryMin,
             SalaryMax,
             RecruiterId,
-            createdBy);
+            createdBy
+        );
 }

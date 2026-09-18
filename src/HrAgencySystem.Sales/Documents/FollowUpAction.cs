@@ -12,7 +12,8 @@ public sealed record FollowUpAction(
     DateTimeOffset FollowDateTime,
     DateTimeOffset CreatedAt,
     CompanySnapshot Company,
-    UserSnapshot CreatedBy)
+    UserSnapshot CreatedBy
+)
 {
     public const string ContentFieldName = "Content";
 
@@ -24,7 +25,8 @@ public sealed record FollowUpAction(
         DateTimeOffset followDateTime,
         DateTimeOffset createdAt,
         CompanySnapshot company,
-        UserSnapshot createdBy)
+        UserSnapshot createdBy
+    )
     {
         ArgumentNullException.ThrowIfNull(content);
 
@@ -36,7 +38,8 @@ public sealed record FollowUpAction(
             followDateTime,
             createdAt,
             company,
-            createdBy);
+            createdBy
+        );
     }
 
     public FollowUpAction Update(LongText content, DateTimeOffset followDateTime)
@@ -46,7 +49,7 @@ public sealed record FollowUpAction(
         return this with
         {
             Content = content.Value,
-            FollowDateTime = followDateTime
+            FollowDateTime = followDateTime,
         };
     }
 }

@@ -24,7 +24,7 @@ public sealed class PlatformSalesSeeder(
     IDocumentSession session,
     ISalesService service,
     ILogger<PlatformSalesSeeder> logger
-    ) : IPlatformSalesSeeder
+) : IPlatformSalesSeeder
 {
     private static readonly Faker Faker = new();
     private CancellationToken Ct { get; set; }
@@ -33,13 +33,15 @@ public sealed class PlatformSalesSeeder(
 
     public async Task Seed(
         int opportunityCount = 500,
-        string slug = "hr-agency", CancellationToken cts = default)
+        string slug = "hr-agency",
+        CancellationToken cts = default
+    )
     {
         Ct = cts;
         var stopwatch = Stopwatch.StartNew();
 
         logger.LogInformation("Starting HR Agency sales seeding");
-        
+
         var organizationId = await service.GetBySlugAsync(slug, Ct);
 
         var userIds = await GetUserIds(organizationId);
@@ -47,45 +49,41 @@ public sealed class PlatformSalesSeeder(
 
         if (userIds.Count == 0)
             throw new InvalidOperationException(
-                $"No users found for organization {organizationId.Value}.");
+                $"No users found for organization {organizationId.Value}."
+            );
 
         if (companyIds.Count == 0)
             throw new InvalidOperationException(
-                $"No companies found for organization {organizationId.Value}.");
+                $"No companies found for organization {organizationId.Value}."
+            );
 
         for (var i = 0; i < opportunityCount; i++)
         {
             var createdBy = userIds[Random.Shared.Next(userIds.Count)];
             var companyId = companyIds[Random.Shared.Next(companyIds.Count)];
 
-            await CreateOpportunityWithActivities(
-                organizationId,
-                createdBy,
-                companyId,
-                userIds);
+            await CreateOpportunityWithActivities(organizationId, createdBy, companyId, userIds);
         }
-        
+
         logger.LogInformation("Total added: {Total}.", Total);
         logger.LogInformation("Aggregate loaded: {AggregateLoadTotal}.", AggregateLoadTotal);
-        
-        logger.LogInformation(
-            "HR Agency sales seeding completed in {Elapsed}",
-            stopwatch.Elapsed);
+
+        logger.LogInformation("HR Agency sales seeding completed in {Elapsed}", stopwatch.Elapsed);
     }
 
-    private async Task<IReadOnlyList<Guid>> GetUserIds(
-        OrganizationId organizationId)
+    private async Task<IReadOnlyList<Guid>> GetUserIds(OrganizationId organizationId)
     {
-        return await session.Query<UserProjection>()
+        return await session
+            .Query<UserProjection>()
             .Where(x => x.OrganizationId == organizationId.Value)
             .Select(x => x.Id)
             .ToListAsync(Ct);
     }
 
-    private async Task<IReadOnlyList<Guid>> GetCompanies(
-        OrganizationId organizationId)
+    private async Task<IReadOnlyList<Guid>> GetCompanies(OrganizationId organizationId)
     {
-        return await session.Query<CompanyProjection>()
+        return await session
+            .Query<CompanyProjection>()
             .Where(x => x.OrganizationId == organizationId.Value)
             .Select(x => x.Id)
             .ToListAsync(Ct);
@@ -95,19 +93,19 @@ public sealed class PlatformSalesSeeder(
         OrganizationId organizationId,
         Guid createdBy,
         Guid companyId,
-        IReadOnlyList<Guid> userIds)
+        IReadOnlyList<Guid> userIds
+    )
     {
         var now = DateTimeOffset.UtcNow;
 
-        var createdAt = RandomDate(
-            now.AddMonths(-3),
-            now);
+        var createdAt = RandomDate(now.AddMonths(-3), now);
 
         var clock = new FixedClock(createdAt);
 
-        var responsibleId = Random.Shared.NextDouble() < 0.15
-            ? (Guid?)null
-            : userIds[Random.Shared.Next(userIds.Count)];
+        var responsibleId =
+            Random.Shared.NextDouble() < 0.15
+                ? (Guid?)null
+                : userIds[Random.Shared.Next(userIds.Count)];
 
         var command = new CreateOpportunity(
             OrganizationId: organizationId.Value,
@@ -119,7 +117,8 @@ public sealed class PlatformSalesSeeder(
             Currency: RandomCurrency(),
             ExpectedCloseDate: GenerateExpectedCloseDate(createdAt),
             ResponsibleId: responsibleId,
-            CreatedBy: createdBy);
+            CreatedBy: createdBy
+        );
 
         await session.SaveChangesAsync(Ct);
 
@@ -130,7 +129,8 @@ public sealed class PlatformSalesSeeder(
                 service,
                 session,
                 clock,
-                Ct);
+                Ct
+            );
 
             await session.SaveChangesAsync(Ct);
 
@@ -153,21 +153,11 @@ public sealed class PlatformSalesSeeder(
              *   ↓
              * Won
              */
-            await CreateStageHistory(
-                organizationId,
-                opportunity,
-                createdAt,
-                now,
-                createdBy);
+            await CreateStageHistory(organizationId, opportunity, createdAt, now, createdBy);
 
             await session.SaveChangesAsync(Ct);
 
-            await CreateActivities(
-                organizationId,
-                opportunity,
-                userIds,
-                createdAt,
-                now);
+            await CreateActivities(organizationId, opportunity, userIds, createdAt, now);
 
             await session.SaveChangesAsync(Ct);
             Total++;
@@ -183,7 +173,8 @@ public sealed class PlatformSalesSeeder(
         OpportunityCreated opportunity,
         DateTimeOffset createdAt,
         DateTimeOffset now,
-        Guid modifiedBy)
+        Guid modifiedBy
+    )
     {
         var stages = GeneratePipelineStages();
 
@@ -196,9 +187,7 @@ public sealed class PlatformSalesSeeder(
              *
              * Minimum 1 godzina, maksimum kilka/kilkanaście dni.
              */
-            var stageDate = RandomDate(
-                previousDate.AddHours(1),
-                now);
+            var stageDate = RandomDate(previousDate.AddHours(1), now);
 
             /*
              * Nie pozwalamy, żeby losowanie daty cofnęło historię.
@@ -212,27 +201,27 @@ public sealed class PlatformSalesSeeder(
             if (stageDate > now)
                 break;
 
-            var lostReason = stage == OpportunityStage.Lost
-                ? GenerateLostReason()
-                : string.Empty;
+            var lostReason = stage == OpportunityStage.Lost ? GenerateLostReason() : string.Empty;
 
             var command = new ChangeOpportunityStage(
                 OpportunityId: opportunity.OpportunityId,
                 OrganizationId: organizationId.Value,
                 Stage: stage,
                 LostReason: lostReason,
-                ModifiedBy: modifiedBy);
+                ModifiedBy: modifiedBy
+            );
 
             var clock = new FixedClock(stageDate);
 
-            var allEvents = await session.Events.FetchStreamAsync(command.OpportunityId, token: Ct );
+            var allEvents = await session.Events.FetchStreamAsync(command.OpportunityId, token: Ct);
 
             logger.LogInformation(
                 "Opportunity {OpportunityId} has {EventCount} events. Last event: {LastEvent}",
                 command.OpportunityId,
                 allEvents.Count,
-                allEvents.LastOrDefault()?.Data?.GetType().Name);
-            
+                allEvents.LastOrDefault()?.Data?.GetType().Name
+            );
+
             var opportunityAggregate = SalesOpportunity.Empty();
             foreach (var eventData in allEvents)
             {
@@ -241,7 +230,7 @@ public sealed class PlatformSalesSeeder(
                     case OpportunityCreated created:
                         opportunityAggregate.Apply(created);
                         break;
-                    
+
                     case OpportunityUpdated updated:
                         opportunityAggregate.Apply(updated);
                         break;
@@ -257,24 +246,23 @@ public sealed class PlatformSalesSeeder(
                     // kolejne eventy agregatu...
                 }
             }
-            
+
             logger.LogInformation("Aggregate state: " + opportunityAggregate);
-           
+
             logger.LogInformation("Aggregate loaded successfully with id " + command.OpportunityId);
             AggregateLoadTotal++;
-            
-           var result = await ChangeOpportunityStageHandler.Handle(
+
+            var result = await ChangeOpportunityStageHandler.Handle(
                 command,
                 opportunityAggregate,
                 service,
                 clock,
-                Ct);
+                Ct
+            );
 
             previousDate = stageDate;
-            
-            session.Events.Append(
-                command.OpportunityId,
-                result.Item1);
+
+            session.Events.Append(command.OpportunityId, result.Item1);
 
             await session.SaveChangesAsync(Ct);
             /*
@@ -305,30 +293,18 @@ public sealed class PlatformSalesSeeder(
 
         return targetStage switch
         {
-            0 =>
-            [
-                OpportunityStage.Viewed
-            ],
+            0 => [OpportunityStage.Viewed],
 
-            1 =>
-            [
-                OpportunityStage.Viewed,
-                OpportunityStage.Contacted
-            ],
+            1 => [OpportunityStage.Viewed, OpportunityStage.Contacted],
 
-            2 =>
-            [
-                OpportunityStage.Viewed,
-                OpportunityStage.Contacted,
-                OpportunityStage.Qualified
-            ],
+            2 => [OpportunityStage.Viewed, OpportunityStage.Contacted, OpportunityStage.Qualified],
 
             3 =>
             [
                 OpportunityStage.Viewed,
                 OpportunityStage.Contacted,
                 OpportunityStage.Qualified,
-                OpportunityStage.Proposal
+                OpportunityStage.Proposal,
             ],
 
             4 =>
@@ -337,23 +313,18 @@ public sealed class PlatformSalesSeeder(
                 OpportunityStage.Contacted,
                 OpportunityStage.Qualified,
                 OpportunityStage.Proposal,
-                OpportunityStage.Won
+                OpportunityStage.Won,
             ],
 
-            5 =>
-            [
-                OpportunityStage.Viewed,
-                OpportunityStage.Contacted,
-                OpportunityStage.Lost
-            ],
+            5 => [OpportunityStage.Viewed, OpportunityStage.Contacted, OpportunityStage.Lost],
 
             _ =>
             [
                 OpportunityStage.Viewed,
                 OpportunityStage.Contacted,
                 OpportunityStage.Qualified,
-                OpportunityStage.Lost
-            ]
+                OpportunityStage.Lost,
+            ],
         };
     }
 
@@ -362,7 +333,8 @@ public sealed class PlatformSalesSeeder(
         OpportunityCreated opportunity,
         IReadOnlyList<Guid> userIds,
         DateTimeOffset opportunityCreatedAt,
-        DateTimeOffset now)
+        DateTimeOffset now
+    )
     {
         var activityCount = Random.Shared.Next(0, 7);
 
@@ -371,9 +343,7 @@ public sealed class PlatformSalesSeeder(
 
         for (var i = 0; i < activityCount; i++)
         {
-            var activityDate = RandomDate(
-                opportunityCreatedAt,
-                now);
+            var activityDate = RandomDate(opportunityCreatedAt, now);
 
             var createdBy = userIds[Random.Shared.Next(userIds.Count)];
 
@@ -382,42 +352,32 @@ public sealed class PlatformSalesSeeder(
                 SalesOpportunityId: opportunity.OpportunityId,
                 ActivityType: RandomActivityType(),
                 Note: GenerateActivityNote(),
-                CreatedBy: createdBy);
+                CreatedBy: createdBy
+            );
 
             var clock = new FixedClock(activityDate);
 
-            await CreateActivityHandler.Handle(
-                command,
-                service,
-                session,
-                clock,
-                Ct);
+            await CreateActivityHandler.Handle(command, service, session, clock, Ct);
         }
     }
 
-    private static DateTimeOffset RandomDate(
-        DateTimeOffset from,
-        DateTimeOffset to)
+    private static DateTimeOffset RandomDate(DateTimeOffset from, DateTimeOffset to)
     {
         var range = to - from;
 
         if (range <= TimeSpan.Zero)
             return from;
 
-        var randomTicks = (long)(
-            Random.Shared.NextDouble() * range.Ticks);
+        var randomTicks = (long)(Random.Shared.NextDouble() * range.Ticks);
 
         return from.AddTicks(randomTicks);
     }
 
-    private static DateOnly GenerateExpectedCloseDate(
-        DateTimeOffset opportunityCreatedAt)
+    private static DateOnly GenerateExpectedCloseDate(DateTimeOffset opportunityCreatedAt)
     {
         var days = Random.Shared.Next(7, 61);
 
-        return opportunityCreatedAt
-            .AddDays(days).Date.ToDateOnly();
-
+        return opportunityCreatedAt.AddDays(days).Date.ToDateOnly();
     }
 
     private static decimal GenerateExpectedValue()
@@ -447,7 +407,7 @@ public sealed class PlatformSalesSeeder(
             CurrencyCode.PLN,
             CurrencyCode.EUR,
             CurrencyCode.GBP,
-            CurrencyCode.USD
+            CurrencyCode.USD,
         };
 
         return currencies[Random.Shared.Next(currencies.Length)];
@@ -511,7 +471,7 @@ public sealed class PlatformSalesSeeder(
             "Customer confirmed the main requirements.",
             "Discussed next steps with the customer.",
             "Customer is waiting for internal approval.",
-            "Decision postponed due to budget constraints."
+            "Decision postponed due to budget constraints.",
         };
 
         return notes[Random.Shared.Next(notes.Length)];
@@ -532,7 +492,7 @@ public sealed class PlatformSalesSeeder(
             "Project was cancelled by the customer.",
             "Customer selected another provider.",
             "No agreement was reached on commercial terms.",
-            "Customer postponed the decision until next year."
+            "Customer postponed the decision until next year.",
         };
 
         return reasons[Random.Shared.Next(reasons.Length)];

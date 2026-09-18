@@ -2,9 +2,7 @@ namespace HrAgencySystem.Recruitment.Domain.JobPostings;
 
 public static class JobPostStatusChangePolicy
 {
-    public static bool Allow(
-        JobPostStatus oldStatus,
-        JobPostStatus newStatus)
+    public static bool Allow(JobPostStatus oldStatus, JobPostStatus newStatus)
     {
         if (oldStatus == newStatus)
             return false;
@@ -20,13 +18,12 @@ public static class JobPostStatusChangePolicy
             (JobPostStatus.Published, JobPostStatus.Closed) => true,
             (JobPostStatus.Archived, JobPostStatus.Published) => true,
 
-            _ => false
+            _ => false,
         };
     }
 
     public static bool IsFinal(JobPostStatus status)
     {
-        return status is
-            JobPostStatus.Closed;
+        return status is JobPostStatus.Closed;
     }
 }

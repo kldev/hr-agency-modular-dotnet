@@ -6,13 +6,13 @@ using HrAgencySystem.Sales.Projections;
 
 namespace HrAgencySystem.Api.Endpoints.SalesOpportunity.Maps;
 
-
 internal static class MapGet
 {
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/opportunity/{opportunityId}
-        group.MapGet("{opportunityId:guid}", Handler)
+        group
+            .MapGet("{opportunityId:guid}", Handler)
             .WithSummary("Get opportunity")
             .WithName("Get opportunity")
             .Produces<OpportunityProjection>()
@@ -26,14 +26,13 @@ internal static class MapGet
         CancellationToken ct
     )
     {
-        var result = await repository
-            .GetByIdAsync(user.OrganizationId, opportunityId, ct);
+        var result = await repository.GetByIdAsync(user.OrganizationId, opportunityId, ct);
 
         if (result is null)
             return TypedResults.NotFound(
-                DomainObjectNotFound.NotFound("Sales opportunity", opportunityId));
+                DomainObjectNotFound.NotFound("Sales opportunity", opportunityId)
+            );
 
         return TypedResults.Ok(result);
     }
-
 }

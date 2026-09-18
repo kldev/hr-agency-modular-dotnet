@@ -6,6 +6,7 @@ namespace HrAgencySystem.Recruitment.Application.Interviews.ChangeInterviewer;
 public sealed record ChangeInterviewer(
     Guid InterviewId,
     Guid OrganizationId,
-    Guid InterviewerId, 
-    string? Note, 
-    Guid ModifiedBy):IUpdateCommand;
+    Guid InterviewerId,
+    string? Note,
+    Guid ModifiedBy
+) : IUpdateCommand;

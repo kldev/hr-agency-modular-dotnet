@@ -6,11 +6,16 @@ namespace HrAgencySystem.Company.Application.Port;
 
 public interface ICompanyTaxIdReservationRepository
 {
-    Task<bool> ExitsAsync(OrganizationId organizationId, TaxId taxId, CancellationToken cancellationToken = default);
+    Task<bool> ExitsAsync(
+        OrganizationId organizationId,
+        TaxId taxId,
+        CancellationToken cancellationToken = default
+    );
 
     Task ReserveAsync(
         OrganizationId organizationId,
         TaxId taxId,
         CompanyId companyId,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

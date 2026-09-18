@@ -10,8 +10,7 @@ public sealed class JobPostTests
     [Fact]
     public void Apply_events_should_build_and_update_job_posting_correctly()
     {
-        var createdAt = new DateTimeOffset(
-            2026, 9, 3, 10, 0, 0, TimeSpan.Zero);
+        var createdAt = new DateTimeOffset(2026, 9, 3, 10, 0, 0, TimeSpan.Zero);
 
         var updatedAt = createdAt.AddHours(2);
 
@@ -35,7 +34,8 @@ public sealed class JobPostTests
             companyId,
             recruiterId,
             creatorId,
-            createdAt);
+            createdAt
+        );
 
         AssertCreatedState(
             posting,
@@ -45,69 +45,41 @@ public sealed class JobPostTests
             companyId,
             recruiterId,
             creatorId,
-            createdAt);
+            createdAt
+        );
 
         // Update
-        ApplyUpdated(
-            posting,
-            updatedAt,
-            modifierId);
+        ApplyUpdated(posting, updatedAt, modifierId);
 
-        AssertUpdatedState(
-            posting,
-            modifierId,
-            updatedAt);
+        AssertUpdatedState(posting, modifierId, updatedAt);
 
         // Publish
-        ApplyPublished(
-            posting,
-            updatedAt.AddMinutes(10),
-            modifierId);
+        ApplyPublished(posting, updatedAt.AddMinutes(10), modifierId);
 
-        Assert.Equal(
-            JobPostStatus.Published,
-            posting.Status);
+        Assert.Equal(JobPostStatus.Published, posting.Status);
 
-        Assert.Equal(
-            updatedAt.AddMinutes(10),
-            posting.UpdatedAt);
+        Assert.Equal(updatedAt.AddMinutes(10), posting.UpdatedAt);
 
-        Assert.Equal(
-            modifierId,
-            posting.ModifiedBy);
+        Assert.Equal(modifierId, posting.ModifiedBy);
 
         // Publish to channel
         var channelPublishedAt = updatedAt.AddMinutes(20);
 
-        ApplyToChannel(
-            posting,
-            channelPublishedAt,
-            modifierId,
-            PostingChannelType.PracujPl);
+        ApplyToChannel(posting, channelPublishedAt, modifierId, PostingChannelType.PracujPl);
 
-        Assert.Equal(
-            JobPostStatus.Published,
-            posting.Status);
+        Assert.Equal(JobPostStatus.Published, posting.Status);
 
         Assert.Single(posting.Posts);
 
         var post = posting.Posts[0];
 
-        Assert.Equal(
-            PostingChannelType.PracujPl,
-            post.ChannelType);
+        Assert.Equal(PostingChannelType.PracujPl, post.ChannelType);
 
-        Assert.Equal(
-            channelPublishedAt,
-            post.PublishedAt);
+        Assert.Equal(channelPublishedAt, post.PublishedAt);
 
-        Assert.Equal(
-            channelPublishedAt,
-            posting.UpdatedAt);
+        Assert.Equal(channelPublishedAt, posting.UpdatedAt);
 
-        Assert.Equal(
-            modifierId,
-            posting.ModifiedBy);
+        Assert.Equal(modifierId, posting.ModifiedBy);
     }
 
     [Fact]
@@ -125,23 +97,21 @@ public sealed class JobPostTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             Guid.NewGuid(),
-            createdAt);
+            createdAt
+        );
 
-        ApplyClosed(
-            posting,
-            createdAt.AddHours(1),
-            Guid.NewGuid());
+        ApplyClosed(posting, createdAt.AddHours(1), Guid.NewGuid());
 
-        Assert.Equal(
-            JobPostStatus.Closed,
-            posting.Status);
+        Assert.Equal(JobPostStatus.Closed, posting.Status);
 
         Assert.Throws<InvalidOperationException>(() =>
             ApplyToChannel(
                 posting,
                 createdAt.AddHours(2),
                 Guid.NewGuid(),
-                PostingChannelType.Linkedin));
+                PostingChannelType.Linkedin
+            )
+        );
 
         Assert.Empty(posting.Posts);
     }
@@ -161,23 +131,14 @@ public sealed class JobPostTests
             Guid.NewGuid(),
             Guid.NewGuid(),
             Guid.NewGuid(),
-            createdAt);
+            createdAt
+        );
 
-        ApplyArchived(
-            posting,
-            createdAt.AddHours(1),
-            Guid.NewGuid());
+        ApplyArchived(posting, createdAt.AddHours(1), Guid.NewGuid());
 
-        Assert.Equal(
-            JobPostStatus.Archived,
-            posting.Status);
+        Assert.Equal(JobPostStatus.Archived, posting.Status);
 
-
-        ApplyToChannel(
-            posting,
-            createdAt.AddHours(2),
-            Guid.NewGuid(),
-            PostingChannelType.Linkedin);
+        ApplyToChannel(posting, createdAt.AddHours(2), Guid.NewGuid(), PostingChannelType.Linkedin);
 
         Assert.Single(posting.Posts);
         Assert.Equal(JobPostStatus.Archived, posting.Status);
@@ -191,7 +152,8 @@ public sealed class JobPostTests
         Guid companyId,
         Guid recruiterId,
         Guid creatorId,
-        DateTimeOffset createdAt)
+        DateTimeOffset createdAt
+    )
     {
         post.Apply(
             new JobPostCreated(
@@ -202,24 +164,9 @@ public sealed class JobPostTests
                 Title: "Senior .NET Developer",
                 Summary: "Senior developer position.",
                 Description: "Development of recruitment platform.",
-                Responsibilities:
-                [
-                    "Develop backend services",
-                    "Review code",
-                    "Design solutions"
-                ],
-                Requirements:
-                [
-                    "C#",
-                    ".NET",
-                    "PostgreSQL"
-                ],
-                Skills:
-                [
-                    "Clean Architecture",
-                    "DDD",
-                    "Marten"
-                ],
+                Responsibilities: ["Develop backend services", "Review code", "Design solutions"],
+                Requirements: ["C#", ".NET", "PostgreSQL"],
+                Skills: ["Clean Architecture", "DDD", "Marten"],
                 Location: "Opole",
                 CountryCode: "PL",
                 EmploymentType: EmploymentType.FullTime,
@@ -227,24 +174,15 @@ public sealed class JobPostTests
                 CurrencyCode: CurrencyCode.PLN,
                 SalaryMin: 15000,
                 SalaryMax: 22000,
-                Recruiter: new UserSnapshot(
-                    recruiterId,
-                    "John",
-                    "Recruiter",
-                    "john@example.com"),
-                CreatedBy: new UserSnapshot(
-                    creatorId,
-                    "Jane",
-                    "Creator",
-                    "jane@example.com"),
-                Company: new CompanySnapshot(
-                    companyId,
-                    "Example Company",
-                    "1234567890"),
+                Recruiter: new UserSnapshot(recruiterId, "John", "Recruiter", "john@example.com"),
+                CreatedBy: new UserSnapshot(creatorId, "Jane", "Creator", "jane@example.com"),
+                Company: new CompanySnapshot(companyId, "Example Company", "1234567890"),
                 LanguageCode: "PL",
                 OrgSlug: "example-organization",
                 PostingSlug: "senior-dotnet-developer",
-                CreatedAt: createdAt));
+                CreatedAt: createdAt
+            )
+        );
     }
 
     private static void AssertCreatedState(
@@ -255,97 +193,58 @@ public sealed class JobPostTests
         Guid companyId,
         Guid recruiterId,
         Guid creatorId,
-        DateTimeOffset createdAt)
+        DateTimeOffset createdAt
+    )
     {
-        Assert.Equal(
-            jobPostingId,
-            post.Id.Value);
+        Assert.Equal(jobPostingId, post.Id.Value);
 
-        Assert.Equal(
-            jobDescriptionId,
-            post.DescriptionId.Value);
+        Assert.Equal(jobDescriptionId, post.DescriptionId.Value);
 
-        Assert.Equal(
-            organizationId,
-            post.OrganizationId.Value);
+        Assert.Equal(organizationId, post.OrganizationId.Value);
 
-        Assert.Equal(
-            companyId,
-            post.CompanyId.Value);
+        Assert.Equal(companyId, post.CompanyId.Value);
 
-        Assert.Equal(
-            "Senior .NET Developer",
-            post.Title.Value);
+        Assert.Equal("Senior .NET Developer", post.Title.Value);
 
-        Assert.Equal(
-            "Senior developer position.",
-            post.Summary.Value);
+        Assert.Equal("Senior developer position.", post.Summary.Value);
 
-        Assert.Equal(
-            "Development of recruitment platform.",
-            post.Description.Value);
+        Assert.Equal("Development of recruitment platform.", post.Description.Value);
 
         Assert.Equal(
             ["Develop backend services", "Review code", "Design solutions"],
-            post.Responsibilities.Select(x => x.Value));
+            post.Responsibilities.Select(x => x.Value)
+        );
 
-        Assert.Equal(
-            ["C#", ".NET", "PostgreSQL"],
-            post.Requirements.Select(x => x.Value));
+        Assert.Equal(["C#", ".NET", "PostgreSQL"], post.Requirements.Select(x => x.Value));
 
-        Assert.Equal(
-            ["Clean Architecture", "DDD", "Marten"],
-            post.Skills.Select(x => x.Value));
+        Assert.Equal(["Clean Architecture", "DDD", "Marten"], post.Skills.Select(x => x.Value));
 
-        Assert.Equal(
-            "Opole",
-            post.Location.Value);
+        Assert.Equal("Opole", post.Location.Value);
 
-        Assert.Equal(
-            "PL",
-            post.CountryCode.Value);
+        Assert.Equal("PL", post.CountryCode.Value);
 
-        Assert.Equal(
-            "PL",
-            post.LanguageCode.Value);
+        Assert.Equal("PL", post.LanguageCode.Value);
 
-        Assert.Equal(
-            EmploymentType.FullTime,
-            post.EmploymentType);
+        Assert.Equal(EmploymentType.FullTime, post.EmploymentType);
 
-        Assert.Equal(
-            WorkMode.Hybrid,
-            post.WorkMode);
+        Assert.Equal(WorkMode.Hybrid, post.WorkMode);
 
-        Assert.Equal(
-            JobPostStatus.Draft,
-            post.Status);
+        Assert.Equal(JobPostStatus.Draft, post.Status);
 
-        Assert.Equal(
-            recruiterId,
-            post.RecruiterId);
+        Assert.Equal(recruiterId, post.RecruiterId);
 
-        Assert.Equal(
-            creatorId,
-            post.CreatedBy);
+        Assert.Equal(creatorId, post.CreatedBy);
 
         Assert.Null(post.ModifiedBy);
 
-        Assert.Equal(
-            createdAt,
-            post.CreatedAt);
+        Assert.Equal(createdAt, post.CreatedAt);
 
-        Assert.Equal(
-            createdAt,
-            post.UpdatedAt);
+        Assert.Equal(createdAt, post.UpdatedAt);
 
         Assert.Empty(post.Posts);
     }
 
-    private static void ApplyUpdated(
-        JobPost post,
-        DateTimeOffset occurredAt,
-        Guid modifierId)
+    private static void ApplyUpdated(JobPost post, DateTimeOffset occurredAt, Guid modifierId)
     {
         post.Apply(
             new JobPostUpdated(
@@ -353,21 +252,9 @@ public sealed class JobPostTests
                 Title: "Lead .NET Developer",
                 Summary: "Updated job summary.",
                 Description: "Updated job description.",
-                Responsibilities:
-                [
-                    "Lead development",
-                    "Review architecture"
-                ],
-                Requirements:
-                [
-                    "C#",
-                    ".NET 8"
-                ],
-                Skills:
-                [
-                    "DDD",
-                    "Marten"
-                ],
+                Responsibilities: ["Lead development", "Review architecture"],
+                Requirements: ["C#", ".NET 8"],
+                Skills: ["DDD", "Marten"],
                 Location: "Wrocław",
                 CountryCode: "PL",
                 EmploymentType: EmploymentType.FullTime,
@@ -377,138 +264,92 @@ public sealed class JobPostTests
                 SalaryMin: 18000,
                 SalaryMax: 25000,
                 OccurredAt: occurredAt,
-                Author: new UserSnapshot(
-                    modifierId,
-                    "John",
-                    "Developer",
-                    "john@example.com")));
+                Author: new UserSnapshot(modifierId, "John", "Developer", "john@example.com")
+            )
+        );
     }
 
-    private static void AssertUpdatedState(
-        JobPost post,
-        Guid modifierId,
-        DateTimeOffset occurredAt)
+    private static void AssertUpdatedState(JobPost post, Guid modifierId, DateTimeOffset occurredAt)
     {
-        Assert.Equal(
-            "Lead .NET Developer",
-            post.Title.Value);
+        Assert.Equal("Lead .NET Developer", post.Title.Value);
 
-        Assert.Equal(
-            "Updated job summary.",
-            post.Summary.Value);
+        Assert.Equal("Updated job summary.", post.Summary.Value);
 
-        Assert.Equal(
-            "Updated job description.",
-            post.Description.Value);
+        Assert.Equal("Updated job description.", post.Description.Value);
 
         Assert.Equal(
             ["Lead development", "Review architecture"],
-            post.Responsibilities.Select(x => x.Value));
+            post.Responsibilities.Select(x => x.Value)
+        );
 
-        Assert.Equal(
-            ["C#", ".NET 8"],
-            post.Requirements.Select(x => x.Value));
+        Assert.Equal(["C#", ".NET 8"], post.Requirements.Select(x => x.Value));
 
-        Assert.Equal(
-            ["DDD", "Marten"],
-            post.Skills.Select(x => x.Value));
+        Assert.Equal(["DDD", "Marten"], post.Skills.Select(x => x.Value));
 
-        Assert.Equal(
-            "Wrocław",
-            post.Location.Value);
+        Assert.Equal("Wrocław", post.Location.Value);
 
-        Assert.Equal(
-            "PL",
-            post.CountryCode.Value);
+        Assert.Equal("PL", post.CountryCode.Value);
 
-        Assert.Equal(
-            "PL",
-            post.LanguageCode.Value);
+        Assert.Equal("PL", post.LanguageCode.Value);
 
-        Assert.Equal(
-            EmploymentType.FullTime,
-            post.EmploymentType);
+        Assert.Equal(EmploymentType.FullTime, post.EmploymentType);
 
-        Assert.Equal(
-            WorkMode.Remote,
-            post.WorkMode);
+        Assert.Equal(WorkMode.Remote, post.WorkMode);
 
-        Assert.Equal(
-            JobPostStatus.Draft,
-            post.Status);
+        Assert.Equal(JobPostStatus.Draft, post.Status);
 
-        Assert.Equal(
-            modifierId,
-            post.ModifiedBy);
+        Assert.Equal(modifierId, post.ModifiedBy);
 
-        Assert.Equal(
-            occurredAt,
-            post.UpdatedAt);
+        Assert.Equal(occurredAt, post.UpdatedAt);
     }
 
-    private static void ApplyPublished(
-        JobPost post,
-        DateTimeOffset occurredAt,
-        Guid authorId)
+    private static void ApplyPublished(JobPost post, DateTimeOffset occurredAt, Guid authorId)
     {
         post.Apply(
             new JobPostPublished(
                 JobPostId: post.Id.Value,
                 OccurredAt: occurredAt,
-                Author: new UserSnapshot(
-                    authorId,
-                    "John",
-                    "Publisher",
-                    "publisher@example.com")));
+                Author: new UserSnapshot(authorId, "John", "Publisher", "publisher@example.com")
+            )
+        );
     }
 
     private static void ApplyToChannel(
         JobPost post,
         DateTimeOffset occurredAt,
         Guid authorId,
-        PostingChannelType channelType)
+        PostingChannelType channelType
+    )
     {
         post.Apply(
             new JobPostedToChannel(
                 JobPostId: post.Id.Value,
                 ChannelType: channelType,
                 OccurredAt: occurredAt,
-                Author: new UserSnapshot(
-                    authorId,
-                    "John",
-                    "Publisher",
-                    "publisher@example.com")));
+                Author: new UserSnapshot(authorId, "John", "Publisher", "publisher@example.com")
+            )
+        );
     }
 
-    private static void ApplyClosed(
-        JobPost post,
-        DateTimeOffset occurredAt,
-        Guid authorId)
+    private static void ApplyClosed(JobPost post, DateTimeOffset occurredAt, Guid authorId)
     {
         post.Apply(
             new JobPostClosed(
                 JobPostId: post.Id.Value,
                 OccurredAt: occurredAt,
-                Author: new UserSnapshot(
-                    authorId,
-                    "John",
-                    "Closer",
-                    "closer@example.com")));
+                Author: new UserSnapshot(authorId, "John", "Closer", "closer@example.com")
+            )
+        );
     }
 
-    private static void ApplyArchived(
-        JobPost post,
-        DateTimeOffset occurredAt,
-        Guid authorId)
+    private static void ApplyArchived(JobPost post, DateTimeOffset occurredAt, Guid authorId)
     {
         post.Apply(
             new JobPostArchived(
                 JobPostId: post.Id.Value,
                 OccurredAt: occurredAt,
-                Author: new UserSnapshot(
-                    authorId,
-                    "John",
-                    "Archiver",
-                    "archiver@example.com")));
+                Author: new UserSnapshot(authorId, "John", "Archiver", "archiver@example.com")
+            )
+        );
     }
 }

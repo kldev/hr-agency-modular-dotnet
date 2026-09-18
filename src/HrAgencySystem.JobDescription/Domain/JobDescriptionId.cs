@@ -1,6 +1,5 @@
 namespace HrAgencySystem.JobDescription.Domain;
 
-
 public readonly record struct JobDescriptionId(Guid Value)
 {
     public static JobDescriptionId New()

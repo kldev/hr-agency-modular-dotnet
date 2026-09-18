@@ -7,8 +7,7 @@ public sealed record PostTitle
     public const int MaxLength = 250;
 
     public const string RequiredMessage = "Post title is required.";
-    public const string MaxLengthMessage =
-        "Post title cannot exceed 250 characters.";
+    public const string MaxLengthMessage = "Post title cannot exceed 250 characters.";
 
     private PostTitle(string value)
     {
@@ -21,13 +20,10 @@ public sealed record PostTitle
     {
         var (title, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : title!;
+        return error is not null ? throw new InValidValueException(error) : title!;
     }
 
-    public static (PostTitle? title, string? error) TryCreate(
-        string value)
+    public static (PostTitle? title, string? error) TryCreate(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (null, RequiredMessage);

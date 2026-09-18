@@ -85,5 +85,5 @@ public enum Industry
     Entertainment,
     Sports,
     NonProfit,
-    Other
+    Other,
 }

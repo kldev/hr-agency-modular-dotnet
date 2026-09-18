@@ -4,6 +4,6 @@ namespace HrAgencySystem.Api.Common.Config;
 public sealed class ApplicationConfig
 {
     public const string Section = "Application";
-    
+
     public string FedUrl { get; set; } = "";
 }

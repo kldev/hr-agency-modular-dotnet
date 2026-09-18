@@ -40,22 +40,26 @@ public sealed class FeedsDbContext(DbContextOptions<FeedsDbContext> options) : D
             entity.Property(x => x.CreatedAt).HasColumnName("created_at");
             entity.Property(x => x.UpdatedAt).HasColumnName("updated_at");
 
-            entity.Property(x => x.EmploymentType)
+            entity
+                .Property(x => x.EmploymentType)
                 .HasColumnName("employment_type")
                 .HasConversion<string>()
                 .HasMaxLength(40);
 
-            entity.Property(x => x.WorkMode)
+            entity
+                .Property(x => x.WorkMode)
                 .HasColumnName("work_mode")
                 .HasConversion<string>()
                 .HasMaxLength(40);
 
-            entity.Property(x => x.CurrencyCode)
+            entity
+                .Property(x => x.CurrencyCode)
                 .HasColumnName("currency_code")
                 .HasConversion<string>()
                 .HasMaxLength(3);
 
-            entity.HasIndex(x => new { x.OrganizationId, x.IsPublished })
+            entity
+                .HasIndex(x => new { x.OrganizationId, x.IsPublished })
                 .HasDatabaseName("idx_feeds_job_posts_org_published");
         });
     }

@@ -8,4 +8,5 @@ public sealed record OrganizationUpdated(
     string Slug,
     IReadOnlyList<string> EmailDomains,
     DateTimeOffset ModifiedAt,
-    OrganizationInfoData? Info = null);
+    OrganizationInfoData? Info = null
+);

@@ -8,8 +8,7 @@ public sealed record FirstName
 
     public const string RequiredMessage = "First name is required.";
 
-    public const string MaxLengthMessage =
-        "First name cannot exceed 100 characters.";
+    public const string MaxLengthMessage = "First name cannot exceed 100 characters.";
 
     private FirstName(string value)
     {
@@ -22,20 +21,18 @@ public sealed record FirstName
     {
         var (firstName, error) = TryCreate(value, isRequired);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : firstName!;
+        return error is not null ? throw new InValidValueException(error) : firstName!;
     }
 
     public static (FirstName? firstName, string? error) TryCreate(
-        string value, bool isRequired = true)
+        string value,
+        bool isRequired = true
+    )
     {
-
         if (string.IsNullOrWhiteSpace(value))
         {
             return isRequired ? (null, RequiredMessage) : (new FirstName(""), null);
         }
-
 
         var normalized = value.Trim();
 
@@ -45,6 +42,5 @@ public sealed record FirstName
         return (new FirstName(normalized), null);
     }
 
-    public override string ToString()
-        => Value;
+    public override string ToString() => Value;
 }

@@ -23,11 +23,13 @@ public sealed record LanguageCode
 
     public static (LanguageCode? code, string? error) TryCreate(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return (null, RequiredMessage);
+        if (string.IsNullOrWhiteSpace(value))
+            return (null, RequiredMessage);
 
         var normalized = value.Trim().ToUpperInvariant();
 
-        if (normalized.Length != 2) return (null, InvalidFormatMessage);
+        if (normalized.Length != 2)
+            return (null, InvalidFormatMessage);
 
         if (!normalized.All(char.IsLetter))
             return (null, OnlyCharactersAllowedMessage);

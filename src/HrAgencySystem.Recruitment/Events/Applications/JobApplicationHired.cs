@@ -2,7 +2,8 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Recruitment.Events.Applications;
 
-public sealed record class JobApplicationHired( 
+public sealed record class JobApplicationHired(
     Guid JobApplicationId,
     DateTimeOffset OccurredAt,
-    UserSnapshot Author) : IJobApplicationEvent;
+    UserSnapshot Author
+) : IJobApplicationEvent;

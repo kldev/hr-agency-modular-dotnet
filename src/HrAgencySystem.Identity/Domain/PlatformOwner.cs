@@ -6,9 +6,7 @@ namespace HrAgencySystem.Identity.Domain;
 
 public sealed class PlatformOwner
 {
-    private PlatformOwner()
-    {
-    }
+    private PlatformOwner() { }
 
     public PlatformOwnerId Id { get; private set; } = null!;
 

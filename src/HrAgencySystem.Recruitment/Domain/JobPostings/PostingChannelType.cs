@@ -50,5 +50,5 @@ public enum PostingChannelType
     /**
      * Other external job board.
      */
-    Other
+    Other,
 }

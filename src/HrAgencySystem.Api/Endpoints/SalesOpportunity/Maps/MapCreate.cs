@@ -13,17 +13,25 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         // /api/sales/opportunity
-        group.MapPost("", Handler)
+        group
+            .MapPost("", Handler)
             .WithSummary("Create opportunity")
             .WithName("Create opportunity")
             .Produces<OpportunityCreated>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user,
-        CreateOpportunityRequest request, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        IMessageBus bus,
+        AppUserAuthenticated user,
+        CreateOpportunityRequest request,
+        CancellationToken ct
+    )
     {
-        var result = await bus.InvokeAsync<OpportunityCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<OpportunityCreated>(
+            request.ToCommand(user.OrganizationId, user.UserId),
+            ct
+        );
 
         return TypedResults.Created($"/api/sales/opportunity/{result.OpportunityId}", result);
     }
@@ -36,18 +44,21 @@ internal static class MapCreate
         bool IsHotLead,
         CurrencyCode Currency,
         DateOnly? ExpectedCloseDate,
-        Guid? ResponsibleId)
+        Guid? ResponsibleId
+    )
     {
-        public CreateOpportunity ToCommand(Guid organizationId, Guid createdBy)
-            => new (organizationId, 
-                CompanyId, 
-                Title, 
-                Description, 
+        public CreateOpportunity ToCommand(Guid organizationId, Guid createdBy) =>
+            new(
+                organizationId,
+                CompanyId,
+                Title,
+                Description,
                 ExpectedValue,
                 IsHotLead,
-                Currency, 
+                Currency,
                 ExpectedCloseDate,
-                ResponsibleId, 
-                createdBy);
+                ResponsibleId,
+                createdBy
+            );
     }
 }

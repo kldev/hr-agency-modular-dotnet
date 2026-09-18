@@ -8,9 +8,12 @@ public sealed partial class HrAgencyShowcaseSeeder
 
     private async Task WaitForProjections(int times = 1)
     {
-        LoggerExtensions.LogDebug(logger, "Waiting {DelayMs}ms for projections ({Times} times)",
+        LoggerExtensions.LogDebug(
+            logger,
+            "Waiting {DelayMs}ms for projections ({Times} times)",
             ProjectionDelayMs,
-            times);
+            times
+        );
 
         await Task.Delay(ProjectionDelayMs * times);
     }

@@ -11,7 +11,8 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         // POST /api/sales/follow-up
-        group.MapPost("", Handler)
+        group
+            .MapPost("", Handler)
             .WithSummary("Create follow up action")
             .WithName("Create follow up action")
             .Produces<FollowUpActionCreated>()
@@ -22,10 +23,13 @@ internal static class MapCreate
         IMessageBus bus,
         AppUserAuthenticated user,
         CreateFollowUpActionRequest request,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var result = await bus.InvokeAsync<FollowUpActionCreated>(
-            request.ToCommand(user.OrganizationId, user.UserId), ct);
+            request.ToCommand(user.OrganizationId, user.UserId),
+            ct
+        );
 
         return TypedResults.Created($"/api/sales/follow-up/{result.FollowUpActionId}", result);
     }
@@ -33,14 +37,10 @@ internal static class MapCreate
     internal sealed record CreateFollowUpActionRequest(
         Guid OpportunityId,
         string Content,
-        DateTimeOffset FollowDateTime)
+        DateTimeOffset FollowDateTime
+    )
     {
-        public CreateFollowUpAction ToCommand(Guid organizationId, Guid createdBy)
-            => new(
-                organizationId,
-                OpportunityId,
-                Content,
-                FollowDateTime,
-                createdBy);
+        public CreateFollowUpAction ToCommand(Guid organizationId, Guid createdBy) =>
+            new(organizationId, OpportunityId, Content, FollowDateTime, createdBy);
     }
 }

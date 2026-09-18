@@ -9,21 +9,29 @@ using Wolverine;
 
 namespace HrAgencySystem.Identity.Infrastructure.IAM;
 
-public sealed class AccountRepository(IDocumentSession session, IMessageBus bus) : IAccountRepository
+public sealed class AccountRepository(IDocumentSession session, IMessageBus bus)
+    : IAccountRepository
 {
-    public async Task<UserEmailReservation?> FindUserByEmail(Email email, string slug, CancellationToken ct)
+    public async Task<UserEmailReservation?> FindUserByEmail(
+        Email email,
+        string slug,
+        CancellationToken ct
+    )
     {
         var organizationId = await bus.InvokeAsync<OrganizationId>(slug, ct);
-        var reservation = await session.Query<UserEmailReservation>().WithEmail(organizationId, email)
+        var reservation = await session
+            .Query<UserEmailReservation>()
+            .WithEmail(organizationId, email)
             .SingleOrDefaultAsync(ct);
 
         return reservation;
-
     }
 
     public async Task<OwnerEmailReservation?> FindOwnerByEmail(Email email, CancellationToken ct)
     {
-        var reservation = await session.Query<OwnerEmailReservation>().Where(z => z.Email == email.Value)
+        var reservation = await session
+            .Query<OwnerEmailReservation>()
+            .Where(z => z.Email == email.Value)
             .SingleOrDefaultAsync(ct);
 
         return reservation;
@@ -36,6 +44,9 @@ public sealed class AccountRepository(IDocumentSession session, IMessageBus bus)
 
     public async Task<UserProjection> GetUser(UserId userId, CancellationToken ct)
     {
-        return await session.Query<UserProjection>().Where(z => z.Id == userId.Value).FirstAsync(ct);
+        return await session
+            .Query<UserProjection>()
+            .Where(z => z.Id == userId.Value)
+            .FirstAsync(ct);
     }
 }

@@ -29,7 +29,8 @@ public sealed record InterviewProjection(
     string JobPostTitle,
     string Location,
     string MeetingUrl,
-    Guid JobPostId)
+    Guid JobPostId
+)
 {
     public static InterviewProjection Create(InterviewCreated @event)
     {
@@ -48,9 +49,9 @@ public sealed record InterviewProjection(
             @event.Author.Id,
             @event.Author,
             @event.Note,
-            null, 
-            null, 
-            @event.OccurredAt, 
+            null,
+            null,
+            @event.OccurredAt,
             null,
             @event.Candidate,
             @event.JobPostTitle ?? "",
@@ -59,42 +60,35 @@ public sealed record InterviewProjection(
             @event.JobPostId ?? Guid.Empty
         );
     }
-    
+
     private static InterviewProjection ApplyCommon(
         InterviewProjection projection,
-        IInterviewEvent @event)
+        IInterviewEvent @event
+    )
     {
         return projection with
         {
             ModifiedByUserId = @event.Author.Id,
             ModifiedBy = @event.Author,
-            ModifiedAt = @event.OccurredAt
+            ModifiedAt = @event.OccurredAt,
         };
     }
-    
+
     public InterviewProjection Apply(InterviewFormatChanged @event)
     {
-        return ApplyCommon(this, @event) with
-        {
-            Format = @event.NewFormat,
-        };
+        return ApplyCommon(this, @event) with { Format = @event.NewFormat };
     }
-    
+
     public InterviewProjection Apply(InterviewStatusChanged @event)
     {
-        return ApplyCommon(this, @event) with
-        {
-            Status = @event.NewStatus,
-        };
+        return ApplyCommon(this, @event) with { Status = @event.NewStatus };
     }
-    
+
     public InterviewProjection Apply(InterviewerChanged @event)
     {
-        return ApplyCommon(this, @event) with
-        {
-            Interviewer = @event.NewInterviewer,
-        };
+        return ApplyCommon(this, @event) with { Interviewer = @event.NewInterviewer };
     }
+
     public InterviewProjection Apply(InterviewRescheduled @event)
     {
         Console.WriteLine("Change status: Rescheduled, " + ApplicantInfo.FullName);
@@ -103,9 +97,9 @@ public sealed record InterviewProjection(
             ScheduleAt = @event.ScheduleAt,
             Timezone = @event.Timezone,
             Location = @event.Location,
-            MeetingUrl =@event.MeetingUrl,
+            MeetingUrl = @event.MeetingUrl,
             Status = InterviewStatus.Rescheduled,
-            Note = @event.Note
+            Note = @event.Note,
         };
     }
 }

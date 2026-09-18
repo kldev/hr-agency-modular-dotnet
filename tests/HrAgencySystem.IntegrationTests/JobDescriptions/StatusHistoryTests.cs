@@ -6,9 +6,7 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class StatusHistoryTests(
-    IntegrationEnvironment environment,
-    ITestOutputHelper output)
+public sealed class StatusHistoryTests(IntegrationEnvironment environment, ITestOutputHelper output)
     : BaseIntegrationTest(environment, output)
 {
     private readonly Guid OrganizationId = Guid.NewGuid();
@@ -35,15 +33,13 @@ public sealed class StatusHistoryTests(
     {
         JobDescriptionClient.WithOrganizationId(OrganizationId);
 
-        var first = await JobDescriptionClient.CreateAsync(
-            JobDescriptionTestData.CreateRequest());
+        var first = await JobDescriptionClient.CreateAsync(JobDescriptionTestData.CreateRequest());
 
         FirstJobDescriptionId = first.JobDescriptionId;
 
         Assert.Equal(OrganizationId, first.OrganizationId);
 
-        var second = await JobDescriptionClient.CreateAsync(
-            JobDescriptionTestData.CreateRequest());
+        var second = await JobDescriptionClient.CreateAsync(JobDescriptionTestData.CreateRequest());
 
         SecondJobDescriptionId = second.JobDescriptionId;
 
@@ -51,8 +47,7 @@ public sealed class StatusHistoryTests(
 
         JobDescriptionClient.WithOrganizationId(OtherOrganizationId);
 
-        var other = await JobDescriptionClient.CreateAsync(
-            JobDescriptionTestData.CreateRequest());
+        var other = await JobDescriptionClient.CreateAsync(JobDescriptionTestData.CreateRequest());
 
         OtherOrganizationJobDescriptionId = other.JobDescriptionId;
 
@@ -69,25 +64,23 @@ public sealed class StatusHistoryTests(
 
         await JobDescriptionClient.ChangeStatusAsync(
             FirstJobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         await JobDescriptionClient.ChangeStatusAsync(
             SecondJobDescriptionId,
-            JobDescriptionStatus.Open);
-        
+            JobDescriptionStatus.Open
+        );
+
         await Eventually.AssertAsync(async () =>
         {
             var history = await GetStatusHistory();
 
             Assert.Equal(2, history.Count);
 
-            Assert.Contains(
-                history,
-                x => x.JobDescriptionId == FirstJobDescriptionId);
+            Assert.Contains(history, x => x.JobDescriptionId == FirstJobDescriptionId);
 
-            Assert.Contains(
-                history,
-                x => x.JobDescriptionId == SecondJobDescriptionId);
+            Assert.Contains(history, x => x.JobDescriptionId == SecondJobDescriptionId);
         });
     }
 
@@ -97,11 +90,13 @@ public sealed class StatusHistoryTests(
 
         await JobDescriptionClient.ChangeStatusAsync(
             FirstJobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         await JobDescriptionClient.ChangeStatusAsync(
             SecondJobDescriptionId,
-            JobDescriptionStatus.Cancelled);
+            JobDescriptionStatus.Cancelled
+        );
 
         await Eventually.AssertAsync(async () =>
         {
@@ -109,11 +104,7 @@ public sealed class StatusHistoryTests(
 
             Assert.Single(history);
 
-            Assert.All(
-                history,
-                x => Assert.Equal(
-                    FirstJobDescriptionId,
-                    x.JobDescriptionId));
+            Assert.All(history, x => Assert.Equal(FirstJobDescriptionId, x.JobDescriptionId));
         });
     }
 
@@ -123,13 +114,15 @@ public sealed class StatusHistoryTests(
 
         await JobDescriptionClient.ChangeStatusAsync(
             OtherOrganizationJobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         JobDescriptionClient.WithOrganizationId(OrganizationId);
 
         await JobDescriptionClient.ChangeStatusAsync(
             FirstJobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         JobDescriptionClient.WithOrganizationId(OtherOrganizationId);
 
@@ -141,9 +134,8 @@ public sealed class StatusHistoryTests(
 
             Assert.All(
                 history,
-                x => Assert.Equal(
-                    OtherOrganizationJobDescriptionId,
-                    x.JobDescriptionId));
+                x => Assert.Equal(OtherOrganizationJobDescriptionId, x.JobDescriptionId)
+            );
         });
     }
 
@@ -153,11 +145,13 @@ public sealed class StatusHistoryTests(
 
         await JobDescriptionClient.ChangeStatusAsync(
             FirstJobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         await JobDescriptionClient.ChangeStatusAsync(
             SecondJobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         await Eventually.AssertAsync(async () =>
         {
@@ -165,13 +159,9 @@ public sealed class StatusHistoryTests(
 
             Assert.Equal(2, history.Count);
 
-            Assert.Contains(
-                history,
-                x => x.JobDescriptionId == FirstJobDescriptionId);
+            Assert.Contains(history, x => x.JobDescriptionId == FirstJobDescriptionId);
 
-            Assert.Contains(
-                history,
-                x => x.JobDescriptionId == SecondJobDescriptionId);
+            Assert.Contains(history, x => x.JobDescriptionId == SecondJobDescriptionId);
         });
     }
 
@@ -182,7 +172,8 @@ public sealed class StatusHistoryTests(
         // FirstJobDescription already has status changes from previous scenarios,
         // therefore this scenario needs a fresh job description.
         var jobDescription = await JobDescriptionClient.CreateAsync(
-            JobDescriptionTestData.CreateRequest());
+            JobDescriptionTestData.CreateRequest()
+        );
 
         await WaitForProjection();
 
@@ -201,13 +192,15 @@ public sealed class StatusHistoryTests(
 
         await JobDescriptionClient.ChangeStatusAsync(
             FirstJobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         await WaitForProjection();
 
         await JobDescriptionClient.ChangeStatusAsync(
             FirstJobDescriptionId,
-            JobDescriptionStatus.Closed);
+            JobDescriptionStatus.Closed
+        );
 
         await WaitForProjection();
         await Eventually.AssertAsync(
@@ -218,35 +211,29 @@ public sealed class StatusHistoryTests(
                 Assert.Single(history);
 
                 Assert.Equal(2, history[0].Changes.Count);
-                Assert.Equal(
-                    JobDescriptionStatus.Closed,
-                    history[0].CurrentStatus);
+                Assert.Equal(JobDescriptionStatus.Closed, history[0].CurrentStatus);
 
-                Assert.All(
-                    history,
-                    x => Assert.Equal(
-                        FirstJobDescriptionId,
-                        x.JobDescriptionId));
+                Assert.All(history, x => Assert.Equal(FirstJobDescriptionId, x.JobDescriptionId));
             },
             timeout: TimeSpan.FromSeconds(10),
-            interval: TimeSpan.FromSeconds(2));
+            interval: TimeSpan.FromSeconds(2)
+        );
     }
 
     private async Task<IReadOnlyList<JdStatusChangeHistory>> GetStatusHistory(
-        Guid? jobDescriptionId = null)
+        Guid? jobDescriptionId = null
+    )
     {
-        var response =
-            await JobDescriptionClient.GetStatusHistoryAsync(jobDescriptionId);
+        var response = await JobDescriptionClient.GetStatusHistoryAsync(jobDescriptionId);
 
-        var result =
-            await response.ReadWithJson<IReadOnlyList<JdStatusChangeHistory>>(
-                OutputHelper);
+        var result = await response.ReadWithJson<IReadOnlyList<JdStatusChangeHistory>>(
+            OutputHelper
+        );
 
         response.EnsureSuccessStatusCode();
 
         return result!;
     }
 
-    private static Task WaitForProjection() =>
-        Task.Delay(TimeSpan.FromSeconds(3));
+    private static Task WaitForProjection() => Task.Delay(TimeSpan.FromSeconds(3));
 }

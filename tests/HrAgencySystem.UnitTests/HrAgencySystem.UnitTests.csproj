@@ -1,40 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="coverlet.collector">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
-        <PackageReference Include="NSubstitute" />
-        <PackageReference Include="xunit" />
-        <PackageReference Include="xunit.runner.visualstudio">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <Using Include="Xunit"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Company\HrAgencySystem.Company.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.JobDescription\HrAgencySystem.JobDescription.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj"/>
-        <ProjectReference Include="..\..\src\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj"/>
-        <ProjectReference Include="..\HrAgencySystem.IntegrationTests\HrAgencySystem.IntegrationTests.csproj" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Company\HrAgencySystem.Company.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.JobDescription\HrAgencySystem.JobDescription.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.IntegrationTests\HrAgencySystem.IntegrationTests.csproj" />
+  </ItemGroup>
 </Project>

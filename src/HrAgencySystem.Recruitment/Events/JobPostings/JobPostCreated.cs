@@ -27,4 +27,5 @@ public sealed record JobPostCreated(
     string LanguageCode,
     string OrgSlug,
     string PostingSlug,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt
+);

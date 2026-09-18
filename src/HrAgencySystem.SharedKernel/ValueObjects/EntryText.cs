@@ -7,8 +7,7 @@ public sealed record EntryText
     public const int MaxLength = 4000;
 
     public const string RequiredMessage = "Entry text is required.";
-    public const string MaxLengthMessage =
-        "Entry text cannot exceed 4000 characters.";
+    public const string MaxLengthMessage = "Entry text cannot exceed 4000 characters.";
 
     private EntryText(string value)
     {
@@ -21,9 +20,7 @@ public sealed record EntryText
     {
         var (entryText, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : entryText!;
+        return error is not null ? throw new InValidValueException(error) : entryText!;
     }
 
     public static List<EntryText> Create(IReadOnlyList<string> values)
@@ -31,8 +28,7 @@ public sealed record EntryText
         return [.. values.Select(Create)];
     }
 
-    public static (EntryText? entryText, string? error) TryCreate(
-        string value)
+    public static (EntryText? entryText, string? error) TryCreate(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (null, RequiredMessage);

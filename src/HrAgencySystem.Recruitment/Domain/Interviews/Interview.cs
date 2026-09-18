@@ -10,21 +10,18 @@ namespace HrAgencySystem.Recruitment.Domain.Interviews;
 
 public sealed class Interview : IOrganizationDomain
 {
-    private Interview()
-    {
-        
-    }
+    private Interview() { }
 
     public static Interview Empty()
     {
         return new Interview();
     }
-    
+
     public InterviewId Id { get; private set; }
-    public OrganizationId OrganizationId { get; private set;}
+    public OrganizationId OrganizationId { get; private set; }
     public JobApplicationId JobApplicationId { get; private set; }
     public CandidateId CandidateId { get; private set; }
-    public CompanyId    CompanyId { get; private set; }
+    public CompanyId CompanyId { get; private set; }
     public InterviewStatus Status { get; private set; }
     public DateTimeOffset ScheduleAt { get; private set; }
     public string Timezone { get; private set; } = "";
@@ -33,8 +30,8 @@ public sealed class Interview : IOrganizationDomain
     public UserSnapshot Interviewer { get; private set; } = null!;
     public InterviewFormat Format { get; private set; }
     public InterviewType InterviewType { get; private set; }
-    
-    public UserSnapshot  CreatedByUser { get; private set; } = null!;
+
+    public UserSnapshot CreatedByUser { get; private set; } = null!;
     public UserSnapshot? LastModifiedByUser { get; private set; }
     public ShortNote Note { get; private set; } = null!;
 
@@ -45,7 +42,7 @@ public sealed class Interview : IOrganizationDomain
         JobApplicationId = JobApplicationId.From(@event.JobApplicationId);
         CandidateId = CandidateId.From(@event.CandidateId);
         CompanyId = CompanyId.From(@event.CompanyId);
-        ScheduleAt= @event.ScheduleAt;
+        ScheduleAt = @event.ScheduleAt;
         Timezone = @event.Timezone;
         Interviewer = @event.Interviewer;
         Format = @event.Format;
@@ -61,13 +58,13 @@ public sealed class Interview : IOrganizationDomain
         Format = @event.NewFormat;
         ApplyCommon(@event);
     }
-    
+
     public void Apply(InterviewStatusChanged @event)
     {
         Status = @event.NewStatus;
         ApplyCommon(@event);
     }
-    
+
     public void Apply(InterviewerChanged @event)
     {
         Interviewer = @event.NewInterviewer;
@@ -82,10 +79,10 @@ public sealed class Interview : IOrganizationDomain
         Status = InterviewStatus.Rescheduled;
         ApplyCommon(@event);
     }
-    
+
     private void ApplyCommon(IInterviewEvent @event)
     {
         LastModifiedByUser = @event.Author;
         UpdatedAt = @event.OccurredAt;
     }
-} 
+}

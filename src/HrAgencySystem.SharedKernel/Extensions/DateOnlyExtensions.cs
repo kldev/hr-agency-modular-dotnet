@@ -6,7 +6,8 @@ public static class DateOnlyExtensions
     {
         public DateTimeOffset? ToUtc(string timezone = "Europe/Warsaw")
         {
-            if (date == null) return null;
+            if (date == null)
+                return null;
 
             var timeZone = GetTimeZone(timezone);
             var localDateTime = date.Value.ToDateTime(TimeOnly.MinValue, DateTimeKind.Unspecified);
@@ -32,9 +33,8 @@ public static class DateOnlyExtensions
 
     extension(DateOnly date)
     {
-        public DateTimeOffset? ToUtc(string timezone= "Europe/Warsaw")
+        public DateTimeOffset? ToUtc(string timezone = "Europe/Warsaw")
         {
-
             var timeZone = GetTimeZone(timezone);
             var localDateTime = date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Unspecified);
             return new DateTimeOffset(TimeZoneInfo.ConvertTimeToUtc(localDateTime, timeZone));
@@ -43,7 +43,6 @@ public static class DateOnlyExtensions
 
     extension(DateTime date)
     {
-        public DateOnly ToDateOnly()
-            => new (date.Year, date.Month, date.Day);
+        public DateOnly ToDateOnly() => new(date.Year, date.Month, date.Day);
     }
 }

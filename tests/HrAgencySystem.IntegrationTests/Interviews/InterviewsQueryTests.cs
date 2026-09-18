@@ -17,29 +17,27 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
     private IQuerySession _session = null!;
     private InterviewsQueryRepository _repository = null!;
 
-
     private readonly Guid _organizationId = Guid.NewGuid();
     private readonly Guid _otherOrganizationId = Guid.NewGuid();
 
-    private readonly UserSnapshot _user =
-        new(
-            Guid.NewGuid(),
-            "John",
-            "Smith",
-            "j-smith@phpdemo.com");
+    private readonly UserSnapshot _user = new(
+        Guid.NewGuid(),
+        "John",
+        "Smith",
+        "j-smith@phpdemo.com"
+    );
 
     public async Task InitializeAsync()
     {
         var storeOptions = new StoreOptions();
 
-        var dataSourceBuilder =
-            new NpgsqlDataSourceBuilder(fixture.ConnectionString);
+        var dataSourceBuilder = new NpgsqlDataSourceBuilder(fixture.ConnectionString);
 
         storeOptions.Connection(dataSourceBuilder.Build());
         storeOptions.RegisterDocumentType<InterviewProjection>();
-        
+
         storeOptions.DatabaseSchemaName = "recruitment";
-        
+
         _store = new DocumentStore(storeOptions);
         _session = _store.QuerySession();
         _repository = new InterviewsQueryRepository(_session);
@@ -47,8 +45,6 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         var cleaner = new DatabaseCleaner(fixture.ConnectionString);
 
         await cleaner.CleanInterviews();
-
-
     }
 
     public async Task DisposeAsync()
@@ -66,10 +62,7 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         await Store(interview);
 
         // Act
-        var result = await _repository.Get(
-            _organizationId,
-            interview.Id,
-            CancellationToken.None);
+        var result = await _repository.Get(_organizationId, interview.Id, CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);
@@ -80,16 +73,12 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
     public async Task Get_ShouldReturnNull_WhenInterviewBelongsToAnotherOrganization()
     {
         // Arrange
-        var interview = CreateInterview(
-            organizationId: _otherOrganizationId);
+        var interview = CreateInterview(organizationId: _otherOrganizationId);
 
         await Store(interview);
 
         // Act
-        var result = await _repository.Get(
-            _organizationId,
-            interview.Id,
-            CancellationToken.None);
+        var result = await _repository.Get(_organizationId, interview.Id, CancellationToken.None);
 
         // Assert
         Assert.Null(result);
@@ -99,10 +88,7 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
     public async Task Get_ShouldReturnNull_WhenInterviewDoesNotExist()
     {
         // Act
-        var result = await _repository.Get(
-            _organizationId,
-            Guid.NewGuid(),
-            CancellationToken.None);
+        var result = await _repository.Get(_organizationId, Guid.NewGuid(), CancellationToken.None);
 
         // Assert
         Assert.Null(result);
@@ -114,18 +100,16 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         // Arrange
         var expected = CreateInterview();
 
-        var otherOrganizationInterview = CreateInterview(
-            organizationId: _otherOrganizationId);
+        var otherOrganizationInterview = CreateInterview(organizationId: _otherOrganizationId);
 
-        await Store(
-            expected,
-            otherOrganizationInterview);
+        await Store(expected, otherOrganizationInterview);
 
         // Act
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Single(result.Content);
@@ -138,11 +122,9 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         // Arrange
         var interviewerId = Guid.NewGuid();
 
-        var expected = CreateInterview(
-            interviewerId: interviewerId);
+        var expected = CreateInterview(interviewerId: interviewerId);
 
-        var other = CreateInterview(
-            interviewerId: Guid.NewGuid());
+        var other = CreateInterview(interviewerId: Guid.NewGuid());
 
         await Store(expected, other);
 
@@ -150,7 +132,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(interviewerId: interviewerId),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Single(result.Content);
@@ -163,11 +146,9 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         // Arrange
         var candidateId = Guid.NewGuid();
 
-        var expected = CreateInterview(
-            candidateId: candidateId);
+        var expected = CreateInterview(candidateId: candidateId);
 
-        var other = CreateInterview(
-            candidateId: Guid.NewGuid());
+        var other = CreateInterview(candidateId: Guid.NewGuid());
 
         await Store(expected, other);
 
@@ -175,7 +156,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(candidateId: candidateId),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Single(result.Content);
@@ -188,11 +170,9 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         // Arrange
         var jobApplicationId = Guid.NewGuid();
 
-        var expected = CreateInterview(
-            applicationId: jobApplicationId);
+        var expected = CreateInterview(applicationId: jobApplicationId);
 
-        var other = CreateInterview(
-            applicationId: Guid.NewGuid());
+        var other = CreateInterview(applicationId: Guid.NewGuid());
 
         await Store(expected, other);
 
@@ -200,7 +180,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(jobApplicationId: jobApplicationId),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Single(result.Content);
@@ -213,11 +194,9 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         // Arrange
         var createdByUserId = Guid.NewGuid();
 
-        var expected = CreateInterview(
-            createdByUserId: createdByUserId);
+        var expected = CreateInterview(createdByUserId: createdByUserId);
 
-        var other = CreateInterview(
-            createdByUserId: Guid.NewGuid());
+        var other = CreateInterview(createdByUserId: Guid.NewGuid());
 
         await Store(expected, other);
 
@@ -225,7 +204,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(createdByUserId: createdByUserId),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Single(result.Content);
@@ -236,11 +216,9 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
     public async Task GetSlice_ShouldFilterByStatus()
     {
         // Arrange
-        var expected = CreateInterview(
-            status: InterviewStatus.Planned);
+        var expected = CreateInterview(status: InterviewStatus.Planned);
 
-        var other = CreateInterview(
-            status: InterviewStatus.Completed);
+        var other = CreateInterview(status: InterviewStatus.Completed);
 
         await Store(expected, other);
 
@@ -248,7 +226,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(status: InterviewStatus.Planned),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Single(result.Content);
@@ -259,34 +238,22 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
     public async Task GetSlice_ShouldFilterByScheduleFrom()
     {
         // Arrange
-        var from = new DateTimeOffset(
-            2026,
-            9,
-            10,
-            10,
-            0,
-            0,
-            TimeSpan.Zero);
+        var from = new DateTimeOffset(2026, 9, 10, 10, 0, 0, TimeSpan.Zero);
 
-        var before = CreateInterview(
-            scheduleAt: from.AddSeconds(-1));
+        var before = CreateInterview(scheduleAt: from.AddSeconds(-1));
 
-        var expected = CreateInterview(
-            scheduleAt: from);
+        var expected = CreateInterview(scheduleAt: from);
 
-        var after = CreateInterview(
-            scheduleAt: from.AddHours(1));
+        var after = CreateInterview(scheduleAt: from.AddHours(1));
 
-        await Store(
-            before,
-            expected,
-            after);
+        await Store(before, expected, after);
 
         // Act
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(from: from),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(2, result.Content.Count);
@@ -299,34 +266,22 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
     public async Task GetSlice_ShouldFilterByScheduleTo()
     {
         // Arrange
-        var to = new DateTimeOffset(
-            2026,
-            9,
-            11,
-            0,
-            0,
-            0,
-            TimeSpan.Zero);
+        var to = new DateTimeOffset(2026, 9, 11, 0, 0, 0, TimeSpan.Zero);
 
-        var before = CreateInterview(
-            scheduleAt: to.AddHours(-2));
+        var before = CreateInterview(scheduleAt: to.AddHours(-2));
 
-        var expected = CreateInterview(
-            scheduleAt: to.AddSeconds(-1));
+        var expected = CreateInterview(scheduleAt: to.AddSeconds(-1));
 
-        var after = CreateInterview(
-            scheduleAt: to);
+        var after = CreateInterview(scheduleAt: to);
 
-        await Store(
-            before,
-            expected,
-            after);
+        await Store(before, expected, after);
 
         // Act
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(to: to),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(2, result.Content.Count);
@@ -334,53 +289,31 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         Assert.Equal(expected.Id, result.Content[0].Id);
         Assert.Equal(before.Id, result.Content[1].Id);
     }
+
     [Fact]
     public async Task GetSlice_ShouldFilterByScheduleDateRange()
     {
         // Arrange
-        var from = new DateTimeOffset(
-            2026,
-            9,
-            10,
-            0,
-            0,
-            0,
-            TimeSpan.Zero);
+        var from = new DateTimeOffset(2026, 9, 10, 0, 0, 0, TimeSpan.Zero);
 
-        var to = new DateTimeOffset(
-            2026,
-            9,
-            10,
-            23,
-            59,
-            59,
-            TimeSpan.Zero);
+        var to = new DateTimeOffset(2026, 9, 10, 23, 59, 59, TimeSpan.Zero);
 
-        var before = CreateInterview(
-            scheduleAt: from.AddSeconds(-1));
+        var before = CreateInterview(scheduleAt: from.AddSeconds(-1));
 
-        var morning = CreateInterview(
-            scheduleAt: from.AddHours(8));
+        var morning = CreateInterview(scheduleAt: from.AddHours(8));
 
-        var afternoon = CreateInterview(
-            scheduleAt: from.AddHours(14));
+        var afternoon = CreateInterview(scheduleAt: from.AddHours(14));
 
-        var after = CreateInterview(
-            scheduleAt: to.AddSeconds(1));
+        var after = CreateInterview(scheduleAt: to.AddSeconds(1));
 
-        await Store(
-            before,
-            morning,
-            afternoon,
-            after);
+        await Store(before, morning, afternoon, after);
 
         // Act
         var result = await _repository.GetSlice(
             _organizationId,
-            CreateQuery(
-                from: from,
-                to: to),
-            CancellationToken.None);
+            CreateQuery(from: from, to: to),
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(2, result.Content.Count);
@@ -394,45 +327,25 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
     {
         // Arrange
         var oldest = CreateInterview(
-            scheduleAt: new DateTimeOffset(
-                2026,
-                9,
-                10,
-                9,
-                0,
-                0,
-                TimeSpan.Zero));
+            scheduleAt: new DateTimeOffset(2026, 9, 10, 9, 0, 0, TimeSpan.Zero)
+        );
 
         var middle = CreateInterview(
-            scheduleAt: new DateTimeOffset(
-                2026,
-                9,
-                10,
-                12,
-                0,
-                0,
-                TimeSpan.Zero));
+            scheduleAt: new DateTimeOffset(2026, 9, 10, 12, 0, 0, TimeSpan.Zero)
+        );
 
         var newest = CreateInterview(
-            scheduleAt: new DateTimeOffset(
-                2026,
-                9,
-                10,
-                15,
-                0,
-                0,
-                TimeSpan.Zero));
+            scheduleAt: new DateTimeOffset(2026, 9, 10, 15, 0, 0, TimeSpan.Zero)
+        );
 
-        await Store(
-            oldest,
-            middle,
-            newest);
+        await Store(oldest, middle, newest);
 
         // Act
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(3, result.Content.Count);
@@ -456,7 +369,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         var result = await _repository.GetSlice(
             _organizationId,
             CreateQuery(),
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(3, result.Content.Count);
@@ -471,7 +385,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
         DateTimeOffset? from = null,
         DateTimeOffset? to = null,
         int page = 1,
-        int pageSize = 100)
+        int pageSize = 100
+    )
     {
         return new InterviewsQuery(
             jobApplicationId,
@@ -483,7 +398,8 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
             to,
             "",
             page,
-            pageSize);
+            pageSize
+        );
     }
 
     private async Task Store(params InterviewProjection[] interviews)
@@ -527,10 +443,12 @@ public class InterviewsQueryTests(PostgresFixture fixture) : IAsyncLifetime
             null,
             null,
             DateTimeOffset.UtcNow,
-            null, candidateInfo,
+            null,
+            candidateInfo,
             "Job Post Title",
             "Location",
             "Meeting Url",
-            Guid.NewGuid());
+            Guid.NewGuid()
+        );
     }
 }

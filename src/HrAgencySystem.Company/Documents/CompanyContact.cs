@@ -3,12 +3,11 @@ using HrAgencySystem.SharedKernel.Web.Common;
 namespace HrAgencySystem.Company.Documents;
 
 public sealed record CompanyContact(
-    Guid Id, 
+    Guid Id,
     Guid OrganizationId,
-    Guid CompanyId, 
+    Guid CompanyId,
     ContactPerson Contact,
     string CompanyName,
     DateTimeOffset CreatedAt,
-    DateTimeOffset? ModifiedAt = null);
-    
-    
+    DateTimeOffset? ModifiedAt = null
+);

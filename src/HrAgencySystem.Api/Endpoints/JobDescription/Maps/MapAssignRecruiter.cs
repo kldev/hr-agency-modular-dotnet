@@ -11,20 +11,32 @@ internal static class MapAssignRecruiter
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPut("/api/job-description/{jobDescriptionId:guid}/assign-recruiter", Handler)
+        group
+            .MapPut("/api/job-description/{jobDescriptionId:guid}/assign-recruiter", Handler)
             .Produces<JobDescriptionRecruiterAssigned>()
             .ProducesStandardErrors()
             .WithSummary("Assign recruiter")
             .WithName("Assign job description recruiter");
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, Guid jobDescriptionId, AssignRecruiterRequest request,
-        IMessageBus bus, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        Guid jobDescriptionId,
+        AssignRecruiterRequest request,
+        IMessageBus bus,
+        CancellationToken ct
+    )
     {
         var result = await bus.InvokeAsync<JobDescriptionRecruiterAssigned>(
-            new AssignJobDescriptionRecruiter(jobDescriptionId, request.RecruiterId,  user.UserId, user.OrganizationId), ct);
+            new AssignJobDescriptionRecruiter(
+                jobDescriptionId,
+                request.RecruiterId,
+                user.UserId,
+                user.OrganizationId
+            ),
+            ct
+        );
 
         return TypedResults.Ok(result);
     }
 }
-

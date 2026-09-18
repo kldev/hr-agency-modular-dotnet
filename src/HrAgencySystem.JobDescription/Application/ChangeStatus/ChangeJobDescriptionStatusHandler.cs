@@ -15,9 +15,11 @@ public static class ChangeJobDescriptionStatusHandler
         Domain.JobDescription aggregate,
         IJobDescriptionService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
+        if (aggregate == null)
+            throw new NotFoundException("Job description", command.JobDescriptionId);
         var result = new UpdateJobDescriptionStatusResult(aggregate.Id.Value, command.Status);
 
         var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
@@ -26,20 +28,36 @@ public static class ChangeJobDescriptionStatusHandler
         {
             return (result, []);
         }
-        
+
         switch (command.Status)
         {
             case JobDescriptionStatus.Closed:
-                var @closedEvent = new JobDescriptionClosed(aggregate.Id.Value, modifiedBy, clock.UtcNow);
+                var @closedEvent = new JobDescriptionClosed(
+                    aggregate.Id.Value,
+                    modifiedBy,
+                    clock.UtcNow
+                );
                 return (result, [@closedEvent]);
             case JobDescriptionStatus.Cancelled:
-                var @canceledEvent = new JobDescriptionCancelled(aggregate.Id.Value, modifiedBy, clock.UtcNow);
+                var @canceledEvent = new JobDescriptionCancelled(
+                    aggregate.Id.Value,
+                    modifiedBy,
+                    clock.UtcNow
+                );
                 return (result, [@canceledEvent]);
             case JobDescriptionStatus.OnHold:
-                var @holdEvent = new JobDescriptionPutOnHold(aggregate.Id.Value, modifiedBy, clock.UtcNow);
+                var @holdEvent = new JobDescriptionPutOnHold(
+                    aggregate.Id.Value,
+                    modifiedBy,
+                    clock.UtcNow
+                );
                 return (result, [holdEvent]);
             case JobDescriptionStatus.Open:
-                var @openEvent = new JobDescriptionOpened(aggregate.Id.Value, modifiedBy, clock.UtcNow);
+                var @openEvent = new JobDescriptionOpened(
+                    aggregate.Id.Value,
+                    modifiedBy,
+                    clock.UtcNow
+                );
                 return (result, [@openEvent]);
             case JobDescriptionStatus.Draft:
             default:
@@ -48,4 +66,7 @@ public static class ChangeJobDescriptionStatusHandler
     }
 }
 
-public sealed record UpdateJobDescriptionStatusResult(Guid JobDescriptionId, JobDescriptionStatus Status);
+public sealed record UpdateJobDescriptionStatusResult(
+    Guid JobDescriptionId,
+    JobDescriptionStatus Status
+);

@@ -5,23 +5,32 @@ using HrAgencySystem.Company.Documents;
 
 namespace HrAgencySystem.Api.Endpoints.Suggestion.Maps;
 
-
 internal static class MapCompanyContacts
 {
     internal static void Map(this RouteGroupBuilder group)
     {
-        group.MapGet("/api/suggestion/company-contacts", Handler)
+        group
+            .MapGet("/api/suggestion/company-contacts", Handler)
             .WithSummary("Get top 25 contacts")
             .WithName("Get company-contacts suggestions")
             .Produces<IReadOnlyList<CompanyContact>>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, ICompanyContactSuggestionRepository repository,
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        ICompanyContactSuggestionRepository repository,
         CancellationToken ct,
-        string? search, Guid? companyId)
+        string? search,
+        Guid? companyId
+    )
     {
-        var result = await repository.GetSuggestionAsync(user.OrganizationId, search ?? "", companyId, ct);
+        var result = await repository.GetSuggestionAsync(
+            user.OrganizationId,
+            search ?? "",
+            companyId,
+            ct
+        );
         return TypedResults.Ok(result);
     }
 }

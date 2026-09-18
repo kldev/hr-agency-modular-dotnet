@@ -7,9 +7,7 @@ using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Users;
 
-public sealed class UserTestClient(
-    HttpClient client,
-    ITestOutputHelper output)
+public sealed class UserTestClient(HttpClient client, ITestOutputHelper output)
 {
     public async Task<UserProjection> CreateAsync(
         Guid organizationId,
@@ -17,24 +15,17 @@ public sealed class UserTestClient(
         string firstName = "John",
         string lastName = "Doe",
         OrganizationRoleApi role = OrganizationRoleApi.Admin,
-        string password = "Password123!")
+        string password = "Password123!"
+    )
     {
-        var request = new CreateUserRequest(
-            email,
-            firstName,
-            lastName,
-            role,
-            password);
+        var request = new CreateUserRequest(email, firstName, lastName, role, password);
 
         client.WithOrganizationId(organizationId);
-        var response = await client.PostAsJsonAsync(
-            "/api/users",
-            request);
+        var response = await client.PostAsJsonAsync("/api/users", request);
 
         response.EnsureSuccessStatusCode();
 
-        var result = await response.ReadWithJson<UserProjection>(
-            output);
+        var result = await response.ReadWithJson<UserProjection>(output);
 
         Assert.NotNull(result);
 

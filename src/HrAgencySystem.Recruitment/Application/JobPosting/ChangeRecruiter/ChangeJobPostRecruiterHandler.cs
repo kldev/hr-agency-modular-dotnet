@@ -17,14 +17,20 @@ public static class ChangeJobPostRecruiterHandler
         JobPost aggregate,
         IRecruitmentService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
         var recruiter = await service.GetUserAsync(command.RecruiterId, ct);
 
         ValidateOrganization(command, aggregate);
 
-        var @event = new JobPostRecruiterChanged(command.JobPostId, recruiter, clock.UtcNow, modifiedBy);
+        var @event = new JobPostRecruiterChanged(
+            command.JobPostId,
+            recruiter,
+            clock.UtcNow,
+            modifiedBy
+        );
 
         return (@event, [@event]);
     }

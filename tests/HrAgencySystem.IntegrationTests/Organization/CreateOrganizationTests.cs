@@ -16,7 +16,8 @@ namespace HrAgencySystem.IntegrationTests.Organization;
 [Collection(IntegrationCollection.Name)]
 public sealed class CreateOrganizationTests : BaseIntegrationTest
 {
-    public CreateOrganizationTests(IntegrationEnvironment env, ITestOutputHelper outputHelper) : base(env, outputHelper) 
+    public CreateOrganizationTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)
+        : base(env, outputHelper)
     {
         Cleaner.CleanOrganizationReservation().Wait();
         Client.AsOwner();
@@ -24,12 +25,10 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
 
     private static CreateOrganization CreateOrganizationRequest(
         string name = "HR Agency",
-        string slug = "hr-agency")
+        string slug = "hr-agency"
+    )
     {
-        return new CreateOrganization(
-            name,
-            slug,
-            Guid.NewGuid(), [slug + ".com"]);
+        return new CreateOrganization(name, slug, Guid.NewGuid(), [slug + ".com"]);
     }
 
     [Fact]
@@ -37,12 +36,9 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
     {
         var request = CreateOrganizationRequest();
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
-        var result = await response.ReadWithJson<OrganizationCreated>(
-            OutputHelper);
+        var result = await response.ReadWithJson<OrganizationCreated>(OutputHelper);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -55,13 +51,9 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
     [Fact]
     public async Task Post_organization_without_name_returns_bad_request()
     {
-        var request = CreateOrganizationRequest(
-            " ",
-            "hr-agency");
+        var request = CreateOrganizationRequest(" ", "hr-agency");
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -70,21 +62,15 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         Assert.NotNull(result);
         Assert.Single(result.ValidationErrors);
 
-        Assert.Equal(
-            OrganizationName.RequiredMessage,
-            result.ValidationErrors.First());
+        Assert.Equal(OrganizationName.RequiredMessage, result.ValidationErrors.First());
     }
 
     [Fact]
     public async Task Post_organization_without_slug_returns_bad_request()
     {
-        var request = CreateOrganizationRequest(
-            "HR Agency",
-            " ");
+        var request = CreateOrganizationRequest("HR Agency", " ");
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -93,21 +79,15 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         Assert.NotNull(result);
         Assert.Single(result.ValidationErrors);
 
-        Assert.Equal(
-            OrganizationSlug.RequiredMessage,
-            result.ValidationErrors.First());
+        Assert.Equal(OrganizationSlug.RequiredMessage, result.ValidationErrors.First());
     }
 
     [Fact]
     public async Task Post_organization_with_invalid_fields_returns_all_validation_errors()
     {
-        var request = CreateOrganizationRequest(
-            " ",
-            " ");
+        var request = CreateOrganizationRequest(" ", " ");
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -116,28 +96,19 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         Assert.NotNull(result);
         Assert.Equal(2, result.ValidationErrors.Count);
 
-        Assert.Contains(
-            OrganizationName.RequiredMessage,
-            result.ValidationErrors);
+        Assert.Contains(OrganizationName.RequiredMessage, result.ValidationErrors);
 
-        Assert.Contains(
-            OrganizationSlug.RequiredMessage,
-            result.ValidationErrors);
+        Assert.Contains(OrganizationSlug.RequiredMessage, result.ValidationErrors);
     }
 
     [Fact]
     public async Task Post_organization_normalizes_name_and_slug()
     {
-        var request = CreateOrganizationRequest(
-            "  HR Agency  ",
-            "  HR-AGENCY  ");
+        var request = CreateOrganizationRequest("  HR Agency  ", "  HR-AGENCY  ");
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
-        var result = await response.ReadWithJson<OrganizationCreated>(
-            OutputHelper);
+        var result = await response.ReadWithJson<OrganizationCreated>(OutputHelper);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
 
@@ -149,13 +120,9 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
     [Fact]
     public async Task Post_organization_with_name_exceeding_max_length_returns_bad_request()
     {
-        var request = CreateOrganizationRequest(
-            new string('A', 251)
-            );
+        var request = CreateOrganizationRequest(new string('A', 251));
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -164,21 +131,15 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         Assert.NotNull(result);
         Assert.Single(result.ValidationErrors);
 
-        Assert.Equal(
-            OrganizationName.MaxLengthMessage,
-            result.ValidationErrors.First());
+        Assert.Equal(OrganizationName.MaxLengthMessage, result.ValidationErrors.First());
     }
 
     [Fact]
     public async Task Post_organization_with_slug_exceeding_max_length_returns_bad_request()
     {
-        var request = CreateOrganizationRequest(
-            "HR Agency",
-            new string('a', 101));
+        var request = CreateOrganizationRequest("HR Agency", new string('a', 101));
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -187,9 +148,7 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         Assert.NotNull(result);
         Assert.Single(result.ValidationErrors);
 
-        Assert.Equal(
-            OrganizationSlug.MaxLengthMessage,
-            result.ValidationErrors.First());
+        Assert.Equal(OrganizationSlug.MaxLengthMessage, result.ValidationErrors.First());
     }
 
     [Fact]
@@ -197,52 +156,37 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
     {
         var request = CreateOrganizationRequest();
 
-        var responseFirst = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var responseFirst = await Client.PostAsJsonAsync("/api/organization", request);
 
-        Assert.Equal(
-            HttpStatusCode.Created,
-            responseFirst.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, responseFirst.StatusCode);
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
-        
-        Assert.Equal(
-            HttpStatusCode.BadRequest,
-            response.StatusCode);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task Post_concurrent_calls_with_same_tax_id_allow_only_one_organization()
     {
-        var request =
-            CreateOrganizationRequest(slug: "flex-jobs", name: "Flex Jobs");
+        var request = CreateOrganizationRequest(slug: "flex-jobs", name: "Flex Jobs");
 
         var tasks = new[]
         {
             Client.PostAsJsonAsync("/api/organization", request),
-            Client.PostAsJsonAsync("/api/organization", request)
+            Client.PostAsJsonAsync("/api/organization", request),
         };
 
         var responses = await Task.WhenAll(tasks);
 
         Assert.Equal(2, responses.Length);
 
-        Assert.Contains(
-            responses,
-            response => response.IsSuccessStatusCode);
+        Assert.Contains(responses, response => response.IsSuccessStatusCode);
 
-        Assert.Contains(
-            responses,
-            response => response.StatusCode == HttpStatusCode.Conflict);
+        Assert.Contains(responses, response => response.StatusCode == HttpStatusCode.Conflict);
 
-        var conflict = responses.Single(x =>
-            x.StatusCode == HttpStatusCode.Conflict);
+        var conflict = responses.Single(x => x.StatusCode == HttpStatusCode.Conflict);
 
-        var problem = await conflict.Content
-            .ReadFromJsonAsync<ProblemDetails>();
+        var problem = await conflict.Content.ReadFromJsonAsync<ProblemDetails>();
 
         Assert.NotNull(problem);
 
@@ -250,35 +194,28 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
         {
             case nameof(DocumentAlreadyExistsException):
                 OutputHelper.WriteLine("Catch database unique constrain");
-                Assert.Equal(
-                    nameof(DocumentAlreadyExistsException),
-                    problem.Type);
+                Assert.Equal(nameof(DocumentAlreadyExistsException), problem.Type);
                 break;
             case nameof(BusinessRuleException):
                 OutputHelper.WriteLine("Catch with exists query");
-                Assert.Equal(
-                    nameof(BusinessRuleException),
-                    problem.Type);
+                Assert.Equal(nameof(BusinessRuleException), problem.Type);
                 break;
         }
     }
-    
+
     [Fact]
     public async Task CreateOrganizationWithoutEmailDomainsReturnBadRequest()
     {
-        var request = new CreateOrganization("Name", "Slug", Guid.NewGuid(),[]);
+        var request = new CreateOrganization("Name", "Slug", Guid.NewGuid(), []);
 
-        var response = await Client.PostAsJsonAsync(
-            "/api/organization",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/organization", request);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         var result = await response.ReadWithJson<ProblemDetails>();
 
         Assert.NotNull(result);
-        
+
         Assert.Equal("No email domains specified", result.Detail);
     }
-
 }

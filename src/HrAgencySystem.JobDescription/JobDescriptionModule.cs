@@ -14,16 +14,14 @@ public static class JobDescriptionModule
 {
     private const string SchemaName = "job_description";
 
-    public static void AddJobDescriptionModule(
-        this IServiceCollection services)
+    public static void AddJobDescriptionModule(this IServiceCollection services)
     {
-       services.AddScoped<IJobDescriptionQueryRepository, JobDescriptionQueryRepository>();
-       services.AddScoped<IJobDescriptionSnapshotRepository, JobDescriptionSnapshotRepository>();
-       services.AddScoped<IJobDescriptionService, JobDescriptionService>();
+        services.AddScoped<IJobDescriptionQueryRepository, JobDescriptionQueryRepository>();
+        services.AddScoped<IJobDescriptionSnapshotRepository, JobDescriptionSnapshotRepository>();
+        services.AddScoped<IJobDescriptionService, JobDescriptionService>();
     }
 
-    public static void ConfigureMarten(
-        StoreOptions options)
+    public static void ConfigureMarten(StoreOptions options)
     {
         ConfigureEvents(options);
         ConfigureProjections(options);
@@ -41,29 +39,30 @@ public static class JobDescriptionModule
 
     private static void ConfigureProjections(StoreOptions options)
     {
-        options.Projections.Snapshot<JobDescriptionProjection>(
-            SnapshotLifecycle.Async);
+        options.Projections.Snapshot<JobDescriptionProjection>(SnapshotLifecycle.Async);
 
-        options.Schema
-            .For<JobDescriptionProjection>()
+        options
+            .Schema.For<JobDescriptionProjection>()
             .DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrgId })
             .Index(x => new { x.OrgId, x.CompanyId })
             .Index(x => new { x.OrgId, x.Status })
             .Index(x => new { x.OrgId, x.RecruiterId })
-            .Index(x => new { x.OrgId, x.Title, x.Id })
+            .Index(x => new
+            {
+                x.OrgId,
+                x.Title,
+                x.Id,
+            })
             .Index(x => new { x.OrgId, x.Company.Name })
             .Index(x => new { x.OrgId, x.Company.TaxId });
 
-        
-        options.Projections.Add(new StatusChangeHistoryProjection(),
-            ProjectionLifecycle.Async);
+        options.Projections.Add(new StatusChangeHistoryProjection(), ProjectionLifecycle.Async);
 
-        options.Schema
-            .For<JdStatusChangeHistory>()
+        options
+            .Schema.For<JdStatusChangeHistory>()
             .DatabaseSchemaName(SchemaName)
-            .Index(z=> new { OrganizationId = z.OrgId })
-            .Index(z=> new { OrganizationId = z.OrgId, JobDescriptionId = z.JobDescriptionId });
-        
+            .Index(z => new { OrganizationId = z.OrgId })
+            .Index(z => new { OrganizationId = z.OrgId, JobDescriptionId = z.JobDescriptionId });
     }
 }

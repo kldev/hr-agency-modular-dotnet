@@ -25,16 +25,19 @@ public static class ScheduleInterviewHandler
         var user = await service.GetUserAsync(command.CreatedBy, ct);
         var interviewer = await service.GetUserAsync(command.InterviewerId, ct);
         var organizationId = OrganizationId.From(command.OrganizationId);
-        var application = await service.GetApplicationAsync(command.JobApplicationId,
-            command.OrganizationId, ct);
+        var application = await service.GetApplicationAsync(
+            command.JobApplicationId,
+            command.OrganizationId,
+            ct
+        );
 
         await service.ValidateOrganization(command.OrganizationId, ct);
 
         var interviewId = InterviewId.New();
 
         var (shortNote, error) = ShortNote.TryCreate(command.Note, false);
-        if (error != null) throw new ValidationException(error);
-
+        if (error != null)
+            throw new ValidationException(error);
 
         var @event = new InterviewCreated(
             interviewId.Value,
@@ -57,17 +60,26 @@ public static class ScheduleInterviewHandler
             application.JobPostId
         );
 
-        var jobApplicationEvent = new JobApplicationInterviewScheduled(command.JobApplicationId,
-            clock.UtcNow, user, interviewId.Value
+        var jobApplicationEvent = new JobApplicationInterviewScheduled(
+            command.JobApplicationId,
+            clock.UtcNow,
+            user,
+            interviewId.Value
         );
 
         session.Events.StartStream<Interview>(interviewId.Value, @event);
         session.Events.Append(jobApplicationEvent.JobApplicationId, jobApplicationEvent);
 
-        if (string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
+        if (string.IsNullOrEmpty(command.Note))
+            return (@event, [@event]);
 
-        await service.AppendApplicationNoteToStream(new JobApplicationId(application.JobApplicationId),
-            OrganizationId.From(command.OrganizationId), command.Note, user, ct);
+        await service.AppendApplicationNoteToStream(
+            new JobApplicationId(application.JobApplicationId),
+            OrganizationId.From(command.OrganizationId),
+            command.Note,
+            user,
+            ct
+        );
 
         return (@event, [@event]);
     }

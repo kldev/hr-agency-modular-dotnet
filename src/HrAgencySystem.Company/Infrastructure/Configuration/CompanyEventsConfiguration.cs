@@ -13,5 +13,5 @@ internal static class CompanyEventsConfiguration
             options.Events.AddEventType<CompanyJobPostCreated>();
             options.Events.AddEventType<CompanyJobPostActiveChanged>();
         }
-    }   
+    }
 }

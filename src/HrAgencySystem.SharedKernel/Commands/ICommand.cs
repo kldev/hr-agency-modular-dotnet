@@ -1,8 +1,6 @@
 namespace HrAgencySystem.SharedKernel.Commands;
 
-public interface ICommand
-{
-}
+public interface ICommand { }
 
 public interface ICreateCommand : ICommand
 {

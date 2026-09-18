@@ -9,7 +9,8 @@ internal static class MapLoginOwner
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("/api/owner/login", Handler)
+        group
+            .MapPost("/api/owner/login", Handler)
             .WithSummary("Login platform owner")
             .WithName("Login platform owner")
             .Produces<LoginUserResult>()

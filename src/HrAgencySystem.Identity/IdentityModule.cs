@@ -16,8 +16,8 @@ namespace HrAgencySystem.Identity;
 public static class IdentityModule
 {
     private const string SchemaName = "identity";
-    public static void AddIdentityModule(
-        this IServiceCollection services)
+
+    public static void AddIdentityModule(this IServiceCollection services)
     {
         services.AddTransient<IPasswordHasher, BCryptPasswordHasher>();
         services.AddScoped<IUserEmailReservationRepository, UserEmailReservationRepository>();
@@ -30,9 +30,8 @@ public static class IdentityModule
         services.AddScoped<IUserQueryRepository, UserQueryRepository>();
         services.AddScoped<IIdentityService, IdentityService>();
     }
-    
-    public static void ConfigureMarten(
-        StoreOptions options)
+
+    public static void ConfigureMarten(StoreOptions options)
     {
         ConfigureTable(options);
         ConfigureEvents(options);
@@ -48,27 +47,49 @@ public static class IdentityModule
     private static void ConfigureProjections(StoreOptions options)
     {
         options.Projections.Snapshot<UserProjection>(SnapshotLifecycle.Async);
-        
-        options.Schema.For<UserProjection>().DatabaseSchemaName(SchemaName)
+
+        options
+            .Schema.For<UserProjection>()
+            .DatabaseSchemaName(SchemaName)
             .Index(x => new { x.OrganizationId })
-            .Index(x => new { x.OrganizationId, x.Email, x.Id })
-            .Index(z=> new { z.OrganizationId, z.CreatedAt})
-            .Index(z=> new { z.OrganizationId, z.Role});
+            .Index(x => new
+            {
+                x.OrganizationId,
+                x.Email,
+                x.Id,
+            })
+            .Index(z => new { z.OrganizationId, z.CreatedAt })
+            .Index(z => new { z.OrganizationId, z.Role });
 
         options.Projections.Snapshot<OwnerProjection>(SnapshotLifecycle.Async);
-        options.Schema.For<OwnerProjection>().DatabaseSchemaName(SchemaName)
+        options
+            .Schema.For<OwnerProjection>()
+            .DatabaseSchemaName(SchemaName)
             .Index(x => new { x.Email });
     }
-    
 
     private static void ConfigureTable(StoreOptions options)
     {
-        options.Schema.For<UserEmailReservation>().DatabaseSchemaName(SchemaName)
-            .Index(x => new { x.OrganizationId, x.Email },
-                idx => { idx.IsUnique = true; });
-        
-        options.Schema.For<OwnerEmailReservation>().DatabaseSchemaName(SchemaName)
-            .Index(x => new { x.Email },
-                idx => { idx.IsUnique = true; });
+        options
+            .Schema.For<UserEmailReservation>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(
+                x => new { x.OrganizationId, x.Email },
+                idx =>
+                {
+                    idx.IsUnique = true;
+                }
+            );
+
+        options
+            .Schema.For<OwnerEmailReservation>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(
+                x => new { x.Email },
+                idx =>
+                {
+                    idx.IsUnique = true;
+                }
+            );
     }
 }

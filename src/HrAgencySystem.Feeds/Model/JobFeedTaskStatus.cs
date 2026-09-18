@@ -5,5 +5,5 @@ internal enum JobFeedTaskStatus
     Pending,
     Processing,
     Completed,
-    Failed
+    Failed,
 }

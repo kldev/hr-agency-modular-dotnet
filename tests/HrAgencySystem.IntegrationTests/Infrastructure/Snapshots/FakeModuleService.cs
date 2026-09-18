@@ -12,7 +12,11 @@ using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
-public class FakeModuleService : IRecruitmentService, ICompanyService, IJobDescriptionService, IIdentityService
+public class FakeModuleService
+    : IRecruitmentService,
+        ICompanyService,
+        IJobDescriptionService,
+        IIdentityService
 {
     public Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {
@@ -24,9 +28,8 @@ public class FakeModuleService : IRecruitmentService, ICompanyService, IJobDescr
     public Task<CompanySnapshot> GetCompanyAsync(Guid companyId, CancellationToken ct)
     {
         var suffix = companyId.ToString().Substring(4);
-        var result = new CompanySnapshot(companyId, "Company  " + suffix,
-            "TXT 101-200" + suffix);
-        
+        var result = new CompanySnapshot(companyId, "Company  " + suffix, "TXT 101-200" + suffix);
+
         return Task.FromResult(result);
     }
 
@@ -35,24 +38,32 @@ public class FakeModuleService : IRecruitmentService, ICompanyService, IJobDescr
         return Task.CompletedTask;
     }
 
-    public Task<OrganizationInfo> GetOrganization(OrganizationId organizationId, CancellationToken ct)
+    public Task<OrganizationInfo> GetOrganization(
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
     {
         var info = new OrganizationInfo(organizationId.Value, "hr-test", "Test");
         return Task.FromResult(info);
     }
 
-    public Task<JobApplicationInfo> GetApplicationAsync(Guid jobApplicationId, Guid organizationId, CancellationToken ct)
+    public Task<JobApplicationInfo> GetApplicationAsync(
+        Guid jobApplicationId,
+        Guid organizationId,
+        CancellationToken ct
+    )
     {
         var candidateInfo = new CandidateInfo(Guid.NewGuid(), "test@fake.com", "", "", "");
         var result = new JobApplicationInfo(
-            jobApplicationId, 
-            organizationId, 
-            Guid.NewGuid(), 
-            Guid.NewGuid(), 
+            jobApplicationId,
+            organizationId,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
             candidateInfo,
-            "Job Post Title", 
-            Guid.NewGuid());
-        
+            "Job Post Title",
+            Guid.NewGuid()
+        );
+
         return Task.FromResult(result);
     }
 
@@ -63,11 +74,17 @@ public class FakeModuleService : IRecruitmentService, ICompanyService, IJobDescr
 
     public void ValidateAggregateUpdate(IOrganizationDomain? aggregate, Guid commandOrganizationId)
     {
-        if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId) throw new OrganizationAccessDeniedException();
+        if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
+            throw new OrganizationAccessDeniedException();
     }
 
-    public Task AppendApplicationNoteToStream(JobApplicationId jobApplicationId, OrganizationId organizationId, string note,
-        UserSnapshot user, CancellationToken ct)
+    public Task AppendApplicationNoteToStream(
+        JobApplicationId jobApplicationId,
+        OrganizationId organizationId,
+        string note,
+        UserSnapshot user,
+        CancellationToken ct
+    )
     {
         return Task.CompletedTask;
     }

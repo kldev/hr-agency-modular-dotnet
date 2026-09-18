@@ -13,7 +13,8 @@ public static class MapUpdate
     public static void Map(RouteGroupBuilder group)
     {
         // PUT /api/organization/{organizationId}
-        group.MapPut("{organizationId:guid}", Handler)
+        group
+            .MapPut("{organizationId:guid}", Handler)
             .WithSummary("Update organization data")
             .WithName("Update organization data")
             .Produces<OrganizationUpdated>()
@@ -24,16 +25,18 @@ public static class MapUpdate
         IMessageBus bus,
         OwnerAuthenticated owner,
         Guid organizationId,
-        [FromBody]OrganizationRequest request,
-        CancellationToken ct)
+        [FromBody] OrganizationRequest request,
+        CancellationToken ct
+    )
     {
         var command = new UpdateOrganization(
-            organizationId, 
-            request.Name, 
-            request.Slug, 
-            owner.Id, 
+            organizationId,
+            request.Name,
+            request.Slug,
+            owner.Id,
             request.EmailDomains,
-            request.Info ?? OrganizationInfoData.NoInfo);
+            request.Info ?? OrganizationInfoData.NoInfo
+        );
         var result = await bus.InvokeAsync<OrganizationUpdated>(command, ct);
 
         return TypedResults.Ok(result);

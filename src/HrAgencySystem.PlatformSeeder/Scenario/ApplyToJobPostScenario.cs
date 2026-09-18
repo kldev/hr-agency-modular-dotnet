@@ -8,11 +8,10 @@ using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder.Scenario;
 
-public sealed class ApplyToJobPostScenario(
-    IMessageBus bus,
-    IQuerySession session)
+public sealed class ApplyToJobPostScenario(IMessageBus bus, IQuerySession session)
 {
     private const int ApplicationsPerCandidate = 5;
+
     public async Task Execute(int count = 500)
     {
         var jobs = await GetJobs();
@@ -23,7 +22,7 @@ public sealed class ApplyToJobPostScenario(
         await CreateShowcaseCandidates(jobs);
         await CreateRandomCandidates(count, jobs);
     }
-    
+
     public async Task ExecuteShowcase()
     {
         var jobs = await GetJobs();
@@ -38,79 +37,56 @@ public sealed class ApplyToJobPostScenario(
     {
         var candidates = new[]
         {
-            new CandidateSeed(
-                "Fox",
-                "Mulder",
-                "fox.mulder@fbi.gov",
-                "+1 202-555-0101"),
-
-            new CandidateSeed(
-                "Dana",
-                "Scully",
-                "dana.scully@fbi.gov",
-                "+1 202-555-0102"),
-
+            new CandidateSeed("Fox", "Mulder", "fox.mulder@fbi.gov", "+1 202-555-0101"),
+            new CandidateSeed("Dana", "Scully", "dana.scully@fbi.gov", "+1 202-555-0102"),
             // Friends
 
-            new CandidateSeed(
-                "Rachel",
-                "Green",
-                "rachel.green@friends.example",
-                "+1 212-555-0101"),
-
-            new CandidateSeed(
-                "Ross",
-                "Geller",
-                "ross.geller@friends.example",
-                "+1 212-555-0102"),
-
+            new CandidateSeed("Rachel", "Green", "rachel.green@friends.example", "+1 212-555-0101"),
+            new CandidateSeed("Ross", "Geller", "ross.geller@friends.example", "+1 212-555-0102"),
             new CandidateSeed(
                 "Monica",
                 "Geller",
                 "monica.geller@friends.example",
-                "+1 212-555-0103"),
-
+                "+1 212-555-0103"
+            ),
             new CandidateSeed(
                 "Chandler",
                 "Bing",
                 "chandler.bing@friends.example",
-                "+1 212-555-0104"),
-
+                "+1 212-555-0104"
+            ),
             new CandidateSeed(
                 "Joey",
                 "Tribbiani",
                 "joey.tribbiani@friends.example",
-                "+1 212-555-0105"),
-
+                "+1 212-555-0105"
+            ),
             new CandidateSeed(
                 "Phoebe",
                 "Buffay",
                 "phoebe.buffay@friends.example",
-                "+1 212-555-0106"),
+                "+1 212-555-0106"
+            ),
         };
 
-        var commands = candidates
-            .SelectMany(candidate => CreateApplications(candidate, jobs));
+        var commands = candidates.SelectMany(candidate => CreateApplications(candidate, jobs));
 
         await ExecuteInSequence(commands);
     }
 
-    private async Task CreateRandomCandidates(
-        int count,
-        IReadOnlyList<Guid> jobs)
+    private async Task CreateRandomCandidates(int count, IReadOnlyList<Guid> jobs)
     {
         var faker = new Faker();
 
-        var commands = Enumerable
-            .Range(0, count)
-            .SelectMany(_ => CreateApplications(faker, jobs));
+        var commands = Enumerable.Range(0, count).SelectMany(_ => CreateApplications(faker, jobs));
 
         await ExecuteInSequence(commands);
     }
 
     private static IEnumerable<ApplyToJobApplication> CreateApplications(
         CandidateSeed candidate,
-        IReadOnlyList<Guid> jobs)
+        IReadOnlyList<Guid> jobs
+    )
     {
         for (var i = 0; i < ApplicationsPerCandidate; i++)
         {
@@ -120,13 +96,15 @@ public sealed class ApplyToJobPostScenario(
                 Phone: candidate.Phone,
                 Source: RandomSource(),
                 FirstName: candidate.FirstName,
-                LastName: candidate.LastName);
+                LastName: candidate.LastName
+            );
         }
     }
 
     private static IEnumerable<ApplyToJobApplication> CreateApplications(
         Faker faker,
-        IReadOnlyList<Guid> jobs)
+        IReadOnlyList<Guid> jobs
+    )
     {
         var firstName = faker.Person.FirstName;
         var lastName = faker.Person.LastName;
@@ -135,24 +113,25 @@ public sealed class ApplyToJobPostScenario(
         var email = faker.Internet.Email(
             firstName,
             lastName + Random.Shared.Next(1000, 99999),
-            uniqueSuffix: index.ToString());
+            uniqueSuffix: index.ToString()
+        );
 
         var phone = faker.Phone.PhoneNumber();
 
         for (var i = 0; i < ApplicationsPerCandidate; i++)
         {
             yield return new ApplyToJobApplication(
-                JobPostId: jobs[Random.Shared.Next(jobs.Count)], 
+                JobPostId: jobs[Random.Shared.Next(jobs.Count)],
                 Email: email,
                 Phone: phone,
                 Source: RandomSource(),
                 FirstName: firstName,
-                LastName: lastName);
+                LastName: lastName
+            );
         }
     }
 
-    private async Task ExecuteInSequence(
-        IEnumerable<ApplyToJobApplication> commands)
+    private async Task ExecuteInSequence(IEnumerable<ApplyToJobApplication> commands)
     {
         foreach (var command in commands)
         {
@@ -174,10 +153,7 @@ public sealed class ApplyToJobPostScenario(
 
     private async Task<IReadOnlyList<Guid>> GetJobs()
     {
-        return await session
-            .Query<JobPostCreated>()
-            .Select(x => x.JobPostId)
-            .ToListAsync();
+        return await session.Query<JobPostCreated>().Select(x => x.JobPostId).ToListAsync();
     }
 
     private static CandidateSource RandomSource()
@@ -191,5 +167,6 @@ public sealed class ApplyToJobPostScenario(
         string FirstName,
         string LastName,
         string Email,
-        string Phone);
+        string Phone
+    );
 }

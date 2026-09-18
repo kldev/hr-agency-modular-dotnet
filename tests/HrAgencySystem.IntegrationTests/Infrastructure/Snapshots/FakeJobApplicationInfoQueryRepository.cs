@@ -6,17 +6,23 @@ namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
 public class FakeJobApplicationInfoQueryRepository : IJobApplicationInfoQueryRepository
 {
-    public Task<JobApplicationInfo?> GetAsync(Guid jobApplicationId, OrganizationId organizationId, CancellationToken ct)
+    public Task<JobApplicationInfo?> GetAsync(
+        Guid jobApplicationId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
     {
         var candidateInfo = new CandidateInfo(Guid.NewGuid(), "test@fake.com", "", "", "");
-        var result = new JobApplicationInfo(jobApplicationId, 
-            organizationId.Value, 
-            Guid.NewGuid(), 
-            Guid.NewGuid(), 
+        var result = new JobApplicationInfo(
+            jobApplicationId,
+            organizationId.Value,
+            Guid.NewGuid(),
+            Guid.NewGuid(),
             candidateInfo,
-            "Job Post Title", 
-            Guid.NewGuid());
-        
+            "Job Post Title",
+            Guid.NewGuid()
+        );
+
         return Task.FromResult((JobApplicationInfo?)result);
     }
 }

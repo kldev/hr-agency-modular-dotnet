@@ -8,8 +8,11 @@ namespace HrAgencySystem.Api.Infrastructure;
 
 public static class AuthenticationExtensions
 {
-    public static void SetupAppAuthorization(this IServiceCollection services, 
-        IConfiguration configuration, IWebHostEnvironment environment)
+    public static void SetupAppAuthorization(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment environment
+    )
     {
         services.AddCors(opt =>
         {
@@ -17,39 +20,36 @@ public static class AuthenticationExtensions
             {
                 if (environment.IsDevelopment())
                 {
-                    policy.AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowAnyOrigin();
+                    policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                 }
                 else
                 {
                     var cors = configuration["Cors"] ?? "";
                     var corsOrigins = cors.Split(",", StringSplitOptions.RemoveEmptyEntries);
-                    policy.AllowAnyHeader()
+                    policy
+                        .AllowAnyHeader()
                         .AllowAnyMethod()
                         .WithOrigins("http://localhost:4300")
                         .WithOrigins("http://localhost:8080")
                         .WithOrigins([.. corsOrigins]);
-
                 }
             });
         });
-        
-        services.AddAuthorizationBuilder()
-                    .SetFallbackPolicy(new AuthorizationPolicyBuilder()
-                .RequireAuthenticatedUser()
-                .Build());
-        
-        services.Configure<JwtConfig>(
-            configuration.GetSection(JwtConfig.Section));
-        
-        var config = configuration
-                         .GetSection(JwtConfig.Section)
-                         .Get<JwtConfig>()
-                     ?? throw new InvalidOperationException(
-                         $"Configuration section '{JwtConfig.Section}' is missing.");
-        
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+        services
+            .AddAuthorizationBuilder()
+            .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+
+        services.Configure<JwtConfig>(configuration.GetSection(JwtConfig.Section));
+
+        var config =
+            configuration.GetSection(JwtConfig.Section).Get<JwtConfig>()
+            ?? throw new InvalidOperationException(
+                $"Configuration section '{JwtConfig.Section}' is missing."
+            );
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -61,7 +61,8 @@ public static class AuthenticationExtensions
                     ValidIssuer = config.Issuer,
                     ValidAudience = config.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(config.SecretKey))
+                        Encoding.UTF8.GetBytes(config.SecretKey)
+                    ),
                 };
             });
     }

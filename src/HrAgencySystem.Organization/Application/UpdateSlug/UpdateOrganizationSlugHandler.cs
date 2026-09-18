@@ -12,19 +12,25 @@ namespace HrAgencySystem.Organization.Application.UpdateSlug;
 public static class UpdateOrganizationSlugHandler
 {
     [AggregateHandler]
-    public static async Task<(OrganizationSlugUpdated, Wolverine.Marten.Events)> Handle(UpdateOrganizationSlug command,
+    public static async Task<(OrganizationSlugUpdated, Wolverine.Marten.Events)> Handle(
+        UpdateOrganizationSlug command,
         Domain.Organization aggregate,
         ILogger logger,
-        IOrganizationSlugReservationRepository repository, 
+        IOrganizationSlugReservationRepository repository,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        if (aggregate == null) throw new NotFoundException("Organization", command.OrganizationId);
+        if (aggregate == null)
+            throw new NotFoundException("Organization", command.OrganizationId);
 
-        logger.LogInformation($"Updating organization slug {command.Slug} from {aggregate.Slug.Value}");
+        logger.LogInformation(
+            $"Updating organization slug {command.Slug} from {aggregate.Slug.Value}"
+        );
 
         var (slug, error) = OrganizationSlug.TryCreate(command.Slug);
-        if (error != null) throw new ValidationException(error);
+        if (error != null)
+            throw new ValidationException(error);
 
         if (aggregate.Slug.Value.Equals(command.Slug))
             throw new BusinessRuleException("Cannot update organization with the same slug");
@@ -33,7 +39,7 @@ public static class UpdateOrganizationSlugHandler
             throw new BusinessRuleException(CreateOrganizationHandler.SlugAlreadyExitsMessage);
 
         await repository.Reserve(aggregate.Id, slug!);
-        
+
         var @event = new OrganizationSlugUpdated(slug!.Value, command.OrganizationId, clock.UtcNow);
 
         return (@event, [@event]);

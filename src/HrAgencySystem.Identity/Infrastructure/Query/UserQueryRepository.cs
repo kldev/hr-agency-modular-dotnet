@@ -8,36 +8,56 @@ namespace HrAgencySystem.Identity.Infrastructure.Query;
 
 public class UserQueryRepository(IDocumentSession session) : IUserQueryRepository
 {
-    public async Task<SliceResponse<UserProjection>> GetUsers(Guid organizationId, string search, IReadOnlyList<OrganizationRole> roles, int page, int pageSize, CancellationToken ct)
+    public async Task<SliceResponse<UserProjection>> GetUsers(
+        Guid organizationId,
+        string search,
+        IReadOnlyList<OrganizationRole> roles,
+        int page,
+        int pageSize,
+        CancellationToken ct
+    )
     {
-        var query = session.Query<UserProjection>()
+        var query = session
+            .Query<UserProjection>()
             .WithOrganizationId(organizationId)
             .WithSearch(search)
             .WithRoles(roles)
             .WithoutSystemRole()
-            .OrderByDescending(z=>z.CreatedAt);
+            .OrderByDescending(z => z.CreatedAt);
 
         return await query.ToSlice(page, pageSize, ct);
     }
 
-    public async Task<UserProjection?> GetUser(Guid organizationId, Guid userId, CancellationToken ct)
+    public async Task<UserProjection?> GetUser(
+        Guid organizationId,
+        Guid userId,
+        CancellationToken ct
+    )
     {
-        return await session.Query<UserProjection>()
+        return await session
+            .Query<UserProjection>()
             .WithOrganizationId(organizationId)
             .WithUserId(userId)
             .WithoutSystemRole()
             .SingleOrDefaultAsync(ct);
     }
 
-    public async Task<SliceResponse<UserProjection>> GetUsersOwner(Guid? organizationId, string search, IReadOnlyList<OrganizationRole> roles, int page, int pageSize,
-        CancellationToken ct)
+    public async Task<SliceResponse<UserProjection>> GetUsersOwner(
+        Guid? organizationId,
+        string search,
+        IReadOnlyList<OrganizationRole> roles,
+        int page,
+        int pageSize,
+        CancellationToken ct
+    )
     {
-        var query = session.Query<UserProjection>()
+        var query = session
+            .Query<UserProjection>()
             .WithOptionalOrganizationId(organizationId)
             .WithSearch(search)
             .WithRoles(roles)
             .WithoutSystemRole()
-            .OrderByDescending(z=>z.CreatedAt);
+            .OrderByDescending(z => z.CreatedAt);
 
         return await query.ToSlice(page, pageSize, ct);
     }

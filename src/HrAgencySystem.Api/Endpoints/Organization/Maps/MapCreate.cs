@@ -10,21 +10,24 @@ internal static class MapCreate
 {
     public static void Map(RouteGroupBuilder group)
     {
-        group.MapPost("", Handler)
+        group
+            .MapPost("", Handler)
             .WithSummary("Create organization")
             .WithName("Create organization")
             .Produces<OrganizationCreated>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(OwnerAuthenticated owner, OrganizationRequest request,
+    private static async Task<IResult> Handler(
+        OwnerAuthenticated owner,
+        OrganizationRequest request,
         IMessageBus bus,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var result = await bus.InvokeAsync<OrganizationCreated>(request.ToCommand(owner.Id), ct);
 
-        return TypedResults.Created(
-            $"/api/organization/{result.OrganizationId}", result);
+        return TypedResults.Created($"/api/organization/{result.OrganizationId}", result);
     }
 }
 
@@ -33,9 +36,9 @@ internal sealed record OrganizationRequest(
     string Name,
     string Slug,
     IReadOnlyList<string> EmailDomains,
-    OrganizationInfoData? Info)
+    OrganizationInfoData? Info
+)
 {
     public CreateOrganization ToCommand(Guid createdBy) =>
         new(Name, Slug, createdBy, EmailDomains, Info);
 }
-

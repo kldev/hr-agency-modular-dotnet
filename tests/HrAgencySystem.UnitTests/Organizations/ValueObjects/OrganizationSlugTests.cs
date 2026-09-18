@@ -63,12 +63,10 @@ public sealed class OrganizationSlugTests
     [InlineData("   ")]
     [InlineData("\t")]
     [InlineData("\n")]
-    public void Create_WithEmptyOrWhitespaceValue_ThrowsInValidValueException(
-        string value)
+    public void Create_WithEmptyOrWhitespaceValue_ThrowsInValidValueException(string value)
     {
         // Act
-        var exception = Assert.Throws<InValidValueException>(
-            () => OrganizationSlug.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => OrganizationSlug.Create(value));
 
         // Assert
         Assert.Contains(OrganizationSlug.RequiredMessage, exception.Message);
@@ -81,8 +79,7 @@ public sealed class OrganizationSlugTests
         var value = new string('a', 101);
 
         // Act
-        var exception = Assert.Throws<InValidValueException>(
-            () => OrganizationSlug.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => OrganizationSlug.Create(value));
 
         // Assert
         Assert.Contains(OrganizationSlug.MaxLengthMessage, exception.Message);
@@ -122,8 +119,7 @@ public sealed class OrganizationSlugTests
     [InlineData("   ")]
     [InlineData("\t")]
     [InlineData("\n")]
-    public void TryCreate_WithEmptyOrWhitespaceValue_ReturnsRequiredError(
-        string value)
+    public void TryCreate_WithEmptyOrWhitespaceValue_ReturnsRequiredError(string value)
     {
         // Act
         var (slug, error) = OrganizationSlug.TryCreate(value);
@@ -148,8 +144,7 @@ public sealed class OrganizationSlugTests
     public void Create_WithNullValue_ThrowsInValidValueException()
     {
         // Act
-        var exception = Assert.Throws<InValidValueException>(
-            () => OrganizationSlug.Create(null!));
+        var exception = Assert.Throws<InValidValueException>(() => OrganizationSlug.Create(null!));
 
         // Assert
         Assert.Contains(OrganizationSlug.RequiredMessage, exception.Message);

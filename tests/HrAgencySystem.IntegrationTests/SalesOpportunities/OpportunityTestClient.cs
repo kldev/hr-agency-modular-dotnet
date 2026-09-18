@@ -22,34 +22,34 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         DateOnly? expectedCloseDate = null,
         decimal? expectedValue = null,
         Guid? responsibleId = null
-    )
-    => new(
-        CompanyId: companyId ?? Guid.NewGuid(),
-        Title: title ?? "Some title",
-        Description: description ?? "",
-        ExpectedValue: expectedValue ?? 10_000,
-        IsHotLead: false,
-        Currency: currency ?? CurrencyCode.EUR,
-        ExpectedCloseDate: expectedCloseDate,
-        ResponsibleId: responsibleId
-    );
-    
+    ) =>
+        new(
+            CompanyId: companyId ?? Guid.NewGuid(),
+            Title: title ?? "Some title",
+            Description: description ?? "",
+            ExpectedValue: expectedValue ?? 10_000,
+            IsHotLead: false,
+            Currency: currency ?? CurrencyCode.EUR,
+            ExpectedCloseDate: expectedCloseDate,
+            ResponsibleId: responsibleId
+        );
+
     internal MapUpdate.UpdateOpportunityRequest CreateValidUpdateRequest(
         string? title = null,
         string? description = null,
         CurrencyCode? currency = null,
         DateOnly? expectedCloseDate = null,
         decimal? expectedValue = null
-    )
-        => new(
+    ) =>
+        new(
             Title: title ?? "Some title",
             Description: description ?? "",
             ExpectedValue: expectedValue ?? 10_000,
-            false ,
+            false,
             Currency: currency ?? CurrencyCode.EUR,
             ExpectedCloseDate: expectedCloseDate
         );
-    
+
     internal async Task<OpportunityCreated> Create(
         Guid? organizationId = null,
         Guid? companyId = null,
@@ -82,11 +82,13 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         response.EnsureSuccessStatusCode();
 
         var result = (await response.ReadWithJson<OpportunityCreated>())!;
-        output.WriteLine($"Opportunity created: {result.OpportunityId} Org: {result.OrganizationId}");
+        output.WriteLine(
+            $"Opportunity created: {result.OpportunityId} Org: {result.OrganizationId}"
+        );
 
         return result;
     }
-    
+
     internal async Task<OpportunityUpdated> Update(
         Guid? organizationId = null,
         Guid? opportunityId = null,
@@ -106,23 +108,21 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
             Title: title ?? "Some title",
             Description: description ?? "",
             ExpectedValue: expectedValue ?? 10_000,
-            isHotLead ?? false ,
+            isHotLead ?? false,
             Currency: currency ?? CurrencyCode.EUR,
             ExpectedCloseDate: expectedCloseDate
         );
 
-        var response = await client.PutAsJsonAsync(BaseUrl +$"/{opportunityId}",  request);
+        var response = await client.PutAsJsonAsync(BaseUrl + $"/{opportunityId}", request);
 
         response.EnsureSuccessStatusCode();
 
         var result = (await response.ReadWithJson<OpportunityUpdated>())!;
-        
+
         return result;
     }
-    
-    internal async Task<OpportunityProjection> Get(
-        Guid organizationId,
-        Guid opportunityId)
+
+    internal async Task<OpportunityProjection> Get(Guid organizationId, Guid opportunityId)
     {
         client.WithOrganizationId(organizationId);
 
@@ -143,18 +143,20 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
         client.WithUserId(modifiedBy ?? Guid.NewGuid());
 
-        var request = new ChangeResponsiblePersonRequest(
-            responsible ?? Guid.NewGuid());
+        var request = new ChangeResponsiblePersonRequest(responsible ?? Guid.NewGuid());
 
-        var response = await client.PutAsJsonAsync(BaseUrl +$"/{opportunityId}/responsible", request);
+        var response = await client.PutAsJsonAsync(
+            BaseUrl + $"/{opportunityId}/responsible",
+            request
+        );
 
         response.EnsureSuccessStatusCode();
 
         var result = (await response.ReadWithJson<ResponsiblePersonChanged>())!;
-        
+
         return result;
     }
-    
+
     internal async Task<StageChanged> ChangeStage(
         Guid? organizationId = null,
         Guid? opportunityId = null,
@@ -166,14 +168,16 @@ public sealed class OpportunityTestClient(HttpClient client, ITestOutputHelper o
         client.WithUserId(modifiedBy ?? Guid.NewGuid());
 
         var request = new ChangeOpportunityStageRequest(
-            stage ?? OpportunityStage.Qualified, LostReason: "");
+            stage ?? OpportunityStage.Qualified,
+            LostReason: ""
+        );
 
-        var response = await client.PutAsJsonAsync(BaseUrl +$"/{opportunityId}/stage", request);
+        var response = await client.PutAsJsonAsync(BaseUrl + $"/{opportunityId}/stage", request);
 
         response.EnsureSuccessStatusCode();
 
         var result = (await response.ReadWithJson<StageChanged>())!;
-        
+
         return result;
     }
 }

@@ -7,42 +7,39 @@ namespace HrAgencySystem.Recruitment.Domain.JobPostings;
 
 public sealed class JobPost
 {
-    private JobPost(){}
+    private JobPost() { }
 
     public static JobPost Empty()
     {
         return new JobPost();
     }
-    
+
     public static JobPost WithOrganization(Guid organizationId)
     {
-        var post = new JobPost
-        {
-            OrganizationId = new OrganizationId(organizationId)
-        };
+        var post = new JobPost { OrganizationId = new OrganizationId(organizationId) };
         return post;
     }
-    
+
     public JobPostId Id { get; private set; }
-    
-    public JobDescriptionId  DescriptionId { get; private set; }
+
+    public JobDescriptionId DescriptionId { get; private set; }
 
     public OrganizationId OrganizationId { get; private set; }
 
     public CompanyId CompanyId { get; private set; }
-    
+
     public PostTitle Title { get; private set; } = null!;
-    
+
     public LongText Summary { get; private set; } = null!;
-    
+
     public LongText Description { get; private set; } = null!;
-    
+
     public IReadOnlyList<EntryText> Responsibilities { get; private set; } = [];
 
     public IReadOnlyList<EntryText> Requirements { get; private set; } = [];
 
     public IReadOnlyList<EntryText> Skills { get; private set; } = [];
-    
+
     public JobLocation Location { get; private set; } = null!;
 
     public CountryCode CountryCode { get; private set; } = null!;
@@ -52,21 +49,21 @@ public sealed class JobPost
     public WorkMode WorkMode { get; private set; }
 
     public SalaryRange SalaryRange { get; private set; } = null!;
-    
+
     public JobPostStatus Status { get; private set; }
 
     public LanguageCode LanguageCode { get; private set; } = null!;
-    
+
     public Guid RecruiterId { get; private set; }
 
     public DateTimeOffset CreatedAt { get; private set; }
 
     public DateTimeOffset UpdatedAt { get; private set; }
-    
+
     public Guid CreatedBy { get; private set; }
 
     public Guid? ModifiedBy { get; private set; }
-    
+
     public IReadOnlyList<ChannelPost> Posts { get; private set; } = [];
 
     public void Apply(JobPostCreated @event)
@@ -100,7 +97,6 @@ public sealed class JobPost
         CreatedAt = @event.CreatedAt;
         UpdatedAt = @event.CreatedAt;
         Posts = new List<ChannelPost>();
-
     }
 
     public void Apply(JobPostUpdated @event)
@@ -129,32 +125,33 @@ public sealed class JobPost
         Status = JobPostStatus.Archived;
         ApplyCommon(@event);
     }
-    
+
     public void Apply(JobPostClosed @event)
     {
         Status = JobPostStatus.Closed;
         ApplyCommon(@event);
     }
-    
+
     public void Apply(JobPostedToChannel @event)
     {
-        if(JobPostStatusChangePolicy.IsFinal(Status))
+        if (JobPostStatusChangePolicy.IsFinal(Status))
             throw new InvalidOperationException(
-                "Job post in final status. Change status to published before posting to channel."); 
-        
+                "Job post in final status. Change status to published before posting to channel."
+            );
+
         var posts = Posts.Append(new ChannelPost(@event.ChannelType, @event.OccurredAt));
         Posts = [.. posts];
-        
+
         ApplyCommon(@event);
     }
-    
+
     public void Apply(JobPostStatusChanged @event)
     {
         Status = @event.NewStatus;
 
         ApplyCommon(@event);
     }
-    
+
     public void Apply(JobPostPublished @event)
     {
         Status = JobPostStatus.Published;
@@ -166,12 +163,10 @@ public sealed class JobPost
         RecruiterId = @event.Recruiter.Id;
         ApplyCommon(@event);
     }
-    
+
     private void ApplyCommon(IJobPostEvent @event)
     {
         UpdatedAt = @event.OccurredAt;
         ModifiedBy = @event.Author.Id;
     }
-
-
 }

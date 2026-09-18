@@ -18,20 +18,20 @@ public static class CreateCompanyHandler
 {
     public const string TaxIdAlreadyExistsMessage =
         "A company with the specified tax ID already exists in this organization.";
-    
+
     public static async Task<CompanyCreated> Handle(
         CreateCompany command,
         IDocumentSession session,
         ICompanyTaxIdReservationRepository taxIdReservationRepository,
         IClock clock,
         ICompanyService service,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
-        
-        var (name, registrationNumber, webSite, countryCode, taxId ) =
-            CreateValueObjects(command);
-        
+
+        var (name, registrationNumber, webSite, countryCode, taxId) = CreateValueObjects(command);
+
         await ValidateTaxReservation(taxIdReservationRepository, ct, organizationId, taxId);
 
         await service.ValidateOrganization(organizationId.Value, ct);
@@ -41,14 +41,16 @@ public static class CreateCompanyHandler
         var companyId = CompanyId.New();
 
         // The unique constraint protects against concurrent requests.
-        await taxIdReservationRepository.ReserveAsync(
-            organizationId,
-            taxId,
-            companyId,
-            ct);
+        await taxIdReservationRepository.ReserveAsync(organizationId, taxId, companyId, ct);
 
-        var (addContact, addContactId) = CreateAndSaveContact(session, command, companyId, organizationId, clock);
-        
+        var (addContact, addContactId) = CreateAndSaveContact(
+            session,
+            command,
+            companyId,
+            organizationId,
+            clock
+        );
+
         var @event = new CompanyCreated(
             companyId.Value,
             organizationId.Value,
@@ -61,36 +63,54 @@ public static class CreateCompanyHandler
             createdBy,
             clock.UtcNow,
             addContact,
-            addContactId);
+            addContactId
+        );
 
         session.Events.StartStream<Domain.Company>(companyId.Value, @event);
 
         return @event;
     }
 
-    private static (ContactPerson?, Guid?) CreateAndSaveContact(IDocumentSession session, 
-        CreateCompany command, 
-        CompanyId id, OrganizationId organizationId, IClock clock)
+    private static (ContactPerson?, Guid?) CreateAndSaveContact(
+        IDocumentSession session,
+        CreateCompany command,
+        CompanyId id,
+        OrganizationId organizationId,
+        IClock clock
+    )
     {
-        if (command.Contact == null) return (null, null);
+        if (command.Contact == null)
+            return (null, null);
         var data = ContactDataFactory.Create(
-            new CreateCompanyContact(organizationId.Value, id.Value, command.Contact, command.CreatedBy));
+            new CreateCompanyContact(
+                organizationId.Value,
+                id.Value,
+                command.Contact,
+                command.CreatedBy
+            )
+        );
 
         var contactId = Guid.NewGuid();
         var contact = new CompanyContact(
             contactId,
             command.OrganizationId,
             id.Value,
-            data, command!.Name, clock.UtcNow);
-        
+            data,
+            command!.Name,
+            clock.UtcNow
+        );
+
         session.Insert(contact);
 
         return (data, contactId);
     }
-    
-    
-    private static async Task ValidateTaxReservation(ICompanyTaxIdReservationRepository taxIdReservationRepository,
-        CancellationToken cancellationToken, OrganizationId organizationId, TaxId taxId)
+
+    private static async Task ValidateTaxReservation(
+        ICompanyTaxIdReservationRepository taxIdReservationRepository,
+        CancellationToken cancellationToken,
+        OrganizationId organizationId,
+        TaxId taxId
+    )
     {
         if (await taxIdReservationRepository.ExitsAsync(organizationId, taxId, cancellationToken))
             throw new BusinessRuleException(TaxIdAlreadyExistsMessage);

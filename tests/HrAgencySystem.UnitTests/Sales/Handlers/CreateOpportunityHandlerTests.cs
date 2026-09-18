@@ -15,15 +15,11 @@ namespace HrAgencySystem.UnitTests.Sales.Handlers;
 
 public class CreateOpportunityHandlerTests : BaseTest
 {
-    private readonly IDocumentSession _documentSession =
-        Substitute.For<IDocumentSession>();
+    private readonly IDocumentSession _documentSession = Substitute.For<IDocumentSession>();
 
+    private readonly ISalesService _salesService = Substitute.For<ISalesService>();
 
-    private readonly ISalesService _salesService =
-        Substitute.For<ISalesService>();
-
-    private readonly IClock _clock =
-        Substitute.For<IClock>();
+    private readonly IClock _clock = Substitute.For<IClock>();
 
     private static readonly Guid OrganizationId = Guid.NewGuid();
     private static readonly Guid CompanyId = Guid.NewGuid();
@@ -31,36 +27,17 @@ public class CreateOpportunityHandlerTests : BaseTest
     private static readonly Guid OwnerId = Guid.NewGuid();
 
     private static UserSnapshot CreatedBy { get; } =
-        new(
-            CreatedById,
-            "Bob",
-            "Smith",
-            "bob-smith@hr-agency.com");
+        new(CreatedById, "Bob", "Smith", "bob-smith@hr-agency.com");
 
     private static UserSnapshot Owner { get; } =
-        new(
-            OwnerId,
-            "Alice",
-            "Wells",
-            "alice-wells@hr-agency.com");
+        new(OwnerId, "Alice", "Wells", "alice-wells@hr-agency.com");
 
-    private static CompanySnapshot Company { get; } =
-        new(
-            CompanyId,
-            "Company A",
-            "TX-100-101");
+    private static CompanySnapshot Company { get; } = new(CompanyId, "Company A", "TX-100-101");
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsSalesOpportunityCreated()
     {
-        var now = new DateTimeOffset(
-            2026,
-            8,
-            30,
-            10,
-            0,
-            0,
-            TimeSpan.Zero);
+        var now = new DateTimeOffset(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
         var expectedCloseDate = new DateTimeOffset(
             2026,
@@ -69,7 +46,8 @@ public class CreateOpportunityHandlerTests : BaseTest
             0,
             0,
             0,
-            TimeSpan.Zero).Date.ToDateOnly();
+            TimeSpan.Zero
+        ).Date.ToDateOnly();
 
         var command = CreateValidCommand(
             organizationId: OrganizationId,
@@ -77,7 +55,8 @@ public class CreateOpportunityHandlerTests : BaseTest
             createdBy: CreatedById,
             ownerId: OwnerId,
             expectedCloseDate: expectedCloseDate,
-            isHotLead: true);
+            isHotLead: true
+        );
 
         SetupOrganization();
         SetupCreatedBy();
@@ -93,84 +72,54 @@ public class CreateOpportunityHandlerTests : BaseTest
         Assert.Equal(CompanyId, result.Company.Id);
 
         Assert.True(result.IsHotLead);
-        
-        Assert.Equal(
-            "Senior .NET Developer",
-            result.Title);
 
-        Assert.Equal(
-            "Potential software development opportunity.",
-            result.Description);
+        Assert.Equal("Senior .NET Developer", result.Title);
 
-        Assert.Equal(
-            OpportunityStage.New,
-            result.Stage);
+        Assert.Equal("Potential software development opportunity.", result.Description);
 
-        Assert.Equal(
-            50000m,
-            result.ExpectedValue);
+        Assert.Equal(OpportunityStage.New, result.Stage);
 
-        Assert.Equal(
-            CurrencyCode.PLN,
-            result.Currency);
+        Assert.Equal(50000m, result.ExpectedValue);
 
-        Assert.Equal(
-            expectedCloseDate,
-            result.ExpectedCloseDate);
+        Assert.Equal(CurrencyCode.PLN, result.Currency);
 
-        Assert.Equal(
-            OwnerId,
-            result.Responsible.Id);
+        Assert.Equal(expectedCloseDate, result.ExpectedCloseDate);
 
-        Assert.Equal(
-            CreatedById,
-            result.CreatedBy.Id);
+        Assert.Equal(OwnerId, result.Responsible.Id);
 
-        Assert.Equal(
-            now,
-            result.CreatedAt);
+        Assert.Equal(CreatedById, result.CreatedBy.Id);
+
+        Assert.Equal(now, result.CreatedAt);
 
         await _salesService
             .Received(1)
-            .ValidateOrganization(
-                OrganizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                OwnerId,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(OwnerId, Arg.Any<CancellationToken>());
 
-        await _salesService
-            .Received(1)
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>());
 
-        _documentSession.Events
-            .Received(1)
+        _documentSession
+            .Events.Received(1)
             .StartStream<SalesOpportunity>(
                 result.OpportunityId,
                 Arg.Is<OpportunityCreated>(x =>
-                    x.OpportunityId == result.OpportunityId &&
-                    x.OrganizationId == result.OrganizationId &&
-                    x.Company.Id == result.Company.Id &&
-                    x.Title == result.Title &&
-                    x.Description == result.Description &&
-                    x.Stage == result.Stage &&
-                    x.ExpectedValue == result.ExpectedValue &&
-                    x.Currency == result.Currency &&
-                    x.ExpectedCloseDate == result.ExpectedCloseDate &&
-                    x.Responsible.Id == result.Responsible.Id &&
-                    x.CreatedBy.Id == result.CreatedBy.Id &&
-                    x.CreatedAt == result.CreatedAt));
+                    x.OpportunityId == result.OpportunityId
+                    && x.OrganizationId == result.OrganizationId
+                    && x.Company.Id == result.Company.Id
+                    && x.Title == result.Title
+                    && x.Description == result.Description
+                    && x.Stage == result.Stage
+                    && x.ExpectedValue == result.ExpectedValue
+                    && x.Currency == result.Currency
+                    && x.ExpectedCloseDate == result.ExpectedCloseDate
+                    && x.Responsible.Id == result.Responsible.Id
+                    && x.CreatedBy.Id == result.CreatedBy.Id
+                    && x.CreatedAt == result.CreatedAt
+                )
+            );
     }
 
     [Fact]
@@ -180,7 +129,8 @@ public class CreateOpportunityHandlerTests : BaseTest
             organizationId: OrganizationId,
             companyId: CompanyId,
             createdBy: CreatedById,
-            ownerId: null);
+            ownerId: null
+        );
 
         SetupOrganization();
         SetupCreatedBy();
@@ -188,21 +138,13 @@ public class CreateOpportunityHandlerTests : BaseTest
 
         var result = await Handle(command);
 
-        Assert.Equal(
-            CreatedById,
-            result.Responsible.Id);
+        Assert.Equal(CreatedById, result.Responsible.Id);
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
         await _salesService
             .DidNotReceive()
-            .GetUserAsync(
-                Arg.Is<Guid>(id => id != CreatedById),
-                Arg.Any<CancellationToken>());
+            .GetUserAsync(Arg.Is<Guid>(id => id != CreatedById), Arg.Any<CancellationToken>());
 
         AssertStreamCreated();
     }
@@ -214,7 +156,8 @@ public class CreateOpportunityHandlerTests : BaseTest
             organizationId: OrganizationId,
             companyId: CompanyId,
             createdBy: CreatedById,
-            ownerId: CreatedById);
+            ownerId: CreatedById
+        );
 
         SetupOrganization();
         SetupCreatedBy();
@@ -222,15 +165,9 @@ public class CreateOpportunityHandlerTests : BaseTest
 
         var result = await Handle(command);
 
-        Assert.Equal(
-            CreatedById,
-            result.Responsible.Id);
+        Assert.Equal(CreatedById, result.Responsible.Id);
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
         AssertStreamCreated();
     }
@@ -242,7 +179,8 @@ public class CreateOpportunityHandlerTests : BaseTest
             organizationId: OrganizationId,
             companyId: CompanyId,
             createdBy: CreatedById,
-            ownerId: OwnerId);
+            ownerId: OwnerId
+        );
 
         SetupOrganization();
         SetupCreatedBy();
@@ -251,29 +189,15 @@ public class CreateOpportunityHandlerTests : BaseTest
 
         var result = await Handle(command);
 
-        Assert.Equal(
-            OwnerId,
-            result.Responsible.Id);
+        Assert.Equal(OwnerId, result.Responsible.Id);
 
-        Assert.Equal(
-            "Alice",
-            result.Responsible.FirstName);
+        Assert.Equal("Alice", result.Responsible.FirstName);
 
-        Assert.Equal(
-            "Wells",
-            result.Responsible.LastName);
+        Assert.Equal("Wells", result.Responsible.LastName);
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                OwnerId,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(OwnerId, Arg.Any<CancellationToken>());
 
         AssertStreamCreated();
     }
@@ -281,8 +205,7 @@ public class CreateOpportunityHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidTitle_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            title: "");
+        var command = CreateValidCommand(title: "");
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
@@ -297,21 +220,17 @@ public class CreateOpportunityHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithEmptyDescription_CreatesOpportunity()
     {
-        var command = CreateValidCommand(
-            description: "");
+        var command = CreateValidCommand(description: "");
 
         var result = await Handle(command);
-    
+
         Assert.Empty(result.Description);
-        
     }
 
     [Fact]
     public async Task Handle_WithInvalidTitleAndEmptyDescription_ThrowsValidationException()
     {
-        var command = CreateValidCommand(
-            title: "",
-            description: "");
+        var command = CreateValidCommand(title: "", description: "");
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
@@ -328,27 +247,22 @@ public class CreateOpportunityHandlerTests : BaseTest
     public async Task Handle_WithNonExistingOrganization_ThrowsBusinessRuleException()
     {
         var exceptionToThrow = new BusinessRuleException(
-            IOrganizationChecker.OrganizationCheckMessage);
+            IOrganizationChecker.OrganizationCheckMessage
+        );
 
         _salesService
-            .ValidateOrganization(
-                OrganizationId,
-                Arg.Any<CancellationToken>())
+            .ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>())
             .Returns(Task.FromException(exceptionToThrow));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(
-            CreateValidCommand(
-                organizationId: OrganizationId)));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(CreateValidCommand(organizationId: OrganizationId))
+        );
 
-        Assert.Equal(
-            IOrganizationChecker.OrganizationCheckMessage,
-            exception.Message);
+        Assert.Equal(IOrganizationChecker.OrganizationCheckMessage, exception.Message);
 
         await _salesService
             .Received(1)
-            .ValidateOrganization(
-                OrganizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
 
         AssertNoUserLookup();
         AssertNoCompanyLookup();
@@ -358,31 +272,21 @@ public class CreateOpportunityHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithNonExistingCreatedByUser_ThrowsBusinessRuleException()
     {
-        var exceptionToThrow = new BusinessRuleException(
-            "User was not found.");
+        var exceptionToThrow = new BusinessRuleException("User was not found.");
 
         SetupOrganization();
 
         _salesService
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>())
+            .GetUserAsync(CreatedById, Arg.Any<CancellationToken>())
             .Returns(Task.FromException<UserSnapshot>(exceptionToThrow));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(
-            CreateValidCommand(
-                organizationId: OrganizationId,
-                createdBy: CreatedById)));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(CreateValidCommand(organizationId: OrganizationId, createdBy: CreatedById))
+        );
 
-        Assert.Equal(
-            exceptionToThrow.Message,
-            exception.Message);
+        Assert.Equal(exceptionToThrow.Message, exception.Message);
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
         AssertNoCompanyLookup();
         AssertNoStream();
@@ -391,39 +295,30 @@ public class CreateOpportunityHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithNonExistingOwner_ThrowsBusinessRuleException()
     {
-        var exceptionToThrow = new BusinessRuleException(
-            "User was not found.");
+        var exceptionToThrow = new BusinessRuleException("User was not found.");
 
         SetupOrganization();
         SetupCreatedBy();
 
         _salesService
-            .GetUserAsync(
-                OwnerId,
-                Arg.Any<CancellationToken>())
+            .GetUserAsync(OwnerId, Arg.Any<CancellationToken>())
             .Returns(Task.FromException<UserSnapshot>(exceptionToThrow));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(
-            CreateValidCommand(
-                organizationId: OrganizationId,
-                createdBy: CreatedById,
-                ownerId: OwnerId)));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(
+                CreateValidCommand(
+                    organizationId: OrganizationId,
+                    createdBy: CreatedById,
+                    ownerId: OwnerId
+                )
+            )
+        );
 
-        Assert.Equal(
-            exceptionToThrow.Message,
-            exception.Message);
+        Assert.Equal(exceptionToThrow.Message, exception.Message);
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                OwnerId,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(OwnerId, Arg.Any<CancellationToken>());
 
         AssertNoCompanyLookup();
         AssertNoStream();
@@ -432,32 +327,22 @@ public class CreateOpportunityHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithNonExistingCompany_ThrowsBusinessRuleException()
     {
-        var exceptionToThrow = new BusinessRuleException(
-            "Company was not found.");
+        var exceptionToThrow = new BusinessRuleException("Company was not found.");
 
         SetupOrganization();
         SetupCreatedBy();
 
         _salesService
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>())
+            .GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>())
             .Returns(Task.FromException<CompanySnapshot>(exceptionToThrow));
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(
-            CreateValidCommand(
-                organizationId: OrganizationId,
-                companyId: CompanyId)));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(CreateValidCommand(organizationId: OrganizationId, companyId: CompanyId))
+        );
 
-        Assert.Equal(
-            exceptionToThrow.Message,
-            exception.Message);
+        Assert.Equal(exceptionToThrow.Message, exception.Message);
 
-        await _salesService
-            .Received(1)
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>());
 
         AssertNoStream();
     }
@@ -469,7 +354,8 @@ public class CreateOpportunityHandlerTests : BaseTest
             organizationId: OrganizationId,
             companyId: CompanyId,
             createdBy: CreatedById,
-            ownerId: Guid.Empty);
+            ownerId: Guid.Empty
+        );
 
         SetupOrganization();
         SetupCreatedBy();
@@ -477,116 +363,81 @@ public class CreateOpportunityHandlerTests : BaseTest
 
         var result = await Handle(command);
 
-        Assert.Equal(
-            CreatedById,
-            result.Responsible.Id);
+        Assert.Equal(CreatedById, result.Responsible.Id);
 
-        await _salesService
-            .Received(1)
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>());
+        await _salesService.Received(1).GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
 
         await _salesService
             .DidNotReceive()
-            .GetUserAsync(
-                Arg.Is<Guid>(id => id == Guid.Empty),
-                Arg.Any<CancellationToken>());
+            .GetUserAsync(Arg.Is<Guid>(id => id == Guid.Empty), Arg.Any<CancellationToken>());
 
         AssertStreamCreated();
     }
 
-    private async Task<OpportunityCreated> Handle(
-        CreateOpportunity command,
-        IClock? clock = null)
+    private async Task<OpportunityCreated> Handle(CreateOpportunity command, IClock? clock = null)
     {
         return await CreateOpportunityHandler.Handle(
             command,
             _salesService,
             _documentSession,
             clock ?? _clock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
     }
 
     private void SetupOrganization()
     {
         _salesService
-            .ValidateOrganization(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
+            .ValidateOrganization(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
     }
 
     private void SetupCreatedBy()
     {
-        _salesService
-            .GetUserAsync(
-                CreatedById,
-                Arg.Any<CancellationToken>())
-            .Returns(CreatedBy);
+        _salesService.GetUserAsync(CreatedById, Arg.Any<CancellationToken>()).Returns(CreatedBy);
     }
 
     private void SetupOwner()
     {
-        _salesService
-            .GetUserAsync(
-                OwnerId,
-                Arg.Any<CancellationToken>())
-            .Returns(Owner);
+        _salesService.GetUserAsync(OwnerId, Arg.Any<CancellationToken>()).Returns(Owner);
     }
 
     private void SetupCompany()
     {
-        _salesService
-            .GetCompanyAsync(
-                CompanyId,
-                Arg.Any<CancellationToken>())
-            .Returns(Company);
+        _salesService.GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>()).Returns(Company);
     }
 
     private void AssertNoOrganizationValidation()
     {
         _salesService
             .DidNotReceive()
-            .ValidateOrganization(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoUserLookup()
     {
-        _salesService
-            .DidNotReceive()
-            .GetUserAsync(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+        _salesService.DidNotReceive().GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoCompanyLookup()
     {
         _salesService
             .DidNotReceive()
-            .GetCompanyAsync(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+            .GetCompanyAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoStream()
     {
-        _documentSession.Events
-            .DidNotReceive()
-            .StartStream<SalesOpportunity>(
-                Arg.Any<Guid>(),
-                Arg.Any<object>());
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<SalesOpportunity>(Arg.Any<Guid>(), Arg.Any<object>());
     }
 
     private void AssertStreamCreated()
     {
-        _documentSession.Events
-            .Received(1)
-            .StartStream<SalesOpportunity>(
-                Arg.Any<Guid>(),
-                Arg.Any<OpportunityCreated>());
+        _documentSession
+            .Events.Received(1)
+            .StartStream<SalesOpportunity>(Arg.Any<Guid>(), Arg.Any<OpportunityCreated>());
     }
 
     private static CreateOpportunity CreateValidCommand(
@@ -599,7 +450,8 @@ public class CreateOpportunityHandlerTests : BaseTest
         DateOnly? expectedCloseDate = null,
         Guid? ownerId = null,
         Guid? createdBy = null,
-        bool? isHotLead = null)
+        bool? isHotLead = null
+    )
     {
         return new CreateOpportunity(
             organizationId ?? OrganizationId,
@@ -609,12 +461,9 @@ public class CreateOpportunityHandlerTests : BaseTest
             expectedValue,
             isHotLead ?? false,
             currency,
-            expectedCloseDate ??
-            new DateOnly(
-                2026,
-                12,
-                31),
+            expectedCloseDate ?? new DateOnly(2026, 12, 31),
             ownerId,
-            createdBy ?? CreatedById);
+            createdBy ?? CreatedById
+        );
     }
 }

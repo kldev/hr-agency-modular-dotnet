@@ -12,11 +12,16 @@ using Wolverine;
 
 namespace HrAgencySystem.Web.Pages;
 
-public partial class Apply(IMessageBus bus, IQueryOrganizationRepository repository, IJobPostQueryRepository jobPostQueryRepository, ILogger<Apply> logger) : PageModel
+public partial class Apply(
+    IMessageBus bus,
+    IQueryOrganizationRepository repository,
+    IJobPostQueryRepository jobPostQueryRepository,
+    ILogger<Apply> logger
+) : PageModel
 {
     public JobView Job { get; private set; } = null!;
     public string Slug { get; set; } = "";
-    
+
     public async Task<IActionResult> OnGetAsync(string slug, string postslug, CancellationToken ct)
     {
         var job = await GetJobAsync(slug, postslug, ct);
@@ -29,7 +34,7 @@ public partial class Apply(IMessageBus bus, IQueryOrganizationRepository reposit
 
         return Page();
     }
-    
+
     [BindProperty]
     [Required(ErrorMessage = "First name is required.")]
     [Display(Name = "First name")]
@@ -45,14 +50,12 @@ public partial class Apply(IMessageBus bus, IQueryOrganizationRepository reposit
     [EmailAddress(ErrorMessage = "Provide a valid e-mail address.")]
     [Display(Name = "E-mail")]
     public string Email { get; set; } = string.Empty;
-    
+
     [BindProperty]
     [Display(Name = "Phone")]
     public string? Phone { get; set; } = string.Empty;
 
-    public async Task<IActionResult> OnPostAsync(string slug,
-        string postslug,
-        CancellationToken ct)
+    public async Task<IActionResult> OnPostAsync(string slug, string postslug, CancellationToken ct)
     {
         LogApplyingJobSlugWithEmail(slug, Email);
         var job = await GetJobAsync(slug, postslug, ct);
@@ -67,8 +70,15 @@ public partial class Apply(IMessageBus bus, IQueryOrganizationRepository reposit
 
         try
         {
-            var request = new ApplyToJobApplication(job.Id, Email, Phone ?? "", CandidateSource.CareerPage, FirstName, LastName);
-            
+            var request = new ApplyToJobApplication(
+                job.Id,
+                Email,
+                Phone ?? "",
+                CandidateSource.CareerPage,
+                FirstName,
+                LastName
+            );
+
             await bus.InvokeAsync<JobApplicationCreated>(request, ct);
             return Redirect($"/{slug}/success.html");
         }
@@ -78,11 +88,12 @@ public partial class Apply(IMessageBus bus, IQueryOrganizationRepository reposit
             return RedirectToPage("/Error");
         }
     }
-    
+
     private async Task<JobPostProjection?> GetJobAsync(
         string slug,
         string postslug,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var organization = await repository.GetBySlugAsync(slug, ct);
 
@@ -92,7 +103,8 @@ public partial class Apply(IMessageBus bus, IQueryOrganizationRepository reposit
         return await jobPostQueryRepository.GetJobPost(
             organization.Id,
             $"{organization.Slug}/{postslug}",
-            ct);
+            ct
+        );
     }
 
     [LoggerMessage(LogLevel.Information, "Applying job {slug} with {email}")]

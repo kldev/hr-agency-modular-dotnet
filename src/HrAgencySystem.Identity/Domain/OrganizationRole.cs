@@ -7,7 +7,7 @@ public enum OrganizationRole
     HiringManager,
     Interviewer,
     Sales,
-    System
+    System,
 }
 
 public enum OrganizationRoleApi
@@ -16,7 +16,7 @@ public enum OrganizationRoleApi
     Recruiter,
     HiringManager,
     Interviewer,
-    Sales
+    Sales,
 }
 
 public static class OrganizationRoleExtension

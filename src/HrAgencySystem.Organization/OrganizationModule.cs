@@ -14,16 +14,21 @@ namespace HrAgencySystem.Organization;
 
 public static class OrganizationModule
 {
-    public static void AddOrganizationModule(this IServiceCollection services, IConfiguration configuration)
+    public static void AddOrganizationModule(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
-        services.AddScoped<IOrganizationSlugReservationRepository, OrganizationSlugReservationRepository>();
+        services.AddScoped<
+            IOrganizationSlugReservationRepository,
+            OrganizationSlugReservationRepository
+        >();
         services.AddScoped<IOrganizationChecker, OrganizationChecker>();
         services.AddScoped<IQueryOrganizationRepository, QueryOrganizationRepository>();
         services.AddScoped<IOrganizationQueryRepository, OrganizationQueryRepository>();
     }
-    
-    public static void ConfigureMarten(
-        StoreOptions options)
+
+    public static void ConfigureMarten(StoreOptions options)
     {
         ConfigureTable(options);
         ConfigureEvents(options);
@@ -37,15 +42,20 @@ public static class OrganizationModule
 
     private static void ConfigureTable(StoreOptions options)
     {
-        options.Schema.For<OrganizationSlugReservation>().DatabaseSchemaName("organization")
+        options
+            .Schema.For<OrganizationSlugReservation>()
+            .DatabaseSchemaName("organization")
             .Index(
-                x => new
+                x => new { x.Slug },
+                idx =>
                 {
-                    x.Slug
-                },
-                idx => { idx.IsUnique = true; });
+                    idx.IsUnique = true;
+                }
+            );
 
-        options.Schema.For<OrganizationProjection>().DatabaseSchemaName("organization")
+        options
+            .Schema.For<OrganizationProjection>()
+            .DatabaseSchemaName("organization")
             .Index(z => z.Name)
             .Index(z => z.Slug)
             .Index(z => z.CreatedAt);
@@ -53,8 +63,7 @@ public static class OrganizationModule
 
     private static void ConfigureEvents(StoreOptions options)
     {
-        options.Events.AddEventType(
-            typeof(OrganizationCreated));
+        options.Events.AddEventType(typeof(OrganizationCreated));
         options.Events.AddEventType<OrganizationUpdated>();
         options.Events.AddEventType<OrganizationSlugUpdated>();
     }

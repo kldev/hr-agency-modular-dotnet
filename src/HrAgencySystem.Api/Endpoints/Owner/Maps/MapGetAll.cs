@@ -8,7 +8,8 @@ internal static class MapGetAll
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/owners", Handler)
+        group
+            .MapGet("/api/owners", Handler)
             .WithSummary("Get owners")
             .Produces<IReadOnlyList<OwnerProjection>>()
             .ProducesStandardErrors();

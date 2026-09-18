@@ -14,14 +14,15 @@ namespace HrAgencySystem.Identity.Application.Owners.Create;
 public class CreatePlatformOwnerHandler
 {
     private const string EmailAlreadyUsed = "Email already used";
-    
+
     public static async Task<PlatformOwnerCreated> Handle(
         CreatePlatformOwner command,
         IDocumentSession session,
         IClock clock,
         IPasswordHasher hasher,
         IOwnerEmailReservationRepository repository,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var email = GetEmail(command);
 
@@ -30,19 +31,20 @@ public class CreatePlatformOwnerHandler
         await ValidateEmailReservation(repository, ct, email);
 
         var ownerId = PlatformOwnerId.New();
-        
+
         var passwordHash = hasher.Hash(command.Password);
         await repository.ReserveAsync(email!, passwordHash, ownerId);
-        
+
         var @event = new PlatformOwnerCreated(
             ownerId.Value,
             email.Value,
             PlatformRole.Owner,
             passwordHash,
-            clock.UtcNow);
-        
+            clock.UtcNow
+        );
+
         session.Events.StartStream<PlatformOwner>(ownerId.Value, @event);
-        
+
         return @event;
     }
 
@@ -52,8 +54,11 @@ public class CreatePlatformOwnerHandler
         return error != null ? throw new ValidationException(error) : email!;
     }
 
-    private static async Task ValidateEmailReservation(IOwnerEmailReservationRepository repository, CancellationToken ct,
-        Email? email)
+    private static async Task ValidateEmailReservation(
+        IOwnerEmailReservationRepository repository,
+        CancellationToken ct,
+        Email? email
+    )
     {
         if (await repository.ExistAsync(email!, ct))
         {

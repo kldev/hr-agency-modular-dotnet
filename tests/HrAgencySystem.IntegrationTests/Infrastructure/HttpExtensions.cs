@@ -9,21 +9,26 @@ public static class HttpExtensions
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() }
+        Converters = { new JsonStringEnumConverter() },
     };
 
     public static async Task<T?> ReadWithJson<T>(
         this HttpResponseMessage response,
-        ITestOutputHelper? output = null)
+        ITestOutputHelper? output = null
+    )
     {
         var content = await response.Content.ReadAsStringAsync();
 
         if (output == null)
-            return string.IsNullOrWhiteSpace(content) ? default : JsonSerializer.Deserialize<T>(content, JsonOptions);
-        
+            return string.IsNullOrWhiteSpace(content)
+                ? default
+                : JsonSerializer.Deserialize<T>(content, JsonOptions);
+
         output.WriteLine($"Status: {response.StatusCode}");
         output.WriteLine($"Content: {content}");
 
-        return string.IsNullOrWhiteSpace(content) ? default : JsonSerializer.Deserialize<T>(content, JsonOptions);
+        return string.IsNullOrWhiteSpace(content)
+            ? default
+            : JsonSerializer.Deserialize<T>(content, JsonOptions);
     }
 }

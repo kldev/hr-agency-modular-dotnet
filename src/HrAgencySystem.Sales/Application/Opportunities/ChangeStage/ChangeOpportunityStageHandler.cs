@@ -9,7 +9,7 @@ using Wolverine.Marten;
 
 namespace HrAgencySystem.Sales.Application.Opportunities.ChangeStage;
 
-public  static class ChangeOpportunityStageHandler
+public static class ChangeOpportunityStageHandler
 {
     public const string SameStageError = "Opportunity is already at this stage";
 
@@ -19,9 +19,9 @@ public  static class ChangeOpportunityStageHandler
         SalesOpportunity aggregate,
         ISalesService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-                
         ArgumentNullException.ThrowIfNull(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
@@ -30,7 +30,8 @@ public  static class ChangeOpportunityStageHandler
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var lostReason = GetLostReason(command);
-        var @event = new StageChanged(aggregate.Id.Value,
+        var @event = new StageChanged(
+            aggregate.Id.Value,
             aggregate.OrganizationId.Value,
             aggregate.Stage,
             command.Stage,
@@ -46,8 +47,9 @@ public  static class ChangeOpportunityStageHandler
 
     private static string GetLostReason(ChangeOpportunityStage command)
     {
-        if (command.Stage != OpportunityStage.Lost) return "";
-        
+        if (command.Stage != OpportunityStage.Lost)
+            return "";
+
         var (lostReason, error) = ShortNote.TryCreate(command.LostReason);
         return error != null ? throw new ValidationException(error) : lostReason!.Value;
     }

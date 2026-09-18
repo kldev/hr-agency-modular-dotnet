@@ -11,7 +11,8 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/sales/follow-up/{followUpActionId}
-        group.MapPut("{followUpActionId:guid}", Handler)
+        group
+            .MapPut("{followUpActionId:guid}", Handler)
             .WithSummary("Update follow up action")
             .WithName("Update follow up action")
             .Produces<FollowUpActionUpdated>()
@@ -23,24 +24,26 @@ internal static class MapUpdate
         AppUserAuthenticated user,
         Guid followUpActionId,
         UpdateFollowUpActionRequest request,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var result = await bus.InvokeAsync<FollowUpActionUpdated>(
-            request.ToCommand(user.OrganizationId, followUpActionId, user.UserId), ct);
+            request.ToCommand(user.OrganizationId, followUpActionId, user.UserId),
+            ct
+        );
 
         return TypedResults.Ok(result);
     }
 
     internal sealed record UpdateFollowUpActionRequest(
         string Content,
-        DateTimeOffset FollowDateTime)
+        DateTimeOffset FollowDateTime
+    )
     {
-        public UpdateFollowUpAction ToCommand(Guid organizationId, Guid followUpActionId, Guid modifiedBy)
-            => new(
-                followUpActionId,
-                organizationId,
-                Content,
-                FollowDateTime,
-                modifiedBy);
+        public UpdateFollowUpAction ToCommand(
+            Guid organizationId,
+            Guid followUpActionId,
+            Guid modifiedBy
+        ) => new(followUpActionId, organizationId, Content, FollowDateTime, modifiedBy);
     }
 }

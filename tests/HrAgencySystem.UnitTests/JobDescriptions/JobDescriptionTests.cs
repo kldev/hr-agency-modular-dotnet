@@ -10,13 +10,14 @@ namespace HrAgencySystem.UnitTests.JobDescriptions;
 
 public class JobDescriptionTests
 {
-    private static UserSnapshot User { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
-    private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Other", "Other", "other@test.io");
+    private static UserSnapshot User { get; } = new(Guid.NewGuid(), "Test", "User", "test@test.io");
+    private UserSnapshot ModifiedBy { get; } =
+        new(Guid.NewGuid(), "Other", "Other", "other@test.io");
     private static UserSnapshot Recruiter { get; } =
-        new (Guid.NewGuid(), "Alice", "Wells", "alice-wells@hr-agency.com");
-    
-    private static CompanySnapshot Company { get; } = new (Guid.NewGuid(), "Company A", "TX100");
-    
+        new(Guid.NewGuid(), "Alice", "Wells", "alice-wells@hr-agency.com");
+
+    private static CompanySnapshot Company { get; } = new(Guid.NewGuid(), "Company A", "TX100");
+
     [Fact]
     public void Empty_ReturnsEmptyJobDescription()
     {
@@ -39,14 +40,10 @@ public class JobDescriptionTests
         var jobDescriptionId = Guid.NewGuid();
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
-        var recruiter = Recruiter; 
-        var occurredAt = new DateTimeOffset(
-            2026, 9, 1, 10, 0, 0, TimeSpan.Zero);
+        var recruiter = Recruiter;
+        var occurredAt = new DateTimeOffset(2026, 9, 1, 10, 0, 0, TimeSpan.Zero);
 
-        var salaryRange = SalaryRange.Create(
-            15000m,
-            22000m,
-            CurrencyCode.PLN);
+        var salaryRange = SalaryRange.Create(15000m, 22000m, CurrencyCode.PLN);
 
         var @event = new JobDescriptionCreated(
             jobDescriptionId,
@@ -55,18 +52,9 @@ public class JobDescriptionTests
             "Senior .NET Developer",
             "Senior developer position",
             "We are looking for an experienced .NET developer.",
-            [
-                "Design and develop backend services.",
-                "Review code."
-            ],
-            [
-                "5+ years of .NET experience.",
-                "Experience with PostgreSQL."
-            ],
-            [
-                "C#",
-                "ASP.NET Core"
-            ],
+            ["Design and develop backend services.", "Review code."],
+            ["5+ years of .NET experience.", "Experience with PostgreSQL."],
+            ["C#", "ASP.NET Core"],
             "Opole",
             "PL",
             EmploymentType.FullTime,
@@ -77,96 +65,57 @@ public class JobDescriptionTests
             recruiter,
             User,
             Company,
-            occurredAt);
+            occurredAt
+        );
 
         var jobDescription = D.JobDescription.Empty();
 
         jobDescription.Apply(@event);
 
-        Assert.Equal(
-            JobDescriptionId.From(jobDescriptionId),
-            jobDescription.Id);
+        Assert.Equal(JobDescriptionId.From(jobDescriptionId), jobDescription.Id);
+
+        Assert.Equal(OrganizationId.From(organizationId), jobDescription.OrganizationId);
+
+        Assert.Equal(CompanyId.From(companyId), jobDescription.CompanyId);
+
+        Assert.Equal(JobTitle.Create("Senior .NET Developer"), jobDescription.Title);
+
+        Assert.Equal(LongText.Create("Senior developer position"), jobDescription.Summary);
 
         Assert.Equal(
-            OrganizationId.From(organizationId),
-            jobDescription.OrganizationId);
+            LongText.Create("We are looking for an experienced .NET developer."),
+            jobDescription.Description
+        );
 
         Assert.Equal(
-            CompanyId.From(companyId),
-            jobDescription.CompanyId);
+            EntryText.Create(["Design and develop backend services.", "Review code."]),
+            jobDescription.Responsibilities
+        );
 
         Assert.Equal(
-            JobTitle.Create("Senior .NET Developer"),
-            jobDescription.Title);
+            EntryText.Create(["5+ years of .NET experience.", "Experience with PostgreSQL."]),
+            jobDescription.Requirements
+        );
 
-        Assert.Equal(
-            LongText.Create("Senior developer position"),
-            jobDescription.Summary);
+        Assert.Equal(EntryText.Create(["C#", "ASP.NET Core"]), jobDescription.Skills);
 
-        Assert.Equal(
-            LongText.Create(
-                "We are looking for an experienced .NET developer."),
-            jobDescription.Description);
+        Assert.Equal(JobLocation.Create("Opole"), jobDescription.Location);
 
-        Assert.Equal(
-            EntryText.Create(
-            [
-                "Design and develop backend services.",
-                "Review code."
-            ]),
-            jobDescription.Responsibilities);
+        Assert.Equal(CountryCode.Create("PL"), jobDescription.CountryCode);
 
-        Assert.Equal(
-            EntryText.Create(
-            [
-                "5+ years of .NET experience.",
-                "Experience with PostgreSQL."
-            ]),
-            jobDescription.Requirements);
+        Assert.Equal(EmploymentType.FullTime, jobDescription.EmploymentType);
 
-        Assert.Equal(
-            EntryText.Create(
-            [
-                "C#",
-                "ASP.NET Core"
-            ]),
-            jobDescription.Skills);
+        Assert.Equal(WorkMode.Hybrid, jobDescription.WorkMode);
 
-        Assert.Equal(
-            JobLocation.Create("Opole"),
-            jobDescription.Location);
+        Assert.Equal(salaryRange, jobDescription.SalaryRange);
 
-        Assert.Equal(
-            CountryCode.Create("PL"),
-            jobDescription.CountryCode);
+        Assert.Equal(JobDescriptionStatus.Draft, jobDescription.Status);
 
-        Assert.Equal(
-            EmploymentType.FullTime,
-            jobDescription.EmploymentType);
+        Assert.Equal(recruiter.Id, jobDescription.RecruiterId);
 
-        Assert.Equal(
-            WorkMode.Hybrid,
-            jobDescription.WorkMode);
+        Assert.Equal(occurredAt, jobDescription.CreatedAt);
 
-        Assert.Equal(
-            salaryRange,
-            jobDescription.SalaryRange);
-
-        Assert.Equal(
-            JobDescriptionStatus.Draft,
-            jobDescription.Status);
-
-        Assert.Equal(
-            recruiter.Id,
-            jobDescription.RecruiterId);
-
-        Assert.Equal(
-            occurredAt,
-            jobDescription.CreatedAt);
-
-        Assert.Equal(
-            occurredAt,
-            jobDescription.UpdatedAt);
+        Assert.Equal(occurredAt, jobDescription.UpdatedAt);
     }
 
     [Fact]
@@ -174,29 +123,17 @@ public class JobDescriptionTests
     {
         var jobDescription = CreateJobDescription();
 
-        var updatedAt = new DateTimeOffset(
-            2026, 9, 2, 12, 30, 0, TimeSpan.Zero);
+        var updatedAt = new DateTimeOffset(2026, 9, 2, 12, 30, 0, TimeSpan.Zero);
 
-        var salaryRange = SalaryRange.Create(
-            18000m,
-            25000m,
-            CurrencyCode.EUR);
+        var salaryRange = SalaryRange.Create(18000m, 25000m, CurrencyCode.EUR);
 
         var @event = new JobDescriptionUpdated(
             "Lead .NET Developer",
             "Lead developer position",
             "Updated job description.",
-            [
-                "Lead backend development."
-            ],
-            [
-                "7+ years of .NET experience."
-            ],
-            [
-                "C#",
-                "ASP.NET Core",
-                "PostgreSQL"
-            ],
+            ["Lead backend development."],
+            ["7+ years of .NET experience."],
+            ["C#", "ASP.NET Core", "PostgreSQL"],
             "Berlin",
             "DE",
             EmploymentType.Contract,
@@ -205,7 +142,8 @@ public class JobDescriptionTests
             salaryRange.Min,
             salaryRange.Max,
             User,
-            updatedAt);
+            updatedAt
+        );
 
         var originalId = jobDescription.Id;
         var originalOrganizationId = jobDescription.OrganizationId;
@@ -216,84 +154,45 @@ public class JobDescriptionTests
         jobDescription.Apply(@event);
 
         Assert.Equal(originalId, jobDescription.Id);
-        Assert.Equal(
-            originalOrganizationId,
-            jobDescription.OrganizationId);
+        Assert.Equal(originalOrganizationId, jobDescription.OrganizationId);
+
+        Assert.Equal(originalCompanyId, jobDescription.CompanyId);
+
+        Assert.Equal(originalRecruiterId, jobDescription.RecruiterId);
+
+        Assert.Equal(originalCreatedAt, jobDescription.CreatedAt);
+
+        Assert.Equal(JobTitle.Create("Lead .NET Developer"), jobDescription.Title);
+
+        Assert.Equal(LongText.Create("Lead developer position"), jobDescription.Summary);
+
+        Assert.Equal(LongText.Create("Updated job description."), jobDescription.Description);
 
         Assert.Equal(
-            originalCompanyId,
-            jobDescription.CompanyId);
+            EntryText.Create(["Lead backend development."]),
+            jobDescription.Responsibilities
+        );
 
         Assert.Equal(
-            originalRecruiterId,
-            jobDescription.RecruiterId);
+            EntryText.Create(["7+ years of .NET experience."]),
+            jobDescription.Requirements
+        );
 
-        Assert.Equal(
-            originalCreatedAt,
-            jobDescription.CreatedAt);
+        Assert.Equal(EntryText.Create(["C#", "ASP.NET Core", "PostgreSQL"]), jobDescription.Skills);
 
-        Assert.Equal(
-            JobTitle.Create("Lead .NET Developer"),
-            jobDescription.Title);
+        Assert.Equal(JobLocation.Create("Berlin"), jobDescription.Location);
 
-        Assert.Equal(
-            LongText.Create("Lead developer position"),
-            jobDescription.Summary);
+        Assert.Equal(CountryCode.Create("DE"), jobDescription.CountryCode);
 
-        Assert.Equal(
-            LongText.Create("Updated job description."),
-            jobDescription.Description);
+        Assert.Equal(EmploymentType.Contract, jobDescription.EmploymentType);
 
-        Assert.Equal(
-            EntryText.Create(
-            [
-                "Lead backend development."
-            ]),
-            jobDescription.Responsibilities);
+        Assert.Equal(WorkMode.Remote, jobDescription.WorkMode);
 
-        Assert.Equal(
-            EntryText.Create(
-            [
-                "7+ years of .NET experience."
-            ]),
-            jobDescription.Requirements);
+        Assert.Equal(salaryRange, jobDescription.SalaryRange);
 
-        Assert.Equal(
-            EntryText.Create(
-            [
-                "C#",
-                "ASP.NET Core",
-                "PostgreSQL"
-            ]),
-            jobDescription.Skills);
+        Assert.Equal(updatedAt, jobDescription.UpdatedAt);
 
-        Assert.Equal(
-            JobLocation.Create("Berlin"),
-            jobDescription.Location);
-
-        Assert.Equal(
-            CountryCode.Create("DE"),
-            jobDescription.CountryCode);
-
-        Assert.Equal(
-            EmploymentType.Contract,
-            jobDescription.EmploymentType);
-
-        Assert.Equal(
-            WorkMode.Remote,
-            jobDescription.WorkMode);
-
-        Assert.Equal(
-            salaryRange,
-            jobDescription.SalaryRange);
-
-        Assert.Equal(
-            updatedAt,
-            jobDescription.UpdatedAt);
-
-        Assert.Equal(
-            JobDescriptionStatus.Draft,
-            jobDescription.Status);
+        Assert.Equal(JobDescriptionStatus.Draft, jobDescription.Status);
     }
 
     [Fact]
@@ -301,21 +200,15 @@ public class JobDescriptionTests
     {
         var jobDescription = CreateJobDescription();
 
-        var occurredAt = new DateTimeOffset(
-            2026, 9, 2, 10, 0, 0, TimeSpan.Zero);
+        var occurredAt = new DateTimeOffset(2026, 9, 2, 10, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy,
-            occurredAt);
+        var @event = new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy, occurredAt);
 
         jobDescription.Apply(@event);
 
-        Assert.Equal(
-            JobDescriptionStatus.Open,
-            jobDescription.Status);
+        Assert.Equal(JobDescriptionStatus.Open, jobDescription.Status);
 
-        Assert.Equal(
-            occurredAt,
-            jobDescription.UpdatedAt);
+        Assert.Equal(occurredAt, jobDescription.UpdatedAt);
 
         Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
@@ -325,22 +218,16 @@ public class JobDescriptionTests
     {
         var jobDescription = CreateJobDescription();
 
-        var occurredAt = new DateTimeOffset(
-            2026, 9, 2, 11, 0, 0, TimeSpan.Zero);
+        var occurredAt = new DateTimeOffset(2026, 9, 2, 11, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionPutOnHold(jobDescription.Id.Value, ModifiedBy,
-            occurredAt);
+        var @event = new JobDescriptionPutOnHold(jobDescription.Id.Value, ModifiedBy, occurredAt);
 
         jobDescription.Apply(@event);
 
-        Assert.Equal(
-            JobDescriptionStatus.OnHold,
-            jobDescription.Status);
+        Assert.Equal(JobDescriptionStatus.OnHold, jobDescription.Status);
 
-        Assert.Equal(
-            occurredAt,
-            jobDescription.UpdatedAt);
-        
+        Assert.Equal(occurredAt, jobDescription.UpdatedAt);
+
         Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
@@ -349,22 +236,16 @@ public class JobDescriptionTests
     {
         var jobDescription = CreateJobDescription();
 
-        var occurredAt = new DateTimeOffset(
-            2026, 9, 2, 12, 0, 0, TimeSpan.Zero);
+        var occurredAt = new DateTimeOffset(2026, 9, 2, 12, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionClosed(jobDescription.Id.Value, ModifiedBy,
-            occurredAt);
+        var @event = new JobDescriptionClosed(jobDescription.Id.Value, ModifiedBy, occurredAt);
 
         jobDescription.Apply(@event);
 
-        Assert.Equal(
-            JobDescriptionStatus.Closed,
-            jobDescription.Status);
+        Assert.Equal(JobDescriptionStatus.Closed, jobDescription.Status);
 
-        Assert.Equal(
-            occurredAt,
-            jobDescription.UpdatedAt);
-        
+        Assert.Equal(occurredAt, jobDescription.UpdatedAt);
+
         Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
@@ -373,22 +254,16 @@ public class JobDescriptionTests
     {
         var jobDescription = CreateJobDescription();
 
-        var occurredAt = new DateTimeOffset(
-            2026, 9, 2, 13, 0, 0, TimeSpan.Zero);
+        var occurredAt = new DateTimeOffset(2026, 9, 2, 13, 0, 0, TimeSpan.Zero);
 
-        var @event = new JobDescriptionCancelled(jobDescription.Id.Value, ModifiedBy,
-            occurredAt);
+        var @event = new JobDescriptionCancelled(jobDescription.Id.Value, ModifiedBy, occurredAt);
 
         jobDescription.Apply(@event);
 
-        Assert.Equal(
-            JobDescriptionStatus.Cancelled,
-            jobDescription.Status);
+        Assert.Equal(JobDescriptionStatus.Cancelled, jobDescription.Status);
 
-        Assert.Equal(
-            occurredAt,
-            jobDescription.UpdatedAt);
-        
+        Assert.Equal(occurredAt, jobDescription.UpdatedAt);
+
         Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
@@ -401,19 +276,14 @@ public class JobDescriptionTests
 
         var occurredAt = createdAt.AddHours(2);
 
-        var @event = new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy,
-            occurredAt);
+        var @event = new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy, occurredAt);
 
         jobDescription.Apply(@event);
 
-        Assert.Equal(
-            createdAt,
-            jobDescription.CreatedAt);
+        Assert.Equal(createdAt, jobDescription.CreatedAt);
 
-        Assert.Equal(
-            occurredAt,
-            jobDescription.UpdatedAt);
-        
+        Assert.Equal(occurredAt, jobDescription.UpdatedAt);
+
         Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
@@ -425,14 +295,11 @@ public class JobDescriptionTests
         var openedAt = jobDescription.CreatedAt.AddHours(1);
 
         jobDescription.Apply(
-            new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy,
-                openedAt));
+            new JobDescriptionOpened(jobDescription.Id.Value, ModifiedBy, openedAt)
+        );
 
         var updatedAt = openedAt.AddHours(1);
-        var salaryRange = SalaryRange.Create(
-            10000m,
-            15000m,
-            CurrencyCode.PLN);
+        var salaryRange = SalaryRange.Create(10000m, 15000m, CurrencyCode.PLN);
 
         var @event = new JobDescriptionUpdated(
             "Updated title",
@@ -449,31 +316,23 @@ public class JobDescriptionTests
             salaryRange.Min,
             salaryRange.Max,
             ModifiedBy,
-            updatedAt);
+            updatedAt
+        );
 
         jobDescription.Apply(@event);
 
-        Assert.Equal(
-            JobDescriptionStatus.Open,
-            jobDescription.Status);
+        Assert.Equal(JobDescriptionStatus.Open, jobDescription.Status);
 
-        Assert.Equal(
-            updatedAt,
-            jobDescription.UpdatedAt);
-        
+        Assert.Equal(updatedAt, jobDescription.UpdatedAt);
+
         Assert.Equal(ModifiedBy.Id, jobDescription.ModifiedBy);
     }
 
-
-    
     private static D.JobDescription CreateJobDescription()
     {
         var recruiter = Recruiter;
-        var salaryRange = SalaryRange.Create(
-            15000m,
-            22000m,
-            CurrencyCode.PLN);
-        
+        var salaryRange = SalaryRange.Create(15000m, 22000m, CurrencyCode.PLN);
+
         var @event = new JobDescriptionCreated(
             Guid.NewGuid(),
             Guid.NewGuid(),
@@ -481,30 +340,21 @@ public class JobDescriptionTests
             "Senior .NET Developer",
             "Senior developer position",
             "We are looking for an experienced .NET developer.",
-            [
-                "Design and develop backend services.",
-                "Review code."
-            ],
-            [
-                "5+ years of .NET experience."
-            ],
-            [
-                "C#",
-                "ASP.NET Core"
-            ],
+            ["Design and develop backend services.", "Review code."],
+            ["5+ years of .NET experience."],
+            ["C#", "ASP.NET Core"],
             "Opole",
             "PL",
             EmploymentType.FullTime,
             WorkMode.Hybrid,
-            
             salaryRange.Currency,
             salaryRange.Min,
             salaryRange.Max,
             recruiter,
             User,
             Company,
-            new DateTimeOffset(
-                2026, 9, 1, 10, 0, 0, TimeSpan.Zero));
+            new DateTimeOffset(2026, 9, 1, 10, 0, 0, TimeSpan.Zero)
+        );
 
         var jobDescription = D.JobDescription.Empty();
 

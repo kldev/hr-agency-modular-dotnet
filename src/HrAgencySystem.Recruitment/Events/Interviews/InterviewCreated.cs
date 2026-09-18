@@ -22,4 +22,5 @@ public sealed record InterviewCreated(
     string? JobPostTitle,
     string? Location,
     string? MeetingUrl,
-    Guid? JobPostId) : IInterviewEvent;
+    Guid? JobPostId
+) : IInterviewEvent;

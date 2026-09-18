@@ -8,7 +8,7 @@ public static class GuidExtensions
         {
             return guid != null && guid != Guid.Empty;
         }
-        
+
         public bool IsInvalid()
         {
             return guid == null || guid == Guid.Empty;

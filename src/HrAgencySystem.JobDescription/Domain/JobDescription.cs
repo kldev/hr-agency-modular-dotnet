@@ -7,9 +7,7 @@ namespace HrAgencySystem.JobDescription.Domain;
 
 public sealed class JobDescription
 {
-    private JobDescription()
-    {
-    }
+    private JobDescription() { }
 
     public JobDescriptionId Id { get; private set; }
 
@@ -46,11 +44,11 @@ public sealed class JobDescription
     public DateTimeOffset CreatedAt { get; private set; }
 
     public DateTimeOffset UpdatedAt { get; private set; }
-    
+
     public Guid CreatedBy { get; set; }
 
     public Guid? ModifiedBy { get; set; } = null;
-    
+
     public static JobDescription Empty()
     {
         return new JobDescription();

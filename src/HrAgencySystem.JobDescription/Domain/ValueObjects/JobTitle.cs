@@ -7,8 +7,7 @@ public sealed record JobTitle
     public const int MaxLength = 250;
 
     public const string RequiredMessage = "Job title is required.";
-    public const string MaxLengthMessage =
-        "Job title cannot exceed 250 characters.";
+    public const string MaxLengthMessage = "Job title cannot exceed 250 characters.";
 
     private JobTitle(string value)
     {
@@ -21,13 +20,10 @@ public sealed record JobTitle
     {
         var (title, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : title!;
+        return error is not null ? throw new InValidValueException(error) : title!;
     }
 
-    public static (JobTitle? title, string? error) TryCreate(
-        string value)
+    public static (JobTitle? title, string? error) TryCreate(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (null, RequiredMessage);

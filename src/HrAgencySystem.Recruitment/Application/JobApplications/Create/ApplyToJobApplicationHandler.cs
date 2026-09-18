@@ -18,41 +18,48 @@ namespace HrAgencySystem.Recruitment.Application.JobApplications.Create;
 
 public static class ApplyToJobApplicationHandler
 {
-    public static async Task<JobApplicationCreated> Handle(ApplyToJobApplication command,
+    public static async Task<JobApplicationCreated> Handle(
+        ApplyToJobApplication command,
         ICandidateResolver resolver,
         IJobPostQueryRepository queryRepository,
         IRecruitmentService service,
         IDocumentSession session,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var (email, firstName, lastName, phoneNumber) = GetValueObjects(command);
         var post = await queryRepository.GetJobPostInfo(command.JobPostId, ct);
 
         if (post.Status != JobPostStatus.Published)
-            throw new BusinessRuleException("Applications are only allowed for published job posts.");
-        
-        var candidateCommand =
-            new CreateCandidate(post.OrganizationId,
-                command.Email,
-                command.Source,
-                command.Phone, 
-                command.FirstName ?? "", 
-                command.LastName ?? "", 
-                null, 
-                post.CompanyId);
+            throw new BusinessRuleException(
+                "Applications are only allowed for published job posts."
+            );
+
+        var candidateCommand = new CreateCandidate(
+            post.OrganizationId,
+            command.Email,
+            command.Source,
+            command.Phone,
+            command.FirstName ?? "",
+            command.LastName ?? "",
+            null,
+            post.CompanyId
+        );
         var candidate = await resolver.FindOrCreate(candidateCommand, post, ct);
 
         var company = await service.GetCompanyAsync(post.CompanyId, ct);
-        UserSnapshot? user = command.CreatedBy.IsInvalid() ? null : await service.GetUserAsync(command.CreatedBy!.Value, ct);
-        
+        UserSnapshot? user = command.CreatedBy.IsInvalid()
+            ? null
+            : await service.GetUserAsync(command.CreatedBy!.Value, ct);
+
         var jobApplicationId = JobApplicationId.New();
         var @event = new JobApplicationCreated(
             jobApplicationId.Value,
-            post.OrganizationId, 
-            post.Id, 
+            post.OrganizationId,
+            post.Id,
             post.JobTitle,
-            command.Source, 
+            command.Source,
             company,
             candidate,
             email.Value,
@@ -60,15 +67,20 @@ public static class ApplyToJobApplicationHandler
             firstName.Value,
             lastName.Value,
             clock.UtcNow,
-            user);
+            user
+        );
 
         session.Events.StartStream<JobApplication>(jobApplicationId.Value, @event);
 
         return @event;
     }
-    
-    private static (Email email, FirstName firstName, LastName lastName, CandidatePhoneNumber phoneNumber)
-        GetValueObjects(ApplyToJobApplication command)
+
+    private static (
+        Email email,
+        FirstName firstName,
+        LastName lastName,
+        CandidatePhoneNumber phoneNumber
+    ) GetValueObjects(ApplyToJobApplication command)
     {
         var (email, emailError) = Email.TryCreate(command.Email);
         var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName ?? "", false);
@@ -76,11 +88,17 @@ public static class ApplyToJobApplicationHandler
         var (phoneNumber, phoneNumberError) = CandidatePhoneNumber.TryCreate(command.Phone);
 
         var errors = new List<string>();
-        if (emailError != null) errors.Add(emailError);
-        if (phoneNumberError != null) errors.Add(phoneNumberError);
-        if (firstNameError != null) errors.Add(firstNameError);
-        if (lastNameError != null) errors.Add(lastNameError);
+        if (emailError != null)
+            errors.Add(emailError);
+        if (phoneNumberError != null)
+            errors.Add(phoneNumberError);
+        if (firstNameError != null)
+            errors.Add(firstNameError);
+        if (lastNameError != null)
+            errors.Add(lastNameError);
 
-        return errors.Count > 0 ? throw new ValidationException(errors) : (email!, firstName!, lastName!, phoneNumber!);
+        return errors.Count > 0
+            ? throw new ValidationException(errors)
+            : (email!, firstName!, lastName!, phoneNumber!);
     }
 }

@@ -9,8 +9,8 @@ public sealed record ApplyToJobApplication(
     CandidateSource Source,
     string? FirstName = null,
     string? LastName = null,
-    Guid? CreatedBy = null)
+    Guid? CreatedBy = null
+)
 {
-    public string ToFullName()
-        => $"{FirstName} {LastName}".Trim();
+    public string ToFullName() => $"{FirstName} {LastName}".Trim();
 }

@@ -12,8 +12,10 @@ internal static class OpportunityDataFactory
         var (description, descriptionError) = LongText.TryCreate(command.Description);
 
         var errors = new List<string>();
-        if (titleError != null) errors.Add(titleError);
-        if (descriptionError != null) errors.Add(descriptionError);
+        if (titleError != null)
+            errors.Add(titleError);
+        if (descriptionError != null)
+            errors.Add(descriptionError);
         switch (command.ExpectedValue)
         {
             case <= 0:

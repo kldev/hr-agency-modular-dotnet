@@ -6,5 +6,5 @@ public enum JobDescriptionStatus
     Open,
     OnHold,
     Closed,
-    Cancelled
+    Cancelled,
 }

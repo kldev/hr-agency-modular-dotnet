@@ -40,8 +40,7 @@ public sealed class OrganizationNameTests
     public void Create_WithEmptyOrWhitespaceValue_ThrowsInValidValueException(string value)
     {
         // Act
-        var exception = Assert.Throws<InValidValueException>(
-            () => OrganizationName.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => OrganizationName.Create(value));
 
         // Assert
         Assert.Contains(OrganizationName.RequiredMessage, exception.Message);
@@ -54,8 +53,7 @@ public sealed class OrganizationNameTests
         var value = new string('A', 251);
 
         // Act
-        var exception = Assert.Throws<InValidValueException>(
-            () => OrganizationName.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => OrganizationName.Create(value));
 
         // Assert
         Assert.Contains(OrganizationName.MaxLengthMessage, exception.Message);
@@ -95,8 +93,7 @@ public sealed class OrganizationNameTests
     [InlineData("   ")]
     [InlineData("\t")]
     [InlineData("\n")]
-    public void TryCreate_WithEmptyOrWhitespaceValue_ReturnsRequiredError(
-        string value)
+    public void TryCreate_WithEmptyOrWhitespaceValue_ReturnsRequiredError(string value)
     {
         // Act
         var (name, error) = OrganizationName.TryCreate(value);
@@ -186,4 +183,3 @@ public sealed class OrganizationNameTests
         Assert.NotEqual(first, second);
     }
 }
-

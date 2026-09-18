@@ -20,23 +20,40 @@ public class GetCompaniesTests(IntegrationEnvironment environment, ITestOutputHe
     private async Task SetupCompanies()
     {
         await CompanyClient.CreateAsync(OrganizationId, name: "Almec");
-        await CompanyClient.CreateAsync(OrganizationId, name: "SkyNet", countryCode:"uk", taxId: "SK-100");
-        await CompanyClient.CreateAsync(OrganizationId, name: "HR Agency", registrationNumber: "HR-200");
+        await CompanyClient.CreateAsync(
+            OrganizationId,
+            name: "SkyNet",
+            countryCode: "uk",
+            taxId: "SK-100"
+        );
+        await CompanyClient.CreateAsync(
+            OrganizationId,
+            name: "HR Agency",
+            registrationNumber: "HR-200"
+        );
 
         await CompanyClient.CreateAsync(OtherOrganizationId);
         await CompanyClient.CreateAsync(OtherOrganizationId);
-        await CompanyClient.CreateAsync(OtherOrganizationId, name: "Flex Jobs", taxId: "SK-101", registrationNumber: "HR-201");
+        await CompanyClient.CreateAsync(
+            OtherOrganizationId,
+            name: "Flex Jobs",
+            taxId: "SK-101",
+            registrationNumber: "HR-201"
+        );
     }
 
-    private async Task<IReadOnlyList<CompanySuggestion>> GetSuggestions(string search = "", string countryCode = "")
+    private async Task<IReadOnlyList<CompanySuggestion>> GetSuggestions(
+        string search = "",
+        string countryCode = ""
+    )
     {
-        var url =$"/api/suggestion/companies?search={search}&countryCode={countryCode}" ;
+        var url = $"/api/suggestion/companies?search={search}&countryCode={countryCode}";
         var response = await Client.GetAsync(url);
         var result = (await response.ReadWithJson<IReadOnlyList<CompanySuggestion>>(OutputHelper))!;
         response.EnsureSuccessStatusCode();
         return result;
     }
-    
+
     [Fact]
     public async Task ShouldGetCompaniesFromOrganization()
     {
@@ -50,11 +67,11 @@ public class GetCompaniesTests(IntegrationEnvironment environment, ITestOutputHe
             Assert.Contains(result, x => x.Name == "Almec");
             Assert.Contains(result, x => x.Name == "SkyNet");
             Assert.Contains(result, x => x.Name == "HR Agency");
-            
+
             Assert.DoesNotContain(result, x => x.Name == "Flex Jobs");
         });
     }
-    
+
     [Fact]
     public async Task ShouldGetCompaniesFilterBySearch()
     {
@@ -68,7 +85,7 @@ public class GetCompaniesTests(IntegrationEnvironment environment, ITestOutputHe
             Assert.Contains(result, x => x.Name == "Almec");
         });
     }
-    
+
     [Fact]
     public async Task ShouldGetCompaniesFilterByTax()
     {
@@ -82,7 +99,7 @@ public class GetCompaniesTests(IntegrationEnvironment environment, ITestOutputHe
             Assert.Contains(result, x => x.Name == "SkyNet");
         });
     }
-    
+
     [Fact]
     public async Task ShouldGetCompaniesFilterByCountryCode()
     {
@@ -96,7 +113,7 @@ public class GetCompaniesTests(IntegrationEnvironment environment, ITestOutputHe
             Assert.Contains(result, x => x.Name == "SkyNet");
         });
     }
-    
+
     [Fact]
     public async Task ShouldNotGetCompaniesFromOtherOrganizationWithSearchQuery()
     {

@@ -41,12 +41,13 @@ public sealed record CandidateProjection(
     DateTimeOffset? ModifiedAt,
     string Note,
     // ReSharper disable once NotAccessedPositionalProperty.Global
-    string FullName): IAudit
+    string FullName
+) : IAudit
 {
-    public static CandidateProjection Create(
-        CandidateCreated @event)
+    public static CandidateProjection Create(CandidateCreated @event)
     {
-        return new CandidateProjection(@event.CandidateId,
+        return new CandidateProjection(
+            @event.CandidateId,
             @event.OrganizationId,
             @event.Email,
             @event.Phone,
@@ -55,34 +56,34 @@ public sealed record CandidateProjection(
             @event.Source,
             CandidateStatus.Active,
             @event.CreatedAt,
-            @event.CreatedBy ?? new UserSnapshot(Guid.NewGuid(), "", "","system"),
+            @event.CreatedBy ?? new UserSnapshot(Guid.NewGuid(), "", "", "system"),
             @event.CreatedBy?.Id,
             null,
             null,
             [],
             [],
-            @event.CompanyId.HasValue ? [@event.CompanyId.Value] : [], 
+            @event.CompanyId.HasValue ? [@event.CompanyId.Value] : [],
             null,
             @event.Note,
-            $"{@event.FirstName} {@event.LastName}");
+            $"{@event.FirstName} {@event.LastName}"
+        );
     }
 
     public CandidateProjection Apply(CandidateTagged @event)
     {
-        if (TagsIds.Contains(@event.Tag.Id)) return this;
-        
-        var tags = Tags
-            .Append(@event.Tag)
-            .ToArray();
+        if (TagsIds.Contains(@event.Tag.Id))
+            return this;
+
+        var tags = Tags.Append(@event.Tag).ToArray();
         var tagIds = TagsIds.Append(@event.Tag.Id).ToArray();
-        
+
         return this with
         {
             ModifiedBy = @event.Author,
             ModifyById = @event.Author.Id,
             Tags = tags,
             TagsIds = tagIds,
-            ModifiedAt = @event.CreatedAt
+            ModifiedAt = @event.CreatedAt,
         };
     }
 
@@ -96,24 +97,23 @@ public sealed record CandidateProjection(
             ModifyById = @event.RemovedBy.Id,
             Tags = tags,
             TagsIds = tagIds,
-            ModifiedAt = @event.ModifiedAt
+            ModifiedAt = @event.ModifiedAt,
         };
     }
 
     public CandidateProjection Apply(CandidateApplicationUpdated @event)
     {
-        
-        if (CompanyIds.Contains(@event.CompanyId)) return this;
+        if (CompanyIds.Contains(@event.CompanyId))
+            return this;
         var companyIds = CompanyIds.Append(@event.CompanyId).ToArray();
 
         return this with
         {
             CompanyIds = companyIds,
-            ModifiedAt = @event.OccuredAt
-            
+            ModifiedAt = @event.OccuredAt,
         };
     }
-    
+
     public CandidateProjection Apply(CandidateUpdated @event)
     {
         return this with
@@ -124,7 +124,7 @@ public sealed record CandidateProjection(
             Note = @event.Note,
             ModifiedBy = @event.ModifiedBy,
             ModifyById = @event.ModifiedBy.Id,
-            ModifiedAt = @event.ModifiedAt
+            ModifiedAt = @event.ModifiedAt,
         };
     }
 }

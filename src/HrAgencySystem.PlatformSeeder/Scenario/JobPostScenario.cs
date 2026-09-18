@@ -9,7 +9,8 @@ internal sealed class JobPostScenario(IMessageBus bus)
     public async Task<IReadOnlyList<Guid>> Create(
         Guid jobDescriptionId,
         Guid organizationId,
-        Guid recruiterId)
+        Guid recruiterId
+    )
     {
         var createdBy = recruiterId;
 
@@ -20,7 +21,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
             CreateFrench(jobDescriptionId, organizationId, recruiterId, createdBy),
             CreateBelgian(jobDescriptionId, organizationId, recruiterId, createdBy),
             CreateGerman(jobDescriptionId, organizationId, recruiterId, createdBy),
-            CreateCzech(jobDescriptionId, organizationId, recruiterId, createdBy)
+            CreateCzech(jobDescriptionId, organizationId, recruiterId, createdBy),
         };
 
         var ids = new List<Guid>(posts.Length);
@@ -38,8 +39,9 @@ internal sealed class JobPostScenario(IMessageBus bus)
         Guid jobDescriptionId,
         Guid organizationId,
         Guid recruiterId,
-        Guid createdBy)
-        => Create(
+        Guid createdBy
+    ) =>
+        Create(
             jobDescriptionId,
             organizationId,
             recruiterId,
@@ -59,7 +61,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Pisanie testów jednostkowych i integracyjnych",
                 "Udział w przeglądach kodu",
                 "Współpraca z programistami frontendowymi",
-                "Monitorowanie i poprawa wydajności aplikacji"
+                "Monitorowanie i poprawa wydajności aplikacji",
             ],
             requirements:
             [
@@ -68,15 +70,17 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Dobra znajomość relacyjnych baz danych",
                 "Doświadczenie w tworzeniu REST API",
                 "Umiejętność pracy w zespole",
-                "Dobra znajomość języka angielskiego"
-            ]);
+                "Dobra znajomość języka angielskiego",
+            ]
+        );
 
     private static CreateJobPost CreateEnglish(
         Guid jobDescriptionId,
         Guid organizationId,
         Guid recruiterId,
-        Guid createdBy)
-        => Create(
+        Guid createdBy
+    ) =>
+        Create(
             jobDescriptionId,
             organizationId,
             recruiterId,
@@ -96,7 +100,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Write unit and integration tests",
                 "Participate in code reviews",
                 "Collaborate with frontend developers",
-                "Monitor and improve application performance"
+                "Monitor and improve application performance",
             ],
             requirements:
             [
@@ -105,15 +109,17 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Good knowledge of relational databases",
                 "Experience developing REST APIs",
                 "Ability to work effectively in a team",
-                "Good command of English"
-            ]);
+                "Good command of English",
+            ]
+        );
 
     private static CreateJobPost CreateFrench(
         Guid jobDescriptionId,
         Guid organizationId,
         Guid recruiterId,
-        Guid createdBy)
-        => Create(
+        Guid createdBy
+    ) =>
+        Create(
             jobDescriptionId,
             organizationId,
             recruiterId,
@@ -133,7 +139,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Écrire des tests unitaires et d'intégration",
                 "Participer aux revues de code",
                 "Collaborer avec les développeurs frontend",
-                "Surveiller et améliorer les performances des applications"
+                "Surveiller et améliorer les performances des applications",
             ],
             requirements:
             [
@@ -142,15 +148,17 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Bonne connaissance des bases de données relationnelles",
                 "Expérience dans le développement d'API REST",
                 "Capacité à travailler efficacement en équipe",
-                "Bonne maîtrise de l'anglais"
-            ]);
+                "Bonne maîtrise de l'anglais",
+            ]
+        );
 
     private static CreateJobPost CreateBelgian(
         Guid jobDescriptionId,
         Guid organizationId,
         Guid recruiterId,
-        Guid createdBy)
-        => Create(
+        Guid createdBy
+    ) =>
+        Create(
             jobDescriptionId,
             organizationId,
             recruiterId,
@@ -170,7 +178,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Unit- en integratietests schrijven",
                 "Deelnemen aan code reviews",
                 "Samenwerken met frontendontwikkelaars",
-                "De prestaties van applicaties monitoren en verbeteren"
+                "De prestaties van applicaties monitoren en verbeteren",
             ],
             requirements:
             [
@@ -179,15 +187,17 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Goede kennis van relationele databases",
                 "Ervaring met het ontwikkelen van REST API's",
                 "Vermogen om effectief in teamverband te werken",
-                "Goede beheersing van het Engels"
-            ]);
+                "Goede beheersing van het Engels",
+            ]
+        );
 
     private static CreateJobPost CreateGerman(
         Guid jobDescriptionId,
         Guid organizationId,
         Guid recruiterId,
-        Guid createdBy)
-        => Create(
+        Guid createdBy
+    ) =>
+        Create(
             jobDescriptionId,
             organizationId,
             recruiterId,
@@ -207,7 +217,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Unit- und Integrationstests schreiben",
                 "An Code-Reviews teilnehmen",
                 "Mit Frontend-Entwicklern zusammenarbeiten",
-                "Die Anwendungsleistung überwachen und verbessern"
+                "Die Anwendungsleistung überwachen und verbessern",
             ],
             requirements:
             [
@@ -216,15 +226,17 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Gute Kenntnisse relationaler Datenbanken",
                 "Erfahrung in der Entwicklung von REST-APIs",
                 "Fähigkeit zur effektiven Zusammenarbeit im Team",
-                "Gute Englischkenntnisse"
-            ]);
+                "Gute Englischkenntnisse",
+            ]
+        );
 
     private static CreateJobPost CreateCzech(
         Guid jobDescriptionId,
         Guid organizationId,
         Guid recruiterId,
-        Guid createdBy)
-        => Create(
+        Guid createdBy
+    ) =>
+        Create(
             jobDescriptionId,
             organizationId,
             recruiterId,
@@ -244,7 +256,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Psát unit a integrační testy",
                 "Účastnit se code review",
                 "Spolupracovat s frontendovými vývojáři",
-                "Monitorovat a zlepšovat výkon aplikací"
+                "Monitorovat a zlepšovat výkon aplikací",
             ],
             requirements:
             [
@@ -253,8 +265,9 @@ internal sealed class JobPostScenario(IMessageBus bus)
                 "Dobrá znalost relačních databází",
                 "Zkušenosti s vývojem REST API",
                 "Schopnost efektivně pracovat v týmu",
-                "Dobrá znalost angličtiny"
-            ]);
+                "Dobrá znalost angličtiny",
+            ]
+        );
 
     private static CreateJobPost Create(
         Guid jobDescriptionId,
@@ -270,8 +283,9 @@ internal sealed class JobPostScenario(IMessageBus bus)
         decimal salaryMin,
         decimal salaryMax,
         IReadOnlyList<string> responsibilities,
-        IReadOnlyList<string> requirements)
-        => new(
+        IReadOnlyList<string> requirements
+    ) =>
+        new(
             JobDescriptionId: jobDescriptionId,
             OrganizationId: organizationId,
             Title: title,
@@ -279,15 +293,7 @@ internal sealed class JobPostScenario(IMessageBus bus)
             Description: description,
             Responsibilities: responsibilities,
             Requirements: requirements,
-            Skills:
-            [
-                "Java 21",
-                "Spring Boot",
-                "PostgreSQL",
-                "REST API",
-                "Docker",
-                "Git"
-            ],
+            Skills: ["Java 21", "Spring Boot", "PostgreSQL", "REST API", "Docker", "Git"],
             Location: "Opole",
             CountryCode: countryCode,
             LanguageCode: languageCode,
@@ -297,5 +303,6 @@ internal sealed class JobPostScenario(IMessageBus bus)
             SalaryMin: salaryMin,
             SalaryMax: salaryMax,
             RecruiterId: recruiterId,
-            CreatedBy: createdBy);
+            CreatedBy: createdBy
+        );
 }

@@ -7,39 +7,40 @@ namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 [Collection(IntegrationCollection.Name)]
 public sealed class ChangeJobDescriptionStatusTests(
     IntegrationEnvironment env,
-    ITestOutputHelper outputHelper)
-    : BaseIntegrationTest(env, outputHelper)
+    ITestOutputHelper outputHelper
+) : BaseIntegrationTest(env, outputHelper)
 {
     [Fact]
     public async Task ShouldUpdateJobDescriptionStatus()
     {
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
+        Client.WithOrganizationId(Guid.NewGuid());
         Client.AsOrganizationRoles();
-        
+
         var createRequest = JobDescriptionTestData.CreateRequest();
 
         var created = await JobDescriptionClient.CreateAsync(createRequest);
 
         Assert.NotNull(created);
-        
+
         // Act
         var result = await JobDescriptionClient.ChangeStatusAsync(
             created.JobDescriptionId,
-            JobDescriptionStatus.Open);
+            JobDescriptionStatus.Open
+        );
 
         // Assert
         Assert.Equal(JobDescriptionStatus.Open, result.Status);
 
         await Task.Delay(1000);
         // Act
-        var resultClosed =  await JobDescriptionClient.ChangeStatusAsync(
+        var resultClosed = await JobDescriptionClient.ChangeStatusAsync(
             created.JobDescriptionId,
-            JobDescriptionStatus.Closed);
-        
+            JobDescriptionStatus.Closed
+        );
+
         Assert.Equal(JobDescriptionStatus.Closed, resultClosed.Status);
-        
+
         await Eventually.AssertAsync(async () =>
         {
             var projection = await JobDescriptionClient.GetSingle(created.JobDescriptionId);

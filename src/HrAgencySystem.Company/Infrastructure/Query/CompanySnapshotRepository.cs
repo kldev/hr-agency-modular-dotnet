@@ -10,13 +10,16 @@ public class CompanySnapshotRepository(IDocumentSession session) : ICompanySnaps
 {
     public async Task<CompanySnapshot?> GetCompanyAsync(Guid companyId, CancellationToken ct)
     {
-        var result = await session.Query<CompanyProjection>()
+        var result = await session
+            .Query<CompanyProjection>()
             .WithCompanyId(companyId)
             .Select(z => new CompanySnapshot(z.Id, z.Name, z.TaxId))
             .FirstOrDefaultAsync(ct);
-        if (result != null) return result;
+        if (result != null)
+            return result;
 
-        return await session.Query<CompanyCreated>()
+        return await session
+            .Query<CompanyCreated>()
             .Where(z => z.CompanyId == companyId)
             .Select(z => new CompanySnapshot(z.CompanyId, z.Name, z.TaxId))
             .FirstOrDefaultAsync(ct);

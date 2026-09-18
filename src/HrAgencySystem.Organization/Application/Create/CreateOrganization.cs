@@ -3,11 +3,12 @@ using HrAgencySystem.SharedKernel.Commands;
 namespace HrAgencySystem.Organization.Application.Create;
 
 public sealed record CreateOrganization(
-    string Name, 
-    string Slug, 
-    Guid CreatedBy, 
+    string Name,
+    string Slug,
+    Guid CreatedBy,
     IReadOnlyList<string> EmailDomains,
-    OrganizationInfoData? Info = null) : ICreateCommand, IOrganizationData;
+    OrganizationInfoData? Info = null
+) : ICreateCommand, IOrganizationData;
 
 public interface IOrganizationData
 {
@@ -21,8 +22,8 @@ public record OrganizationInfoData(
     string Phone = "",
     string Email = "",
     string Location = "",
-    string Website = "")
+    string Website = ""
+)
 {
-    public static OrganizationInfoData NoInfo
-        => new ();
+    public static OrganizationInfoData NoInfo => new();
 }

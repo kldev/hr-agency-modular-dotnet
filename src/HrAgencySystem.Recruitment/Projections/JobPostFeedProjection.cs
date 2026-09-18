@@ -22,7 +22,8 @@ public sealed class JobPostFeedProjection
         Guid identity,
         IEvent @event,
         FeedsDbContext dbContext,
-        IQuerySession session)
+        IQuerySession session
+    )
     {
         switch (@event.Data)
         {
@@ -45,7 +46,8 @@ public sealed class JobPostFeedProjection
                 return Publish(
                     snapshot,
                     status.NewStatus == JobPostStatus.Published,
-                    status.OccurredAt);
+                    status.OccurredAt
+                );
 
             default:
                 return snapshot;
@@ -81,7 +83,7 @@ public sealed class JobPostFeedProjection
             SalaryMax = @event.SalaryMax,
             PostingSlug = @event.OrgSlug + "/" + @event.PostingSlug,
             CreatedAt = @event.CreatedAt,
-            UpdatedAt = @event.CreatedAt
+            UpdatedAt = @event.CreatedAt,
         };
     }
 
@@ -109,7 +111,8 @@ public sealed class JobPostFeedProjection
     private static JobPostFeedRow Publish(
         JobPostFeedRow row,
         bool isPublished,
-        DateTimeOffset occurredAt)
+        DateTimeOffset occurredAt
+    )
     {
         row.IsPublished = isPublished;
         row.UpdatedAt = occurredAt;

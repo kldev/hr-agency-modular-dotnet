@@ -5,7 +5,7 @@ using JasperFx;
 
 namespace HrAgencySystem.Sales.Application.Opportunities.Update;
 
-public sealed record UpdateOpportunity(   
+public sealed record UpdateOpportunity(
     [property: Identity] Guid OpportunityId,
     Guid OrganizationId,
     string Title,
@@ -14,4 +14,5 @@ public sealed record UpdateOpportunity(
     bool IsHotLead,
     CurrencyCode Currency,
     DateOnly? ExpectedCloseDate,
-    Guid ModifiedBy): IOpportunityData, IUpdateCommand;
+    Guid ModifiedBy
+) : IOpportunityData, IUpdateCommand;

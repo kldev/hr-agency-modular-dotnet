@@ -10,7 +10,10 @@ namespace HrAgencySystem.IntegrationTests.Suggestion;
 public sealed class GetTagsTests(IntegrationEnvironment environment, ITestOutputHelper output)
     : BaseIntegrationTest(environment, output)
 {
-    private async Task<IReadOnlyList<Tag>> GetTagsSuggestions(string search = "", TagCategory? category = null)
+    private async Task<IReadOnlyList<Tag>> GetTagsSuggestions(
+        string search = "",
+        TagCategory? category = null
+    )
     {
         var url = "/api/suggestion/tags?search=" + search;
         if (category.HasValue)
@@ -19,11 +22,11 @@ public sealed class GetTagsTests(IntegrationEnvironment environment, ITestOutput
         }
 
         var response = await Client.GetAsync(url);
-    
+
         response.EnsureSuccessStatusCode();
-        
+
         var result = (await response.ReadWithJson<IReadOnlyList<Tag>>(OutputHelper))!;
-   
+
         return result;
     }
 
@@ -37,7 +40,7 @@ public sealed class GetTagsTests(IntegrationEnvironment environment, ITestOutput
         Assert.NotNull(problem);
         Assert.Equal("No search or category parameter were provided.", problem.Title);
     }
-    
+
     [Fact]
     public async Task ShouldGetTagsFilterBySearchQuery()
     {
@@ -46,7 +49,7 @@ public sealed class GetTagsTests(IntegrationEnvironment environment, ITestOutput
         Assert.NotEmpty(response);
         Assert.Equal(12, response.Count);
     }
-    
+
     [Fact]
     public async Task ShouldGetTagsFilterByCategoryQuery()
     {
@@ -55,7 +58,7 @@ public sealed class GetTagsTests(IntegrationEnvironment environment, ITestOutput
         Assert.NotEmpty(response);
         Assert.Equal(11, response.Count);
     }
-    
+
     [Fact]
     public async Task ShouldGetTagsFilterByCategoryAndSearchQuery()
     {

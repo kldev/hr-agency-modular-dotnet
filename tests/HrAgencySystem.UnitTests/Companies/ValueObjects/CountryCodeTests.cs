@@ -24,8 +24,7 @@ public class CountryCodeTests
     [InlineData("   ")]
     public void Create_WithMissingValue_ThrowsInValidValueException(string value)
     {
-        var exception = Assert
-            .Throws<InValidValueException>(() => CountryCode.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => CountryCode.Create(value));
         Assert.Equal(CountryCode.RequiredMessage, exception.Message);
     }
 
@@ -36,8 +35,7 @@ public class CountryCodeTests
     [InlineData("123")]
     public void Create_WithInvalidLength_ThrowsInValidValueException(string value)
     {
-        var exception = Assert
-            .Throws<InValidValueException>(() => CountryCode.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => CountryCode.Create(value));
         Assert.Equal(CountryCode.InvalidFormatMessage, exception.Message);
     }
 
@@ -48,8 +46,7 @@ public class CountryCodeTests
     [InlineData("@#")]
     public void Create_WithNonLetterCharacters_ThrowsInValidValueException(string value)
     {
-        var exception = Assert
-            .Throws<InValidValueException>(() => CountryCode.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => CountryCode.Create(value));
 
         Assert.Equal(CountryCode.OnlyCharactersAllowedMessage, exception.Message);
     }

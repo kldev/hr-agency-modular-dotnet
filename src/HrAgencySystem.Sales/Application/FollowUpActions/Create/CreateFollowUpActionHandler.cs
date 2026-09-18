@@ -10,7 +10,8 @@ public static class CreateFollowUpActionHandler
     public static async Task<FollowUpActionCreated> Handle(
         CreateFollowUpAction command,
         ISalesService service,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
         await service.ValidateOrganization(command.OrganizationId, ct);
@@ -23,6 +24,7 @@ public static class CreateFollowUpActionHandler
             command.Content,
             command.FollowDateTime,
             user,
-            ct);
+            ct
+        );
     }
 }

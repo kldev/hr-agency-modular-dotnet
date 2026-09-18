@@ -24,4 +24,5 @@ public sealed record JobDescriptionCreated(
     UserSnapshot Recruiter,
     UserSnapshot CreatedBy,
     CompanySnapshot Company,
-    DateTimeOffset CreatedAt) : IJobDescription;
+    DateTimeOffset CreatedAt
+) : IJobDescription;

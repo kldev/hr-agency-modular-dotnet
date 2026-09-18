@@ -11,4 +11,5 @@ public sealed record ActivityCreated(
     string Note,
     DateTimeOffset CreatedAt,
     UserSnapshot CreatedBy,
-    CompanySnapshot Company);
+    CompanySnapshot Company
+);

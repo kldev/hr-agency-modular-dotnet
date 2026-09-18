@@ -17,11 +17,20 @@ public static class CreateJobDescriptionHandler
         IDocumentSession session,
         IClock clock,
         IJobDescriptionService service,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var (title, summary, description,
-            location, responsibilities,
-            requirements, skills, salaryRange, countryCode) = JobDescriptionDataFactory.Create(command);
+        var (
+            title,
+            summary,
+            description,
+            location,
+            responsibilities,
+            requirements,
+            skills,
+            salaryRange,
+            countryCode
+        ) = JobDescriptionDataFactory.Create(command);
 
         await service.ValidateOrganization(command.OrganizationId, ct);
 
@@ -33,26 +42,27 @@ public static class CreateJobDescriptionHandler
 
         var jobDescriptionId = JobDescriptionId.New();
         var @event = new JobDescriptionCreated(
-                jobDescriptionId.Value,
-                command.OrganizationId,
-                command.CompanyId,
-                title.Value,
-                summary.Value,
-                description.Value,
-                [.. responsibilities.Select(z => z.Value)],
-                [.. requirements.Select(x => x.Value)],
-                [.. skills.Select(x => x.Value)],
-                location.Value,
-                countryCode.Value,
-                command.EmploymentType,
-                command.WorkMode,
-                salaryRange.Currency,
-                salaryRange.Min,
-                salaryRange.Max,
-                recruiter!,
-                createdBy,
-                company,
-                clock.UtcNow);
+            jobDescriptionId.Value,
+            command.OrganizationId,
+            command.CompanyId,
+            title.Value,
+            summary.Value,
+            description.Value,
+            [.. responsibilities.Select(z => z.Value)],
+            [.. requirements.Select(x => x.Value)],
+            [.. skills.Select(x => x.Value)],
+            location.Value,
+            countryCode.Value,
+            command.EmploymentType,
+            command.WorkMode,
+            salaryRange.Currency,
+            salaryRange.Min,
+            salaryRange.Max,
+            recruiter!,
+            createdBy,
+            company,
+            clock.UtcNow
+        );
 
         session.Events.StartStream<Domain.JobDescription>(jobDescriptionId.Value, @event);
 

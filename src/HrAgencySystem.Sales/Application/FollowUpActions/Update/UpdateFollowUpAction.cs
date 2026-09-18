@@ -8,4 +8,5 @@ public sealed record UpdateFollowUpAction(
     Guid OrganizationId,
     string Content,
     DateTimeOffset FollowDateTime,
-    Guid ModifiedBy) : IUpdateCommand;
+    Guid ModifiedBy
+) : IUpdateCommand;

@@ -7,8 +7,8 @@ namespace HrAgencySystem.IntegrationTests.Interviews;
 [Collection(IntegrationCollection.Name)]
 public sealed class InterviewsGetSliceTests(
     IntegrationEnvironment environment,
-    ITestOutputHelper output)
-    : BaseIntegrationTest(environment, output)
+    ITestOutputHelper output
+) : BaseIntegrationTest(environment, output)
 {
     private readonly Guid OrganizationId = Guid.NewGuid();
 
@@ -21,19 +21,13 @@ public sealed class InterviewsGetSliceTests(
     private readonly Guid JobApplicationId = Guid.NewGuid();
     private readonly Guid SecondJobApplicationId = Guid.NewGuid();
 
-    private readonly DateTime TestDate = new(
-        2026,
-        9,
-        10,
-        10,
-        0,
-        0);
+    private readonly DateTime TestDate = new(2026, 9, 10, 10, 0, 0);
 
     protected override async Task BeforeEachAsync()
     {
         await Cleaner.CleanInterviews();
     }
-    
+
     [Fact]
     public async Task ShouldReturnAllInterviews()
     {
@@ -42,21 +36,17 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate,
             InterviewerId,
-            CreatedById);
-        
+            CreatedById
+        );
+
         await Eventually.AssertAsync(async () =>
         {
-            var interviews = await InterviewClient.GetSliceAsync(
-                OrganizationId);
+            var interviews = await InterviewClient.GetSliceAsync(OrganizationId);
 
             Assert.Single(interviews.Content);
-            Assert.Equal(
-                InterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(InterviewerId, interviews.Content[0].InterviewerId);
 
-            Assert.Equal(
-                TestDate.ToUniversalTime(),
-                interviews.Content[0].ScheduleAt);
+            Assert.Equal(TestDate.ToUniversalTime(), interviews.Content[0].ScheduleAt);
         });
     }
 
@@ -68,23 +58,21 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate,
             InterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                candidateId: result.CandidateId);
+                candidateId: result.CandidateId
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                InterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(InterviewerId, interviews.Content[0].InterviewerId);
 
-            Assert.Equal(
-                result.CandidateId,
-                interviews.Content[0].CandidateId);
+            Assert.Equal(result.CandidateId, interviews.Content[0].CandidateId);
         });
     }
 
@@ -98,19 +86,19 @@ public sealed class InterviewsGetSliceTests(
             secondJobApplicationId,
             TestDate.AddHours(2),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                jobApplicationId: secondJobApplicationId);
+                jobApplicationId: secondJobApplicationId
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                secondJobApplicationId,
-                interviews.Content[0].ApplicationId);
+            Assert.Equal(secondJobApplicationId, interviews.Content[0].ApplicationId);
         });
     }
 
@@ -122,19 +110,19 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddHours(2),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                interviewerId: SecondInterviewerId);
+                interviewerId: SecondInterviewerId
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                SecondInterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(SecondInterviewerId, interviews.Content[0].InterviewerId);
         });
     }
 
@@ -146,19 +134,19 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddHours(2),
             SecondInterviewerId,
-            SecondCreatedById);
+            SecondCreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                createdByUserId: SecondCreatedById);
+                createdByUserId: SecondCreatedById
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                SecondCreatedById,
-                interviews.Content[0].CreatedByUserId);
+            Assert.Equal(SecondCreatedById, interviews.Content[0].CreatedByUserId);
         });
     }
 
@@ -170,19 +158,19 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate,
             SecondInterviewerId,
-            CreatedById);
-        
+            CreatedById
+        );
+
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                status: InterviewStatus.Planned);
+                status: InterviewStatus.Planned
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                InterviewStatus.Planned,
-                interviews.Content[0].Status);
+            Assert.Equal(InterviewStatus.Planned, interviews.Content[0].Status);
         });
     }
 
@@ -193,7 +181,8 @@ public sealed class InterviewsGetSliceTests(
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                status: InterviewStatus.Canceled);
+                status: InterviewStatus.Canceled
+            );
 
             Assert.Empty(interviews.Content);
         });
@@ -207,19 +196,19 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddDays(5),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                fromDate: DateOnly.FromDateTime(TestDate.AddDays(1)));
+                fromDate: DateOnly.FromDateTime(TestDate.AddDays(1))
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                SecondInterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(SecondInterviewerId, interviews.Content[0].InterviewerId);
         });
     }
 
@@ -231,26 +220,27 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddSeconds(-1),
             InterviewerId,
-            CreatedById);
-        
+            CreatedById
+        );
+
         await InterviewClient.ScheduleAsync(
             OrganizationId,
             JobApplicationId,
             TestDate.AddDays(5),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                toDate: DateOnly.FromDateTime(TestDate));
+                toDate: DateOnly.FromDateTime(TestDate)
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                InterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(InterviewerId, interviews.Content[0].InterviewerId);
         });
     }
 
@@ -262,35 +252,36 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddDays(-5),
             SecondInterviewerId,
-            CreatedById);
-        
+            CreatedById
+        );
 
         await InterviewClient.ScheduleAsync(
             OrganizationId,
             JobApplicationId,
             TestDate.AddDays(1),
             SecondInterviewerId,
-            CreatedById);
-        
+            CreatedById
+        );
+
         await InterviewClient.ScheduleAsync(
             OrganizationId,
             JobApplicationId,
             TestDate.AddDays(5),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
                 fromDate: DateOnly.FromDateTime(TestDate.AddDays(-1)),
-                toDate: DateOnly.FromDateTime(TestDate.AddDays(2)));
-            
+                toDate: DateOnly.FromDateTime(TestDate.AddDays(2))
+            );
+
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                SecondInterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(SecondInterviewerId, interviews.Content[0].InterviewerId);
         });
     }
 
@@ -302,7 +293,8 @@ public sealed class InterviewsGetSliceTests(
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
                 fromDate: DateOnly.FromDateTime(TestDate.AddDays(1)),
-                toDate: DateOnly.FromDateTime(TestDate.AddDays(2)));
+                toDate: DateOnly.FromDateTime(TestDate.AddDays(2))
+            );
 
             Assert.Empty(interviews.Content);
         });
@@ -316,8 +308,9 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddHours(2),
             SecondInterviewerId,
-            SecondCreatedById);
-        
+            SecondCreatedById
+        );
+
         Assert.Equal(JobApplicationId, created.JobApplicationId);
         Assert.Equal(SecondInterviewerId, created.Interviewer.Id);
         Assert.Equal(SecondCreatedById, created.Author.Id);
@@ -328,23 +321,18 @@ public sealed class InterviewsGetSliceTests(
                 OrganizationId,
                 interviewerId: SecondInterviewerId,
                 createdByUserId: SecondCreatedById,
-                status: InterviewStatus.Planned);
+                status: InterviewStatus.Planned
+            );
 
             Assert.Single(interviews.Content);
 
             var interview = interviews.Content[0];
 
-            Assert.Equal(
-                SecondInterviewerId,
-                interview.InterviewerId);
+            Assert.Equal(SecondInterviewerId, interview.InterviewerId);
 
-            Assert.Equal(
-                SecondCreatedById,
-                interview.CreatedByUserId);
+            Assert.Equal(SecondCreatedById, interview.CreatedByUserId);
 
-            Assert.Equal(
-                InterviewStatus.Planned,
-                interview.Status);
+            Assert.Equal(InterviewStatus.Planned, interview.Status);
         });
     }
 
@@ -356,33 +344,35 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddHours(1),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await InterviewClient.ScheduleAsync(
             OrganizationId,
             JobApplicationId,
             TestDate.AddHours(2),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var firstPage = await InterviewClient.GetSliceAsync(
                 OrganizationId,
                 page: 1,
-                pageSize: 1);
+                pageSize: 1
+            );
 
             var secondPage = await InterviewClient.GetSliceAsync(
                 OrganizationId,
                 page: 2,
-                pageSize: 1);
+                pageSize: 1
+            );
 
             Assert.Single(firstPage.Content);
             Assert.Single(secondPage.Content);
 
-            Assert.NotEqual(
-                firstPage.Content[0].Id,
-                secondPage.Content[0].Id);
+            Assert.NotEqual(firstPage.Content[0].Id, secondPage.Content[0].Id);
         });
     }
 
@@ -394,7 +384,8 @@ public sealed class InterviewsGetSliceTests(
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
                 page: 2,
-                pageSize: 100);
+                pageSize: 100
+            );
 
             Assert.Empty(interviews.Content);
         });
@@ -408,21 +399,24 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate.AddHours(1),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await InterviewClient.ScheduleAsync(
             OrganizationId,
             JobApplicationId,
             TestDate.AddHours(2),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
                 page: 1,
-                pageSize: 2);
+                pageSize: 2
+            );
 
             Assert.Equal(2, interviews.Content.Count);
         });
@@ -436,30 +430,29 @@ public sealed class InterviewsGetSliceTests(
             JobApplicationId,
             TestDate,
             InterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         var second = await InterviewClient.ScheduleAsync(
             OrganizationId,
             SecondJobApplicationId,
             TestDate.AddHours(1),
             SecondInterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                jobApplicationId: SecondJobApplicationId);
+                jobApplicationId: SecondJobApplicationId
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                second.JobApplicationId,
-                interviews.Content[0].ApplicationId);
+            Assert.Equal(second.JobApplicationId, interviews.Content[0].ApplicationId);
 
-            Assert.NotEqual(
-                first.JobApplicationId,
-                interviews.Content[0].ApplicationId);
+            Assert.NotEqual(first.JobApplicationId, interviews.Content[0].ApplicationId);
         });
     }
 
@@ -467,31 +460,30 @@ public sealed class InterviewsGetSliceTests(
     public async Task ShouldReturnOnlyInterviewsFromRequestedOrganization()
     {
         var otherOrganizationId = Guid.NewGuid();
-        
+
         await InterviewClient.ScheduleAsync(
             OrganizationId,
             JobApplicationId,
             TestDate,
             InterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await InterviewClient.ScheduleAsync(
             otherOrganizationId,
             Guid.NewGuid(),
             TestDate,
             Guid.NewGuid(),
-            Guid.NewGuid());
+            Guid.NewGuid()
+        );
 
         await Eventually.AssertAsync(async () =>
         {
-            var interviews = await InterviewClient.GetSliceAsync(
-                OrganizationId);
+            var interviews = await InterviewClient.GetSliceAsync(OrganizationId);
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                OrganizationId,
-                interviews.Content[0].OrgId);
+            Assert.Equal(OrganizationId, interviews.Content[0].OrgId);
         });
     }
 
@@ -503,19 +495,19 @@ public sealed class InterviewsGetSliceTests(
             Guid.NewGuid(),
             TestDate.AddSeconds(1),
             InterviewerId,
-            Guid.NewGuid());
-        
+            Guid.NewGuid()
+        );
+
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                fromDate: DateOnly.FromDateTime(TestDate));
+                fromDate: DateOnly.FromDateTime(TestDate)
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                InterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(InterviewerId, interviews.Content[0].InterviewerId);
         });
     }
 
@@ -527,19 +519,19 @@ public sealed class InterviewsGetSliceTests(
             Guid.NewGuid(),
             TestDate,
             InterviewerId,
-            Guid.NewGuid());
-        
+            Guid.NewGuid()
+        );
+
         await Eventually.AssertAsync(async () =>
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                toDate: DateOnly.FromDateTime(TestDate));
+                toDate: DateOnly.FromDateTime(TestDate)
+            );
 
             Assert.Single(interviews.Content);
 
-            Assert.Equal(
-                InterviewerId,
-                interviews.Content[0].InterviewerId);
+            Assert.Equal(InterviewerId, interviews.Content[0].InterviewerId);
         });
     }
 
@@ -550,7 +542,8 @@ public sealed class InterviewsGetSliceTests(
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                interviewerId: Guid.NewGuid());
+                interviewerId: Guid.NewGuid()
+            );
 
             Assert.Empty(interviews.Content);
         });
@@ -563,7 +556,8 @@ public sealed class InterviewsGetSliceTests(
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                jobApplicationId: Guid.NewGuid());
+                jobApplicationId: Guid.NewGuid()
+            );
 
             Assert.Empty(interviews.Content);
         });
@@ -576,7 +570,8 @@ public sealed class InterviewsGetSliceTests(
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                candidateId: Guid.NewGuid());
+                candidateId: Guid.NewGuid()
+            );
 
             Assert.Empty(interviews.Content);
         });
@@ -589,7 +584,8 @@ public sealed class InterviewsGetSliceTests(
         {
             var interviews = await InterviewClient.GetSliceAsync(
                 OrganizationId,
-                createdByUserId: Guid.NewGuid());
+                createdByUserId: Guid.NewGuid()
+            );
 
             Assert.Empty(interviews.Content);
         });

@@ -4,5 +4,5 @@ public enum CandidateStatus
 {
     Active,
     Blocked,
-    Archived
+    Archived,
 }

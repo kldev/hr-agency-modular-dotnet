@@ -10,7 +10,7 @@ public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutpu
     : BaseIntegrationTest(environment, output)
 {
     protected override async Task BeforeEachAsync()
-    { 
+    {
         await Cleaner.CleanUsers();
         await SetupUsers();
     }
@@ -20,36 +20,38 @@ public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutpu
 
     private async Task SetupUsers()
     {
-        await UserClient.CreateAsync(
-            OrganizationId,
-            "first@test.com");
+        await UserClient.CreateAsync(OrganizationId, "first@test.com");
+
+        await UserClient.CreateAsync(OrganizationId, "second@test.com");
 
         await UserClient.CreateAsync(
             OrganizationId,
-            "second@test.com");
+            "sales@test.com",
+            role: OrganizationRoleApi.Sales,
+            firstName: "Tom",
+            lastName: "Moore"
+        );
 
         await UserClient.CreateAsync(
             OrganizationId,
-            "sales@test.com", role: OrganizationRoleApi.Sales, firstName: "Tom", lastName: "Moore");
+            "recruiter@test.com",
+            role: OrganizationRoleApi.Recruiter
+        );
 
-        await UserClient.CreateAsync(
-            OrganizationId,
-            "recruiter@test.com", role: OrganizationRoleApi.Recruiter);
-
-        await UserClient.CreateAsync(
-            OtherOrganizationId,
-            "other@test.com");
+        await UserClient.CreateAsync(OtherOrganizationId, "other@test.com");
     }
 
-    private async Task<IReadOnlyList<UserSuggestion>> GetUserSuggestions(string search = "", IReadOnlyList<OrganizationRole>?roles = null)
+    private async Task<IReadOnlyList<UserSuggestion>> GetUserSuggestions(
+        string search = "",
+        IReadOnlyList<OrganizationRole>? roles = null
+    )
     {
         var url = "/api/suggestion/users?search=" + search;
         if (roles?.Count > 0)
         {
-            url += "&roles=" +
-                   string.Join("&roles=", roles ?? []);
+            url += "&roles=" + string.Join("&roles=", roles ?? []);
         }
-        
+
         OutputHelper.WriteLine("url: " + url);
         var response = await Client.GetAsync(url);
         var result = (await response.ReadWithJson<IReadOnlyList<UserSuggestion>>(OutputHelper))!;
@@ -74,7 +76,7 @@ public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutpu
             Assert.DoesNotContain(users, x => x.Email == "other@test.com");
         });
     }
-    
+
     [Fact]
     public async Task ShouldGetUsersFilterBySearchQuery()
     {
@@ -86,10 +88,9 @@ public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutpu
 
             Assert.Single(users);
             Assert.Contains(users, x => x.Email == "sales@test.com");
-    
         });
     }
-    
+
     [Fact]
     public async Task ShouldGetUsersFilterByRolesQuery()
     {
@@ -97,7 +98,9 @@ public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutpu
 
         await Eventually.AssertAsync(async () =>
         {
-            var users = await GetUserSuggestions(roles: [OrganizationRole.Sales, OrganizationRole.Recruiter]);
+            var users = await GetUserSuggestions(
+                roles: [OrganizationRole.Sales, OrganizationRole.Recruiter]
+            );
 
             Assert.Equal(2, users.Count);
             Assert.Contains(users, x => x.Email == "sales@test.com");

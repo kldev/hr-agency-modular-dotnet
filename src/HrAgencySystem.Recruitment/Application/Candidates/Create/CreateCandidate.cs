@@ -12,4 +12,5 @@ public sealed record CreateCandidate(
     string LastName = "",
     Guid? CreatedBy = null,
     Guid? CompanyId = null,
-    string Note = "") : ICandidateData;
+    string Note = ""
+) : ICandidateData;

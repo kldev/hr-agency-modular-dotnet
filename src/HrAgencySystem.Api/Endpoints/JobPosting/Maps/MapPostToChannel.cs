@@ -11,8 +11,9 @@ internal static class MapPostToChannel
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        // PUT /api/recruitment/job-posting/{id}/channel 
-        group.MapPut("{jobPostId:guid}/channel", Handler)
+        // PUT /api/recruitment/job-posting/{id}/channel
+        group
+            .MapPut("{jobPostId:guid}/channel", Handler)
             .WithSummary("Job posted to channel")
             .WithName("Post job to channel")
             .Produces<JobPostedToChannel>()
@@ -24,12 +25,13 @@ internal static class MapPostToChannel
         IMessageBus bus,
         PostToChannelRequest request,
         Guid jobPostId,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var result =
-            await bus.InvokeAsync<JobPostedToChannel>(
-                request.ToCommand(user.OrganizationId, user.UserId, jobPostId),
-                ct);
+        var result = await bus.InvokeAsync<JobPostedToChannel>(
+            request.ToCommand(user.OrganizationId, user.UserId, jobPostId),
+            ct
+        );
 
         return TypedResults.Ok(result);
     }
@@ -38,6 +40,6 @@ internal static class MapPostToChannel
 // ReSharper disable once ClassNeverInstantiated.Global
 internal sealed record PostToChannelRequest(PostingChannelType Channel)
 {
-    internal PostToChannel ToCommand(Guid organizationId, Guid userId, Guid jobPostId)
-        => new PostToChannel(jobPostId, organizationId, Channel, userId);
+    internal PostToChannel ToCommand(Guid organizationId, Guid userId, Guid jobPostId) =>
+        new PostToChannel(jobPostId, organizationId, Channel, userId);
 }

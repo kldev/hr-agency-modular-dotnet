@@ -20,49 +20,41 @@ public class CreateCompanyHandlerTests : BaseTest
 {
     private readonly ICompanyTaxIdReservationRepository _repository =
         Substitute.For<ICompanyTaxIdReservationRepository>();
-    
-    private readonly IDocumentSession _documentSession =
-        Substitute.For<IDocumentSession>();
 
-    private readonly ICompanyService _service =
-        Substitute.For<ICompanyService>();
+    private readonly IDocumentSession _documentSession = Substitute.For<IDocumentSession>();
 
+    private readonly ICompanyService _service = Substitute.For<ICompanyService>();
 
     private static readonly Guid SalesId = Guid.NewGuid();
 
     private static UserSnapshot Sales { get; } =
-        new(
-            SalesId,
-            "Alice",
-            "Wells",
-            "alice-wells@hr-agency.com");
+        new(SalesId, "Alice", "Wells", "alice-wells@hr-agency.com");
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsCompanyCreated()
     {
         var organizationId = Guid.NewGuid();
-        var now = new DateTimeOffset(
-            2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+        var now = new DateTimeOffset(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
         var command = new CreateCompany(
             organizationId,
             "  ACME Corporation  ",
             "pl",
             " PL123456789 ",
-            " REG-123 ", SalesId);
+            " REG-123 ",
+            SalesId
+        );
 
         _repository
-            .ExitsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CancellationToken>())
+            .ExitsAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CancellationToken>())
             .Returns(false);
 
-        _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
+        _documentSession
+            .Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
         _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Sales);
-        
+
         var clock = new FixedClock(now);
 
         var result = await CreateCompanyHandler.Handle(
@@ -71,7 +63,8 @@ public class CreateCompanyHandlerTests : BaseTest
             _repository,
             clock,
             _service,
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         Assert.NotEqual(Guid.Empty, result.CompanyId);
         Assert.Equal(organizationId, result.OrganizationId);
@@ -81,18 +74,22 @@ public class CreateCompanyHandlerTests : BaseTest
         Assert.Equal("REG-123", result.RegistrationNumber);
         Assert.Equal(now, result.CreatedAt);
 
-        await _repository.Received(1)
+        await _repository
+            .Received(1)
             .ExitsAsync(
                 Arg.Is<OrganizationId>(x => x.Value == organizationId),
                 Arg.Is<TaxId>(x => x.Value == "PL123456789"),
-                Arg.Any<CancellationToken>());
+                Arg.Any<CancellationToken>()
+            );
 
-        await _repository.Received(1)
+        await _repository
+            .Received(1)
             .ReserveAsync(
                 Arg.Is<OrganizationId>(x => x.Value == organizationId),
                 Arg.Is<TaxId>(x => x.Value == "PL123456789"),
                 Arg.Is<CompanyId>(x => x.Value == result.CompanyId),
-                Arg.Any<CancellationToken>());
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]
@@ -103,7 +100,9 @@ public class CreateCompanyHandlerTests : BaseTest
             "",
             "POL",
             "",
-            new string('A', 101), SalesId);
+            new string('A', 101),
+            SalesId
+        );
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -112,24 +111,23 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _service,
-                CancellationToken.None));
+                CancellationToken.None
+            )
+        );
 
         Assert.Equal(
             [
                 CompanyName.RequiredMessage,
                 RegistrationNumber.MaxLengthMessage,
                 CountryCode.InvalidFormatMessage,
-                TaxId.RequiredMessage
-                
+                TaxId.RequiredMessage,
             ],
-            exception.Errors);
+            exception.Errors
+        );
 
         await _repository
             .DidNotReceive()
-            .ExitsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CancellationToken>());
+            .ExitsAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CancellationToken>());
 
         await _repository
             .DidNotReceive()
@@ -137,7 +135,8 @@ public class CreateCompanyHandlerTests : BaseTest
                 Arg.Any<OrganizationId>(),
                 Arg.Any<TaxId>(),
                 Arg.Any<CompanyId>(),
-                Arg.Any<CancellationToken>());
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]
@@ -148,7 +147,9 @@ public class CreateCompanyHandlerTests : BaseTest
             "",
             "PL",
             "PL123456789",
-            "REG-123", SalesId);
+            "REG-123",
+            SalesId
+        );
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -157,18 +158,15 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _service,
-                CancellationToken.None));
+                CancellationToken.None
+            )
+        );
 
-        Assert.Equal(
-            ["Company name is required."],
-            exception.Errors);
+        Assert.Equal(["Company name is required."], exception.Errors);
 
         await _repository
             .DidNotReceive()
-            .ExitsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CancellationToken>());
+            .ExitsAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -179,7 +177,9 @@ public class CreateCompanyHandlerTests : BaseTest
             "ACME",
             "POL",
             "PL123456789",
-            "REG-123", SalesId);
+            "REG-123",
+            SalesId
+        );
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -188,29 +188,21 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _service,
-                CancellationToken.None));
+                CancellationToken.None
+            )
+        );
 
-        Assert.Equal(
-            ["Country code must be ISO 3166-1 alpha-2."],
-            exception.Errors);
+        Assert.Equal(["Country code must be ISO 3166-1 alpha-2."], exception.Errors);
 
         await _repository
             .DidNotReceive()
-            .ExitsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CancellationToken>());
+            .ExitsAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_WithInvalidTaxId_ThrowsValidationException()
     {
-        var command = new CreateCompany(
-            Guid.NewGuid(),
-            "ACME",
-            "PL",
-            "",
-            "REG-123", SalesId);
+        var command = new CreateCompany(Guid.NewGuid(), "ACME", "PL", "", "REG-123", SalesId);
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -219,18 +211,15 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _service,
-                CancellationToken.None));
+                CancellationToken.None
+            )
+        );
 
-        Assert.Equal(
-            ["Tax ID is required."],
-            exception.Errors);
+        Assert.Equal(["Tax ID is required."], exception.Errors);
 
         await _repository
             .DidNotReceive()
-            .ExitsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CancellationToken>());
+            .ExitsAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -241,7 +230,9 @@ public class CreateCompanyHandlerTests : BaseTest
             "ACME",
             "PL",
             "PL123456789",
-            new string('A', 101), SalesId);
+            new string('A', 101),
+            SalesId
+        );
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateCompanyHandler.Handle(
@@ -250,58 +241,56 @@ public class CreateCompanyHandlerTests : BaseTest
                 _repository,
                 TestClock,
                 _service,
-                CancellationToken.None));
+                CancellationToken.None
+            )
+        );
 
-        Assert.Equal(
-            ["Registration number cannot exceed 100 characters."],
-            exception.Errors);
+        Assert.Equal(["Registration number cannot exceed 100 characters."], exception.Errors);
 
         await _repository
             .DidNotReceive()
-            .ExitsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CancellationToken>());
+            .ExitsAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CancellationToken>());
     }
-    
+
     [Fact]
     public async Task Handle_NonExistingOrganizationId_ThrowsBusinessRuleException()
     {
         var organizationId = Guid.NewGuid();
-        var now = new DateTimeOffset(
-            2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+        var now = new DateTimeOffset(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
         var command = new CreateCompany(
             organizationId,
             "  ACME Corporation  ",
             "pl",
             " PL123456789 ",
-            " REG-123 ", SalesId);
+            " REG-123 ",
+            SalesId
+        );
 
         _repository
-            .ExitsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CancellationToken>())
+            .ExitsAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CancellationToken>())
             .Returns(false);
 
-        _documentSession.Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
+        _documentSession
+            .Events.StartStream<HrAgencySystem.Company.Domain.Company>(Arg.Any<object>())
             .ReturnsNullForAnyArgs();
 
-        _service.ValidateOrganization(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        _service
+            .ValidateOrganization(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
-        
+
         var clock = new FixedClock(now);
 
-
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>( async () => await CreateCompanyHandler.Handle(
-            command,
-            _documentSession,
-            _repository,
-            clock,
-            _service,
-            CancellationToken.None));
-
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(async () =>
+            await CreateCompanyHandler.Handle(
+                command,
+                _documentSession,
+                _repository,
+                clock,
+                _service,
+                CancellationToken.None
+            )
+        );
 
         Assert.Equal(typeof(BusinessRuleException), exception.GetType());
         Assert.Equal(OrganizationId.OrganizationCheckMessage, exception.Message);

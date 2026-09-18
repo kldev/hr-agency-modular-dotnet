@@ -9,4 +9,5 @@ public sealed record JobApplicationStatusChanged(
     DateTimeOffset OccurredAt,
     JobApplicationStatus OldStatus,
     JobApplicationStatus NewStatus,
-    UserSnapshot Author) : IJobApplicationEvent;
+    UserSnapshot Author
+) : IJobApplicationEvent;

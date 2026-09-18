@@ -16,20 +16,14 @@ namespace HrAgencySystem.UnitTests.JobDescriptions.Handlers;
 
 public class CreateJobDescriptionHandlerTests : BaseTest
 {
-    private readonly IDocumentSession _documentSession =
-            Substitute.For<IDocumentSession>();
-    
-    private readonly IJobDescriptionService _service
-        = Substitute.For<IJobDescriptionService>();
+    private readonly IDocumentSession _documentSession = Substitute.For<IDocumentSession>();
+
+    private readonly IJobDescriptionService _service = Substitute.For<IJobDescriptionService>();
 
     private static readonly Guid RecruiterId = Guid.NewGuid();
 
     private static UserSnapshot Recruiter { get; } =
-        new(
-            RecruiterId,
-            "Alice",
-            "Wells",
-            "alice-wells@hr-agency.com");
+        new(RecruiterId, "Alice", "Wells", "alice-wells@hr-agency.com");
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobDescriptionCreated()
@@ -37,8 +31,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         var organizationId = Guid.NewGuid();
         var companyId = Guid.NewGuid();
 
-        var now = new DateTimeOffset(
-            2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+        var now = new DateTimeOffset(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 
         var command = new CreateJobDescription(
             organizationId,
@@ -46,18 +39,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             "  Senior .NET Developer  ",
             "  Senior developer position  ",
             "  We are looking for an experienced .NET developer.  ",
-            [
-                "  Design and develop backend services.  ",
-                "  Review code.  "
-            ],
-            [
-                "  5+ years of .NET experience.  ",
-                "  Experience with PostgreSQL.  "
-            ],
-            [
-                "  C#  ",
-                "  ASP.NET Core  "
-            ],
+            ["  Design and develop backend services.  ", "  Review code.  "],
+            ["  5+ years of .NET experience.  ", "  Experience with PostgreSQL.  "],
+            ["  C#  ", "  ASP.NET Core  "],
             "  Opole  ",
             "pl",
             EmploymentType.FullTime,
@@ -66,49 +50,35 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             15000m,
             22000m,
             RecruiterId,
-            RecruiterId);
-        
+            RecruiterId
+        );
+
+        _service.GetUserAsync(RecruiterId, Arg.Any<CancellationToken>()).Returns(Recruiter);
 
         _service
-            .GetUserAsync(RecruiterId, Arg.Any<CancellationToken>())
-            .Returns(Recruiter);
-
-        _service.GetCompanyAsync(companyId, Arg.Any<CancellationToken>())
+            .GetCompanyAsync(companyId, Arg.Any<CancellationToken>())
             .Returns(new CompanySnapshot(companyId, "Company A", "TX-100-101"));
 
-        var result = await Handle(
-            command,
-            new FixedClock(now));
+        var result = await Handle(command, new FixedClock(now));
 
         Assert.NotEqual(Guid.Empty, result.JobDescriptionId);
         Assert.Equal(organizationId, result.OrganizationId);
         Assert.Equal(companyId, result.CompanyId);
         Assert.Equal("Senior .NET Developer", result.Title);
         Assert.Equal("Senior developer position", result.Summary);
-        Assert.Equal(
-            "We are looking for an experienced .NET developer.",
-            result.Description);
+        Assert.Equal("We are looking for an experienced .NET developer.", result.Description);
 
         Assert.Equal(
-            [
-                "Design and develop backend services.",
-                "Review code."
-            ],
-            result.Responsibilities);
+            ["Design and develop backend services.", "Review code."],
+            result.Responsibilities
+        );
 
         Assert.Equal(
-            [
-                "5+ years of .NET experience.",
-                "Experience with PostgreSQL."
-            ],
-            result.Requirements);
+            ["5+ years of .NET experience.", "Experience with PostgreSQL."],
+            result.Requirements
+        );
 
-        Assert.Equal(
-            [
-                "C#",
-                "ASP.NET Core"
-            ],
-            result.Skills);
+        Assert.Equal(["C#", "ASP.NET Core"], result.Skills);
 
         Assert.Equal("Opole", result.Location);
         Assert.Equal("PL", result.CountryCode);
@@ -122,15 +92,14 @@ public class CreateJobDescriptionHandlerTests : BaseTest
 
         await _service
             .Received(1)
-            .ValidateOrganization(
-                organizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(organizationId, Arg.Any<CancellationToken>());
 
-        _documentSession.Events
-            .Received(1)
+        _documentSession
+            .Events.Received(1)
             .StartStream<HrAgencySystem.JobDescription.Domain.JobDescription>(
                 result.JobDescriptionId,
-                Arg.Is<JobDescriptionCreated>(x => x.JobDescriptionId == result.JobDescriptionId));
+                Arg.Is<JobDescriptionCreated>(x => x.JobDescriptionId == result.JobDescriptionId)
+            );
     }
 
     [Fact]
@@ -142,18 +111,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             "",
             new string('A', LongText.MaxLength + 1),
             "",
-            [
-                "",
-                new string('A', EntryText.MaxLength + 1)
-            ],
-            [
-                "",
-                new string('B', EntryText.MaxLength + 1)
-            ],
-            [
-                "",
-                new string('C', EntryText.MaxLength + 1)
-            ],
+            ["", new string('A', EntryText.MaxLength + 1)],
+            ["", new string('B', EntryText.MaxLength + 1)],
+            ["", new string('C', EntryText.MaxLength + 1)],
             new string('A', JobLocation.MaxLength + 1),
             "POL",
             EmploymentType.FullTime,
@@ -162,7 +122,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             -1m,
             -2m,
             Guid.NewGuid(),
-            RecruiterId);
+            RecruiterId
+        );
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
@@ -179,9 +140,10 @@ public class CreateJobDescriptionHandlerTests : BaseTest
                 EntryText.RequiredMessage,
                 EntryText.MaxLengthMessage,
                 SalaryRange.NegativeSalaryMessage,
-                CountryCode.InvalidFormatMessage
+                CountryCode.InvalidFormatMessage,
             ],
-            exception.Errors);
+            exception.Errors
+        );
 
         await AssertNoOrganizationCheck();
         AssertNoStream();
@@ -190,27 +152,25 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidTitle_ThrowsValidationException()
     {
-        await AssertValidationError(
-            CreateValidCommand(title: ""),
-            JobTitle.RequiredMessage);
+        await AssertValidationError(CreateValidCommand(title: ""), JobTitle.RequiredMessage);
     }
 
     [Fact]
     public async Task Handle_WithTitleExceedingMaximumLength_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                title: new string('A', JobTitle.MaxLength + 1)),
-            JobTitle.MaxLengthMessage);
+            CreateValidCommand(title: new string('A', JobTitle.MaxLength + 1)),
+            JobTitle.MaxLengthMessage
+        );
     }
 
     [Fact]
     public async Task Handle_WithSummaryExceedingMaximumLength_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                summary: new string('A', LongText.MaxLength + 1)),
-            LongText.MaxLengthMessage);
+            CreateValidCommand(summary: new string('A', LongText.MaxLength + 1)),
+            LongText.MaxLengthMessage
+        );
     }
 
     [Fact]
@@ -218,29 +178,26 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         await AssertValidationError(
             CreateValidCommand(description: ""),
-            LongText.FieldIsRequired("Job description"));
+            LongText.FieldIsRequired("Job description")
+        );
     }
 
     [Fact]
     public async Task Handle_WithDescriptionExceedingMaximumLength_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                description: new string('A', LongText.MaxLength + 1)),
-            LongText.MaxLengthMessage);
+            CreateValidCommand(description: new string('A', LongText.MaxLength + 1)),
+            LongText.MaxLengthMessage
+        );
     }
 
     [Fact]
     public async Task Handle_WithInvalidResponsibility_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                responsibilities:
-                [
-                    "Valid responsibility",
-                    ""
-                ]),
-            EntryText.RequiredMessage);
+            CreateValidCommand(responsibilities: ["Valid responsibility", ""]),
+            EntryText.RequiredMessage
+        );
     }
 
     [Fact]
@@ -248,64 +205,55 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         await AssertValidationError(
             CreateValidCommand(
-                requirements:
-                [
-                    "Valid requirement",
-                    new string('A', EntryText.MaxLength + 1)
-                ]),
-            EntryText.MaxLengthMessage);
+                requirements: ["Valid requirement", new string('A', EntryText.MaxLength + 1)]
+            ),
+            EntryText.MaxLengthMessage
+        );
     }
 
     [Fact]
     public async Task Handle_WithInvalidSkill_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                skills:
-                [
-                    "C#",
-                    ""
-                ]),
-            EntryText.RequiredMessage);
+            CreateValidCommand(skills: ["C#", ""]),
+            EntryText.RequiredMessage
+        );
     }
 
     [Fact]
     public async Task Handle_WithInvalidLocation_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                location: new string('A', JobLocation.MaxLength + 1)),
-            JobLocation.MaxLengthMessage);
+            CreateValidCommand(location: new string('A', JobLocation.MaxLength + 1)),
+            JobLocation.MaxLengthMessage
+        );
     }
 
     [Fact]
     public async Task Handle_WithNegativeMinimumSalary_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                salaryMin: -1m,
-                salaryMax: 10000m),
-            SalaryRange.NegativeSalaryMessage);
+            CreateValidCommand(salaryMin: -1m, salaryMax: 10000m),
+            SalaryRange.NegativeSalaryMessage
+        );
     }
 
     [Fact]
     public async Task Handle_WithNegativeMaximumSalary_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                salaryMin: 1000m,
-                salaryMax: -1m),
-            SalaryRange.NegativeSalaryMessage);
+            CreateValidCommand(salaryMin: 1000m, salaryMax: -1m),
+            SalaryRange.NegativeSalaryMessage
+        );
     }
 
     [Fact]
     public async Task Handle_WithMinimumSalaryGreaterThanMaximum_ThrowsValidationException()
     {
         await AssertValidationError(
-            CreateValidCommand(
-                salaryMin: 20000m,
-                salaryMax: 10000m),
-            SalaryRange.MinimumExceedsMaximumMessage);
+            CreateValidCommand(salaryMin: 20000m, salaryMax: 10000m),
+            SalaryRange.MinimumExceedsMaximumMessage
+        );
     }
 
     [Fact]
@@ -313,7 +261,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
     {
         await AssertValidationError(
             CreateValidCommand(countryCode: "POL"),
-            CountryCode.InvalidFormatMessage);
+            CountryCode.InvalidFormatMessage
+        );
     }
 
     [Fact]
@@ -326,17 +275,14 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             .Throws(new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage));
 
         var exception = await AssertBusinessRuleError(
-            CreateValidCommand(organizationId: organizationId));
+            CreateValidCommand(organizationId: organizationId)
+        );
 
-        Assert.Equal(
-            OrganizationId.OrganizationCheckMessage,
-            exception.Message);
+        Assert.Equal(OrganizationId.OrganizationCheckMessage, exception.Message);
 
         await _service
             .Received(1)
-            .ValidateOrganization(
-                organizationId,
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(organizationId, Arg.Any<CancellationToken>());
 
         AssertNoStream();
     }
@@ -350,38 +296,26 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             .GetUserAsync(recruiterId, Arg.Any<CancellationToken>())
             .Throws(new NotFoundException("User", recruiterId));
 
-        var exception = await AssertNotFoundError(
-            CreateValidCommand(recruiterId: recruiterId));
+        var exception = await AssertNotFoundError(CreateValidCommand(recruiterId: recruiterId));
 
-        Assert.Contains(
-            "User not found",
-            exception.Message);
+        Assert.Contains("User not found", exception.Message);
 
-        await _service
-            .Received(1)
-            .GetUserAsync(
-                recruiterId,
-                Arg.Any<CancellationToken>());
+        await _service.Received(1).GetUserAsync(recruiterId, Arg.Any<CancellationToken>());
 
         AssertNoStream();
     }
 
-    private async Task AssertValidationError(
-        CreateJobDescription command,
-        string expectedError)
+    private async Task AssertValidationError(CreateJobDescription command, string expectedError)
     {
         var exception = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
 
-        Assert.Equal(
-            [expectedError],
-            exception.Errors);
+        Assert.Equal([expectedError], exception.Errors);
 
         await AssertNoOrganizationCheck();
         AssertNoStream();
     }
 
-    private async Task<BusinessRuleException> AssertBusinessRuleError(
-        CreateJobDescription command)
+    private async Task<BusinessRuleException> AssertBusinessRuleError(CreateJobDescription command)
     {
         return await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command));
     }
@@ -393,32 +327,33 @@ public class CreateJobDescriptionHandlerTests : BaseTest
 
     private async Task<JobDescriptionCreated> Handle(
         CreateJobDescription command,
-        IClock? clock = null)
+        IClock? clock = null
+    )
     {
         return await CreateJobDescriptionHandler.Handle(
             command,
             _documentSession,
             clock ?? TestClock,
             _service,
-            CancellationToken.None);
+            CancellationToken.None
+        );
     }
 
     private async Task AssertNoOrganizationCheck()
     {
         await _service
             .DidNotReceive()
-            .ValidateOrganization(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+            .ValidateOrganization(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private void AssertNoStream()
     {
-        _documentSession.Events
-            .DidNotReceive()
+        _documentSession
+            .Events.DidNotReceive()
             .StartStream<HrAgencySystem.JobDescription.Domain.JobDescription>(
                 Arg.Any<Guid>(),
-                Arg.Any<object>());
+                Arg.Any<object>()
+            );
     }
 
     private static CreateJobDescription CreateValidCommand(
@@ -427,8 +362,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         Guid? recruiterId = null,
         string title = "Senior .NET Developer",
         string? summary = "Senior developer position",
-        string description =
-            "We are looking for an experienced .NET developer.",
+        string description = "We are looking for an experienced .NET developer.",
         IReadOnlyList<string>? responsibilities = null,
         IReadOnlyList<string>? requirements = null,
         IReadOnlyList<string>? skills = null,
@@ -438,7 +372,8 @@ public class CreateJobDescriptionHandlerTests : BaseTest
         WorkMode workMode = WorkMode.Hybrid,
         CurrencyCode currencyCode = CurrencyCode.PLN,
         decimal salaryMin = 15000m,
-        decimal salaryMax = 22000m)
+        decimal salaryMax = 22000m
+    )
     {
         return new CreateJobDescription(
             organizationId ?? Guid.NewGuid(),
@@ -446,19 +381,9 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             title,
             summary,
             description,
-            responsibilities ??
-            [
-                "Design and develop backend services."
-            ],
-            requirements ??
-            [
-                "5+ years of .NET experience."
-            ],
-            skills ??
-            [
-                "C#",
-                "ASP.NET Core"
-            ],
+            responsibilities ?? ["Design and develop backend services."],
+            requirements ?? ["5+ years of .NET experience."],
+            skills ?? ["C#", "ASP.NET Core"],
             location,
             countryCode,
             employmentType,
@@ -467,8 +392,7 @@ public class CreateJobDescriptionHandlerTests : BaseTest
             salaryMin,
             salaryMax,
             recruiterId ?? RecruiterId,
-            RecruiterId);
+            RecruiterId
+        );
     }
-
 }
-

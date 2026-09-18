@@ -24,8 +24,7 @@ public sealed class EmailTests
     [Fact]
     public void Create_WithNull_ThrowsInValidValueException()
     {
-        var exception = Assert.Throws<InValidValueException>(
-            () => Email.Create(null!));
+        var exception = Assert.Throws<InValidValueException>(() => Email.Create(null!));
 
         Assert.Equal(Email.RequiredMessage, exception.Message);
     }
@@ -34,11 +33,9 @@ public sealed class EmailTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]
-    public void Create_WithEmptyEmail_ThrowsInValidValueException(
-        string value)
+    public void Create_WithEmptyEmail_ThrowsInValidValueException(string value)
     {
-        var exception = Assert.Throws<InValidValueException>(
-            () => Email.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => Email.Create(value));
 
         Assert.Equal(Email.RequiredMessage, exception.Message);
     }
@@ -50,8 +47,7 @@ public sealed class EmailTests
 
         Assert.Equal(324, value.Length);
 
-        var exception = Assert.Throws<InValidValueException>(
-            () => Email.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => Email.Create(value));
 
         Assert.Equal(Email.MaxLengthMessage, exception.Message);
     }
@@ -74,12 +70,9 @@ public sealed class EmailTests
     [InlineData("invalid@")]
     [InlineData("@example.com")]
     [InlineData("invalid.example.com")]
-    
-    public void Create_WithInvalidEmail_ThrowsInValidValueException(
-        string value)
+    public void Create_WithInvalidEmail_ThrowsInValidValueException(string value)
     {
-        var exception = Assert.Throws<InValidValueException>(
-            () => Email.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => Email.Create(value));
 
         Assert.Equal(Email.InvalidEmail, exception.Message);
     }
@@ -87,8 +80,7 @@ public sealed class EmailTests
     [Fact]
     public void TryCreate_WithValidEmail_ReturnsEmailWithoutError()
     {
-        var (email, error) =
-            Email.TryCreate("john.doe@example.com");
+        var (email, error) = Email.TryCreate("john.doe@example.com");
 
         Assert.NotNull(email);
         Assert.Null(error);
@@ -98,8 +90,7 @@ public sealed class EmailTests
     [Fact]
     public void TryCreate_WithInvalidEmail_ReturnsErrorWithoutThrowing()
     {
-        var (email, error) =
-            Email.TryCreate("invalid");
+        var (email, error) = Email.TryCreate("invalid");
 
         Assert.Null(email);
         Assert.Equal(Email.InvalidEmail, error);
@@ -117,7 +108,7 @@ public sealed class EmailTests
     public void EmailWithWhitespaceAndValid_ReturnsEmailValue()
     {
         var email = Email.Create("invalid @Example.com");
-        
+
         Assert.Equal("invalid@example.com", email.ToString());
     }
 }

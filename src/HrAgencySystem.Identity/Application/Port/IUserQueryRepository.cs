@@ -6,7 +6,21 @@ namespace HrAgencySystem.Identity.Application.Port;
 
 public interface IUserQueryRepository
 {
-    Task<SliceResponse<UserProjection>> GetUsers(Guid organizationId, string search, IReadOnlyList<OrganizationRole> roles, int page, int pageSize, CancellationToken ct);
+    Task<SliceResponse<UserProjection>> GetUsers(
+        Guid organizationId,
+        string search,
+        IReadOnlyList<OrganizationRole> roles,
+        int page,
+        int pageSize,
+        CancellationToken ct
+    );
     Task<UserProjection?> GetUser(Guid organizationId, Guid userId, CancellationToken ct);
-    Task<SliceResponse<UserProjection>> GetUsersOwner(Guid? organizationId, string search, IReadOnlyList<OrganizationRole> roles, int page, int pageSize, CancellationToken ct);
+    Task<SliceResponse<UserProjection>> GetUsersOwner(
+        Guid? organizationId,
+        string search,
+        IReadOnlyList<OrganizationRole> roles,
+        int page,
+        int pageSize,
+        CancellationToken ct
+    );
 }

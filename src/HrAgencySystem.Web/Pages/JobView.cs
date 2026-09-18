@@ -13,7 +13,8 @@ public sealed record JobView(
     string Location,
     EmploymentType EmploymentType,
     IReadOnlyList<string> Responsibilities,
-    IReadOnlyList<string> Requirements)
+    IReadOnlyList<string> Requirements
+)
 {
     public static JobView FromProjection(JobPostProjection projection)
     {
@@ -23,6 +24,7 @@ public sealed record JobView(
             projection.Location,
             projection.EmploymentType,
             projection.Responsibilities,
-            projection.Requirements);
+            projection.Requirements
+        );
     }
 }

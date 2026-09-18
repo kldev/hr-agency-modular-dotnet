@@ -1,6 +1,7 @@
 namespace HrAgencySystem.Feeds.Model;
 
-public enum JobFeedType {
+public enum JobFeedType
+{
     Xml,
-    Json
+    Json,
 }

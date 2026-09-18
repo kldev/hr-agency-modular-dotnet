@@ -10,7 +10,8 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
     public async Task Create(
         Guid organizationId,
         IReadOnlyList<Guid> userIds,
-        IReadOnlyList<Guid> companyIds)
+        IReadOnlyList<Guid> companyIds
+    )
     {
         if (companyIds.Count == 0 || userIds.Count == 0)
             return;
@@ -31,7 +32,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Czytanie rysunku technicznego",
                     "Obsługa elektronarzędzi",
                     "Kontrola jakości wykonanych spoin",
-                    "Przygotowanie elementów do spawania"
+                    "Przygotowanie elementów do spawania",
                 ],
                 [
                     "Doświadczenie w spawaniu metodą MAG",
@@ -39,7 +40,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Aktualne uprawnienia spawalnicze będą dodatkowym atutem",
                     "Gotowość do pracy zmianowej",
                     "Dokładność i odpowiedzialność",
-                    "Brak przeciwwskazań do pracy fizycznej"
+                    "Brak przeciwwskazań do pracy fizycznej",
                 ],
                 [
                     "Spawanie konstrukcji stalowych zgodnie z dokumentacją",
@@ -47,7 +48,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Wykonywanie spoin zgodnie z wymaganiami jakościowymi",
                     "Kontrola wykonanych połączeń",
                     "Dbanie o stanowisko pracy",
-                    "Przestrzeganie zasad BHP"
+                    "Przestrzeganie zasad BHP",
                 ],
                 "Opole",
                 "PL",
@@ -56,8 +57,8 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                 CurrencyCode.PLN,
                 8500m,
                 12000m,
-                userIds[userIndex % userIds.Count], 
-                userIds[userIndex % userIds.Count] 
+                userIds[userIndex % userIds.Count],
+                userIds[userIndex % userIds.Count]
             )
         );
 
@@ -74,7 +75,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Czytanie rysunku technicznego",
                     "Podstawy programowania CNC",
                     "Pomiar detali",
-                    "Kontrola jakości"
+                    "Kontrola jakości",
                 ],
                 [
                     "Doświadczenie jako operator CNC",
@@ -82,7 +83,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Znajomość podstaw obróbki skrawaniem",
                     "Umiejętność posługiwania się przyrządami pomiarowymi",
                     "Gotowość do pracy zmianowej",
-                    "Dokładność"
+                    "Dokładność",
                 ],
                 [
                     "Obsługa tokarek i frezarek CNC",
@@ -90,7 +91,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Kontrola wymiarów produkowanych elementów",
                     "Wprowadzanie korekt do programu",
                     "Przygotowanie materiału do produkcji",
-                    "Prowadzenie podstawowej dokumentacji"
+                    "Prowadzenie podstawowej dokumentacji",
                 ],
                 "Nysa",
                 "PL",
@@ -117,7 +118,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Czytanie rysunku technicznego",
                     "Obsługa elektronarzędzi",
                     "Pomiar i dopasowanie elementów",
-                    "Prace ślusarskie"
+                    "Prace ślusarskie",
                 ],
                 [
                     "Doświadczenie w montażu konstrukcji stalowych",
@@ -125,7 +126,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Znajomość elektronarzędzi",
                     "Sprawność fizyczna",
                     "Gotowość do pracy na wysokości",
-                    "Prawo jazdy będzie dodatkowym atutem"
+                    "Prawo jazdy będzie dodatkowym atutem",
                 ],
                 [
                     "Montaż elementów konstrukcji stalowych",
@@ -133,7 +134,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Wiercenie i cięcie elementów",
                     "Wykonywanie prostych prac ślusarskich",
                     "Kontrola poprawności montażu",
-                    "Przestrzeganie zasad bezpieczeństwa"
+                    "Przestrzeganie zasad bezpieczeństwa",
                 ],
                 "Kędzierzyn-Koźle",
                 "PL",
@@ -160,7 +161,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Obsługa prostych maszyn",
                     "Kontrola wizualna produktów",
                     "Pakowanie produktów",
-                    "Przestrzeganie instrukcji stanowiskowych"
+                    "Przestrzeganie instrukcji stanowiskowych",
                 ],
                 [
                     "Gotowość do pracy zmianowej",
@@ -168,7 +169,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Dokładność",
                     "Odpowiedzialność",
                     "Gotowość do pracy fizycznej",
-                    "Doświadczenie produkcyjne będzie dodatkowym atutem"
+                    "Doświadczenie produkcyjne będzie dodatkowym atutem",
                 ],
                 [
                     "Obsługa stanowiska produkcyjnego",
@@ -176,7 +177,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Kontrola jakości wyrobów",
                     "Uzupełnianie materiałów produkcyjnych",
                     "Dbanie o porządek na stanowisku",
-                    "Przestrzeganie zasad BHP"
+                    "Przestrzeganie zasad BHP",
                 ],
                 "Brzeg",
                 "PL",
@@ -203,7 +204,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Praca ze skanerem magazynowym",
                     "Kompletacja zamówień",
                     "Przyjmowanie dostaw",
-                    "Kontrola stanów magazynowych"
+                    "Kontrola stanów magazynowych",
                 ],
                 [
                     "Doświadczenie w pracy magazynowej",
@@ -211,7 +212,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Gotowość do pracy zmianowej",
                     "Umiejętność pracy ze skanerem",
                     "Dobra organizacja pracy",
-                    "Odpowiedzialność"
+                    "Odpowiedzialność",
                 ],
                 [
                     "Przyjmowanie i wydawanie towaru",
@@ -219,7 +220,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Rozładunek dostaw",
                     "Przygotowywanie materiałów dla produkcji",
                     "Obsługa systemu magazynowego",
-                    "Dbanie o porządek w magazynie"
+                    "Dbanie o porządek w magazynie",
                 ],
                 "Opole",
                 "PL",
@@ -246,7 +247,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Czytanie rysunku technicznego",
                     "Pomiary przyrządami kontrolnymi",
                     "Dokumentacja jakościowa",
-                    "Analiza niezgodności"
+                    "Analiza niezgodności",
                 ],
                 [
                     "Doświadczenie w kontroli jakości",
@@ -254,7 +255,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Znajomość przyrządów pomiarowych",
                     "Dokładność i skrupulatność",
                     "Umiejętność analizy problemów",
-                    "Znajomość podstaw systemów jakości będzie atutem"
+                    "Znajomość podstaw systemów jakości będzie atutem",
                 ],
                 [
                     "Kontrola jakości wyrobów",
@@ -262,7 +263,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
                     "Dokumentowanie wyników kontroli",
                     "Identyfikowanie niezgodności",
                     "Współpraca z działem produkcji",
-                    "Udział w działaniach korygujących"
+                    "Udział w działaniach korygujących",
                 ],
                 "Krapkowice",
                 "PL",
@@ -277,14 +278,8 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
         );
     }
 
-    private async Task Create(
-        Guid userId,
-        CreateJobDescription request)
+    private async Task Create(Guid userId, CreateJobDescription request)
     {
-        await bus.InvokeAsync(
-            request with
-            {
-                RecruiterId = userId
-            });
+        await bus.InvokeAsync(request with { RecruiterId = userId });
     }
 }

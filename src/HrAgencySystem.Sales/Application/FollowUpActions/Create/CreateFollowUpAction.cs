@@ -8,4 +8,5 @@ public sealed record CreateFollowUpAction(
     Guid OpportunityId,
     string Content,
     DateTimeOffset FollowDateTime,
-    Guid CreatedBy) : ICreateCommand;
+    Guid CreatedBy
+) : ICreateCommand;

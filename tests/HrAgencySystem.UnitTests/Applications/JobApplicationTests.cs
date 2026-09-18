@@ -50,36 +50,22 @@ public sealed class JobApplicationTests
 
         application.Apply(@event);
 
-        Assert.Equal(
-            JobApplicationId.From(TestApplicationId),
-            application.Id);
+        Assert.Equal(JobApplicationId.From(TestApplicationId), application.Id);
 
-        Assert.Equal(
-            OrganizationId.From(TestOrganizationId),
-            application.OrganizationId);
+        Assert.Equal(OrganizationId.From(TestOrganizationId), application.OrganizationId);
 
-        Assert.Equal(
-            JobPostId.From(TestJobPostId),
-            application.JobPostId);
+        Assert.Equal(JobPostId.From(TestJobPostId), application.JobPostId);
 
-        Assert.Equal(
-            CandidateId.From(TestCandidateId),
-            application.CandidateId);
+        Assert.Equal(CandidateId.From(TestCandidateId), application.CandidateId);
 
-        Assert.Equal(
-            JobApplicationStatus.Applied,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Applied, application.Status);
 
-        Assert.Equal(
-            CandidateSource.Direct,
-            application.Source);
+        Assert.Equal(CandidateSource.Direct, application.Source);
 
         Assert.Equal(createdAt, application.CreatedAt);
         Assert.Equal(createdAt, application.UpdatedAt);
 
-        Assert.Equal(
-            Email.Create(EmailAddress),
-            application.Email);
+        Assert.Equal(Email.Create(EmailAddress), application.Email);
 
         Assert.Null(application.LastModifiedByUserId);
         Assert.Null(application.LastModifiedByUser);
@@ -94,59 +80,38 @@ public sealed class JobApplicationTests
         var occurredAt = DateTimeOffset.UtcNow;
         var author = CreateUserSnapshot();
 
-        application.Apply(
-            CreateScreeningStarted(
-                occurredAt,
-                author));
+        application.Apply(CreateScreeningStarted(occurredAt, author));
 
-        Assert.Equal(
-            JobApplicationStatus.Screening,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Screening, application.Status);
 
-        Assert.Equal(
-            occurredAt,
-            application.UpdatedAt);
+        Assert.Equal(occurredAt, application.UpdatedAt);
 
-        Assert.Equal(
-            TestUserId,
-            application.LastModifiedByUserId);
+        Assert.Equal(TestUserId, application.LastModifiedByUserId);
 
-        Assert.Same(
-            author,
-            application.LastModifiedByUser);
+        Assert.Same(author, application.LastModifiedByUser);
     }
 
     [Theory]
     [InlineData(JobApplicationStatus.Screening)]
     [InlineData(JobApplicationStatus.Interview)]
     public void Apply_assessment_started_should_change_allowed_status_to_assessment(
-        JobApplicationStatus currentStatus)
+        JobApplicationStatus currentStatus
+    )
     {
         var application = GivenApplication(currentStatus);
 
         var occurredAt = DateTimeOffset.UtcNow;
         var author = CreateUserSnapshot();
 
-        application.Apply(
-            CreateAssessmentStarted(
-                occurredAt,
-                author));
+        application.Apply(CreateAssessmentStarted(occurredAt, author));
 
-        Assert.Equal(
-            JobApplicationStatus.Assessment,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Assessment, application.Status);
 
-        Assert.Equal(
-            occurredAt,
-            application.UpdatedAt);
+        Assert.Equal(occurredAt, application.UpdatedAt);
 
-        Assert.Equal(
-            TestUserId,
-            application.LastModifiedByUserId);
+        Assert.Equal(TestUserId, application.LastModifiedByUserId);
 
-        Assert.Same(
-            author,
-            application.LastModifiedByUser);
+        Assert.Same(author, application.LastModifiedByUser);
     }
 
     [Theory]
@@ -156,57 +121,42 @@ public sealed class JobApplicationTests
     [InlineData(JobApplicationStatus.Rejected)]
     [InlineData(JobApplicationStatus.Withdrawn)]
     public void Apply_assessment_started_should_reject_invalid_status(
-        JobApplicationStatus currentStatus)
+        JobApplicationStatus currentStatus
+    )
     {
         var application = GivenApplication(currentStatus);
 
-        var exception = Assert.Throws<InvalidOperationException>(
-            () => application.Apply(CreateAssessmentStarted()));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            application.Apply(CreateAssessmentStarted())
+        );
 
-        Assert.Contains(
-            $"{currentStatus}",
-            exception.Message);
-        Assert.Contains(
-            "Not allowed to change job application status",
-            exception.Message);
+        Assert.Contains($"{currentStatus}", exception.Message);
+        Assert.Contains("Not allowed to change job application status", exception.Message);
     }
 
     [Theory]
     [InlineData(JobApplicationStatus.Screening)]
     [InlineData(JobApplicationStatus.Assessment)]
     public void Apply_interview_scheduled_should_change_allowed_status_to_interview(
-        JobApplicationStatus currentStatus)
+        JobApplicationStatus currentStatus
+    )
     {
         var application = GivenApplication(currentStatus);
 
         var occurredAt = DateTimeOffset.UtcNow;
         var author = CreateUserSnapshot();
 
-        application.Apply(
-            CreateInterviewScheduled(
-                TestInterviewId,
-                occurredAt,
-                author));
+        application.Apply(CreateInterviewScheduled(TestInterviewId, occurredAt, author));
 
-        Assert.Equal(
-            JobApplicationStatus.Interview,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Interview, application.Status);
 
-        Assert.Equal(
-            TestInterviewId,
-            application.LatestInterviewId);
+        Assert.Equal(TestInterviewId, application.LatestInterviewId);
 
-        Assert.Equal(
-            occurredAt,
-            application.UpdatedAt);
+        Assert.Equal(occurredAt, application.UpdatedAt);
 
-        Assert.Equal(
-            TestUserId,
-            application.LastModifiedByUserId);
+        Assert.Equal(TestUserId, application.LastModifiedByUserId);
 
-        Assert.Same(
-            author,
-            application.LastModifiedByUser);
+        Assert.Same(author, application.LastModifiedByUser);
     }
 
     [Theory]
@@ -216,52 +166,40 @@ public sealed class JobApplicationTests
     [InlineData(JobApplicationStatus.Rejected)]
     [InlineData(JobApplicationStatus.Withdrawn)]
     public void Apply_interview_scheduled_should_reject_invalid_status(
-        JobApplicationStatus currentStatus)
+        JobApplicationStatus currentStatus
+    )
     {
         var application = GivenApplication(currentStatus);
 
-        var exception = Assert.Throws<InvalidOperationException>(
-            () => application.Apply(CreateInterviewScheduled()));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            application.Apply(CreateInterviewScheduled())
+        );
 
-        Assert.Contains(
-            $"{currentStatus}",
-            exception.Message);
-        Assert.Contains(
-            "Not allowed to change job application status",
-            exception.Message);
+        Assert.Contains($"{currentStatus}", exception.Message);
+        Assert.Contains("Not allowed to change job application status", exception.Message);
     }
 
     [Theory]
     [InlineData(JobApplicationStatus.Interview)]
     [InlineData(JobApplicationStatus.Assessment)]
     public void Apply_offer_made_should_change_allowed_status_to_offer(
-        JobApplicationStatus currentStatus)
+        JobApplicationStatus currentStatus
+    )
     {
         var application = GivenApplication(currentStatus);
 
         var occurredAt = DateTimeOffset.UtcNow;
         var author = CreateUserSnapshot();
 
-        application.Apply(
-            CreateOfferMade(
-                occurredAt,
-                author));
+        application.Apply(CreateOfferMade(occurredAt, author));
 
-        Assert.Equal(
-            JobApplicationStatus.Offer,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Offer, application.Status);
 
-        Assert.Equal(
-            occurredAt,
-            application.UpdatedAt);
+        Assert.Equal(occurredAt, application.UpdatedAt);
 
-        Assert.Equal(
-            TestUserId,
-            application.LastModifiedByUserId);
+        Assert.Equal(TestUserId, application.LastModifiedByUserId);
 
-        Assert.Same(
-            author,
-            application.LastModifiedByUser);
+        Assert.Same(author, application.LastModifiedByUser);
     }
 
     [Theory]
@@ -271,20 +209,16 @@ public sealed class JobApplicationTests
     [InlineData(JobApplicationStatus.Hired)]
     [InlineData(JobApplicationStatus.Rejected)]
     [InlineData(JobApplicationStatus.Withdrawn)]
-    public void Apply_offer_made_should_reject_invalid_status(
-        JobApplicationStatus currentStatus)
+    public void Apply_offer_made_should_reject_invalid_status(JobApplicationStatus currentStatus)
     {
         var application = GivenApplication(currentStatus);
 
-        var exception = Assert.Throws<InvalidOperationException>(
-            () => application.Apply(CreateOfferMade()));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            application.Apply(CreateOfferMade())
+        );
 
-        Assert.Contains(
-            $"{currentStatus}",
-            exception.Message);
-        Assert.Contains(
-            "Not allowed to change job application status",
-            exception.Message);
+        Assert.Contains($"{currentStatus}", exception.Message);
+        Assert.Contains("Not allowed to change job application status", exception.Message);
     }
 
     [Fact]
@@ -295,26 +229,15 @@ public sealed class JobApplicationTests
         var occurredAt = DateTimeOffset.UtcNow;
         var author = CreateUserSnapshot();
 
-        application.Apply(
-            CreateHired(
-                occurredAt,
-                author));
+        application.Apply(CreateHired(occurredAt, author));
 
-        Assert.Equal(
-            JobApplicationStatus.Hired,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Hired, application.Status);
 
-        Assert.Equal(
-            occurredAt,
-            application.UpdatedAt);
+        Assert.Equal(occurredAt, application.UpdatedAt);
 
-        Assert.Equal(
-            TestUserId,
-            application.LastModifiedByUserId);
+        Assert.Equal(TestUserId, application.LastModifiedByUserId);
 
-        Assert.Same(
-            author,
-            application.LastModifiedByUser);
+        Assert.Same(author, application.LastModifiedByUser);
     }
 
     [Theory]
@@ -325,16 +248,13 @@ public sealed class JobApplicationTests
     [InlineData(JobApplicationStatus.Offer)]
     [InlineData(JobApplicationStatus.Rejected)]
     [InlineData(JobApplicationStatus.Withdrawn)]
-    public void Apply_hired_should_change_any_status_to_hired(
-        JobApplicationStatus currentStatus)
+    public void Apply_hired_should_change_any_status_to_hired(JobApplicationStatus currentStatus)
     {
         var application = GivenApplication(currentStatus);
 
         application.Apply(CreateHired());
 
-        Assert.Equal(
-            JobApplicationStatus.Hired,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Hired, application.Status);
     }
 
     [Theory]
@@ -344,53 +264,39 @@ public sealed class JobApplicationTests
     [InlineData(JobApplicationStatus.Interview)]
     [InlineData(JobApplicationStatus.Offer)]
     public void Apply_rejected_should_change_non_final_status_to_rejected(
-        JobApplicationStatus currentStatus)
+        JobApplicationStatus currentStatus
+    )
     {
         var application = GivenApplication(currentStatus);
 
         var occurredAt = DateTimeOffset.UtcNow;
         var author = CreateUserSnapshot();
 
-        application.Apply(
-            CreateRejected(
-                occurredAt,
-                author));
+        application.Apply(CreateRejected(occurredAt, author));
 
-        Assert.Equal(
-            JobApplicationStatus.Rejected,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Rejected, application.Status);
 
-        Assert.Equal(
-            occurredAt,
-            application.UpdatedAt);
+        Assert.Equal(occurredAt, application.UpdatedAt);
 
-        Assert.Equal(
-            TestUserId,
-            application.LastModifiedByUserId);
+        Assert.Equal(TestUserId, application.LastModifiedByUserId);
 
-        Assert.Same(
-            author,
-            application.LastModifiedByUser);
+        Assert.Same(author, application.LastModifiedByUser);
     }
 
     [Theory]
     [InlineData(JobApplicationStatus.Hired)]
     [InlineData(JobApplicationStatus.Rejected)]
     [InlineData(JobApplicationStatus.Withdrawn)]
-    public void Apply_rejected_should_reject_final_status(
-        JobApplicationStatus currentStatus)
+    public void Apply_rejected_should_reject_final_status(JobApplicationStatus currentStatus)
     {
         var application = GivenApplication(currentStatus);
 
-        var exception = Assert.Throws<InvalidOperationException>(
-            () => application.Apply(CreateRejected()));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            application.Apply(CreateRejected())
+        );
 
-        Assert.Contains(
-            $"{currentStatus}",
-            exception.Message);
-        Assert.Contains(
-            "Not allowed to change job application status",
-            exception.Message);
+        Assert.Contains($"{currentStatus}", exception.Message);
+        Assert.Contains("Not allowed to change job application status", exception.Message);
     }
 
     [Theory]
@@ -400,57 +306,44 @@ public sealed class JobApplicationTests
     [InlineData(JobApplicationStatus.Interview)]
     [InlineData(JobApplicationStatus.Offer)]
     public void Apply_withdrawn_should_change_non_final_status_to_withdrawn(
-        JobApplicationStatus currentStatus)
+        JobApplicationStatus currentStatus
+    )
     {
         var application = GivenApplication(currentStatus);
 
         var occurredAt = DateTimeOffset.UtcNow;
         var author = CreateUserSnapshot();
 
-        application.Apply(
-            CreateWithdrawn(
-                occurredAt,
-                author));
+        application.Apply(CreateWithdrawn(occurredAt, author));
 
-        Assert.Equal(
-            JobApplicationStatus.Withdrawn,
-            application.Status);
+        Assert.Equal(JobApplicationStatus.Withdrawn, application.Status);
 
-        Assert.Equal(
-            occurredAt,
-            application.UpdatedAt);
+        Assert.Equal(occurredAt, application.UpdatedAt);
 
-        Assert.Equal(
-            TestUserId,
-            application.LastModifiedByUserId);
+        Assert.Equal(TestUserId, application.LastModifiedByUserId);
 
-        Assert.Same(
-            author,
-            application.LastModifiedByUser);
+        Assert.Same(author, application.LastModifiedByUser);
     }
 
     [Theory]
     [InlineData(JobApplicationStatus.Hired)]
     [InlineData(JobApplicationStatus.Rejected)]
     [InlineData(JobApplicationStatus.Withdrawn)]
-    public void Apply_withdrawn_should_reject_final_status(
-        JobApplicationStatus currentStatus)
+    public void Apply_withdrawn_should_reject_final_status(JobApplicationStatus currentStatus)
     {
         var application = GivenApplication(currentStatus);
 
-        var exception = Assert.Throws<InvalidOperationException>(
-            () => application.Apply(CreateWithdrawn()));
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            application.Apply(CreateWithdrawn())
+        );
 
-        Assert.Contains(
-            "Not allowed to change job application",
-            exception.Message);
-        Assert.Contains(
-            currentStatus.ToString(),
-            exception.Message);
+        Assert.Contains("Not allowed to change job application", exception.Message);
+        Assert.Contains(currentStatus.ToString(), exception.Message);
     }
 
     private static JobApplication GivenApplication(
-        JobApplicationStatus status = JobApplicationStatus.Applied)
+        JobApplicationStatus status = JobApplicationStatus.Applied
+    )
     {
         var application = JobApplication.Empty();
 
@@ -495,86 +388,115 @@ public sealed class JobApplicationTests
 
             case JobApplicationStatus.Applied:
             default:
-                throw new ArgumentOutOfRangeException(
-                    nameof(status),
-                    status,
-                    null);
+                throw new ArgumentOutOfRangeException(nameof(status), status, null);
         }
 
         return application;
     }
 
-    private static JobApplicationCreated CreateApplicationCreated(
-        DateTimeOffset? createdAt = null)
+    private static JobApplicationCreated CreateApplicationCreated(DateTimeOffset? createdAt = null)
     {
         return new JobApplicationCreated(
-            TestApplicationId, 
-            TestOrganizationId, 
-            TestJobPostId, "Job Title",
+            TestApplicationId,
+            TestOrganizationId,
+            TestJobPostId,
+            "Job Title",
             CandidateSource.Direct,
             new CompanySnapshot(Guid.NewGuid(), "", ""),
             new CandidateInfo(TestCandidateId, EmailAddress, "+1 112 123 124", "Test", "Last"),
             EmailAddress,
             "+1 112 123 124",
-            "Test", "Last",
-            createdAt ?? DateTimeOffset.UtcNow, null);
+            "Test",
+            "Last",
+            createdAt ?? DateTimeOffset.UtcNow,
+            null
+        );
     }
 
     private static JobApplicationScreeningStarted CreateScreeningStarted(
         DateTimeOffset? occurredAt = null,
-        UserSnapshot? author = null)
+        UserSnapshot? author = null
+    )
     {
-        return new JobApplicationScreeningStarted(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            author ?? TestUser);
+        return new JobApplicationScreeningStarted(
+            TestApplicationId,
+            occurredAt ?? DateTimeOffset.UtcNow,
+            author ?? TestUser
+        );
     }
 
     private static JobApplicationAssessmentStarted CreateAssessmentStarted(
         DateTimeOffset? occurredAt = null,
-        UserSnapshot? author = null)
+        UserSnapshot? author = null
+    )
     {
-        return new JobApplicationAssessmentStarted(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            author ?? TestUser);
+        return new JobApplicationAssessmentStarted(
+            TestApplicationId,
+            occurredAt ?? DateTimeOffset.UtcNow,
+            author ?? TestUser
+        );
     }
 
     private static JobApplicationInterviewScheduled CreateInterviewScheduled(
         Guid? interviewId = null,
         DateTimeOffset? occurredAt = null,
-        UserSnapshot? author = null)
+        UserSnapshot? author = null
+    )
     {
-        return new JobApplicationInterviewScheduled(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            author ?? TestUser, interviewId ?? Guid.NewGuid());
+        return new JobApplicationInterviewScheduled(
+            TestApplicationId,
+            occurredAt ?? DateTimeOffset.UtcNow,
+            author ?? TestUser,
+            interviewId ?? Guid.NewGuid()
+        );
     }
 
     private static JobApplicationOfferMade CreateOfferMade(
         DateTimeOffset? occurredAt = null,
-        UserSnapshot? author = null)
+        UserSnapshot? author = null
+    )
     {
-        return new JobApplicationOfferMade(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            author ?? TestUser);
+        return new JobApplicationOfferMade(
+            TestApplicationId,
+            occurredAt ?? DateTimeOffset.UtcNow,
+            author ?? TestUser
+        );
     }
 
     private static JobApplicationHired CreateHired(
         DateTimeOffset? occurredAt = null,
-        UserSnapshot? author = null)
+        UserSnapshot? author = null
+    )
     {
-        return new JobApplicationHired(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            author ?? TestUser);
+        return new JobApplicationHired(
+            TestApplicationId,
+            occurredAt ?? DateTimeOffset.UtcNow,
+            author ?? TestUser
+        );
     }
 
     private static JobApplicationRejected CreateRejected(
         DateTimeOffset? occurredAt = null,
-        UserSnapshot? author = null)
+        UserSnapshot? author = null
+    )
     {
-        return new JobApplicationRejected(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            author ?? TestUser);
+        return new JobApplicationRejected(
+            TestApplicationId,
+            occurredAt ?? DateTimeOffset.UtcNow,
+            author ?? TestUser
+        );
     }
 
     private static JobApplicationWithdrawn CreateWithdrawn(
         DateTimeOffset? occurredAt = null,
-        UserSnapshot? author = null)
+        UserSnapshot? author = null
+    )
     {
-        return new JobApplicationWithdrawn(TestApplicationId, occurredAt ?? DateTimeOffset.UtcNow,
-            author ?? TestUser);
+        return new JobApplicationWithdrawn(
+            TestApplicationId,
+            occurredAt ?? DateTimeOffset.UtcNow,
+            author ?? TestUser
+        );
     }
 
     private static UserSnapshot CreateUserSnapshot()

@@ -1,4 +1,5 @@
 namespace HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
+
 public readonly record struct JobDescriptionId(Guid Value)
 {
     public static JobDescriptionId New()

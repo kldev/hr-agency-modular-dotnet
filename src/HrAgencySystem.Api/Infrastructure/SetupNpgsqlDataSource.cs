@@ -13,7 +13,8 @@ internal static class SetupNpgsqlDataSource
             var connectionString =
                 configuration.GetConnectionString("Postgres")
                 ?? throw new InvalidOperationException(
-                    "Postgres connection string is not configured.");
+                    "Postgres connection string is not configured."
+                );
 
             return NpgsqlDataSource.Create(connectionString);
         });

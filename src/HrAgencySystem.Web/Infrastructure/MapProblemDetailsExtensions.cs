@@ -9,8 +9,7 @@ public static class MapProblemDetailsExtensions
         public void AddGlobalExceptionHandler()
         {
             services.AddExceptionHandler<GlobalExceptionHandler>();
-            services.AddProblemDetails(); 
+            services.AddProblemDetails();
         }
     }
-    
 }

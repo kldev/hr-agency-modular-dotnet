@@ -9,40 +9,36 @@ namespace HrAgencySystem.IntegrationTests.JobDescriptions;
 [Collection(IntegrationCollection.Name)]
 public sealed class AssignRecruiterRequestTests(
     IntegrationEnvironment env,
-    ITestOutputHelper output)
-    : BaseIntegrationTest(env, output)
+    ITestOutputHelper output
+) : BaseIntegrationTest(env, output)
 {
     [Fact]
     public async Task ShouldAssignRecruiter()
     {
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
-        
+        Client.WithOrganizationId(Guid.NewGuid());
+
         var createRequest = JobDescriptionTestData.CreateRequest();
 
-        var createResponse = await Client.PostAsJsonAsync(
-            "/api/job-description",
-            createRequest);
-        
+        var createResponse = await Client.PostAsJsonAsync("/api/job-description", createRequest);
+
         var created = await createResponse.ReadWithJson<JobDescriptionCreated>(OutputHelper);
         createResponse.EnsureSuccessStatusCode();
         var recruiterId = Guid.NewGuid();
 
-        var request = JobDescriptionTestData.CreateAssignRecruiterRequest(
-            recruiterId);
+        var request = JobDescriptionTestData.CreateAssignRecruiterRequest(recruiterId);
 
         Assert.NotNull(created);
         // Act
         var response = await Client.PutAsJsonAsync(
             $"/api/job-description/{created.JobDescriptionId}/assign-recruiter",
-            request);
+            request
+        );
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var result =
-            await response.ReadWithJson<JobDescriptionRecruiterAssigned>();
+        var result = await response.ReadWithJson<JobDescriptionRecruiterAssigned>();
 
         Assert.NotNull(result);
         Assert.Equal(recruiterId, result.Recruiter.Id);

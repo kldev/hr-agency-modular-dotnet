@@ -20,42 +20,30 @@ public class ChangeJobApplicationStatusHandlerTests
     private readonly IUserSnapshotRepository _snapshotRepository =
         Substitute.For<IUserSnapshotRepository>();
 
-    private readonly INoteRepository _noteRepository =
-        Substitute.For<INoteRepository>();
-    
-    private readonly IRecruitmentService _service =
-        Substitute.For<IRecruitmentService>();
+    private readonly INoteRepository _noteRepository = Substitute.For<INoteRepository>();
 
-    private readonly IClock _clock =
-        Substitute.For<IClock>();
+    private readonly IRecruitmentService _service = Substitute.For<IRecruitmentService>();
+
+    private readonly IClock _clock = Substitute.For<IClock>();
 
     private readonly Guid _organizationId = Guid.NewGuid();
     private readonly Guid _candidateId = Guid.NewGuid();
     private readonly Guid _jobApplicationId = Guid.NewGuid();
     private readonly Guid _modifiedBy = Guid.NewGuid();
 
-    private readonly DateTimeOffset _now =
-        new(2026, 9, 7, 10, 0, 0, TimeSpan.Zero);
+    private readonly DateTimeOffset _now = new(2026, 9, 7, 10, 0, 0, TimeSpan.Zero);
 
     private readonly UserSnapshot _user;
 
     public ChangeJobApplicationStatusHandlerTests()
     {
-        _user = new UserSnapshot(
-            _modifiedBy,
-            "John",
-            "Smith",
-            "john.smith@example.com");
+        _user = new UserSnapshot(_modifiedBy, "John", "Smith", "john.smith@example.com");
 
         _clock.UtcNow.Returns(_now);
 
-        _snapshotRepository
-            .GetUserAsync(_modifiedBy, Arg.Any<CancellationToken>())
-            .Returns(_user);
-        
-        _service
-            .GetUserAsync(_modifiedBy, Arg.Any<CancellationToken>())
-            .Returns(_user);
+        _snapshotRepository.GetUserAsync(_modifiedBy, Arg.Any<CancellationToken>()).Returns(_user);
+
+        _service.GetUserAsync(_modifiedBy, Arg.Any<CancellationToken>()).Returns(_user);
     }
 
     [Fact]
@@ -93,9 +81,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         var aggregate = CreateAggregate(JobApplicationStatus.Screening);
 
-        var command = CreateCommand(
-            JobApplicationUpdateStatus.Interview,
-            interviewId: interviewId);
+        var command = CreateCommand(JobApplicationUpdateStatus.Interview, interviewId: interviewId);
 
         var (result, events) = await Handle(command, aggregate);
 
@@ -104,16 +90,14 @@ public class ChangeJobApplicationStatusHandlerTests
 
         Assert.Equal(2, events.Count);
 
-        var interviewEvent =
-            Assert.IsType<JobApplicationInterviewScheduled>(events[0]);
+        var interviewEvent = Assert.IsType<JobApplicationInterviewScheduled>(events[0]);
 
         Assert.Equal(_jobApplicationId, interviewEvent.JobApplicationId);
         Assert.Equal(interviewId, interviewEvent.InterviewId);
         Assert.Equal(_now, interviewEvent.OccurredAt);
         Assert.Equal(_user, interviewEvent.Author);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(JobApplicationStatus.Interview, statusChangedEvent.NewStatus);
     }
@@ -134,8 +118,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         Assert.IsType<JobApplicationAssessmentStarted>(events[0]);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(JobApplicationStatus.Assessment, statusChangedEvent.NewStatus);
     }
@@ -156,8 +139,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         Assert.IsType<JobApplicationOfferMade>(events[0]);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(JobApplicationStatus.Offer, statusChangedEvent.NewStatus);
     }
@@ -178,8 +160,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         Assert.IsType<JobApplicationHired>(events[0]);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(JobApplicationStatus.Hired, statusChangedEvent.NewStatus);
     }
@@ -200,8 +181,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         Assert.IsType<JobApplicationRejected>(events[0]);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(JobApplicationStatus.Rejected, statusChangedEvent.NewStatus);
     }
@@ -222,8 +202,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         Assert.IsType<JobApplicationWithdrawn>(events[0]);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(JobApplicationStatus.Withdrawn, statusChangedEvent.NewStatus);
     }
@@ -236,7 +215,8 @@ public class ChangeJobApplicationStatusHandlerTests
         var command = CreateCommand(
             JobApplicationUpdateStatus.Interview,
             interviewId: Guid.NewGuid(),
-            note: "Candidate passed the screening.");
+            note: "Candidate passed the screening."
+        );
 
         var (result, events) = await Handle(command, aggregate);
 
@@ -254,13 +234,17 @@ public class ChangeJobApplicationStatusHandlerTests
         Assert.Equal("Candidate passed the screening.", noteEvent.Note);
         Assert.Equal(_user, noteEvent.Author);
 
-        await _noteRepository.Received(1).CreateNoteAsync(
-            Arg.Is<CreateNoteDocument>(x =>
-                x.JobApplicationId == _jobApplicationId &&
-                x.OrganizationId == _organizationId &&
-                x.CandidateId == _candidateId &&
-                x.Text.Value == "Candidate passed the screening."),
-            _user);
+        await _noteRepository
+            .Received(1)
+            .CreateNoteAsync(
+                Arg.Is<CreateNoteDocument>(x =>
+                    x.JobApplicationId == _jobApplicationId
+                    && x.OrganizationId == _organizationId
+                    && x.CandidateId == _candidateId
+                    && x.Text.Value == "Candidate passed the screening."
+                ),
+                _user
+            );
     }
 
     [Fact]
@@ -268,9 +252,7 @@ public class ChangeJobApplicationStatusHandlerTests
     {
         var aggregate = CreateAggregate(JobApplicationStatus.Screening);
 
-        var command = CreateCommand(
-            JobApplicationUpdateStatus.Assessment,
-            note: string.Empty);
+        var command = CreateCommand(JobApplicationUpdateStatus.Assessment, note: string.Empty);
 
         var (_, events) = await Handle(command, aggregate);
 
@@ -280,9 +262,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         await _noteRepository
             .DidNotReceive()
-            .CreateNoteAsync(
-                Arg.Any<CreateNoteDocument>(),
-                Arg.Any<UserSnapshot>());
+            .CreateNoteAsync(Arg.Any<CreateNoteDocument>(), Arg.Any<UserSnapshot>());
     }
 
     [Fact]
@@ -290,9 +270,7 @@ public class ChangeJobApplicationStatusHandlerTests
     {
         var aggregate = CreateAggregate(JobApplicationStatus.Screening);
 
-        var command = CreateCommand(
-            JobApplicationUpdateStatus.Assessment,
-            note: null!);
+        var command = CreateCommand(JobApplicationUpdateStatus.Assessment, note: null!);
 
         var (_, events) = await Handle(command, aggregate);
 
@@ -300,9 +278,7 @@ public class ChangeJobApplicationStatusHandlerTests
 
         await _noteRepository
             .DidNotReceive()
-            .CreateNoteAsync(
-                Arg.Any<CreateNoteDocument>(),
-                Arg.Any<UserSnapshot>());
+            .CreateNoteAsync(Arg.Any<CreateNoteDocument>(), Arg.Any<UserSnapshot>());
     }
 
     [Fact]
@@ -312,23 +288,22 @@ public class ChangeJobApplicationStatusHandlerTests
 
         var command = CreateCommand(
             JobApplicationUpdateStatus.Screening,
-            organizationId: Guid.NewGuid());
+            organizationId: Guid.NewGuid()
+        );
 
-
-        _service.When(x => x.ValidateAggregateUpdate(aggregate, command.OrganizationId))
+        _service
+            .When(x => x.ValidateAggregateUpdate(aggregate, command.OrganizationId))
             .Throws<OrganizationAccessDeniedException>();
-        
-        var exception = await Assert.ThrowsAsync<OrganizationAccessDeniedException>(() => Handle(command, aggregate));
 
-        Assert.Equal(
-            OrganizationAccessDeniedException.ProblemMessage,
-            exception.Message);
+        var exception = await Assert.ThrowsAsync<OrganizationAccessDeniedException>(() =>
+            Handle(command, aggregate)
+        );
+
+        Assert.Equal(OrganizationAccessDeniedException.ProblemMessage, exception.Message);
 
         await _snapshotRepository
             .DidNotReceive()
-            .GetUserAsync(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>());
+            .GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -344,14 +319,15 @@ public class ChangeJobApplicationStatusHandlerTests
 
         var command = CreateCommand(
             JobApplicationUpdateStatus.Screening,
-            modifiedBy: missingUserId);
+            modifiedBy: missingUserId
+        );
 
-        var exception = await Assert.ThrowsAsync<NotFoundException>(() => Handle(command, aggregate));
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
+            Handle(command, aggregate)
+        );
 
-        Assert.Contains("User not found",
-            exception.Message);
-        Assert.Contains(missingUserId.ToString(),
-            exception.Message);
+        Assert.Contains("User not found", exception.Message);
+        Assert.Contains(missingUserId.ToString(), exception.Message);
     }
 
     [Fact]
@@ -359,21 +335,17 @@ public class ChangeJobApplicationStatusHandlerTests
     {
         var aggregate = CreateAggregate(JobApplicationStatus.Screening);
 
-        var command = CreateCommand(
-            JobApplicationUpdateStatus.Interview,
-            interviewId: null);
+        var command = CreateCommand(JobApplicationUpdateStatus.Interview, interviewId: null);
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command, aggregate));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(command, aggregate)
+        );
 
-        Assert.Equal(
-            "Interview id must be specified.",
-            exception.Message);
+        Assert.Equal("Interview id must be specified.", exception.Message);
 
         await _noteRepository
             .DidNotReceive()
-            .CreateNoteAsync(
-                Arg.Any<CreateNoteDocument>(),
-                Arg.Any<UserSnapshot>());
+            .CreateNoteAsync(Arg.Any<CreateNoteDocument>(), Arg.Any<UserSnapshot>());
     }
 
     [Fact]
@@ -381,32 +353,27 @@ public class ChangeJobApplicationStatusHandlerTests
     {
         var aggregate = CreateAggregate(JobApplicationStatus.Applied);
 
-        var command = CreateCommand(
-            JobApplicationUpdateStatus.Assessment);
+        var command = CreateCommand(JobApplicationUpdateStatus.Assessment);
 
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command, aggregate));
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(command, aggregate)
+        );
 
-        Assert.Contains(
-            "Not allowed to change job application status",
-            exception.Message);
+        Assert.Contains("Not allowed to change job application status", exception.Message);
     }
-    
 
     [Fact]
     public async Task Should_use_clock_time_for_all_events()
     {
         var aggregate = CreateAggregate(JobApplicationStatus.Applied);
 
-        var command = CreateCommand(
-            JobApplicationUpdateStatus.Screening);
+        var command = CreateCommand(JobApplicationUpdateStatus.Screening);
 
         var (_, events) = await Handle(command, aggregate);
 
-        var screeningEvent =
-            Assert.IsType<JobApplicationScreeningStarted>(events[0]);
+        var screeningEvent = Assert.IsType<JobApplicationScreeningStarted>(events[0]);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(_now, screeningEvent.OccurredAt);
         Assert.Equal(_now, statusChangedEvent.OccurredAt);
@@ -417,25 +384,22 @@ public class ChangeJobApplicationStatusHandlerTests
     {
         var aggregate = CreateAggregate(JobApplicationStatus.Applied);
 
-        var command = CreateCommand(
-            JobApplicationUpdateStatus.Screening);
+        var command = CreateCommand(JobApplicationUpdateStatus.Screening);
 
         var (_, events) = await Handle(command, aggregate);
 
-        var screeningEvent =
-            Assert.IsType<JobApplicationScreeningStarted>(events[0]);
+        var screeningEvent = Assert.IsType<JobApplicationScreeningStarted>(events[0]);
 
-        var statusChangedEvent =
-            Assert.IsType<JobApplicationStatusChanged>(events[1]);
+        var statusChangedEvent = Assert.IsType<JobApplicationStatusChanged>(events[1]);
 
         Assert.Equal(_user, screeningEvent.Author);
         Assert.Equal(_user, statusChangedEvent.Author);
     }
 
-    private async Task<(ChangeJobApplicationStatusResult Result, Wolverine.Marten.Events Events)>
-        Handle(
-            ChangeJobApplicationStatus command,
-            JobApplication aggregate)
+    private async Task<(
+        ChangeJobApplicationStatusResult Result,
+        Wolverine.Marten.Events Events
+    )> Handle(ChangeJobApplicationStatus command, JobApplication aggregate)
     {
         return await ChangeJobApplicationStatusHandler.Handle(
             command,
@@ -443,7 +407,8 @@ public class ChangeJobApplicationStatusHandlerTests
             _service,
             _noteRepository,
             _clock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
     }
 
     private ChangeJobApplicationStatus CreateCommand(
@@ -451,7 +416,8 @@ public class ChangeJobApplicationStatusHandlerTests
         Guid? interviewId = null,
         string? note = "",
         Guid? organizationId = null,
-        Guid? modifiedBy = null)
+        Guid? modifiedBy = null
+    )
     {
         return new ChangeJobApplicationStatus(
             _jobApplicationId,
@@ -459,28 +425,29 @@ public class ChangeJobApplicationStatusHandlerTests
             note!,
             status,
             interviewId,
-            modifiedBy ?? _modifiedBy);
+            modifiedBy ?? _modifiedBy
+        );
     }
 
     private JobApplication CreateAggregate(JobApplicationStatus status)
     {
         var application = JobApplication.Empty();
         var now = DateTimeOffset.UtcNow;
-        
+
         application.Apply(GetCreatedEvent(now));
 
         ChangeStatusPipeline(status, application, now);
-        
-        ApplyStatusEvent(
-            application,
-            status,
-            _jobApplicationId,
-            now);
+
+        ApplyStatusEvent(application, status, _jobApplicationId, now);
 
         return application;
     }
 
-    private void ChangeStatusPipeline(JobApplicationStatus status, JobApplication application, DateTimeOffset now)
+    private void ChangeStatusPipeline(
+        JobApplicationStatus status,
+        JobApplication application,
+        DateTimeOffset now
+    )
     {
         switch (status)
         {
@@ -489,28 +456,34 @@ public class ChangeJobApplicationStatusHandlerTests
                     application,
                     JobApplicationStatus.Screening,
                     _jobApplicationId,
-                    now);
+                    now
+                );
                 break;
-            case JobApplicationStatus.Interview or JobApplicationStatus.Hired or JobApplicationStatus.Offer:
+            case JobApplicationStatus.Interview
+            or JobApplicationStatus.Hired
+            or JobApplicationStatus.Offer:
             {
                 ApplyStatusEvent(
                     application,
                     JobApplicationStatus.Screening,
                     _jobApplicationId,
-                    now);
-            
+                    now
+                );
+
                 ApplyStatusEvent(
                     application,
                     JobApplicationStatus.Assessment,
                     _jobApplicationId,
-                    now);
-            
+                    now
+                );
+
                 if (status == JobApplicationStatus.Hired)
                     ApplyStatusEvent(
                         application,
                         JobApplicationStatus.Offer,
                         _jobApplicationId,
-                        now);
+                        now
+                    );
                 break;
             }
         }
@@ -524,28 +497,22 @@ public class ChangeJobApplicationStatusHandlerTests
             _candidateId,
             "Senior Software Developer",
             CandidateSource.InternalDatabase,
-            new CompanySnapshot(
-                Guid.NewGuid(),
-                "Acme Corporation",
-                "acme.example.com"),
-            new CandidateInfo(
-                _candidateId,
-                "john.smith@example.com",
-                "",
-                "John",
-                "Smith"),
+            new CompanySnapshot(Guid.NewGuid(), "Acme Corporation", "acme.example.com"),
+            new CandidateInfo(_candidateId, "john.smith@example.com", "", "John", "Smith"),
             "john.smith@example.com",
             "+48 600 123 456",
             "John",
             "Smith",
-            now);
+            now
+        );
     }
 
     private void ApplyStatusEvent(
         JobApplication application,
         JobApplicationStatus status,
         Guid jobApplicationId,
-        DateTimeOffset now)
+        DateTimeOffset now
+    )
     {
         switch (status)
         {
@@ -553,19 +520,11 @@ public class ChangeJobApplicationStatusHandlerTests
                 return;
 
             case JobApplicationStatus.Hired:
-                application.Apply(
-                    new JobApplicationHired(
-                        jobApplicationId,
-                        now,
-                        _user));
+                application.Apply(new JobApplicationHired(jobApplicationId, now, _user));
                 return;
 
             case JobApplicationStatus.Screening:
-                application.Apply(
-                    new JobApplicationScreeningStarted(
-                        jobApplicationId,
-                        now,
-                        _user));
+                application.Apply(new JobApplicationScreeningStarted(jobApplicationId, now, _user));
                 return;
 
             case JobApplicationStatus.Interview:
@@ -574,39 +533,27 @@ public class ChangeJobApplicationStatusHandlerTests
                         jobApplicationId,
                         now,
                         _user,
-                        Guid.NewGuid()));
+                        Guid.NewGuid()
+                    )
+                );
                 return;
 
             case JobApplicationStatus.Assessment:
                 application.Apply(
-                    new JobApplicationAssessmentStarted(
-                        jobApplicationId,
-                        now,
-                        _user));
+                    new JobApplicationAssessmentStarted(jobApplicationId, now, _user)
+                );
                 return;
 
             case JobApplicationStatus.Offer:
-                application.Apply(
-                    new JobApplicationOfferMade(
-                        jobApplicationId,
-                        now,
-                        _user));
+                application.Apply(new JobApplicationOfferMade(jobApplicationId, now, _user));
                 return;
 
             case JobApplicationStatus.Rejected:
-                application.Apply(
-                    new JobApplicationRejected(
-                        jobApplicationId,
-                        now,
-                        _user));
+                application.Apply(new JobApplicationRejected(jobApplicationId, now, _user));
                 return;
 
             case JobApplicationStatus.Withdrawn:
-                application.Apply(
-                    new JobApplicationWithdrawn(
-                        jobApplicationId,
-                        now,
-                        _user));
+                application.Apply(new JobApplicationWithdrawn(jobApplicationId, now, _user));
                 return;
 
             default:

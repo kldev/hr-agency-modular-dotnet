@@ -12,7 +12,8 @@ internal static class MapChangeStage
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/sales/opportunity/{id}/stage
-        group.MapPut("{opportunityId:guid}/stage", Handler)
+        group
+            .MapPut("{opportunityId:guid}/stage", Handler)
             .WithSummary("Change stage")
             .WithName("Change opportunity stage")
             .Produces<StageChanged>()
@@ -24,17 +25,19 @@ internal static class MapChangeStage
         AppUserAuthenticated user,
         Guid opportunityId,
         ChangeOpportunityStageRequest request,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var command = new ChangeOpportunityStage(
             opportunityId,
-            user.OrganizationId, 
-            request.Stage, 
+            user.OrganizationId,
+            request.Stage,
             request.LostReason ?? "",
-            user.UserId);
-        
+            user.UserId
+        );
+
         var result = await bus.InvokeAsync<StageChanged>(command, ct);
-        
+
         return TypedResults.Ok(result);
     }
 }

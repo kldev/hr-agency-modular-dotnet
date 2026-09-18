@@ -11,24 +11,21 @@ namespace HrAgencySystem.IntegrationTests.Owner;
 [Collection(IntegrationCollection.Name)]
 public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
 {
-    public CreateOwnerEndpointTests(IntegrationEnvironment env, ITestOutputHelper outputHelper) : base(env, outputHelper) 
+    public CreateOwnerEndpointTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)
+        : base(env, outputHelper)
     {
         Cleaner.CleanOwnerEmailReservation().Wait();
         Client.AsOwner();
     }
-    
+
     [Fact]
     public async Task ShouldCreateOwner()
     {
         // Arrange
-        var request = new CreatePlatformOwner(
-            Email: "owner@test.com",
-            Password: "Password123!");
+        var request = new CreatePlatformOwner(Email: "owner@test.com", Password: "Password123!");
 
         // Act
-        var response = await Client.PostAsJsonAsync(
-            "/api/owners",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/owners", request);
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
@@ -45,26 +42,22 @@ public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
     public async Task ShouldNotCreateTwoOwnersWithTheSameEmail()
     {
         // Arrange
-        var request = new CreatePlatformOwner(
-            Email: "owner@test.com",
-            Password: "Password123!");
+        var request = new CreatePlatformOwner(Email: "owner@test.com", Password: "Password123!");
 
         // Act
-        var firstResponse = await Client.PostAsJsonAsync(
-            "/api/owners",
-            request);
+        var firstResponse = await Client.PostAsJsonAsync("/api/owners", request);
 
         var secondResponse = await Client.PostAsJsonAsync(
             "/api/owners",
             request with
             {
-                Password = "AnotherPassword123!"
-            });
+                Password = "AnotherPassword123!",
+            }
+        );
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, firstResponse.StatusCode);
         Assert.Equal(HttpStatusCode.BadRequest, secondResponse.StatusCode);
-
     }
 
     [Fact]
@@ -73,20 +66,18 @@ public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
         // Arrange
         var firstRequest = new CreatePlatformOwner(
             Email: "owner1@test.com",
-            Password: "Password123!");
+            Password: "Password123!"
+        );
 
         var secondRequest = new CreatePlatformOwner(
             Email: "owner2@test.com",
-            Password: "Password123!");
+            Password: "Password123!"
+        );
 
         // Act
-        var firstResponse = await Client.PostAsJsonAsync(
-            "/api/owners",
-            firstRequest);
+        var firstResponse = await Client.PostAsJsonAsync("/api/owners", firstRequest);
 
-        var secondResponse = await Client.PostAsJsonAsync(
-            "/api/owners",
-            secondRequest);
+        var secondResponse = await Client.PostAsJsonAsync("/api/owners", secondRequest);
 
         // Assert
         firstResponse.EnsureSuccessStatusCode();
@@ -99,10 +90,9 @@ public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
         Assert.NotNull(firstOwner);
         Assert.NotNull(secondOwner);
         Assert.NotEqual(firstOwner.Id, secondOwner.Id);
-        
+
         Assert.Equal(firstRequest.Email, firstOwner.Email);
         Assert.Equal(secondRequest.Email, secondOwner.Email);
-        
     }
 
     [Fact]
@@ -110,18 +100,14 @@ public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
     {
         Client.AsOrganizationRoles();
 
-        var request = new CreatePlatformOwner(
-            Email: "owner@test.com",
-            Password: "Password123!");
+        var request = new CreatePlatformOwner(Email: "owner@test.com", Password: "Password123!");
 
         // Act
-        var response = await Client.PostAsJsonAsync(
-            "/api/owners",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/owners", request);
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
-    
+
     [Fact]
     public async Task WithOwnerRoleShouldCreateOwner()
     {
@@ -129,14 +115,12 @@ public sealed class CreateOwnerEndpointTests : BaseIntegrationTest
 
         var request = new CreatePlatformOwner(
             Email: "otherOwner@test.com",
-            Password: "Password123!");
+            Password: "Password123!"
+        );
 
         // Act
-        var response = await Client.PostAsJsonAsync(
-            "/api/owners",
-            request);
+        var response = await Client.PostAsJsonAsync("/api/owners", request);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
     }
-
 }

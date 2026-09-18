@@ -23,8 +23,7 @@ public class TaxIdTests
     [InlineData("   ")]
     public void Create_WithMissingValue_ThrowsInValidValueException(string value)
     {
-        Assert
-            .Throws<InValidValueException>(() => TaxId.Create(value));
+        Assert.Throws<InValidValueException>(() => TaxId.Create(value));
     }
 
     [Fact]
@@ -32,8 +31,7 @@ public class TaxIdTests
     {
         var value = new string('A', 51);
 
-        Assert
-            .Throws<InValidValueException>(() => TaxId.Create(value));
+        Assert.Throws<InValidValueException>(() => TaxId.Create(value));
     }
 
     [Fact]

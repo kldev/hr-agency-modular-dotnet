@@ -8,7 +8,8 @@ public sealed record JobApplicationUpdated(
     string FirstName,
     string LastName,
     string Phone,
-    UserSnapshot Author):IJobApplicationEvent
+    UserSnapshot Author
+) : IJobApplicationEvent
 {
     public string FullName => $"{FirstName} {LastName}".Trim();
 }

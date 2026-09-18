@@ -20,4 +20,5 @@ public sealed record JobDescriptionUpdated(
     decimal SalaryMin,
     decimal SalaryMax,
     UserSnapshot ModifiedBy,
-    DateTimeOffset UpdatedAt);
+    DateTimeOffset UpdatedAt
+);

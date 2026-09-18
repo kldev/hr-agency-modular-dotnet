@@ -11,4 +11,5 @@ public sealed record InterviewRescheduled(
     UserSnapshot Author,
     DateTimeOffset OccurredAt,
     string Location = "",
-    string MeetingUrl = "") : IInterviewEvent;
+    string MeetingUrl = ""
+) : IInterviewEvent;

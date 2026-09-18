@@ -4,7 +4,5 @@ namespace HrAgencySystem.Feeds.Port;
 
 internal interface IJobFeedTaskQueue
 {
-    Task<IReadOnlyList<JobFeedTask>> Fetch(
-        int batchSize,
-        CancellationToken ct);
+    Task<IReadOnlyList<JobFeedTask>> Fetch(int batchSize, CancellationToken ct);
 }

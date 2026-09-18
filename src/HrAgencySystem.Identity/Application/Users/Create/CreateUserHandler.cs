@@ -14,8 +14,9 @@ namespace HrAgencySystem.Identity.Application.Users.Create;
 
 public static class CreateUserHandler
 {
-    public const string UserWithEmailMessage = "A user with this email already exists in the organization.";
-    
+    public const string UserWithEmailMessage =
+        "A user with this email already exists in the organization.";
+
     public static async Task<UserCreated> Handle(
         CreateUser command,
         IDocumentSession session,
@@ -23,32 +24,28 @@ public static class CreateUserHandler
         IUserEmailReservationRepository repository,
         IIdentityService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         await service.ValidateOrganization(command.OrganizationId, ct);
 
-        var (
-            email,
-            firstName,
-            lastName,
-            phone
-            ) = CreateValueObjects(command);
+        var (email, firstName, lastName, phone) = CreateValueObjects(command);
 
         PasswordPolicyValidator.Validate(command.Password);
 
         var user = await service.GetUserAsync(command.CreatedBy, ct);
         var organizationId = OrganizationId.From(command.OrganizationId);
-        
-        await ValidateEmailReservation(repository, ct,organizationId , email);
-        
+
+        await ValidateEmailReservation(repository, ct, organizationId, email);
+
         var userId = UserId.New();
-        
+
         var passwordHash = hasher.Hash(command.Password);
 
         var organizationInfo = await service.GetOrganization(organizationId, ct);
 
         await repository.ReserveAsync(organizationId, email, userId, passwordHash);
-        
+
         var @event = new UserCreated(
             userId.Value,
             organizationId.Value,
@@ -60,64 +57,59 @@ public static class CreateUserHandler
             organizationInfo,
             user!,
             clock.UtcNow,
-            phone.Value);
+            phone.Value
+        );
 
-        session.Events.StartStream<User>(
-            userId.Value,
-            @event);
+        session.Events.StartStream<User>(userId.Value, @event);
 
         return @event;
     }
 
-    private static async Task ValidateEmailReservation(IUserEmailReservationRepository repository, CancellationToken ct,
-        OrganizationId organizationId, Email email)
+    private static async Task ValidateEmailReservation(
+        IUserEmailReservationRepository repository,
+        CancellationToken ct,
+        OrganizationId organizationId,
+        Email email
+    )
     {
         if (await repository.ExistAsync(organizationId, email, ct))
             throw new BusinessRuleException(UserWithEmailMessage);
     }
-    
-    private static UserData CreateValueObjects(
-        CreateUser command)
+
+    private static UserData CreateValueObjects(CreateUser command)
     {
         var errors = new List<string>();
 
-        var (email, emailError) =
-            Email.TryCreate(command.Email);
+        var (email, emailError) = Email.TryCreate(command.Email);
 
         if (emailError is not null)
             errors.Add(emailError);
 
-        var (firstName, firstNameError) =
-            FirstName.TryCreate(command.FirstName);
+        var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName);
 
         if (firstNameError is not null)
             errors.Add(firstNameError);
 
-        var (lastName, lastNameError) =
-            LastName.TryCreate(command.LastName);
+        var (lastName, lastNameError) = LastName.TryCreate(command.LastName);
 
         if (lastNameError is not null)
             errors.Add(lastNameError);
-        
-        var (phone, phoneError) =
-            PersonPhone.TryCreate(command.Phone);
+
+        var (phone, phoneError) = PersonPhone.TryCreate(command.Phone);
 
         if (phoneError is not null)
             errors.Add(phoneError);
-        
+
         if (errors.Count > 0)
             throw new ValidationException(errors);
 
-        return new UserData(
-            email!,
-            firstName!,
-            lastName!,
-            phone!);
+        return new UserData(email!, firstName!, lastName!, phone!);
     }
 
     private sealed record UserData(
         Email Email,
         FirstName FirstName,
         LastName LastName,
-        PersonPhone Phone);
+        PersonPhone Phone
+    );
 }

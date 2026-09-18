@@ -22,14 +22,15 @@ public sealed record TaxId
         return error is not null ? throw new InValidValueException(error) : taxId!;
     }
 
-    public static (TaxId? taxId, string? error) TryCreate(
-        string value)
+    public static (TaxId? taxId, string? error) TryCreate(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return (null, RequiredMessage);
+        if (string.IsNullOrWhiteSpace(value))
+            return (null, RequiredMessage);
 
         var normalized = value.Trim();
 
-        if (normalized.Length > MaxLength) return (null, MaxLenghtMessage);
+        if (normalized.Length > MaxLength)
+            return (null, MaxLenghtMessage);
 
         return (new TaxId(normalized), null);
     }

@@ -24,8 +24,7 @@ public sealed class FirstNameTests
     [Fact]
     public void Create_WithNull_ThrowsInValidValueException()
     {
-        var exception = Assert.Throws<InValidValueException>(
-            () => FirstName.Create(null!));
+        var exception = Assert.Throws<InValidValueException>(() => FirstName.Create(null!));
 
         Assert.Equal(FirstName.RequiredMessage, exception.Message);
     }
@@ -36,11 +35,9 @@ public sealed class FirstNameTests
     [InlineData("   ")]
     [InlineData("\t")]
     [InlineData("\n")]
-    public void Create_WithEmptyOrWhitespaceValue_ThrowsInValidValueException(
-        string value)
+    public void Create_WithEmptyOrWhitespaceValue_ThrowsInValidValueException(string value)
     {
-        var exception = Assert.Throws<InValidValueException>(
-            () => FirstName.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => FirstName.Create(value));
 
         Assert.Equal(FirstName.RequiredMessage, exception.Message);
     }
@@ -50,8 +47,7 @@ public sealed class FirstNameTests
     {
         var value = new string('A', 101);
 
-        var exception = Assert.Throws<InValidValueException>(
-            () => FirstName.Create(value));
+        var exception = Assert.Throws<InValidValueException>(() => FirstName.Create(value));
 
         Assert.Equal(FirstName.MaxLengthMessage, exception.Message);
     }
@@ -69,8 +65,7 @@ public sealed class FirstNameTests
     [Fact]
     public void TryCreate_WithValidValue_ReturnsFirstNameWithoutError()
     {
-        var (firstName, error) =
-            FirstName.TryCreate("John");
+        var (firstName, error) = FirstName.TryCreate("John");
 
         Assert.NotNull(firstName);
         Assert.Null(error);
@@ -81,11 +76,9 @@ public sealed class FirstNameTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("   ")]
-    public void TryCreate_WithEmptyValue_ReturnsRequiredError(
-        string value)
+    public void TryCreate_WithEmptyValue_ReturnsRequiredError(string value)
     {
-        var (firstName, error) =
-            FirstName.TryCreate(value);
+        var (firstName, error) = FirstName.TryCreate(value);
 
         Assert.Null(firstName);
         Assert.Equal(FirstName.RequiredMessage, error);
@@ -96,8 +89,7 @@ public sealed class FirstNameTests
     {
         var value = new string('A', 101);
 
-        var (firstName, error) =
-            FirstName.TryCreate(value);
+        var (firstName, error) = FirstName.TryCreate(value);
 
         Assert.Null(firstName);
         Assert.Equal(FirstName.MaxLengthMessage, error);

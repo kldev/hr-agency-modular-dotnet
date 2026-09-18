@@ -13,11 +13,10 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
 {
     private readonly IClock _clock = Substitute.For<IClock>();
 
-    private readonly IJobDescriptionService _service =
-        Substitute.For<IJobDescriptionService>();
+    private readonly IJobDescriptionService _service = Substitute.For<IJobDescriptionService>();
 
-    private UserSnapshot ModifiedBy { get; } = new (Guid.NewGuid(), "Test", "User", "test@test.io");
-    
+    private UserSnapshot ModifiedBy { get; } = new(Guid.NewGuid(), "Test", "User", "test@test.io");
+
     [Fact]
     public async Task Should_close_job_description()
     {
@@ -28,12 +27,13 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var command = new ChangeJobDescriptionStatus(
             jobDescriptionId,
             D.JobDescriptionStatus.Closed,
-            Guid.NewGuid(), Guid.NewGuid());
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        );
 
         var aggregate = D.JobDescription.Empty();
 
-        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
 
@@ -43,7 +43,8 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             aggregate,
             _service,
             _clock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -65,13 +66,14 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var command = new ChangeJobDescriptionStatus(
             jobDescriptionId,
             D.JobDescriptionStatus.Cancelled,
-            Guid.NewGuid(), Guid.NewGuid());
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        );
 
         var aggregate = D.JobDescription.Empty();
 
-        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
-        
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+
         _clock.UtcNow.Returns(now);
 
         // Act
@@ -79,7 +81,9 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             command,
             aggregate,
             _service,
-            _clock, CancellationToken.None);
+            _clock,
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -101,12 +105,13 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var command = new ChangeJobDescriptionStatus(
             jobDescriptionId,
             D.JobDescriptionStatus.OnHold,
-            Guid.NewGuid(), Guid.NewGuid());
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        );
 
         var aggregate = D.JobDescription.Empty();
-        
-        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
+
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
 
@@ -116,7 +121,8 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             aggregate,
             _service,
             _clock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -138,12 +144,13 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var command = new ChangeJobDescriptionStatus(
             jobDescriptionId,
             D.JobDescriptionStatus.Open,
-            Guid.NewGuid(), Guid.NewGuid());
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        );
 
         var aggregate = D.JobDescription.Empty();
-        
-        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
+
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
 
         _clock.UtcNow.Returns(now);
 
@@ -152,7 +159,9 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             command,
             aggregate,
             _service,
-            _clock, CancellationToken.None);
+            _clock,
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -171,14 +180,14 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         // Arrange
         var aggregate = D.JobDescription.Empty();
 
-        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
-        
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+
         var command = new ChangeJobDescriptionStatus(
             aggregate.Id.Value,
             aggregate.Status,
             Guid.NewGuid(),
-            Guid.NewGuid());
+            Guid.NewGuid()
+        );
 
         // Act
         var (result, events) = await ChangeJobDescriptionStatusHandler.Handle(
@@ -186,7 +195,8 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
             aggregate,
             _service,
             _clock,
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         // Assert
         Assert.Equal(aggregate.Id.Value, result.JobDescriptionId);
@@ -204,15 +214,20 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
         var command = new ChangeJobDescriptionStatus(
             jobDescriptionId,
             D.JobDescriptionStatus.Closed,
-            Guid.NewGuid(), Guid.NewGuid());
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        );
 
         // Act
-        var exception = await Assert.ThrowsAsync<NotFoundException>(
-            async () => await ChangeJobDescriptionStatusHandler.Handle(
+        var exception = await Assert.ThrowsAsync<NotFoundException>(async () =>
+            await ChangeJobDescriptionStatusHandler.Handle(
                 command,
                 null!,
                 _service,
-                _clock, CancellationToken.None));
+                _clock,
+                CancellationToken.None
+            )
+        );
 
         // Assert
         Assert.Contains("not found", exception.Message);
@@ -229,22 +244,25 @@ public sealed class ChangeJobDescriptionStatusHandlerTests
 
         var command = new ChangeJobDescriptionStatus(
             aggregate.Id.Value,
-            invalidStatus, Guid.NewGuid(), Guid.NewGuid());
+            invalidStatus,
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        );
 
-        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
-            .Returns(ModifiedBy);
-        
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
+
         // Act
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(
-            async () => await ChangeJobDescriptionStatusHandler.Handle(
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(async () =>
+            await ChangeJobDescriptionStatusHandler.Handle(
                 command,
                 aggregate,
                 _service,
-                _clock, CancellationToken.None));
+                _clock,
+                CancellationToken.None
+            )
+        );
 
         // Assert
-        Assert.Equal(
-            "Invalid status change: " + invalidStatus,
-            exception.Message);
+        Assert.Equal("Invalid status change: " + invalidStatus, exception.Message);
     }
 }

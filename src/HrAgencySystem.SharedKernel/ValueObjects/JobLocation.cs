@@ -6,8 +6,7 @@ public sealed record JobLocation
 {
     public const int MaxLength = 300;
 
-    public const string MaxLengthMessage =
-        "Job location cannot exceed 300 characters.";
+    public const string MaxLengthMessage = "Job location cannot exceed 300 characters.";
 
     private JobLocation(string value)
     {
@@ -20,13 +19,10 @@ public sealed record JobLocation
     {
         var (location, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : location!;
+        return error is not null ? throw new InValidValueException(error) : location!;
     }
 
-    public static (JobLocation? summary, string? error) TryCreate(
-        string? value)
+    public static (JobLocation? summary, string? error) TryCreate(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (new JobLocation(string.Empty), null);

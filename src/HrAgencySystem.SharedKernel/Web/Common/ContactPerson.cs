@@ -5,7 +5,8 @@ public sealed record ContactPerson(
     string FirstName,
     string LastName,
     string JobTitle,
-    string Phone)
+    string Phone
+)
 {
     public string Fullname { get; } = $"{FirstName} {LastName}".Trim();
 };

@@ -7,7 +7,8 @@ internal static class JobPostingTestData
 {
     public static CreatePostRequest CreateRequest(
         Guid? jobDescriptionId = null,
-        Guid? recruiterId = null) =>
+        Guid? recruiterId = null
+    ) =>
         new(
             JobDescriptionId: jobDescriptionId ?? Guid.NewGuid(),
             Title: "Senior .NET Developer",
@@ -17,21 +18,15 @@ internal static class JobPostingTestData
             [
                 "Design and develop applications",
                 "Review code",
-                "Collaborate with the team"
+                "Collaborate with the team",
             ],
             Requirements:
             [
                 "5+ years of experience",
                 "Good knowledge of C#",
-                "Good knowledge of PostgreSQL"
+                "Good knowledge of PostgreSQL",
             ],
-            Skills:
-            [
-                "C#",
-                ".NET",
-                "PostgreSQL",
-                "Docker"
-            ],
+            Skills: ["C#", ".NET", "PostgreSQL", "Docker"],
             Location: "Opole",
             CountryCode: "PL",
             LanguageCode: "PL",
@@ -40,34 +35,22 @@ internal static class JobPostingTestData
             CurrencyCode: CurrencyCode.PLN,
             SalaryMin: 15_000,
             SalaryMax: 22_000,
-            RecruiterId: recruiterId ?? Guid.NewGuid());
-    
+            RecruiterId: recruiterId ?? Guid.NewGuid()
+        );
 
     public static UpdateJobPostRequest UpdateRequest() =>
         new(
             Title: "Senior Backend .NET Developer",
             Summary: "Updated senior backend developer position",
             Description: "We are looking for an experienced backend .NET developer.",
-            Responsibilities:
-            [
-                "Develop backend applications",
-                "Review code",
-                "Mentor developers"
-            ],
+            Responsibilities: ["Develop backend applications", "Review code", "Mentor developers"],
             Requirements:
             [
                 "6+ years of experience",
                 "Advanced C# knowledge",
-                "PostgreSQL experience"
+                "PostgreSQL experience",
             ],
-            Skills:
-            [
-                "C#",
-                ".NET 10",
-                "PostgreSQL",
-                "Docker",
-                "Kubernetes"
-            ],
+            Skills: ["C#", ".NET 10", "PostgreSQL", "Docker", "Kubernetes"],
             Location: "Wrocław",
             CountryCode: "PL",
             LanguageCode: "PL",
@@ -75,9 +58,8 @@ internal static class JobPostingTestData
             WorkMode: WorkMode.Remote,
             CurrencyCode: CurrencyCode.PLN,
             SalaryMin: 18_000,
-            SalaryMax: 25_000);
+            SalaryMax: 25_000
+        );
 
-
-    public static string InvalidTitle =>
-        string.Empty;
+    public static string InvalidTitle => string.Empty;
 }

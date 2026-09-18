@@ -8,9 +8,9 @@ public class Success(IQueryOrganizationRepository repository) : PageModel
 {
     public string Slug { get; private set; } = "";
     public string OrganizationName { get; private set; } = "";
+
     public async Task<IActionResult> OnGetAsync(string slug, CancellationToken ct)
     {
-        
         Slug = slug;
         var organization = await repository.GetBySlugAsync(slug, ct);
 
@@ -21,7 +21,7 @@ public class Success(IQueryOrganizationRepository repository) : PageModel
         }
 
         OrganizationName = organization.Name;
-        
+
         return Page();
     }
 }

@@ -4,25 +4,36 @@ using Marten;
 
 namespace HrAgencySystem.Company.Infrastructure.Query;
 
-public sealed class CompanySuggestionRepository(IDocumentSession session) : ICompanySuggestionRepository
+public sealed class CompanySuggestionRepository(IDocumentSession session)
+    : ICompanySuggestionRepository
 {
-    public async Task<IReadOnlyList<CompanySuggestion>> GetCompanySuggestions(Guid organizationId, string search,
-        string countryCode, CancellationToken ct)
+    public async Task<IReadOnlyList<CompanySuggestion>> GetCompanySuggestions(
+        Guid organizationId,
+        string search,
+        string countryCode,
+        CancellationToken ct
+    )
     {
-        var result = await session.Query<CompanyProjection>()
+        var result = await session
+            .Query<CompanyProjection>()
             .WithOrganizationId(organizationId)
             .WithSearch(search)
             .WithCountryCode(countryCode)
             .OrderByDescending(z => z.CreatedBy)
-            .Take(25).ToListAsync(ct);
+            .Take(25)
+            .ToListAsync(ct);
 
         return [.. result.Select(z => z.ToSuggestion()).ToList()];
     }
 
-    public async Task<CompanySuggestion?> GetCompanySuggestion(Guid organizationId, Guid companyId,
-        CancellationToken ct)
+    public async Task<CompanySuggestion?> GetCompanySuggestion(
+        Guid organizationId,
+        Guid companyId,
+        CancellationToken ct
+    )
     {
-        var result = await session.Query<CompanyProjection>()
+        var result = await session
+            .Query<CompanyProjection>()
             .WithOrganizationId(organizationId)
             .WithCompanyId(companyId)
             .FirstOrDefaultAsync(ct);

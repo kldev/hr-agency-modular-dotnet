@@ -9,4 +9,5 @@ public sealed record FollowUpActionCreated(
     string Content,
     DateTimeOffset FollowDateTime,
     DateTimeOffset CreatedAt,
-    UserSnapshot CreatedBy);
+    UserSnapshot CreatedBy
+);

@@ -9,7 +9,8 @@ internal static class MapGetResponsibleTotals
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/opportunity/totals-responsible
-        group.MapGet("totals-responsible", Handler)
+        group
+            .MapGet("totals-responsible", Handler)
             .WithSummary("Get responsible totals")
             .WithName("Get opportunities responsible totals")
             .Produces<IReadOnlyList<SalesPipelineResponsibleQueryResult>>()
@@ -17,11 +18,11 @@ internal static class MapGetResponsibleTotals
     }
 
     private static async Task<IResult> Handler(
-        ISalesPipelineQueryRepository repository, 
+        ISalesPipelineQueryRepository repository,
         AppUserAuthenticated user,
-        CancellationToken ct = default)
+        CancellationToken ct = default
+    )
     {
-        
         var result = await repository.GetResponsibleTotalsAsync(user.OrganizationId, ct);
 
         return TypedResults.Ok(result);

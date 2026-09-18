@@ -1,10 +1,11 @@
 namespace HrAgencySystem.Sales.Domain.Activity;
 
-public enum SalesActivityType {
+public enum SalesActivityType
+{
     Call,
     Email,
     Meeting,
     Note,
     Presentation,
-    Other
+    Other,
 }

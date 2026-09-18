@@ -2,8 +2,6 @@ using JasperFx.Blocks;
 
 namespace HrAgencySystem.SharedKernel.Snapshots;
 
-
-
 public interface IUserSnapshotRepository
 {
     public const string NotFoundMessage = "Require user data not found.";
@@ -11,14 +9,9 @@ public interface IUserSnapshotRepository
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed record UserSnapshot(
-    Guid Id,
-    string FirstName,
-    string LastName,
-    string Email)
+public sealed record UserSnapshot(Guid Id, string FirstName, string LastName, string Email)
 {
     public string Fullname => $"{FirstName} {LastName}".Trim();
 
-    public static UserSnapshot System
-        => new UserSnapshot(Guid.NewGuid(), "", "", "system");
+    public static UserSnapshot System => new UserSnapshot(Guid.NewGuid(), "", "", "system");
 }

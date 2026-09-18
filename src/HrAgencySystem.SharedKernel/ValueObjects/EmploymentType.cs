@@ -1,9 +1,10 @@
 namespace HrAgencySystem.SharedKernel.ValueObjects;
 
-public enum EmploymentType {
+public enum EmploymentType
+{
     FullTime,
     PartTime,
     Contract,
     Temporary,
-    Internship
+    Internship,
 }

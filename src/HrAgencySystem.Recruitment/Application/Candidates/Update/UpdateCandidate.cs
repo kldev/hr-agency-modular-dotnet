@@ -10,4 +10,5 @@ public sealed record UpdateCandidate(
     string FirstName,
     string LastName,
     string Note,
-    Guid ModifiedBy):IUpdateCommand, ICandidateData;
+    Guid ModifiedBy
+) : IUpdateCommand, ICandidateData;

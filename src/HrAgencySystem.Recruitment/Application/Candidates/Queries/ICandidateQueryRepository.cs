@@ -6,15 +6,24 @@ namespace HrAgencySystem.Recruitment.Application.Candidates.Queries;
 
 public interface ICandidateQueryRepository
 {
-    Task<SliceResponse<CandidateProjection>> GetCandidates(Guid organizationId, CandidateQuery query, CancellationToken ct);
-    Task<CandidateProjection?> GetCandidate(Guid organizationId, Guid candidateId, CancellationToken ct);
+    Task<SliceResponse<CandidateProjection>> GetCandidates(
+        Guid organizationId,
+        CandidateQuery query,
+        CancellationToken ct
+    );
+    Task<CandidateProjection?> GetCandidate(
+        Guid organizationId,
+        Guid candidateId,
+        CancellationToken ct
+    );
 }
 
 public sealed record CandidateQuery(
-    string Search, 
-    Guid? CompanyId, 
-    Guid[] Tags, 
+    string Search,
+    Guid? CompanyId,
+    Guid[] Tags,
     CandidateStatus? Status,
     CandidateSource[] Sources,
-    int Page, 
-    int PageSize) : IPagedQuery;
+    int Page,
+    int PageSize
+) : IPagedQuery;

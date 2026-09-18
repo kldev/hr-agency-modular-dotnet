@@ -11,15 +11,20 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/interviews
-        group.MapGet("{interviewId}", Handler)
+        group
+            .MapGet("{interviewId}", Handler)
             .WithSummary("Get interview")
             .WithName("Get interview")
             .Produces<InterviewProjection>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user,
-        IInterviewsQueryRepository repository, Guid interviewId, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IInterviewsQueryRepository repository,
+        Guid interviewId,
+        CancellationToken ct
+    )
     {
         var result = await repository.Get(user.OrganizationId, interviewId, ct);
         if (result == null)

@@ -13,19 +13,20 @@ namespace HrAgencySystem.IntegrationTests.Candidates;
 public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper output)
 {
     public const string BaseUrl = "/api/recruitment/candidates";
+
     internal async Task<CandidateCreated> Create(
-        Guid? organizationId =null,
+        Guid? organizationId = null,
         string? Email = null,
         string FirstName = "joe",
         string LastName = "smith",
-        Guid? createdByUserId =null,
+        Guid? createdByUserId = null,
         string? Note = null,
-        string? Phone =null,
-        CandidateSource source = CandidateSource.Facebook)
+        string? Phone = null,
+        CandidateSource source = CandidateSource.Facebook
+    )
     {
         client.WithUserId(createdByUserId ?? Guid.NewGuid());
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
-        
 
         var command = new CreateCandidateRequest(
             Email ?? "email@fake.com",
@@ -33,16 +34,14 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
             FirstName,
             LastName,
             source,
-            Note ??""
-            );
+            Note ?? ""
+        );
 
         output.WriteLine($"Create candidate with email {Email}");
-        var response = await client.PostAsJsonAsync(
-            BaseUrl,
-            command);
+        var response = await client.PostAsJsonAsync(BaseUrl, command);
 
         var result = await response.ReadWithJson<CandidateCreated>();
-        
+
         response.EnsureSuccessStatusCode();
         return result!;
     }
@@ -60,7 +59,6 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
         client.WithUserId(modifiedByUserId ?? Guid.NewGuid());
         client.WithOrganizationId(organizationId ?? Guid.NewGuid());
 
-
         var command = new MapUpdate.UpdateCandidateRequest(
             Phone ?? "+1 123 123 123",
             FirstName,
@@ -68,25 +66,20 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
             Note ?? ""
         );
 
-        var response = await client.PutAsJsonAsync(
-            $"{BaseUrl}/{candidateId}",
-            command);
+        var response = await client.PutAsJsonAsync($"{BaseUrl}/{candidateId}", command);
 
         var result = await response.ReadWithJson<CandidateUpdated>();
 
         response.EnsureSuccessStatusCode();
-        
+
         return result!;
     }
-    
-    internal async Task<CandidateProjection?> GetAsync(
-        Guid organizationId,
-        Guid candidateId)
+
+    internal async Task<CandidateProjection?> GetAsync(Guid organizationId, Guid candidateId)
     {
         client.WithOrganizationId(organizationId);
 
-        var response = await client.GetAsync(
-            $"{BaseUrl}/{candidateId}");
+        var response = await client.GetAsync($"{BaseUrl}/{candidateId}");
 
         if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             return null;
@@ -96,24 +89,23 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
         return await response.ReadWithJson<CandidateProjection>();
     }
 
-    internal async Task<SliceResponse<CandidateProjection>> GetSliceAsync ( 
+    internal async Task<SliceResponse<CandidateProjection>> GetSliceAsync(
         Guid organizationId,
         int? page,
-        int? pageSize)
+        int? pageSize
+    )
     {
         var sliceUrl = $"{BaseUrl}";
         var query = new List<string>();
-        
+
         query.Add($"page={page ?? 1}");
         query.Add($"pageSize={pageSize ?? 100}");
-        
+
         client.WithOrganizationId(organizationId);
         sliceUrl += $"?{string.Join("&", query)}";
 
-        var response = await client.GetAsync(
-            $"{sliceUrl}");
+        var response = await client.GetAsync($"{sliceUrl}");
 
-        
         response.EnsureSuccessStatusCode();
 
         return (await response.ReadWithJson<SliceResponse<CandidateProjection>>())!;

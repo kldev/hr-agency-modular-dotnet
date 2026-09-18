@@ -18,7 +18,8 @@ public sealed record UpdateJobDescription(
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    Guid ModifiedBy) : IJobDescription, IUpdateCommand;
+    Guid ModifiedBy
+) : IJobDescription, IUpdateCommand;

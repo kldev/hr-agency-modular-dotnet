@@ -19,44 +19,60 @@ namespace HrAgencySystem.IntegrationTests.Infrastructure;
 public class ApiApplicationFactory(string connectionString) : WebApplicationFactory<IApiMarker>
 {
     public TestLoggerProvider LoggerProvider { get; } = new();
-    
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("ConnectionStrings__Postgres", connectionString);
 
         builder.ConfigureServices(services =>
         {
-            services.Replace(ServiceDescriptor.Scoped<IOrganizationChecker, FakeOrganizationChecker>());
+            services.Replace(
+                ServiceDescriptor.Scoped<IOrganizationChecker, FakeOrganizationChecker>()
+            );
             services.Replace(ServiceDescriptor.Scoped<IUserSnapshotRepository, FakeUserSnapshot>());
-            services.Replace(ServiceDescriptor.Scoped<ICompanySnapshotRepository, FakeCompanySnapshot>());
-            services.Replace(ServiceDescriptor.Scoped<IJobDescriptionSnapshotRepository, FakeJobDescriptionSnapshot>());
-            services.Replace(ServiceDescriptor
-                .Scoped<IJobApplicationInfoQueryRepository, FakeJobApplicationInfoQueryRepository>());
+            services.Replace(
+                ServiceDescriptor.Scoped<ICompanySnapshotRepository, FakeCompanySnapshot>()
+            );
+            services.Replace(
+                ServiceDescriptor.Scoped<
+                    IJobDescriptionSnapshotRepository,
+                    FakeJobDescriptionSnapshot
+                >()
+            );
+            services.Replace(
+                ServiceDescriptor.Scoped<
+                    IJobApplicationInfoQueryRepository,
+                    FakeJobApplicationInfoQueryRepository
+                >()
+            );
 
             services.Replace(
-                ServiceDescriptor.Scoped<ISalesOpportunitySnapshotRepository, FakeSalesOpportunitySnapshot>());
-            
-            services.Replace(
-                ServiceDescriptor.Scoped<IRecruitmentService, FakeModuleService>());
-            services.Replace(
-                ServiceDescriptor.Scoped<ICompanyService, FakeModuleService>());
-            services.Replace(
-                ServiceDescriptor.Scoped<IJobDescriptionService, FakeModuleService>());
-            services.Replace(
-                ServiceDescriptor.Scoped<IIdentityService, FakeModuleService>());
-            
-            
+                ServiceDescriptor.Scoped<
+                    ISalesOpportunitySnapshotRepository,
+                    FakeSalesOpportunitySnapshot
+                >()
+            );
+
+            services.Replace(ServiceDescriptor.Scoped<IRecruitmentService, FakeModuleService>());
+            services.Replace(ServiceDescriptor.Scoped<ICompanyService, FakeModuleService>());
+            services.Replace(ServiceDescriptor.Scoped<IJobDescriptionService, FakeModuleService>());
+            services.Replace(ServiceDescriptor.Scoped<IIdentityService, FakeModuleService>());
+
             ConfigureAuthentication(services);
         });
-        
-        builder.ConfigureAppConfiguration((_, configuration) =>
-        {
-            configuration.AddInMemoryCollection(new Dictionary<string, string?>
+
+        builder.ConfigureAppConfiguration(
+            (_, configuration) =>
             {
-                ["ConnectionStrings:Postgres"] = connectionString,
-            });
-            builder.UseEnvironment("Testing");
-        });
+                configuration.AddInMemoryCollection(
+                    new Dictionary<string, string?>
+                    {
+                        ["ConnectionStrings:Postgres"] = connectionString,
+                    }
+                );
+                builder.UseEnvironment("Testing");
+            }
+        );
         // builder.ConfigureLogging(logging =>
         // {
         //     logging.ClearProviders();
@@ -65,18 +81,19 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
         //
         //     logging.SetMinimumLevel(LogLevel.Debug);
         // });
-        
-        
     }
 
     private void ConfigureAuthentication(IServiceCollection services)
     {
-        services.AddAuthentication(options =>
+        services
+            .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = TestAuthHandler.AuthenticationScheme;
                 options.DefaultChallengeScheme = TestAuthHandler.AuthenticationScheme;
             })
             .AddScheme<TestAuthHandlerOptions, TestAuthHandler>(
-                TestAuthHandler.AuthenticationScheme, opt => {});
+                TestAuthHandler.AuthenticationScheme,
+                opt => { }
+            );
     }
 }

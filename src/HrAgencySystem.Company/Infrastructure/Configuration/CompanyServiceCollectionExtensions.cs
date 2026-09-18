@@ -14,12 +14,18 @@ internal static class CompanyServiceCollectionExtensions
     {
         public void AddCompanyServices()
         {
-            services.AddScoped<ICompanyTaxIdReservationRepository, CompanyTaxIdReservationRepository>();
+            services.AddScoped<
+                ICompanyTaxIdReservationRepository,
+                CompanyTaxIdReservationRepository
+            >();
             services.AddScoped<ICompaniesQueryRepository, CompaniesQueryRepository>();
             services.AddScoped<ICompanySnapshotRepository, CompanySnapshotRepository>();
             services.AddScoped<ICompanySuggestionRepository, CompanySuggestionRepository>();
             services.AddScoped<ICompanyContactQueryRepository, CompanyContactQueryRepository>();
-            services.AddScoped<ICompanyContactSuggestionRepository, CompanyContactSuggestionRepository>();
+            services.AddScoped<
+                ICompanyContactSuggestionRepository,
+                CompanyContactSuggestionRepository
+            >();
             services.AddScoped<ICompanyContactRepository, CompanyContactRepository>();
             services.AddScoped<ICompanyService, CompanyService>();
         }

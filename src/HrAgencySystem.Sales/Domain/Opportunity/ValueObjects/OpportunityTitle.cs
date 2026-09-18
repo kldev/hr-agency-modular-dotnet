@@ -5,10 +5,9 @@ namespace HrAgencySystem.Sales.Domain.Opportunity.ValueObjects;
 public sealed record OpportunityTitle
 {
     private const int MaxLength = 300;
-    
-    private const string MaxLengthMessage =
-        "Title cannot exceed 300 characters.";
-    
+
+    private const string MaxLengthMessage = "Title cannot exceed 300 characters.";
+
     public const string RequiredMessage = "Title is required.";
 
     private OpportunityTitle(string value)
@@ -22,17 +21,13 @@ public sealed record OpportunityTitle
     {
         var (title, error) = TryCreate(value);
 
-        return error is not null
-            ? throw new InValidValueException(error)
-            : title!;
+        return error is not null ? throw new InValidValueException(error) : title!;
     }
 
-    public static (OpportunityTitle? title, string? error) TryCreate(
-        string? value)
+    public static (OpportunityTitle? title, string? error) TryCreate(string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
             return (null, RequiredMessage);
-       
 
         var normalized = value.Trim();
 

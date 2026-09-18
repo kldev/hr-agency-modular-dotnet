@@ -4,7 +4,6 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-
 namespace HrAgencySystem.JobDescription.Projections;
 
 public sealed record JobDescriptionProjection(
@@ -33,10 +32,10 @@ public sealed record JobDescriptionProjection(
     UserSnapshot? ModifiedBy,
     CompanySnapshot Company,
     DateTimeOffset CreatedAt,
-    DateTimeOffset? ModifiedAt) : IAudit
+    DateTimeOffset? ModifiedAt
+) : IAudit
 {
-    public static JobDescriptionProjection Create(
-        JobDescriptionCreated @event)
+    public static JobDescriptionProjection Create(JobDescriptionCreated @event)
     {
         return new JobDescriptionProjection(
             @event.JobDescriptionId,
@@ -59,14 +58,16 @@ public sealed record JobDescriptionProjection(
             @event.Recruiter.Id,
             @event.Recruiter,
             @event.CreatedBy.Id,
-            @event.CreatedBy, null, null,
+            @event.CreatedBy,
+            null,
+            null,
             @event.Company,
             @event.CreatedAt,
-            null);
+            null
+        );
     }
 
-    public JobDescriptionProjection Apply(
-        JobDescriptionUpdated @event)
+    public JobDescriptionProjection Apply(JobDescriptionUpdated @event)
     {
         return this with
         {
@@ -85,60 +86,55 @@ public sealed record JobDescriptionProjection(
             SalaryMax = @event.SalaryMax,
             ModifiedAt = @event.UpdatedAt,
             ModifiedById = @event.ModifiedBy.Id,
-            ModifiedBy = @event.ModifiedBy
+            ModifiedBy = @event.ModifiedBy,
         };
     }
 
-    public JobDescriptionProjection Apply(
-        JobDescriptionOpened @event)
+    public JobDescriptionProjection Apply(JobDescriptionOpened @event)
     {
         return this with
         {
             Status = JobDescriptionStatus.Open,
             ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
-            ModifiedBy = @event.ModifiedBy
+            ModifiedBy = @event.ModifiedBy,
         };
     }
 
-    public JobDescriptionProjection Apply(
-        JobDescriptionPutOnHold @event)
+    public JobDescriptionProjection Apply(JobDescriptionPutOnHold @event)
     {
         return this with
         {
             Status = JobDescriptionStatus.OnHold,
             ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
-            ModifiedBy = @event.ModifiedBy
+            ModifiedBy = @event.ModifiedBy,
         };
     }
 
-    public JobDescriptionProjection Apply(
-        JobDescriptionClosed @event)
+    public JobDescriptionProjection Apply(JobDescriptionClosed @event)
     {
         return this with
         {
             Status = JobDescriptionStatus.Closed,
             ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
-            ModifiedBy = @event.ModifiedBy
+            ModifiedBy = @event.ModifiedBy,
         };
     }
 
-    public JobDescriptionProjection Apply(
-        JobDescriptionCancelled @event)
+    public JobDescriptionProjection Apply(JobDescriptionCancelled @event)
     {
         return this with
         {
             Status = JobDescriptionStatus.Cancelled,
             ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
-            ModifiedBy = @event.ModifiedBy
+            ModifiedBy = @event.ModifiedBy,
         };
     }
-    
-    public JobDescriptionProjection Apply(
-        JobDescriptionRecruiterAssigned @event)
+
+    public JobDescriptionProjection Apply(JobDescriptionRecruiterAssigned @event)
     {
         return this with
         {
@@ -146,7 +142,7 @@ public sealed record JobDescriptionProjection(
             Recruiter = @event.Recruiter,
             ModifiedAt = @event.OccurredAt,
             ModifiedById = @event.ModifiedBy.Id,
-            ModifiedBy = @event.ModifiedBy
+            ModifiedBy = @event.ModifiedBy,
         };
     }
 }

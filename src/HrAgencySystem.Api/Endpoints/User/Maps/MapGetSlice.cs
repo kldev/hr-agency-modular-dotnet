@@ -12,22 +12,32 @@ internal static class MapGetSlice
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("/api/users", Handler)
+        group
+            .MapGet("/api/users", Handler)
             .WithSummary("Get users")
             .WithName("Get users")
             .Produces<SliceResponse<UserProjection>>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user,
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
         IUserQueryRepository repository,
         CancellationToken ct,
         [FromQuery] string? search,
         [FromQuery] OrganizationRole[] roles,
-        int page = 1, int pageSize = 100)
+        int page = 1,
+        int pageSize = 100
+    )
     {
-        var result = await repository
-            .GetUsers(user.OrganizationId, search ?? "", roles ?? [], page, pageSize, ct);
+        var result = await repository.GetUsers(
+            user.OrganizationId,
+            search ?? "",
+            roles ?? [],
+            page,
+            pageSize,
+            ct
+        );
         return TypedResults.Ok(result);
     }
 }

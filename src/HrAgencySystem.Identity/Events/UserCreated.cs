@@ -15,4 +15,5 @@ public sealed record UserCreated(
     OrganizationInfo Organization,
     UserSnapshot CreatedBy,
     DateTimeOffset CreatedAt,
-    string? Phone = null);
+    string? Phone = null
+);

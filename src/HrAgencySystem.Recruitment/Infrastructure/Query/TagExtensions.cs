@@ -8,7 +8,9 @@ internal static class TagExtensions
     {
         internal IQueryable<Tag> WithName(string name)
         {
-            return string.IsNullOrWhiteSpace(name) ? query : query.Where(t => t.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
+            return string.IsNullOrWhiteSpace(name)
+                ? query
+                : query.Where(t => t.Name.Contains(name, StringComparison.OrdinalIgnoreCase));
         }
 
         internal IQueryable<Tag> WithCategory(TagCategory? category)

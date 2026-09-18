@@ -17,24 +17,32 @@ public static class ChangeInterviewerHandler
         IDocumentSession session,
         IRecruitmentService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         var interviewer = await service.GetUserAsync(command.InterviewerId, ct);
 
-        var @event =
-            new InterviewerChanged(command.InterviewId, 
-                aggregate.Interviewer, 
-                interviewer, 
-                user, 
-                clock.UtcNow);
+        var @event = new InterviewerChanged(
+            command.InterviewId,
+            aggregate.Interviewer,
+            interviewer,
+            user,
+            clock.UtcNow
+        );
 
-        if (string.IsNullOrEmpty(command.Note)) return (@event, [@event]);
-        
-        await service.AppendApplicationNoteToStream(aggregate.JobApplicationId,
-            OrganizationId.From(command.OrganizationId), command.Note, user, ct);
+        if (string.IsNullOrEmpty(command.Note))
+            return (@event, [@event]);
+
+        await service.AppendApplicationNoteToStream(
+            aggregate.JobApplicationId,
+            OrganizationId.From(command.OrganizationId),
+            command.Note,
+            user,
+            ct
+        );
 
         return (@event, [@event]);
     }

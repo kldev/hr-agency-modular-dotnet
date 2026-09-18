@@ -7,29 +7,38 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.JobPosting.Maps;
 
-
 internal static class MapUpdate
 {
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/recruitment/job-posting/{id}
-        group.MapPut("{jobPostId}", Handler)
+        group
+            .MapPut("{jobPostId}", Handler)
             .WithSummary("Update job post")
             .WithName("Update job post")
             .Produces<JobPostUpdated>()
             .ProducesStandardErrors();
     }
-    
-    private static async Task<IResult> Handler(IMessageBus bus, AppUserAuthenticated user, Guid jobPostId,
-        UpdateJobPostRequest request, CancellationToken ct)
+
+    private static async Task<IResult> Handler(
+        IMessageBus bus,
+        AppUserAuthenticated user,
+        Guid jobPostId,
+        UpdateJobPostRequest request,
+        CancellationToken ct
+    )
     {
-        var result = await bus.InvokeAsync<JobPostUpdated>(request.ToCommand(jobPostId, user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<JobPostUpdated>(
+            request.ToCommand(jobPostId, user.OrganizationId, user.UserId),
+            ct
+        );
         return TypedResults.Ok(result);
     }
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record UpdateJobPostRequest(string Title,
+internal sealed record UpdateJobPostRequest(
+    string Title,
     string? Summary,
     string Description,
     IReadOnlyList<string> Responsibilities,
@@ -40,15 +49,17 @@ internal sealed record UpdateJobPostRequest(string Title,
     string LanguageCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode CurrencyCode,
     decimal SalaryMin,
-    decimal SalaryMax)
+    decimal SalaryMax
+)
 {
     public UpdateJobPost ToCommand(Guid jobPostId, Guid organizationId, Guid modifiedBy) =>
-        new (jobPostId, 
-            organizationId, 
-            Title, 
-            Summary, 
+        new(
+            jobPostId,
+            organizationId,
+            Title,
+            Summary,
             Description,
             Responsibilities,
             Requirements,
@@ -61,5 +72,6 @@ internal sealed record UpdateJobPostRequest(string Title,
             CurrencyCode,
             SalaryMin,
             SalaryMax,
-            modifiedBy);
+            modifiedBy
+        );
 }

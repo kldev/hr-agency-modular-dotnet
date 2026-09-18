@@ -20,7 +20,7 @@ public sealed class BadRequestDetails : ProblemDetails
     {
         return new BadRequestDetails(exception.Errors)
         {
-            Detail = "Request contains invalid fields"
+            Detail = "Request contains invalid fields",
         };
     }
 
@@ -29,14 +29,16 @@ public sealed class BadRequestDetails : ProblemDetails
         return TypedResults.Problem(
             statusCode: details.Status ?? StatusCodes.Status400BadRequest,
             detail: details.Detail,
-            extensions: GetExtensions(details));
+            extensions: GetExtensions(details)
+        );
     }
 
     private static Dictionary<string, object?> GetExtensions(BadRequestDetails details)
     {
         var extensions = new Dictionary<string, object?>();
 
-        if (details.ValidationErrors is { Count: > 0 }) extensions["validationErrors"] = details.ValidationErrors;
+        if (details.ValidationErrors is { Count: > 0 })
+            extensions["validationErrors"] = details.ValidationErrors;
 
         return extensions;
     }

@@ -10,36 +10,38 @@ internal static partial class JobPostingSlugGenerator
         string? companyName,
         string? title,
         string? location,
-        Guid postingId)
+        Guid postingId
+    )
     {
         var baseSlug = string.Join(
             "-",
             new[] { companyName, title, location }
                 .Where(value => !string.IsNullOrWhiteSpace(value))
-                .Select(Slugify!));
+                .Select(Slugify!)
+        );
 
-        var suffix = postingId
-            .ToString("N")[..4];
+        var suffix = postingId.ToString("N")[..4];
 
         return $"{baseSlug}-{suffix}";
     }
 
     private static string Slugify(string value)
     {
-        var normalized = value
-            .Trim()
-            .ToLowerInvariant()
-            .Normalize(NormalizationForm.FormD);
+        var normalized = value.Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
 
         var builder = new StringBuilder();
 
-        foreach (var character in from character in normalized let category = CharUnicodeInfo.GetUnicodeCategory(character) where category != UnicodeCategory.NonSpacingMark select character)
+        foreach (
+            var character in from character in normalized
+            let category = CharUnicodeInfo.GetUnicodeCategory(character)
+            where category != UnicodeCategory.NonSpacingMark
+            select character
+        )
         {
             builder.Append(character);
         }
 
-        return MyRegex().Replace(builder.ToString(), "-")
-            .Trim('-');
+        return MyRegex().Replace(builder.ToString(), "-").Trim('-');
     }
 
     [GeneratedRegex("[^a-z0-9]+")]

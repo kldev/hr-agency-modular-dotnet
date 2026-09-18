@@ -2,7 +2,9 @@ using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Recruitment.Events.Applications;
 
-public sealed record JobApplicationNoteDeleted(Guid JobApplicationId,
+public sealed record JobApplicationNoteDeleted(
+    Guid JobApplicationId,
     Guid CandidateId,
-    UserSnapshot DeletedBy, 
-    DateTimeOffset DeletedAt);
+    UserSnapshot DeletedBy,
+    DateTimeOffset DeletedAt
+);

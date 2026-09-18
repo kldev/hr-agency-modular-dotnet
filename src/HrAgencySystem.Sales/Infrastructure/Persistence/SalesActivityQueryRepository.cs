@@ -5,12 +5,17 @@ using Marten;
 
 namespace HrAgencySystem.Sales.Infrastructure.Persistence;
 
-public sealed class SalesActivityQueryRepository(IQuerySession session) : ISalesActivityQueryRepository
+public sealed class SalesActivityQueryRepository(IQuerySession session)
+    : ISalesActivityQueryRepository
 {
-    public async Task<SliceResponse<ActivityProjection>> GetSlicesAsync(Guid organizationId, 
-        SalesActivityQuery query, CancellationToken ct)
+    public async Task<SliceResponse<ActivityProjection>> GetSlicesAsync(
+        Guid organizationId,
+        SalesActivityQuery query,
+        CancellationToken ct
+    )
     {
-        return await session.Query<ActivityProjection>()
+        return await session
+            .Query<ActivityProjection>()
             .WithOrganizationId(organizationId)
             .WithCompanyId(query.CompanyId)
             .WithOpportunityId(query.OpportunityId)

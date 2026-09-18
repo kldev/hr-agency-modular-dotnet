@@ -8,9 +8,7 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.SalesFollowUpActions;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class FollowUpActionTests(
-    IntegrationEnvironment env,
-    ITestOutputHelper output)
+public sealed class FollowUpActionTests(IntegrationEnvironment env, ITestOutputHelper output)
     : BaseIntegrationTest(env, output)
 {
     private static readonly DateTimeOffset Tomorrow = new(2026, 10, 1, 9, 0, 0, TimeSpan.Zero);
@@ -29,7 +27,8 @@ public sealed class FollowUpActionTests(
     {
         var opportunity = await OpportunityTestClient.Create(
             organizationId: organizationId ?? _organizationId,
-            companyId: _companyId);
+            companyId: _companyId
+        );
 
         return opportunity.OpportunityId;
     }
@@ -45,7 +44,8 @@ public sealed class FollowUpActionTests(
             opportunityId: opportunityId,
             content: "Send the offer and call back",
             followDateTime: Tomorrow,
-            createdById: createdBy);
+            createdById: createdBy
+        );
 
         Assert.NotEqual(Guid.Empty, result.FollowUpActionId);
         Assert.Equal(_organizationId, result.OrganizationId);
@@ -64,9 +64,13 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "Send the offer",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
-        var document = await FollowUpActionTestClient.Get(_organizationId, created.FollowUpActionId);
+        var document = await FollowUpActionTestClient.Get(
+            _organizationId,
+            created.FollowUpActionId
+        );
 
         Assert.Equal(created.FollowUpActionId, document.Id);
         Assert.Equal(opportunityId, document.OpportunityId);
@@ -85,7 +89,8 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "  ",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
@@ -93,8 +98,10 @@ public sealed class FollowUpActionTests(
 
         Assert.NotNull(problem);
         Assert.Single(problem.ValidationErrors);
-        Assert.Equal(LongText.FieldIsRequired(FollowUpAction.ContentFieldName),
-            problem.ValidationErrors.First());
+        Assert.Equal(
+            LongText.FieldIsRequired(FollowUpAction.ContentFieldName),
+            problem.ValidationErrors.First()
+        );
     }
 
     [Fact]
@@ -107,14 +114,16 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "Call the client",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
         var updated = await FollowUpActionTestClient.Update(
             organizationId: _organizationId,
             followUpActionId: created.FollowUpActionId,
             content: "Client asked to postpone the call",
             followDateTime: NextWeek,
-            modifiedById: modifiedBy);
+            modifiedById: modifiedBy
+        );
 
         Assert.Equal(created.FollowUpActionId, updated.FollowUpActionId);
         Assert.Equal(opportunityId, updated.OpportunityId);
@@ -123,7 +132,10 @@ public sealed class FollowUpActionTests(
         Assert.Equal(NextWeek, updated.FollowDateTime);
         Assert.Equal(modifiedBy, updated.ModifiedBy.Id);
 
-        var document = await FollowUpActionTestClient.Get(_organizationId, created.FollowUpActionId);
+        var document = await FollowUpActionTestClient.Get(
+            _organizationId,
+            created.FollowUpActionId
+        );
 
         Assert.Equal("Client asked to postpone the call", document.Content);
         Assert.Equal(NextWeek, document.FollowDateTime);
@@ -137,7 +149,8 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             followUpActionId: Guid.NewGuid(),
             content: "Call the client",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -150,13 +163,15 @@ public sealed class FollowUpActionTests(
         var created = await FollowUpActionTestClient.Create(
             organizationId: _organizationId,
             opportunityId: opportunityId,
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
         var response = await FollowUpActionTestClient.UpdateResponse(
             organizationId: Guid.NewGuid(),
             followUpActionId: created.FollowUpActionId,
             content: "Hijacked",
-            followDateTime: NextWeek);
+            followDateTime: NextWeek
+        );
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -169,9 +184,13 @@ public sealed class FollowUpActionTests(
         var created = await FollowUpActionTestClient.Create(
             organizationId: _organizationId,
             opportunityId: opportunityId,
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
-        var response = await FollowUpActionTestClient.GetResponse(Guid.NewGuid(), created.FollowUpActionId);
+        var response = await FollowUpActionTestClient.GetResponse(
+            Guid.NewGuid(),
+            created.FollowUpActionId
+        );
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -183,16 +202,27 @@ public sealed class FollowUpActionTests(
         var otherOpportunityId = await AnOpportunity();
 
         var first = await FollowUpActionTestClient.Create(
-            organizationId: _organizationId, opportunityId: opportunityId, followDateTime: Tomorrow);
+            organizationId: _organizationId,
+            opportunityId: opportunityId,
+            followDateTime: Tomorrow
+        );
 
         var second = await FollowUpActionTestClient.Create(
-            organizationId: _organizationId, opportunityId: opportunityId, followDateTime: NextMonth);
+            organizationId: _organizationId,
+            opportunityId: opportunityId,
+            followDateTime: NextMonth
+        );
 
         await FollowUpActionTestClient.Create(
-            organizationId: _organizationId, opportunityId: otherOpportunityId, followDateTime: NextWeek);
+            organizationId: _organizationId,
+            opportunityId: otherOpportunityId,
+            followDateTime: NextWeek
+        );
 
         var slice = await FollowUpActionTestClient.GetSliceAsync(
-            organizationId: _organizationId, opportunityId: opportunityId);
+            organizationId: _organizationId,
+            opportunityId: opportunityId
+        );
 
         Assert.Equal(2, slice.Content.Count);
         Assert.Equal(second.FollowUpActionId, slice.Content[0].Id);
@@ -205,7 +235,10 @@ public sealed class FollowUpActionTests(
         var opportunityId = await AnOpportunity();
 
         await FollowUpActionTestClient.Create(
-            organizationId: _organizationId, opportunityId: opportunityId, followDateTime: Tomorrow);
+            organizationId: _organizationId,
+            opportunityId: opportunityId,
+            followDateTime: Tomorrow
+        );
 
         var slice = await FollowUpActionTestClient.GetSliceAsync(organizationId: Guid.NewGuid());
 
@@ -218,10 +251,15 @@ public sealed class FollowUpActionTests(
         var opportunityId = await AnOpportunity();
 
         await FollowUpActionTestClient.Create(
-            organizationId: _organizationId, opportunityId: opportunityId, followDateTime: Tomorrow);
+            organizationId: _organizationId,
+            opportunityId: opportunityId,
+            followDateTime: Tomorrow
+        );
 
         var slice = await FollowUpActionTestClient.GetSliceAsync(
-            organizationId: _organizationId, companyId: _companyId);
+            organizationId: _organizationId,
+            companyId: _companyId
+        );
 
         Assert.Single(slice.Content);
         Assert.Equal(_companyId, slice.Content[0].Company.Id);
@@ -236,16 +274,20 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "Call the client",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
-        await Eventually.AssertAsync(async () =>
-        {
-            var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
+        await Eventually.AssertAsync(
+            async () =>
+            {
+                var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
 
-            Assert.Equal(created.FollowUpActionId, opportunity.FollowUpActionId);
-            Assert.Equal("Call the client", opportunity.FollowUpContent);
-            Assert.Equal(Tomorrow, opportunity.FollowUpDateTime);
-        }, output: OutputHelper);
+                Assert.Equal(created.FollowUpActionId, opportunity.FollowUpActionId);
+                Assert.Equal("Call the client", opportunity.FollowUpContent);
+                Assert.Equal(Tomorrow, opportunity.FollowUpDateTime);
+            },
+            output: OutputHelper
+        );
     }
 
     [Fact]
@@ -257,22 +299,27 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "Sign the contract",
-            followDateTime: NextMonth);
+            followDateTime: NextMonth
+        );
 
         await FollowUpActionTestClient.Create(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "An entry added for an earlier date",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
-        await Eventually.AssertAsync(async () =>
-        {
-            var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
+        await Eventually.AssertAsync(
+            async () =>
+            {
+                var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
 
-            Assert.Equal(latest.FollowUpActionId, opportunity.FollowUpActionId);
-            Assert.Equal("Sign the contract", opportunity.FollowUpContent);
-            Assert.Equal(NextMonth, opportunity.FollowUpDateTime);
-        }, output: OutputHelper);
+                Assert.Equal(latest.FollowUpActionId, opportunity.FollowUpActionId);
+                Assert.Equal("Sign the contract", opportunity.FollowUpContent);
+                Assert.Equal(NextMonth, opportunity.FollowUpDateTime);
+            },
+            output: OutputHelper
+        );
     }
 
     [Fact]
@@ -284,22 +331,27 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "Call the client",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
         await FollowUpActionTestClient.Update(
             organizationId: _organizationId,
             followUpActionId: created.FollowUpActionId,
             content: "Client asked to postpone the call",
-            followDateTime: NextWeek);
+            followDateTime: NextWeek
+        );
 
-        await Eventually.AssertAsync(async () =>
-        {
-            var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
+        await Eventually.AssertAsync(
+            async () =>
+            {
+                var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
 
-            Assert.Equal(created.FollowUpActionId, opportunity.FollowUpActionId);
-            Assert.Equal("Client asked to postpone the call", opportunity.FollowUpContent);
-            Assert.Equal(NextWeek, opportunity.FollowUpDateTime);
-        }, output: OutputHelper);
+                Assert.Equal(created.FollowUpActionId, opportunity.FollowUpActionId);
+                Assert.Equal("Client asked to postpone the call", opportunity.FollowUpContent);
+                Assert.Equal(NextWeek, opportunity.FollowUpDateTime);
+            },
+            output: OutputHelper
+        );
     }
 
     [Fact]
@@ -311,28 +363,34 @@ public sealed class FollowUpActionTests(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "Call the client",
-            followDateTime: Tomorrow);
+            followDateTime: Tomorrow
+        );
 
         var newer = await FollowUpActionTestClient.Create(
             organizationId: _organizationId,
             opportunityId: opportunityId,
             content: "Sign the contract",
-            followDateTime: NextWeek);
+            followDateTime: NextWeek
+        );
 
         await FollowUpActionTestClient.Update(
             organizationId: _organizationId,
             followUpActionId: older.FollowUpActionId,
             content: "Rescheduled after the signature",
-            followDateTime: NextMonth);
+            followDateTime: NextMonth
+        );
 
-        await Eventually.AssertAsync(async () =>
-        {
-            var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
+        await Eventually.AssertAsync(
+            async () =>
+            {
+                var opportunity = await OpportunityTestClient.Get(_organizationId, opportunityId);
 
-            Assert.NotEqual(newer.FollowUpActionId, opportunity.FollowUpActionId);
-            Assert.Equal(older.FollowUpActionId, opportunity.FollowUpActionId);
-            Assert.Equal("Rescheduled after the signature", opportunity.FollowUpContent);
-            Assert.Equal(NextMonth, opportunity.FollowUpDateTime);
-        }, output: OutputHelper);
+                Assert.NotEqual(newer.FollowUpActionId, opportunity.FollowUpActionId);
+                Assert.Equal(older.FollowUpActionId, opportunity.FollowUpActionId);
+                Assert.Equal("Rescheduled after the signature", opportunity.FollowUpContent);
+                Assert.Equal(NextMonth, opportunity.FollowUpDateTime);
+            },
+            output: OutputHelper
+        );
     }
 }

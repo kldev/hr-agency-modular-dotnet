@@ -17,23 +17,29 @@ public static class UpdateJobPostHandler
         JobPost aggregate,
         IRecruitmentService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var (title, summary, description,
-            location, responsibilities,
-            requirements, 
-            skills, 
-            salaryRange, 
-            countryCode, 
-            languageCode) = JobPostDataFactory.Create(command);
+        var (
+            title,
+            summary,
+            description,
+            location,
+            responsibilities,
+            requirements,
+            skills,
+            salaryRange,
+            countryCode,
+            languageCode
+        ) = JobPostDataFactory.Create(command);
 
         var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
         if (modifiedBy == null)
             throw new BusinessRuleException(IUserSnapshotRepository.NotFoundMessage);
-        
+
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException("Invalid organization id");
-        
+
         var @event = new JobPostUpdated(
             command.JobPostId,
             title.Value,
@@ -51,9 +57,9 @@ public static class UpdateJobPostHandler
             salaryRange.Min,
             salaryRange.Max,
             modifiedBy,
-            clock.UtcNow);
+            clock.UtcNow
+        );
 
         return (@event, [@event]);
     }
-    
 }

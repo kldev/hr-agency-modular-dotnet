@@ -17,15 +17,20 @@ public static class UpdateOrganizationHandler
         ILogger logger,
         IOrganizationSlugReservationRepository repository,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        if (aggregate == null) throw new NotFoundException("Organization", command.OrganizationId);
+        if (aggregate == null)
+            throw new NotFoundException("Organization", command.OrganizationId);
 
         logger.LogUpdateOrganization(command.Name, command.Slug, command.EmailDomains.Count);
-        
+
         var organizationId = aggregate.Id;
         var (name, slug) = OrganizationDataFactory.Create(command);
-        if (command.EmailDomains.Count == 0 || command.EmailDomains.All(z=>string.IsNullOrEmpty(z.Trim())))
+        if (
+            command.EmailDomains.Count == 0
+            || command.EmailDomains.All(z => string.IsNullOrEmpty(z.Trim()))
+        )
             throw new BusinessRuleException("No email domains specified");
 
         if (aggregate.Slug.Value != slug.Value)
@@ -37,11 +42,12 @@ public static class UpdateOrganizationHandler
 
         var @event = new OrganizationUpdated(
             command.OrganizationId,
-            name.Value, 
-            slug.Value, 
-            [..command.EmailDomains.Where(z=>z.Trim().Length >0)],
+            name.Value,
+            slug.Value,
+            [.. command.EmailDomains.Where(z => z.Trim().Length > 0)],
             clock.UtcNow,
-            command.Info);
+            command.Info
+        );
 
         return (@event, [@event]);
     }
@@ -52,7 +58,12 @@ internal static partial class OrganizationLogs
     [LoggerMessage(
         EventId = 1,
         Level = LogLevel.Information,
-        Message = "Updating organization {name} {slug}, domains count {count}")]
-    public static partial void LogUpdateOrganization(this ILogger logger, 
-        string name, string slug, int count);
+        Message = "Updating organization {name} {slug}, domains count {count}"
+    )]
+    public static partial void LogUpdateOrganization(
+        this ILogger logger,
+        string name,
+        string slug,
+        int count
+    );
 }

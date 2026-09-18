@@ -7,7 +7,5 @@ public sealed record JobApplicationNoteAdded(
     Guid CandidateId,
     DateTimeOffset OccurredAt,
     string Note,
-    UserSnapshot Author) : IJobApplicationEvent
-{
-    
-}
+    UserSnapshot Author
+) : IJobApplicationEvent { }

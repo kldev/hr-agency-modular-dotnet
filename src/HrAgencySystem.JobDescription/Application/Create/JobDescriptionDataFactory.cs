@@ -11,23 +11,31 @@ internal static class JobDescriptionDataFactory
         var errors = new List<string>();
 
         var (title, error) = JobTitle.TryCreate(command.Title);
-        if (error != null) {
+        if (error != null)
+        {
             errors.Add(error);
         }
-        
-        var (summary, errorSummary) = LongText.TryCreate(command.Summary ??"");
-        if (errorSummary != null) {
+
+        var (summary, errorSummary) = LongText.TryCreate(command.Summary ?? "");
+        if (errorSummary != null)
+        {
             errors.Add(errorSummary);
         }
 
-        var (description, errorDescription) = LongText.TryCreate(command.Description, true, "Job description");
+        var (description, errorDescription) = LongText.TryCreate(
+            command.Description,
+            true,
+            "Job description"
+        );
 
-        if (errorDescription != null) {
+        if (errorDescription != null)
+        {
             errors.Add(errorDescription);
         }
-        
+
         var (location, errorLocation) = JobLocation.TryCreate(command.Location);
-        if (errorLocation != null) {
+        if (errorLocation != null)
+        {
             errors.Add(errorLocation);
         }
 
@@ -38,18 +46,23 @@ internal static class JobDescriptionDataFactory
         errors.AddRange(errorsRequirements);
         errors.AddRange(errorsSkills);
 
-        var (salary, errorSalary) = SalaryRange.TryCreate(command.SalaryMin,
-            command.SalaryMax, command.CurrencyCode);
+        var (salary, errorSalary) = SalaryRange.TryCreate(
+            command.SalaryMin,
+            command.SalaryMax,
+            command.CurrencyCode
+        );
 
-        if (errorSalary != null) {
+        if (errorSalary != null)
+        {
             errors.Add(errorSalary);
         }
-        
+
         var (countryCode, errorCountryCode) = CountryCode.TryCreate(command.CountryCode);
-        if (errorCountryCode != null) {
+        if (errorCountryCode != null)
+        {
             errors.Add(errorCountryCode);
         }
-        
+
         if (errors.Count > 0)
             throw new ValidationException(errors);
 
@@ -66,7 +79,9 @@ internal static class JobDescriptionDataFactory
         );
     }
 
-    private static (List<EntryText> entries, List<string> errors) TryCreateEntries(IReadOnlyList<string> input)
+    private static (List<EntryText> entries, List<string> errors) TryCreateEntries(
+        IReadOnlyList<string> input
+    )
     {
         var entries = new List<EntryText>();
         var errors = new List<string>();
@@ -74,16 +89,17 @@ internal static class JobDescriptionDataFactory
         foreach (var item in input)
         {
             var (entry, error) = EntryText.TryCreate(item);
-            if (error != null) {
+            if (error != null)
+            {
                 errors.Add(error);
                 continue;
             }
             entries.Add(entry!);
         }
-        
+
         return (entries, errors);
     }
-    
+
     internal sealed record JdData(
         JobTitle Title,
         LongText Summary,
@@ -93,6 +109,6 @@ internal static class JobDescriptionDataFactory
         IReadOnlyList<EntryText> Requirements,
         IReadOnlyList<EntryText> Skills,
         SalaryRange SalaryRange,
-        CountryCode  CountryCode
+        CountryCode CountryCode
     );
 }

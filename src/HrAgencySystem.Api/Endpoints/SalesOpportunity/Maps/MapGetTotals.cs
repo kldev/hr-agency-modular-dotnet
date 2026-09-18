@@ -10,7 +10,8 @@ internal static class MapGetTotals
     internal static void Map(RouteGroupBuilder group)
     {
         // GET /api/sales/opportunity/totals
-        group.MapGet("totals", Handler)
+        group
+            .MapGet("totals", Handler)
             .WithSummary("Get pipeline totals")
             .WithName("Get opportunities pipeline totals")
             .Produces<IReadOnlyList<SalesPipelineQueryResult>>()
@@ -18,16 +19,25 @@ internal static class MapGetTotals
     }
 
     private static async Task<IResult> Handler(
-        ISalesPipelineQueryRepository repository, 
+        ISalesPipelineQueryRepository repository,
         AppUserAuthenticated user,
         string? search,
         Guid? companyId,
         Guid? responsibleId,
         OpportunityStage? stage,
-        int page = 1, int pageSize = 100,
-        CancellationToken ct = default)
+        int page = 1,
+        int pageSize = 100,
+        CancellationToken ct = default
+    )
     {
-        var query = new OpportunityQuery(search ?? "", companyId, responsibleId, stage, page, pageSize);
+        var query = new OpportunityQuery(
+            search ?? "",
+            companyId,
+            responsibleId,
+            stage,
+            page,
+            pageSize
+        );
         var result = await repository.GetTotalsAsync(user.OrganizationId, query, ct);
 
         return TypedResults.Ok(result);

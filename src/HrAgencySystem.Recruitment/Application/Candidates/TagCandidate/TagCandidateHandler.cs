@@ -16,21 +16,22 @@ public static class TagCandidateHandler
     [AggregateHandler]
     // ReSharper disable once UnusedMember.Global
     public static async Task<(CandidateTagged, Wolverine.Marten.Events)> Handle(
-        TagCandidate command, 
+        TagCandidate command,
         Domain.Candidates.Candidate aggregate,
         ITagRepository tagRepository,
         IRecruitmentService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);
-        
+
         var tag = await tagRepository.GetTag(command.TagId, ct);
         var user = await service.GetUserAsync(command.CreatedBy, ct);
 
         var @event = new CandidateTagged(aggregate.Id.Value, tag, user, clock.UtcNow);
-        
+
         return (@event, [@event]);
     }
 }

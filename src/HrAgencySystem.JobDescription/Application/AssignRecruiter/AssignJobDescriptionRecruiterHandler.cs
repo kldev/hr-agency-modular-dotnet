@@ -11,15 +11,17 @@ namespace HrAgencySystem.JobDescription.Application.AssignRecruiter;
 public static class AssignJobDescriptionRecruiterHandler
 {
     [AggregateHandler]
-    public static async Task<(JobDescriptionRecruiterAssigned,Wolverine.Marten.Events)> Handle(
+    public static async Task<(JobDescriptionRecruiterAssigned, Wolverine.Marten.Events)> Handle(
         AssignJobDescriptionRecruiter command,
         Domain.JobDescription aggregate,
         IJobDescriptionService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        if (aggregate == null) throw new NotFoundException("Job description", command.JobDescriptionId);
-        
+        if (aggregate == null)
+            throw new NotFoundException("Job description", command.JobDescriptionId);
+
         var recruiter = await service.GetUserAsync(command.RecruiterId, ct);
 
         var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
@@ -31,7 +33,10 @@ public static class AssignJobDescriptionRecruiterHandler
         return (@event, [@event]);
     }
 
-    private static void ValidateOrganization(AssignJobDescriptionRecruiter command, Domain.JobDescription aggregate)
+    private static void ValidateOrganization(
+        AssignJobDescriptionRecruiter command,
+        Domain.JobDescription aggregate
+    )
     {
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(OrganizationId.OrganizationNotMatchMessage);

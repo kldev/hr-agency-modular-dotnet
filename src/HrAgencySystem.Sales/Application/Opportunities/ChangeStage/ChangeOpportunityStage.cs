@@ -9,4 +9,5 @@ public sealed record ChangeOpportunityStage(
     Guid OrganizationId,
     OpportunityStage Stage,
     string LostReason,
-    Guid ModifiedBy) :IUpdateCommand;
+    Guid ModifiedBy
+) : IUpdateCommand;

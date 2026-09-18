@@ -6,9 +6,17 @@ namespace HrAgencySystem.Recruitment.Application.Interviews.Queries;
 
 public interface IInterviewsQueryRepository
 {
-    Task<SliceResponse<InterviewProjection>> GetSlice(Guid organizationId, InterviewsQuery query, CancellationToken ct);
+    Task<SliceResponse<InterviewProjection>> GetSlice(
+        Guid organizationId,
+        InterviewsQuery query,
+        CancellationToken ct
+    );
     Task<InterviewProjection?> Get(Guid organizationId, Guid interviewId, CancellationToken ct);
-    Task<IReadOnlyList<InterviewProjection>> GetRange(Guid organizationId, InterviewsQuery query, CancellationToken ct);
+    Task<IReadOnlyList<InterviewProjection>> GetRange(
+        Guid organizationId,
+        InterviewsQuery query,
+        CancellationToken ct
+    );
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
@@ -21,6 +29,6 @@ public sealed record InterviewsQuery(
     DateTimeOffset? From,
     DateTimeOffset? To,
     string Search,
-    int Page, 
-    int PageSize) : IPagedQuery;
-    
+    int Page,
+    int PageSize
+) : IPagedQuery;

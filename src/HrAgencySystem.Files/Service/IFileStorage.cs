@@ -8,11 +8,8 @@ public interface IFileStorage
         FileInput input,
         string key,
         string bucketName,
-        CancellationToken cancellationToken);
-    
-    Task<FileResponse> GetAsync(
-        string key,
-        string bucketName,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken
+    );
 
+    Task<FileResponse> GetAsync(string key, string bucketName, CancellationToken cancellationToken);
 }

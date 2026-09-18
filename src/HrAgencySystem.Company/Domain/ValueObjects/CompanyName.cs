@@ -22,16 +22,15 @@ public sealed record CompanyName
         return error is not null ? throw new InValidValueException(error) : companyName!;
     }
 
-    public static (CompanyName? companyName, string? error) TryCreate(
-        string value)
+    public static (CompanyName? companyName, string? error) TryCreate(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return (null, RequiredMessage);
+        if (string.IsNullOrWhiteSpace(value))
+            return (null, RequiredMessage);
 
         var normalized = value.Trim();
 
         if (normalized.Length > MaxLength)
-            return (null,
-                MaxLengthMessage);
+            return (null, MaxLengthMessage);
 
         return (new CompanyName(normalized), null);
     }

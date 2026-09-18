@@ -3,7 +3,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Recruitment.Documents;
 
-public sealed record JobApplicationNote( 
+public sealed record JobApplicationNote(
     Guid Id,
     Guid JobApplicationId,
     Guid OrgId,
@@ -15,7 +15,8 @@ public sealed record JobApplicationNote(
     DateTimeOffset CreatedAt,
     Guid? ModifyById,
     UserSnapshot? ModifyBy,
-    DateTimeOffset? ModifyAt)
+    DateTimeOffset? ModifyAt
+)
 {
     public static JobApplicationNote Create(
         Guid jobApplicationId,
@@ -23,8 +24,8 @@ public sealed record JobApplicationNote(
         Guid candidateId,
         ShortNote note,
         UserSnapshot createdBy,
-        DateTimeOffset createdAt)
-
+        DateTimeOffset createdAt
+    )
     {
         ArgumentNullException.ThrowIfNull(note);
 
@@ -36,37 +37,38 @@ public sealed record JobApplicationNote(
             note.Value,
             createdBy.Id,
             createdBy,
-            false, 
+            false,
             createdAt,
             null,
             null,
-            null);
+            null
+        );
     }
 
-    public JobApplicationNote Delete( 
-        UserSnapshot deleteBy,
-        DateTimeOffset deleteAt)
+    public JobApplicationNote Delete(UserSnapshot deleteBy, DateTimeOffset deleteAt)
     {
         return this with
         {
             IsDeleted = true,
             ModifyAt = deleteAt,
             ModifyBy = deleteBy,
-            ModifyById = deleteBy.Id
+            ModifyById = deleteBy.Id,
         };
     }
 
-    public JobApplicationNote Modify(ShortNote note,
+    public JobApplicationNote Modify(
+        ShortNote note,
         Guid modifyById,
         UserSnapshot modifyBy,
-        DateTimeOffset modifyAt)
+        DateTimeOffset modifyAt
+    )
     {
         return this with
         {
             ModifyAt = modifyAt,
             ModifyBy = modifyBy,
-            ModifyById = modifyById, 
-            Note = note.Value
+            ModifyById = modifyById,
+            Note = note.Value,
         };
     }
 }

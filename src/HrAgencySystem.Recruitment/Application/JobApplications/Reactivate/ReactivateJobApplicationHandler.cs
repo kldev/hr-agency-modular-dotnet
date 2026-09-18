@@ -9,14 +9,14 @@ namespace HrAgencySystem.Recruitment.Application.JobApplications.Reactivate;
 
 public static class ReactivateJobApplicationHandler
 {
-
     [AggregateHandler]
     public static async Task<(JobApplicationReactivated, Wolverine.Marten.Events)> Handle(
         ReactivateJobApplication command,
         JobApplication aggregate,
         IRecruitmentService service,
         IClock clock,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         if (aggregate.Status != JobApplicationStatus.Withdrawn)

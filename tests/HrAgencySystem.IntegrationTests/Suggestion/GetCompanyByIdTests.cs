@@ -7,8 +7,10 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Suggestion;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class GetCompanyByIdTests(IntegrationEnvironment environment, ITestOutputHelper output)
-    : BaseIntegrationTest(environment, output)
+public sealed class GetCompanyByIdTests(
+    IntegrationEnvironment environment,
+    ITestOutputHelper output
+) : BaseIntegrationTest(environment, output)
 {
     private readonly Guid OrganizationId = Guid.NewGuid();
     private readonly Guid OtherOrganizationId = Guid.NewGuid();
@@ -26,8 +28,12 @@ public sealed class GetCompanyByIdTests(IntegrationEnvironment environment, ITes
     [Fact]
     public async Task ShouldGetCompanySuggestionById()
     {
-        var created = await CompanyClient.CreateAsync(OrganizationId, name: "Almec", taxId: "TX-100",
-            countryCode: "pl");
+        var created = await CompanyClient.CreateAsync(
+            OrganizationId,
+            name: "Almec",
+            taxId: "TX-100",
+            countryCode: "pl"
+        );
 
         Client.WithOrganizationId(OrganizationId);
 

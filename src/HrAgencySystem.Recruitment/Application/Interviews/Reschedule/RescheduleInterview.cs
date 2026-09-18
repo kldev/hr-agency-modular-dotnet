@@ -12,9 +12,9 @@ public sealed record RescheduleInterview(
     Guid ModifiedBy,
     string ScheduledTimezone = "Europe/Warsaw",
     string Location = "",
-    string MeetingUrl = "") : IUpdateCommand
+    string MeetingUrl = ""
+) : IUpdateCommand
 {
     [JsonIgnore]
-    public DateTimeOffset ScheduledAtInstant
-        => ScheduledAt.ToInstantUtc(ScheduledTimezone);
+    public DateTimeOffset ScheduledAtInstant => ScheduledAt.ToInstantUtc(ScheduledTimezone);
 }

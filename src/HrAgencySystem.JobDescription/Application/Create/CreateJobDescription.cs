@@ -16,9 +16,9 @@ public sealed record CreateJobDescription(
     string CountryCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
     Guid RecruiterId,
     Guid CreatedBy
-    ) : IJobDescription, ICreateCommand;
+) : IJobDescription, ICreateCommand;

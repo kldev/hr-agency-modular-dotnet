@@ -13,20 +13,32 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         // POST /api/recruitment/job-posting
-        group.MapPost("", Handler)
+        group
+            .MapPost("", Handler)
             .WithSummary("Create job post")
             .WithName("Create job post")
             .Produces<JobPostCreated>()
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, IMessageBus bus, CreatePostRequest request, CancellationToken ct)
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        IMessageBus bus,
+        CreatePostRequest request,
+        CancellationToken ct
+    )
     {
-        var result = await bus.InvokeAsync<JobPostCreated>(request.ToCommand(user.OrganizationId, user.UserId), ct);
+        var result = await bus.InvokeAsync<JobPostCreated>(
+            request.ToCommand(user.OrganizationId, user.UserId),
+            ct
+        );
 
-        var integrationEvent = new JobPostCreatedIntegrationEvent(result.CompanyId, result.JobPostId);
+        var integrationEvent = new JobPostCreatedIntegrationEvent(
+            result.CompanyId,
+            result.JobPostId
+        );
         await bus.PublishAsync(integrationEvent);
-        
+
         return TypedResults.Created($"/api/recruitment/job-posting/{result.JobPostId}", result);
     }
 }
@@ -44,17 +56,18 @@ internal sealed record CreatePostRequest(
     string LanguageCode,
     EmploymentType EmploymentType,
     WorkMode WorkMode,
-    CurrencyCode  CurrencyCode,
+    CurrencyCode CurrencyCode,
     decimal SalaryMin,
     decimal SalaryMax,
-    Guid RecruiterId)
+    Guid RecruiterId
+)
 {
     public CreateJobPost ToCommand(Guid organizationId, Guid createdBy) =>
-        new ( 
+        new(
             JobDescriptionId,
-            organizationId, 
-            Title, 
-            Summary, 
+            organizationId,
+            Title,
+            Summary,
             Description,
             Responsibilities,
             Requirements,
@@ -68,5 +81,6 @@ internal sealed record CreatePostRequest(
             SalaryMin,
             SalaryMax,
             RecruiterId,
-            createdBy);
+            createdBy
+        );
 }

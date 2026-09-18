@@ -10,31 +10,32 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
 {
     private static readonly Random Random = new();
 
-    
     public async Task<IReadOnlyList<Guid>> Create(
         Guid organizationId,
         IReadOnlyList<Guid> userIds,
-        IReadOnlyList<Guid> companyIds)
+        IReadOnlyList<Guid> companyIds
+    )
     {
         if (companyIds.Count == 0 || userIds.Count == 0)
             return [];
-        
+
         var jobDescriptions = new[]
         {
             await CreateCSharpDeveloper(
                 organizationId,
                 companyIds[Random.Next(0, companyIds.Count)],
-                userIds[Random.Next(0, userIds.Count)]),
-
+                userIds[Random.Next(0, userIds.Count)]
+            ),
             await CreateNextJsDeveloper(
                 organizationId,
                 companyIds[Random.Next(0, companyIds.Count)],
-                userIds[Random.Next(0, userIds.Count)]),
-
+                userIds[Random.Next(0, userIds.Count)]
+            ),
             await CreateNodeJsDeveloper(
                 organizationId,
                 companyIds[Random.Next(0, companyIds.Count)],
-                userIds[Random.Next(0, userIds.Count)]),
+                userIds[Random.Next(0, userIds.Count)]
+            ),
         };
 
         await Task.Delay(TimeSpan.FromSeconds(5));
@@ -50,14 +51,18 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     jobDescription.JobDescriptionId,
                     organizationId,
                     recruiterId,
-                    CreatePolishPost(jobDescription)));
+                    CreatePolishPost(jobDescription)
+                )
+            );
 
             jobPostIds.Add(
                 await CreateJobPost(
                     jobDescription.JobDescriptionId,
                     organizationId,
                     recruiterId,
-                    CreateEnglishPost(jobDescription)));
+                    CreateEnglishPost(jobDescription)
+                )
+            );
         }
 
         return jobPostIds;
@@ -66,7 +71,8 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
     private async Task<JobDescriptionSeedResult> CreateCSharpDeveloper(
         Guid organizationId,
         Guid companyId,
-        Guid recruiterId)
+        Guid recruiterId
+    )
     {
         var result = await bus.InvokeAsync<JobDescriptionCreated>(
             new CreateJobDescription(
@@ -81,7 +87,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Implement business logic and domain features",
                     "Write unit and integration tests",
                     "Participate in code reviews",
-                    "Cooperate with frontend developers and other engineering teams"
+                    "Cooperate with frontend developers and other engineering teams",
                 ],
                 [
                     "At least 3 years of commercial experience with C#",
@@ -91,17 +97,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Good knowledge of relational databases",
                     "Experience with automated testing",
                     "Ability to work effectively in a team",
-                    "Good command of English"
+                    "Good command of English",
                 ],
-                [
-                    "C#",
-                    ".NET",
-                    "ASP.NET Core",
-                    "PostgreSQL",
-                    "REST API",
-                    "Docker",
-                    "Git"
-                ],
+                ["C#", ".NET", "ASP.NET Core", "PostgreSQL", "REST API", "Docker", "Git"],
                 "Opole",
                 "PL",
                 EmploymentType.FullTime,
@@ -110,21 +108,21 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 14000m,
                 22000m,
                 recruiterId,
-                recruiterId)
-            with
+                recruiterId
+            ) with
             {
-                RecruiterId = recruiterId
-            });
+                RecruiterId = recruiterId,
+            }
+        );
 
-        return new JobDescriptionSeedResult(
-            result.JobDescriptionId,
-            recruiterId, result.Title );
+        return new JobDescriptionSeedResult(result.JobDescriptionId, recruiterId, result.Title);
     }
 
     private async Task<JobDescriptionSeedResult> CreateNextJsDeveloper(
         Guid organizationId,
         Guid companyId,
-        Guid recruiterId)
+        Guid recruiterId
+    )
     {
         var result = await bus.InvokeAsync<JobDescriptionCreated>(
             new CreateJobDescription(
@@ -139,7 +137,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Integrate frontend applications with REST APIs",
                     "Optimize application performance and user experience",
                     "Write unit and integration tests",
-                    "Cooperate with backend developers and UX designers"
+                    "Cooperate with backend developers and UX designers",
                 ],
                 [
                     "At least 2 years of commercial experience with React",
@@ -149,18 +147,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Experience integrating REST APIs",
                     "Knowledge of frontend testing",
                     "Good understanding of Git",
-                    "Good command of English"
+                    "Good command of English",
                 ],
-                [
-                    "NextJS",
-                    "React",
-                    "TypeScript",
-                    "JavaScript",
-                    "HTML",
-                    "CSS",
-                    "REST API",
-                    "Git"
-                ],
+                ["NextJS", "React", "TypeScript", "JavaScript", "HTML", "CSS", "REST API", "Git"],
                 "Opole",
                 "PL",
                 EmploymentType.FullTime,
@@ -169,21 +158,21 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 12000m,
                 20000m,
                 recruiterId,
-                recruiterId)
-            with
+                recruiterId
+            ) with
             {
-                RecruiterId = recruiterId
-            });
+                RecruiterId = recruiterId,
+            }
+        );
 
-        return new JobDescriptionSeedResult(
-            result.JobDescriptionId,
-            recruiterId, result.Title);
+        return new JobDescriptionSeedResult(result.JobDescriptionId, recruiterId, result.Title);
     }
 
     private async Task<JobDescriptionSeedResult> CreateNodeJsDeveloper(
         Guid organizationId,
         Guid companyId,
-        Guid recruiterId)
+        Guid recruiterId
+    )
     {
         var result = await bus.InvokeAsync<JobDescriptionCreated>(
             new CreateJobDescription(
@@ -198,7 +187,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Implement scalable application architecture",
                     "Integrate applications with databases and external services",
                     "Write unit and integration tests",
-                    "Monitor and improve application performance"
+                    "Monitor and improve application performance",
                 ],
                 [
                     "At least 3 years of professional experience with NodeJS",
@@ -208,17 +197,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Experience with backend application architecture",
                     "Knowledge of automated testing",
                     "Experience with Docker",
-                    "Good command of English"
+                    "Good command of English",
                 ],
-                [
-                    "NodeJS",
-                    "TypeScript",
-                    "JavaScript",
-                    "REST API",
-                    "PostgreSQL",
-                    "Docker",
-                    "Git"
-                ],
+                ["NodeJS", "TypeScript", "JavaScript", "REST API", "PostgreSQL", "Docker", "Git"],
                 "Opole",
                 "PL",
                 EmploymentType.FullTime,
@@ -227,19 +208,17 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 13000m,
                 21000m,
                 recruiterId,
-                recruiterId)
-            with
+                recruiterId
+            ) with
             {
-                RecruiterId = recruiterId
-            });
+                RecruiterId = recruiterId,
+            }
+        );
 
-        return new JobDescriptionSeedResult(
-            result.JobDescriptionId,
-            recruiterId, result.Title);
+        return new JobDescriptionSeedResult(result.JobDescriptionId, recruiterId, result.Title);
     }
 
-    private static CreateJobPost CreatePolishPost(
-        JobDescriptionSeedResult jobDescription)
+    private static CreateJobPost CreatePolishPost(JobDescriptionSeedResult jobDescription)
     {
         return jobDescription switch
         {
@@ -256,7 +235,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Implementacja logiki biznesowej",
                     "Pisanie testów jednostkowych i integracyjnych",
                     "Udział w code review",
-                    "Współpraca z programistami frontendowymi"
+                    "Współpraca z programistami frontendowymi",
                 ],
                 [
                     "Minimum 3 lata komercyjnego doświadczenia z C#",
@@ -264,8 +243,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Dobra znajomość ASP.NET Core",
                     "Doświadczenie w tworzeniu REST API",
                     "Dobra znajomość relacyjnych baz danych",
-                    "Doświadczenie w testach automatycznych"
-                ]),
+                    "Doświadczenie w testach automatycznych",
+                ]
+            ),
 
             { Title: "NextJS Developer" } => CreatePolish(
                 jobDescription.JobDescriptionId,
@@ -280,7 +260,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Integracja aplikacji z REST API",
                     "Optymalizacja wydajności aplikacji",
                     "Pisanie testów automatycznych",
-                    "Współpraca z backendem i UX"
+                    "Współpraca z backendem i UX",
                 ],
                 [
                     "Minimum 2 lata komercyjnego doświadczenia z React",
@@ -288,8 +268,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Bardzo dobra znajomość TypeScript",
                     "Znajomość HTML i CSS",
                     "Doświadczenie w integracji REST API",
-                    "Znajomość testów frontendowych"
-                ]),
+                    "Znajomość testów frontendowych",
+                ]
+            ),
 
             { Title: "NodeJS Developer" } => CreatePolish(
                 jobDescription.JobDescriptionId,
@@ -304,7 +285,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Projektowanie skalowalnej architektury aplikacji",
                     "Integracja z bazami danych i usługami zewnętrznymi",
                     "Pisanie testów jednostkowych i integracyjnych",
-                    "Monitorowanie i poprawa wydajności"
+                    "Monitorowanie i poprawa wydajności",
                 ],
                 [
                     "Minimum 3 lata profesjonalnego doświadczenia z NodeJS",
@@ -312,16 +293,17 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Doświadczenie w tworzeniu REST API",
                     "Dobra znajomość relacyjnych baz danych",
                     "Znajomość architektury aplikacji backendowych",
-                    "Doświadczenie w testach automatycznych"
-                ]),
+                    "Doświadczenie w testach automatycznych",
+                ]
+            ),
 
             _ => throw new InvalidOperationException(
-                $"Unsupported Job Description: {jobDescription.Title}")
+                $"Unsupported Job Description: {jobDescription.Title}"
+            ),
         };
     }
 
-    private static CreateJobPost CreateEnglishPost(
-        JobDescriptionSeedResult jobDescription)
+    private static CreateJobPost CreateEnglishPost(JobDescriptionSeedResult jobDescription)
     {
         return jobDescription switch
         {
@@ -338,7 +320,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Implement business logic",
                     "Write unit and integration tests",
                     "Participate in code reviews",
-                    "Collaborate with frontend developers"
+                    "Collaborate with frontend developers",
                 ],
                 [
                     "At least 3 years of commercial experience with C#",
@@ -346,8 +328,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Good knowledge of ASP.NET Core",
                     "Experience with REST APIs",
                     "Good knowledge of relational databases",
-                    "Experience with automated testing"
-                ]),
+                    "Experience with automated testing",
+                ]
+            ),
 
             { Title: "NextJS Developer" } => CreateEnglish(
                 jobDescription.JobDescriptionId,
@@ -362,7 +345,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Integrate applications with REST APIs",
                     "Optimize application performance",
                     "Write automated tests",
-                    "Collaborate with backend developers and UX designers"
+                    "Collaborate with backend developers and UX designers",
                 ],
                 [
                     "At least 2 years of commercial experience with React",
@@ -370,8 +353,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Strong TypeScript skills",
                     "Good knowledge of HTML and CSS",
                     "Experience integrating REST APIs",
-                    "Knowledge of frontend testing"
-                ]),
+                    "Knowledge of frontend testing",
+                ]
+            ),
 
             { Title: "NodeJS Developer" } => CreateEnglish(
                 jobDescription.JobDescriptionId,
@@ -386,7 +370,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Design scalable application architecture",
                     "Integrate applications with databases and external services",
                     "Write unit and integration tests",
-                    "Monitor and improve application performance"
+                    "Monitor and improve application performance",
                 ],
                 [
                     "At least 3 years of professional experience with NodeJS",
@@ -394,11 +378,13 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                     "Experience with REST API development",
                     "Good knowledge of relational databases",
                     "Knowledge of backend application architecture",
-                    "Experience with automated testing"
-                ]),
+                    "Experience with automated testing",
+                ]
+            ),
 
             _ => throw new InvalidOperationException(
-                $"Unsupported Job Description: {jobDescription.Title}")
+                $"Unsupported Job Description: {jobDescription.Title}"
+            ),
         };
     }
 
@@ -406,7 +392,8 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
         Guid jobDescriptionId,
         Guid organizationId,
         Guid recruiterId,
-        CreateJobPost request)
+        CreateJobPost request
+    )
     {
         return await bus.InvokeAsync<Guid>(
             request with
@@ -414,8 +401,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 JobDescriptionId = jobDescriptionId,
                 OrganizationId = organizationId,
                 RecruiterId = recruiterId,
-                CreatedBy = recruiterId
-            });
+                CreatedBy = recruiterId,
+            }
+        );
     }
 
     private static CreateJobPost CreatePolish(
@@ -426,8 +414,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
         decimal salaryMin,
         decimal salaryMax,
         IReadOnlyList<string> responsibilities,
-        IReadOnlyList<string> requirements)
-        => Create(
+        IReadOnlyList<string> requirements
+    ) =>
+        Create(
             jobDescriptionId,
             title,
             summary,
@@ -437,7 +426,8 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
             salaryMin,
             salaryMax,
             responsibilities,
-            requirements);
+            requirements
+        );
 
     private static CreateJobPost CreateEnglish(
         Guid jobDescriptionId,
@@ -447,8 +437,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
         decimal salaryMin,
         decimal salaryMax,
         IReadOnlyList<string> responsibilities,
-        IReadOnlyList<string> requirements)
-        => Create(
+        IReadOnlyList<string> requirements
+    ) =>
+        Create(
             jobDescriptionId,
             title,
             summary,
@@ -458,7 +449,8 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
             salaryMin,
             salaryMax,
             responsibilities,
-            requirements);
+            requirements
+        );
 
     private static CreateJobPost Create(
         Guid jobDescriptionId,
@@ -470,8 +462,9 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
         decimal salaryMin,
         decimal salaryMax,
         IReadOnlyList<string> responsibilities,
-        IReadOnlyList<string> requirements)
-        => new(
+        IReadOnlyList<string> requirements
+    ) =>
+        new(
             JobDescriptionId: jobDescriptionId,
             OrganizationId: Guid.Empty,
             Title: title,
@@ -489,12 +482,12 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
             SalaryMin: salaryMin,
             SalaryMax: salaryMax,
             RecruiterId: Guid.Empty,
-            CreatedBy: Guid.Empty);
+            CreatedBy: Guid.Empty
+        );
 
     private sealed record JobDescriptionSeedResult(
         Guid JobDescriptionId,
         Guid RecruiterId,
-        String Title)
-    {
-    }
+        String Title
+    ) { }
 }

@@ -12,7 +12,8 @@ internal static class MapChangeResponsible
     internal static void Map(RouteGroupBuilder group)
     {
         // PUT /api/sales/opportunity/{id}/responsible
-        group.MapPut("{opportunityId:guid}/responsible", Handler)
+        group
+            .MapPut("{opportunityId:guid}/responsible", Handler)
             .WithSummary("Change responsible person")
             .WithName("Change opportunity responsible person")
             .Produces<ResponsiblePersonChanged>()
@@ -24,16 +25,18 @@ internal static class MapChangeResponsible
         AppUserAuthenticated user,
         Guid opportunityId,
         ChangeResponsiblePersonRequest request,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
-        var command = new ChangeResponsiblePerson(opportunityId, 
-            user.OrganizationId, 
-            request.ResponsibleId, 
-            user.UserId);
-        
+        var command = new ChangeResponsiblePerson(
+            opportunityId,
+            user.OrganizationId,
+            request.ResponsibleId,
+            user.UserId
+        );
+
         var result = await bus.InvokeAsync<ResponsiblePersonChanged>(command, ct);
-        
+
         return TypedResults.Ok(result);
     }
 }
-

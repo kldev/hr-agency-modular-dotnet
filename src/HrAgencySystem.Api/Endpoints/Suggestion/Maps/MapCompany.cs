@@ -9,20 +9,25 @@ internal static class MapCompany
 {
     internal static void Map(this RouteGroupBuilder group)
     {
-        group.MapGet("/api/suggestion/companies/{companyId:guid}", Handler)
+        group
+            .MapGet("/api/suggestion/companies/{companyId:guid}", Handler)
             .Produces<CompanySuggestion>()
             .WithName("Get company suggestion")
             .WithSummary("Get a single company suggestion by id")
             .ProducesStandardErrors();
     }
 
-    private static async Task<IResult> Handler(AppUserAuthenticated user, ICompanySuggestionRepository repository,
+    private static async Task<IResult> Handler(
+        AppUserAuthenticated user,
+        ICompanySuggestionRepository repository,
         Guid companyId,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var result = await repository.GetCompanySuggestion(user.OrganizationId, companyId, ct);
 
-        if (result is null) throw new NotFoundException("Company", companyId);
+        if (result is null)
+            throw new NotFoundException("Company", companyId);
 
         return TypedResults.Ok(result);
     }

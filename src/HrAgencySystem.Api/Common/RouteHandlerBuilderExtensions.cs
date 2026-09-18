@@ -5,8 +5,7 @@ namespace HrAgencySystem.Api.Common;
 
 public static class RouteHandlerBuilderExtensions
 {
-    public static RouteHandlerBuilder ProducesStandardErrors(
-        this RouteHandlerBuilder builder)
+    public static RouteHandlerBuilder ProducesStandardErrors(this RouteHandlerBuilder builder)
     {
         return builder
             .Produces<BadRequestDetails>(StatusCodes.Status400BadRequest)

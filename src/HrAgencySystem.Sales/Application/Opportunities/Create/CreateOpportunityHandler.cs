@@ -20,10 +20,10 @@ public static class CreateOpportunityHandler
     )
     {
         var (title, description) = OpportunityDataFactory.Create(command);
-        
+
         var organizationId = OrganizationId.From(command.OrganizationId);
         await service.ValidateOrganization(command.OrganizationId, ct);
-        
+
         var user = await service.GetUserAsync(command.CreatedBy, ct);
         var owner = await GetOwner(service, command.ResponsibleId, user, ct);
         var company = await service.GetCompanyAsync(command.CompanyId, ct);
@@ -43,17 +43,22 @@ public static class CreateOpportunityHandler
             owner,
             clock.UtcNow,
             user
-            );
+        );
 
         session.Events.StartStream<SalesOpportunity>(opportunityId.Value, @event);
 
         return @event;
     }
 
-    private static async Task<UserSnapshot> GetOwner(ISalesService service, Guid? ownerId, UserSnapshot defaultOwner,
-        CancellationToken ct)
+    private static async Task<UserSnapshot> GetOwner(
+        ISalesService service,
+        Guid? ownerId,
+        UserSnapshot defaultOwner,
+        CancellationToken ct
+    )
     {
-        if (ownerId.IsInvalid() || ownerId!.Value == defaultOwner.Id) return defaultOwner;
+        if (ownerId.IsInvalid() || ownerId!.Value == defaultOwner.Id)
+            return defaultOwner;
 
         var owner = await service.GetUserAsync(ownerId.Value, ct);
 

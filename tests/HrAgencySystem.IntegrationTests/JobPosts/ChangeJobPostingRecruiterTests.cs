@@ -10,23 +10,21 @@ namespace HrAgencySystem.IntegrationTests.JobPosts;
 [Collection(IntegrationCollection.Name)]
 public sealed class ChangeJobPostingRecruiterTests(
     IntegrationEnvironment env,
-    ITestOutputHelper output)
-    : BaseIntegrationTest(env, output)
+    ITestOutputHelper output
+) : BaseIntegrationTest(env, output)
 {
     [Fact]
     public async Task ShouldChangeJobPostingRecruiter()
     {
         var organizationId = Guid.NewGuid();
         // Arrange
-        Client
-            .WithOrganizationId(organizationId);
+        Client.WithOrganizationId(organizationId);
 
         JobPostingClient.WithOrganizationId(organizationId);
-        
+
         var createRequest = JobPostingTestData.CreateRequest();
 
-        var created = await JobPostingClient.CreateAsync(
-            createRequest);
+        var created = await JobPostingClient.CreateAsync(createRequest);
 
         Assert.NotNull(created);
         Assert.Equal(organizationId, created.OrganizationId);
@@ -38,13 +36,12 @@ public sealed class ChangeJobPostingRecruiterTests(
         // Act
         var response = await Client.PutAsJsonAsync(
             $"/api/recruitment/job-posting/{created.JobPostId}/change-recruiter",
-            request);
+            request
+        );
 
         // Assert
         var result = await response.ReadWithJson<JobPostRecruiterChanged>(OutputHelper);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
-  
 
         Assert.NotNull(result);
         Assert.Equal(created.JobPostId, result.JobPostId);
@@ -52,8 +49,7 @@ public sealed class ChangeJobPostingRecruiterTests(
 
         await Eventually.AssertAsync(async () =>
         {
-            var projection = await JobPostingClient.GetSingle(
-                created.JobPostId);
+            var projection = await JobPostingClient.GetSingle(created.JobPostId);
 
             Assert.Equal(recruiterId, projection.RecruiterId);
         });
@@ -63,23 +59,21 @@ public sealed class ChangeJobPostingRecruiterTests(
     public async Task ShouldReturnBadRequestWhenRecruiterIdIsEmpty()
     {
         // Arrange
-        Client
-            .WithOrganizationId(Guid.NewGuid());
+        Client.WithOrganizationId(Guid.NewGuid());
 
         var createRequest = JobPostingTestData.CreateRequest();
 
-        var created = await JobPostingClient.CreateAsync(
-            createRequest);
+        var created = await JobPostingClient.CreateAsync(createRequest);
 
         Assert.NotNull(created);
 
-        var request = new AssignRecruiterRequest(
-            Guid.Empty);
+        var request = new AssignRecruiterRequest(Guid.Empty);
 
         // Act
         var response = await Client.PutAsJsonAsync(
             $"/api/recruitment/job-posting/{created.JobPostId}/change-recruiter",
-            request);
+            request
+        );
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

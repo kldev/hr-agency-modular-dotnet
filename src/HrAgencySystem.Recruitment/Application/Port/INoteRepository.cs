@@ -9,4 +9,9 @@ public interface INoteRepository
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public record CreateNoteDocument(Guid JobApplicationId, Guid OrganizationId, Guid CandidateId, ShortNote Text);
+public record CreateNoteDocument(
+    Guid JobApplicationId,
+    Guid OrganizationId,
+    Guid CandidateId,
+    ShortNote Text
+);

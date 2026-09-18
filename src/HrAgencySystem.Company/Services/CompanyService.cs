@@ -8,7 +8,8 @@ namespace HrAgencySystem.Company.Services;
 public sealed class CompanyService(
     IUserSnapshotRepository userSnapshotRepository,
     ICompanySnapshotRepository companySnapshotRepository,
-    IOrganizationChecker checker) : ICompanyService
+    IOrganizationChecker checker
+) : ICompanyService
 {
     public async Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {

@@ -18,22 +18,25 @@ public static class CreateJobPostHandler
         IDocumentSession session,
         IClock clock,
         IRecruitmentService service,
-        IJobDescriptionSnapshotRepository  jobDescriptionSnapshotRepository,
-        CancellationToken ct)
+        IJobDescriptionSnapshotRepository jobDescriptionSnapshotRepository,
+        CancellationToken ct
+    )
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
         var jobDescriptionId = JobDescriptionId.From(command.JobDescriptionId);
-        
-        var (title, 
-            summary, 
+
+        var (
+            title,
+            summary,
             description,
-            location, 
+            location,
             responsibilities,
-            requirements, 
-            skills, 
-            salaryRange, 
-            countryCode, 
-            languageCode) = JobPostDataFactory.Create(command);
+            requirements,
+            skills,
+            salaryRange,
+            countryCode,
+            languageCode
+        ) = JobPostDataFactory.Create(command);
 
         var organizationSlug = await service.GetOrganizationSlug(organizationId, ct);
 
@@ -48,44 +51,56 @@ public static class CreateJobPostHandler
         var jobPostId = JobPostId.New();
 
         var jobPostSlug = JobPostingSlugGenerator.Generate(
-            company.Name, title.Value, location.Value, jobPostId.Value);
-        
+            company.Name,
+            title.Value,
+            location.Value,
+            jobPostId.Value
+        );
+
         var @event = new JobPostCreated(
-                jobPostId.Value,
-                jobDescriptionId.Value,
-                organizationId.Value,
-                jobDescription.CompanyId,
-                title.Value,
-                summary.Value,
-                description.Value,
-                [.. responsibilities.Select(z => z.Value)],
-                [.. requirements.Select(x => x.Value)],
-                [.. skills.Select(x => x.Value)],
-                location.Value,
-                countryCode.Value,
-                command.EmploymentType,
-                command.WorkMode,
-                salaryRange.Currency,
-                salaryRange.Min,
-                salaryRange.Max,
-                recruiter,
-                createdBy,
-                company,
-                languageCode.Value,
-                organizationSlug,
-                jobPostSlug,
-                clock.UtcNow);
+            jobPostId.Value,
+            jobDescriptionId.Value,
+            organizationId.Value,
+            jobDescription.CompanyId,
+            title.Value,
+            summary.Value,
+            description.Value,
+            [.. responsibilities.Select(z => z.Value)],
+            [.. requirements.Select(x => x.Value)],
+            [.. skills.Select(x => x.Value)],
+            location.Value,
+            countryCode.Value,
+            command.EmploymentType,
+            command.WorkMode,
+            salaryRange.Currency,
+            salaryRange.Min,
+            salaryRange.Max,
+            recruiter,
+            createdBy,
+            company,
+            languageCode.Value,
+            organizationSlug,
+            jobPostSlug,
+            clock.UtcNow
+        );
 
         session.Events.StartStream<JobPost>(jobPostId.Value, @event);
 
         return @event;
     }
-    
-    private static async Task<JobDescriptionSnapshot> GetJobDescription(CreateJobPost command,
-        IJobDescriptionSnapshotRepository jobDescriptionSnapshotRepository, CancellationToken ct)
+
+    private static async Task<JobDescriptionSnapshot> GetJobDescription(
+        CreateJobPost command,
+        IJobDescriptionSnapshotRepository jobDescriptionSnapshotRepository,
+        CancellationToken ct
+    )
     {
-        var jobDescription =
-            await jobDescriptionSnapshotRepository.GetAsync(command.JobDescriptionId, command.OrganizationId, ct);
-        return jobDescription ?? throw new BusinessRuleException(IJobDescriptionSnapshotRepository.NotFoundMessage);
+        var jobDescription = await jobDescriptionSnapshotRepository.GetAsync(
+            command.JobDescriptionId,
+            command.OrganizationId,
+            ct
+        );
+        return jobDescription
+            ?? throw new BusinessRuleException(IJobDescriptionSnapshotRepository.NotFoundMessage);
     }
 }

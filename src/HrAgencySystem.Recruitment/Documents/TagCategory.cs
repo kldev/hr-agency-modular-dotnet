@@ -5,5 +5,5 @@ public enum TagCategory
     Language,
     SkillIt,
     ProductionSkill,
-    DrivingLicense
+    DrivingLicense,
 }

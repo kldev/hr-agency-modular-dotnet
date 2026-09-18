@@ -16,11 +16,9 @@ public sealed record ScheduleInterview(
     Guid CreatedBy,
     string ScheduledTimezone = "Europe/Warsaw",
     string Location = "",
-    string MeetingUrl = "") : ICreateCommand
+    string MeetingUrl = ""
+) : ICreateCommand
 {
     [JsonIgnore]
-    public DateTimeOffset ScheduledAtInstant
-        => ScheduledAt.ToInstantUtc(ScheduledTimezone);
-
-
+    public DateTimeOffset ScheduledAtInstant => ScheduledAt.ToInstantUtc(ScheduledTimezone);
 }

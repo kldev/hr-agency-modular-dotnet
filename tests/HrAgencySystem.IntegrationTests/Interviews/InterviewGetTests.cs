@@ -6,9 +6,7 @@ using Xunit.Abstractions;
 namespace HrAgencySystem.IntegrationTests.Interviews;
 
 [Collection(IntegrationCollection.Name)]
-public sealed class InterviewGetTests(
-    IntegrationEnvironment environment,
-    ITestOutputHelper output)
+public sealed class InterviewGetTests(IntegrationEnvironment environment, ITestOutputHelper output)
     : BaseIntegrationTest(environment, output)
 {
     private readonly Guid OrganizationId = Guid.NewGuid();
@@ -18,13 +16,7 @@ public sealed class InterviewGetTests(
     private readonly Guid CreatedById = Guid.NewGuid();
     private readonly Guid JobApplicationId = Guid.NewGuid();
 
-    private readonly DateTime TestDate = new(
-        2026,
-        9,
-        10,
-        10,
-        0,
-        0);
+    private readonly DateTime TestDate = new(2026, 9, 10, 10, 0, 0);
 
     protected override async Task BeforeEachAsync()
     {
@@ -39,31 +31,22 @@ public sealed class InterviewGetTests(
             JobApplicationId,
             TestDate,
             InterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
-            var interview = await InterviewClient.GetAsync(
-                OrganizationId,
-                created.InterviewId);
+            var interview = await InterviewClient.GetAsync(OrganizationId, created.InterviewId);
 
             Assert.NotNull(interview);
 
-            Assert.Equal(
-                created.InterviewId,
-                interview.Id);
+            Assert.Equal(created.InterviewId, interview.Id);
 
-            Assert.Equal(
-                OrganizationId,
-                interview.OrgId);
+            Assert.Equal(OrganizationId, interview.OrgId);
 
-            Assert.Equal(
-                JobApplicationId,
-                interview.ApplicationId);
+            Assert.Equal(JobApplicationId, interview.ApplicationId);
 
-            Assert.Equal(
-                InterviewerId,
-                interview.InterviewerId);
+            Assert.Equal(InterviewerId, interview.InterviewerId);
         });
     }
 
@@ -75,13 +58,15 @@ public sealed class InterviewGetTests(
             JobApplicationId,
             TestDate,
             InterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         await Eventually.AssertAsync(async () =>
         {
             var interview = await InterviewClient.GetAsync(
                 OtherOrganizationId,
-                created.InterviewId);
+                created.InterviewId
+            );
 
             Assert.Null(interview);
         });
@@ -90,9 +75,7 @@ public sealed class InterviewGetTests(
     [Fact]
     public async Task ShouldReturnNotFoundForUnknownInterviewId()
     {
-        var interview = await InterviewClient.GetAsync(
-            OrganizationId,
-            Guid.NewGuid());
+        var interview = await InterviewClient.GetAsync(OrganizationId, Guid.NewGuid());
 
         Assert.Null(interview);
     }
@@ -105,29 +88,24 @@ public sealed class InterviewGetTests(
             JobApplicationId,
             TestDate,
             InterviewerId,
-            CreatedById);
+            CreatedById
+        );
 
         Client.WithOrganizationId(OtherOrganizationId);
-        
+
         await Eventually.AssertAsync(async () =>
         {
             var response = await Client.GetAsync("api/interviews/" + created.InterviewId);
 
-            Assert.Equal(
-                HttpStatusCode.NotFound,
-                response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 
-            Assert.Equal(
-                "application/json",
-                response.Content.Headers.ContentType?.MediaType);
+            Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
 
             var problem = await response.ReadWithJson<ProblemDetails>();
 
             Assert.NotNull(problem);
 
-            Assert.Equal(
-                (int)HttpStatusCode.NotFound,
-                problem.Status);
+            Assert.Equal((int)HttpStatusCode.NotFound, problem.Status);
 
             Assert.NotNull(problem.Title);
         });

@@ -10,7 +10,8 @@ public static class UpdateFollowUpActionHandler
     public static async Task<FollowUpActionUpdated> Handle(
         UpdateFollowUpAction command,
         ISalesService service,
-        CancellationToken ct)
+        CancellationToken ct
+    )
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
         await service.ValidateOrganization(command.OrganizationId, ct);
@@ -23,6 +24,7 @@ public static class UpdateFollowUpActionHandler
             command.Content,
             command.FollowDateTime,
             user,
-            ct);
+            ct
+        );
     }
 }

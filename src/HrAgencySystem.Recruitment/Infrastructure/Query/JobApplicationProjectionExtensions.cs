@@ -5,7 +5,6 @@ using HrAgencySystem.SharedKernel.Extensions;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Query;
 
-
 internal static class JobApplicationProjectionExtensions
 {
     extension(IQueryable<JobApplicationProjection> query)
@@ -19,7 +18,7 @@ internal static class JobApplicationProjectionExtensions
         {
             return query.Where(q => q.OrgId == organizationId);
         }
-        
+
         internal IQueryable<JobApplicationProjection> WithJobPostId(Guid? jobPostId)
         {
             return jobPostId.IsInvalid() ? query : query.Where(q => q.JobPostId == jobPostId);
@@ -30,29 +29,40 @@ internal static class JobApplicationProjectionExtensions
             return companyId.IsInvalid() ? query : query.Where(q => q.CompanyId == companyId);
         }
 
-        internal IQueryable<JobApplicationProjection> WithStatus(IReadOnlyList<JobApplicationStatus> statuses)
+        internal IQueryable<JobApplicationProjection> WithStatus(
+            IReadOnlyList<JobApplicationStatus> statuses
+        )
         {
             return statuses.Count == 0 ? query : query.Where(q => statuses.Contains(q.Status));
         }
 
-        internal IQueryable<JobApplicationProjection> WithSources(IReadOnlyList<CandidateSource> sources)
+        internal IQueryable<JobApplicationProjection> WithSources(
+            IReadOnlyList<CandidateSource> sources
+        )
         {
             return sources.Count == 0 ? query : query.Where(q => sources.Contains(q.Source));
         }
 
         internal IQueryable<JobApplicationProjection> WithTags(IReadOnlyList<Guid> tags)
         {
-            return tags.Count == 0 ? query : tags.Aggregate(query, (current, tag) => current.Where(q => q.TagsIds.Contains(tag)));
+            return tags.Count == 0
+                ? query
+                : tags.Aggregate(
+                    query,
+                    (current, tag) => current.Where(q => q.TagsIds.Contains(tag))
+                );
         }
 
         internal IQueryable<JobApplicationProjection> WithSearch(string search)
         {
-            return  string.IsNullOrWhiteSpace(search) ? query : query.Where(q => 
-                q.ApplicantFullName.Contains(search, StringComparison.OrdinalIgnoreCase)
-                || q.ApplicantEmail.Contains(search, StringComparison.OrdinalIgnoreCase )
-                || q.JobPostTitle.Contains(search, StringComparison.OrdinalIgnoreCase )
-                || q.Company.Name.Contains(search, StringComparison.OrdinalIgnoreCase )
-            );
+            return string.IsNullOrWhiteSpace(search)
+                ? query
+                : query.Where(q =>
+                    q.ApplicantFullName.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || q.ApplicantEmail.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || q.JobPostTitle.Contains(search, StringComparison.OrdinalIgnoreCase)
+                    || q.Company.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                );
         }
     }
 }
