@@ -20,7 +20,7 @@ export function OpportunityPipeline({
 	const currentIndex = stages.indexOf(stage);
 
 	return (
-		<section className="data-details-section">
+		<section className="data-details-section sales-pipeline-panel">
 			<div className="data-details-section-header">
 				<div>
 					<h2>Pipeline stage</h2>
