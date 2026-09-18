@@ -5,7 +5,7 @@ import { useGetOnlyMine } from "#/hooks";
 import { Route } from "#/routes/app/sales";
 
 import { Page } from "@/components/layout";
-import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
+import { EmptyState, EnumFilter, LoadMore, WorkInProgress } from "@/components/ui";
 import {
 	CreateOpportunityDrawer,
 	type CreateOpportunityRef,
@@ -13,19 +13,27 @@ import {
 	SalesTable,
 } from "../components";
 import { SalesToolbar } from "../components/SalesToolbar";
-import { type SalesPageFillters, useGetOpportunitesSlice } from "../hooks";
+import { useGetOpportunitesSlice } from "../hooks";
 import { salesStageOptions } from "../types";
+import "./sales-kanban.css";
 
 const SalesPage: React.FC = () => {
 	const oppRef = useRef<CreateOpportunityRef>(null);
 	const [onlyMine, setOnlyMine] = useState<boolean>(false);
 
 	const navigate = Route.useNavigate();
-	const search = Route.useSearch() as SalesPageFillters;
+	const search = Route.useSearch();
+
+	const view = search.view ?? "table";
+	const isTable = view === "table";
 
 	const { userId } = useGetOnlyMine(onlyMine);
 
-	const query = useGetOpportunitesSlice({ ...search, responsibleId: userId });
+	const query = useGetOpportunitesSlice({
+		search: search.search,
+		stage: search.stage,
+		responsibleId: userId,
+	});
 	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
 	const isEmpty = query.isFetched && items.length === 0;
@@ -50,7 +58,9 @@ const SalesPage: React.FC = () => {
 			<SalesToolbar
 				search={search.search ?? ""}
 				onClear={() => {
-					navigate({ search: {} });
+					navigate({
+						search: (previous) => ({ search: undefined, stage: undefined, view: previous.view }),
+					});
 				}}
 				onSearchChange={(v) => {
 					navigate({ search: (previous) => ({ ...previous, search: v }) });
@@ -63,23 +73,36 @@ const SalesPage: React.FC = () => {
 					setOnlyMine(val);
 					onRefresh();
 				}}
-			/>
-			<EnumFilter
-				value={search.stage || null}
-				options={salesStageOptions}
-				onChange={(s) => {
-					navigate({ search: (previous) => ({ ...previous, stage: s }) });
+				view={view}
+				onViewChange={(val) => {
+					navigate({
+						search: (previous) => ({ ...previous, view: val === "table" ? undefined : val }),
+					});
 				}}
 			/>
-			<SalesTable items={items} onRefresh={onRefresh} />
-			<SalesCardList items={items} onRefresh={onRefresh} />
-			<LoadMore
-				loading={query.isPending}
-				hasNext={hasMore[0]}
-				onClick={() => {
-					query.fetchNextPage();
-				}}
-			/>
+
+			{isTable ? (
+				<>
+					<EnumFilter
+						value={search.stage || null}
+						options={salesStageOptions}
+						onChange={(s) => {
+							navigate({ search: (previous) => ({ ...previous, stage: s ?? undefined }) });
+						}}
+					/>
+					<SalesTable items={items} onRefresh={onRefresh} />
+					<SalesCardList items={items} onRefresh={onRefresh} />
+					<LoadMore
+						loading={query.isPending}
+						hasNext={hasMore[0]}
+						onClick={() => {
+							query.fetchNextPage();
+						}}
+					/>
+				</>
+			) : (
+				<WorkInProgress />
+			)}
 			<CreateOpportunityDrawer ref={oppRef} onSuccess={() => query.refetch()} />
 		</Page>
 	);
