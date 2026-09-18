@@ -4,8 +4,9 @@ import type { OpportunityProjection } from "#/api/models";
 import { salesKeys } from "@/api/query-keys";
 import { Kanban } from "@/components/kanban";
 import { pipelineStages, type SalesPageFillters, useGetPipelineTotals } from "../../hooks";
-import type { SalesActionRef } from "../forms";
+import type { SalesActionRef, SalesActionTypes } from "../forms";
 import SalesActionDrawers from "../forms/SalesActionDrawers";
+import { OpportunityCard } from "./OpportunityCard";
 import { SalesKanbanColumn } from "./SalesKanbanColumn";
 
 interface SalesKanbanProps {
@@ -23,12 +24,21 @@ export function SalesKanban({ filters }: SalesKanbanProps) {
 		client.invalidateQueries({ queryKey: salesKeys.all });
 	};
 
-	const renderCard = (item: OpportunityProjection) => (
-		<Kanban.Card key={item.id}>
-			<div className="sales-card-title">{item.title}</div>
+	const handleAction = (action: SalesActionTypes, item: OpportunityProjection) => {
+		if (action === "change-stage") {
+			salesRef.current?.changeStage({ id: item.id, stage: item.stage, title: item.title });
+			return;
+		}
 
-			<div className="sales-card-company">{item.company?.name}</div>
-		</Kanban.Card>
+		salesRef.current?.onAction(item.id, action);
+	};
+
+	const renderCard = (item: OpportunityProjection) => (
+		<OpportunityCard
+			key={item.id}
+			opportunity={item}
+			onAction={(action) => handleAction(action, item)}
+		/>
 	);
 
 	return (
