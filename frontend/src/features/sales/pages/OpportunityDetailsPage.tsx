@@ -11,7 +11,12 @@ import type { SalesActionRef, SalesActionTypes } from "../components/forms";
 import SalesActionDrawers from "../components/forms/SalesActionDrawers";
 import { useGetOpportunity } from "../hooks";
 import { salesStageOptions } from "../types";
-import { OpportunityActivity, OpportunityNextAction, OpportunityPipeline } from "./components";
+import {
+	OpportunityActivity,
+	OpportunityContacts,
+	OpportunityNextAction,
+	OpportunityPipeline,
+} from "./components";
 import "./sales-details.css";
 
 const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
@@ -154,6 +159,8 @@ const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 								</DetailItem>
 							</dl>
 						</section>
+
+						<OpportunityContacts companyId={opportunity.companyId} />
 
 						<AuditInformation
 							createdAt={opportunity.createdAt}
