@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { CalendarClock, Pencil } from "lucide-react";
+import { CalendarClock, Pencil, Plus } from "lucide-react";
 import type { OpportunityProjection } from "#/api/models";
 import { formatDateTime } from "#/utlis";
 import { ActionButton, Button } from "@/components/ui";
@@ -27,6 +27,10 @@ export function OpportunityNextAction({ opportunity, onAdd, onEdit }: Opportunit
 
 				{hasFollowUp ? (
 					<div className="toolbar-right">
+						<ActionButton title="Add follow up" onClick={onAdd}>
+							<Plus size={15} />
+						</ActionButton>
+
 						<ActionButton title="Edit follow up" onClick={onEdit}>
 							<Pencil size={15} />
 						</ActionButton>

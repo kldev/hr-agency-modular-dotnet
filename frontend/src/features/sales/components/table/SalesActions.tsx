@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ClockArrowRight, Pencil, Settings2, TrendingUp } from "lucide-react";
+import { CalendarClock, ClockArrowRight, Pencil, Settings2, TrendingUp } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 import type { SalesActionTypes } from "../forms";
 
@@ -21,6 +21,11 @@ export function SalesActions({ onAction, opportunityId, mode }: SalesActionsProp
 			label: "Change stage",
 			icon: TrendingUp,
 			action: () => onAction("change-stage"),
+		},
+		{
+			label: "Add follow up",
+			icon: CalendarClock,
+			action: () => onAction("add-follow-up"),
 		},
 	];
 

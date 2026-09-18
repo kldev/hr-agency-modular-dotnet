@@ -39,6 +39,9 @@ const SalesActionDrawers = forwardRef<SalesActionRef, OnSucess>(({ onSuccess }, 
 					case "log-activity":
 						logAction.current?.log(id);
 						break;
+					case "add-follow-up":
+						followUp.current?.add(id);
+						break;
 				}
 			},
 		}),

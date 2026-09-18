@@ -39,7 +39,11 @@ export interface FollowUpRef {
 	edit: (info: FollowUpInfo) => void;
 }
 
-export type SalesActionTypes = "edit-opportunity" | "log-activity" | "change-stage";
+export type SalesActionTypes =
+	| "edit-opportunity"
+	| "log-activity"
+	| "change-stage"
+	| "add-follow-up";
 
 export interface SalesActionRef {
 	onAction: (id: string, action: SalesActionTypes) => void;
