@@ -98,6 +98,10 @@
 	margin-top: var(--space-2);
 }
 
+.kanban-column-footer .load-more {
+	padding: var(--space-2) 0;
+}
+
 .kanban-column-empty {
 	display: flex;
 	align-items: center;
@@ -134,5 +138,10 @@
 	.kanban-column {
 		width: 85vw;
 		min-width: 85vw;
+	}
+
+	.kanban-column-content {
+		max-height: none;
+		overflow-y: visible;
 	}
 }

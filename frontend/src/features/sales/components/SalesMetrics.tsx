@@ -26,12 +26,14 @@ export function SalesMetrics({ totals }: SalesMetricsProps) {
 			/>
 
 			<MetricCard
+				className="sales-metric-money"
 				icon={<CircleDollarSign size={17} />}
 				label="Pipeline value"
 				value={formatStageValues(sumStageValues(totals, openStages))}
 			/>
 
 			<MetricCard
+				className="sales-metric-money"
 				icon={<Handshake size={17} />}
 				label="Won value"
 				value={formatStageValues(sumStageValues(totals, ["Won"]))}
