@@ -1,8 +1,12 @@
 import type { OpportunityProjection, OpportunityStage } from "#/api/models";
-import { formatSalary } from "#/utlis";
 import { Kanban } from "@/components/kanban";
 import { LoadMore } from "@/components/ui";
-import { type SalesPageFillters, type StageTotals, useGetOpportunitesSlice } from "../../hooks";
+import {
+	formatStageValues,
+	type SalesPageFillters,
+	type StageTotals,
+	useGetOpportunitesSlice,
+} from "../../hooks";
 import { salesStageOptions } from "../../types";
 import { stageIcons } from "./stages";
 
@@ -13,14 +17,6 @@ interface SalesKanbanColumnProps {
 	filters: SalesPageFillters;
 	totals: StageTotals;
 	renderCard: (item: OpportunityProjection) => React.ReactNode;
-}
-
-function formatValues(totals: StageTotals) {
-	if (totals.values.length === 0) {
-		return "0";
-	}
-
-	return totals.values.map((it) => `${formatSalary(it.value)} ${it.currency}`).join(" · ");
 }
 
 export function SalesKanbanColumn({ stage, filters, totals, renderCard }: SalesKanbanColumnProps) {
@@ -38,7 +34,7 @@ export function SalesKanbanColumn({ stage, filters, totals, renderCard }: SalesK
 				title={label}
 				icon={<Icon size={15} />}
 				count={totals.count}
-				meta={formatValues(totals)}
+				meta={formatStageValues(totals.values)}
 			/>
 
 			<Kanban.ColumnContent>

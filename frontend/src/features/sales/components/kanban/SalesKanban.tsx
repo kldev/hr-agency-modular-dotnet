@@ -6,6 +6,7 @@ import { Kanban } from "@/components/kanban";
 import { pipelineStages, type SalesPageFillters, useGetPipelineTotals } from "../../hooks";
 import type { SalesActionRef, SalesActionTypes } from "../forms";
 import SalesActionDrawers from "../forms/SalesActionDrawers";
+import { SalesMetrics } from "../SalesMetrics";
 import { OpportunityCard } from "./OpportunityCard";
 import { SalesKanbanColumn } from "./SalesKanbanColumn";
 
@@ -43,6 +44,8 @@ export function SalesKanban({ filters }: SalesKanbanProps) {
 
 	return (
 		<>
+			<SalesMetrics totals={totals} />
+
 			<Kanban label="Sales pipeline">
 				{pipelineStages.map((stage) => (
 					<SalesKanbanColumn

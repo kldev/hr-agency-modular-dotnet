@@ -1,4 +1,5 @@
 import type { CurrencyCode, OpportunityStage, SalesPipelineQueryResult } from "#/api/models";
+import { formatSalary } from "#/utlis";
 
 export type StageValue = {
 	currency: CurrencyCode;
@@ -64,6 +65,16 @@ export function sumStageValues(
 	return [...sums.entries()]
 		.map(([currency, value]) => ({ currency, value }))
 		.sort((left, right) => right.value - left.value);
+}
+
+// several currencies per stage are listed one after another - the backend does not
+// convert them, so a single "total" would be made up
+export function formatStageValues(values: StageValue[]): string {
+	if (values.length === 0) {
+		return "0";
+	}
+
+	return values.map((it) => `${formatSalary(it.value)} ${it.currency}`).join(" · ");
 }
 
 export function sumStageCount(
