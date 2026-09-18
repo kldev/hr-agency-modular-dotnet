@@ -28,9 +28,22 @@ export interface ChangeStageRef {
 	changeStage: (info: OpportunityInfo) => void;
 }
 
+export type FollowUpInfo = {
+	followUpActionId: string;
+	content: string;
+	followDateTime: string;
+};
+
+export interface FollowUpRef {
+	add: (opportunityId: string) => void;
+	edit: (info: FollowUpInfo) => void;
+}
+
 export type SalesActionTypes = "edit-opportunity" | "log-activity" | "change-stage";
 
 export interface SalesActionRef {
 	onAction: (id: string, action: SalesActionTypes) => void;
 	changeStage: (info: OpportunityInfo) => void;
+	addFollowUp: (opportunityId: string) => void;
+	editFollowUp: (info: FollowUpInfo) => void;
 }

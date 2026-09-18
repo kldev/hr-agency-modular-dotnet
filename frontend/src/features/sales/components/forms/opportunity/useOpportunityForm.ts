@@ -3,15 +3,19 @@ import { createServerFn } from "@tanstack/react-start";
 import { getFnOptions } from "#/server/axios";
 import {
 	changeOpportunityStage,
+	createFollowUpAction,
 	createOpportunity,
 	logSalesActivity,
+	updateFollowUpAction,
 	updateOpportunity,
 } from "@/api/endpoints";
 import type {
 	ChangeOpportunityStageRequest,
+	CreateFollowUpActionRequest,
 	CreateOpportunityRequest,
 	CreateSalesActivityRequest,
 	OpportunityStage,
+	UpdateFollowUpActionRequest,
 	UpdateOpportunityRequest,
 } from "@/api/models";
 import { useProjectionWait } from "@/hooks";
@@ -27,6 +31,15 @@ type UpdateOpportunityVariables = {
 
 type LogAcivityVariables = {
 	request: CreateSalesActivityRequest;
+};
+
+type CreateFollowUpVariables = {
+	request: CreateFollowUpActionRequest;
+};
+
+type UpdateFollowUpVariables = {
+	followUpActionId: string;
+	request: UpdateFollowUpActionRequest;
 };
 
 type OpportunityOptions = {
@@ -55,6 +68,22 @@ const logActivityServerFn = createServerFn({
 	.validator((input: { req: CreateSalesActivityRequest }) => input)
 	.handler(({ data }) => {
 		return logSalesActivity(data.req, getFnOptions());
+	});
+
+const createFollowUpServerFn = createServerFn({
+	method: "POST",
+})
+	.validator((input: { req: CreateFollowUpActionRequest }) => input)
+	.handler(({ data }) => {
+		return createFollowUpAction(data.req, getFnOptions());
+	});
+
+const updateFollowUpServerFn = createServerFn({
+	method: "POST",
+})
+	.validator((input: { id: string; req: UpdateFollowUpActionRequest }) => input)
+	.handler(({ data }) => {
+		return updateFollowUpAction(data.id, data.req, getFnOptions());
 	});
 
 export function useCreateOpportuinity({ onSuccess }: OpportunityOptions) {
@@ -140,5 +169,43 @@ export function useChangeStage({ onSuccess }: OpportunityOptions) {
 		mutation,
 		waiting,
 		changeStage,
+	};
+}
+
+export function useCreateFollowUp({ onSuccess }: OpportunityOptions) {
+	const { wait, waiting } = useProjectionWait();
+
+	const mutation = useMutation({
+		mutationFn: ({ request }: CreateFollowUpVariables) =>
+			createFollowUpServerFn({ data: { req: request } }),
+
+		onSuccess: async () => {
+			await wait();
+			onSuccess();
+		},
+	});
+
+	return {
+		mutation,
+		waiting,
+	};
+}
+
+export function useUpdateFollowUp({ onSuccess }: OpportunityOptions) {
+	const { wait, waiting } = useProjectionWait();
+
+	const mutation = useMutation({
+		mutationFn: ({ followUpActionId, request }: UpdateFollowUpVariables) =>
+			updateFollowUpServerFn({ data: { id: followUpActionId, req: request } }),
+
+		onSuccess: async () => {
+			await wait();
+			onSuccess();
+		},
+	});
+
+	return {
+		mutation,
+		waiting,
 	};
 }

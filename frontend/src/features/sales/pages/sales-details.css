@@ -124,3 +124,41 @@
 		flex-basis: 32px;
 	}
 }
+
+/* Follow up ----------------------------------------------- */
+.sales-follow-up {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	padding: var(--space-4);
+}
+
+.sales-follow-up-date {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+}
+
+.sales-follow-up-date.sales-follow-up-overdue {
+	color: var(--color-danger);
+}
+
+.sales-follow-up-badge {
+	padding: 0 var(--space-2);
+	border-radius: var(--radius-md);
+	background: var(--color-danger-soft);
+	color: var(--color-danger);
+	font-size: var(--font-size-xs);
+}
+
+.sales-follow-up-content {
+	margin: 0;
+	color: var(--color-text);
+	font-size: var(--font-size-sm);
+	line-height: 1.5;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}

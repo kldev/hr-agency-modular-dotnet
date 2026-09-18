@@ -11,7 +11,7 @@ import type { SalesActionRef, SalesActionTypes } from "../components/forms";
 import SalesActionDrawers from "../components/forms/SalesActionDrawers";
 import { useGetOpportunity } from "../hooks";
 import { salesStageOptions } from "../types";
-import { OpportunityActivity, OpportunityPipeline } from "./components";
+import { OpportunityActivity, OpportunityNextAction, OpportunityPipeline } from "./components";
 import "./sales-details.css";
 
 const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
@@ -122,6 +122,20 @@ const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 				}
 				sidebar={
 					<>
+						<OpportunityNextAction
+							opportunity={opportunity}
+							onAdd={() => {
+								salesRef.current?.addFollowUp(opportunity.id);
+							}}
+							onEdit={() => {
+								salesRef.current?.editFollowUp({
+									followUpActionId: opportunity.followUpActionId as string,
+									content: opportunity.followUpContent ?? "",
+									followDateTime: opportunity.followUpDateTime as string,
+								});
+							}}
+						/>
+
 						<section className="data-details-section">
 							<div className="data-details-section-header">
 								<div>
