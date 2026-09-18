@@ -40,4 +40,10 @@ export interface OpportunityProjection {
 	modifiedBy: null | UserSnapshot;
 	/** @nullable */
 	modifiedAt: string | null;
+	/** @nullable */
+	followUpActionId: string | null;
+	/** @nullable */
+	followUpContent: string | null;
+	/** @nullable */
+	followUpDateTime: string | null;
 }

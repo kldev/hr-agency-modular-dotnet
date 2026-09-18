@@ -35,8 +35,13 @@ import type {
 	BadRequestDetails,
 	ChangeOpportunityStageRequest,
 	ChangeResponsiblePersonRequest,
+	CreateFollowUpActionRequest,
 	CreateOpportunityRequest,
 	CreateSalesActivityRequest,
+	FollowUpAction,
+	FollowUpActionCreated,
+	FollowUpActionUpdated,
+	GetFollowUpActionsParams,
 	GetOpportunitiesParams,
 	GetOpportunitiesPipelineTotalsParams,
 	GetSalesActivitiesParams,
@@ -48,8 +53,10 @@ import type {
 	SalesPipelineQueryResult,
 	SalesPipelineResponsibleQueryResult,
 	SliceResponseOfActivityProjection,
+	SliceResponseOfFollowUpAction,
 	SliceResponseOfOpportunityProjection,
 	StageChanged,
+	UpdateFollowUpActionRequest,
 	UpdateOpportunityRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
@@ -1218,4 +1225,465 @@ export const useGetOpportunitiesResponsibleTotals = <
 	TContext
 > => {
 	return useMutation(getGetOpportunitiesResponsibleTotalsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Create follow up action
+ */
+export const createFollowUpAction = (
+	createFollowUpActionRequest: BodyType<CreateFollowUpActionRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<FollowUpActionCreated>(
+		{
+			url: `/api/sales/follow-up`,
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			data: createFollowUpActionRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getCreateFollowUpActionQueryKey = (
+	createFollowUpActionRequest?: BodyType<CreateFollowUpActionRequest>,
+) => {
+	return ["POST", `/api/sales/follow-up`, createFollowUpActionRequest] as const;
+};
+
+export const getCreateFollowUpActionQueryOptions = <
+	TData = Awaited<ReturnType<typeof createFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	createFollowUpActionRequest: BodyType<CreateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof createFollowUpAction>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getCreateFollowUpActionQueryKey(createFollowUpActionRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof createFollowUpAction>>> = ({ signal }) =>
+		createFollowUpAction(createFollowUpActionRequest, requestOptions, signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof createFollowUpAction>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CreateFollowUpActionQueryResult = NonNullable<
+	Awaited<ReturnType<typeof createFollowUpAction>>
+>;
+export type CreateFollowUpActionQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useCreateFollowUpAction<
+	TData = Awaited<ReturnType<typeof createFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	createFollowUpActionRequest: BodyType<CreateFollowUpActionRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof createFollowUpAction>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof createFollowUpAction>>,
+					TError,
+					Awaited<ReturnType<typeof createFollowUpAction>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCreateFollowUpAction<
+	TData = Awaited<ReturnType<typeof createFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	createFollowUpActionRequest: BodyType<CreateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof createFollowUpAction>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof createFollowUpAction>>,
+					TError,
+					Awaited<ReturnType<typeof createFollowUpAction>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCreateFollowUpAction<
+	TData = Awaited<ReturnType<typeof createFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	createFollowUpActionRequest: BodyType<CreateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof createFollowUpAction>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Create follow up action
+ */
+
+export function useCreateFollowUpAction<
+	TData = Awaited<ReturnType<typeof createFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	createFollowUpActionRequest: BodyType<CreateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof createFollowUpAction>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getCreateFollowUpActionQueryOptions(createFollowUpActionRequest, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Get follow up actions
+ */
+export const getFollowUpActions = (
+	params?: GetFollowUpActionsParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<SliceResponseOfFollowUpAction>(
+		{ url: `/api/sales/follow-up`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getGetFollowUpActionsMutationKey = () => ["getFollowUpActions"] as const;
+
+export const getGetFollowUpActionsMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getFollowUpActions>>,
+		TError,
+		GetFollowUpActionsMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getFollowUpActions>>,
+	TError,
+	GetFollowUpActionsMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetFollowUpActionsMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getFollowUpActions>>,
+		GetFollowUpActionsMutationVariables
+	> = (props) => {
+		const { params } = props ?? {};
+
+		return getFollowUpActions(params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetFollowUpActionsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getFollowUpActions>>
+>;
+
+export type GetFollowUpActionsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetFollowUpActionsMutationVariables = { params?: GetFollowUpActionsParams };
+
+/**
+ * @summary Get follow up actions
+ */
+export const useGetFollowUpActions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getFollowUpActions>>,
+			TError,
+			GetFollowUpActionsMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getFollowUpActions>>,
+	TError,
+	GetFollowUpActionsMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetFollowUpActionsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Update follow up action
+ */
+export const updateFollowUpAction = (
+	followUpActionId: string,
+	updateFollowUpActionRequest: BodyType<UpdateFollowUpActionRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<FollowUpActionUpdated>(
+		{
+			url: `/api/sales/follow-up/${followUpActionId}`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: updateFollowUpActionRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getUpdateFollowUpActionQueryKey = (
+	followUpActionId: string,
+	updateFollowUpActionRequest?: BodyType<UpdateFollowUpActionRequest>,
+) => {
+	return ["PUT", `/api/sales/follow-up/${followUpActionId}`, updateFollowUpActionRequest] as const;
+};
+
+export const getUpdateFollowUpActionQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	followUpActionId: string,
+	updateFollowUpActionRequest: BodyType<UpdateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateFollowUpAction>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getUpdateFollowUpActionQueryKey(followUpActionId, updateFollowUpActionRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateFollowUpAction>>> = ({ signal }) =>
+		updateFollowUpAction(followUpActionId, updateFollowUpActionRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: followUpActionId !== null && followUpActionId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateFollowUpAction>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type UpdateFollowUpActionQueryResult = NonNullable<
+	Awaited<ReturnType<typeof updateFollowUpAction>>
+>;
+export type UpdateFollowUpActionQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useUpdateFollowUpAction<
+	TData = Awaited<ReturnType<typeof updateFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	followUpActionId: string,
+	updateFollowUpActionRequest: BodyType<UpdateFollowUpActionRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateFollowUpAction>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateFollowUpAction>>,
+					TError,
+					Awaited<ReturnType<typeof updateFollowUpAction>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateFollowUpAction<
+	TData = Awaited<ReturnType<typeof updateFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	followUpActionId: string,
+	updateFollowUpActionRequest: BodyType<UpdateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateFollowUpAction>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateFollowUpAction>>,
+					TError,
+					Awaited<ReturnType<typeof updateFollowUpAction>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateFollowUpAction<
+	TData = Awaited<ReturnType<typeof updateFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	followUpActionId: string,
+	updateFollowUpActionRequest: BodyType<UpdateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateFollowUpAction>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Update follow up action
+ */
+
+export function useUpdateFollowUpAction<
+	TData = Awaited<ReturnType<typeof updateFollowUpAction>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	followUpActionId: string,
+	updateFollowUpActionRequest: BodyType<UpdateFollowUpActionRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateFollowUpAction>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getUpdateFollowUpActionQueryOptions(
+		followUpActionId,
+		updateFollowUpActionRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Get follow up action
+ */
+export const getFollowUpAction = (
+	followUpActionId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<FollowUpAction>(
+		{ url: `/api/sales/follow-up/${followUpActionId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetFollowUpActionMutationKey = () => ["getFollowUpAction"] as const;
+
+export const getGetFollowUpActionMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getFollowUpAction>>,
+		TError,
+		GetFollowUpActionMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getFollowUpAction>>,
+	TError,
+	GetFollowUpActionMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetFollowUpActionMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getFollowUpAction>>,
+		GetFollowUpActionMutationVariables
+	> = (props) => {
+		const { followUpActionId } = props ?? {};
+
+		return getFollowUpAction(followUpActionId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetFollowUpActionMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getFollowUpAction>>
+>;
+
+export type GetFollowUpActionMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetFollowUpActionMutationVariables = { followUpActionId: string };
+
+/**
+ * @summary Get follow up action
+ */
+export const useGetFollowUpAction = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getFollowUpAction>>,
+			TError,
+			GetFollowUpActionMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getFollowUpAction>>,
+	TError,
+	GetFollowUpActionMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetFollowUpActionMutationOptions(options), queryClient);
 };
