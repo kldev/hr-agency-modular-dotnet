@@ -1,0 +1,54 @@
+/* Pipeline ------------------------------------------------ */
+.sales-pipeline {
+	display: grid;
+	grid-template-columns: repeat(6, minmax(0, 1fr));
+	gap: var(--space-2);
+}
+
+.sales-pipeline-stage {
+	justify-content: center;
+	min-height: 38px;
+}
+
+.sales-pipeline .sales-pipeline-stage-current {
+	border-color: var(--color-primary);
+	color: var(--color-primary);
+}
+
+.sales-pipeline .sales-pipeline-stage-completed {
+	color: var(--color-success);
+}
+
+.sales-pipeline-check {
+	display: grid;
+	place-items: center;
+	width: 17px;
+	height: 17px;
+	border-radius: 50%;
+	background: var(--color-success-soft);
+	color: var(--color-success);
+}
+
+.sales-pipeline-lost {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: var(--space-3);
+	padding-bottom: var(--space-3);
+	border-bottom: 1px solid var(--color-border-subtle);
+	color: var(--color-danger);
+	font-size: var(--font-size-sm);
+}
+
+/* Responsive ---------------------------------------------- */
+@media (max-width: 768px) {
+	.sales-pipeline {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 560px) {
+	.sales-pipeline {
+		grid-template-columns: 1fr;
+	}
+}

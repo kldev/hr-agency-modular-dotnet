@@ -1,12 +1,20 @@
+import { useRef } from "react";
+import type { OpportunityStage } from "#/api/models";
 import { MessagePreview } from "#/components/ui/MessagePreview";
 import { formatDate, formatSalary } from "#/utlis";
 import { AuditInformation, DataDetails, DetailsHeader, DetailsLoading } from "@/components/ui";
 import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
-import { SalesStageBadge } from "../components";
+import { SalesActions, SalesStageBadge } from "../components";
+import type { SalesActionRef, SalesActionTypes } from "../components/forms";
+import SalesActionDrawers from "../components/forms/SalesActionDrawers";
 import { useGetOpportunity } from "../hooks";
 import { salesStageOptions } from "../types";
+import { OpportunityPipeline } from "./components";
+import "./sales-details.css";
 
 const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
+	const salesRef = useRef<SalesActionRef>(null);
+
 	const query = useGetOpportunity(id);
 
 	if (!id || query.isLoading || query.isError || !query.data) {
@@ -17,6 +25,28 @@ const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 
 	const opportunity = query.data;
 
+	const refetch = () => {
+		query.refetch();
+	};
+
+	const handleAction = (action: SalesActionTypes) => {
+		if (action === "change-stage") {
+			changeStage();
+			return;
+		}
+
+		salesRef.current?.onAction(opportunity.id, action);
+	};
+
+	const changeStage = (targetStage?: OpportunityStage) => {
+		salesRef.current?.changeStage({
+			id: opportunity.id,
+			stage: opportunity.stage,
+			title: opportunity.title,
+			targetStage,
+		});
+	};
+
 	return (
 		<DataDetails>
 			<DetailsHeader
@@ -26,6 +56,18 @@ const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 						<SalesStageBadge stage={opportunity.stage} />
 					</div>
 				}
+				extraAdd={
+					<SalesActions onAction={handleAction} mode="details" opportunityId={opportunity.id} />
+				}
+				onEdit={() => {
+					salesRef.current?.onAction(opportunity.id, "edit-opportunity");
+				}}
+			/>
+
+			<OpportunityPipeline
+				stage={opportunity.stage}
+				lostReason={opportunity.lostReason}
+				onStageChange={changeStage}
 			/>
 
 			<DataDetailsLayout
@@ -95,6 +137,8 @@ const OpportunityDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 					</>
 				}
 			/>
+
+			<SalesActionDrawers ref={salesRef} onSuccess={refetch} />
 		</DataDetails>
 	);
 };

@@ -21,6 +21,7 @@ export type OpportunityInfo = {
 	id: string;
 	title: string;
 	stage: OpportunityStage;
+	targetStage?: OpportunityStage;
 };
 
 export interface ChangeStageRef {

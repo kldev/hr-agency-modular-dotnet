@@ -8,39 +8,43 @@ interface SalesActionsProps {
 	opportunityId: string;
 	mode: "table" | "details";
 }
-export function SalesActions({ onAction, opportunityId }: SalesActionsProps) {
-	const naviage = useNavigate();
+export function SalesActions({ onAction, opportunityId, mode }: SalesActionsProps) {
+	const navigate = useNavigate();
+
+	const actions = [
+		{
+			label: "Log activity",
+			icon: ClockArrowRight,
+			action: () => onAction("log-activity"),
+		},
+		{
+			label: "Change stage",
+			icon: TrendingUp,
+			action: () => onAction("change-stage"),
+		},
+	];
+
+	if (mode === "table") {
+		actions.push(
+			{ label: "Edit", icon: Pencil, action: () => onAction("edit-opportunity") },
+
+			{
+				label: "Open details",
+				icon: Settings2,
+
+				action: () => {
+					navigate({
+						to: "/app/sales/opportunities/$id",
+						params: { id: opportunityId },
+					});
+				},
+			},
+		);
+	}
 
 	return (
 		<div className="table-actions">
-			<ActionMenu
-				actions={[
-					{
-						label: "Log activity",
-						icon: ClockArrowRight,
-						action: () => onAction("log-activity"),
-					},
-					{
-						label: "Change stage",
-						icon: TrendingUp,
-						action: () => onAction("change-stage"),
-					},
-					{ label: "Edit", icon: Pencil, action: () => onAction("edit-opportunity") },
-
-					{
-						label: "Open details",
-						icon: Settings2,
-
-						action: () => {
-							naviage({
-								to: "/app/sales/opportunities/$id",
-								search: { search: undefined, source: undefined, status: undefined },
-								params: { id: opportunityId },
-							});
-						},
-					},
-				]}
-			/>
+			<ActionMenu actions={actions} />
 		</div>
 	);
 }
