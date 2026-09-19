@@ -1,17 +1,12 @@
 namespace HrAgencySystem.Identity.Domain.ValueObjects;
 
-public sealed record PlatformOwnerId
+public readonly record struct PlatformOwnerId(Guid Value)
 {
-    private PlatformOwnerId(Guid value)
-    {
-        Value = value;
-    }
-
-    public Guid Value { get; }
-
     public static PlatformOwnerId New() => new(Guid.NewGuid());
 
     public static PlatformOwnerId From(Guid value) => new(value);
 
     public override string ToString() => Value.ToString();
+
+    public static implicit operator Guid(PlatformOwnerId id) => id.Value;
 }

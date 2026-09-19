@@ -5,6 +5,7 @@ using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Services;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Factories;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -29,14 +30,14 @@ public static class CreateUserHandler
     {
         await service.ValidateOrganization(command.OrganizationId, ct);
 
-        var (email, firstName, lastName, phone) = CreateValueObjects(command);
+        var contact = ContactDataFactory.CreateValueObjects(command);
 
         PasswordPolicyValidator.Validate(command.Password);
 
         var user = await service.GetUserAsync(command.CreatedBy, ct);
         var organizationId = OrganizationId.From(command.OrganizationId);
 
-        await ValidateEmailReservation(repository, ct, organizationId, email);
+        await ValidateEmailReservation(repository, ct, organizationId, contact.Email);
 
         var userId = UserId.New();
 
@@ -44,20 +45,17 @@ public static class CreateUserHandler
 
         var organizationInfo = await service.GetOrganization(organizationId, ct);
 
-        await repository.ReserveAsync(organizationId, email, userId, passwordHash);
+        await repository.ReserveAsync(organizationId, contact.Email, userId, passwordHash);
 
         var @event = new UserCreated(
             userId.Value,
             organizationId.Value,
-            email.Value,
-            firstName.Value,
-            lastName.Value,
             command.Role,
             passwordHash,
             organizationInfo,
             user!,
-            clock.UtcNow,
-            phone.Value
+            contact.ToContact(),
+            clock.UtcNow
         );
 
         session.Events.StartStream<User>(userId.Value, @event);
@@ -75,41 +73,4 @@ public static class CreateUserHandler
         if (await repository.ExistAsync(organizationId, email, ct))
             throw new BusinessRuleException(UserWithEmailMessage);
     }
-
-    private static UserData CreateValueObjects(CreateUser command)
-    {
-        var errors = new List<string>();
-
-        var (email, emailError) = Email.TryCreate(command.Email);
-
-        if (emailError is not null)
-            errors.Add(emailError);
-
-        var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName);
-
-        if (firstNameError is not null)
-            errors.Add(firstNameError);
-
-        var (lastName, lastNameError) = LastName.TryCreate(command.LastName);
-
-        if (lastNameError is not null)
-            errors.Add(lastNameError);
-
-        var (phone, phoneError) = PersonPhone.TryCreate(command.Phone);
-
-        if (phoneError is not null)
-            errors.Add(phoneError);
-
-        if (errors.Count > 0)
-            throw new ValidationException(errors);
-
-        return new UserData(email!, firstName!, lastName!, phone!);
-    }
-
-    private sealed record UserData(
-        Email Email,
-        FirstName FirstName,
-        LastName LastName,
-        PersonPhone Phone
-    );
 }

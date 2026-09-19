@@ -1,14 +1,13 @@
 using HrAgencySystem.Identity.Domain;
+using HrAgencySystem.SharedKernel.Factories;
+using HrAgencySystem.SharedKernel.Web.Common;
 
 namespace HrAgencySystem.Identity.Application.Users.Create;
 
 public sealed record CreateUser(
     Guid OrganizationId,
-    string Email,
-    string FirstName,
-    string LastName,
+    ContactPerson Contact,
     OrganizationRole Role,
     string Password,
-    Guid CreatedBy,
-    string? Phone = null
-);
+    Guid CreatedBy
+) : IContactData;

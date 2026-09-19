@@ -1,14 +1,17 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Domain;
+using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using HrAgencySystem.SharedKernel.Web.Common;
 using Marten;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -41,11 +44,17 @@ public class CreateUserHandlerTests : BaseTest
         const string password = "Password123!";
         const string passwordHash = "hashed-password";
 
+        var organization = new OrganizationInfo(organizationId, "hr-agency", "HR Agency");
+
         var command = new CreateUser(
             organizationId,
-            "  john.doe@example.com  ",
-            "  John  ",
-            "  Doe  ",
+            new ContactPerson(
+                "  john.doe@example.com  ",
+                "  John  ",
+                "  Doe  ",
+                "  Senior Recruiter  ",
+                "  +48 600 100 200  "
+            ),
             OrganizationRole.Admin,
             password,
             Guid.NewGuid()
@@ -54,6 +63,10 @@ public class CreateUserHandlerTests : BaseTest
         _hasher.Hash(password).Returns(passwordHash);
 
         _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
+
+        _service
+            .GetOrganization(Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .Returns(organization);
 
         _documentSession
             .Events.StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>())
@@ -77,11 +90,15 @@ public class CreateUserHandlerTests : BaseTest
 
         Assert.NotEqual(Guid.Empty, result.UserId);
         Assert.Equal(organizationId, result.OrganizationId);
-        Assert.Equal("john.doe@example.com", result.Email);
-        Assert.Equal("John", result.FirstName);
-        Assert.Equal("Doe", result.LastName);
+        Assert.Equal("john.doe@example.com", result.Contact.Email);
+        Assert.Equal("John", result.Contact.FirstName);
+        Assert.Equal("Doe", result.Contact.LastName);
+        Assert.Equal("Senior Recruiter", result.Contact.JobTitle);
+        Assert.Equal("+48 600 100 200", result.Contact.Phone);
         Assert.Equal(OrganizationRole.Admin, result.Role);
         Assert.Equal(passwordHash, result.PasswordHash);
+        Assert.Equal(organization, result.Organization);
+        Assert.Equal(Admin, result.CreatedBy);
         Assert.Equal(now, result.CreatedAt);
 
         await _service
@@ -89,6 +106,15 @@ public class CreateUserHandlerTests : BaseTest
             .ValidateOrganization(organizationId, Arg.Any<CancellationToken>());
 
         _hasher.Received(1).Hash(password);
+
+        await _emailReservationRepository
+            .Received(1)
+            .ReserveAsync(
+                Arg.Is<OrganizationId>(z => z.Value == organizationId),
+                Arg.Is<Email>(z => z.Value == "john.doe@example.com"),
+                Arg.Is<UserId>(z => z.Value == result.UserId),
+                passwordHash
+            );
 
         var call = _documentSession
             .Events.ReceivedCalls()
@@ -100,9 +126,11 @@ public class CreateUserHandlerTests : BaseTest
 
         Assert.Equal(result.UserId, @event.UserId);
         Assert.Equal(organizationId, @event.OrganizationId);
-        Assert.Equal("john.doe@example.com", @event.Email);
-        Assert.Equal("John", @event.FirstName);
-        Assert.Equal("Doe", @event.LastName);
+        Assert.Equal("john.doe@example.com", @event.Contact.Email);
+        Assert.Equal("John", @event.Contact.FirstName);
+        Assert.Equal("Doe", @event.Contact.LastName);
+        Assert.Equal("Senior Recruiter", @event.Contact.JobTitle);
+        Assert.Equal("+48 600 100 200", @event.Contact.Phone);
         Assert.Equal(OrganizationRole.Admin, @event.Role);
         Assert.Equal(passwordHash, @event.PasswordHash);
         Assert.Equal(now, @event.CreatedAt);
@@ -113,9 +141,7 @@ public class CreateUserHandlerTests : BaseTest
     {
         var command = new CreateUser(
             Guid.NewGuid(),
-            "",
-            "",
-            "",
+            new ContactPerson("", "", "", "", ""),
             OrganizationRole.Recruiter,
             "Password123!",
             Guid.NewGuid()
@@ -138,15 +164,7 @@ public class CreateUserHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidEmail_ThrowsValidationException()
     {
-        var command = new CreateUser(
-            Guid.NewGuid(),
-            "",
-            "John",
-            "Doe",
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
-        );
+        var command = CommandWith("", "John", "Doe");
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
@@ -162,15 +180,7 @@ public class CreateUserHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidFirstName_ThrowsValidationException()
     {
-        var command = new CreateUser(
-            Guid.NewGuid(),
-            "john.doe@example.com",
-            "",
-            "Doe",
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
-        );
+        var command = CommandWith("john.doe@example.com", "", "Doe");
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
@@ -186,15 +196,7 @@ public class CreateUserHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithInvalidLastName_ThrowsValidationException()
     {
-        var command = new CreateUser(
-            Guid.NewGuid(),
-            "john.doe@example.com",
-            "John",
-            "",
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
-        );
+        var command = CommandWith("john.doe@example.com", "John", "");
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
@@ -210,15 +212,7 @@ public class CreateUserHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithEmailTooLong_ThrowsValidationException()
     {
-        var command = new CreateUser(
-            Guid.NewGuid(),
-            new string('a', 321) + "@example.com",
-            "John",
-            "Doe",
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
-        );
+        var command = CommandWith(new string('a', 321) + "@example.com", "John", "Doe");
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
@@ -234,15 +228,7 @@ public class CreateUserHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithFirstNameTooLong_ThrowsValidationException()
     {
-        var command = new CreateUser(
-            Guid.NewGuid(),
-            "john.doe@example.com",
-            new string('A', 101),
-            "Doe",
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
-        );
+        var command = CommandWith("john.doe@example.com", new string('A', 101), "Doe");
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
@@ -258,15 +244,7 @@ public class CreateUserHandlerTests : BaseTest
     [Fact]
     public async Task Handle_WithLastNameTooLong_ThrowsValidationException()
     {
-        var command = new CreateUser(
-            Guid.NewGuid(),
-            "john.doe@example.com",
-            "John",
-            new string('A', 101),
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
-        );
+        var command = CommandWith("john.doe@example.com", "John", new string('A', 101));
 
         var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
 
@@ -280,17 +258,51 @@ public class CreateUserHandlerTests : BaseTest
     }
 
     [Fact]
-    public async Task Handle_WithInvalidPassword_ThrowsValidationException()
+    public async Task Handle_WithJobTitleTooLong_ThrowsValidationException()
     {
-        var command = new CreateUser(
-            Guid.NewGuid(),
+        var command = CommandWith(
             "john.doe@example.com",
             "John",
             "Doe",
-            OrganizationRole.Recruiter,
-            "123",
-            Guid.NewGuid()
+            jobTitle: new string('A', 201)
         );
+
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
+
+        Assert.Contains(exception.Errors, error => error.Contains("Job title"));
+
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
+
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
+    }
+
+    [Fact]
+    public async Task Handle_WithPhoneTooLong_ThrowsValidationException()
+    {
+        var command = CommandWith(
+            "john.doe@example.com",
+            "John",
+            "Doe",
+            phone: new string('1', PersonPhone.MaxLength + 1)
+        );
+
+        var exception = await Assert.ThrowsAsync<ValidationException>(() => HandleCommand(command));
+
+        Assert.Contains(exception.Errors, error => error.Contains("Phone"));
+
+        _hasher.DidNotReceive().Hash(Arg.Any<string>());
+
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
+    }
+
+    [Fact]
+    public async Task Handle_WithInvalidPassword_ThrowsValidationException()
+    {
+        var command = CommandWith("john.doe@example.com", "John", "Doe", password: "123");
 
         var exception = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             HandleCommand(command)
@@ -310,14 +322,11 @@ public class CreateUserHandlerTests : BaseTest
     {
         var organizationId = Guid.NewGuid();
 
-        var command = new CreateUser(
-            organizationId,
+        var command = CommandWith(
             "john.doe@example.com",
             "John",
             "Doe",
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
+            organizationId: organizationId
         );
 
         _service
@@ -339,15 +348,14 @@ public class CreateUserHandlerTests : BaseTest
         var organizationId = Guid.NewGuid();
         using var cts = new CancellationTokenSource();
 
-        var command = new CreateUser(
-            organizationId,
+        var command = CommandWith(
             "john.doe@example.com",
             "John",
             "Doe",
-            OrganizationRole.Recruiter,
-            "Password123!",
-            Guid.NewGuid()
+            organizationId: organizationId
         );
+
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
 
         _emailReservationRepository
             .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>())
@@ -364,16 +372,19 @@ public class CreateUserHandlerTests : BaseTest
     public async Task Handle_ExistEmailInOrganization_ThrowsBusinessRuleException()
     {
         var organizationId = Guid.NewGuid();
-        var now = new DateTimeOffset(2026, 8, 31, 10, 0, 0, TimeSpan.Zero);
 
         const string password = "Password123!";
         const string passwordHash = "hashed-password";
 
         var command = new CreateUser(
             organizationId,
-            "  john.doe@example.com  ",
-            "  John  ",
-            "  Doe  ",
+            new ContactPerson(
+                "  john.doe@example.com  ",
+                "  John  ",
+                "  Doe  ",
+                "Recruiter",
+                "+48 600 100 200"
+            ),
             OrganizationRole.Admin,
             password,
             Guid.NewGuid()
@@ -396,6 +407,25 @@ public class CreateUserHandlerTests : BaseTest
         );
 
         Assert.Equal(CreateUserHandler.UserWithEmailMessage, exception.Message);
+    }
+
+    private static CreateUser CommandWith(
+        string email,
+        string firstName,
+        string lastName,
+        string jobTitle = "Recruiter",
+        string phone = "+48 600 100 200",
+        string password = "Password123!",
+        Guid? organizationId = null
+    )
+    {
+        return new CreateUser(
+            organizationId ?? Guid.NewGuid(),
+            new ContactPerson(email, firstName, lastName, jobTitle, phone),
+            OrganizationRole.Recruiter,
+            password,
+            Guid.NewGuid()
+        );
     }
 
     private async Task HandleCommand(

@@ -7,6 +7,7 @@ public static class Endpoint
         var group = endpoints.MapGroup("").WithSummary("Users").WithTags("Users");
 
         Maps.MapCreate.Map(group);
+        Maps.MapUpdate.Map(group);
         Maps.MapGet.Map(group);
         Maps.MapGetSlice.Map(group);
     }

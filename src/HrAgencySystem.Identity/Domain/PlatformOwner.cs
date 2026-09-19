@@ -8,7 +8,7 @@ public sealed class PlatformOwner
 {
     private PlatformOwner() { }
 
-    public PlatformOwnerId Id { get; private set; } = null!;
+    public PlatformOwnerId Id { get; private set; }
 
     public Email Email { get; private set; } = null!;
 

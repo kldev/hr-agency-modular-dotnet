@@ -1,5 +1,6 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain.ValueObjects;
+using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
@@ -38,5 +39,26 @@ public sealed class UserEmailReservationRepository(IDocumentSession session)
         session.Insert(reservation);
 
         return Task.CompletedTask;
+    }
+
+    public async Task ChangeEmailAsync(
+        OrganizationId organizationId,
+        UserId userId,
+        Email email,
+        CancellationToken ct
+    )
+    {
+        var reservation = await session
+            .Query<UserEmailReservation>()
+            .Where(z => z.OrganizationId == organizationId.Value && z.UserId == userId.Value)
+            .SingleOrDefaultAsync(ct);
+
+        if (reservation is null)
+            throw new NotFoundException("User email reservation", userId.Value);
+
+        if (reservation.Email == email.Value)
+            return;
+
+        session.Update(reservation with { Email = email.Value });
     }
 }

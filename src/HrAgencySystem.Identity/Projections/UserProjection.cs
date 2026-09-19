@@ -20,7 +20,8 @@ public sealed record UserProjection(
     OrganizationInfo Organization,
     string Phone = "",
     UserSnapshot? ModifiedBy = null,
-    DateTimeOffset? ModifiedAt = null
+    DateTimeOffset? ModifiedAt = null,
+    string JobTitle = ""
 ) : IAudit
 {
     public static UserProjection Create(UserCreated @event)
@@ -28,18 +29,42 @@ public sealed record UserProjection(
         return new UserProjection(
             @event.UserId,
             @event.OrganizationId,
-            @event.Email,
-            @event.FirstName,
-            @event.LastName,
+            @event.Contact.Email,
+            @event.Contact.FirstName,
+            @event.Contact.LastName,
             @event.Role,
             @event.CreatedBy.Id,
             @event.CreatedBy,
             @event.CreatedAt,
             @event.Organization,
-            @event.Phone ?? "",
+            @event.Contact.Phone,
             null,
-            null
+            null,
+            @event.Contact.JobTitle
         );
+    }
+
+    public UserProjection Apply(UserUpdated @event)
+    {
+        return this with
+        {
+            Email = @event.Contact.Email,
+            FirstName = @event.Contact.FirstName,
+            LastName = @event.Contact.LastName,
+            JobTitle = @event.Contact.JobTitle,
+            ModifiedBy = @event.ModifiedBy,
+            ModifiedAt = @event.ModifiedAt,
+        };
+    }
+
+    public UserProjection Apply(RoleChanged @event)
+    {
+        return this with
+        {
+            Role = @event.Role,
+            ModifiedBy = @event.ModifiedBy,
+            ModifiedAt = @event.ModifiedAt,
+        };
     }
 
     public string FullName => $"{FirstName} {LastName}";

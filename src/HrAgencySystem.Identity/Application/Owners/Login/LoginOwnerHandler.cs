@@ -1,4 +1,3 @@
-using HrAgencySystem.Identity.Application.Owners.Login;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
@@ -6,7 +5,7 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Microsoft.Extensions.Logging;
 
-namespace HrAgencySystem.Identity.Application.Handlers;
+namespace HrAgencySystem.Identity.Application.Owners.Login;
 
 public static class LoginOwnerHandler
 {

@@ -21,7 +21,12 @@ public sealed class UserSnapshotRepository(IDocumentSession session) : IUserSnap
         return await session
             .Query<UserCreated>()
             .Where(z => z.UserId == userId)
-            .Select(z => new UserSnapshot(z.UserId, z.FirstName, z.LastName, z.Email))
+            .Select(z => new UserSnapshot(
+                z.UserId,
+                z.Contact.FirstName,
+                z.Contact.LastName,
+                z.Contact.Email
+            ))
             .FirstOrDefaultAsync(ct);
     }
 }

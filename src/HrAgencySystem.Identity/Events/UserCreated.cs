@@ -1,19 +1,17 @@
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Web.Common;
 
 namespace HrAgencySystem.Identity.Events;
 
 public sealed record UserCreated(
     Guid UserId,
     Guid OrganizationId,
-    string Email,
-    string FirstName,
-    string LastName,
     OrganizationRole Role,
     string PasswordHash,
     OrganizationInfo Organization,
     UserSnapshot CreatedBy,
-    DateTimeOffset CreatedAt,
-    string? Phone = null
+    ContactPerson Contact,
+    DateTimeOffset CreatedAt
 );

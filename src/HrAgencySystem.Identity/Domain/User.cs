@@ -5,11 +5,11 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.Identity.Domain;
 
-public sealed class User
+public sealed class User : IOrganizationDomain
 {
     private User() { }
 
-    public UserId Id { get; private set; } = null!;
+    public UserId Id { get; private set; }
 
     public OrganizationId OrganizationId { get; private set; }
 
@@ -18,6 +18,8 @@ public sealed class User
     public FirstName FirstName { get; private set; } = null!;
 
     public LastName LastName { get; private set; } = null!;
+
+    public PersonJobTitle JobTitle { get; private set; } = null!;
 
     public OrganizationRole Role { get; private set; }
 
@@ -35,14 +37,28 @@ public sealed class User
         Id = UserId.From(@event.UserId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
 
-        Email = Email.Create(@event.Email);
-        FirstName = FirstName.Create(@event.FirstName);
-        LastName = LastName.Create(@event.LastName);
+        Email = Email.Create(@event.Contact.Email);
+        FirstName = FirstName.Create(@event.Contact.FirstName);
+        LastName = LastName.Create(@event.Contact.LastName);
+        JobTitle = PersonJobTitle.Create(@event.Contact.JobTitle);
 
         Role = @event.Role;
 
         PasswordHash = @event.PasswordHash;
 
         CreatedAt = @event.CreatedAt;
+    }
+
+    public void Apply(UserUpdated @event)
+    {
+        Email = Email.Create(@event.Contact.Email);
+        FirstName = FirstName.Create(@event.Contact.FirstName);
+        LastName = LastName.Create(@event.Contact.LastName);
+        JobTitle = PersonJobTitle.Create(@event.Contact.JobTitle);
+    }
+
+    public void Apply(RoleChanged @event)
+    {
+        Role = @event.Role;
     }
 }

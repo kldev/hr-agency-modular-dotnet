@@ -1,10 +1,10 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
-using HrAgencySystem.Api.Endpoints.User.Maps;
 using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.SharedKernel.Web.Common;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
@@ -16,6 +16,7 @@ internal sealed record CreateUserForOrganizationRequest(
     OrganizationRoleApi Role,
     Guid OrganizationId,
     string Password,
+    string? JobTitle = null,
     string? Phone = null
 )
 {
@@ -23,13 +24,16 @@ internal sealed record CreateUserForOrganizationRequest(
     {
         return new CreateUser(
             OrganizationId,
-            Email,
-            FirstName,
-            LastName,
+            new ContactPerson(
+                Email,
+                FirstName,
+                LastName,
+                JobTitle ?? string.Empty,
+                Phone ?? string.Empty
+            ),
             Role.ToDomainRole(),
             Password,
-            Guid.Empty,
-            Phone
+            Guid.Empty
         );
     }
 }

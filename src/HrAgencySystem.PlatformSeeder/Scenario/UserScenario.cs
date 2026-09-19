@@ -2,6 +2,7 @@ using Bogus;
 using HrAgencySystem.Identity.Application.Users.Create;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Events;
+using HrAgencySystem.SharedKernel.Web.Common;
 using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder.Scenario;
@@ -26,47 +27,63 @@ internal class UserScenario(IMessageBus bus)
         var domain = $"@{data.Slug}.com";
         const string userPassword = Config.TestPassword;
 
+        var faker = new Faker();
+
         var users = new List<CreateUser>
         {
             new(
                 data.OrganizationId,
-                $"j.smith{domain}",
-                "John",
-                "Smith",
+                new ContactPerson(
+                    $"j.smith{domain}",
+                    "John",
+                    "Smith",
+                    JobTitleFor(OrganizationRole.Admin),
+                    faker.Phone.PhoneNumber()
+                ),
                 OrganizationRole.Admin,
                 userPassword,
                 Guid.Empty
             ),
             new(
                 data.OrganizationId,
-                $"kate.rec{domain}",
-                "Katy",
-                "Wells",
+                new ContactPerson(
+                    $"kate.rec{domain}",
+                    "Katy",
+                    "Wells",
+                    JobTitleFor(OrganizationRole.Recruiter),
+                    faker.Phone.PhoneNumber()
+                ),
                 OrganizationRole.Recruiter,
                 userPassword,
                 Guid.Empty
             ),
             new(
                 data.OrganizationId,
-                $"bob.sale{domain}",
-                "Bob",
-                "Wells",
+                new ContactPerson(
+                    $"bob.sale{domain}",
+                    "Bob",
+                    "Wells",
+                    JobTitleFor(OrganizationRole.Sales),
+                    faker.Phone.PhoneNumber()
+                ),
                 OrganizationRole.Sales,
                 userPassword,
                 Guid.Empty
             ),
             new(
                 data.OrganizationId,
-                $"adrian.sal{domain}",
-                "Adrian",
-                "Jimbo",
+                new ContactPerson(
+                    $"adrian.sal{domain}",
+                    "Adrian",
+                    "Jimbo",
+                    JobTitleFor(OrganizationRole.Sales),
+                    faker.Phone.PhoneNumber()
+                ),
                 OrganizationRole.Sales,
                 userPassword,
                 Guid.Empty
             ),
         };
-
-        var faker = new Faker();
 
         for (var i = users.Count; i < seedCount; i++)
         {
@@ -77,13 +94,16 @@ internal class UserScenario(IMessageBus bus)
             users.Add(
                 new CreateUser(
                     data.OrganizationId,
-                    $"{firstName.ToLowerInvariant()}.{lastName.ToLowerInvariant()}{i}{Random.Shared.Next(1000, 99999)}{domain}",
-                    firstName,
-                    lastName,
+                    new ContactPerson(
+                        $"{firstName.ToLowerInvariant()}.{lastName.ToLowerInvariant()}{i}{Random.Shared.Next(1000, 99999)}{domain}",
+                        firstName,
+                        lastName,
+                        JobTitleFor(role),
+                        faker.Phone.PhoneNumber()
+                    ),
                     role,
                     userPassword,
-                    Guid.Empty,
-                    faker.Phone.PhoneNumber()
+                    Guid.Empty
                 )
             );
         }
@@ -98,4 +118,15 @@ internal class UserScenario(IMessageBus bus)
 
         return ids;
     }
+
+    private static string JobTitleFor(OrganizationRole role) =>
+        role switch
+        {
+            OrganizationRole.Admin => "Administrator",
+            OrganizationRole.Recruiter => "Recruiter",
+            OrganizationRole.HiringManager => "Hiring Manager",
+            OrganizationRole.Interviewer => "Interviewer",
+            OrganizationRole.Sales => "Sales Specialist",
+            _ => "Employee",
+        };
 }
