@@ -14,17 +14,12 @@
  * OpenAPI spec version: v1
  */
 import type { ContactPerson } from "./contactPerson.ts";
-import type { OrganizationInfo } from "./organizationInfo.ts";
-import type { OrganizationRole } from "./organizationRole.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface UserCreated {
+export interface UserUpdated {
 	userId: string;
 	organizationId: string;
-	role: OrganizationRole;
-	passwordHash: string;
-	organization: OrganizationInfo;
-	createdBy: UserSnapshot;
+	modifiedBy: UserSnapshot;
 	contact: ContactPerson;
-	createdAt: string;
+	modifiedAt: string;
 }

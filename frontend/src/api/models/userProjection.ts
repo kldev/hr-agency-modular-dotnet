@@ -32,6 +32,7 @@ export interface UserProjection {
 	modifiedBy?: null | UserSnapshot;
 	/** @nullable */
 	modifiedAt?: string | null;
+	jobTitle?: string;
 	/** @nullable */
 	fullName?: string | null;
 }

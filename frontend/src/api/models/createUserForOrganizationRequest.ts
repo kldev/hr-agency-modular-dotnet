@@ -23,5 +23,7 @@ export interface CreateUserForOrganizationRequest {
 	organizationId: string;
 	password: string;
 	/** @nullable */
+	jobTitle?: string | null;
+	/** @nullable */
 	phone?: string | null;
 }

@@ -36,7 +36,9 @@ import type {
 	GetUsersParams,
 	ProblemDetails,
 	SliceResponseOfUserProjection,
+	UpdateUserRequest,
 	UserCreated,
+	UserUpdated,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
 import { customInstance } from "../../mutator.ts";
@@ -264,3 +266,138 @@ export const useGetUsers = <
 > => {
 	return useMutation(getGetUsersMutationOptions(options), queryClient);
 };
+/**
+ * @summary Update user
+ */
+export const updateUser = (
+	userId: string,
+	updateUserRequest: BodyType<UpdateUserRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<UserUpdated>(
+		{
+			url: `/api/users/${userId}`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: updateUserRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getUpdateUserQueryKey = (
+	userId: string,
+	updateUserRequest?: BodyType<UpdateUserRequest>,
+) => {
+	return ["PUT", `/api/users/${userId}`, updateUserRequest] as const;
+};
+
+export const getUpdateUserQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserRequest: BodyType<UpdateUserRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateUser>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getUpdateUserQueryKey(userId, updateUserRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateUser>>> = ({ signal }) =>
+		updateUser(userId, updateUserRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: userId !== null && userId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateUser>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type UpdateUserQueryResult = NonNullable<Awaited<ReturnType<typeof updateUser>>>;
+export type UpdateUserQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useUpdateUser<
+	TData = Awaited<ReturnType<typeof updateUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserRequest: BodyType<UpdateUserRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateUser>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateUser>>,
+					TError,
+					Awaited<ReturnType<typeof updateUser>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateUser<
+	TData = Awaited<ReturnType<typeof updateUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserRequest: BodyType<UpdateUserRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateUser>>, TError, TData>> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateUser>>,
+					TError,
+					Awaited<ReturnType<typeof updateUser>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateUser<
+	TData = Awaited<ReturnType<typeof updateUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserRequest: BodyType<UpdateUserRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateUser>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Update user
+ */
+
+export function useUpdateUser<
+	TData = Awaited<ReturnType<typeof updateUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserRequest: BodyType<UpdateUserRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof updateUser>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getUpdateUserQueryOptions(userId, updateUserRequest, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
