@@ -61,4 +61,9 @@ public sealed class User : IOrganizationDomain
     {
         Role = @event.Role;
     }
+
+    public void Apply(PasswordChanged @event)
+    {
+        PasswordHash = @event.PasswordHash;
+    }
 }

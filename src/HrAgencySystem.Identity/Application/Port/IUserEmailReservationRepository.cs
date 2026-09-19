@@ -19,4 +19,10 @@ public interface IUserEmailReservationRepository
         Email email,
         CancellationToken ct
     );
+    Task ChangePasswordAsync(
+        OrganizationId organizationId,
+        UserId userId,
+        string passwordHash,
+        CancellationToken ct
+    );
 }

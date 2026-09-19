@@ -13,6 +13,7 @@ internal static class IdentityEventsConfiguration
             options.Events.AddEventType<PlatformOwnerCreated>();
             options.Events.AddEventType<RoleChanged>();
             options.Events.AddEventType<UserUpdated>();
+            options.Events.AddEventType<PasswordChanged>();
         }
     }
 }

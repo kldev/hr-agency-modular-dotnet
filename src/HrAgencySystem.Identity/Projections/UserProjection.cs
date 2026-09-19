@@ -67,5 +67,10 @@ public sealed record UserProjection(
         };
     }
 
+    public UserProjection Apply(PasswordChanged @event)
+    {
+        return this with { ModifiedBy = @event.ModifiedBy, ModifiedAt = @event.ModifiedAt };
+    }
+
     public string FullName => $"{FirstName} {LastName}";
 }

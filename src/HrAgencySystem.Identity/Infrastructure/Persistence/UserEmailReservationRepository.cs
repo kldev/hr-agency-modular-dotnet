@@ -48,17 +48,37 @@ public sealed class UserEmailReservationRepository(IDocumentSession session)
         CancellationToken ct
     )
     {
-        var reservation = await session
-            .Query<UserEmailReservation>()
-            .Where(z => z.OrganizationId == organizationId.Value && z.UserId == userId.Value)
-            .SingleOrDefaultAsync(ct);
-
-        if (reservation is null)
-            throw new NotFoundException("User email reservation", userId.Value);
+        var reservation = await FindReservation(organizationId, userId, ct);
 
         if (reservation.Email == email.Value)
             return;
 
         session.Update(reservation with { Email = email.Value });
+    }
+
+    public async Task ChangePasswordAsync(
+        OrganizationId organizationId,
+        UserId userId,
+        string passwordHash,
+        CancellationToken ct
+    )
+    {
+        var reservation = await FindReservation(organizationId, userId, ct);
+
+        session.Update(reservation with { PasswordHash = passwordHash });
+    }
+
+    private async Task<UserEmailReservation> FindReservation(
+        OrganizationId organizationId,
+        UserId userId,
+        CancellationToken ct
+    )
+    {
+        var reservation = await session
+            .Query<UserEmailReservation>()
+            .Where(z => z.OrganizationId == organizationId.Value && z.UserId == userId.Value)
+            .SingleOrDefaultAsync(ct);
+
+        return reservation ?? throw new NotFoundException("User email reservation", userId.Value);
     }
 }

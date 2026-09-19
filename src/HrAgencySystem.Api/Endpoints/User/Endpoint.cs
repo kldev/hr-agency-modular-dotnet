@@ -8,6 +8,7 @@ public static class Endpoint
 
         Maps.MapCreate.Map(group);
         Maps.MapUpdate.Map(group);
+        Maps.MapChangePassword.Map(group);
         Maps.MapGet.Map(group);
         Maps.MapGetSlice.Map(group);
     }

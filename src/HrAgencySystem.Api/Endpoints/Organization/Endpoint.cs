@@ -14,6 +14,7 @@ public static class Endpoint
         Maps.MapGetSlice.Map(group);
         Maps.MapGetBySlug.Map(group);
         Maps.MapCreateUser.Map(group);
+        Maps.MapUpdateUser.Map(group);
         Maps.MapGetUsersSlice.Map(group);
         Maps.MapUpdate.Map(group);
         Maps.MapGet.Map(group);
