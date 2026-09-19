@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Wolverine;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
@@ -26,6 +27,12 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
 
         builder.ConfigureServices(services =>
         {
+            // The API wires RabbitMQ at startup and AutoProvisions the mail topology, which would
+            // make every integration test depend on a running broker. Stubbing the external
+            // transports keeps the outbox and the routing rules in place — a handler returning
+            // OutgoingMessages still routes — while nothing ever leaves the process.
+            services.DisableAllExternalWolverineTransports();
+
             services.Replace(
                 ServiceDescriptor.Scoped<IOrganizationChecker, FakeOrganizationChecker>()
             );
