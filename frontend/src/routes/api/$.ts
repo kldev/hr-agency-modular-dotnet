@@ -62,12 +62,19 @@ async function proxyRequest(request: Request) {
 		const responseHeaders = new Headers();
 
 		for (const [key, value] of Object.entries(response.headers)) {
-			if (typeof value === "string") {
+			// Length and encoding describe the bytes axios already decoded; forwarding them would
+			// describe a body that no longer exists in that shape.
+			if (typeof value === "string" && key !== "content-length" && key !== "content-encoding") {
 				responseHeaders.set(key, value);
 			}
 		}
 
-		return new Response(response.data, {
+		// 204/205/304 must not carry a body. Axios hands back an empty ArrayBuffer rather than null,
+		// and the Response constructor rejects that outright - which used to turn a call that had
+		// already succeeded on the API into a 502 for the browser.
+		const forbidsBody = [204, 205, 304].includes(response.status);
+
+		return new Response(forbidsBody ? null : response.data, {
 			status: response.status,
 			headers: responseHeaders,
 		});
