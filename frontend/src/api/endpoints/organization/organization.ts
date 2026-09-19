@@ -44,7 +44,9 @@ import type {
 	SliceResponseOfOrganizationProjection,
 	SliceResponseOfUserProjection,
 	UpdateSlug,
+	UpdateUserForOrganizationRequest,
 	UserCreated,
+	UserUpdated,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
 import { customInstance } from "../../mutator.ts";
@@ -739,6 +741,160 @@ export const useGetOrganizationsUsers = <
 > => {
 	return useMutation(getGetOrganizationsUsersMutationOptions(options), queryClient);
 };
+/**
+ * @summary Update user
+ */
+export const updateOrganizationUser = (
+	userId: string,
+	updateUserForOrganizationRequest: BodyType<UpdateUserForOrganizationRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<UserUpdated>(
+		{
+			url: `/api/organization/users/${userId}`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: updateUserForOrganizationRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getUpdateOrganizationUserQueryKey = (
+	userId: string,
+	updateUserForOrganizationRequest?: BodyType<UpdateUserForOrganizationRequest>,
+) => {
+	return ["PUT", `/api/organization/users/${userId}`, updateUserForOrganizationRequest] as const;
+};
+
+export const getUpdateOrganizationUserQueryOptions = <
+	TData = Awaited<ReturnType<typeof updateOrganizationUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserForOrganizationRequest: BodyType<UpdateUserForOrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationUser>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getUpdateOrganizationUserQueryKey(userId, updateUserForOrganizationRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof updateOrganizationUser>>> = ({ signal }) =>
+		updateOrganizationUser(userId, updateUserForOrganizationRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: userId !== null && userId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationUser>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type UpdateOrganizationUserQueryResult = NonNullable<
+	Awaited<ReturnType<typeof updateOrganizationUser>>
+>;
+export type UpdateOrganizationUserQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useUpdateOrganizationUser<
+	TData = Awaited<ReturnType<typeof updateOrganizationUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserForOrganizationRequest: BodyType<UpdateUserForOrganizationRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationUser>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateOrganizationUser>>,
+					TError,
+					Awaited<ReturnType<typeof updateOrganizationUser>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateOrganizationUser<
+	TData = Awaited<ReturnType<typeof updateOrganizationUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserForOrganizationRequest: BodyType<UpdateUserForOrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationUser>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof updateOrganizationUser>>,
+					TError,
+					Awaited<ReturnType<typeof updateOrganizationUser>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUpdateOrganizationUser<
+	TData = Awaited<ReturnType<typeof updateOrganizationUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserForOrganizationRequest: BodyType<UpdateUserForOrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationUser>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Update user
+ */
+
+export function useUpdateOrganizationUser<
+	TData = Awaited<ReturnType<typeof updateOrganizationUser>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	updateUserForOrganizationRequest: BodyType<UpdateUserForOrganizationRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof updateOrganizationUser>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getUpdateOrganizationUserQueryOptions(
+		userId,
+		updateUserForOrganizationRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
 /**
  * @summary Update organization data
  */

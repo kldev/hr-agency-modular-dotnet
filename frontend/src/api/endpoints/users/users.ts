@@ -32,6 +32,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import type {
 	BadRequestDetails,
+	ChangePasswordRequest,
 	CreateUserRequest,
 	GetUsersParams,
 	ProblemDetails,
@@ -394,6 +395,134 @@ export function useUpdateUser<
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 	const queryOptions = getUpdateUserQueryOptions(userId, updateUserRequest, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Change own password
+ */
+export const changeOwnPassword = (
+	changePasswordRequest: BodyType<ChangePasswordRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<void>(
+		{
+			url: `/api/users/me/password`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: changePasswordRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getChangeOwnPasswordQueryKey = (
+	changePasswordRequest?: BodyType<ChangePasswordRequest>,
+) => {
+	return ["PUT", `/api/users/me/password`, changePasswordRequest] as const;
+};
+
+export const getChangeOwnPasswordQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeOwnPassword>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	changePasswordRequest: BodyType<ChangePasswordRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeOwnPassword>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getChangeOwnPasswordQueryKey(changePasswordRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeOwnPassword>>> = ({ signal }) =>
+		changeOwnPassword(changePasswordRequest, requestOptions, signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof changeOwnPassword>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type ChangeOwnPasswordQueryResult = NonNullable<
+	Awaited<ReturnType<typeof changeOwnPassword>>
+>;
+export type ChangeOwnPasswordQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useChangeOwnPassword<
+	TData = Awaited<ReturnType<typeof changeOwnPassword>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	changePasswordRequest: BodyType<ChangePasswordRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeOwnPassword>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeOwnPassword>>,
+					TError,
+					Awaited<ReturnType<typeof changeOwnPassword>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeOwnPassword<
+	TData = Awaited<ReturnType<typeof changeOwnPassword>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	changePasswordRequest: BodyType<ChangePasswordRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeOwnPassword>>, TError, TData>> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeOwnPassword>>,
+					TError,
+					Awaited<ReturnType<typeof changeOwnPassword>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeOwnPassword<
+	TData = Awaited<ReturnType<typeof changeOwnPassword>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	changePasswordRequest: BodyType<ChangePasswordRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeOwnPassword>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Change own password
+ */
+
+export function useChangeOwnPassword<
+	TData = Awaited<ReturnType<typeof changeOwnPassword>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	changePasswordRequest: BodyType<ChangePasswordRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeOwnPassword>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getChangeOwnPasswordQueryOptions(changePasswordRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;
