@@ -46,7 +46,8 @@ public class JobPostQueryRepository(IDocumentSession session) : IJobPostQueryRep
                 result.OrgId,
                 result.CompanyId,
                 result.Title,
-                result.Status
+                result.Status,
+                result.Recruiter
             );
     }
 

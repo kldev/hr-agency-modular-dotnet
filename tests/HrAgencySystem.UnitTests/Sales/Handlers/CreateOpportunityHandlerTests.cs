@@ -1,3 +1,4 @@
+using HrAgencySystem.EmailTemplates.Contracts.Sales;
 using HrAgencySystem.Sales.Application.Opportunities.Create;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
@@ -10,6 +11,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
 using NSubstitute;
+using Wolverine;
 
 namespace HrAgencySystem.UnitTests.Sales.Handlers;
 
@@ -222,6 +224,10 @@ public class CreateOpportunityHandlerTests : BaseTest
     {
         var command = CreateValidCommand(description: "");
 
+        SetupOrganization();
+        SetupCreatedBy();
+        SetupCompany();
+
         var result = await Handle(command);
 
         Assert.Empty(result.Description);
@@ -374,7 +380,58 @@ public class CreateOpportunityHandlerTests : BaseTest
         AssertStreamCreated();
     }
 
+    [Fact]
+    public async Task Handle_WithResponsibleOtherThanCreator_SendsNotification()
+    {
+        var command = CreateValidCommand(
+            organizationId: OrganizationId,
+            companyId: CompanyId,
+            createdBy: CreatedById,
+            ownerId: OwnerId
+        );
+
+        SetupOrganization();
+        SetupCreatedBy();
+        SetupOwner();
+        SetupCompany();
+
+        var (_, messages) = await HandleWithMessages(command);
+
+        var notification = Assert.Single(messages.OfType<SendOpportunityCreated>());
+        Assert.Equal(Owner.Email, notification.ResponsiblePersonEmail);
+        Assert.Equal(Owner.Fullname, notification.ResponsiblePersonFullName);
+        Assert.Equal(Company.Name, notification.CompanyName);
+    }
+
+    [Fact]
+    public async Task Handle_WithCreatorAsResponsible_SendsNoNotification()
+    {
+        var command = CreateValidCommand(
+            organizationId: OrganizationId,
+            companyId: CompanyId,
+            createdBy: CreatedById,
+            ownerId: CreatedById
+        );
+
+        SetupOrganization();
+        SetupCreatedBy();
+        SetupCompany();
+
+        var (_, messages) = await HandleWithMessages(command);
+
+        Assert.Empty(messages);
+    }
+
     private async Task<OpportunityCreated> Handle(CreateOpportunity command, IClock? clock = null)
+    {
+        var (@event, _) = await HandleWithMessages(command, clock);
+        return @event;
+    }
+
+    private async Task<(OpportunityCreated, OutgoingMessages)> HandleWithMessages(
+        CreateOpportunity command,
+        IClock? clock = null
+    )
     {
         return await CreateOpportunityHandler.Handle(
             command,

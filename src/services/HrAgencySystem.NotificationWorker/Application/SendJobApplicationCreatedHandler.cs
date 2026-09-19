@@ -4,10 +4,18 @@ namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendJobApplicationCreatedHandler
 {
-    public static Task Handle(SendJobApplicationCreated command, CancellationToken ct)
+    public static Task Handle(
+        SendJobApplicationCreated message,
+        ILogger<SendJobApplicationCreated> logger
+    )
     {
-        Console.WriteLine($"Sending job application created: {command.JobApplicationId}");
-        Console.WriteLine($"Applicant email {command.ApplicantEmail}");
+        logger.LogInformation(
+            "Job application {JobApplicationId} for {JobPostTitle}: mailing {ApplicantEmail}",
+            message.JobApplicationId,
+            message.JobPostTitle,
+            message.ApplicantEmail
+        );
+
         return Task.CompletedTask;
     }
 }

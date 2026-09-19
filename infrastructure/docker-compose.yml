@@ -111,8 +111,7 @@ services:
       RabbitMq__Username: ${RabbitMqUser}
       RabbitMq__Password: ${RabbitMqPassword}
       RabbitMq__VHost: "/development"
-      RabbitMq__MailExchange: "x.emails"
-      RabbitMq__RecruitmentRoutingKey: "recruitment"
+      RabbitMq__MailExchange: "x.emails"      
       Cors: ${Cors}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]

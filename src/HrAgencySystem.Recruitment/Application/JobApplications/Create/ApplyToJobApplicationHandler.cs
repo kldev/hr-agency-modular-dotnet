@@ -19,14 +19,13 @@ namespace HrAgencySystem.Recruitment.Application.JobApplications.Create;
 
 public static class ApplyToJobApplicationHandler
 {
-    public static async Task<JobApplicationCreated> Handle(
+    public static async Task<(JobApplicationCreated, OutgoingMessages)> Handle(
         ApplyToJobApplication command,
         ICandidateResolver resolver,
         IJobPostQueryRepository queryRepository,
         IRecruitmentService service,
         IDocumentSession session,
         IClock clock,
-        IMessageBus bus,
         CancellationToken ct
     )
     {
@@ -74,7 +73,8 @@ public static class ApplyToJobApplicationHandler
 
         session.Events.StartStream<JobApplication>(jobApplicationId.Value, @event);
 
-        await bus.PublishAsync(
+        var messages = new OutgoingMessages
+        {
             new SendJobApplicationCreated(
                 Guid.NewGuid(),
                 nameof(ApplyToJobApplicationHandler),
@@ -84,11 +84,11 @@ public static class ApplyToJobApplicationHandler
                 email.Value,
                 $"{firstName.Value} {lastName.Value}",
                 phoneNumber.Value,
-                "John Smith"
-            )
-        );
+                post.Recruiter.Fullname
+            ),
+        };
 
-        return @event;
+        return (@event, messages);
     }
 
     private static (

@@ -106,6 +106,7 @@ if [ -n "$DETACH_ARG" ]; then
     echo ""
     echo "     Seed:    http://localhost:5000/api/development/seed"
     echo "              http://localhost:5000/api/development/seed-sales?count=1000"
+    echo "              http://localhost:5000/api/development/seed/random?count=50"
     echo "  RabbitMQ:   amqp://localhost:5672"
     echo "  Management: http://localhost:15672  (user: $RabbitMqUser)"
     echo ""

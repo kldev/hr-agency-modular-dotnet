@@ -1,6 +1,5 @@
-using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Company;
-using HrAgencySystem.EmailTemplates.Contracts;
+using HrAgencySystem.EmailTemplates.Messaging;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
@@ -12,7 +11,6 @@ using JasperFx.Events.Daemon;
 using Marten;
 using Wolverine;
 using Wolverine.Marten;
-using Wolverine.RabbitMQ;
 
 namespace HrAgencySystem.Api.Infrastructure;
 
@@ -37,7 +35,10 @@ public static class SetupMartenExtensions
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
             })
             .AddAsyncDaemon(DaemonMode.HotCold)
-            .IntegrateWithWolverine();
+            .IntegrateWithWolverine(x =>
+            {
+                x.MessageStorageSchemaName = "messages";
+            });
     }
 
     private static void ConfigureModules(StoreOptions options)
@@ -61,7 +62,7 @@ public static class SetupMartenExtensions
         builder
             .UseWolverine(options =>
             {
-                options.AddRabbitMq(config);
+                options.PublishEmailMessages(config);
                 ConfigureDiscover(options);
 
                 options.Policies.AutoApplyTransactions();

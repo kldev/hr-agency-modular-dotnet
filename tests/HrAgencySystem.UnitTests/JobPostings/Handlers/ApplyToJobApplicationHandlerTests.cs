@@ -30,14 +30,19 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
 
     private readonly IClock _clock = Substitute.For<IClock>();
 
-    private readonly IMessageBus _bus = Substitute.For<IMessageBus>();
-
     private static readonly Guid JobPostId = Guid.NewGuid();
     private static readonly Guid OrganizationId = Guid.NewGuid();
     private static readonly Guid CompanyId = Guid.NewGuid();
     private static readonly Guid EventId = Guid.NewGuid();
 
     private static readonly DateTimeOffset Now = new(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+
+    private static readonly UserSnapshot Recruiter = new(
+        Guid.NewGuid(),
+        "Dana",
+        "Scully",
+        "dana.scully@fbi.gov"
+    );
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobApplicationCreated()
@@ -213,6 +218,15 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
         IClock? clock = null
     )
     {
+        var (@event, _) = await HandleWithMessages(command, clock);
+        return @event;
+    }
+
+    private async Task<(JobApplicationCreated, OutgoingMessages)> HandleWithMessages(
+        ApplyToJobApplication command,
+        IClock? clock = null
+    )
+    {
         return await ApplyToJobApplicationHandler.Handle(
             command,
             _candidateResolver,
@@ -220,7 +234,6 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             _service,
             _documentSession,
             clock ?? TestClock,
-            _bus,
             CancellationToken.None
         );
     }
@@ -294,7 +307,8 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             OrganizationId,
             CompanyId,
             "Senior .NET Developer",
-            status
+            status,
+            Recruiter
         );
     }
 

@@ -1,23 +1,19 @@
 using HrAgencySystem.EmailTemplates;
-using HrAgencySystem.NotificationWorker;
+using HrAgencySystem.EmailTemplates.Messaging;
 using Wolverine;
-using Wolverine.RabbitMQ;
 
 var builder = Host.CreateApplicationBuilder(args);
 {
-    builder.Services.AddOptions<RabbitMqConfig>(RabbitMqConfig.SectionName);
-    builder.Services.AddHostedService<Worker>();
     builder.Services.AddEMailTemplates();
 
-    var section = builder.Configuration.GetSection(RabbitMqConfig.SectionName);
-
-    var config = RabbitMqConfig.FromSection(section);
-
-    Console.WriteLine($"Using RabbitMQ connection string: {config.GetConnectionUri()}");
+    var config = RabbitMqConfig.FromSection(
+        builder.Configuration.GetSection(RabbitMqConfig.SectionName)
+    );
 
     builder.UseWolverine(opts =>
     {
-        opts.AddRabbitMq(config);
+        opts.ConsumeEmailMessages(config);
+        opts.Discovery.IncludeAssembly(typeof(Program).Assembly);
     });
 }
 
