@@ -1,0 +1,34 @@
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
+
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+WORKDIR /src
+
+COPY Directory.Packages.props .
+
+COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.EmailTemplates.Contracts.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/
+COPY src/EmailTemplates/HrAgencySystem.EmailTemplates/HrAgencySystem.EmailTemplates.csproj EmailTemplates/HrAgencySystem.EmailTemplates/
+COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/
+COPY src/services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj services/HrAgencySystem.NotificationWorker/
+
+RUN dotnet restore services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj
+
+COPY src .
+
+RUN dotnet publish services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj \
+    --configuration Release \
+    --no-restore \
+    --output /app/publish \
+    /p:UseAppHost=false
+
+FROM runtime AS final
+
+WORKDIR /app
+
+COPY --from=build --chown=app:app /app/publish .
+
+USER app
+
+ENTRYPOINT ["dotnet", "HrAgencySystem.NotificationWorker.dll"]

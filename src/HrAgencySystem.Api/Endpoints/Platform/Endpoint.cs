@@ -55,7 +55,7 @@ internal static class Endpoint
             await seeder.SeedShowcase();
             return TypedResults.Text("Seed showcase applicants completed");
         }
-        await seeder.SeedApplicants(count);
+        await seeder.SeedApplicants(Math.Clamp(count, 50, 200));
         return TypedResults.Text("Seed applicants completed");
     }
 

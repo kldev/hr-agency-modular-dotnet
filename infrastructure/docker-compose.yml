@@ -62,9 +62,11 @@ services:
     environment:
         MP_MAX_MESSAGES: 5000
         MP_DATABASE: /data/mailpit.db
-        MP_SMTP_AUTH_ACCEPT_ANY: 1
+        MP_SMTP_AUTH_ACCEPT_ANY: 0
         MP_SMTP_AUTH_ALLOW_INSECURE: 1     
-        MP_SMTP_AUTH: mailer:mailer          
+        MP_SMTP_AUTH: mailer:mailer
+    networks:
+      - inner-cluster-communication
   rabbitmq:
     image: rabbitmq:4-management
     container_name: hr-agency-api-rabbitmq
@@ -96,7 +98,9 @@ services:
       dockerfile: ./Dockerfile
     container_name: hr-agency-api    
     networks:
-      - inner-cluster-communication     
+      - inner-cluster-communication   
+    deploy:
+      replicas: ${ApiReplicaCount:-1}          
     environment:
       ASPNETCORE_ENVIRONMENT: docker
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=50"
@@ -151,10 +155,44 @@ services:
       # Not a functional dependency: the API owns schema creation, the worker runs with AutoCreate.None.
       webapi:
         condition: service_healthy
+  emails-worker:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.notification-worker
+    # No container_name: the service scales, and a fixed name would break every replica but the first.
+    networks:
+      - inner-cluster-communication
+    deploy:
+      replicas: ${EmailsWorkerReplicaCount:-1}
+    environment:
+      DOTNET_ENVIRONMENT: docker
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
+      # Must match webapi - producer and consumers share one topology description.
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: ${RabbitMqUser}
+      RabbitMq__Password: ${RabbitMqPassword}
+      RabbitMq__VHost: "/development"
+      RabbitMq__MailExchange: "x.emails"
+      MailProvider: "mailkit"
+      Smtp__Host: "mailpit"
+      Smtp__Port: 1025
+      Smtp__UseSsl: false
+      Smtp__Username: mailer
+      Smtp__Password: mailer
+      Smtp__FromEmail: "no-reply@hr-agency.com"
+      Smtp__FromName: "HR Agency Portal"
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
   front:
     build:
       context: ../frontend
-    container_name: hr-agency-front    
+    container_name: hr-agency-front  
+    deploy:
+      replicas: ${FrontReplicaCount:-1}      
     ports:
     - "8080:3000"
     environment:      

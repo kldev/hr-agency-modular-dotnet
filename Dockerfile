@@ -14,6 +14,7 @@ COPY Directory.Packages.props .
 
 COPY src/HrAgencySystem.Api/HrAgencySystem.Api.csproj HrAgencySystem.Api/
 COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.EmailTemplates.Contracts.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/
+COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/
 COPY src/HrAgencySystem.Audit/HrAgencySystem.Audit.csproj HrAgencySystem.Audit/
 COPY src/HrAgencySystem.Company/HrAgencySystem.Company.csproj HrAgencySystem.Company/
 COPY src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj HrAgencySystem.Feeds/
