@@ -2,6 +2,7 @@ using System.Reflection;
 using FluentEmail.Liquid;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
+using HrAgencySystem.EmailTemplates.Contracts.Sales;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
@@ -13,6 +14,14 @@ public sealed class EmailTemplateProvider : IEmailTemplateProvider
         "Mail/NotifyRecruiterJobApplicationCreated.liquid";
 
     private const string ResetPasswordFile = "Mail/ResetPassword.liquid";
+
+    private const string NotifyRecruiterJobPostAssignedFile =
+        "Mail/NotifyRecruiterJobPostAssigned.liquid";
+
+    private const string NotifyOpportunityCreatedFile = "Mail/NotifyOpportunityCreated.liquid";
+
+    private const string NotifyOpportunityResponsibleChangedFile =
+        "Mail/NotifyOpportunityResponsibleChanged.liquid";
 
     private static readonly Assembly TemplateAssembly = typeof(IEmailTemplateProvider).Assembly;
 
@@ -38,6 +47,29 @@ public sealed class EmailTemplateProvider : IEmailTemplateProvider
     public async Task<string> RenderSendPasswordReset(SendPasswordReset data)
     {
         var template = await ReadTemplate(ResetPasswordFile);
+
+        return await _renderer.ParseAsync(template, data);
+    }
+
+    public async Task<string> RenderSendJobPostRecruiterChanged(SendJobPostRecruiterChanged data)
+    {
+        var template = await ReadTemplate(NotifyRecruiterJobPostAssignedFile);
+
+        return await _renderer.ParseAsync(template, data);
+    }
+
+    public async Task<string> RenderSendOpportunityCreated(SendOpportunityCreated data)
+    {
+        var template = await ReadTemplate(NotifyOpportunityCreatedFile);
+
+        return await _renderer.ParseAsync(template, data);
+    }
+
+    public async Task<string> RenderSendOpportunityResponsibleChanged(
+        SendOpportunityResponsibleChanged data
+    )
+    {
+        var template = await ReadTemplate(NotifyOpportunityResponsibleChangedFile);
 
         return await _renderer.ParseAsync(template, data);
     }

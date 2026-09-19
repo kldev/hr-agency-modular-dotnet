@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="x-apple-disable-message-reformatting">
+   <title>Job post assigned &middot; {{ JobPostTitle }}</title>
+   <!--[if mso]>
+   <style>
+      * { font-family: Arial, Helvetica, sans-serif !important; }
+      table { border-collapse: collapse; }
+   </style>
+   <![endif]-->
+   <!--[if !mso]><!-->
+   <style>
+      * {
+         font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      @media only screen and (max-width: 620px) {
+         .content-padding { padding-left: 20px !important; padding-right: 20px !important; }
+         .detail-label { display: block !important; width: 100% !important; padding-bottom: 2px !important; }
+         .detail-value { display: block !important; width: 100% !important; padding-bottom: 12px !important; }
+      }
+   </style>
+   <!--<![endif]-->
+</head>
+
+<body style="margin: 0; padding: 0; width: 100%; background-color: #f6f7f9; color: #17202a;">
+
+<!-- Preheader: the preview line in the inbox list. -->
+<div style="display: none; max-height: 0; overflow: hidden; mso-hide: all;">
+   {{ ChangedByFullname }} handed {{ JobPostTitle }} over to you.
+</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+       style="border-collapse: collapse; width: 100%; background-color: #f6f7f9;">
+   <tr>
+      <td align="center" style="padding: 32px 12px;">
+         <!--[if mso]>
+         <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td>
+         <![endif]-->
+         <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+                style="border-collapse: collapse; width: 100%; max-width: 600px; background-color: #ffffff;
+                       border: 1px solid #dfe3e8; border-radius: 4px;">
+
+            {% include "Mail/header" %}
+
+            <!-- Headline -->
+            <tr>
+               <td class="content-padding" style="padding: 32px 32px 0 32px;">
+                  <div style="font-size: 11px; font-weight: 600; color: #2457a6; letter-spacing: 1.4px;
+                              text-transform: uppercase;">
+                     Job post assigned
+                  </div>
+                  <h1 style="margin: 10px 0 0 0; font-size: 22px; line-height: 30px; font-weight: 600; color: #17202a;">
+                     {{ JobPostTitle }} is now yours
+                  </h1>
+                  <p style="margin: 12px 0 0 0; font-size: 14px; line-height: 22px; color: #5f6b78;">
+                     Hi {{ RecruiterFullname }}, {{ ChangedByFullname }} made you the recruiter for this
+                     job post. Every application that comes in from now on lands in your pipeline.
+                  </p>
+               </td>
+            </tr>
+
+            <!-- Assignment card -->
+            <tr>
+               <td class="content-padding" style="padding: 24px 32px 0 32px;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                         style="border-collapse: collapse; width: 100%; background-color: #f9fafb;
+                                border: 1px solid #e9edf1; border-radius: 4px;">
+                     <tr>
+                        <td style="padding: 18px 20px;">
+                           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+                                  style="border-collapse: collapse; width: 100%;">
+                              <tr>
+                                 <td class="detail-label" width="35%"
+                                     style="padding: 0 0 10px 0; font-size: 12px; line-height: 18px; color: #87919d;">
+                                    Job post
+                                 </td>
+                                 <td class="detail-value"
+                                     style="padding: 0 0 10px 0; font-size: 14px; line-height: 18px; font-weight: 600; color: #17202a;">
+                                    {{ JobPostTitle }}
+                                 </td>
+                              </tr>
+                              <tr>
+                                 <td class="detail-label"
+                                     style="padding: 0; font-size: 12px; line-height: 18px; color: #87919d;">
+                                    Handed over by
+                                 </td>
+                                 <td class="detail-value"
+                                     style="padding: 0; font-size: 14px; line-height: 18px; color: #17202a;">
+                                    {{ ChangedByFullname }}
+                                 </td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+
+            <!-- Reference -->
+            <tr>
+               <td class="content-padding" style="padding: 24px 32px 28px 32px;">
+                  <div style="height: 1px; line-height: 1px; font-size: 0; background-color: #e9edf1;">&nbsp;</div>
+                  <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 18px; color: #87919d;">
+                     Job post reference: {{ JobPostId }}
+                  </p>
+               </td>
+            </tr>
+
+            {% include "Mail/footer" %}
+
+         </table>
+         <!--[if mso]>
+         </td></tr></table>
+         <![endif]-->
+      </td>
+   </tr>
+</table>
+
+</body>
+</html>
