@@ -1,21 +1,28 @@
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
+using HrAgencySystem.EmailTemplates.Rendering;
+using HrAgencySystem.EmailTemplates.Sending;
 
 namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendOpportunityCreatedHandler
 {
-    public static Task Handle(
+    public static async Task Handle(
         SendOpportunityCreated message,
-        ILogger<SendOpportunityCreated> logger
+        IEmailTemplateProvider templates,
+        ISendEmail sender,
+        CancellationToken ct
     )
     {
-        logger.LogInformation(
-            "Opportunity {OpportunityTitle} for {CompanyName}: mailing {ResponsiblePersonEmail}",
-            message.OpportunityTitle,
-            message.CompanyName,
-            message.ResponsiblePersonEmail
-        );
+        var html = await templates.RenderSendOpportunityCreated(message);
 
-        return Task.CompletedTask;
+        await sender.SendAsync(
+            new EmailMessage(
+                message.ResponsiblePersonEmail,
+                message.ResponsiblePersonFullName,
+                $"New opportunity: {message.OpportunityTitle}",
+                html
+            ),
+            ct
+        );
     }
 }

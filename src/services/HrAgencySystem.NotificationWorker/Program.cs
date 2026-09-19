@@ -4,7 +4,7 @@ using Wolverine;
 
 var builder = Host.CreateApplicationBuilder(args);
 {
-    builder.Services.AddEMailTemplates();
+    builder.Services.AddEMailTemplates(builder.Configuration);
 
     var config = RabbitMqConfig.FromSection(
         builder.Configuration.GetSection(RabbitMqConfig.SectionName)

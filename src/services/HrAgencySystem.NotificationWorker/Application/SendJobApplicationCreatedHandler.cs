@@ -1,21 +1,28 @@
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
+using HrAgencySystem.EmailTemplates.Rendering;
+using HrAgencySystem.EmailTemplates.Sending;
 
 namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendJobApplicationCreatedHandler
 {
-    public static Task Handle(
+    public static async Task Handle(
         SendJobApplicationCreated message,
-        ILogger<SendJobApplicationCreated> logger
+        IEmailTemplateProvider templates,
+        ISendEmail sender,
+        CancellationToken ct
     )
     {
-        logger.LogInformation(
-            "Job application {JobApplicationId} for {JobPostTitle}: mailing {ApplicantEmail}",
-            message.JobApplicationId,
-            message.JobPostTitle,
-            message.ApplicantEmail
-        );
+        var html = await templates.RenderSendJobApplicationCreated(message);
 
-        return Task.CompletedTask;
+        await sender.SendAsync(
+            new EmailMessage(
+                message.RecruiterEmail,
+                message.RecruiterFullname,
+                $"New application: {message.ApplicantFullname} for {message.JobPostTitle}",
+                html
+            ),
+            ct
+        );
     }
 }

@@ -10,6 +10,7 @@ public sealed record SendJobApplicationCreated(
     string ApplicantFullname,
     string ApplicantPhone,
     string RecruiterFullname,
+    string RecruiterEmail,
     // Deep link into the portal; when empty the mail simply drops its call to action.
     string ApplicationUrl = ""
 ) : IEmailTemplateContract;

@@ -1,6 +1,7 @@
 using System.Net;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
+using HrAgencySystem.EmailTemplates.Contracts.Sales;
 using HrAgencySystem.EmailTemplates.Rendering;
 using Xunit.Abstractions;
 
@@ -93,6 +94,91 @@ public class EmailMessageBodyTests(ITestOutputHelper output)
         Assert.Contains("script", WebUtility.HtmlDecode(html));
     }
 
+    [Fact]
+    public async Task RenderMailJobPostRecruiterChanged()
+    {
+        var handover = new SendJobPostRecruiterChanged(
+            Guid.NewGuid(),
+            "recruitment-service",
+            Guid.NewGuid(),
+            "C# Developer",
+            "katy.wells@hr-agency.test",
+            "Katy Wells",
+            "John Smith"
+        );
+
+        var html = await _renderer.RenderSendJobPostRecruiterChanged(handover);
+
+        await Save(nameof(RenderMailJobPostRecruiterChanged), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(handover.JobPostTitle, text);
+        Assert.Contains(handover.RecruiterFullname, text);
+        Assert.Contains(handover.ChangedByFullname, text);
+        Assert.Contains(handover.JobPostId.ToString(), text);
+        Assert.Contains("HR Agency Portal", text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    [Fact]
+    public async Task RenderMailOpportunityCreated()
+    {
+        var created = new SendOpportunityCreated(
+            Guid.NewGuid(),
+            "sales-service",
+            Guid.NewGuid(),
+            "Contoso",
+            Guid.NewGuid(),
+            "Katy Wells",
+            "katy.wells@hr-agency.test",
+            "Team of four .NET engineers"
+        );
+
+        var html = await _renderer.RenderSendOpportunityCreated(created);
+
+        await Save(nameof(RenderMailOpportunityCreated), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(created.OpportunityTitle, text);
+        Assert.Contains(created.CompanyName, text);
+        Assert.Contains(created.ResponsiblePersonFullName, text);
+        Assert.Contains(created.OpportunityId.ToString(), text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    [Fact]
+    public async Task RenderMailOpportunityResponsibleChanged()
+    {
+        var handover = new SendOpportunityResponsibleChanged(
+            Guid.NewGuid(),
+            "sales-service",
+            Guid.NewGuid(),
+            "Team of four .NET engineers",
+            "katy.wells@hr-agency.test",
+            "Katy Wells",
+            "Bob Smith",
+            "John Smith"
+        );
+
+        var html = await _renderer.RenderSendOpportunityResponsibleChanged(handover);
+
+        await Save(nameof(RenderMailOpportunityResponsibleChanged), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(handover.OpportunityTitle, text);
+        Assert.Contains(handover.ResponsibleFullname, text);
+        Assert.Contains(handover.PreviousResponsibleFullname, text);
+        Assert.Contains(handover.ChangedByFullname, text);
+        Assert.Contains(handover.OpportunityId.ToString(), text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
     private static SendJobApplicationCreated Application() =>
         new(
             Guid.NewGuid(),
@@ -104,6 +190,7 @@ public class EmailMessageBodyTests(ITestOutputHelper output)
             "Demo User",
             "+48 600 100 200",
             "Test Recruiter",
+            "test.recruiter@hr-agency.test",
             "https://portal.hr-agency.test/recruitment/job-applications/6f1c1b7a"
         );
 

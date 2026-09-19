@@ -1,17 +1,28 @@
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
+using HrAgencySystem.EmailTemplates.Rendering;
+using HrAgencySystem.EmailTemplates.Sending;
 
 namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendPasswordResetHandler
 {
-    public static Task Handle(SendPasswordReset message, ILogger<SendPasswordReset> logger)
+    public static async Task Handle(
+        SendPasswordReset message,
+        IEmailTemplateProvider templates,
+        ISendEmail sender,
+        CancellationToken ct
+    )
     {
-        logger.LogInformation(
-            "Password reset valid for {ExpiresInMinutes} min: mailing {RecipientEmail}",
-            message.ExpiresInMinutes,
-            message.RecipientEmail
-        );
+        var html = await templates.RenderSendPasswordReset(message);
 
-        return Task.CompletedTask;
+        await sender.SendAsync(
+            new EmailMessage(
+                message.RecipientEmail,
+                message.RecipientFullname,
+                "Reset your password",
+                html
+            ),
+            ct
+        );
     }
 }

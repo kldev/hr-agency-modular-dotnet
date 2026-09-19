@@ -1,21 +1,28 @@
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
+using HrAgencySystem.EmailTemplates.Rendering;
+using HrAgencySystem.EmailTemplates.Sending;
 
 namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendJobPostRecruiterChangedHandler
 {
-    public static Task Handle(
+    public static async Task Handle(
         SendJobPostRecruiterChanged message,
-        ILogger<SendJobPostRecruiterChanged> logger
+        IEmailTemplateProvider templates,
+        ISendEmail sender,
+        CancellationToken ct
     )
     {
-        logger.LogInformation(
-            "Job post {JobPostTitle} handed over by {ChangedByFullname}: mailing {RecruiterEmail}",
-            message.JobPostTitle,
-            message.ChangedByFullname,
-            message.RecruiterEmail
-        );
+        var html = await templates.RenderSendJobPostRecruiterChanged(message);
 
-        return Task.CompletedTask;
+        await sender.SendAsync(
+            new EmailMessage(
+                message.RecruiterEmail,
+                message.RecruiterFullname,
+                $"Job post assigned to you: {message.JobPostTitle}",
+                html
+            ),
+            ct
+        );
     }
 }

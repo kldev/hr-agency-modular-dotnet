@@ -84,7 +84,8 @@ public static class ApplyToJobApplicationHandler
                 email.Value,
                 $"{firstName.Value} {lastName.Value}",
                 phoneNumber.Value,
-                post.Recruiter.Fullname
+                post.Recruiter.Fullname,
+                post.Recruiter.Email
             ),
         };
 

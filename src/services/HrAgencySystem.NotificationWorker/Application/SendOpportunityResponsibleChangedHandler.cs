@@ -1,21 +1,28 @@
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
+using HrAgencySystem.EmailTemplates.Rendering;
+using HrAgencySystem.EmailTemplates.Sending;
 
 namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendOpportunityResponsibleChangedHandler
 {
-    public static Task Handle(
+    public static async Task Handle(
         SendOpportunityResponsibleChanged message,
-        ILogger<SendOpportunityResponsibleChanged> logger
+        IEmailTemplateProvider templates,
+        ISendEmail sender,
+        CancellationToken ct
     )
     {
-        logger.LogInformation(
-            "Opportunity {OpportunityTitle} handed over by {ChangedByFullname}: mailing {ResponsibleEmail}",
-            message.OpportunityTitle,
-            message.ChangedByFullname,
-            message.ResponsibleEmail
-        );
+        var html = await templates.RenderSendOpportunityResponsibleChanged(message);
 
-        return Task.CompletedTask;
+        await sender.SendAsync(
+            new EmailMessage(
+                message.ResponsibleEmail,
+                message.ResponsibleFullname,
+                $"Opportunity assigned to you: {message.OpportunityTitle}",
+                html
+            ),
+            ct
+        );
     }
 }

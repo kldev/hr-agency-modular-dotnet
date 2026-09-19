@@ -74,7 +74,23 @@ services:
       retries: 10
       start_period: "30s"
 
+  mailpit:
+    image: axllent/mailpit
+    container_name: hr-agency-mailpit
+    restart: unless-stopped
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    volumes:
+      - mailpit_data:/data
+
 volumes:
   postgres_data:
   files_data:
   rabbitmq_data:
+  mailpit_data:
