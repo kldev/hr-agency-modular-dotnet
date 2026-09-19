@@ -7,6 +7,7 @@ using HrAgencySystem.IntegrationTests.JobPosts;
 using HrAgencySystem.IntegrationTests.SalesActivities;
 using HrAgencySystem.IntegrationTests.SalesFollowUpActions;
 using HrAgencySystem.IntegrationTests.SalesOpportunities;
+using HrAgencySystem.IntegrationTests.Teams;
 using HrAgencySystem.IntegrationTests.Users;
 using Xunit.Abstractions;
 
@@ -53,6 +54,7 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
             _environment.CreateClient().AsOrganizationRoles(),
             output
         );
+        TeamClient = new TeamTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
         //   _environment.SetOutputHelper(output);
     }
 
@@ -73,6 +75,8 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     protected OpportunityTestClient OpportunityTestClient { get; }
 
     protected FollowUpActionTestClient FollowUpActionTestClient { get; }
+
+    protected TeamTestClient TeamClient { get; }
 
     public async Task InitializeAsync()
     {
