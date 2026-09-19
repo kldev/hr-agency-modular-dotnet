@@ -4,10 +4,7 @@ internal static class Endpoint
 {
     internal static void Map(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints
-            .MapGroup("")
-            .WithTags("Sales")
-            .RequireAuthorization();
+        var group = endpoints.MapGroup("").WithTags("Sales").RequireAuthorization();
 
         Maps.MapCreate.Map(group);
         Maps.MapUpdate.Map(group);
