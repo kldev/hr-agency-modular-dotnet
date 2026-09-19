@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmailTemplates\HrAgencySystem.EmailTemplates.Contracts\HrAgencySystem.EmailTemplates.Contracts.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
   </ItemGroup>
 </Project>

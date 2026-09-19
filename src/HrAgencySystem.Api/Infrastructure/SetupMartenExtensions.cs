@@ -64,6 +64,7 @@ public static class SetupMartenExtensions
             {
                 options.PublishEmailMessages(config);
                 ConfigureDiscover(options);
+                IdentityModule.ConfigureWolverine(options);
 
                 options.Policies.AutoApplyTransactions();
             })

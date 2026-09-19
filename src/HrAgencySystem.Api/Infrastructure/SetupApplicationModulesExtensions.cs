@@ -28,7 +28,7 @@ public static class SetupApplicationModulesExtensions
             services.AddTransient<IClock, SystemClock>();
             services.AddCompanyModule();
             services.AddOrganizationModule(configuration);
-            services.AddIdentityModule();
+            services.AddIdentityModule(configuration);
             services.AddJobDescriptionModule();
             services.AddRecruitmentModule(configuration);
             services.AddFeedsModule(configuration);

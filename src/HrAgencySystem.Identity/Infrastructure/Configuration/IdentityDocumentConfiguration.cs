@@ -1,4 +1,5 @@
 using HrAgencySystem.Identity.Infrastructure.Persistence;
+using HrAgencySystem.Identity.Sagas;
 using Marten;
 
 namespace HrAgencySystem.Identity.Infrastructure.Configuration;
@@ -21,6 +22,12 @@ internal static class IdentityDocumentConfiguration
                         idx.IsUnique = true;
                     }
                 )
+                .Index(x => new { x.OrganizationId, x.UserId });
+
+            // The saga is a Marten document like any other; Wolverine only needs it to be storable.
+            options
+                .Schema.For<PasswordResetSaga>()
+                .DatabaseSchemaName(SchemaName)
                 .Index(x => new { x.OrganizationId, x.UserId });
 
             options
