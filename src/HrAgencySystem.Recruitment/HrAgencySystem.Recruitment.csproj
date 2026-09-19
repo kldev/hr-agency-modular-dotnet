@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmailTemplates\HrAgencySystem.EmailTemplates.Contracts\HrAgencySystem.EmailTemplates.Contracts.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />

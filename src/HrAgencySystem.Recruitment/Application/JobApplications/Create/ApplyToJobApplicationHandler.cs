@@ -1,3 +1,4 @@
+using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.Recruitment.Application.Candidates.Create;
 using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
@@ -11,14 +12,14 @@ using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using JasperFx.CodeGeneration.Frames;
 using Marten;
+using Wolverine;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplications.Create;
 
 public static class ApplyToJobApplicationHandler
 {
-    public static async Task<JobApplicationCreated> Handle(
+    public static async Task<(JobApplicationCreated, OutgoingMessages)> Handle(
         ApplyToJobApplication command,
         ICandidateResolver resolver,
         IJobPostQueryRepository queryRepository,
@@ -72,7 +73,23 @@ public static class ApplyToJobApplicationHandler
 
         session.Events.StartStream<JobApplication>(jobApplicationId.Value, @event);
 
-        return @event;
+        var messages = new OutgoingMessages
+        {
+            new SendJobApplicationCreated(
+                Guid.NewGuid(),
+                nameof(ApplyToJobApplicationHandler),
+                jobApplicationId.Value,
+                post.Id,
+                post.JobTitle,
+                email.Value,
+                $"{firstName.Value} {lastName.Value}",
+                phoneNumber.Value,
+                post.Recruiter.Fullname,
+                post.Recruiter.Email
+            ),
+        };
+
+        return (@event, messages);
     }
 
     private static (

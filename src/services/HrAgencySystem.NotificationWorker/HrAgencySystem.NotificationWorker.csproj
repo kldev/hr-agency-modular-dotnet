@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-HrAgencySystem.NotificationWorker-82c331c5-4f73-433a-8a24-b94021f84f00</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Npgsql" />
+    <PackageReference Include="Npgsql.DependencyInjection" />
+    <PackageReference Include="Weasel.Postgresql" />
+    <PackageReference Include="WolverineFx" />
+    <PackageReference Include="WolverineFx.RabbitMQ" />
+    <PackageReference Include="WolverineFx.RuntimeCompilation" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates.Contracts\HrAgencySystem.EmailTemplates.Contracts.csproj" />
+    <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates\HrAgencySystem.EmailTemplates.csproj" />
+    <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates.Messaging\HrAgencySystem.EmailTemplates.Messaging.csproj" />
+  </ItemGroup>
+</Project>

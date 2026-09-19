@@ -12,6 +12,7 @@
     <PackageReference Include="Marten" />
     <PackageReference Include="WolverineFx" />
     <PackageReference Include="WolverineFx.Marten" />
+    <PackageReference Include="WolverineFx.RabbitMQ" />
     <PackageReference Include="WolverineFx.RuntimeCompilation" />
   </ItemGroup>
 
@@ -25,6 +26,7 @@
     <ProjectReference Include="..\HrAgencySystem.JobDescription\HrAgencySystem.JobDescription.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />
+    <ProjectReference Include="..\EmailTemplates\HrAgencySystem.EmailTemplates.Messaging\HrAgencySystem.EmailTemplates.Messaging.csproj" />
   </ItemGroup>
 
   <ItemGroup>

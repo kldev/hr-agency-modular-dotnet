@@ -13,10 +13,21 @@
     <Project Path="src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj" />
     <Project Path="src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj" />
     <Project Path="src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj" />
-    <Project Path="src/HrAgencySystem.Web/HrAgencySystem.Web.csproj" />
     <Project Path="src\HrAgencySystem.PlatformSeeder\HrAgencySystem.PlatformSeeder.csproj" />
   </Folder>
+  <Folder Name="/src/EmailTemplates/">
+    <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.EmailTemplates.Contracts.csproj" />
+    <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates/HrAgencySystem.EmailTemplates.csproj" />
+    <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj" />
+  </Folder>
+  <Folder Name="/src/Svc/">
+    <Project Path="src/services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj" />
+  </Folder>
+  <Folder Name="/src/Web/">
+    <Project Path="src/HrAgencySystem.Web/HrAgencySystem.Web.csproj" />
+  </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/HrAgencySystem.EmailTemplates.UnitTests/HrAgencySystem.EmailTemplates.UnitTests.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.UnitTests/HrAgencySystem.UnitTests.csproj" />
   </Folder>

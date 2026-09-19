@@ -1,4 +1,5 @@
 using HrAgencySystem.Api;
+using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
 using HrAgencySystem.PlatformSeeder;
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddDataSource();
     builder.Services.SetupApplicationModules(builder.Configuration);
     builder.Services.SetupMartenForApplication(builder.Configuration);
-    builder.Host.SetupWolverineForApplication();
+    builder.Host.SetupWolverineForApplication(builder.Configuration);
     builder.Services.AddAppOpenApi();
     builder.Services.SetupAppAuthorization(builder.Configuration, builder.Environment);
     if (builder.Environment.IsDevelopment() || builder.Environment.EnvironmentName == "docker")

@@ -1,3 +1,4 @@
+using HrAgencySystem.EmailTemplates.Contracts.Sales;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.Opportunity;
 using HrAgencySystem.Sales.Services;
@@ -6,12 +7,13 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
+using Wolverine;
 
 namespace HrAgencySystem.Sales.Application.Opportunities.Create;
 
 public static class CreateOpportunityHandler
 {
-    public static async Task<OpportunityCreated> Handle(
+    public static async Task<(OpportunityCreated, OutgoingMessages)> Handle(
         CreateOpportunity command,
         ISalesService service,
         IDocumentSession session,
@@ -47,7 +49,26 @@ public static class CreateOpportunityHandler
 
         session.Events.StartStream<SalesOpportunity>(opportunityId.Value, @event);
 
-        return @event;
+        var messages = new OutgoingMessages();
+
+        // Creating an opportunity for yourself is not worth an email.
+        if (@event.Responsible.Id != command.CreatedBy)
+        {
+            messages.Add(
+                new SendOpportunityCreated(
+                    Guid.NewGuid(),
+                    nameof(CreateOpportunityHandler),
+                    @event.OpportunityId,
+                    @event.Company.Name,
+                    @event.Company.Id,
+                    @event.Responsible.Fullname,
+                    @event.Responsible.Email,
+                    @event.Title
+                )
+            );
+        }
+
+        return (@event, messages);
     }
 
     private static async Task<UserSnapshot> GetOwner(

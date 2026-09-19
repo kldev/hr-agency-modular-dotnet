@@ -23,7 +23,8 @@ public sealed record JobPostInfo(
     Guid OrganizationId,
     Guid CompanyId,
     string JobTitle,
-    JobPostStatus Status
+    JobPostStatus Status,
+    UserSnapshot Recruiter
 );
 
 public sealed record JobPostQuery(

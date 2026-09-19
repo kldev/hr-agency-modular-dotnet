@@ -124,7 +124,7 @@ public sealed class PlatformSalesSeeder(
 
         try
         {
-            var opportunity = await CreateOpportunityHandler.Handle(
+            var (opportunity, _) = await CreateOpportunityHandler.Handle(
                 command,
                 service,
                 session,

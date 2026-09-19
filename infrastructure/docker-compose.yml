@@ -65,6 +65,31 @@ services:
         MP_SMTP_AUTH_ACCEPT_ANY: 1
         MP_SMTP_AUTH_ALLOW_INSECURE: 1     
         MP_SMTP_AUTH: mailer:mailer          
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: hr-agency-api-rabbitmq
+    # Pinned: the node name is rabbit@<hostname> and the data dir is derived from it,
+    # so an auto-generated hostname would orphan the volume on every recreate.
+    hostname: hr-agency-api-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RabbitMqUser}
+      RABBITMQ_DEFAULT_PASS: ${RabbitMqPassword}
+      # Must match RabbitMq:VHost used by the API (amqp://.../development).
+      RABBITMQ_DEFAULT_VHOST: development
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: "30s"
+    networks:
+      - inner-cluster-communication
   webapi:
     build:
       context: ../
@@ -82,6 +107,11 @@ services:
       RustFs__AccessKey: ${RustFsAccessKey}
       RustFs__SecretKey: ${RustFsSecretKey}
       Application__FeedUrl: "http://localhost:8080"
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: ${RabbitMqUser}
+      RabbitMq__Password: ${RabbitMqPassword}
+      RabbitMq__VHost: "/development"
+      RabbitMq__MailExchange: "x.emails"      
       Cors: ${Cors}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
@@ -95,6 +125,8 @@ services:
     depends_on:      
       postgres:
         condition: service_healthy   
+      rabbitmq:
+        condition: service_healthy
   feeds-worker:
     build:
       context: ../
@@ -147,3 +179,4 @@ volumes:
   postgres_data:
   files_data:
   mailpit:
+  rabbitmq_data:

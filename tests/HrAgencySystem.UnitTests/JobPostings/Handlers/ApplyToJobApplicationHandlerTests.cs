@@ -13,6 +13,7 @@ using HrAgencySystem.SharedKernel.Time;
 using Marten;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Wolverine;
 
 namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
@@ -35,6 +36,13 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     private static readonly Guid EventId = Guid.NewGuid();
 
     private static readonly DateTimeOffset Now = new(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
+
+    private static readonly UserSnapshot Recruiter = new(
+        Guid.NewGuid(),
+        "Dana",
+        "Scully",
+        "dana.scully@fbi.gov"
+    );
 
     [Fact]
     public async Task Handle_WithValidCommand_ReturnsJobApplicationCreated()
@@ -210,6 +218,15 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
         IClock? clock = null
     )
     {
+        var (@event, _) = await HandleWithMessages(command, clock);
+        return @event;
+    }
+
+    private async Task<(JobApplicationCreated, OutgoingMessages)> HandleWithMessages(
+        ApplyToJobApplication command,
+        IClock? clock = null
+    )
+    {
         return await ApplyToJobApplicationHandler.Handle(
             command,
             _candidateResolver,
@@ -290,7 +307,8 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             OrganizationId,
             CompanyId,
             "Senior .NET Developer",
-            status
+            status,
+            Recruiter
         );
     }
 
