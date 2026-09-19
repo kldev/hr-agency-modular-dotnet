@@ -10,7 +10,7 @@ internal static class MapJobPosts
     internal static void Map(this RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/suggestion/job-posts", Handler)
+            .MapGet(ApiEndpoints.Suggestions.JobPosts, Handler)
             .Produces<IReadOnlyList<JobPostSuggestion>>()
             .WithName("Get job post suggestions")
             .WithSummary("Get top 25 job posts")

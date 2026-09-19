@@ -10,7 +10,7 @@ internal static class MapCompanyContacts
     internal static void Map(this RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/suggestion/company-contacts", Handler)
+            .MapGet(ApiEndpoints.Suggestions.CompanyContacts, Handler)
             .WithSummary("Get top 25 contacts")
             .WithName("Get company-contacts suggestions")
             .Produces<IReadOnlyList<CompanyContact>>()

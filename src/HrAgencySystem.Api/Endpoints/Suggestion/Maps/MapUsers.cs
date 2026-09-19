@@ -11,7 +11,7 @@ internal static class MapUsers
     internal static void Map(this RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/suggestion/users", Handler)
+            .MapGet(ApiEndpoints.Suggestions.Users, Handler)
             .Produces<IReadOnlyList<UserSuggestion>>()
             .WithSummary("Get top 25 users")
             .WithName("Get users suggestions")

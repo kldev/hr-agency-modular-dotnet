@@ -10,7 +10,7 @@ internal static class MapCompany
     internal static void Map(this RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/suggestion/companies/{companyId:guid}", Handler)
+            .MapGet(ApiEndpoints.Suggestions.Company, Handler)
             .Produces<CompanySuggestion>()
             .WithName("Get company suggestion")
             .WithSummary("Get a single company suggestion by id")

@@ -10,7 +10,7 @@ internal static class MapTags
     internal static void Map(this RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/suggestion/tags", Handler)
+            .MapGet(ApiEndpoints.Suggestions.Tags, Handler)
             .Produces<IReadOnlyList<Tag>>()
             .WithSummary("Get tags (limit 25)")
             .WithName("Get tags suggestions")
