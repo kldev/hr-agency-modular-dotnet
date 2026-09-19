@@ -1,0 +1,15 @@
+{
+   "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+   "tasks": [
+      {
+         "name": "format",
+         "group": "pre-commit",
+         "command": "bash",
+         "args": [ "format.sh" ],
+         "windows": {
+            "command": "dotnet",
+            "args": ["csharpier", "format", "." ]
+         }
+      }
+   ]
+}
