@@ -36,7 +36,7 @@ public sealed class AssignJobDescriptionRecruiterHandlerTests
         );
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(
-            new OrganizationId(organizationId)
+            OrganizationId.From(organizationId)
         );
         ;
 

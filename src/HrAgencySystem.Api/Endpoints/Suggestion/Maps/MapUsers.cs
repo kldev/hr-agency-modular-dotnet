@@ -27,7 +27,7 @@ internal static class MapUsers
     )
     {
         var result = await repository.GetUserSuggestions(
-            user.OrganizationId,
+            user.GetOrganization,
             search ?? "",
             roles,
             ct

@@ -1,6 +1,7 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.SharedKernel.Tenant;
 using Marten;
 
 namespace HrAgencySystem.Identity.Infrastructure.Query;
@@ -8,7 +9,7 @@ namespace HrAgencySystem.Identity.Infrastructure.Query;
 public sealed class UserSuggestionRepository(IDocumentSession session) : IUserSuggestionRepository
 {
     public async Task<IReadOnlyList<UserSuggestion>> GetUserSuggestions(
-        Guid organizationId,
+        OrganizationId organizationId,
         string search,
         IReadOnlyList<OrganizationRole> roles,
         CancellationToken ct
@@ -28,7 +29,7 @@ public sealed class UserSuggestionRepository(IDocumentSession session) : IUserSu
     // No role filter here on purpose: the picker has to be able to show a user that is already
     // stored on an aggregate, even when their role changed in the meantime.
     public async Task<UserSuggestion?> GetUserSuggestion(
-        Guid organizationId,
+        OrganizationId organizationId,
         Guid userId,
         CancellationToken ct
     )

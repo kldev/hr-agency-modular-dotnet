@@ -16,7 +16,7 @@ public sealed class JobPost
 
     public static JobPost WithOrganization(Guid organizationId)
     {
-        var post = new JobPost { OrganizationId = new OrganizationId(organizationId) };
+        var post = new JobPost { OrganizationId = OrganizationId.From(organizationId) };
         return post;
     }
 

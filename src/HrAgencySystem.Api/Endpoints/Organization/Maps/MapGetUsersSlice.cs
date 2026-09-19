@@ -3,6 +3,7 @@ using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Web;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,7 @@ internal static class MapGetUsersSlice
     )
     {
         var result = await repository.GetUsersOwner(
-            organizationId,
+            OrganizationId.From(organizationId),
             search ?? "",
             roles ?? [],
             page,

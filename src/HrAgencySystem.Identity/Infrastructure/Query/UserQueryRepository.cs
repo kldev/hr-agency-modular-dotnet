@@ -1,6 +1,7 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Web;
 using Marten;
 
@@ -9,7 +10,7 @@ namespace HrAgencySystem.Identity.Infrastructure.Query;
 public class UserQueryRepository(IDocumentSession session) : IUserQueryRepository
 {
     public async Task<SliceResponse<UserProjection>> GetUsers(
-        Guid organizationId,
+        OrganizationId organizationId,
         string search,
         IReadOnlyList<OrganizationRole> roles,
         int page,
@@ -29,7 +30,7 @@ public class UserQueryRepository(IDocumentSession session) : IUserQueryRepositor
     }
 
     public async Task<UserProjection?> GetUser(
-        Guid organizationId,
+        OrganizationId organizationId,
         Guid userId,
         CancellationToken ct
     )
@@ -43,7 +44,7 @@ public class UserQueryRepository(IDocumentSession session) : IUserQueryRepositor
     }
 
     public async Task<SliceResponse<UserProjection>> GetUsersOwner(
-        Guid? organizationId,
+        OrganizationId? organizationId,
         string search,
         IReadOnlyList<OrganizationRole> roles,
         int page,

@@ -20,7 +20,8 @@ public record AppUserAuthenticated(
     }
 
     [JsonIgnore]
-    public OrganizationId GetOrganization => new(OrganizationId);
+    public OrganizationId GetOrganization =>
+        SharedKernel.Tenant.OrganizationId.From(OrganizationId);
 }
 
 public sealed record OwnerAuthenticated(Guid Id, string Email, PlatformRole Role)

@@ -32,12 +32,12 @@ public class OrganizationSlugReservationRepository(IDocumentSession session)
 
     public async Task<OrganizationId?> FindBySlug(OrganizationSlug slug, CancellationToken ct)
     {
-        var organizationId = await session
+        Guid? organizationId = await session
             .Query<OrganizationSlugReservation>()
             .Where(z => z.Slug == slug.Value)
             .Select(z => z.OrganizationId)
             .FirstOrDefaultAsync(ct);
 
-        return organizationId == Guid.Empty ? null : new OrganizationId(organizationId);
+        return OrganizationId.From(organizationId);
     }
 }

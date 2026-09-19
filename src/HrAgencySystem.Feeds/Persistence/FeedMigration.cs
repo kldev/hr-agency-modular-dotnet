@@ -14,9 +14,9 @@ public sealed class FeedMigration(NpgsqlDataSource ds) : ISeeder
         await table.MigrateAsync(conn);
     }
 
-    private static Weasel.Postgresql.Tables.Table GetFeedTable()
+    private static Table GetFeedTable()
     {
-        var table = new Weasel.Postgresql.Tables.Table("jobs.job_feed_tasks");
+        var table = new Table("jobs.job_feed_tasks");
         table.AddColumn<Guid>("id").AsPrimaryKey();
         table.AddColumn<Guid>("organization_id");
         var status = new TableColumn("status", "varchar(40)") { AllowNulls = false };

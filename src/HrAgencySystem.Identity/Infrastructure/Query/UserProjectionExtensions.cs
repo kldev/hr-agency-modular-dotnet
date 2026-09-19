@@ -1,6 +1,6 @@
 using HrAgencySystem.Identity.Domain;
 using HrAgencySystem.Identity.Projections;
-using HrAgencySystem.SharedKernel.Extensions;
+using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Identity.Infrastructure.Query;
 
@@ -8,15 +8,15 @@ internal static class UserProjectionExtensions
 {
     internal static IQueryable<UserProjection> WithOrganizationId(
         this IQueryable<UserProjection> query,
-        Guid organizationId
+        OrganizationId organizationId
     )
     {
-        return query.Where(u => u.OrganizationId == organizationId);
+        return query.Where(u => u.OrganizationId == organizationId.Value);
     }
 
     internal static IQueryable<UserProjection> WithOptionalOrganizationId(
         this IQueryable<UserProjection> query,
-        Guid? organizationId
+        OrganizationId? organizationId
     )
     {
         return organizationId.IsInvalid()

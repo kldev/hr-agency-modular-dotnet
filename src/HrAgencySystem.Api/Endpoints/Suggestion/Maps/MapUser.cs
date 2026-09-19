@@ -2,6 +2,7 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Api.Endpoints.Suggestion.Maps;
 
@@ -24,7 +25,7 @@ internal static class MapUser
         CancellationToken ct
     )
     {
-        var result = await repository.GetUserSuggestion(user.OrganizationId, userId, ct);
+        var result = await repository.GetUserSuggestion(user.GetOrganization, userId, ct);
 
         if (result is null)
             throw new NotFoundException("User", userId);

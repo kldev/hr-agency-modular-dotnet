@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.Extensions;
+
 namespace HrAgencySystem.Identity.Domain.ValueObjects;
 
 public sealed record UserId
@@ -13,5 +15,11 @@ public sealed record UserId
 
     public static UserId From(Guid value) => new(value);
 
+    public static UserId? From(Guid? value) => value.IsInvalid() ? null : From(value!.Value);
+
     public override string ToString() => Value.ToString();
+
+    public static implicit operator Guid(UserId id) => id.Value;
+
+    public static implicit operator Guid?(UserId? id) => id?.Value;
 }

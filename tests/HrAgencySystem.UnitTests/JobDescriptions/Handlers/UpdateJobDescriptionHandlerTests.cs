@@ -41,7 +41,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
         );
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(
-            new OrganizationId(command.OrganizationId)
+            OrganizationId.From(command.OrganizationId)
         );
 
         var clock = new FixedClock(now);
@@ -435,7 +435,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
         );
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(
-            new OrganizationId(command.OrganizationId)
+            OrganizationId.From(command.OrganizationId)
         );
 
         _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
@@ -466,7 +466,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
         );
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(
-            new OrganizationId(command.OrganizationId)
+            OrganizationId.From(command.OrganizationId)
         );
 
         _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(ModifiedBy);
@@ -493,7 +493,7 @@ public class UpdateJobDescriptionHandlerTests : BaseTest
         var command = CreateValidCommand();
 
         var aggregate = D.JobDescription.EmptyWithOrganizationId(
-            new OrganizationId(command.OrganizationId)
+            OrganizationId.From(command.OrganizationId)
         );
 
         var clock = new FixedClock(now);

@@ -1,6 +1,6 @@
 namespace HrAgencySystem.Organization.Infrastructure.Persistence;
 
-public class OrganizationSlugReservation
+public sealed class OrganizationSlugReservation
 {
     public Guid Id { get; init; }
 
