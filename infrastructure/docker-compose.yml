@@ -113,6 +113,8 @@ services:
       RustFs__AccessKey: ${RustFsAccessKey}
       RustFs__SecretKey: ${RustFsSecretKey}
       Application__FeedUrl: "http://localhost:8080"
+      # Base of the reset password link that goes out in a mail - must point at the front, not the api.
+      Application__PortalUrl: "http://localhost:8080"
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: ${RabbitMqUser}
       RabbitMq__Password: ${RabbitMqPassword}

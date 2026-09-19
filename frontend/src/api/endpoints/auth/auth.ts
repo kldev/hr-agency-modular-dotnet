@@ -33,11 +33,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	AppUserAuthenticated,
 	BadRequestDetails,
+	CompletePasswordResetRequest,
 	LoginOwner,
 	LoginUser,
 	LoginUserResult,
 	OwnerAuthenticated,
 	ProblemDetails,
+	RequestPasswordResetRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
 import { customInstance } from "../../mutator.ts";
@@ -187,6 +189,284 @@ export function useLoginOrganizationUser<
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 	const queryOptions = getLoginOrganizationUserQueryOptions(loginUser, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Request a password reset link
+ */
+export const requestPasswordReset = (
+	requestPasswordResetRequest: BodyType<RequestPasswordResetRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<unknown>(
+		{
+			url: `/api/auth/password-reset`,
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			data: requestPasswordResetRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getRequestPasswordResetQueryKey = (
+	requestPasswordResetRequest?: BodyType<RequestPasswordResetRequest>,
+) => {
+	return ["POST", `/api/auth/password-reset`, requestPasswordResetRequest] as const;
+};
+
+export const getRequestPasswordResetQueryOptions = <
+	TData = Awaited<ReturnType<typeof requestPasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	requestPasswordResetRequest: BodyType<RequestPasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof requestPasswordReset>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getRequestPasswordResetQueryKey(requestPasswordResetRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof requestPasswordReset>>> = ({ signal }) =>
+		requestPasswordReset(requestPasswordResetRequest, requestOptions, signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof requestPasswordReset>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type RequestPasswordResetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof requestPasswordReset>>
+>;
+export type RequestPasswordResetQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useRequestPasswordReset<
+	TData = Awaited<ReturnType<typeof requestPasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	requestPasswordResetRequest: BodyType<RequestPasswordResetRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof requestPasswordReset>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof requestPasswordReset>>,
+					TError,
+					Awaited<ReturnType<typeof requestPasswordReset>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRequestPasswordReset<
+	TData = Awaited<ReturnType<typeof requestPasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	requestPasswordResetRequest: BodyType<RequestPasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof requestPasswordReset>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof requestPasswordReset>>,
+					TError,
+					Awaited<ReturnType<typeof requestPasswordReset>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRequestPasswordReset<
+	TData = Awaited<ReturnType<typeof requestPasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	requestPasswordResetRequest: BodyType<RequestPasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof requestPasswordReset>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Request a password reset link
+ */
+
+export function useRequestPasswordReset<
+	TData = Awaited<ReturnType<typeof requestPasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	requestPasswordResetRequest: BodyType<RequestPasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof requestPasswordReset>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getRequestPasswordResetQueryOptions(requestPasswordResetRequest, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Set a new password from a reset link
+ */
+export const completePasswordReset = (
+	completePasswordResetRequest: BodyType<CompletePasswordResetRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<unknown>(
+		{
+			url: `/api/auth/password-reset/confirm`,
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			data: completePasswordResetRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getCompletePasswordResetQueryKey = (
+	completePasswordResetRequest?: BodyType<CompletePasswordResetRequest>,
+) => {
+	return ["POST", `/api/auth/password-reset/confirm`, completePasswordResetRequest] as const;
+};
+
+export const getCompletePasswordResetQueryOptions = <
+	TData = Awaited<ReturnType<typeof completePasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	completePasswordResetRequest: BodyType<CompletePasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completePasswordReset>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getCompletePasswordResetQueryKey(completePasswordResetRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof completePasswordReset>>> = ({ signal }) =>
+		completePasswordReset(completePasswordResetRequest, requestOptions, signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof completePasswordReset>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type CompletePasswordResetQueryResult = NonNullable<
+	Awaited<ReturnType<typeof completePasswordReset>>
+>;
+export type CompletePasswordResetQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useCompletePasswordReset<
+	TData = Awaited<ReturnType<typeof completePasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	completePasswordResetRequest: BodyType<CompletePasswordResetRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completePasswordReset>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof completePasswordReset>>,
+					TError,
+					Awaited<ReturnType<typeof completePasswordReset>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCompletePasswordReset<
+	TData = Awaited<ReturnType<typeof completePasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	completePasswordResetRequest: BodyType<CompletePasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completePasswordReset>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof completePasswordReset>>,
+					TError,
+					Awaited<ReturnType<typeof completePasswordReset>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCompletePasswordReset<
+	TData = Awaited<ReturnType<typeof completePasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	completePasswordResetRequest: BodyType<CompletePasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completePasswordReset>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Set a new password from a reset link
+ */
+
+export function useCompletePasswordReset<
+	TData = Awaited<ReturnType<typeof completePasswordReset>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	completePasswordResetRequest: BodyType<CompletePasswordResetRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completePasswordReset>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getCompletePasswordResetQueryOptions(completePasswordResetRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;

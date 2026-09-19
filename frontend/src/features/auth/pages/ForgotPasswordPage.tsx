@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, CheckCircle2, Mail, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { requestPasswordReset } from "@/api/endpoints";
 import { AuthLayout } from "../layout";
+import { readApiError } from "../readApiError";
 
 const ForgotPasswordPage: React.FC = () => {
 	const [email, setEmail] = useState("");
@@ -22,12 +24,13 @@ const ForgotPasswordPage: React.FC = () => {
 		setIsLoading(true);
 
 		try {
-			// Replace with real password reset API.
-			await new Promise((resolve) => setTimeout(resolve, 700));
+			await requestPasswordReset({ email: email, slug: "" });
 
+			// The same confirmation whatever the answer was: the API does not say whether the
+			// address has an account here, and neither does this screen.
 			setSubmitted(true);
-		} catch {
-			setError("Unable to process your request. Please try again.");
+		} catch (error) {
+			setError(readApiError(error, "Unable to process your request. Please try again."));
 		} finally {
 			setIsLoading(false);
 		}

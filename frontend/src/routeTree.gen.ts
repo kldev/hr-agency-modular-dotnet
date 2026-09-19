@@ -15,6 +15,7 @@ import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as AppRouteRouteImport } from './routes/app/route'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
@@ -76,6 +77,11 @@ const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -247,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/404': typeof R404Route
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/404': typeof R404Route
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
@@ -326,6 +334,7 @@ export interface FileRoutesById {
   '/404': typeof R404Route
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
@@ -368,6 +377,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
@@ -406,6 +416,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
@@ -446,6 +457,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/forgot-password'
     | '/login'
+    | '/reset-password'
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
@@ -487,6 +499,7 @@ export interface RootRouteChildren {
   R404Route: typeof R404Route
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ApiSplatRoute: typeof ApiSplatRoute
   ApiHealthzRoute: typeof ApiHealthzRoute
   OwnerIndexRoute: typeof OwnerIndexRoute
@@ -534,6 +547,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -848,6 +868,7 @@ const rootRouteChildren: RootRouteChildren = {
   R404Route: R404Route,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ApiSplatRoute: ApiSplatRoute,
   ApiHealthzRoute: ApiHealthzRoute,
   OwnerIndexRoute: OwnerIndexRoute,
