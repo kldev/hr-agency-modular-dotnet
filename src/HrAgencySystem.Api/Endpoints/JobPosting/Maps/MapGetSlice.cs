@@ -35,7 +35,7 @@ internal static class MapGetSlice
         CancellationToken ct = default
     )
     {
-        var appUrl = config.Value.FedUrl;
+        var appUrl = config.Value.FeedUrl;
 
         var query = new JobPostQuery(
             search ?? "",

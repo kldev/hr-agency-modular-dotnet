@@ -39,7 +39,7 @@ internal static class MapGet
         return TypedResults.Ok(
             result with
             {
-                PostingSlug = $"{config.Value}/{result.PostingSlug}",
+                PostingSlug = $"{config.Value.FeedUrl}/{result.PostingSlug}",
             }
         );
     }
