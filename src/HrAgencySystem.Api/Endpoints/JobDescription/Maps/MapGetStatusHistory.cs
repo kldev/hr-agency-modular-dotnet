@@ -10,7 +10,7 @@ internal static class MapGetStatusHistory
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/job-description/status", Handler)
+            .MapGet(ApiEndpoints.JobDescriptions.StatusHistory, Handler)
             .Produces<IReadOnlyList<JdStatusChangeHistory>>()
             .ProducesStandardErrors()
             .WithSummary("Get statuses history")

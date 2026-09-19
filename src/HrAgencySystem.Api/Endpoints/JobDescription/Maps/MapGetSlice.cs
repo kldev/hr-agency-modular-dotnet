@@ -12,7 +12,7 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/job-description", Handler)
+            .MapGet(ApiEndpoints.JobDescriptions.Slice, Handler)
             .ProducesStandardErrors()
             .Produces<SliceResponse<JobDescriptionProjection>>()
             .WithSummary("Get job descriptions")

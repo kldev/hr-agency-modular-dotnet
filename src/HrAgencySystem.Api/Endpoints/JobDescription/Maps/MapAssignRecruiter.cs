@@ -12,7 +12,7 @@ internal static class MapAssignRecruiter
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("/api/job-description/{jobDescriptionId:guid}/assign-recruiter", Handler)
+            .MapPut(ApiEndpoints.JobDescriptions.AssignRecruiter, Handler)
             .Produces<JobDescriptionRecruiterAssigned>()
             .ProducesStandardErrors()
             .WithSummary("Assign recruiter")

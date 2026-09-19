@@ -11,7 +11,7 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/job-description/{jobDescriptionId:guid}", Handler)
+            .MapGet(ApiEndpoints.JobDescriptions.Get, Handler)
             .Produces<JobDescriptionProjection>()
             .ProducesStandardErrors()
             .WithSummary("Get job description")

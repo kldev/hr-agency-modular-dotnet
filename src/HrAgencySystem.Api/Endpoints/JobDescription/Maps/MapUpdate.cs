@@ -12,7 +12,7 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("/api/job-description/{jobDescriptionId}", Handler)
+            .MapPut(ApiEndpoints.JobDescriptions.Update, Handler)
             .ProducesStandardErrors()
             .Produces<JobDescriptionUpdated>()
             .WithSummary("Update job description")

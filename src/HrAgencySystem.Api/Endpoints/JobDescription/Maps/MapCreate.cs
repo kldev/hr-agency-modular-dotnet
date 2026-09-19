@@ -12,7 +12,7 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPost("/api/job-description", Handler)
+            .MapPost(ApiEndpoints.JobDescriptions.Create, Handler)
             .Produces<JobDescriptionCreated>()
             .ProducesStandardErrors()
             .WithSummary("Create job description")

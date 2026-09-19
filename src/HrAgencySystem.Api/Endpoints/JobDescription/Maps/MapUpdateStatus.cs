@@ -11,7 +11,7 @@ internal static class MapUpdateStatus
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("/api/job-description/{jobDescriptionId:guid}/{status}", Handler)
+            .MapPut(ApiEndpoints.JobDescriptions.UpdateStatus, Handler)
             .Produces<UpdateJobDescriptionStatusResult>()
             .ProducesStandardErrors()
             .WithSummary("Update status")
