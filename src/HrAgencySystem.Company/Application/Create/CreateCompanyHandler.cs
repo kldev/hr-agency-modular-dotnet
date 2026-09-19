@@ -6,6 +6,7 @@ using HrAgencySystem.Company.Domain.ValueObjects;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.Company.Services;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Factories;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;

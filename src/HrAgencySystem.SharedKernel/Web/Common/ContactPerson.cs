@@ -1,3 +1,5 @@
+using HrAgencySystem.SharedKernel.ValueObjects;
+
 namespace HrAgencySystem.SharedKernel.Web.Common;
 
 public sealed record ContactPerson(
@@ -9,4 +11,18 @@ public sealed record ContactPerson(
 )
 {
     public string Fullname { get; } = $"{FirstName} {LastName}".Trim();
+}
+
+public sealed record ContactPersonValueObject(
+    Email Email,
+    FirstName FirstName,
+    LastName LastName,
+    PersonJobTitle JobTitle,
+    PersonPhone Phone
+)
+{
+    public string Fullname { get; } = $"{FirstName} {LastName}".Trim();
+
+    public ContactPerson ToContact() =>
+        new(Email.Value, FirstName.Value, LastName.Value, JobTitle.Value, Phone.Value);
 };

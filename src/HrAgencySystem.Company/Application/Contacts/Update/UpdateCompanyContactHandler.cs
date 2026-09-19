@@ -3,6 +3,7 @@ using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Documents;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Factories;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine;
 

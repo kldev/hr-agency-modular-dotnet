@@ -1,6 +1,6 @@
 using HrAgencySystem.SharedKernel.Web.Common;
 
-namespace HrAgencySystem.Company.Application.Contacts.Create;
+namespace HrAgencySystem.SharedKernel.Factories;
 
 public interface IContactData
 {

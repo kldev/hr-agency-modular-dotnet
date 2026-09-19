@@ -1,6 +1,7 @@
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Documents;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Factories;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 

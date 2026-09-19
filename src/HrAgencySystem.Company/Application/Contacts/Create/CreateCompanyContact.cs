@@ -1,4 +1,5 @@
 using HrAgencySystem.SharedKernel.Commands;
+using HrAgencySystem.SharedKernel.Factories;
 using HrAgencySystem.SharedKernel.Web.Common;
 
 namespace HrAgencySystem.Company.Application.Contacts.Create;
