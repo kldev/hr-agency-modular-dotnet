@@ -3,14 +3,16 @@ using System.Security.Claims;
 using System.Text;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Projections;
+using HrAgencySystem.SharedKernel.Time;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HrAgencySystem.Identity.Infrastructure.IAM;
 
-public sealed class JwtTokenService(IOptions<JwtConfig> configuration) : IJwtTokenService
+public sealed class JwtTokenService(IOptions<JwtConfig> configuration, IClock clock)
+    : IJwtTokenService
 {
-    public string GenerateUserToken(UserProjection user)
+    public AccessToken GenerateUserToken(UserProjection user)
     {
         Claim[] claims =
         [
@@ -24,7 +26,7 @@ public sealed class JwtTokenService(IOptions<JwtConfig> configuration) : IJwtTok
         return CreateToken(claims);
     }
 
-    public string GenerateOwnerToken(OwnerProjection owner)
+    public AccessToken GenerateOwnerToken(OwnerProjection owner)
     {
         Claim[] claims =
         [
@@ -36,21 +38,22 @@ public sealed class JwtTokenService(IOptions<JwtConfig> configuration) : IJwtTok
         return CreateToken(claims);
     }
 
-    private string CreateToken(Claim[] claims)
+    private AccessToken CreateToken(Claim[] claims)
     {
         var config = configuration.Value;
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.SecretKey));
 
-        var expires = DateTime.UtcNow.AddHours(6);
+        var expires = clock.UtcNow.AddHours(config.ExpiresInHours);
         var token = new JwtSecurityToken(
             issuer: config.Issuer,
             audience: config.Audience,
             claims: claims,
-            expires: expires,
+            expires: expires.UtcDateTime,
             signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
         );
 
         var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
-        return tokenValue;
+
+        return new AccessToken(tokenValue, expires);
     }
 }

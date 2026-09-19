@@ -27,7 +27,7 @@ public static class LoginOwnerHandler
 
         var token = tokenService.GenerateOwnerToken(user);
 
-        return new LoginOwnerResult(token);
+        return new LoginOwnerResult(token.Value);
     }
 
     private static void ValidatePassword(

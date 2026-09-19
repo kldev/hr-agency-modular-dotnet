@@ -23,6 +23,9 @@ public class ChangeUserPasswordHandlerTests : BaseTest
     private readonly IUserEmailReservationRepository _emailReservationRepository =
         Substitute.For<IUserEmailReservationRepository>();
 
+    private readonly IRefreshTokenRepository _refreshTokens =
+        Substitute.For<IRefreshTokenRepository>();
+
     private readonly IPasswordHasher _hasher = Substitute.For<IPasswordHasher>();
 
     private const string CurrentHash = "current-hash";
@@ -52,6 +55,7 @@ public class ChangeUserPasswordHandlerTests : BaseTest
             aggregate,
             _service,
             _emailReservationRepository,
+            _refreshTokens,
             _hasher,
             new FixedClock(now),
             CancellationToken.None
@@ -73,6 +77,27 @@ public class ChangeUserPasswordHandlerTests : BaseTest
                 Arg.Is<OrganizationId>(z => z.Value == OrganizationGuid),
                 Arg.Is<UserId>(z => z.Value == UserGuid),
                 NewHash,
+                Arg.Any<CancellationToken>()
+            );
+    }
+
+    [Fact]
+    public async Task Handle_WithValidCommand_EndsEveryOpenSession()
+    {
+        var command = Command();
+
+        MatchCurrentPassword();
+        _hasher.Hash(command.NewPassword).Returns(NewHash);
+        _service.GetUserAsync(UserGuid, Arg.Any<CancellationToken>()).Returns(Owner);
+
+        await HandleCommand(command);
+
+        // a refresh token taken together with the old password must not outlive it
+        await _refreshTokens
+            .Received(1)
+            .RevokeUserSessionsAsync(
+                Arg.Is<OrganizationId>(z => z.Value == OrganizationGuid),
+                Arg.Is<UserId>(z => z.Value == UserGuid),
                 Arg.Any<CancellationToken>()
             );
     }
@@ -198,6 +223,7 @@ public class ChangeUserPasswordHandlerTests : BaseTest
             aggregate ?? Aggregate(),
             _service,
             _emailReservationRepository,
+            _refreshTokens,
             _hasher,
             TestClock,
             CancellationToken.None

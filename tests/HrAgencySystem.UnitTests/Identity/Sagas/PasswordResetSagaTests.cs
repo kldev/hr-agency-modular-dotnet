@@ -18,6 +18,9 @@ public sealed class PasswordResetSagaTests
     private readonly IUserEmailReservationRepository _reservations =
         Substitute.For<IUserEmailReservationRepository>();
 
+    private readonly IRefreshTokenRepository _refreshTokens =
+        Substitute.For<IRefreshTokenRepository>();
+
     private readonly IPasswordHasher _hasher = Substitute.For<IPasswordHasher>();
 
     private readonly IDocumentSession _session = Substitute.For<IDocumentSession>();
@@ -81,6 +84,15 @@ public sealed class PasswordResetSagaTests
                 Arg.Any<CancellationToken>()
             );
 
+        // whoever forced the reset is the reason for it, so the sessions opened before it die too
+        await _refreshTokens
+            .Received(1)
+            .RevokeUserSessionsAsync(
+                OrganizationId.From(OrganizationGuid),
+                UserIdentity.From(UserGuid),
+                Arg.Any<CancellationToken>()
+            );
+
         Assert.True(saga.IsCompleted());
     }
 
@@ -113,8 +125,9 @@ public sealed class PasswordResetSagaTests
         await NothingChanged();
     }
 
-    private Task NothingChanged() =>
-        _reservations
+    private async Task NothingChanged()
+    {
+        await _reservations
             .DidNotReceive()
             .ChangePasswordAsync(
                 Arg.Any<OrganizationId>(),
@@ -122,6 +135,15 @@ public sealed class PasswordResetSagaTests
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>()
             );
+
+        await _refreshTokens
+            .DidNotReceive()
+            .RevokeUserSessionsAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<UserIdentity>(),
+                Arg.Any<CancellationToken>()
+            );
+    }
 
     private Task Handle(
         PasswordResetSaga saga,
@@ -132,6 +154,7 @@ public sealed class PasswordResetSagaTests
             message,
             _identity,
             _reservations,
+            _refreshTokens,
             _hasher,
             _session,
             clock ?? new FixedClock(Now),

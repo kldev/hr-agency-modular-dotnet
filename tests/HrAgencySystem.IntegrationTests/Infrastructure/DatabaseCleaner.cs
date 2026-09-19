@@ -30,6 +30,11 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<UserEmailReservation>("identity");
     }
 
+    public async Task CleanRefreshTokens()
+    {
+        await CleanTable<RefreshToken>("identity");
+    }
+
     public async Task CleanUsers()
     {
         await CleanTable<UserEmailReservation>("identity");

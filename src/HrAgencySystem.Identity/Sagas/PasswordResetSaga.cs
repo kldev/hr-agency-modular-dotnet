@@ -1,9 +1,8 @@
-using System.Security.Cryptography;
-using System.Text;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.Identity.Application.Policy;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Events;
+using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
@@ -72,6 +71,7 @@ public sealed class PasswordResetSaga : Saga
         CompletePasswordReset message,
         IIdentityService identity,
         IUserEmailReservationRepository reservations,
+        IRefreshTokenRepository refreshTokens,
         IPasswordHasher hasher,
         IDocumentSession session,
         IClock clock,
@@ -94,6 +94,14 @@ public sealed class PasswordResetSaga : Saga
             ct
         );
 
+        // Whoever forced this reset is the reason the password is being changed, so every session
+        // opened before it dies with it - the old refresh tokens would outlive the password by weeks.
+        await refreshTokens.RevokeUserSessionsAsync(
+            OrganizationIdentity.From(OrganizationId),
+            UserIdentity.From(UserId),
+            ct
+        );
+
         var user = await identity.GetUserAsync(UserId, ct);
 
         session.Events.Append(
@@ -104,6 +112,5 @@ public sealed class PasswordResetSaga : Saga
         MarkCompleted();
     }
 
-    public static string Hash(string token) =>
-        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token))).ToLowerInvariant();
+    public static string Hash(string token) => SecureToken.Hash(token);
 }

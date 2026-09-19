@@ -1,10 +1,13 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain.ValueObjects;
+using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Services;
+using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace HrAgencySystem.Identity.Application.Users.Login;
 
@@ -17,6 +20,9 @@ public static class LoginUserHandler
         IAccountRepository repository,
         IJwtTokenService tokenService,
         IQueryOrganizationRepository queryOrganizationRepository,
+        IRefreshTokenRepository refreshTokens,
+        IOptions<JwtConfig> jwt,
+        IClock clock,
         CancellationToken ct
     )
     {
@@ -33,9 +39,25 @@ public static class LoginUserHandler
 
         var user = await repository.GetUser(UserId.From(reservation.UserId), ct);
 
-        var token = tokenService.GenerateUserToken(user);
+        var access = tokenService.GenerateUserToken(user);
 
-        return new LoginUserResult(token);
+        // A login opens a new family; nothing here touches the families of other devices, so signing
+        // in on a second machine does not knock the first one out.
+        var (refreshToken, refreshValue) = RefreshToken.Issue(
+            user.Id,
+            user.OrganizationId,
+            clock,
+            jwt.Value.RefreshTokenExpiresInDays
+        );
+
+        await refreshTokens.IssueAsync(refreshToken, ct);
+
+        return new LoginUserResult(
+            access.Value,
+            refreshValue,
+            access.ExpiresAt,
+            refreshToken.ExpiresAt
+        );
     }
 
     private static void ValidatePassword(

@@ -21,6 +21,7 @@ public static class ChangeUserPasswordHandler
         User aggregate,
         IIdentityService service,
         IUserEmailReservationRepository repository,
+        IRefreshTokenRepository refreshTokens,
         IPasswordHasher hasher,
         IClock clock,
         CancellationToken ct
@@ -44,6 +45,10 @@ public static class ChangeUserPasswordHandler
             passwordHash,
             ct
         );
+
+        // A new password has to end the old sessions, otherwise a refresh token taken together with
+        // the old password keeps working for the rest of its thirty days.
+        await refreshTokens.RevokeUserSessionsAsync(aggregate.OrganizationId, aggregate.Id, ct);
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 

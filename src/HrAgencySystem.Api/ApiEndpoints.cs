@@ -10,6 +10,8 @@ internal static class ApiEndpoints
     internal static class Auth
     {
         public const string Login = $"{Base}/auth/login";
+        public const string Refresh = $"{Base}/auth/refresh";
+        public const string Logout = $"{Base}/auth/logout";
         public const string RequestPasswordReset = $"{Base}/auth/password-reset";
         public const string CompletePasswordReset = $"{Base}/auth/password-reset/confirm";
         public const string Current = $"{Base}/user/me";

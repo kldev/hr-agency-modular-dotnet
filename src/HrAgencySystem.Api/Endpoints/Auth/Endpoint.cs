@@ -8,6 +8,8 @@ internal static class Endpoint
     {
         var group = endpoints.MapGroup("").WithTags("Auth");
         MapLoginUser.Map(group);
+        MapRefreshToken.Map(group);
+        MapLogout.Map(group);
         MapRequestPasswordReset.Map(group);
         MapCompletePasswordReset.Map(group);
         MapLoginOwner.Map(group);

@@ -1,7 +1,7 @@
-using System.Security.Cryptography;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Infrastructure.Configuration;
+using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.Identity.Sagas;
 using HrAgencySystem.SharedKernel.Services;
@@ -40,7 +40,7 @@ public static class RequestPasswordResetHandler
         }
 
         var resetId = Guid.NewGuid();
-        var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
+        var token = SecureToken.New();
 
         // The mail is the saga's to send: it is the thing that knows the window is open.
         messages.Add(
