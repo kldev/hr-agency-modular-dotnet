@@ -8,19 +8,19 @@ internal static class Endpoint
     internal static void Map(this IEndpointRouteBuilder endpoints)
     {
         endpoints
-            .MapGet("/api/development/seed", Handler)
+            .MapGet(ApiEndpoints.Development.Seed, Handler)
             .ExcludeFromDescription()
             .AllowAnonymous()
             .WithRequestTimeout(TimeSpan.FromMinutes(5));
 
         endpoints
-            .MapGet("/api/development/seed/{type}", HandlerApplicants)
+            .MapGet(ApiEndpoints.Development.SeedType, HandlerApplicants)
             .ExcludeFromDescription()
             .AllowAnonymous()
             .WithRequestTimeout(TimeSpan.FromMinutes(5));
 
         endpoints
-            .MapGet("/api/development/seed-sales", HandlerSales)
+            .MapGet(ApiEndpoints.Development.SeedSales, HandlerSales)
             .ExcludeFromDescription()
             .AllowAnonymous()
             .WithRequestTimeout(TimeSpan.FromMinutes(5));

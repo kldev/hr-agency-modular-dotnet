@@ -9,8 +9,8 @@ internal static class MapFeed
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("{slug}/jobs.xml", HandlerXml).WithSummary("Get feed jobs.xml");
-        group.MapGet("{slug}/jobs.json", HandlerJson).WithSummary("Get feed jobs.json");
+        group.MapGet(ApiEndpoints.Public.JobsXml, HandlerXml).WithSummary("Get feed jobs.xml");
+        group.MapGet(ApiEndpoints.Public.JobsJson, HandlerJson).WithSummary("Get feed jobs.json");
     }
 
     private static async Task<IResult> HandlerXml(
