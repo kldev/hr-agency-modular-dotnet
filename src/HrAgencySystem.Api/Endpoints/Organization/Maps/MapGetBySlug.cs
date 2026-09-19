@@ -11,7 +11,7 @@ internal static class MapGetBySlug
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("{slug}", Handler)
+            .MapGet(ApiEndpoints.Organizations.GetBySlug, Handler)
             .WithSummary("Get organization by Slug")
             .WithName("Get organization by Slug")
             .Produces<OrganizationProjection>()

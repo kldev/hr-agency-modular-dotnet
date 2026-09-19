@@ -10,7 +10,7 @@ internal static class MapGetSlice
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("", Handler)
+            .MapGet(ApiEndpoints.Organizations.Slice, Handler)
             .WithSummary("Get organizations")
             .WithName("Get organizations")
             .Produces<SliceResponse<OrganizationProjection>>()

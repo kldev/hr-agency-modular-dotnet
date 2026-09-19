@@ -5,7 +5,7 @@ public static class Endpoint
     public static void Map(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints
-            .MapGroup("/api/organization")
+            .MapGroup("")
             .WithTags("Organization")
             .WithOwnerRole();
 

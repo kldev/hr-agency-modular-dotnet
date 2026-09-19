@@ -10,7 +10,7 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("{organizationId:guid}", Handler)
+            .MapGet(ApiEndpoints.Organizations.Get, Handler)
             .WithSummary("Get organization by id")
             .WithName("Get organization by id")
             .Produces<OrganizationProjection>()

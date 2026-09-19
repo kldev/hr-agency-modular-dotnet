@@ -15,7 +15,7 @@ internal static class MapGetUsersSlice
     {
         // GET /api/organization/users
         group
-            .MapGet("/users", Handler)
+            .MapGet(ApiEndpoints.Organizations.Users, Handler)
             .WithSummary("Get users")
             .WithName("Get organizations users")
             .Produces<SliceResponse<UserProjection>>()

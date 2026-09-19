@@ -14,7 +14,7 @@ public static class MapUpdate
     {
         // PUT /api/organization/{organizationId}
         group
-            .MapPut("{organizationId:guid}", Handler)
+            .MapPut(ApiEndpoints.Organizations.Update, Handler)
             .WithSummary("Update organization data")
             .WithName("Update organization data")
             .Produces<OrganizationUpdated>()

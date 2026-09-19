@@ -11,7 +11,7 @@ internal static class MapCreate
     public static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPost("", Handler)
+            .MapPost(ApiEndpoints.Organizations.Create, Handler)
             .WithSummary("Create organization")
             .WithName("Create organization")
             .Produces<OrganizationCreated>()
