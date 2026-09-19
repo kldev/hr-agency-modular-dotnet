@@ -38,7 +38,7 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("/api/users/{userId:guid}", Handler)
+            .MapPut(ApiEndpoints.Users.Update, Handler)
             .WithSummary("Update user")
             .WithName("Update user")
             .Produces<UserUpdated>()

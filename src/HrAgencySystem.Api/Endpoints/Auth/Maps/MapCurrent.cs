@@ -8,7 +8,7 @@ internal static class MapCurrent
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/user/me", Handler)
+            .MapGet(ApiEndpoints.Auth.Current, Handler)
             .WithSummary("Get information about the current user")
             .WithName("Get authenticated user")
             .Produces<AppUserAuthenticated>()

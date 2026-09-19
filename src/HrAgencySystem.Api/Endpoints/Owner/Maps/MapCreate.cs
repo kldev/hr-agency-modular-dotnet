@@ -11,7 +11,7 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPost("/api/owners", Handler)
+            .MapPost(ApiEndpoints.Owners.Create, Handler)
             .WithSummary("Create owner")
             .Produces<PlatformOwnerCreated>()
             .ProducesStandardErrors();

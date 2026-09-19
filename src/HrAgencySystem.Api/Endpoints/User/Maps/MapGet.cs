@@ -11,7 +11,7 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .Map("/api/users/{userId:guid}", Handler)
+            .Map(ApiEndpoints.Users.Get, Handler)
             .WithSummary("Get user")
             .WithName("Get user")
             .Produces<UserProjection>()

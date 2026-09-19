@@ -9,7 +9,7 @@ internal static class MapLoginUser
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPost("/api/auth/login", Handler)
+            .MapPost(ApiEndpoints.Auth.Login, Handler)
             .WithSummary("Login organization user")
             .WithName("Login organization user")
             .Produces<LoginUserResult>()

@@ -20,7 +20,7 @@ internal static class MapChangePassword
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("/api/users/me/password", Handler)
+            .MapPut(ApiEndpoints.Users.ChangePassword, Handler)
             .WithSummary("Change own password")
             .WithName("Change own password")
             .Produces(StatusCodes.Status204NoContent)

@@ -8,7 +8,7 @@ internal static class MapCurrentOwner
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("/api/owner/me", Handler)
+            .MapGet(ApiEndpoints.Auth.CurrentOwner, Handler)
             .WithSummary("Get information about the current owner")
             .WithName("Get authenticated> owner")
             .Produces<OwnerAuthenticated>()

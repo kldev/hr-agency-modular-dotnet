@@ -43,7 +43,7 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPost("/api/users", Handler)
+            .MapPost(ApiEndpoints.Users.Create, Handler)
             .WithSummary("Create user")
             .WithName("Create user")
             .Produces<UserCreated>()
