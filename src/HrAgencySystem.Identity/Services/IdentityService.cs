@@ -45,4 +45,10 @@ public sealed class IdentityService(
         var slug = await checker.GetSlug(organizationId.Value, ct);
         return slug ?? throw new NotFoundException("Organization", organizationId.Value);
     }
+
+    public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
+    {
+        if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)
+            throw new OrganizationAccessDeniedException();
+    }
 }

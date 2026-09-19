@@ -9,4 +9,5 @@ public interface IIdentityService
     Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct);
     Task ValidateOrganization(Guid organizationId, CancellationToken ct);
     Task<OrganizationInfo> GetOrganization(OrganizationId organizationId, CancellationToken ct);
+    void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId);
 }
