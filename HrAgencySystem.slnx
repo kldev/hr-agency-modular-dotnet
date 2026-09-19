@@ -19,6 +19,9 @@
     <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.EmailTemplates.Contracts.csproj" />
     <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates/HrAgencySystem.EmailTemplates.csproj" />
   </Folder>
+  <Folder Name="/src/Svc/">
+    <Project Path="src/services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj" />
+  </Folder>
   <Folder Name="/src/Web/">
     <Project Path="src/HrAgencySystem.Web/HrAgencySystem.Web.csproj" />
   </Folder>

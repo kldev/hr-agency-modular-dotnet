@@ -65,6 +65,30 @@ services:
         MP_SMTP_AUTH_ACCEPT_ANY: 1
         MP_SMTP_AUTH_ALLOW_INSECURE: 1     
         MP_SMTP_AUTH: mailer:mailer          
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: hr-agency-api-rabbitmq
+    # Pinned: the node name is rabbit@<hostname> and the data dir is derived from it,
+    # so an auto-generated hostname would orphan the volume on every recreate.
+    hostname: hr-agency-api-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RabbitMqUser}
+      RABBITMQ_DEFAULT_PASS: ${RabbitMqPassword}
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: "30s"
+    networks:
+      - inner-cluster-communication
   webapi:
     build:
       context: ../
@@ -147,3 +171,4 @@ volumes:
   postgres_data:
   files_data:
   mailpit:
+  rabbitmq_data:
