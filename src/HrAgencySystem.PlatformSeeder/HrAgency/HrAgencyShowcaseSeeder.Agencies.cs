@@ -37,6 +37,18 @@ public sealed partial class HrAgencyShowcaseSeeder
 
         await WaitForProjections();
 
+        var teamIds = await new TeamScenario(bus).Create(
+            organization.OrganizationId,
+            userIds,
+            userIds[0]
+        );
+
+        logger.LogInformation(
+            "Created {TeamCount} teams for organization {OrganizationId}",
+            teamIds.Count,
+            organization.OrganizationId
+        );
+
         var companyIds = await CreateCompanies(config, organization, userIds);
 
         logger.LogInformation(
@@ -114,6 +126,8 @@ public sealed partial class HrAgencyShowcaseSeeder
         );
 
         var userIds = await CreateUsers(config, organization);
+
+        await new TeamScenario(bus).Create(organization.OrganizationId, userIds, userIds[0]);
 
         var companyIds = await CreateCompanies(config, organization, userIds);
 
