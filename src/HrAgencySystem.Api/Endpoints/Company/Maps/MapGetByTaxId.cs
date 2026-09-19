@@ -12,7 +12,7 @@ internal static class MapGetByTaxId
     {
         // /api/companies/find-by-tax/{taxId}
         group
-            .MapGet("find-by-tax/{taxId}", Handler)
+            .MapGet(ApiEndpoints.Companies.GetByTaxId, Handler)
             .WithSummary("Get company by tax")
             .WithName("Get company by tax")
             .Produces<CompanyProjection>()

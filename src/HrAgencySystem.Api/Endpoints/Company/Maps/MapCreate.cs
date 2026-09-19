@@ -15,7 +15,7 @@ internal static class MapCreate
     {
         // POST /api/companies
         endpoints
-            .MapPost("", Handler)
+            .MapPost(ApiEndpoints.Companies.Create, Handler)
             .WithSummary("Create company")
             .WithName("Create company")
             .ProducesStandardErrors()

@@ -11,7 +11,7 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("{contactId:guid}", Handler)
+            .MapGet(ApiEndpoints.CompanyContacts.Get, Handler)
             .WithSummary("Get contact")
             .WithName("Get company contact")
             .Produces<CompanyContact>()

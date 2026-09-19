@@ -12,7 +12,7 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("{companyId:guid}", Handler)
+            .MapPut(ApiEndpoints.Companies.Update, Handler)
             .WithSummary("Update company")
             .WithName("Update company")
             .Produces<CompanyUpdated>()

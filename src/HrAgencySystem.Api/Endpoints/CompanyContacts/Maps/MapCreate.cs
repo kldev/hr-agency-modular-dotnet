@@ -13,7 +13,7 @@ internal static class MapCreate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPost("{companyId:guid}", Handler)
+            .MapPost(ApiEndpoints.CompanyContacts.Create, Handler)
             .WithSummary("Create contact")
             .WithName("Create company contact")
             .Produces<CompanyContact>()

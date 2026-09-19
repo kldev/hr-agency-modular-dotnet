@@ -11,7 +11,7 @@ internal static class MapDelete
     {
         // /api/recruitment/job-applications/{applicationId}/{noteId}/note
         group
-            .MapDelete("{contactId:guid}", Handler)
+            .MapDelete(ApiEndpoints.CompanyContacts.Delete, Handler)
             .WithSummary("Delete contact")
             .WithName("Delete company contact")
             .Produces<CompanyContactDeleted>()

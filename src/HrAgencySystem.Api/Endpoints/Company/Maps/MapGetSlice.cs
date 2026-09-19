@@ -12,7 +12,7 @@ internal static class MapGetSlice
     {
         // GET /api/companies
         endpoints
-            .MapGet("", Handler)
+            .MapGet(ApiEndpoints.Companies.Slice, Handler)
             .WithSummary("Get companies")
             .WithName("Get companies")
             .Produces<SliceResponse<CompanyProjection>>()

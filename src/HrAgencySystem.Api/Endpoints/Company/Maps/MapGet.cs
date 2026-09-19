@@ -12,7 +12,7 @@ internal static class MapGet
     {
         // GET /api/companies/{companyId:guid}
         group
-            .MapGet("{companyId:guid}", Handler)
+            .MapGet(ApiEndpoints.Companies.Get, Handler)
             .WithSummary("Get company")
             .WithName("Get company")
             .Produces<CompanyProjection>()
