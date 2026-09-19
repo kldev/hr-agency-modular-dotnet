@@ -10,6 +10,7 @@ using HrAgencySystem.Organization;
 using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.Teams;
 
 namespace HrAgencySystem.Api.Infrastructure;
 
@@ -34,6 +35,7 @@ public static class SetupApplicationModulesExtensions
             services.AddFeedsModule(configuration);
             services.AddFilesModule(configuration);
             services.AddSalesModule();
+            services.AddTeamsModule();
         }
 
         private void ConfigureJson()

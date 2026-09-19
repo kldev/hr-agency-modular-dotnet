@@ -12,5 +12,7 @@ internal static class Endpoint
         Maps.MapTags.Map(group);
         Maps.MapCompanyContacts.Map(group);
         Maps.MapJobPosts.Map(group);
+        Maps.MapTeams.Map(group);
+        Maps.MapTeam.Map(group);
     }
 }

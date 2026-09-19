@@ -194,6 +194,20 @@ internal static class ApiEndpoints
         public const string ChangeInterviewer = $"{InterviewBase}/{{interviewId}}/interviewer";
     }
 
+    internal static class Teams
+    {
+        private const string TeamsBase = $"{Base}/teams";
+
+        public const string Create = TeamsBase;
+        public const string Slice = TeamsBase;
+        public const string Get = $"{TeamsBase}/{{teamId:guid}}";
+        public const string Rename = $"{TeamsBase}/{{teamId:guid}}/name";
+        public const string AddMember = $"{TeamsBase}/{{teamId:guid}}/members";
+        public const string RemoveMember = $"{TeamsBase}/{{teamId:guid}}/members/{{userId:guid}}";
+        public const string ChangeMemberRole =
+            $"{TeamsBase}/{{teamId:guid}}/members/{{userId:guid}}/role";
+    }
+
     internal static class Suggestions
     {
         private const string SuggestionBase = $"{Base}/suggestion";
@@ -205,6 +219,8 @@ internal static class ApiEndpoints
         public const string Tags = $"{SuggestionBase}/tags";
         public const string Users = $"{SuggestionBase}/users";
         public const string User = $"{SuggestionBase}/users/{{userId:guid}}";
+        public const string Teams = $"{SuggestionBase}/teams";
+        public const string Team = $"{SuggestionBase}/teams/{{teamId:guid}}";
     }
 
     // Anonymous, excluded from OpenAPI: the feed files served next to the public job board.

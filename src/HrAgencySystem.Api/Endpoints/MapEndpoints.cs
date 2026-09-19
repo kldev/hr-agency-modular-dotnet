@@ -20,6 +20,7 @@ public static class MapEndpoints
         Interviews.Endpoint.Map(app);
         Suggestion.Endpoint.Map(app);
         Organization.Endpoint.Map(app);
+        Teams.Endpoint.Map(app);
 
         MapPlatformSeeder(app);
     }

@@ -5,6 +5,7 @@ using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
 using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
+using HrAgencySystem.Teams;
 using JasperFx;
 using JasperFx.Events;
 using JasperFx.Events.Daemon;
@@ -49,6 +50,7 @@ public static class SetupMartenExtensions
         JobDescriptionModule.ConfigureMarten(options);
         RecruitmentModule.ConfigureMarten(options);
         SalesModule.ConfigureMarten(options);
+        TeamsModule.ConfigureMarten(options);
     }
 
     public static void SetupWolverineForApplication(
@@ -79,5 +81,6 @@ public static class SetupMartenExtensions
         options.Discovery.IncludeAssembly(typeof(JobDescriptionModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(RecruitmentModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(TeamsModule).Assembly);
     }
 }
