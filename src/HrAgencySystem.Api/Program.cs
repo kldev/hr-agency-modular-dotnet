@@ -1,3 +1,4 @@
+using HrAgencySystem.Api;
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
 using HrAgencySystem.PlatformSeeder;
@@ -31,8 +32,10 @@ var app = builder.Build();
     app.MapApplicationEndpoints();
     app.MapOpenApi().AllowAnonymous();
     app.MapAppScalar();
-    app.MapGet("/", () => "HR Agency API").ExcludeFromDescription().AllowAnonymous();
-    app.MapGet("/healthz", () => new { status = "UP" }).ExcludeFromDescription().AllowAnonymous();
+    app.MapGet(ApiEndpoints.Root, () => "HR Agency API").ExcludeFromDescription().AllowAnonymous();
+    app.MapGet(ApiEndpoints.Health, () => new { status = "UP" })
+        .ExcludeFromDescription()
+        .AllowAnonymous();
 
     Console.WriteLine("HR agency API started");
     Console.WriteLine("Environment: " + app.Environment.EnvironmentName);

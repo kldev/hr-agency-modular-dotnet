@@ -4,6 +4,9 @@ internal static class ApiEndpoints
 {
     private const string Base = "/api";
 
+    public const string Root = "/";
+    public const string Health = "/healthz";
+
     internal static class Auth
     {
         public const string Login = $"{Base}/auth/login";
