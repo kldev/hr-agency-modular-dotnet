@@ -7,31 +7,31 @@ namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendOpportunityResponsibleChangedHandler
 {
-    public static async Task Handle(
+    public static Task Handle(
         SendOpportunityResponsibleChanged message,
         IEmailTemplateProvider templates,
         ISendEmail sender,
         IProcessedEventStore processedEvents,
         ILogger<SendOpportunityResponsibleChanged> logger,
         CancellationToken ct
-    )
-    {
-        if (!await processedEvents.TryMarkAsync(message, ct))
-        {
-            logger.LogInformation("Event {EventId} already handled, skipping", message.EventId);
-            return;
-        }
+    ) =>
+        processedEvents.SendOnceAsync(
+            message,
+            logger,
+            async () =>
+            {
+                var html = await templates.RenderSendOpportunityResponsibleChanged(message);
 
-        var html = await templates.RenderSendOpportunityResponsibleChanged(message);
-
-        await sender.SendAsync(
-            new EmailMessage(
-                message.ResponsibleEmail,
-                message.ResponsibleFullname,
-                $"Opportunity assigned to you: {message.OpportunityTitle}",
-                html
-            ),
+                await sender.SendAsync(
+                    new EmailMessage(
+                        message.ResponsibleEmail,
+                        message.ResponsibleFullname,
+                        $"Opportunity assigned to you: {message.OpportunityTitle}",
+                        html
+                    ),
+                    ct
+                );
+            },
             ct
         );
-    }
 }

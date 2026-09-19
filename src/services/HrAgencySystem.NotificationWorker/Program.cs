@@ -20,6 +20,7 @@ var builder = Host.CreateApplicationBuilder(args);
     builder.UseWolverine(opts =>
     {
         opts.ConsumeEmailMessages(config);
+        opts.RetryEmailDelivery();
         opts.Discovery.IncludeAssembly(typeof(Program).Assembly);
     });
 }

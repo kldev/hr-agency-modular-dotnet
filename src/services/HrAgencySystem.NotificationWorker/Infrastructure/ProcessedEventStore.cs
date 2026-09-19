@@ -10,6 +10,10 @@ public sealed class ProcessedEventStore(NpgsqlDataSource ds) : IProcessedEventSt
         values (@event_id, @message_type, @processed_at)
         """;
 
+    private const string DeleteSql = """
+        delete from notifications.processed_events where event_id = @event_id
+        """;
+
     public async Task<bool> TryMarkAsync(IEmailTemplateContract message, CancellationToken ct)
     {
         try
@@ -30,5 +34,15 @@ public sealed class ProcessedEventStore(NpgsqlDataSource ds) : IProcessedEventSt
             // The unique event id is the guard itself: losing the race means somebody else sent it.
             return false;
         }
+    }
+
+    public async Task ReleaseAsync(IEmailTemplateContract message, CancellationToken ct)
+    {
+        await using var conn = await ds.OpenConnectionAsync(ct);
+        await using var command = new NpgsqlCommand(DeleteSql, conn);
+
+        command.Parameters.AddWithValue("event_id", message.EventId);
+
+        await command.ExecuteNonQueryAsync(ct);
     }
 }

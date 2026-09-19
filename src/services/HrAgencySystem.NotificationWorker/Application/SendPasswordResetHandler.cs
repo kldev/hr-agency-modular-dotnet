@@ -7,31 +7,31 @@ namespace HrAgencySystem.NotificationWorker.Application;
 
 public static class SendPasswordResetHandler
 {
-    public static async Task Handle(
+    public static Task Handle(
         SendPasswordReset message,
         IEmailTemplateProvider templates,
         ISendEmail sender,
         IProcessedEventStore processedEvents,
         ILogger<SendPasswordReset> logger,
         CancellationToken ct
-    )
-    {
-        if (!await processedEvents.TryMarkAsync(message, ct))
-        {
-            logger.LogInformation("Event {EventId} already handled, skipping", message.EventId);
-            return;
-        }
+    ) =>
+        processedEvents.SendOnceAsync(
+            message,
+            logger,
+            async () =>
+            {
+                var html = await templates.RenderSendPasswordReset(message);
 
-        var html = await templates.RenderSendPasswordReset(message);
-
-        await sender.SendAsync(
-            new EmailMessage(
-                message.RecipientEmail,
-                message.RecipientFullname,
-                "Reset your password",
-                html
-            ),
+                await sender.SendAsync(
+                    new EmailMessage(
+                        message.RecipientEmail,
+                        message.RecipientFullname,
+                        "Reset your password",
+                        html
+                    ),
+                    ct
+                );
+            },
             ct
         );
-    }
 }
