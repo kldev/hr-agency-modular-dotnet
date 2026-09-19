@@ -13,6 +13,7 @@ using HrAgencySystem.SharedKernel.Time;
 using Marten;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using Wolverine;
 
 namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 
@@ -28,6 +29,8 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     private readonly IRecruitmentService _service = Substitute.For<IRecruitmentService>();
 
     private readonly IClock _clock = Substitute.For<IClock>();
+
+    private readonly IMessageBus _bus = Substitute.For<IMessageBus>();
 
     private static readonly Guid JobPostId = Guid.NewGuid();
     private static readonly Guid OrganizationId = Guid.NewGuid();
@@ -217,6 +220,7 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
             _service,
             _documentSession,
             clock ?? TestClock,
+            _bus,
             CancellationToken.None
         );
     }

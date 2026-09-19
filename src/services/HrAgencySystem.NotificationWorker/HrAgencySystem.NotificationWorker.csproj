@@ -8,5 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="WolverineFx" />
+    <PackageReference Include="WolverineFx.RabbitMQ" />
+    <PackageReference Include="WolverineFx.RuntimeCompilation" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates.Contracts\HrAgencySystem.EmailTemplates.Contracts.csproj" />
+    <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates\HrAgencySystem.EmailTemplates.csproj" />
   </ItemGroup>
 </Project>

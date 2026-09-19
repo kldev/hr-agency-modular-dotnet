@@ -60,7 +60,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: hr_app
       RABBITMQ_DEFAULT_PASS: hr_app
-      RABBITMQ_DEFAULT_VHOST: /
+      # Must match RabbitMq:VHost used by the API (amqp://.../development).
+      RABBITMQ_DEFAULT_VHOST: development
     ports:
       - "5672:5672"
       - "15672:15672"

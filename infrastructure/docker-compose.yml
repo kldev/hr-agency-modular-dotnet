@@ -75,7 +75,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${RabbitMqUser}
       RABBITMQ_DEFAULT_PASS: ${RabbitMqPassword}
-      RABBITMQ_DEFAULT_VHOST: /
+      # Must match RabbitMq:VHost used by the API (amqp://.../development).
+      RABBITMQ_DEFAULT_VHOST: development
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -106,6 +107,12 @@ services:
       RustFs__AccessKey: ${RustFsAccessKey}
       RustFs__SecretKey: ${RustFsSecretKey}
       Application__FeedUrl: "http://localhost:8080"
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: ${RabbitMqUser}
+      RabbitMq__Password: ${RabbitMqPassword}
+      RabbitMq__VHost: "/development"
+      RabbitMq__MailExchange: "x.emails"
+      RabbitMq__RecruitmentRoutingKey: "recruitment"
       Cors: ${Cors}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
@@ -119,6 +126,8 @@ services:
     depends_on:      
       postgres:
         condition: service_healthy   
+      rabbitmq:
+        condition: service_healthy
   feeds-worker:
     build:
       context: ../

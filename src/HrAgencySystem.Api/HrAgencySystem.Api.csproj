@@ -12,6 +12,7 @@
     <PackageReference Include="Marten" />
     <PackageReference Include="WolverineFx" />
     <PackageReference Include="WolverineFx.Marten" />
+    <PackageReference Include="WolverineFx.RabbitMQ" />
     <PackageReference Include="WolverineFx.RuntimeCompilation" />
   </ItemGroup>
 

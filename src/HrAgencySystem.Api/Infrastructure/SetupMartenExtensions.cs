@@ -1,4 +1,6 @@
+using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Company;
+using HrAgencySystem.EmailTemplates.Contracts;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
@@ -10,6 +12,7 @@ using JasperFx.Events.Daemon;
 using Marten;
 using Wolverine;
 using Wolverine.Marten;
+using Wolverine.RabbitMQ;
 
 namespace HrAgencySystem.Api.Infrastructure;
 
@@ -24,18 +27,12 @@ public static class SetupMartenExtensions
             .AddMarten(options =>
             {
                 var connectionString = configuration.GetConnectionString("Postgres");
-
                 options.Connection(connectionString!);
 
                 options.Events.DatabaseSchemaName = "events";
                 options.Events.StreamIdentity = StreamIdentity.AsGuid;
 
-                CompanyModule.ConfigureMarten(options);
-                OrganizationModule.ConfigureMarten(options);
-                IdentityModule.ConfigureMarten(options);
-                JobDescriptionModule.ConfigureMarten(options);
-                RecruitmentModule.ConfigureMarten(options);
-                SalesModule.ConfigureMarten(options);
+                ConfigureModules(options);
 
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
             })
@@ -43,22 +40,42 @@ public static class SetupMartenExtensions
             .IntegrateWithWolverine();
     }
 
-    public static void SetupWolverineForApplication(this ConfigureHostBuilder builder)
+    private static void ConfigureModules(StoreOptions options)
     {
+        CompanyModule.ConfigureMarten(options);
+        OrganizationModule.ConfigureMarten(options);
+        IdentityModule.ConfigureMarten(options);
+        JobDescriptionModule.ConfigureMarten(options);
+        RecruitmentModule.ConfigureMarten(options);
+        SalesModule.ConfigureMarten(options);
+    }
+
+    public static void SetupWolverineForApplication(
+        this ConfigureHostBuilder builder,
+        IConfiguration configuration
+    )
+    {
+        var section = configuration.GetSection(RabbitMqConfig.SectionName);
+        var config = RabbitMqConfig.FromSection(section);
+        Console.WriteLine("Configure WolverineForApplication with: " + config.GetConnectionUri());
         builder
             .UseWolverine(options =>
             {
-                options.Discovery.IncludeAssembly(typeof(CompanyModule).Assembly);
-                options.Discovery.IncludeAssembly(typeof(OrganizationModule).Assembly);
-                options.Discovery.IncludeAssembly(typeof(IdentityModule).Assembly);
-                options.Discovery.IncludeAssembly(typeof(JobDescriptionModule).Assembly);
-
-                options.Discovery.IncludeAssembly(typeof(RecruitmentModule).Assembly);
-
-                options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
+                options.AddRabbitMq(config);
+                ConfigureDiscover(options);
 
                 options.Policies.AutoApplyTransactions();
             })
             .StartAsync();
+    }
+
+    private static void ConfigureDiscover(WolverineOptions options)
+    {
+        options.Discovery.IncludeAssembly(typeof(CompanyModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(OrganizationModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(IdentityModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(JobDescriptionModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(RecruitmentModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
     }
 }
