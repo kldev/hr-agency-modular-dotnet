@@ -15,7 +15,7 @@ internal static class MapUpdate
     {
         // PUT /api/sales/opportunity/{id}
         group
-            .MapPut("{opportunityId:guid}", Handler)
+            .MapPut(ApiEndpoints.Sales.Opportunities.Update, Handler)
             .WithSummary("Update opportunity")
             .WithName("Update opportunity")
             .Produces<OpportunityUpdated>()

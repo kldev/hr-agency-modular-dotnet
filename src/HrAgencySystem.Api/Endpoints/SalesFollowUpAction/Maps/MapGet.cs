@@ -12,7 +12,7 @@ internal static class MapGet
     {
         // GET /api/sales/follow-up/{followUpActionId}
         group
-            .MapGet("{followUpActionId:guid}", Handler)
+            .MapGet(ApiEndpoints.Sales.FollowUpActions.Get, Handler)
             .WithSummary("Get follow up action")
             .WithName("Get follow up action")
             .Produces<FollowUpAction>()

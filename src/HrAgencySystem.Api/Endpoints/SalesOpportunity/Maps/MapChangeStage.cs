@@ -13,7 +13,7 @@ internal static class MapChangeStage
     {
         // PUT /api/sales/opportunity/{id}/stage
         group
-            .MapPut("{opportunityId:guid}/stage", Handler)
+            .MapPut(ApiEndpoints.Sales.Opportunities.ChangeStage, Handler)
             .WithSummary("Change stage")
             .WithName("Change opportunity stage")
             .Produces<StageChanged>()

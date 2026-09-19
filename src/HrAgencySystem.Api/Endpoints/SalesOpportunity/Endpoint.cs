@@ -5,7 +5,7 @@ internal static class Endpoint
     internal static void Map(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints
-            .MapGroup("/api/sales/opportunity")
+            .MapGroup("")
             .WithTags("Sales")
             .RequireAuthorization();
 

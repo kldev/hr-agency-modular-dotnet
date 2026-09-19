@@ -10,7 +10,7 @@ internal static class MapGetResponsibleTotals
     {
         // GET /api/sales/opportunity/totals-responsible
         group
-            .MapGet("totals-responsible", Handler)
+            .MapGet(ApiEndpoints.Sales.Opportunities.ResponsibleTotals, Handler)
             .WithSummary("Get responsible totals")
             .WithName("Get opportunities responsible totals")
             .Produces<IReadOnlyList<SalesPipelineResponsibleQueryResult>>()

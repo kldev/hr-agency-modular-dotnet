@@ -14,7 +14,7 @@ internal static class MapCreate
     {
         // /api/sales/opportunity
         group
-            .MapPost("", Handler)
+            .MapPost(ApiEndpoints.Sales.Opportunities.Create, Handler)
             .WithSummary("Create opportunity")
             .WithName("Create opportunity")
             .Produces<OpportunityCreated>()

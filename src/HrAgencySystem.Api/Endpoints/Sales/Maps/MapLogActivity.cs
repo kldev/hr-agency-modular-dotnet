@@ -12,7 +12,7 @@ internal static class MapLogActivity
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPost("/activity", Handler)
+            .MapPost(ApiEndpoints.Sales.LogActivity, Handler)
             .WithSummary("Log activity")
             .WithName("Log sales activity")
             .Produces<ActivityCreated>()

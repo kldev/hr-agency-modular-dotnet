@@ -11,7 +11,7 @@ internal static class MapGetActivitySlice
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapGet("/activities", Handler)
+            .MapGet(ApiEndpoints.Sales.ActivitySlice, Handler)
             .WithSummary("Get activities")
             .WithName("Get sales activities")
             .Produces<SliceResponse<ActivityProjection>>()

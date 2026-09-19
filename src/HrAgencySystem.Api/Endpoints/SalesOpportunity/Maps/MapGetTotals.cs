@@ -11,7 +11,7 @@ internal static class MapGetTotals
     {
         // GET /api/sales/opportunity/totals
         group
-            .MapGet("totals", Handler)
+            .MapGet(ApiEndpoints.Sales.Opportunities.Totals, Handler)
             .WithSummary("Get pipeline totals")
             .WithName("Get opportunities pipeline totals")
             .Produces<IReadOnlyList<SalesPipelineQueryResult>>()

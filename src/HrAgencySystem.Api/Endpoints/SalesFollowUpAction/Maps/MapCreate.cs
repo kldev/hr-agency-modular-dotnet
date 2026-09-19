@@ -12,7 +12,7 @@ internal static class MapCreate
     {
         // POST /api/sales/follow-up
         group
-            .MapPost("", Handler)
+            .MapPost(ApiEndpoints.Sales.FollowUpActions.Create, Handler)
             .WithSummary("Create follow up action")
             .WithName("Create follow up action")
             .Produces<FollowUpActionCreated>()

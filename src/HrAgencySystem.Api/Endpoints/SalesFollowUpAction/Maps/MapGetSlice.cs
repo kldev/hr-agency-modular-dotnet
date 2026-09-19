@@ -12,7 +12,7 @@ internal static class MapGetSlice
     {
         // GET /api/sales/follow-up
         group
-            .MapGet("", Handler)
+            .MapGet(ApiEndpoints.Sales.FollowUpActions.Slice, Handler)
             .WithSummary("Get follow up actions")
             .WithName("Get follow up actions")
             .Produces<SliceResponse<FollowUpAction>>()

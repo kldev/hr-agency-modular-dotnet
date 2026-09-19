@@ -13,7 +13,7 @@ internal static class MapChangeResponsible
     {
         // PUT /api/sales/opportunity/{id}/responsible
         group
-            .MapPut("{opportunityId:guid}/responsible", Handler)
+            .MapPut(ApiEndpoints.Sales.Opportunities.ChangeResponsible, Handler)
             .WithSummary("Change responsible person")
             .WithName("Change opportunity responsible person")
             .Produces<ResponsiblePersonChanged>()

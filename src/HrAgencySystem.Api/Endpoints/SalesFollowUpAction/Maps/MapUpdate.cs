@@ -12,7 +12,7 @@ internal static class MapUpdate
     {
         // PUT /api/sales/follow-up/{followUpActionId}
         group
-            .MapPut("{followUpActionId:guid}", Handler)
+            .MapPut(ApiEndpoints.Sales.FollowUpActions.Update, Handler)
             .WithSummary("Update follow up action")
             .WithName("Update follow up action")
             .Produces<FollowUpActionUpdated>()
