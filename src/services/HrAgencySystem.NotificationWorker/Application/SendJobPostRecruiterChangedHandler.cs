@@ -1,6 +1,7 @@
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Rendering;
 using HrAgencySystem.EmailTemplates.Sending;
+using HrAgencySystem.NotificationWorker.Infrastructure;
 
 namespace HrAgencySystem.NotificationWorker.Application;
 
@@ -10,9 +11,17 @@ public static class SendJobPostRecruiterChangedHandler
         SendJobPostRecruiterChanged message,
         IEmailTemplateProvider templates,
         ISendEmail sender,
+        IProcessedEventStore processedEvents,
+        ILogger<SendJobPostRecruiterChanged> logger,
         CancellationToken ct
     )
     {
+        if (!await processedEvents.TryMarkAsync(message, ct))
+        {
+            logger.LogInformation("Event {EventId} already handled, skipping", message.EventId);
+            return;
+        }
+
         var html = await templates.RenderSendJobPostRecruiterChanged(message);
 
         await sender.SendAsync(
