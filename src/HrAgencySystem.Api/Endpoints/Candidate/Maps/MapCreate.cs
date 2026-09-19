@@ -13,7 +13,7 @@ internal static class MapCreate
     {
         // api/recruitment/candidates
         group
-            .MapPost("", Handler)
+            .MapPost(ApiEndpoints.Recruitment.Candidates.Create, Handler)
             .WithSummary("Create candidate")
             .WithName("Create candidate")
             .ProducesStandardErrors()

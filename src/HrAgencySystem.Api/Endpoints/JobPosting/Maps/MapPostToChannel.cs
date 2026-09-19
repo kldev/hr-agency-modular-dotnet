@@ -13,7 +13,7 @@ internal static class MapPostToChannel
     {
         // PUT /api/recruitment/job-posting/{id}/channel
         group
-            .MapPut("{jobPostId:guid}/channel", Handler)
+            .MapPut(ApiEndpoints.Recruitment.JobPosts.PostToChannel, Handler)
             .WithSummary("Job posted to channel")
             .WithName("Post job to channel")
             .Produces<JobPostedToChannel>()

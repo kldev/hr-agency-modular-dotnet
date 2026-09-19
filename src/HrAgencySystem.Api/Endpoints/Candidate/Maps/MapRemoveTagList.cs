@@ -13,7 +13,7 @@ internal static class MapRemoveTagList
     {
         // api/recruitment/candidates/{id}/tag
         group
-            .MapPut("{candidateId:guid}/tag/remove", Handler)
+            .MapPut(ApiEndpoints.Recruitment.Candidates.RemoveTagList, Handler)
             .WithSummary("Remove tag list")
             .WithName("Remove candidate tag list")
             .ProducesStandardErrors()

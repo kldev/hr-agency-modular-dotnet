@@ -13,7 +13,7 @@ internal static class MapApplyTo
     {
         // POST /api/recruitment/job-posting/{jobPostId}/apply
         group
-            .MapPost("/{jobPostId:guid}/apply", Handler)
+            .MapPost(ApiEndpoints.Recruitment.JobPosts.ApplyTo, Handler)
             .Produces<JobApplicationCreated>()
             .ProducesStandardErrors()
             .WithSummary("Apply to job post")

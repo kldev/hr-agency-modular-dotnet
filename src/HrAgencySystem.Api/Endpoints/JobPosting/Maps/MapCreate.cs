@@ -14,7 +14,7 @@ internal static class MapCreate
     {
         // POST /api/recruitment/job-posting
         group
-            .MapPost("", Handler)
+            .MapPost(ApiEndpoints.Recruitment.JobPosts.Create, Handler)
             .WithSummary("Create job post")
             .WithName("Create job post")
             .Produces<JobPostCreated>()

@@ -12,7 +12,7 @@ internal static class MapGet
     {
         // api/recruitment/candidates
         group
-            .MapGet("{candidateId:guid}", Handler)
+            .MapGet(ApiEndpoints.Recruitment.Candidates.Get, Handler)
             .WithSummary("Get candidate")
             .WithName("Get candidate")
             .Produces<CandidateProjection>()

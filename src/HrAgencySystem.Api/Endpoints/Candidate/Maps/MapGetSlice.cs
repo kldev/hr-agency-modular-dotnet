@@ -13,7 +13,7 @@ internal static class MapGetSlice
     {
         // api/recruitment/candidates
         group
-            .MapGet("", Handler)
+            .MapGet(ApiEndpoints.Recruitment.Candidates.Slice, Handler)
             .WithSummary("Get candidates")
             .WithName("Get candidates")
             .Produces<SliceResponse<CandidateProjection>>()

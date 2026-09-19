@@ -13,7 +13,7 @@ internal static class MapUpdate
     {
         // PUT /api/recruitment/job-posting/{id}
         group
-            .MapPut("{jobPostId}", Handler)
+            .MapPut(ApiEndpoints.Recruitment.JobPosts.Update, Handler)
             .WithSummary("Update job post")
             .WithName("Update job post")
             .Produces<JobPostUpdated>()

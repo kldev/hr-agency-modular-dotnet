@@ -14,7 +14,7 @@ internal static class MapGet
     {
         // GET/api/recruitment/job-posting/{{id}
         group
-            .MapGet("{jobPostId:guid}", Handler)
+            .MapGet(ApiEndpoints.Recruitment.JobPosts.Get, Handler)
             .WithSummary("Get job post")
             .WithName("Get job post")
             .Produces<JobPostProjection>()

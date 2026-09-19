@@ -13,7 +13,7 @@ internal static class MapTag
     {
         // api/recruitment/candidates/{id}/tag
         group
-            .MapPut("{candidateId:guid}/tag", Handler)
+            .MapPut(ApiEndpoints.Recruitment.Candidates.Tag, Handler)
             .WithSummary("Tag candidate")
             .WithName("Tag candidate")
             .ProducesStandardErrors()
