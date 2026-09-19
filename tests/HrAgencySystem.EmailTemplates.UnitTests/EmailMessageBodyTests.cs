@@ -2,6 +2,7 @@ using System.Net;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
+using HrAgencySystem.EmailTemplates.Contracts.Teams;
 using HrAgencySystem.EmailTemplates.Rendering;
 using Xunit.Abstractions;
 
@@ -175,6 +176,67 @@ public class EmailMessageBodyTests(ITestOutputHelper output)
         Assert.Contains(handover.PreviousResponsibleFullname, text);
         Assert.Contains(handover.ChangedByFullname, text);
         Assert.Contains(handover.OpportunityId.ToString(), text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    [Fact]
+    public async Task RenderMailTeamMemberAdded()
+    {
+        var added = new SendTeamMemberAdded(
+            Guid.NewGuid(),
+            "teams-service",
+            Guid.NewGuid(),
+            "ShawSzenk",
+            "katy.wells@hr-agency.test",
+            "Katy Wells",
+            "Recruiter",
+            "John Smith"
+        );
+
+        var html = await _renderer.RenderSendTeamMemberAdded(added);
+
+        await Save(nameof(RenderMailTeamMemberAdded), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(added.TeamName, text);
+        Assert.Contains(added.MemberFullname, text);
+        Assert.Contains(added.Role, text);
+        Assert.Contains(added.AddedByFullname, text);
+        Assert.Contains(added.TeamId.ToString(), text);
+        Assert.Contains("HR Agency Portal", text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    [Fact]
+    public async Task RenderMailTeamMemberRoleChanged()
+    {
+        var changed = new SendTeamMemberRoleChanged(
+            Guid.NewGuid(),
+            "teams-service",
+            Guid.NewGuid(),
+            "Tiggers",
+            "katy.wells@hr-agency.test",
+            "Katy Wells",
+            "Lead",
+            "Recruiter",
+            "John Smith"
+        );
+
+        var html = await _renderer.RenderSendTeamMemberRoleChanged(changed);
+
+        await Save(nameof(RenderMailTeamMemberRoleChanged), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(changed.TeamName, text);
+        Assert.Contains(changed.MemberFullname, text);
+        Assert.Contains(changed.Role, text);
+        Assert.Contains(changed.PreviousRole, text);
+        Assert.Contains(changed.ChangedByFullname, text);
+        Assert.Contains(changed.TeamId.ToString(), text);
 
         AssertNoUnresolvedLiquid(html);
     }

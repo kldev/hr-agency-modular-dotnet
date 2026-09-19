@@ -11,8 +11,11 @@ public static class EmailTopics
     public const string PasswordReset = "identity.password.reset";
     public const string OpportunityCreated = "sales.opportunity.created";
     public const string OpportunityResponsibleChanged = "sales.opportunity.responsible-changed";
+    public const string TeamMemberAdded = "teams.member.added";
+    public const string TeamMemberRoleChanged = "teams.member.role-changed";
 
     public const string RecruitmentPattern = "recruitment.#";
     public const string IdentityPattern = "identity.#";
     public const string SalesPattern = "sales.#";
+    public const string TeamsPattern = "teams.#";
 }

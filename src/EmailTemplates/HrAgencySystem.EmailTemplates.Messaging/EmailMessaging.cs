@@ -1,6 +1,7 @@
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
+using HrAgencySystem.EmailTemplates.Contracts.Teams;
 using Wolverine;
 using Wolverine.RabbitMQ;
 
@@ -47,6 +48,14 @@ public static class EmailMessaging
             opts.PublishMessage<SendOpportunityResponsibleChanged>()
                 .ToRabbitTopic(EmailTopics.OpportunityResponsibleChanged, config.MailExchange)
                 .UseDurableOutbox();
+
+            opts.PublishMessage<SendTeamMemberAdded>()
+                .ToRabbitTopic(EmailTopics.TeamMemberAdded, config.MailExchange)
+                .UseDurableOutbox();
+
+            opts.PublishMessage<SendTeamMemberRoleChanged>()
+                .ToRabbitTopic(EmailTopics.TeamMemberRoleChanged, config.MailExchange)
+                .UseDurableOutbox();
         }
 
         /// <summary>
@@ -69,16 +78,19 @@ public static class EmailMessaging
                         ex.BindQueue(EmailQueues.Recruitment, EmailTopics.RecruitmentPattern);
                         ex.BindQueue(EmailQueues.Identity, EmailTopics.IdentityPattern);
                         ex.BindQueue(EmailQueues.Sales, EmailTopics.SalesPattern);
+                        ex.BindQueue(EmailQueues.Teams, EmailTopics.TeamsPattern);
                     }
                 )
                 .DeclareQueue(EmailQueues.Recruitment, q => q.IsDurable = true)
                 .DeclareQueue(EmailQueues.Identity, q => q.IsDurable = true)
                 .DeclareQueue(EmailQueues.Sales, q => q.IsDurable = true)
+                .DeclareQueue(EmailQueues.Teams, q => q.IsDurable = true)
                 .AutoProvision();
 
             opts.ListenToRabbitQueue(EmailQueues.Recruitment).ListenerCount(listenerCount);
             opts.ListenToRabbitQueue(EmailQueues.Identity).ListenerCount(listenerCount);
             opts.ListenToRabbitQueue(EmailQueues.Sales).ListenerCount(listenerCount);
+            opts.ListenToRabbitQueue(EmailQueues.Teams).ListenerCount(listenerCount);
         }
     }
 }

@@ -1,6 +1,7 @@
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
+using HrAgencySystem.EmailTemplates.Contracts.Teams;
 
 namespace HrAgencySystem.EmailTemplates.Rendering;
 
@@ -15,4 +16,8 @@ public interface IEmailTemplateProvider
     Task<string> RenderSendOpportunityCreated(SendOpportunityCreated data);
 
     Task<string> RenderSendOpportunityResponsibleChanged(SendOpportunityResponsibleChanged data);
+
+    Task<string> RenderSendTeamMemberAdded(SendTeamMemberAdded data);
+
+    Task<string> RenderSendTeamMemberRoleChanged(SendTeamMemberRoleChanged data);
 }

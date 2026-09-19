@@ -9,4 +9,5 @@ public static class EmailQueues
     public const string Recruitment = "q.emails.recruitment";
     public const string Identity = "q.emails.identity";
     public const string Sales = "q.emails.sales";
+    public const string Teams = "q.emails.teams";
 }

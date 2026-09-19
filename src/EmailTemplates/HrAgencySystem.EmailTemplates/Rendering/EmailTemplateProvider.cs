@@ -3,6 +3,7 @@ using FluentEmail.Liquid;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
+using HrAgencySystem.EmailTemplates.Contracts.Teams;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 
@@ -22,6 +23,11 @@ public sealed class EmailTemplateProvider : IEmailTemplateProvider
 
     private const string NotifyOpportunityResponsibleChangedFile =
         "Mail/NotifyOpportunityResponsibleChanged.liquid";
+
+    private const string NotifyTeamMemberAddedFile = "Mail/NotifyTeamMemberAdded.liquid";
+
+    private const string NotifyTeamMemberRoleChangedFile =
+        "Mail/NotifyTeamMemberRoleChanged.liquid";
 
     private static readonly Assembly TemplateAssembly = typeof(IEmailTemplateProvider).Assembly;
 
@@ -70,6 +76,20 @@ public sealed class EmailTemplateProvider : IEmailTemplateProvider
     )
     {
         var template = await ReadTemplate(NotifyOpportunityResponsibleChangedFile);
+
+        return await _renderer.ParseAsync(template, data);
+    }
+
+    public async Task<string> RenderSendTeamMemberAdded(SendTeamMemberAdded data)
+    {
+        var template = await ReadTemplate(NotifyTeamMemberAddedFile);
+
+        return await _renderer.ParseAsync(template, data);
+    }
+
+    public async Task<string> RenderSendTeamMemberRoleChanged(SendTeamMemberRoleChanged data)
+    {
+        var template = await ReadTemplate(NotifyTeamMemberRoleChangedFile);
 
         return await _renderer.ParseAsync(template, data);
     }
