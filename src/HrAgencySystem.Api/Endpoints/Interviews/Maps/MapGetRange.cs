@@ -13,7 +13,7 @@ internal static class MapGetRange
     {
         // GET /api/interviews/range
         group
-            .MapGet("range", Handler)
+            .MapGet(ApiEndpoints.Interviews.Range, Handler)
             .WithSummary("Get interviews for date range")
             .WithName("Get interviews for date range")
             .Produces<IReadOnlyList<InterviewProjection>>()

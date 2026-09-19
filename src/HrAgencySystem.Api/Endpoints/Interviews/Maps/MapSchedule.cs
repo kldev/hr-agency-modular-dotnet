@@ -13,7 +13,7 @@ internal static class MapSchedule
     {
         // GET /api/interviews/schedule
         group
-            .MapPost("schedule", Handler)
+            .MapPost(ApiEndpoints.Interviews.Schedule, Handler)
             .WithSummary("Schedule interview")
             .WithName("Schedule interview")
             .Produces<InterviewCreated>()

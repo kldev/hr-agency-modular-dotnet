@@ -13,7 +13,7 @@ internal static class MapTagList
     {
         // PUT /api/recruitment/job-applications/{id}/tag-list
         group
-            .MapPut("{applicationId:guid}/tag-list", Handler)
+            .MapPut(ApiEndpoints.Recruitment.JobApplications.TagList, Handler)
             .WithSummary("Add multiple tag")
             .WithName("Add multiple tag to application")
             .Produces<JobApplicationTagged>()

@@ -12,7 +12,7 @@ internal static class MapReschedule
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("{interviewId}/reschedule", Handler)
+            .MapPut(ApiEndpoints.Interviews.Reschedule, Handler)
             .WithSummary("Reschedule interview")
             .WithName("Reschedule interview")
             .Produces<InterviewRescheduled>()

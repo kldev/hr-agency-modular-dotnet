@@ -12,7 +12,7 @@ internal static class MapChangeInterviewer
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("{interviewId}/interviewer", Handler)
+            .MapPut(ApiEndpoints.Interviews.ChangeInterviewer, Handler)
             .WithSummary("Change interviewer")
             .WithName("Change interviewer")
             .Produces<InterviewerChanged>()

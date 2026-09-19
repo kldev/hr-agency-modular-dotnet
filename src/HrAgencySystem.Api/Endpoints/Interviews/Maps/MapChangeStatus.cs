@@ -13,7 +13,7 @@ internal static class MapChangeStatus
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("{interviewId}/status", Handler)
+            .MapPut(ApiEndpoints.Interviews.ChangeStatus, Handler)
             .WithSummary("Change status")
             .WithName("Change interview status")
             .Produces<InterviewStatusChanged>()

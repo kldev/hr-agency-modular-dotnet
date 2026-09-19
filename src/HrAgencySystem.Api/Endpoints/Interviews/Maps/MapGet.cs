@@ -12,7 +12,7 @@ internal static class MapGet
     {
         // GET /api/interviews
         group
-            .MapGet("{interviewId}", Handler)
+            .MapGet(ApiEndpoints.Interviews.Get, Handler)
             .WithSummary("Get interview")
             .WithName("Get interview")
             .Produces<InterviewProjection>()

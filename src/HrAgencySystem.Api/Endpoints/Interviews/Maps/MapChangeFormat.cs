@@ -13,7 +13,7 @@ internal static class MapChangeFormat
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("{interviewId}/format", Handler)
+            .MapPut(ApiEndpoints.Interviews.ChangeFormat, Handler)
             .WithSummary("Change format")
             .WithName("Change interview format")
             .Produces<InterviewFormatChanged>()

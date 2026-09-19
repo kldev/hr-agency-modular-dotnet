@@ -13,7 +13,7 @@ internal static class MapChangeStatus
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("{jobApplicationId}/status", Handler)
+            .MapPut(ApiEndpoints.Recruitment.JobApplications.ChangeStatus, Handler)
             .WithSummary("Change status")
             .WithName("Change job application status")
             .Produces<JobApplicationStatusChanged>()

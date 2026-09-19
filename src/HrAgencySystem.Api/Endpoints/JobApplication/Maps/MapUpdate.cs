@@ -13,7 +13,7 @@ internal static class MapUpdate
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .MapPut("{jobApplicationId:guid}", Handler)
+            .MapPut(ApiEndpoints.Recruitment.JobApplications.Update, Handler)
             .WithSummary("Update job applicant")
             .WithName("Update job applicant")
             .Produces<JobApplicationUpdated>()

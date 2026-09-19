@@ -14,7 +14,7 @@ internal static class MapGetSlice
     {
         // GET /api/recruitment/job-applications
         group
-            .MapGet("", Handler)
+            .MapGet(ApiEndpoints.Recruitment.JobApplications.Slice, Handler)
             .WithSummary("Get applications")
             .WithName("Get job applications slice")
             .Produces<SliceResponse<JobApplicationProjection>>()

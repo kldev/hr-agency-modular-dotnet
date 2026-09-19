@@ -14,7 +14,7 @@ internal static class MapGetSlice
     {
         // GET /api/interviews
         group
-            .MapGet("", Handler)
+            .MapGet(ApiEndpoints.Interviews.Slice, Handler)
             .WithSummary("Get interviews")
             .WithName("Get interviews")
             .Produces<SliceResponse<InterviewProjection>>()
