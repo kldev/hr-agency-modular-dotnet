@@ -1,30 +1,30 @@
 import { Outlet } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
-import { getUserAuth } from "#/server/auth";
+import { useEffect, useState } from "react";
+import type { AppUserAuthenticated } from "#/api/models";
 import { useAuthStore } from "#/stores/authStore";
 import { useUiStore } from "@/stores/uiStore";
 import { Sidebar } from "./sidebar";
 import { TopBar } from "./top-bar";
 
-export function AppLayout() {
+interface AppLayoutProps {
+	user: AppUserAuthenticated;
+}
+
+export function AppLayout({ user }: AppLayoutProps) {
 	const [collapsed, setCollapsed] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const { mode } = useUiStore();
-	const { setUser, clearUser } = useAuthStore();
+	const { setUser } = useAuthStore();
 
 	useEffect(() => {
 		document.documentElement.dataset.theme = mode;
 	}, [mode]);
 
-	const checkTokenAndUser = useCallback(async () => {
-		const user = await getUserAuth();
-		if (!user) clearUser();
-		setUser(user);
-	}, [clearUser, setUser]);
-
+	// The route guard already resolved the user; this only mirrors it into the store the rest of
+	// the tree reads from.
 	useEffect(() => {
-		checkTokenAndUser();
-	}, [checkTokenAndUser]);
+		setUser(user);
+	}, [user, setUser]);
 
 	return (
 		<div

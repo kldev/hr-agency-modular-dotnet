@@ -1,30 +1,29 @@
 import { Outlet } from "@tanstack/react-router";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { OwnerAuthenticated } from "#/api/models";
 import { OwnerTopBar } from "#/platform-owner/layout";
-import { getOwnerAuth } from "#/server/auth";
 import { Sidebar } from "@/components/layout";
 import { useUiStore } from "@/stores/uiStore";
 import { useOwnerAuthStore } from "../stores/authOwnerStore";
 
-export function OwnerLayout() {
+interface OwnerLayoutProps {
+	owner: OwnerAuthenticated;
+}
+
+export function OwnerLayout({ owner }: OwnerLayoutProps) {
 	const [collapsed, setCollapsed] = useState(false);
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const { mode } = useUiStore();
-	const { setOwner, clear } = useOwnerAuthStore();
+	const { setOwner } = useOwnerAuthStore();
 
 	useEffect(() => {
 		document.documentElement.dataset.theme = mode;
 	}, [mode]);
 
-	const checkTokenAndUser = useCallback(async () => {
-		const user = await getOwnerAuth();
-		if (!user) clear();
-		setOwner(user);
-	}, [clear, setOwner]);
-
+	// The route guard already resolved the owner; this only mirrors it into the store.
 	useEffect(() => {
-		checkTokenAndUser();
-	}, [checkTokenAndUser]);
+		setOwner(owner);
+	}, [owner, setOwner]);
 
 	return (
 		<div

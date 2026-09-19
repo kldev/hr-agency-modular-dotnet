@@ -18,15 +18,15 @@ const getJobPostServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { id: string }) => input)
-	.handler(({ data }) => {
-		return getJobPost(data.id, getFnOptions());
+	.handler(async ({ data }) => {
+		return getJobPost(data.id, await getFnOptions());
 	});
 
 const getJobsSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: JobsFilters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getJobPostsSlice(
 			{
 				search: data.search ?? "",
@@ -34,7 +34,7 @@ const getJobsSliceServerFn = createServerFn({
 				page: data.page,
 				pageSize: data.pageSize,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

@@ -16,22 +16,22 @@ const getCompanyContactsServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: string) => input)
-	.handler(({ data }) => {
-		return getCompanyContacts(data, getFnOptions());
+	.handler(async ({ data }) => {
+		return getCompanyContacts(data, await getFnOptions());
 	});
 
 const getCompaniesSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: CompanyFilters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getCompanies(
 			{
 				search: data.search ?? "",
 				page: data.page,
 				pageSize: data.pageSize,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 
@@ -39,8 +39,8 @@ const getCompanyServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: string) => input)
-	.handler(({ data }) => {
-		return getCompany(data, getFnOptions());
+	.handler(async ({ data }) => {
+		return getCompany(data, await getFnOptions());
 	});
 
 export function useGetCompanyContacts(id: string) {

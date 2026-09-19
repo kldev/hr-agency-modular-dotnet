@@ -14,9 +14,6 @@
  * OpenAPI spec version: v1
  */
 
-export interface LoginUserResult {
-	token: string;
+export interface LogoutRequest {
 	refreshToken: string;
-	expiresAt: string;
-	refreshTokenExpiresAt: string;
 }

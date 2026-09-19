@@ -37,8 +37,10 @@ import type {
 	LoginOwner,
 	LoginUser,
 	LoginUserResult,
+	LogoutRequest,
 	OwnerAuthenticated,
 	ProblemDetails,
+	RefreshTokenRequest,
 	RequestPasswordResetRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
@@ -189,6 +191,260 @@ export function useLoginOrganizationUser<
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 	const queryOptions = getLoginOrganizationUserQueryOptions(loginUser, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Exchange a refresh token for a new token pair
+ */
+export const refreshAccessToken = (
+	refreshTokenRequest: BodyType<RefreshTokenRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<LoginUserResult>(
+		{
+			url: `/api/auth/refresh`,
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			data: refreshTokenRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getRefreshAccessTokenQueryKey = (
+	refreshTokenRequest?: BodyType<RefreshTokenRequest>,
+) => {
+	return ["POST", `/api/auth/refresh`, refreshTokenRequest] as const;
+};
+
+export const getRefreshAccessTokenQueryOptions = <
+	TData = Awaited<ReturnType<typeof refreshAccessToken>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	refreshTokenRequest: BodyType<RefreshTokenRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof refreshAccessToken>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getRefreshAccessTokenQueryKey(refreshTokenRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof refreshAccessToken>>> = ({ signal }) =>
+		refreshAccessToken(refreshTokenRequest, requestOptions, signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof refreshAccessToken>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type RefreshAccessTokenQueryResult = NonNullable<
+	Awaited<ReturnType<typeof refreshAccessToken>>
+>;
+export type RefreshAccessTokenQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useRefreshAccessToken<
+	TData = Awaited<ReturnType<typeof refreshAccessToken>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	refreshTokenRequest: BodyType<RefreshTokenRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof refreshAccessToken>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof refreshAccessToken>>,
+					TError,
+					Awaited<ReturnType<typeof refreshAccessToken>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRefreshAccessToken<
+	TData = Awaited<ReturnType<typeof refreshAccessToken>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	refreshTokenRequest: BodyType<RefreshTokenRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof refreshAccessToken>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof refreshAccessToken>>,
+					TError,
+					Awaited<ReturnType<typeof refreshAccessToken>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRefreshAccessToken<
+	TData = Awaited<ReturnType<typeof refreshAccessToken>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	refreshTokenRequest: BodyType<RefreshTokenRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof refreshAccessToken>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Exchange a refresh token for a new token pair
+ */
+
+export function useRefreshAccessToken<
+	TData = Awaited<ReturnType<typeof refreshAccessToken>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	refreshTokenRequest: BodyType<RefreshTokenRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof refreshAccessToken>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getRefreshAccessTokenQueryOptions(refreshTokenRequest, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary End the session behind a refresh token
+ */
+export const logout = (
+	logoutRequest: BodyType<LogoutRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<void>(
+		{
+			url: `/api/auth/logout`,
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			data: logoutRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getLogoutQueryKey = (logoutRequest?: BodyType<LogoutRequest>) => {
+	return ["POST", `/api/auth/logout`, logoutRequest] as const;
+};
+
+export const getLogoutQueryOptions = <
+	TData = Awaited<ReturnType<typeof logout>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	logoutRequest: BodyType<LogoutRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof logout>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getLogoutQueryKey(logoutRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof logout>>> = ({ signal }) =>
+		logout(logoutRequest, requestOptions, signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof logout>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type LogoutQueryResult = NonNullable<Awaited<ReturnType<typeof logout>>>;
+export type LogoutQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useLogout<
+	TData = Awaited<ReturnType<typeof logout>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	logoutRequest: BodyType<LogoutRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof logout>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof logout>>,
+					TError,
+					Awaited<ReturnType<typeof logout>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useLogout<
+	TData = Awaited<ReturnType<typeof logout>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	logoutRequest: BodyType<LogoutRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof logout>>, TError, TData>> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof logout>>,
+					TError,
+					Awaited<ReturnType<typeof logout>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useLogout<
+	TData = Awaited<ReturnType<typeof logout>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	logoutRequest: BodyType<LogoutRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof logout>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary End the session behind a refresh token
+ */
+
+export function useLogout<
+	TData = Awaited<ReturnType<typeof logout>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	logoutRequest: BodyType<LogoutRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof logout>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getLogoutQueryOptions(logoutRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;

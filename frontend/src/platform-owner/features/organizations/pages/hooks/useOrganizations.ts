@@ -16,10 +16,10 @@ export const getSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: OrganizationsPageFillter) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getOrganizations(
 			{ search: data.search, page: data.page, pageSize: data.pageSize },
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

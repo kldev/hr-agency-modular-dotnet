@@ -18,7 +18,7 @@ const getInterviewsSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: InterviewsFilters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getInterviews(
 			{
 				search: data.search ?? "",
@@ -26,7 +26,7 @@ const getInterviewsSliceServerFn = createServerFn({
 				page: data.page,
 				pageSize: data.pageSize,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

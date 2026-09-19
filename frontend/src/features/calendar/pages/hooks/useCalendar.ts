@@ -9,8 +9,8 @@ const getInterviewServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { id: string }) => input)
-	.handler(({ data }) => {
-		return getInterview(data.id, getFnOptions());
+	.handler(async ({ data }) => {
+		return getInterview(data.id, await getFnOptions());
 	});
 
 type GetRanteFilter = {
@@ -24,7 +24,7 @@ const getInterviewsRangeServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: GetRanteFilter) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getInterviewsForDateRange(
 			{
 				search: data.search,
@@ -32,7 +32,7 @@ const getInterviewsRangeServerFn = createServerFn({
 				toDate: data.to,
 				status: data.status,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

@@ -1,34 +1,48 @@
 import { createServerFn } from "@tanstack/react-start";
-import { deleteCookie, getCookie, setCookie } from "@tanstack/react-start/server";
 import axios from "axios";
-import type { AppUserAuthenticated, OwnerAuthenticated } from "#/api/models";
-import { API_URL } from "#/routes/api/$";
+import type { AppUserAuthenticated, LoginUserResult, OwnerAuthenticated } from "#/api/models";
+import { API_URL } from "#/server/apiUrl";
+import {
+	clearSession,
+	currentAccessToken,
+	readRefreshToken,
+	storeOwnerSession,
+	storeSession,
+} from "#/server/session";
 
 export const storeToken = createServerFn({ method: "POST" })
-	.validator((data: { token: string }) => data)
+	.validator((data: LoginUserResult) => data)
 	.handler(async ({ data }) => {
-		setCookie("access_token", data?.token ?? "");
+		storeSession(data);
 		return { message: "OK" };
 	});
 
-export const getToken = createServerFn({
-	method: "GET",
-}).handler(() => {
-	const token = getCookie("access_token");
-	return { token };
-});
-
-export const hasToken = createServerFn({
-	method: "GET",
-}).handler(() => {
-	const token = getCookie("access_token");
-	return { hasToken: token?.length };
-});
+export const storeOwnerToken = createServerFn({ method: "POST" })
+	.validator((data: { token: string }) => data)
+	.handler(async ({ data }) => {
+		storeOwnerSession(data.token);
+		return { message: "OK" };
+	});
 
 export const logout = createServerFn({
 	method: "POST",
 }).handler(async () => {
-	deleteCookie("access_token");
+	const refreshToken = readRefreshToken();
+
+	// The cookies go regardless: a server that cannot be reached must not leave the user signed in.
+	clearSession();
+
+	if (!refreshToken) {
+		return { success: true };
+	}
+
+	try {
+		// Without this the refresh token would stay usable for the rest of its thirty days, and
+		// signing out would only mean "this browser forgot".
+		await axios.post(`${API_URL}/api/auth/logout`, { refreshToken });
+	} catch {
+		return { success: false };
+	}
 
 	return { success: true };
 });
@@ -36,35 +50,30 @@ export const logout = createServerFn({
 export const getUserAuth = createServerFn({
 	method: "GET",
 }).handler(async () => {
-	const token = getCookie("access_token");
-
-	if (!token) {
-		return null;
-	}
-
-	const response = await axios.get(`${API_URL}/api/user/me`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	});
-
-	return response.data as AppUserAuthenticated;
+	return await whoAmI<AppUserAuthenticated>("/api/user/me");
 });
 
 export const getOwnerAuth = createServerFn({
 	method: "GET",
 }).handler(async () => {
-	const token = getCookie("access_token");
+	return await whoAmI<OwnerAuthenticated>("/api/owner/me");
+});
+
+async function whoAmI<T>(path: string) {
+	const token = await currentAccessToken();
 
 	if (!token) {
 		return null;
 	}
 
-	const response = await axios.get(`${API_URL}/api/owner/me`, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-	});
+	try {
+		const response = await axios.get<T>(`${API_URL}${path}`, {
+			headers: { Authorization: `Bearer ${token}` },
+		});
 
-	return response.data as OwnerAuthenticated;
-});
+		return response.data;
+	} catch {
+		// The token was refused although it was just renewed, so there is no session left to report.
+		return null;
+	}
+}

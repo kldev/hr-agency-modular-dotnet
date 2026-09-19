@@ -17,15 +17,15 @@ export const getJobDescriptionServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { id: string }) => input)
-	.handler(({ data }) => {
-		return getJobDescription(data.id, getFnOptions());
+	.handler(async ({ data }) => {
+		return getJobDescription(data.id, await getFnOptions());
 	});
 
 export const getJobDescriptionsSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: JobDescriptionPageFillters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getJobDescriptionsSlice(
 			{
 				search: data.search,
@@ -33,7 +33,7 @@ export const getJobDescriptionsSliceServerFn = createServerFn({
 				page: data.page,
 				pageSize: data.pageSize,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

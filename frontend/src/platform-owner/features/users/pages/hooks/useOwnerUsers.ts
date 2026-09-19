@@ -18,7 +18,7 @@ const getSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: UsersFilters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getOrganizationsUsers(
 			{
 				search: data.search ?? "",
@@ -26,7 +26,7 @@ const getSliceServerFn = createServerFn({
 				page: data.page,
 				pageSize: data.pageSize,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

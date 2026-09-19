@@ -18,7 +18,7 @@ const getUsersliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: UsersFilters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getUsers(
 			{
 				search: data.search ?? "",
@@ -26,7 +26,7 @@ const getUsersliceServerFn = createServerFn({
 				page: data.page,
 				pageSize: data.pageSize,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

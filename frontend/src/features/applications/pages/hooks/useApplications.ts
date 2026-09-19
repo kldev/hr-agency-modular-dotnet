@@ -20,7 +20,7 @@ const getApplicationsSliceServerFn = createServerFn({
 			pageSize?: number;
 		}) => input,
 	)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getJobApplicationsSlice(
 			{
 				search: data.search ?? "",
@@ -29,7 +29,7 @@ const getApplicationsSliceServerFn = createServerFn({
 				page: data.page,
 				pageSize: data.pageSize,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 
@@ -37,8 +37,8 @@ const getApplicationDetailsServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { id: string }) => input)
-	.handler(({ data }) => {
-		return getJobApplication(data.id, getFnOptions());
+	.handler(async ({ data }) => {
+		return getJobApplication(data.id, await getFnOptions());
 	});
 
 export function useGetApplicationsSlice(fillter: ApplicationFilters) {

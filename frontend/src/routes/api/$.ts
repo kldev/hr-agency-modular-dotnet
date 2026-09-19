@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getCookie } from "@tanstack/react-start/server";
 import axios from "axios";
+import { API_URL } from "#/server/apiUrl";
+import { currentAccessToken, refreshSession } from "#/server/session";
 
 export const Route = createFileRoute("/api/$")({
 	server: {
@@ -23,11 +24,15 @@ export const Route = createFileRoute("/api/$")({
 		},
 	},
 });
-export const API_URL = process.env.API_URL ?? "http://localhost:5000";
+
+/// Signing in, refreshing and signing out carry their own credential in the body. Attaching a
+/// bearer token to them - or renewing one on their behalf - would at best be pointless and at worst
+/// loop the proxy through the refresh endpoint it is trying to call.
+const CARRIES_OWN_CREDENTIAL = /^\/api\/auth\//;
 
 async function proxyRequest(request: Request) {
 	const url = new URL(request.url);
-	const token = getCookie("access_token");
+	const anonymous = CARRIES_OWN_CREDENTIAL.test(url.pathname);
 
 	const targetUrl = `${API_URL}/api${url.pathname.replace(/^\/api/, "")}${url.search}`;
 
@@ -39,25 +44,25 @@ async function proxyRequest(request: Request) {
 		}
 	});
 
-	if (token) {
-		headers.Authorization = `Bearer ${token}`;
-	}
+	// Read once and keep it: a retry after a renewal needs the same body, and the request stream is
+	// only good for a single read.
+	const body =
+		request.method === "GET" || request.method === "HEAD" ? undefined : await request.arrayBuffer();
 
 	try {
-		const response = await axios.request({
-			url: targetUrl,
-			method: request.method,
-			paramsSerializer: {
-				indexes: null,
-			},
-			headers,
-			data:
-				request.method === "GET" || request.method === "HEAD"
-					? undefined
-					: await request.arrayBuffer(),
-			responseType: "arraybuffer",
-			validateStatus: () => true,
+		let response = await forward(targetUrl, request.method, headers, body, {
+			token: anonymous ? undefined : await currentAccessToken(),
 		});
+
+		if (response.status === 401 && !anonymous) {
+			// The token was accepted as fresh but the API disagrees - a revoked session, a restarted
+			// API, a clock apart. Worth exactly one renewal before giving the 401 to the browser.
+			const renewed = await refreshSession();
+
+			if (renewed) {
+				response = await forward(targetUrl, request.method, headers, body, { token: renewed });
+			}
+		}
 
 		const responseHeaders = new Headers();
 
@@ -90,4 +95,24 @@ async function proxyRequest(request: Request) {
 
 		return new Response("Proxy error", { status: 502 });
 	}
+}
+
+function forward(
+	targetUrl: string,
+	method: string,
+	headers: Record<string, string>,
+	body: ArrayBuffer | undefined,
+	auth: { token: string | undefined },
+) {
+	return axios.request({
+		url: targetUrl,
+		method,
+		paramsSerializer: {
+			indexes: null,
+		},
+		headers: auth.token ? { ...headers, Authorization: `Bearer ${auth.token}` } : headers,
+		data: body,
+		responseType: "arraybuffer",
+		validateStatus: () => true,
+	});
 }

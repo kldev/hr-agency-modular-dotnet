@@ -1,7 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useState } from "react";
-import { storeToken } from "#/server/auth";
+import { readApiError } from "#/features/auth/readApiError";
+import { storeOwnerToken } from "#/server/auth";
 import { getAuthenticatedOwner, loginPlatformOwner } from "@/api/endpoints";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
 import { AuthLayout } from "../layout";
@@ -36,16 +37,14 @@ const OwnerLoginPage: React.FC = () => {
 		try {
 			const result = await loginPlatformOwner({ email: email, password: password });
 
-			if (result.token) {
-				await storeToken({ data: result });
+			await storeOwnerToken({ data: result });
 
-				const owner = await getAuthenticatedOwner();
-				store.setOwner(owner);
-			}
+			const owner = await getAuthenticatedOwner();
+			store.setOwner(owner);
 
 			navigate({ to: "/admin/dashboard" });
-		} catch {
-			setError("Unable to sign in. Please try again.");
+		} catch (caught) {
+			setError(readApiError(caught, "Unable to sign in. Please try again."));
 		} finally {
 			setIsLoading(false);
 		}

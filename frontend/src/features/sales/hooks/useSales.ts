@@ -25,15 +25,15 @@ const getSingleServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { id: string }) => input)
-	.handler(({ data }) => {
-		return getOpportunity(data.id, getFnOptions());
+	.handler(async ({ data }) => {
+		return getOpportunity(data.id, await getFnOptions());
 	});
 
 const getSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: SalesPageFillters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getOpportunities(
 			{
 				search: data.search,
@@ -42,7 +42,7 @@ const getSliceServerFn = createServerFn({
 				pageSize: data.pageSize,
 				responsibleId: data.responsibleId,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 
@@ -50,14 +50,14 @@ const getActivitiesSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: { opportunityId: string; page: number }) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getSalesActivities(
 			{
 				opportunityId: data.opportunityId,
 				page: data.page,
 				pageSize: ACTIVITY_PAGE_SIZE,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 
@@ -65,13 +65,13 @@ const getPipelineTotalsServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: SalesPageFillters) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getOpportunitiesPipelineTotals(
 			{
 				search: data.search,
 				responsibleId: data.responsibleId,
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 

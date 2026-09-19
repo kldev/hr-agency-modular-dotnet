@@ -50,40 +50,40 @@ const createOpportuinityServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { req: CreateOpportunityRequest }) => input)
-	.handler(({ data }) => {
-		return createOpportunity(data.req, getFnOptions());
+	.handler(async ({ data }) => {
+		return createOpportunity(data.req, await getFnOptions());
 	});
 
 const updateOpportuinityServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { id: string; req: UpdateOpportunityRequest }) => input)
-	.handler(({ data }) => {
-		return updateOpportunity(data.id, data.req, getFnOptions());
+	.handler(async ({ data }) => {
+		return updateOpportunity(data.id, data.req, await getFnOptions());
 	});
 
 const logActivityServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { req: CreateSalesActivityRequest }) => input)
-	.handler(({ data }) => {
-		return logSalesActivity(data.req, getFnOptions());
+	.handler(async ({ data }) => {
+		return logSalesActivity(data.req, await getFnOptions());
 	});
 
 const createFollowUpServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { req: CreateFollowUpActionRequest }) => input)
-	.handler(({ data }) => {
-		return createFollowUpAction(data.req, getFnOptions());
+	.handler(async ({ data }) => {
+		return createFollowUpAction(data.req, await getFnOptions());
 	});
 
 const updateFollowUpServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { id: string; req: UpdateFollowUpActionRequest }) => input)
-	.handler(({ data }) => {
-		return updateFollowUpAction(data.id, data.req, getFnOptions());
+	.handler(async ({ data }) => {
+		return updateFollowUpAction(data.id, data.req, await getFnOptions());
 	});
 
 export function useCreateOpportuinity({ onSuccess }: OpportunityOptions) {

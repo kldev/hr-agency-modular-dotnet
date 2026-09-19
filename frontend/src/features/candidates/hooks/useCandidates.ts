@@ -18,15 +18,15 @@ const getSingleServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: string) => input)
-	.handler(({ data }) => {
-		return getCandidate(data, getFnOptions());
+	.handler(async ({ data }) => {
+		return getCandidate(data, await getFnOptions());
 	});
 
 const getSliceServerFn = createServerFn({
 	method: "GET",
 })
 	.validator((input: CandidatesPageFillter) => input)
-	.handler(({ data }) => {
+	.handler(async ({ data }) => {
 		return getCandidates(
 			{
 				page: data.page,
@@ -34,7 +34,7 @@ const getSliceServerFn = createServerFn({
 				search: data.search,
 				...(data.source ? { source: [data.source] } : {}),
 			},
-			getFnOptions(),
+			await getFnOptions(),
 		);
 	});
 
