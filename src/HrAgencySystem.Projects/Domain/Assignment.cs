@@ -12,4 +12,8 @@ public sealed record Assignment(
     string WorkCountry,
     DateOnly StartsOn,
     DateOnly? EndsOn
-);
+)
+{
+    public const string EndsBeforeStartMessage =
+        "The end date cannot be earlier than the start date.";
+}

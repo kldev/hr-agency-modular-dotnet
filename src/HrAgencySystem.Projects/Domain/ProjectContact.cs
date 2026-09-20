@@ -7,8 +7,4 @@ namespace HrAgencySystem.Projects.Domain;
 /// client's contact list when the person came from there, and is null when somebody was typed in by
 /// hand - the same shape <c>CompanyProjection</c> already uses for a primary contact.
 /// </summary>
-public sealed record ProjectContact(
-    ContactRole Role,
-    ContactPerson Person,
-    Guid? CompanyContactId
-);
+public sealed record ProjectContact(ContactRole Role, ContactPerson Person, Guid? CompanyContactId);

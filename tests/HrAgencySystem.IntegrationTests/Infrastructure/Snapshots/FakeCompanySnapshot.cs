@@ -59,7 +59,9 @@ public sealed class FakeCompanySnapshot(IQuerySession session) : ICompanySnapsho
             .Where(z => z.CompanyId == companyId)
             .FirstOrDefaultAsync(ct);
 
-        return created is null ? null : new CompanySnapshot(created.CompanyId, created.Name, created.TaxId);
+        return created is null
+            ? null
+            : new CompanySnapshot(created.CompanyId, created.Name, created.TaxId);
     }
 
     private async Task<Guid?> FindOwnerAsync(Guid companyId, CancellationToken ct)

@@ -77,10 +77,7 @@ public static class ComplianceCatalogue
         string country,
         EngagementType engagement
     ) =>
-        Requirements.GetValueOrDefault(
-            ((country ?? "").Trim().ToUpperInvariant(), engagement),
-            []
-        );
+        Requirements.GetValueOrDefault(((country ?? "").Trim().ToUpperInvariant(), engagement), []);
 
     public static bool Contains(
         string country,
