@@ -54,7 +54,7 @@ internal sealed class JobFeedProcessor(
         await objectStorage.StoreAsync(
             new FileInput(streamJson, "jobs.json", "application/json"),
             task.OrganizationId + "/jobs.json",
-            BucketNames.FeedJobs,
+            FeedBuckets.Jobs,
             ct
         );
     }
@@ -70,7 +70,7 @@ internal sealed class JobFeedProcessor(
         await objectStorage.StoreAsync(
             new FileInput(stream, "jobs.xml", "application/xml"),
             task.OrganizationId + "/jobs.xml",
-            BucketNames.FeedJobs,
+            FeedBuckets.Jobs,
             ct
         );
     }

@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Common.Response;
+using HrAgencySystem.Feeds;
 using HrAgencySystem.Files.Service;
 using HrAgencySystem.Organization.Application.Port;
 using HrAgencySystem.Organization.Domain.ValueObjects;
@@ -26,7 +27,7 @@ internal static class MapFeed
 
         var result = await storage.GetAsync(
             organization.Value + "/jobs.xml",
-            BucketNames.FeedJobs,
+            FeedBuckets.Jobs,
             ct
         );
 
@@ -49,7 +50,7 @@ internal static class MapFeed
 
         var result = await storage.GetAsync(
             organization.Value + "/jobs.json",
-            BucketNames.FeedJobs,
+            FeedBuckets.Jobs,
             ct
         );
 

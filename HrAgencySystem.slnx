@@ -23,6 +23,7 @@
     <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj" />
   </Folder>
   <Folder Name="/src/Svc/">
+    <Project Path="src/services/HrAgencySystem.FileService/HrAgencySystem.FileService.csproj" />
     <Project Path="src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj" />
     <Project Path="src/services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj" />
   </Folder>
