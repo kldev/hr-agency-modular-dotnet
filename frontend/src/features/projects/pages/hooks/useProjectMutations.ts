@@ -4,6 +4,7 @@ import { getFnOptions } from "#/server/axios";
 import {
 	assignProjectContact,
 	assignProjectTeam,
+	changeProjectLegalEntity,
 	changeProjectStatus,
 	createProject,
 	recordComplianceItem,
@@ -16,6 +17,7 @@ import {
 import type {
 	AssignProjectContactRequest,
 	AssignProjectTeamRequest,
+	ChangeProjectLegalEntityRequest,
 	ChangeProjectStatusRequest,
 	ComplianceRequirement,
 	ContactRole,
@@ -47,6 +49,12 @@ const updateProjectServerFn = createServerFn({
 	.validator((input: { id: string; req: UpdateProjectRequest }) => input)
 	.handler(async ({ data }) => {
 		return updateProject(data.id, data.req, await getFnOptions());
+	});
+
+const changeProjectLegalEntityServerFn = createServerFn({ method: "POST" })
+	.validator((input: { id: string; req: ChangeProjectLegalEntityRequest }) => input)
+	.handler(async ({ data }) => {
+		return changeProjectLegalEntity(data.id, data.req, await getFnOptions());
 	});
 
 const changeProjectStatusServerFn = createServerFn({
@@ -169,6 +177,14 @@ export function useChangeProjectStatus(options: MutationOptions) {
 	return useProjectMutation(
 		({ projectId, request }: { projectId: string; request: ChangeProjectStatusRequest }) =>
 			changeProjectStatusServerFn({ data: { id: projectId, req: request } }),
+		options,
+	);
+}
+
+export function useChangeProjectLegalEntity(options: MutationOptions) {
+	return useProjectMutation(
+		({ projectId, legalEntityId }: { projectId: string; legalEntityId: string }) =>
+			changeProjectLegalEntityServerFn({ data: { id: projectId, req: { legalEntityId } } }),
 		options,
 	);
 }

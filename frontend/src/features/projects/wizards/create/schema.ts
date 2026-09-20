@@ -3,6 +3,7 @@ import { z } from "zod";
 export const projectSchema = z
 	.object({
 		companyId: z.string().min(1, "Pick a client"),
+		legalEntityId: z.string().min(1, "Pick the company that delivers the project"),
 		name: z
 			.string()
 			.trim()
@@ -40,6 +41,7 @@ export type ProjectField = keyof ProjectFormValues;
 
 export const emptyProject: ProjectFormValues = {
 	companyId: "",
+	legalEntityId: "",
 	name: "",
 	description: "",
 	engagementType: "",

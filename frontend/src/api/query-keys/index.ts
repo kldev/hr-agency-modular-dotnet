@@ -4,6 +4,7 @@ export * from "./companiesKeys";
 export * from "./interviewKeys";
 export * from "./jobDescriptionKeys";
 export * from "./jobPostsKeys";
+export * from "./legalEntitiesKeys";
 export * from "./organizationKeys";
 export * from "./profileKeys";
 export * from "./projectsKeys";

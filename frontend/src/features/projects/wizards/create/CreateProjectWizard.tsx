@@ -49,6 +49,7 @@ export function CreateProjectWizard({
 				created = await mutation.mutateAsync({
 					request: {
 						companyId: value.companyId,
+						legalEntityId: value.legalEntityId,
 						name: value.name.trim(),
 						description: value.description.trim(),
 						engagementType: value.engagementType as EngagementType,

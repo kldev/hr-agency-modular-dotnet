@@ -1,4 +1,4 @@
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Landmark } from "lucide-react";
 import type { ProjectProjection } from "@/api/models";
 import { Button, DetailItem, DetailOverviewHeader } from "@/components/ui";
 import { useGetCompany } from "@/features/companies/pages/hooks";
@@ -7,6 +7,7 @@ import { formatAddress } from "../../../utils";
 interface ProjectCustomerSectionProps {
 	project: ProjectProjection;
 	onCompleteProfile: (companyId: string) => void;
+	onChangeLegalEntity: () => void;
 }
 
 /**
@@ -17,12 +18,16 @@ interface ProjectCustomerSectionProps {
 export function ProjectCustomerSection({
 	project,
 	onCompleteProfile,
+	onChangeLegalEntity,
 }: ProjectCustomerSectionProps) {
 	const companyQuery = useGetCompany(project.companyId);
 	const company = companyQuery.data;
 	const profile = company?.profile;
 
 	const address = profile?.registeredAddress;
+
+	// Draft is the only state before a project starts, which is the whole of the rule.
+	const isDraft = project.status === "Draft";
 
 	return (
 		<div className="data-overview">
@@ -61,6 +66,38 @@ export function ProjectCustomerSection({
 					</Button>
 				</div>
 			) : null}
+
+			<DetailOverviewHeader
+				title="Delivered by"
+				description="Our company behind this engagement, as it stood when the project was set up."
+			/>
+
+			<dl className="data-details-list">
+				<DetailItem label="Company">{project.deliveringEntity.name}</DetailItem>
+
+				<DetailItem label="Registered name">{project.deliveringEntity.legalName}</DetailItem>
+
+				<DetailItem label="Tax ID">{project.deliveringEntity.taxId}</DetailItem>
+
+				<DetailItem label="VAT number">{project.deliveringEntity.vatNumber ?? "—"}</DetailItem>
+
+				<DetailItem label="Registered address">
+					{formatAddress(project.deliveringEntity.registeredAddress)}
+				</DetailItem>
+			</dl>
+
+			<div className="project-section-body">
+				{isDraft ? (
+					<Button variant="ghost" icon={<Landmark size={15} />} onClick={onChangeLegalEntity}>
+						Change company
+					</Button>
+				) : (
+					<p className="project-role-description">
+						The project has started, so this is settled. Carrying on under another company means
+						copying the project.
+					</p>
+				)}
+			</div>
 		</div>
 	);
 }

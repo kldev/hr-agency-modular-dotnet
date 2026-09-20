@@ -143,6 +143,18 @@ export function ContractStatusBadge({ status }: { status: ContractStatus }) {
 	);
 }
 
+/**
+ * Trading or not, worked out from the dates rather than a stored flag - the same rule the backend
+ * applies, so the badge cannot disagree with what the list filter did.
+ */
+export function LegalEntityStatusBadge({ isTrading }: { isTrading: boolean }) {
+	return (
+		<span className={clsx("badge", isTrading ? "badge-active" : "badge-closed")}>
+			{isTrading ? "Trading" : "Closed"}
+		</span>
+	);
+}
+
 export function ComplianceStatusBadge({ status }: { status: ComplianceStatus }) {
 	return (
 		<span className={clsx("badge", complianceStatusClass[status])}>
