@@ -11,7 +11,7 @@ namespace HrAgencySystem.Feeds.Application.GenerateJobFeed;
 internal sealed class JobFeedProcessor(
     IJobFeedTaskQueue fetcher,
     IJobFeedTaskRepository repository,
-    IFileStorage fileStorage,
+    IObjectStorage objectStorage,
     IJobFeedGenerator generator
 ) : IJobFeedProcessor
 {
@@ -51,10 +51,10 @@ internal sealed class JobFeedProcessor(
     {
         await using var streamJson = new MemoryStream(Encoding.UTF8.GetBytes(result.Json));
 
-        await fileStorage.StoreAsync(
+        await objectStorage.StoreAsync(
             new FileInput(streamJson, "jobs.json", "application/json"),
             task.OrganizationId + "/jobs.json",
-            BucketNames.FeedJobs,
+            FeedBuckets.Jobs,
             ct
         );
     }
@@ -67,10 +67,10 @@ internal sealed class JobFeedProcessor(
     {
         await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(result.Xml));
 
-        await fileStorage.StoreAsync(
+        await objectStorage.StoreAsync(
             new FileInput(stream, "jobs.xml", "application/xml"),
             task.OrganizationId + "/jobs.xml",
-            BucketNames.FeedJobs,
+            FeedBuckets.Jobs,
             ct
         );
     }

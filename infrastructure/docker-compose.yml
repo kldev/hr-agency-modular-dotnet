@@ -120,6 +120,8 @@ services:
       RabbitMq__Password: ${RabbitMqPassword}
       RabbitMq__VHost: "/development"
       RabbitMq__MailExchange: "x.emails"      
+      FileService__BaseUrl: "http://hr-agency-file-service:8080"
+      FileService__Secret: ${FileServiceSecret}
       Cors: ${Cors}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
@@ -134,6 +136,34 @@ services:
       postgres:
         condition: service_healthy   
       rabbitmq:
+        condition: service_healthy
+  file-service:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.file-service
+    container_name: hr-agency-file-service
+    networks:
+      - inner-cluster-communication
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+      ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
+      # Must match webapi - one shared key, and deliberately not the one user tokens are signed with.
+      FileService__Secret: ${FileServiceSecret}
+      RustFs__Endpoint: "http://hr-agency-api-s3:9000"
+      RustFs__AccessKey: ${RustFsAccessKey}
+      RustFs__SecretKey: ${RustFsSecretKey}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: "10s"
+    restart: on-failure
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rustfs:
         condition: service_healthy
   feeds-worker:
     build:

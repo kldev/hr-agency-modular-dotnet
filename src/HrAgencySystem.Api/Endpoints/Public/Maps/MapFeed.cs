@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Common.Response;
+using HrAgencySystem.Feeds;
 using HrAgencySystem.Files.Service;
 using HrAgencySystem.Organization.Application.Port;
 using HrAgencySystem.Organization.Domain.ValueObjects;
@@ -15,7 +16,7 @@ internal static class MapFeed
 
     private static async Task<IResult> HandlerXml(
         IOrganizationSlugReservationRepository repository,
-        IFileStorage storage,
+        IObjectStorage storage,
         string slug,
         CancellationToken ct
     )
@@ -24,11 +25,7 @@ internal static class MapFeed
         if (organization == null)
             return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));
 
-        var result = await storage.GetAsync(
-            organization.Value + "/jobs.xml",
-            BucketNames.FeedJobs,
-            ct
-        );
+        var result = await storage.GetAsync(organization.Value + "/jobs.xml", FeedBuckets.Jobs, ct);
 
         if (result.FileNotFound)
             return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));
@@ -39,7 +36,7 @@ internal static class MapFeed
     private static async Task<IResult> HandlerJson(
         IOrganizationSlugReservationRepository repository,
         string slug,
-        IFileStorage storage,
+        IObjectStorage storage,
         CancellationToken ct
     )
     {
@@ -49,7 +46,7 @@ internal static class MapFeed
 
         var result = await storage.GetAsync(
             organization.Value + "/jobs.json",
-            BucketNames.FeedJobs,
+            FeedBuckets.Jobs,
             ct
         );
 

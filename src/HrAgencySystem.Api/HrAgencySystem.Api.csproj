@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HrAgencySystem.PlatformSeeder\HrAgencySystem.PlatformSeeder.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Identity\HrAgencySystem.Identity.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj" />
@@ -28,6 +29,7 @@
     <ProjectReference Include="..\HrAgencySystem.Teams\HrAgencySystem.Teams.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />
     <ProjectReference Include="..\EmailTemplates\HrAgencySystem.EmailTemplates.Messaging\HrAgencySystem.EmailTemplates.Messaging.csproj" />
+    <ProjectReference Include="..\services\HrAgencySystem.FileService.Contracts\HrAgencySystem.FileService.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

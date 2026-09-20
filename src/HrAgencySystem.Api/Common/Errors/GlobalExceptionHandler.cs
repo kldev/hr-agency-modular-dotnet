@@ -1,3 +1,4 @@
+using HrAgencySystem.FileService.Contracts;
 using HrAgencySystem.SharedKernel.Exception;
 using JasperFx;
 using Microsoft.AspNetCore.Diagnostics;
@@ -84,6 +85,22 @@ public sealed class GlobalExceptionHandler(
                     httpContext,
                     StatusCodes.Status404NotFound,
                     "Not found",
+                    exception.Message,
+                    exception
+                );
+            case FileServiceException:
+                // 503, not 500: the request was fine and the document is probably fine too - the
+                // process that holds it is not answering. The person reading this needs to know it
+                // is worth trying again, and that nobody has to hunt for a missing file.
+                logger.LogError(
+                    exception,
+                    "File service failure. TraceId: {TraceId}",
+                    httpContext.TraceIdentifier
+                );
+                return await WriteErrorAsync(
+                    httpContext,
+                    StatusCodes.Status503ServiceUnavailable,
+                    "Document storage unavailable",
                     exception.Message,
                     exception
                 );

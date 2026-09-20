@@ -23,6 +23,8 @@
     <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj" />
   </Folder>
   <Folder Name="/src/Svc/">
+    <Project Path="src/services/HrAgencySystem.FileService/HrAgencySystem.FileService.csproj" />
+    <Project Path="src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj" />
     <Project Path="src/services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj" />
   </Folder>
   <Folder Name="/src/Web/">
@@ -30,6 +32,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/HrAgencySystem.EmailTemplates.UnitTests/HrAgencySystem.EmailTemplates.UnitTests.csproj" />
+    <Project Path="tests/HrAgencySystem.FileService.UnitTests/HrAgencySystem.FileService.UnitTests.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.UnitTests/HrAgencySystem.UnitTests.csproj" />
   </Folder>
