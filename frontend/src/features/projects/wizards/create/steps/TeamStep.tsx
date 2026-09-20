@@ -6,9 +6,11 @@ import { emptyProject } from "../schema";
 export const TeamStep = withForm({
 	defaultValues: emptyProject,
 
-	props: {},
+	props: {
+		isSubmitting: false,
+	} as { isSubmitting: boolean },
 
-	render: function Render({ form }) {
+	render: function Render({ form, isSubmitting }) {
 		return (
 			<FormWizard.Section>
 				<FormWizard.SectionHeader
@@ -25,6 +27,7 @@ export const TeamStep = withForm({
 							fieldValue={{ id: field.state.value || null }}
 							errors={field.state.meta.errors}
 							handleChange={(value) => field.handleChange(value.id ?? "")}
+							isSubmitting={isSubmitting}
 						/>
 					)}
 				</form.AppField>

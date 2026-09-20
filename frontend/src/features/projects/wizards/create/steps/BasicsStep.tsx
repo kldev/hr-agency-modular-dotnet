@@ -8,9 +8,11 @@ import { emptyProject } from "../schema";
 export const BasicsStep = withForm({
 	defaultValues: emptyProject,
 
-	props: {},
+	props: {
+		isSubmitting: false,
+	} as { isSubmitting: boolean },
 
-	render: function Render({ form }) {
+	render: function Render({ form, isSubmitting }) {
 		return (
 			<FormWizard.Section>
 				<FormWizard.SectionHeader
@@ -27,6 +29,7 @@ export const BasicsStep = withForm({
 							fieldValue={field.state.value}
 							errors={field.state.meta.errors}
 							handleChange={(value) => field.handleChange(value)}
+							isSubmitting={isSubmitting}
 						/>
 					)}
 				</form.AppField>
@@ -40,6 +43,7 @@ export const BasicsStep = withForm({
 							fieldValue={field.state.value}
 							errors={field.state.meta.errors}
 							handleChange={(value) => field.handleChange(value)}
+							isSubmitting={isSubmitting}
 						/>
 					)}
 				</form.AppField>
@@ -55,6 +59,7 @@ export const BasicsStep = withForm({
 							fieldValue={(field.state.value as EngagementType) || null}
 							errors={field.state.meta.errors}
 							handleChange={(value) => field.handleChange(value)}
+							isSubmitting={isSubmitting}
 						/>
 					)}
 				</form.AppField>

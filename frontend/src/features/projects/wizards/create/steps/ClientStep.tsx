@@ -28,9 +28,11 @@ function ProfileWarning({ companyId }: { companyId: string }) {
 export const ClientStep = withForm({
 	defaultValues: emptyProject,
 
-	props: {},
+	props: {
+		isSubmitting: false,
+	} as { isSubmitting: boolean },
 
-	render: function Render({ form }) {
+	render: function Render({ form, isSubmitting }) {
 		return (
 			<FormWizard.Section>
 				<FormWizard.SectionHeader
@@ -48,6 +50,7 @@ export const ClientStep = withForm({
 								fieldValue={{ id: field.state.value || null }}
 								errors={field.state.meta.errors}
 								handleChange={(value) => field.handleChange(value.id ?? "")}
+								isSubmitting={isSubmitting}
 							/>
 
 							{field.state.value ? <ProfileWarning companyId={field.state.value} /> : null}

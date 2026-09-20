@@ -127,6 +127,7 @@ export function CompleteCompanyProfileWizard({
 										fieldValue={field.state.value}
 										errors={field.state.meta.errors}
 										handleChange={(value) => field.handleChange(value)}
+										isSubmitting={mutation.isPending}
 									/>
 								)}
 							</form.AppField>
@@ -139,6 +140,7 @@ export function CompleteCompanyProfileWizard({
 										fieldValue={field.state.value}
 										errors={field.state.meta.errors}
 										handleChange={(value) => field.handleChange(value)}
+										isSubmitting={mutation.isPending}
 									/>
 								)}
 							</form.AppField>
@@ -162,6 +164,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -174,6 +177,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -186,6 +190,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -198,6 +203,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -210,6 +216,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -221,8 +228,8 @@ export function CompleteCompanyProfileWizard({
 											fieldName={field.name}
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
-											isSubmitting={false}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -246,6 +253,7 @@ export function CompleteCompanyProfileWizard({
 										fieldValue={field.state.value}
 										errors={field.state.meta.errors}
 										handleChange={(value) => field.handleChange(value)}
+										isSubmitting={mutation.isPending}
 									/>
 								)}
 							</form.AppField>
@@ -258,6 +266,7 @@ export function CompleteCompanyProfileWizard({
 										fieldValue={field.state.value}
 										errors={field.state.meta.errors}
 										handleChange={(value) => field.handleChange(value)}
+										isSubmitting={mutation.isPending}
 									/>
 								)}
 							</form.AppField>
@@ -281,6 +290,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -293,6 +303,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -305,6 +316,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -317,6 +329,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>
@@ -329,6 +342,7 @@ export function CompleteCompanyProfileWizard({
 											fieldValue={field.state.value}
 											errors={field.state.meta.errors}
 											handleChange={(value) => field.handleChange(value)}
+											isSubmitting={mutation.isPending}
 										/>
 									)}
 								</form.AppField>

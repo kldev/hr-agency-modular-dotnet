@@ -109,13 +109,13 @@ export function CreateProjectWizard({
 
 			<FormWizard.Body>
 				<FormWizard.Content>
-					{currentStep === 0 && <ClientStep form={form} />}
+					{currentStep === 0 && <ClientStep form={form} isSubmitting={isSubmitting} />}
 
-					{currentStep === 1 && <BasicsStep form={form} />}
+					{currentStep === 1 && <BasicsStep form={form} isSubmitting={isSubmitting} />}
 
-					{currentStep === 2 && <AssignmentStep form={form} />}
+					{currentStep === 2 && <AssignmentStep form={form} isSubmitting={isSubmitting} />}
 
-					{currentStep === 3 && <TeamStep form={form} />}
+					{currentStep === 3 && <TeamStep form={form} isSubmitting={isSubmitting} />}
 
 					{currentStep === 4 && <ReviewStep form={form} clientName={clientSuggestion.data?.name} />}
 				</FormWizard.Content>
