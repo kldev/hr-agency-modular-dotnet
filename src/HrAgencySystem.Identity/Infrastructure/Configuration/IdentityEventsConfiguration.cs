@@ -14,6 +14,7 @@ internal static class IdentityEventsConfiguration
             options.Events.AddEventType<RoleChanged>();
             options.Events.AddEventType<UserUpdated>();
             options.Events.AddEventType<PasswordChanged>();
+            options.Events.AddEventType<UserTeamChanged>();
         }
     }
 }

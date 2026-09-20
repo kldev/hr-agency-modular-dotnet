@@ -25,7 +25,8 @@ internal static class IdentityProjectionConfiguration
                     x.Id,
                 })
                 .Index(z => new { z.OrganizationId, z.CreatedAt })
-                .Index(z => new { z.OrganizationId, z.Role });
+                .Index(z => new { z.OrganizationId, z.Role })
+                .Index(z => new { z.OrganizationId, z.Team!.Id });
 
             options.Projections.Snapshot<OwnerProjection>(SnapshotLifecycle.Async);
             options

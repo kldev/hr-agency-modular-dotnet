@@ -1,5 +1,6 @@
 using HrAgencySystem.Identity.Infrastructure.Configuration;
 using HrAgencySystem.Identity.Sagas;
+using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using Marten;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,11 @@ public static class IdentityModule
     {
         options.LocalQueueFor<StartPasswordReset>().UseDurableInbox();
         options.LocalQueueFor<PasswordResetExpired>().UseDurableInbox();
+
+        // Same reasoning for team membership: losing one of these silently leaves UserProjection.Team
+        // disagreeing with the roster for good. UserTeamChanged needs no entry — it is invoked inline
+        // from this queue's handler, so it is covered by that envelope's retries.
+        options.LocalQueueFor<TeamMembershipChanged>().UseDurableInbox();
     }
 
     public static void ConfigureMarten(StoreOptions options)

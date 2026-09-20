@@ -3,6 +3,7 @@ using HrAgencySystem.Identity.Events;
 using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
+using HrAgencySystem.Teams.Contracts;
 
 namespace HrAgencySystem.Identity.Projections;
 
@@ -21,7 +22,8 @@ public sealed record UserProjection(
     string Phone = "",
     UserSnapshot? ModifiedBy = null,
     DateTimeOffset? ModifiedAt = null,
-    string JobTitle = ""
+    string JobTitle = "",
+    TeamInfo? Team = null
 ) : IAudit
 {
     public static UserProjection Create(UserCreated @event)
@@ -40,7 +42,8 @@ public sealed record UserProjection(
             @event.Contact.Phone,
             null,
             null,
-            @event.Contact.JobTitle
+            @event.Contact.JobTitle,
+            @event.Team
         );
     }
 
@@ -65,6 +68,15 @@ public sealed record UserProjection(
             ModifiedBy = @event.ModifiedBy,
             ModifiedAt = @event.ModifiedAt,
         };
+    }
+
+    /// <summary>
+    /// Membership is not an edit of the user record, so it deliberately leaves ModifiedBy/ModifiedAt
+    /// alone — those answer "who last changed this person's details", and nobody did.
+    /// </summary>
+    public UserProjection Apply(UserTeamChanged @event)
+    {
+        return this with { Team = @event.Team };
     }
 
     public UserProjection Apply(PasswordChanged @event)

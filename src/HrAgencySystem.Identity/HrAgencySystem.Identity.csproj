@@ -16,5 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\EmailTemplates\HrAgencySystem.EmailTemplates.Contracts\HrAgencySystem.EmailTemplates.Contracts.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Teams.Contracts\HrAgencySystem.Teams.Contracts.csproj" />
   </ItemGroup>
 </Project>
