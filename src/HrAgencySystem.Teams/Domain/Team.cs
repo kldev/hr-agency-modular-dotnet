@@ -1,5 +1,6 @@
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
+using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Domain.ValueObjects;
 using HrAgencySystem.Teams.Events;
 

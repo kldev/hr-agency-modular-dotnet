@@ -1,4 +1,5 @@
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Events;
 using Team = HrAgencySystem.Teams.Domain.Team;

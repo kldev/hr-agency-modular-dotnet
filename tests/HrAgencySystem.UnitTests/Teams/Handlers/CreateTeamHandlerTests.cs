@@ -3,6 +3,7 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Create;
+using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using Marten;

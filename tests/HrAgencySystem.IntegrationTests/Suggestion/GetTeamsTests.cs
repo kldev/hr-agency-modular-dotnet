@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Teams.Application.Suggestion;
+using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Domain;
 using Xunit.Abstractions;
 

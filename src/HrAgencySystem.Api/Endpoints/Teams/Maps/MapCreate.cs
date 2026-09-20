@@ -2,6 +2,7 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.Teams.Application.Create;
+using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Events;
 using Wolverine;

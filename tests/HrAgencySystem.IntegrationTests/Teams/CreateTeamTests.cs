@@ -1,6 +1,7 @@
 using System.Net;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Teams.Application.Create;
+using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Domain;
 using Xunit.Abstractions;
 
