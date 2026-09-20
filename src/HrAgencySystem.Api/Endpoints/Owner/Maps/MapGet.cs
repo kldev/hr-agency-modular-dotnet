@@ -10,7 +10,7 @@ internal static class MapGet
     public static void Map(RouteGroupBuilder group)
     {
         group
-            .Map(ApiEndpoints.Owners.Get, Handler)
+            .MapGet(ApiEndpoints.Owners.Get, Handler)
             .WithSummary("Get owner")
             .Produces<OwnerProjection>()
             .ProducesStandardErrors();

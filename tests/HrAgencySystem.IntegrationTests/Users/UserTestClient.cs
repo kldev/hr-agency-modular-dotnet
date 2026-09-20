@@ -43,6 +43,26 @@ public sealed class UserTestClient(HttpClient client, ITestOutputHelper output)
         return result;
     }
 
+    public async Task<UserProjection> GetAsync(Guid organizationId, Guid userId)
+    {
+        var response = await GetRawAsync(organizationId, userId);
+
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.ReadWithJson<UserProjection>(output);
+
+        Assert.NotNull(result);
+
+        return result;
+    }
+
+    public async Task<HttpResponseMessage> GetRawAsync(Guid organizationId, Guid userId)
+    {
+        client.WithOrganizationId(organizationId);
+
+        return await client.GetAsync($"/api/users/{userId}");
+    }
+
     public async Task<HttpResponseMessage> CreateRawAsync(
         Guid organizationId,
         string email,
