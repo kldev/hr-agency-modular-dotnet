@@ -146,7 +146,11 @@ public sealed class HttpFileServiceClient(
             // The service being down is not the same as the document being missing, and saying so
             // is the difference between "storage is unavailable" and a pointless hunt for a file
             // that is exactly where it should be.
-            logger.LogError(ex, "The file service could not be reached at {Uri}.", request.RequestUri);
+            logger.LogError(
+                ex,
+                "The file service could not be reached at {Uri}.",
+                request.RequestUri
+            );
             throw new FileServiceException(FileServiceException.UnavailableMessage, ex);
         }
     }
