@@ -9,6 +9,7 @@ public sealed class ProjectService(
     IUserSnapshotRepository users,
     ICompanySnapshotRepository companies,
     ITeamSnapshotRepository teams,
+    ILegalEntitySnapshotRepository legalEntities,
     IOrganizationChecker checker
 ) : IProjectService
 {
@@ -37,6 +38,26 @@ public sealed class ProjectService(
         // exists in somebody else's tenant.
         return company
             ?? throw new BusinessRuleException(IProjectService.CompanyNotInOrganizationMessage);
+    }
+
+    public async Task<LegalEntitySnapshot> GetLegalEntityAsync(
+        OrganizationId organizationId,
+        Guid legalEntityId,
+        DateOnly startsOn,
+        CancellationToken ct
+    )
+    {
+        var entity = await legalEntities.GetLegalEntityAsync(legalEntityId, organizationId, ct);
+
+        if (entity is null)
+            throw new BusinessRuleException(IProjectService.LegalEntityNotInOrganizationMessage);
+
+        // Checked against the project's start rather than today: setting up next month's engagement
+        // on a company that closes this month is the mistake worth catching.
+        if (!entity.IsActiveOn(startsOn))
+            throw new BusinessRuleException(IProjectService.LegalEntityNotTradingMessage);
+
+        return entity;
     }
 
     public async Task<TeamSnapshot> GetTeamAsync(

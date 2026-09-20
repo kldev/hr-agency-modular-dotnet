@@ -9,9 +9,9 @@ export type ProjectStep = {
 
 export const clientStepDef = {
 	id: "client",
-	title: "Client",
-	description: "Who the work is for",
-	fields: ["companyId"],
+	title: "Parties",
+	description: "Who the work is for and who delivers it",
+	fields: ["companyId", "legalEntityId"],
 } as const satisfies ProjectStep;
 
 export const basicsStepDef = {

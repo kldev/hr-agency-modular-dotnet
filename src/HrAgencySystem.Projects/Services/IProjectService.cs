@@ -15,6 +15,12 @@ public interface IProjectService
     public const string TeamNotInOrganizationMessage =
         "The specified team does not exist in this organization.";
 
+    public const string LegalEntityNotInOrganizationMessage =
+        "The specified legal entity does not exist in this organization.";
+
+    public const string LegalEntityNotTradingMessage =
+        "That legal entity was no longer trading when the project starts.";
+
     Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct);
 
     Task ValidateOrganization(Guid organizationId, CancellationToken ct);
@@ -27,6 +33,18 @@ public interface IProjectService
     Task<CompanySnapshot> GetCompanyAsync(
         OrganizationId organizationId,
         Guid companyId,
+        CancellationToken ct
+    );
+
+    /// <summary>
+    /// Resolves one of our own companies, which must belong to the caller's organization and must
+    /// still have been trading on the day the project starts - an engagement cannot be run by a
+    /// company that was already wound up.
+    /// </summary>
+    Task<LegalEntitySnapshot> GetLegalEntityAsync(
+        OrganizationId organizationId,
+        Guid legalEntityId,
+        DateOnly startsOn,
         CancellationToken ct
     );
 

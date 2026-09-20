@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import type { DocumentCategory } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
+import { FileDropzone } from "#/components/ui/FileDropzone";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
 import {
@@ -128,33 +129,17 @@ const FormContent: React.FC<{
 			>
 				<FormDrawer.Content>
 					<div className="drawer-form">
-						<div className="form-field">
-							<label className="form-label" htmlFor="project-document-file">
-								File
-							</label>
-
-							<input
-								id="project-document-file"
-								type="file"
-								accept={DOCUMENT_ACCEPT}
-								disabled={isUploading}
-								onChange={(event) => pickFile(event.target.files?.[0] ?? null)}
-							/>
-
-							{file ? (
-								<p className="project-file-name">
-									{file.name} · {formatFileSize(file.size)}
-								</p>
-							) : null}
-
-							{fileError ? <p className="form-error">{fileError}</p> : null}
-
-							{isUploading ? (
-								<div className="project-upload-progress">
-									<div className="project-upload-progress-bar" style={{ width: `${progress}%` }} />
-								</div>
-							) : null}
-						</div>
+						<FileDropzone
+							accept={DOCUMENT_ACCEPT}
+							hint={`PDF, image, Word and Excel files, up to ${formatFileSize(
+								MAX_DOCUMENT_SIZE_BYTES,
+							)}.`}
+							file={file}
+							error={fileError}
+							progress={isUploading ? progress : null}
+							disabled={isUploading}
+							onSelect={pickFile}
+						/>
 
 						<form.AppField name="category">
 							{(field) => (

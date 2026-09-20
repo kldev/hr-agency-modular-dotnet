@@ -68,9 +68,40 @@ internal static class ProjectScenario
         service
             .GetTeamAsync(Arg.Any<OrganizationId>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(new TeamSnapshot(TeamId, "Tiggers"));
+        service
+            .GetLegalEntityAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<Guid>(),
+                Arg.Any<DateOnly>(),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                new LegalEntitySnapshot(
+                    LegalEntityId,
+                    "HR Agency",
+                    "HR Agency sp. z o.o.",
+                    "5213870274",
+                    "PL5213870274",
+                    Workplace,
+                    new DateOnly(2020, 1, 1),
+                    null
+                )
+            );
 
         return service;
     }
+
+    /// <summary>The agency company every project is now delivered by.</summary>
+    public static readonly Guid LegalEntityId = Guid.NewGuid();
+
+    public static readonly DeliveringEntitySnapshot DeliveringEntity = new(
+        LegalEntityId,
+        "HR Agency",
+        "HR Agency sp. z o.o.",
+        "5213870274",
+        "PL5213870274",
+        Workplace
+    );
 
     public static Project Draft(
         EngagementType engagement = EngagementType.TemporaryAgencyWork,
@@ -84,6 +115,7 @@ internal static class ProjectScenario
                 ProjectId,
                 organizationId ?? OrganizationId,
                 CompleteCompany,
+                DeliveringEntity,
                 "Delivery for ACME",
                 "Two developers on site in Brussels.",
                 engagement,

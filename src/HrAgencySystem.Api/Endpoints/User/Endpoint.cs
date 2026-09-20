@@ -12,5 +12,11 @@ public static class Endpoint
         Maps.MapChangePassword.Map(group);
         Maps.MapGet.Map(group);
         Maps.MapGetSlice.Map(group);
+
+        Maps.MapGetMe.Map(group);
+        Maps.MapUpdateMe.Map(group);
+        Maps.MapUploadAvatar.Map(group);
+        Maps.MapDownloadAvatar.Map(group);
+        Maps.MapRemoveAvatar.Map(group);
     }
 }

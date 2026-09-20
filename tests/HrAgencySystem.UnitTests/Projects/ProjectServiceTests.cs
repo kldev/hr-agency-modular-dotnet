@@ -22,9 +22,11 @@ public class ProjectServiceTests
     private readonly ICompanySnapshotRepository _companies =
         Substitute.For<ICompanySnapshotRepository>();
     private readonly ITeamSnapshotRepository _teams = Substitute.For<ITeamSnapshotRepository>();
+    private readonly ILegalEntitySnapshotRepository _legalEntities =
+        Substitute.For<ILegalEntitySnapshotRepository>();
     private readonly IOrganizationChecker _checker = Substitute.For<IOrganizationChecker>();
 
-    private ProjectService Service => new(_users, _companies, _teams, _checker);
+    private ProjectService Service => new(_users, _companies, _teams, _legalEntities, _checker);
 
     [Fact]
     public void ValidateAggregateUpdate_WithAForeignAggregate_Throws()

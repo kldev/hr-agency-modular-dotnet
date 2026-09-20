@@ -1,0 +1,47 @@
+/* =========================================================
+   Legal entities
+   ========================================================= */
+
+/* Prose and buttons inside a section body; the header carries its own padding. */
+.legal-entity-section-body {
+	padding: var(--space-4);
+}
+
+.legal-entity-accounts {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+}
+
+/*
+ * Purpose and currency lead, because together they are what identifies the account; the rest is
+ * the number itself. Collapses to a single column where there is no room for six.
+ */
+.legal-entity-account-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.6fr) minmax(0, 2fr) minmax(0, 1fr) minmax(
+			0,
+			1.2fr
+		) auto;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.legal-entity-account-error {
+	grid-column: 1 / -1;
+}
+
+@media (max-width: 900px) {
+	.legal-entity-account-row {
+		grid-template-columns: 1fr;
+	}
+}
+
+.toolbar-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+
+	color: var(--color-text-secondary);
+	font-size: var(--font-size-sm);
+}

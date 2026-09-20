@@ -61,22 +61,25 @@ export function ProjectContractSection({
 						{formatAddress(contract.party.registeredAddress)}
 					</DetailItem>
 				</dl>
-			) : (
-				<p className="project-role-empty">
-					No contract recorded yet. A project cannot go live without a signed one.
-				</p>
-			)}
+			) : null}
 
-			<Button
-				variant={contract ? "ghost" : "primary"}
-				className="mt-3"
-				icon={contract ? <Pencil size={15} /> : <FileSignature size={15} />}
-				onClick={onRecordContract}
-			>
-				{contract ? "Update contract" : "Record contract"}
-			</Button>
+			<div className="project-section-body">
+				{contract ? null : (
+					<p className="project-role-empty">
+						No contract recorded yet. A project cannot go live without a signed one.
+					</p>
+				)}
 
-			<div className="project-section-list mt-5">
+				<Button
+					variant={contract ? "ghost" : "primary"}
+					icon={contract ? <Pencil size={15} /> : <FileSignature size={15} />}
+					onClick={onRecordContract}
+				>
+					{contract ? "Update contract" : "Record contract"}
+				</Button>
+			</div>
+
+			<div className="project-section-list">
 				{purposes.map((purpose) => {
 					const emails = project.emailRecipients
 						.filter((recipient) => recipient.purpose === purpose)

@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { toast } from "sonner";
 import type { ContactRole, EmailPurpose } from "@/api/models";
 import {
-	ActionButton,
 	AuditInformation,
 	DetailsHeader,
 	DetailsLoading,
@@ -17,6 +16,8 @@ import {
 	type AssignProjectTeamFormCommand,
 	AttachDocumentDrawer,
 	type AttachDocumentFormCommand,
+	type ChangeProjectLegalEntityCommand,
+	ChangeProjectLegalEntityDrawer,
 	ChangeProjectStatusDrawer,
 	type ChangeProjectStatusFormCommand,
 	EditProjectDrawer,
@@ -45,6 +46,7 @@ import {
 	ProjectOverviewSection,
 	ProjectStatusSidebar,
 } from "./components/details";
+import { ProjectActions } from "./components/table/ProjectActions";
 import { useGetProject, useRemoveProjectContact } from "./hooks";
 
 export function ProjectDetailsPage() {
@@ -52,6 +54,7 @@ export function ProjectDetailsPage() {
 
 	const editRef = useRef<EditProjectFormCommand>(null);
 	const statusRef = useRef<ChangeProjectStatusFormCommand>(null);
+	const legalEntityRef = useRef<ChangeProjectLegalEntityCommand>(null);
 	const contactRef = useRef<AssignProjectContactFormCommand>(null);
 	const emailsRef = useRef<SetProjectEmailsFormCommand>(null);
 	const contractRef = useRef<RecordContractFormCommand>(null);
@@ -96,12 +99,12 @@ export function ProjectDetailsPage() {
 						</>
 					}
 					extraAdd={
-						<ActionButton
-							title="Change status"
-							onClick={() => statusRef.current?.changeStatus(project)}
-						>
-							Change status
-						</ActionButton>
+						<ProjectActions
+							mode="details"
+							id={project.id}
+							onEdit={() => editRef.current?.edit(project)}
+							onChangeStatus={() => statusRef.current?.changeStatus(project)}
+						/>
 					}
 				/>
 
@@ -119,6 +122,7 @@ export function ProjectDetailsPage() {
 								<ProjectCustomerSection
 									project={project}
 									onCompleteProfile={(companyId) => profileRef.current?.complete(companyId)}
+									onChangeLegalEntity={() => legalEntityRef.current?.change(project)}
 								/>
 							</section>
 
@@ -176,6 +180,7 @@ export function ProjectDetailsPage() {
 			</DataDetails>
 
 			<EditProjectDrawer ref={editRef} onSuccess={refresh} />
+			<ChangeProjectLegalEntityDrawer ref={legalEntityRef} onSuccess={refresh} />
 			<ChangeProjectStatusDrawer ref={statusRef} onSuccess={refresh} />
 			<AssignProjectContactDrawer ref={contactRef} onSuccess={refresh} />
 			<SetProjectEmailsDrawer ref={emailsRef} onSuccess={refresh} />

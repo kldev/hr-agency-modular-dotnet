@@ -13,6 +13,7 @@ internal static class ProjectsEventsConfiguration
             options.Events.AddEventType<ProjectUpdated>();
             options.Events.AddEventType<ProjectStatusChanged>();
             options.Events.AddEventType<ProjectTeamAssigned>();
+            options.Events.AddEventType<ProjectLegalEntityChanged>();
             options.Events.AddEventType<ProjectContactAssigned>();
             options.Events.AddEventType<ProjectContactRemoved>();
             options.Events.AddEventType<ProjectEmailRecipientsChanged>();

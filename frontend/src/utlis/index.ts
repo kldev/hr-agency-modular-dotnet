@@ -22,5 +22,6 @@ export function addIfNotExists<T>(
 export * from "./copyToClipboard";
 export * from "./dateUtils";
 export * from "./delay";
+export * from "./formatFileSize";
 export * from "./formatSalary";
 export * from "./generatePassword";

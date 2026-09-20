@@ -28,10 +28,16 @@ export function ProjectComplianceSection({ project, onRecord }: ProjectComplianc
 				description="What this country and this engagement type require, and where each of them stands."
 			/>
 
-			{query.isLoading ? <p className="project-role-empty">Loading…</p> : null}
+			{query.isLoading ? (
+				<div className="project-section-body">
+					<p className="project-role-empty">Loading…</p>
+				</div>
+			) : null}
 
 			{query.isError ? (
-				<p className="form-error">The compliance catalogue could not be loaded.</p>
+				<div className="project-section-body">
+					<p className="form-error">The compliance catalogue could not be loaded.</p>
+				</div>
 			) : null}
 
 			{query.data && query.data.length === 0 ? (
@@ -59,7 +65,14 @@ export function ProjectComplianceSection({ project, onRecord }: ProjectComplianc
 					<tbody>
 						{query.data.map((view) => (
 							<tr key={view.requirement}>
-								<td>{complianceRequirements[view.requirement]}</td>
+								{/* The legal names are long by nature - "Posting beyond 12 months notified
+								    (§ 13b AEntG)" - so the cell truncates and the title carries the rest. */}
+								<td
+									className="table-cell-truncate"
+									title={complianceRequirements[view.requirement]}
+								>
+									{complianceRequirements[view.requirement]}
+								</td>
 
 								<td>
 									<ComplianceStatusBadge status={view.item?.status ?? "NotStarted"} />
@@ -75,7 +88,12 @@ export function ProjectComplianceSection({ project, onRecord }: ProjectComplianc
 										: "—"}
 								</td>
 
-								<td>{documentName(view.item?.documentId ?? null)}</td>
+								<td
+									className="table-cell-truncate"
+									title={documentName(view.item?.documentId ?? null)}
+								>
+									{documentName(view.item?.documentId ?? null)}
+								</td>
 
 								<td>
 									<div className="flex justify-end">

@@ -1,6 +1,7 @@
-import { AlertTriangle, Building2 } from "lucide-react";
+import { AlertTriangle, Building2, Landmark } from "lucide-react";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { useGetCompany } from "#/features/companies/pages/hooks";
+import { LegalEntitySelect } from "#/features/legal-entities/pages/components";
 import { withForm } from "#/forms";
 import { emptyProject } from "../schema";
 
@@ -55,6 +56,25 @@ export const ClientStep = withForm({
 
 							{field.state.value ? <ProfileWarning companyId={field.state.value} /> : null}
 						</>
+					)}
+				</form.AppField>
+
+				<FormWizard.SectionHeader
+					icon={Landmark}
+					title="Delivered by"
+					description="Which of our own companies runs this engagement. It signs the contract and carries the duties in the country of work - and it cannot be changed once the project starts."
+				/>
+
+				<form.AppField name="legalEntityId">
+					{(field) => (
+						<LegalEntitySelect
+							label="Our company"
+							fieldName={field.name}
+							fieldValue={field.state.value}
+							errors={field.state.meta.errors}
+							handleChange={(value) => field.handleChange(value)}
+							isSubmitting={isSubmitting}
+						/>
 					)}
 				</form.AppField>
 			</FormWizard.Section>

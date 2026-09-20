@@ -13,6 +13,7 @@ public static class Endpoint
         Maps.MapGet.Map(group);
         Maps.MapUpdate.Map(group);
         Maps.MapChangeStatus.Map(group);
+        Maps.MapChangeLegalEntity.Map(group);
         Maps.MapAssignTeam.Map(group);
         Maps.MapAssignContact.Map(group);
         Maps.MapRemoveContact.Map(group);

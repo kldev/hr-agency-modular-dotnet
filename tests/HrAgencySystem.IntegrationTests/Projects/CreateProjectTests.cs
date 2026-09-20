@@ -26,11 +26,12 @@ public class CreateProjectTests(IntegrationEnvironment env, ITestOutputHelper ou
     {
         var organizationId = Guid.NewGuid();
         var companyId = await ProjectClient.CreateCompanyAsync(organizationId);
+        var legalEntityId = await ProjectClient.CreateLegalEntityAsync(organizationId);
         Client.WithOrganizationId(organizationId);
 
         var response = await Client.PostAsJsonAsync(
             "/api/projects",
-            ProjectTestData.CreateRequest(companyId)
+            ProjectTestData.CreateRequest(companyId, legalEntityId)
         );
 
         var result = await response.ReadWithJson<ProjectCreated>(OutputHelper);
@@ -88,11 +89,12 @@ public class CreateProjectTests(IntegrationEnvironment env, ITestOutputHelper ou
     {
         var organizationId = Guid.NewGuid();
         var companyId = await ProjectClient.CreateCompanyAsync(organizationId);
+        var legalEntityId = await ProjectClient.CreateLegalEntityAsync(organizationId);
 
         Client.WithOrganizationId(organizationId);
         var response = await Client.PostAsJsonAsync(
             "/api/projects",
-            ProjectTestData.CreateRequest(companyId) with
+            ProjectTestData.CreateRequest(companyId, legalEntityId) with
             {
                 CountryCode = "pl",
                 PostalCode = "00-838",
@@ -118,11 +120,12 @@ public class CreateProjectTests(IntegrationEnvironment env, ITestOutputHelper ou
     {
         var organizationId = Guid.NewGuid();
         var companyId = await ProjectClient.CreateCompanyAsync(organizationId);
+        var legalEntityId = await ProjectClient.CreateLegalEntityAsync(organizationId);
         Client.WithOrganizationId(organizationId);
 
         var response = await Client.PostAsJsonAsync(
             "/api/projects",
-            ProjectTestData.CreateRequest(companyId) with
+            ProjectTestData.CreateRequest(companyId, legalEntityId) with
             {
                 Name = " ",
                 City = " ",
@@ -145,11 +148,12 @@ public class CreateProjectTests(IntegrationEnvironment env, ITestOutputHelper ou
         var owner = Guid.NewGuid();
         var intruder = Guid.NewGuid();
         var companyId = await ProjectClient.CreateCompanyAsync(owner);
+        var legalEntityId = await ProjectClient.CreateLegalEntityAsync(intruder);
 
         Client.WithOrganizationId(intruder);
         var response = await Client.PostAsJsonAsync(
             "/api/projects",
-            ProjectTestData.CreateRequest(companyId)
+            ProjectTestData.CreateRequest(companyId, legalEntityId)
         );
 
         // A business rule rather than a 404: answering "not found" would confirm whether that id

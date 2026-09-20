@@ -17,6 +17,7 @@ import type { EngagementType } from "./engagementType.ts";
 
 export interface CreateProjectRequest {
 	companyId: string;
+	legalEntityId: string;
 	name: string;
 	description: string;
 	engagementType: EngagementType;

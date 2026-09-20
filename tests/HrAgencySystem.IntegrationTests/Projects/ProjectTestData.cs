@@ -12,6 +12,7 @@ internal static class ProjectTestData
 
     public static MapCreate.CreateProjectRequest CreateRequest(
         Guid companyId,
+        Guid legalEntityId,
         string name = "Delivery for ACME",
         EngagementType engagementType = EngagementType.TemporaryAgencyWork,
         string countryCode = "be",
@@ -19,6 +20,7 @@ internal static class ProjectTestData
     ) =>
         new(
             companyId,
+            legalEntityId,
             name,
             "Two developers on site.",
             engagementType,

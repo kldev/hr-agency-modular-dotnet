@@ -15,6 +15,7 @@
  */
 import type { Assignment } from "./assignment.ts";
 import type { CompanySnapshot } from "./companySnapshot.ts";
+import type { DeliveringEntitySnapshot } from "./deliveringEntitySnapshot.ts";
 import type { EngagementType } from "./engagementType.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
@@ -22,6 +23,7 @@ export interface ProjectCreated {
 	projectId: string;
 	organizationId: string;
 	company: CompanySnapshot;
+	deliveringEntity: DeliveringEntitySnapshot;
 	name: string;
 	description: string;
 	engagementType: EngagementType;

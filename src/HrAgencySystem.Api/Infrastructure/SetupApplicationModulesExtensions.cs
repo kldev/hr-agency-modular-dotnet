@@ -7,6 +7,7 @@ using HrAgencySystem.Feeds;
 using HrAgencySystem.Files;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
+using HrAgencySystem.LegalEntities;
 using HrAgencySystem.Organization;
 using HrAgencySystem.Projects;
 using HrAgencySystem.Recruitment;
@@ -40,6 +41,7 @@ public static class SetupApplicationModulesExtensions
             services.AddProjectsModule();
             services.AddSalesModule();
             services.AddTeamsModule();
+            services.AddLegalEntitiesModule();
         }
 
         private void ConfigureJson()

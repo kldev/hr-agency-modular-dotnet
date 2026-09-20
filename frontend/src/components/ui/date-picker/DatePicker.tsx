@@ -2,9 +2,17 @@ import clsx from "clsx";
 import type { Locale } from "date-fns";
 import { pl } from "date-fns/locale";
 import { CalendarDays, ChevronDown, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { DatePickerCalendar } from "./DatePickerCalendar";
 import { clampDate, normalizeDate } from "./datePickerUtils";
+
+/** Enough room to decide whether the calendar still fits below the field before it is measured. */
+const ESTIMATED_CALENDAR_HEIGHT = 340;
+
+const VIEWPORT_MARGIN = 8;
+
+const FIELD_GAP = 6;
 
 export interface DatePickerProps {
 	value?: Date | null;
@@ -52,8 +60,11 @@ export function DatePicker({
 }: DatePickerProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
+	const popoverRef = useRef<HTMLDivElement>(null);
 
 	const [open, setOpen] = useState(false);
+
+	const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
 
 	const [visibleMonth, setVisibleMonth] = useState<Date>(normalizeDate(value ?? new Date()));
 
@@ -63,6 +74,56 @@ export function DatePicker({
 		}
 	}, [value]);
 
+	/*
+	 * The calendar is rendered into the body rather than next to the field, so it is positioned by
+	 * hand. Anything else would put it inside whichever scroll container the field happens to sit in
+	 * - and the wizard dialog clips its own overflow, which is where a half-cut calendar came from.
+	 */
+	const updatePosition = useCallback(() => {
+		const anchor = rootRef.current;
+
+		if (!anchor) {
+			return;
+		}
+
+		const field = anchor.getBoundingClientRect();
+		const calendar = popoverRef.current?.getBoundingClientRect();
+
+		const height = calendar?.height ?? ESTIMATED_CALENDAR_HEIGHT;
+		const width = calendar?.width ?? field.width;
+
+		const fitsBelow = window.innerHeight - field.bottom >= height + FIELD_GAP + VIEWPORT_MARGIN;
+		const fitsAbove = field.top >= height + FIELD_GAP + VIEWPORT_MARGIN;
+
+		// Below by default; above only when there is genuinely no room below but there is above.
+		const top = fitsBelow || !fitsAbove ? field.bottom + FIELD_GAP : field.top - height - FIELD_GAP;
+
+		const left = Math.max(
+			VIEWPORT_MARGIN,
+			Math.min(field.left, window.innerWidth - width - VIEWPORT_MARGIN),
+		);
+
+		setPosition({ top, left });
+	}, []);
+
+	useLayoutEffect(() => {
+		if (!open) {
+			setPosition(null);
+			return;
+		}
+
+		updatePosition();
+
+		// Capture, so scrolling any ancestor - including a dialog body - moves the calendar with it.
+		window.addEventListener("scroll", updatePosition, true);
+		window.addEventListener("resize", updatePosition);
+
+		return () => {
+			window.removeEventListener("scroll", updatePosition, true);
+			window.removeEventListener("resize", updatePosition);
+		};
+	}, [open, updatePosition]);
+
 	useEffect(() => {
 		if (!open) {
 			return;
@@ -71,7 +132,12 @@ export function DatePicker({
 		const handlePointerDown = (event: PointerEvent) => {
 			const target = event.target as Node;
 
-			if (rootRef.current && !rootRef.current.contains(target)) {
+			const insideField = rootRef.current?.contains(target) ?? false;
+
+			// The calendar is no longer a descendant of the field, so it has to be asked separately.
+			const insideCalendar = popoverRef.current?.contains(target) ?? false;
+
+			if (!insideField && !insideCalendar) {
 				setOpen(false);
 			}
 		};
@@ -245,28 +311,35 @@ export function DatePicker({
 
 			{error && <div className="mt-1 text-xs text-(--color-danger)">{error}</div>}
 
-			{open && (
-				<div
-					className="
-				absolute
-				left-0
-				top-[calc(100%+6px)]
-				z-50
-				max-w-[calc(100vw-24px)]
-			"
-				>
-					<DatePickerCalendar
-						month={visibleMonth}
-						selectedDate={value}
-						minDate={minDate}
-						maxDate={maxDate}
-						locale={locale}
-						onMonthChange={handleMonthChange}
-						onSelect={handleSelect}
-						onToday={handleToday}
-					/>
-				</div>
-			)}
+			{open &&
+				typeof document !== "undefined" &&
+				createPortal(
+					<div
+						ref={popoverRef}
+						// Above the dialogs, drawers and dropdowns, which all sit at 1000 - the field
+						// this belongs to is often inside one of them.
+						className="fixed z-[1100] max-w-[calc(100vw-16px)]"
+						style={{
+							top: position?.top ?? 0,
+							left: position?.left ?? 0,
+							// Hidden for the single frame before it has been measured, so it is never
+							// seen in the wrong place.
+							visibility: position ? "visible" : "hidden",
+						}}
+					>
+						<DatePickerCalendar
+							month={visibleMonth}
+							selectedDate={value}
+							minDate={minDate}
+							maxDate={maxDate}
+							locale={locale}
+							onMonthChange={handleMonthChange}
+							onSelect={handleSelect}
+							onToday={handleToday}
+						/>
+					</div>,
+					document.body,
+				)}
 		</div>
 	);
 }

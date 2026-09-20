@@ -6,6 +6,7 @@ namespace HrAgencySystem.Projects.Application.Create;
 public sealed record CreateProject(
     Guid OrganizationId,
     Guid CompanyId,
+    Guid LegalEntityId,
     string Name,
     string Description,
     EngagementType EngagementType,

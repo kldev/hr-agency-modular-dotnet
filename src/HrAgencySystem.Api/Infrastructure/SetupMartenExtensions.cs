@@ -2,6 +2,7 @@ using HrAgencySystem.Company;
 using HrAgencySystem.EmailTemplates.Messaging;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
+using HrAgencySystem.LegalEntities;
 using HrAgencySystem.Organization;
 using HrAgencySystem.Projects;
 using HrAgencySystem.Recruitment;
@@ -53,6 +54,7 @@ public static class SetupMartenExtensions
         ProjectsModule.ConfigureMarten(options);
         SalesModule.ConfigureMarten(options);
         TeamsModule.ConfigureMarten(options);
+        LegalEntitiesModule.ConfigureMarten(options);
     }
 
     public static void SetupWolverineForApplication(
@@ -86,5 +88,6 @@ public static class SetupMartenExtensions
         options.Discovery.IncludeAssembly(typeof(ProjectsModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(TeamsModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(LegalEntitiesModule).Assembly);
     }
 }

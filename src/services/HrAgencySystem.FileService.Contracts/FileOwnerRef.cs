@@ -9,4 +9,7 @@ public sealed record FileOwnerRef(string Kind, Guid Id);
 public static class FileOwnerKinds
 {
     public const string Project = "project";
+
+    /// <summary>A person's own profile picture. The owner id is the user id.</summary>
+    public const string User = "user";
 }

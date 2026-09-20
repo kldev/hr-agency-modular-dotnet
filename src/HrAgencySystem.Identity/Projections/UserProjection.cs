@@ -55,6 +55,7 @@ public sealed record UserProjection(
             FirstName = @event.Contact.FirstName,
             LastName = @event.Contact.LastName,
             JobTitle = @event.Contact.JobTitle,
+            Phone = @event.Contact.Phone,
             ModifiedBy = @event.ModifiedBy,
             ModifiedAt = @event.ModifiedAt,
         };

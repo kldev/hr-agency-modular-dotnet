@@ -42,6 +42,9 @@ import { Route as AppJobDescriptionsAddRouteImport } from './routes/app/job-desc
 import { Route as AppJobsIndexRouteImport } from './routes/app/jobs/index'
 import { Route as AppJobsIdRouteImport } from './routes/app/jobs/$id'
 import { Route as AppJobsAddRouteImport } from './routes/app/jobs/add'
+import { Route as AppLegalEntitiesIndexRouteImport } from './routes/app/legal-entities/index'
+import { Route as AppLegalEntitiesIdRouteImport } from './routes/app/legal-entities/$id'
+import { Route as AppProfileIndexRouteImport } from './routes/app/profile/index'
 import { Route as AppProjectsIndexRouteImport } from './routes/app/projects/index'
 import { Route as AppProjectsIdRouteImport } from './routes/app/projects/$id'
 import { Route as AppSalesIndexRouteImport } from './routes/app/sales/index'
@@ -218,6 +221,21 @@ const AppJobsAddRoute = AppJobsAddRouteImport.update({
   path: '/jobs/add',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppLegalEntitiesIndexRoute = AppLegalEntitiesIndexRouteImport.update({
+  id: '/legal-entities/',
+  path: '/legal-entities/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppLegalEntitiesIdRoute = AppLegalEntitiesIdRouteImport.update({
+  id: '/legal-entities/$id',
+  path: '/legal-entities/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -294,6 +312,7 @@ export interface FileRoutesByFullPath {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
+  '/app/legal-entities/$id': typeof AppLegalEntitiesIdRoute
   '/app/projects/$id': typeof AppProjectsIdRoute
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
@@ -307,6 +326,8 @@ export interface FileRoutesByFullPath {
   '/app/interviews/': typeof AppInterviewsIndexRoute
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
+  '/app/legal-entities/': typeof AppLegalEntitiesIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
@@ -337,6 +358,7 @@ export interface FileRoutesByTo {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
+  '/app/legal-entities/$id': typeof AppLegalEntitiesIdRoute
   '/app/projects/$id': typeof AppProjectsIdRoute
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
@@ -350,6 +372,8 @@ export interface FileRoutesByTo {
   '/app/interviews': typeof AppInterviewsIndexRoute
   '/app/job-descriptions': typeof AppJobDescriptionsIndexRoute
   '/app/jobs': typeof AppJobsIndexRoute
+  '/app/legal-entities': typeof AppLegalEntitiesIndexRoute
+  '/app/profile': typeof AppProfileIndexRoute
   '/app/projects': typeof AppProjectsIndexRoute
   '/app/sales': typeof AppSalesIndexRoute
   '/app/teams': typeof AppTeamsIndexRoute
@@ -383,6 +407,7 @@ export interface FileRoutesById {
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
   '/app/jobs/$id': typeof AppJobsIdRoute
   '/app/jobs/add': typeof AppJobsAddRoute
+  '/app/legal-entities/$id': typeof AppLegalEntitiesIdRoute
   '/app/projects/$id': typeof AppProjectsIdRoute
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
@@ -396,6 +421,8 @@ export interface FileRoutesById {
   '/app/interviews/': typeof AppInterviewsIndexRoute
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
+  '/app/legal-entities/': typeof AppLegalEntitiesIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
@@ -430,6 +457,7 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
+    | '/app/legal-entities/$id'
     | '/app/projects/$id'
     | '/app/teams/$id'
     | '/app/users/$id'
@@ -443,6 +471,8 @@ export interface FileRouteTypes {
     | '/app/interviews/'
     | '/app/job-descriptions/'
     | '/app/jobs/'
+    | '/app/legal-entities/'
+    | '/app/profile/'
     | '/app/projects/'
     | '/app/sales/'
     | '/app/teams/'
@@ -473,6 +503,7 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
+    | '/app/legal-entities/$id'
     | '/app/projects/$id'
     | '/app/teams/$id'
     | '/app/users/$id'
@@ -486,6 +517,8 @@ export interface FileRouteTypes {
     | '/app/interviews'
     | '/app/job-descriptions'
     | '/app/jobs'
+    | '/app/legal-entities'
+    | '/app/profile'
     | '/app/projects'
     | '/app/sales'
     | '/app/teams'
@@ -518,6 +551,7 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/add'
     | '/app/jobs/$id'
     | '/app/jobs/add'
+    | '/app/legal-entities/$id'
     | '/app/projects/$id'
     | '/app/teams/$id'
     | '/app/users/$id'
@@ -531,6 +565,8 @@ export interface FileRouteTypes {
     | '/app/interviews/'
     | '/app/job-descriptions/'
     | '/app/jobs/'
+    | '/app/legal-entities/'
+    | '/app/profile/'
     | '/app/projects/'
     | '/app/sales/'
     | '/app/teams/'
@@ -786,6 +822,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppJobsAddRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/legal-entities/': {
+      id: '/app/legal-entities/'
+      path: '/legal-entities'
+      fullPath: '/app/legal-entities/'
+      preLoaderRoute: typeof AppLegalEntitiesIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/legal-entities/$id': {
+      id: '/app/legal-entities/$id'
+      path: '/legal-entities/$id'
+      fullPath: '/app/legal-entities/$id'
+      preLoaderRoute: typeof AppLegalEntitiesIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/profile/': {
+      id: '/app/profile/'
+      path: '/profile'
+      fullPath: '/app/profile/'
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/projects/': {
       id: '/app/projects/'
       path: '/projects'
@@ -891,6 +948,7 @@ interface AppRouteRouteChildren {
   AppJobDescriptionsAddRoute: typeof AppJobDescriptionsAddRoute
   AppJobsIdRoute: typeof AppJobsIdRoute
   AppJobsAddRoute: typeof AppJobsAddRoute
+  AppLegalEntitiesIdRoute: typeof AppLegalEntitiesIdRoute
   AppProjectsIdRoute: typeof AppProjectsIdRoute
   AppTeamsIdRoute: typeof AppTeamsIdRoute
   AppUsersIdRoute: typeof AppUsersIdRoute
@@ -902,6 +960,8 @@ interface AppRouteRouteChildren {
   AppInterviewsIndexRoute: typeof AppInterviewsIndexRoute
   AppJobDescriptionsIndexRoute: typeof AppJobDescriptionsIndexRoute
   AppJobsIndexRoute: typeof AppJobsIndexRoute
+  AppLegalEntitiesIndexRoute: typeof AppLegalEntitiesIndexRoute
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
   AppProjectsIndexRoute: typeof AppProjectsIndexRoute
   AppSalesIndexRoute: typeof AppSalesIndexRoute
   AppTeamsIndexRoute: typeof AppTeamsIndexRoute
@@ -921,6 +981,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppJobDescriptionsAddRoute: AppJobDescriptionsAddRoute,
   AppJobsIdRoute: AppJobsIdRoute,
   AppJobsAddRoute: AppJobsAddRoute,
+  AppLegalEntitiesIdRoute: AppLegalEntitiesIdRoute,
   AppProjectsIdRoute: AppProjectsIdRoute,
   AppTeamsIdRoute: AppTeamsIdRoute,
   AppUsersIdRoute: AppUsersIdRoute,
@@ -932,6 +993,8 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppInterviewsIndexRoute: AppInterviewsIndexRoute,
   AppJobDescriptionsIndexRoute: AppJobDescriptionsIndexRoute,
   AppJobsIndexRoute: AppJobsIndexRoute,
+  AppLegalEntitiesIndexRoute: AppLegalEntitiesIndexRoute,
+  AppProfileIndexRoute: AppProfileIndexRoute,
   AppProjectsIndexRoute: AppProjectsIndexRoute,
   AppSalesIndexRoute: AppSalesIndexRoute,
   AppTeamsIndexRoute: AppTeamsIndexRoute,
@@ -960,3 +1023,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

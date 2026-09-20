@@ -38,6 +38,7 @@ internal static class MapCreate
 
     internal sealed record CreateProjectRequest(
         Guid CompanyId,
+        Guid LegalEntityId,
         string Name,
         string Description,
         EngagementType EngagementType,
@@ -56,6 +57,7 @@ internal static class MapCreate
             new(
                 organizationId.Value,
                 CompanyId,
+                LegalEntityId,
                 Name,
                 Description,
                 EngagementType,

@@ -21,6 +21,7 @@ public static class MapEndpoints
         Suggestion.Endpoint.Map(app);
         Organization.Endpoint.Map(app);
         Teams.Endpoint.Map(app);
+        LegalEntity.Endpoint.Map(app);
         Project.Endpoint.Map(app);
 
         MapPlatformSeeder(app);

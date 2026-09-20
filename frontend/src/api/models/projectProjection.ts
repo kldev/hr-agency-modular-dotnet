@@ -15,6 +15,7 @@
  */
 import type { ComplianceItem } from "./complianceItem.ts";
 import type { ContactPerson } from "./contactPerson.ts";
+import type { DeliveringEntitySnapshot } from "./deliveringEntitySnapshot.ts";
 import type { EngagementType } from "./engagementType.ts";
 import type { PostalAddress } from "./postalAddress.ts";
 import type { ProjectContact } from "./projectContact.ts";
@@ -30,6 +31,7 @@ export interface ProjectProjection {
 	companyId: string;
 	companyName: string;
 	companyTaxId: string;
+	deliveringEntity: DeliveringEntitySnapshot;
 	name: string;
 	description: string;
 	status: ProjectStatus;

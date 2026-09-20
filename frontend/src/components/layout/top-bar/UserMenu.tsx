@@ -15,7 +15,7 @@ const UserMenu: React.FC = () => {
 	const navigation = useNavigate();
 	return (
 		<Dropdown>
-			<DropdownItem>
+			<DropdownItem onClick={() => navigation({ to: "/app/profile" })}>
 				<User size={15} />
 				Profile
 			</DropdownItem>

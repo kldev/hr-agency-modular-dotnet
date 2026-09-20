@@ -1,3 +1,4 @@
+using HrAgencySystem.Identity.Documents;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Sagas;
 using Marten;
@@ -46,6 +47,13 @@ internal static class IdentityDocumentConfiguration
                 )
                 .Index(x => x.FamilyId)
                 .Index(x => new { x.OrganizationId, x.UserId });
+
+            // Keyed by the user's id, so there is no separate "which row is mine" lookup; the
+            // organization leads the index for the same reason it leads every other one here.
+            options
+                .Schema.For<UserProfile>()
+                .DatabaseSchemaName(SchemaName)
+                .Index(x => new { x.OrganizationId, x.Id });
 
             options
                 .Schema.For<OwnerEmailReservation>()

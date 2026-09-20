@@ -6,6 +6,7 @@ import {
 	ClipboardList,
 	DollarSign,
 	FolderKanban,
+	Landmark,
 	LayoutDashboard,
 	MessageSquare,
 	Users,
@@ -41,10 +42,11 @@ const menuGroups: MenuGroup[] = [
 		items: [{ label: "Projects", icon: FolderKanban, link: "/app/projects" }],
 	},
 	{
-		title: "Users",
+		title: "Organization",
 		items: [
 			{ label: "Users", icon: Users, link: "/app/users" },
 			{ label: "Teams", icon: UsersRound, link: "/app/teams" },
+			{ label: "Legal entities", icon: Landmark, link: "/app/legal-entities" },
 		],
 	},
 ];

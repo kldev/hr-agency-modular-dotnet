@@ -29,6 +29,11 @@ internal static class ApiEndpoints
         public const string Update = $"{UsersBase}/{{userId:guid}}";
         public const string ChangeRole = $"{UsersBase}/{{userId:guid}}/role";
         public const string ChangePassword = $"{UsersBase}/me/password";
+
+        // "me" never matches the :guid constraint on Get/Update, so the literal and the parameter
+        // route can share a segment - the same arrangement ChangePassword already relies on.
+        public const string Me = $"{UsersBase}/me";
+        public const string Avatar = $"{UsersBase}/me/avatar";
     }
 
     internal static class Owners
@@ -196,6 +201,17 @@ internal static class ApiEndpoints
         public const string ChangeInterviewer = $"{InterviewBase}/{{interviewId}}/interviewer";
     }
 
+    internal static class LegalEntities
+    {
+        private const string LegalEntitiesBase = $"{Base}/legal-entities";
+
+        public const string Create = LegalEntitiesBase;
+        public const string Slice = LegalEntitiesBase;
+        public const string Get = $"{LegalEntitiesBase}/{{legalEntityId:guid}}";
+        public const string Update = $"{LegalEntitiesBase}/{{legalEntityId:guid}}";
+        public const string Close = $"{LegalEntitiesBase}/{{legalEntityId:guid}}/close";
+    }
+
     internal static class Teams
     {
         private const string TeamsBase = $"{Base}/teams";
@@ -219,6 +235,7 @@ internal static class ApiEndpoints
         public const string Get = $"{ProjectsBase}/{{projectId:guid}}";
         public const string Update = $"{ProjectsBase}/{{projectId:guid}}";
         public const string ChangeStatus = $"{ProjectsBase}/{{projectId:guid}}/status";
+        public const string ChangeLegalEntity = $"{ProjectsBase}/{{projectId:guid}}/legal-entity";
         public const string AssignTeam = $"{ProjectsBase}/{{projectId:guid}}/team";
         public const string AssignContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";
         public const string RemoveContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";
