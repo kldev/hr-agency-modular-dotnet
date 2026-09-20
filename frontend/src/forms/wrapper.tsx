@@ -1,5 +1,10 @@
 import { useMemo, useState } from "react";
-import type { CompanySuggestion, OrganizationRole, UserSuggestion } from "#/api/models";
+import type {
+	CompanySuggestion,
+	OrganizationRole,
+	TeamSuggestion,
+	UserSuggestion,
+} from "#/api/models";
 import {
 	ArrayField,
 	type ArrayFieldProps,
@@ -15,6 +20,7 @@ import {
 	LanguageSelect,
 	MoneyInput,
 	type MoneyInputProps,
+	TeamsPicker,
 	Textarea,
 	type TextareaProps,
 	TimeInput,
@@ -169,6 +175,44 @@ export function FormCompanyPicker({
 					setInput(v);
 				}}
 			/>
+			<FieldError errors={errors} />
+		</div>
+	);
+}
+
+type FormTeamPickerProps = {
+	placeholder?: string;
+	hint?: string;
+} & AppInputProps<{ id: string | null; team?: TeamSuggestion | null }>;
+
+export function FormTeamPicker({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	handleChange,
+	errors,
+	placeholder,
+	hint,
+}: FormTeamPickerProps) {
+	const [input, setInput] = useState("");
+
+	return (
+		<div className="form-field">
+			<label className="form-label" htmlFor={fieldName}>
+				{label}
+			</label>
+			<TeamsPicker
+				placeholder={placeholder}
+				disabled={isSubmitting}
+				value={fieldValue?.id ?? ""}
+				inputValue={input}
+				onChange={(id, item) => handleChange({ id: id, team: item })}
+				onInputChange={(v) => {
+					setInput(v);
+				}}
+			/>
+			{hint ? <div className="form-hint">{hint}</div> : null}
 			<FieldError errors={errors} />
 		</div>
 	);

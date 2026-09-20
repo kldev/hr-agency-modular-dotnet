@@ -4,4 +4,6 @@ export const suggestionKeys = {
 	company: (id: string) => [...suggestionKeys.all, "company", id] as const,
 
 	user: (id: string) => [...suggestionKeys.all, "user", id] as const,
+
+	team: (id: string) => [...suggestionKeys.all, "team", id] as const,
 };
