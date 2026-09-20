@@ -24,6 +24,7 @@ internal static class IdentityServiceCollectionExtensions
             services.AddOptions<JwtConfig>(JwtConfig.Section);
             services.AddScoped<IUserSuggestionRepository, UserSuggestionRepository>();
             services.AddScoped<IUserQueryRepository, UserQueryRepository>();
+            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IIdentityService, IdentityService>();
         }
     }

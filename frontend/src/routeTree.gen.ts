@@ -42,6 +42,7 @@ import { Route as AppJobDescriptionsAddRouteImport } from './routes/app/job-desc
 import { Route as AppJobsIndexRouteImport } from './routes/app/jobs/index'
 import { Route as AppJobsIdRouteImport } from './routes/app/jobs/$id'
 import { Route as AppJobsAddRouteImport } from './routes/app/jobs/add'
+import { Route as AppProfileIndexRouteImport } from './routes/app/profile/index'
 import { Route as AppProjectsIndexRouteImport } from './routes/app/projects/index'
 import { Route as AppProjectsIdRouteImport } from './routes/app/projects/$id'
 import { Route as AppSalesIndexRouteImport } from './routes/app/sales/index'
@@ -218,6 +219,11 @@ const AppJobsAddRoute = AppJobsAddRouteImport.update({
   path: '/jobs/add',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppProjectsIndexRoute = AppProjectsIndexRouteImport.update({
   id: '/projects/',
   path: '/projects/',
@@ -307,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/app/interviews/': typeof AppInterviewsIndexRoute
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
@@ -350,6 +357,7 @@ export interface FileRoutesByTo {
   '/app/interviews': typeof AppInterviewsIndexRoute
   '/app/job-descriptions': typeof AppJobDescriptionsIndexRoute
   '/app/jobs': typeof AppJobsIndexRoute
+  '/app/profile': typeof AppProfileIndexRoute
   '/app/projects': typeof AppProjectsIndexRoute
   '/app/sales': typeof AppSalesIndexRoute
   '/app/teams': typeof AppTeamsIndexRoute
@@ -396,6 +404,7 @@ export interface FileRoutesById {
   '/app/interviews/': typeof AppInterviewsIndexRoute
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
@@ -443,6 +452,7 @@ export interface FileRouteTypes {
     | '/app/interviews/'
     | '/app/job-descriptions/'
     | '/app/jobs/'
+    | '/app/profile/'
     | '/app/projects/'
     | '/app/sales/'
     | '/app/teams/'
@@ -486,6 +496,7 @@ export interface FileRouteTypes {
     | '/app/interviews'
     | '/app/job-descriptions'
     | '/app/jobs'
+    | '/app/profile'
     | '/app/projects'
     | '/app/sales'
     | '/app/teams'
@@ -531,6 +542,7 @@ export interface FileRouteTypes {
     | '/app/interviews/'
     | '/app/job-descriptions/'
     | '/app/jobs/'
+    | '/app/profile/'
     | '/app/projects/'
     | '/app/sales/'
     | '/app/teams/'
@@ -786,6 +798,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppJobsAddRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/profile/': {
+      id: '/app/profile/'
+      path: '/profile'
+      fullPath: '/app/profile/'
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/projects/': {
       id: '/app/projects/'
       path: '/projects'
@@ -902,6 +921,7 @@ interface AppRouteRouteChildren {
   AppInterviewsIndexRoute: typeof AppInterviewsIndexRoute
   AppJobDescriptionsIndexRoute: typeof AppJobDescriptionsIndexRoute
   AppJobsIndexRoute: typeof AppJobsIndexRoute
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
   AppProjectsIndexRoute: typeof AppProjectsIndexRoute
   AppSalesIndexRoute: typeof AppSalesIndexRoute
   AppTeamsIndexRoute: typeof AppTeamsIndexRoute
@@ -932,6 +952,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppInterviewsIndexRoute: AppInterviewsIndexRoute,
   AppJobDescriptionsIndexRoute: AppJobDescriptionsIndexRoute,
   AppJobsIndexRoute: AppJobsIndexRoute,
+  AppProfileIndexRoute: AppProfileIndexRoute,
   AppProjectsIndexRoute: AppProjectsIndexRoute,
   AppSalesIndexRoute: AppSalesIndexRoute,
   AppTeamsIndexRoute: AppTeamsIndexRoute,
@@ -960,3 +981,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

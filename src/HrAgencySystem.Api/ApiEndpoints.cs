@@ -29,6 +29,11 @@ internal static class ApiEndpoints
         public const string Update = $"{UsersBase}/{{userId:guid}}";
         public const string ChangeRole = $"{UsersBase}/{{userId:guid}}/role";
         public const string ChangePassword = $"{UsersBase}/me/password";
+
+        // "me" never matches the :guid constraint on Get/Update, so the literal and the parameter
+        // route can share a segment - the same arrangement ChangePassword already relies on.
+        public const string Me = $"{UsersBase}/me";
+        public const string Avatar = $"{UsersBase}/me/avatar";
     }
 
     internal static class Owners

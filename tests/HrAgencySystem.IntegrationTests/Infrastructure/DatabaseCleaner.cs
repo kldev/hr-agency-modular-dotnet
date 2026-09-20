@@ -1,5 +1,6 @@
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Company.Projections;
+using HrAgencySystem.Identity.Documents;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.JobDescription.Projections;
@@ -42,6 +43,7 @@ public sealed class DatabaseCleaner(string connectionString)
     {
         await CleanTable<UserEmailReservation>("identity");
         await CleanTable<UserProjection>("identity");
+        await CleanTable<UserProfile>("identity");
     }
 
     public async Task CleanCompany()

@@ -94,6 +94,10 @@
 	background: var(--color-primary-soft);
 	color: var(--color-primary);
 
+	/* The same circle serves the initial and the picture; nothing is cropped on upload. */
+	object-fit: cover;
+	overflow: hidden;
+
 	font-size: var(--font-size-sm);
 	font-weight: var(--font-weight-semibold);
 }
