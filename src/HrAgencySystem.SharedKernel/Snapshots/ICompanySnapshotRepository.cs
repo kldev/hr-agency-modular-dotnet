@@ -1,3 +1,4 @@
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
 namespace HrAgencySystem.SharedKernel.Snapshots;
@@ -6,6 +7,17 @@ public interface ICompanySnapshotRepository
 {
     public const string NotFoundMessage = "Require company data not found.";
     Task<CompanySnapshot?> GetCompanyAsync(Guid companyId, CancellationToken ct);
+
+    /// <summary>
+    /// Resolves a company only when it belongs to the given organization. The unscoped overload
+    /// above answers "does this id exist anywhere", which is not the same question and cannot
+    /// enforce a same-organization rule.
+    /// </summary>
+    Task<CompanySnapshot?> GetCompanyAsync(
+        Guid companyId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    );
 }
 
 /// <summary>

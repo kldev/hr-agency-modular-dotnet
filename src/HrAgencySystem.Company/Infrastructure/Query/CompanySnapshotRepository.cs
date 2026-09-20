@@ -1,6 +1,7 @@
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.Company.Projections;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using Marten;
 
 namespace HrAgencySystem.Company.Infrastructure.Query;
@@ -31,5 +32,22 @@ public class CompanySnapshotRepository(IDocumentSession session) : ICompanySnaps
             .Where(z => z.CompanyId == companyId)
             .Select(z => new CompanySnapshot(z.CompanyId, z.Name, z.TaxId))
             .FirstOrDefaultAsync(ct);
+    }
+
+    public async Task<CompanySnapshot?> GetCompanyAsync(
+        Guid companyId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
+    {
+        var company = await GetCompanyAsync(companyId, ct);
+
+        // The projection row is the only place the owning organization is recorded, so the scoped
+        // answer is the unscoped one plus a check rather than a second query shape.
+        var belongs = await session
+            .Query<CompanyProjection>()
+            .AnyAsync(z => z.Id == companyId && z.OrganizationId == organizationId.Value, ct);
+
+        return belongs ? company : null;
     }
 }

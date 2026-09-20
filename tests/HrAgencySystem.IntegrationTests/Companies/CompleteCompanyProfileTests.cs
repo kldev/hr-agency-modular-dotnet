@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
-using HrAgencySystem.Api.Endpoints.Company.Maps;
 using HrAgencySystem.Api.Common.Errors;
+using HrAgencySystem.Api.Endpoints.Company.Maps;
 using HrAgencySystem.Company.Events;
 using HrAgencySystem.Company.Projections;
 using HrAgencySystem.IntegrationTests.Infrastructure;

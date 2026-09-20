@@ -53,10 +53,7 @@ internal static class CompanyProfileFactory
         );
     }
 
-    private static PostalAddress? CreateAddress(
-        CompleteCompanyProfile command,
-        List<string> errors
-    )
+    private static PostalAddress? CreateAddress(CompleteCompanyProfile command, List<string> errors)
     {
         string?[] parts =
         [
