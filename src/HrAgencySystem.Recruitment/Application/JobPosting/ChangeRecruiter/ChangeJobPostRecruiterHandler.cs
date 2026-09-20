@@ -1,5 +1,4 @@
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
-using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Services;
@@ -23,7 +22,6 @@ public static class ChangeJobPostRecruiterHandler
         ChangeJobPostRecruiter command,
         JobPost aggregate,
         IRecruitmentService service,
-        IJobPostQueryRepository queryRepository,
         IClock clock,
         CancellationToken ct
     )
@@ -45,14 +43,15 @@ public static class ChangeJobPostRecruiterHandler
         // Taking a post over yourself is not worth an email.
         if (recruiter.Id != modifiedBy.Id)
         {
-            var post = await queryRepository.GetJobPostInfo(command.JobPostId, ct);
-
+            // The title comes off the aggregate, never off JobPostProjection: that projection runs
+            // in the async daemon, so a post created moments ago is not there yet and the lookup
+            // answered 404 on a request that had just succeeded.
             messages.Add(
                 new SendJobPostRecruiterChanged(
                     Guid.NewGuid(),
                     nameof(ChangeJobPostRecruiterHandler),
                     command.JobPostId,
-                    post.JobTitle,
+                    aggregate.Title.Value,
                     recruiter.Email,
                     recruiter.Fullname,
                     modifiedBy.Fullname

@@ -1,6 +1,5 @@
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.Recruitment.Application.JobPosting.ChangeRecruiter;
-using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Services;
@@ -14,9 +13,6 @@ namespace HrAgencySystem.UnitTests.JobPostings.Handlers;
 public sealed class ChangeJobPostRecruiterHandlerTests
 {
     private readonly IRecruitmentService _service = Substitute.For<IRecruitmentService>();
-
-    private readonly IJobPostQueryRepository _queryRepository =
-        Substitute.For<IJobPostQueryRepository>();
 
     private readonly IClock _clock = Substitute.For<IClock>();
 
@@ -56,9 +52,6 @@ public sealed class ChangeJobPostRecruiterHandlerTests
         var (_, _, messages) = await Handle(ChangedBy, ChangedBy);
 
         Assert.Empty(messages);
-        await _queryRepository
-            .DidNotReceive()
-            .GetJobPostInfo(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
     }
 
     private async Task<(JobPostRecruiterChanged, Wolverine.Marten.Events, OutgoingMessages)> Handle(
@@ -75,25 +68,12 @@ public sealed class ChangeJobPostRecruiterHandlerTests
 
         _service.GetUserAsync(recruiter.Id, Arg.Any<CancellationToken>()).Returns(recruiter);
         _service.GetUserAsync(modifiedBy.Id, Arg.Any<CancellationToken>()).Returns(modifiedBy);
-        _queryRepository
-            .GetJobPostInfo(JobPostId, Arg.Any<CancellationToken>())
-            .Returns(
-                new JobPostInfo(
-                    JobPostId,
-                    OrganizationId,
-                    Guid.NewGuid(),
-                    "Senior .NET Developer",
-                    JobPostStatus.Published,
-                    recruiter
-                )
-            );
         _clock.UtcNow.Returns(new DateTimeOffset(2026, 9, 19, 10, 0, 0, TimeSpan.Zero));
 
         return await ChangeJobPostRecruiterHandler.Handle(
             command,
-            JobPost.WithOrganization(OrganizationId),
+            JobPost.WithOrganization(OrganizationId, "Senior .NET Developer"),
             _service,
-            _queryRepository,
             _clock,
             CancellationToken.None
         );
