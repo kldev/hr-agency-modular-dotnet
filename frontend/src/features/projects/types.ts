@@ -161,8 +161,7 @@ export const complianceRequirementHints: Record<ComplianceRequirement, string> =
 		"Valid for 12 months from the start. The duty to produce home-country documents on request runs for a year after the posting ends.",
 	BeMotivatedNotification:
 		"Must be filed before the end of the 12th month — filed later it is void. Valid to marks the filing deadline, not the validity.",
-	DeAentgNotification:
-		"For IT work this is usually Not applicable; record the reason in the note.",
+	DeAentgNotification: "For IT work this is usually Not applicable; record the reason in the note.",
 	DeAuegPermit:
 		"Reference number is the permit number. The first permit always runs for one year; renewal is applied for at least three months before it lapses.",
 	DeAuegNotification:
