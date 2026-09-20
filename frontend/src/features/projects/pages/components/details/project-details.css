@@ -8,12 +8,17 @@
 	gap: var(--space-3);
 }
 
+/*
+ * The section header carries its own padding, so a row without one sits flush against the card edge
+ * while the title above it does not. The padding goes on the row rather than the list, which keeps
+ * the divider running the full width of the card - the same way the header's own bottom border does.
+ */
 .project-role-row {
 	display: flex;
 	align-items: flex-start;
 	justify-content: space-between;
 	gap: var(--space-4);
-	padding: var(--space-3) 0;
+	padding: var(--space-3) var(--space-4);
 	border-bottom: 1px solid var(--color-border-subtle);
 }
 
@@ -41,11 +46,25 @@
 /* Ours, not the client's - the separation is the point, so it is drawn. */
 .project-role-group-title {
 	margin-top: var(--space-4);
+	padding-inline: var(--space-4);
 	font-size: var(--font-size-xs);
 	font-weight: var(--font-weight-medium);
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
 	color: var(--color-text-muted);
+}
+
+/*
+ * Everything in a section that is not the header, a definition list or a table: prose, buttons and
+ * warnings, which otherwise touch the card border.
+ */
+.project-section-body {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--space-3);
+
+	padding: var(--space-4);
 }
 
 .project-email-chips {
@@ -58,7 +77,6 @@
 	display: flex;
 	align-items: flex-start;
 	gap: var(--space-2);
-	margin-top: var(--space-3);
 	padding: var(--space-3);
 	border: 1px solid var(--color-warning, var(--color-border));
 	border-radius: var(--radius-md);

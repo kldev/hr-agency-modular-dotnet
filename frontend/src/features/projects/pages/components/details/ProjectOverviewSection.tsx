@@ -34,14 +34,11 @@ export function ProjectOverviewSection({ project, onAssignTeam }: ProjectOvervie
 				<DetailItem label="Description">{project.description}</DetailItem>
 			</dl>
 
-			<Button
-				variant="ghost"
-				className="mt-3"
-				icon={<UsersRound size={15} />}
-				onClick={onAssignTeam}
-			>
-				{project.teamId ? "Change team" : "Assign team"}
-			</Button>
+			<div className="project-section-body">
+				<Button variant="ghost" icon={<UsersRound size={15} />} onClick={onAssignTeam}>
+					{project.teamId ? "Change team" : "Assign team"}
+				</Button>
+			</div>
 		</div>
 	);
 }

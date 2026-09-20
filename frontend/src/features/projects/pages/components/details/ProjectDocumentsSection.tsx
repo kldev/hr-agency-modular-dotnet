@@ -35,9 +35,7 @@ export function ProjectDocumentsSection({
 				description="Contracts, permits and everything else worth keeping with the project."
 			/>
 
-			{project.documents.length === 0 ? (
-				<p className="project-role-empty">Nothing attached yet.</p>
-			) : (
+			{project.documents.length === 0 ? null : (
 				<table className="table">
 					<thead>
 						<tr>
@@ -54,7 +52,9 @@ export function ProjectDocumentsSection({
 						{project.documents.map((document) => (
 							<tr key={document.documentId}>
 								<td>{documentCategories[document.category]}</td>
-								<td>{document.fileName}</td>
+								<td className="table-cell-truncate" title={document.fileName}>
+									{document.fileName}
+								</td>
 								<td>{formatDate(document.documentDate)}</td>
 								<td>{document.validUntil ? formatDate(document.validUntil) : "—"}</td>
 								<td>{formatFileSize(Number(document.size))}</td>
@@ -91,9 +91,15 @@ export function ProjectDocumentsSection({
 				</table>
 			)}
 
-			<Button variant="ghost" className="mt-3" icon={<Paperclip size={15} />} onClick={onAttach}>
-				Attach document
-			</Button>
+			<div className="project-section-body">
+				{project.documents.length === 0 ? (
+					<p className="project-role-empty">Nothing attached yet.</p>
+				) : null}
+
+				<Button variant="ghost" icon={<Paperclip size={15} />} onClick={onAttach}>
+					Attach document
+				</Button>
+			</div>
 
 			<ConfirmDialog
 				open={Boolean(removing)}

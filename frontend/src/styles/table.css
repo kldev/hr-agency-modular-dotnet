@@ -64,6 +64,16 @@
 	border-bottom: 0;
 }
 
+/*
+ * A cell that would rather cut a long value than push the column wider. `white-space: nowrap` alone
+ * clips it mid-letter with no sign that anything is missing; this adds the ellipsis, and the call
+ * site adds a `title` so the whole value is still readable on hover.
+ */
+.table td.table-cell-truncate {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 .table-number {
 	text-align: right;
 	font-variant-numeric: tabular-nums;

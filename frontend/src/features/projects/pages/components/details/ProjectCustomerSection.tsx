@@ -46,7 +46,7 @@ export function ProjectCustomerSection({
 			</dl>
 
 			{company && !company.isProfileComplete ? (
-				<>
+				<div className="project-section-body">
 					<div className="project-inline-warning">
 						<AlertTriangle size={15} />
 
@@ -56,14 +56,10 @@ export function ProjectCustomerSection({
 						</span>
 					</div>
 
-					<Button
-						variant="primary"
-						className="mt-3"
-						onClick={() => onCompleteProfile(project.companyId)}
-					>
+					<Button variant="primary" onClick={() => onCompleteProfile(project.companyId)}>
 						Complete client data
 					</Button>
-				</>
+				</div>
 			) : null}
 		</div>
 	);
