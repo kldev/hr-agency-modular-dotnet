@@ -4,6 +4,8 @@ using HrAgencySystem.Identity.Documents;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.JobDescription.Projections;
+using HrAgencySystem.LegalEntities.Infrastructure.Persistence;
+using HrAgencySystem.LegalEntities.Projections;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
 using HrAgencySystem.Projects.Projections;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
@@ -71,6 +73,12 @@ public sealed class DatabaseCleaner(string connectionString)
     public async Task CleanProjects()
     {
         await CleanTable<ProjectProjection>("projects");
+    }
+
+    public async Task CleanLegalEntities()
+    {
+        await CleanTable<LegalEntityProjection>("legal_entities");
+        await CleanTable<LegalEntityTaxIdReservation>("legal_entities");
     }
 
     public async Task CleanTeams()

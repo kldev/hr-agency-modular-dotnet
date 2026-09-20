@@ -201,6 +201,17 @@ internal static class ApiEndpoints
         public const string ChangeInterviewer = $"{InterviewBase}/{{interviewId}}/interviewer";
     }
 
+    internal static class LegalEntities
+    {
+        private const string LegalEntitiesBase = $"{Base}/legal-entities";
+
+        public const string Create = LegalEntitiesBase;
+        public const string Slice = LegalEntitiesBase;
+        public const string Get = $"{LegalEntitiesBase}/{{legalEntityId:guid}}";
+        public const string Update = $"{LegalEntitiesBase}/{{legalEntityId:guid}}";
+        public const string Close = $"{LegalEntitiesBase}/{{legalEntityId:guid}}/close";
+    }
+
     internal static class Teams
     {
         private const string TeamsBase = $"{Base}/teams";
