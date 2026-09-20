@@ -29,6 +29,7 @@
     <ProjectReference Include="..\HrAgencySystem.Teams\HrAgencySystem.Teams.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />
     <ProjectReference Include="..\EmailTemplates\HrAgencySystem.EmailTemplates.Messaging\HrAgencySystem.EmailTemplates.Messaging.csproj" />
+    <ProjectReference Include="..\services\HrAgencySystem.FileService.Contracts\HrAgencySystem.FileService.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

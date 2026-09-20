@@ -64,9 +64,7 @@ public sealed class ServiceTokenTests
     [Fact]
     public void ACallerWithoutAnOrganizationClaimIsRefused()
     {
-        var principal = Principal(
-            new Claim(FileServiceToken.ActorClaim, ActorId.ToString())
-        );
+        var principal = Principal(new Claim(FileServiceToken.ActorClaim, ActorId.ToString()));
 
         Assert.Throws<UnauthorizedAccessException>(() => Bind(principal));
     }

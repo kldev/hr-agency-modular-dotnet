@@ -55,6 +55,10 @@ public sealed class StorageKeyTests
             StorageKey.NormalizeOwnerKind(ownerKind)
         );
 
-        Assert.Contains(StorageKey.InvalidOwnerKindMessage, error.Message, StringComparison.Ordinal);
+        Assert.Contains(
+            StorageKey.InvalidOwnerKindMessage,
+            error.Message,
+            StringComparison.Ordinal
+        );
     }
 }

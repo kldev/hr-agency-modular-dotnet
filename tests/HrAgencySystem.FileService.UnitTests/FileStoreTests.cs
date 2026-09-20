@@ -1,8 +1,8 @@
+using HrAgencySystem.Files.Model;
+using HrAgencySystem.Files.Service;
 using HrAgencySystem.FileService.Application;
 using HrAgencySystem.FileService.Contracts;
 using HrAgencySystem.FileService.Domain;
-using HrAgencySystem.Files.Model;
-using HrAgencySystem.Files.Service;
 using Marten;
 using NSubstitute;
 
@@ -32,9 +32,7 @@ public sealed class FileStoreTests
         Assert.Null(result.File);
         Assert.Equal(UploadInspector.UnsupportedTypeMessage, result.Rejection);
 
-        await _storage
-            .DidNotReceiveWithAnyArgs()
-            .StoreAsync(default!, default!, default!, default);
+        await _storage.DidNotReceiveWithAnyArgs().StoreAsync(default!, default!, default!, default);
         _session.DidNotReceiveWithAnyArgs().Insert(Arg.Any<StoredFile>());
         await _session.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
     }
@@ -66,8 +64,10 @@ public sealed class FileStoreTests
             .StoreAsync(
                 Arg.Any<FileInput>(),
                 Arg.Is<string>(key =>
-                    key.StartsWith($"{OrganizationId:N}/project/{OwnerId:N}/", StringComparison.Ordinal)
-                    && key.EndsWith(".pdf", StringComparison.Ordinal)
+                    key.StartsWith(
+                        $"{OrganizationId:N}/project/{OwnerId:N}/",
+                        StringComparison.Ordinal
+                    ) && key.EndsWith(".pdf", StringComparison.Ordinal)
                 ),
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>()

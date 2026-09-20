@@ -2,6 +2,7 @@ using HrAgencySystem.Api;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
+using HrAgencySystem.Api.Infrastructure.FileServiceClient;
 using HrAgencySystem.PlatformSeeder;
 using JasperFx;
 
@@ -34,7 +35,11 @@ var app = builder.Build();
     app.MapOpenApi().AllowAnonymous();
     app.MapAppScalar();
     app.MapGet(ApiEndpoints.Root, () => "HR Agency API").ExcludeFromDescription().AllowAnonymous();
-    app.MapGet(ApiEndpoints.Health, () => new { status = "UP" })
+    app.MapGet(
+            ApiEndpoints.Health,
+            async (FileServiceHealthProbe files, CancellationToken ct) =>
+                new { status = "UP", fileService = await files.CheckAsync(ct) }
+        )
         .ExcludeFromDescription()
         .AllowAnonymous();
 
