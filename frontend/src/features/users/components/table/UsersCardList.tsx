@@ -1,6 +1,7 @@
 import type { UserProjection } from "#/api/models";
 import { DetailItem, EmailItem, PhoneItem } from "#/components/ui";
 
+import { teamRoles } from "#/features/teams/types";
 import { formatDateTimeIntl } from "#/utlis";
 
 interface UsersCardListProps {
@@ -29,6 +30,10 @@ export function UsersCardList({ items, showOrg }: UsersCardListProps) {
 						<PhoneItem phone={item.phone} />
 
 						<DetailItem label="Role">{item.role}</DetailItem>
+
+						<DetailItem label="Team">
+							{item.team ? `${item.team.name} (${teamRoles[item.team.role]})` : "—"}
+						</DetailItem>
 						{showOrg ? (
 							<DetailItem label="Organization">{item.organization.name}</DetailItem>
 						) : (

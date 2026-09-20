@@ -27,6 +27,7 @@ internal static class ApiEndpoints
         public const string Slice = UsersBase;
         public const string Get = $"{UsersBase}/{{userId:guid}}";
         public const string Update = $"{UsersBase}/{{userId:guid}}";
+        public const string ChangeRole = $"{UsersBase}/{{userId:guid}}/role";
         public const string ChangePassword = $"{UsersBase}/me/password";
     }
 

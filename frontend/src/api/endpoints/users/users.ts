@@ -33,12 +33,15 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	BadRequestDetails,
 	ChangePasswordRequest,
+	ChangeUserRoleRequest,
 	CreateUserRequest,
 	GetUsersParams,
 	ProblemDetails,
+	RoleChanged,
 	SliceResponseOfUserProjection,
 	UpdateUserRequest,
 	UserCreated,
+	UserProjection,
 	UserUpdated,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
@@ -395,6 +398,225 @@ export function useUpdateUser<
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 	const queryOptions = getUpdateUserQueryOptions(userId, updateUserRequest, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Get user
+ */
+export const getUser = (
+	userId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<UserProjection>(
+		{ url: `/api/users/${userId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetUserMutationKey = () => ["getUser"] as const;
+
+export const getGetUserMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getUser>>,
+		TError,
+		GetUserMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getUser>>,
+	TError,
+	GetUserMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetUserMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getUser>>,
+		GetUserMutationVariables
+	> = (props) => {
+		const { userId } = props ?? {};
+
+		return getUser(userId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetUserMutationResult = NonNullable<Awaited<ReturnType<typeof getUser>>>;
+
+export type GetUserMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetUserMutationVariables = { userId: string };
+
+/**
+ * @summary Get user
+ */
+export const useGetUser = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getUser>>,
+			TError,
+			GetUserMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getUser>>,
+	TError,
+	GetUserMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetUserMutationOptions(options), queryClient);
+};
+/**
+ * @summary Change user role
+ */
+export const changeUserRole = (
+	userId: string,
+	changeUserRoleRequest: BodyType<ChangeUserRoleRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<RoleChanged>(
+		{
+			url: `/api/users/${userId}/role`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: changeUserRoleRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getChangeUserRoleQueryKey = (
+	userId: string,
+	changeUserRoleRequest?: BodyType<ChangeUserRoleRequest>,
+) => {
+	return ["PUT", `/api/users/${userId}/role`, changeUserRoleRequest] as const;
+};
+
+export const getChangeUserRoleQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeUserRole>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	changeUserRoleRequest: BodyType<ChangeUserRoleRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeUserRole>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getChangeUserRoleQueryKey(userId, changeUserRoleRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeUserRole>>> = ({ signal }) =>
+		changeUserRole(userId, changeUserRoleRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: userId !== null && userId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof changeUserRole>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type ChangeUserRoleQueryResult = NonNullable<Awaited<ReturnType<typeof changeUserRole>>>;
+export type ChangeUserRoleQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useChangeUserRole<
+	TData = Awaited<ReturnType<typeof changeUserRole>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	changeUserRoleRequest: BodyType<ChangeUserRoleRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeUserRole>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeUserRole>>,
+					TError,
+					Awaited<ReturnType<typeof changeUserRole>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeUserRole<
+	TData = Awaited<ReturnType<typeof changeUserRole>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	changeUserRoleRequest: BodyType<ChangeUserRoleRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeUserRole>>, TError, TData>> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeUserRole>>,
+					TError,
+					Awaited<ReturnType<typeof changeUserRole>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeUserRole<
+	TData = Awaited<ReturnType<typeof changeUserRole>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	changeUserRoleRequest: BodyType<ChangeUserRoleRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeUserRole>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Change user role
+ */
+
+export function useChangeUserRole<
+	TData = Awaited<ReturnType<typeof changeUserRole>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	changeUserRoleRequest: BodyType<ChangeUserRoleRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof changeUserRole>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getChangeUserRoleQueryOptions(userId, changeUserRoleRequest, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;

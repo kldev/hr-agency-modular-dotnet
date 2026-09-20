@@ -59,7 +59,7 @@ const UsersPage: React.FC = () => {
 					navigate({ search: (previous) => ({ ...previous, role: s }) });
 				}}
 			/>
-			<UseresTable users={items} />
+			<UseresTable users={items} onRefresh={() => query.refetch()} />
 			<UsersCardList items={items} />
 			<LoadMore
 				loading={query.isPending}

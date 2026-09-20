@@ -22,6 +22,7 @@ export * from "./LoadMore";
 export * from "./MetricCard";
 export * from "./OnlyMine";
 export * from "./pickers";
+export * from "./RepeatableField";
 export * from "./SaveChangesButton";
 export * from "./Select";
 export * from "./Textarea";

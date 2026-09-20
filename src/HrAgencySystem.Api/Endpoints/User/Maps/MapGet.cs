@@ -11,12 +11,11 @@ internal static class MapGet
     internal static void Map(RouteGroupBuilder group)
     {
         group
-            .Map(ApiEndpoints.Users.Get, Handler)
+            .MapGet(ApiEndpoints.Users.Get, Handler)
             .WithSummary("Get user")
             .WithName("Get user")
             .Produces<UserProjection>()
             .ProducesStandardErrors();
-        ;
     }
 
     private static async Task<IResult> Handler(

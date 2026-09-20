@@ -7,4 +7,5 @@ export * from "./jobPostsKeys";
 export * from "./organizationKeys";
 export * from "./salesKeys";
 export * from "./suggestionKeys";
+export * from "./teamsKeys";
 export * from "./usersKeys";
