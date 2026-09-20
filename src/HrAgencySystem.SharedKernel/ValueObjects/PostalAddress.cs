@@ -5,11 +5,24 @@ namespace HrAgencySystem.SharedKernel.ValueObjects;
 /// <summary>
 /// A postal address, good enough to put on a contract or a posting declaration.
 /// <para>
+/// A positional record with a public constructor, like <c>ContactPerson</c> and unlike the private
+/// constructor value objects elsewhere: this one travels inside events and read models, and anything
+/// stored has to come back out of JSON. Validation therefore lives in <see cref="Create"/> and
+/// <see cref="TryCreate"/> rather than in the constructor.
+/// </para>
+/// <para>
 /// The postal code is deliberately not pattern checked. Belgium writes 1000, Germany 10115 and
 /// Poland 00-001; a regex here would reject a correct address the day somebody adds a country.
 /// </para>
 /// </summary>
-public sealed record PostalAddress
+public sealed record PostalAddress(
+    string Street,
+    string BuildingNumber,
+    string? UnitNumber,
+    string PostalCode,
+    string City,
+    string CountryCode
+)
 {
     public const int StreetMaxLength = 200;
     public const int BuildingNumberMaxLength = 20;
@@ -27,30 +40,8 @@ public sealed record PostalAddress
     public const string PostalCodeMaxLengthMessage = "Postal code cannot exceed 20 characters.";
     public const string CityRequiredMessage = "City is required.";
     public const string CityMaxLengthMessage = "City cannot exceed 120 characters.";
-
-    private PostalAddress(
-        string street,
-        string buildingNumber,
-        string? unitNumber,
-        string postalCode,
-        string city,
-        string countryCode
-    )
-    {
-        Street = street;
-        BuildingNumber = buildingNumber;
-        UnitNumber = unitNumber;
-        PostalCode = postalCode;
-        City = city;
-        CountryCode = countryCode;
-    }
-
-    public string Street { get; }
-    public string BuildingNumber { get; }
-    public string? UnitNumber { get; }
-    public string PostalCode { get; }
-    public string City { get; }
-    public string CountryCode { get; }
+    public const string PartialMessage =
+        "An address needs street, building number, postal code, city and country together.";
 
     public static PostalAddress Create(
         string? street,
@@ -145,9 +136,7 @@ public sealed record PostalAddress
 
     public override string ToString()
     {
-        var building = UnitNumber is null
-            ? BuildingNumber
-            : $"{BuildingNumber}/{UnitNumber}";
+        var building = UnitNumber is null ? BuildingNumber : $"{BuildingNumber}/{UnitNumber}";
 
         return $"{Street} {building}, {PostalCode} {City}, {CountryCode}";
     }

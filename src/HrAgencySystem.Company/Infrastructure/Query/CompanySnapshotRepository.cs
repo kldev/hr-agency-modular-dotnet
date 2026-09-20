@@ -13,7 +13,15 @@ public class CompanySnapshotRepository(IDocumentSession session) : ICompanySnaps
         var result = await session
             .Query<CompanyProjection>()
             .WithCompanyId(companyId)
-            .Select(z => new CompanySnapshot(z.Id, z.Name, z.TaxId))
+            .Select(z => new CompanySnapshot(
+                z.Id,
+                z.Name,
+                z.TaxId,
+                z.IsProfileComplete,
+                z.Profile.RegisteredAddress,
+                z.Profile.LegalName,
+                z.Profile.VatNumber
+            ))
             .FirstOrDefaultAsync(ct);
         if (result != null)
             return result;

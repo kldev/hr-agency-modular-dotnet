@@ -31,7 +31,12 @@ public sealed record CompanyProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     int ApplicantsCount,
     ContactPerson? Contact,
-    Guid? ContactPersonId
+    Guid? ContactPersonId,
+    CompanyProfile Profile,
+    // Flattened alongside Profile so "which clients can we sign a contract with" is a filter on a
+    // column rather than a walk into a nested document.
+    bool IsProfileComplete,
+    DateTimeOffset? ProfileCompletedAt
 )
 {
     public static CompanyProjection Create(CompanyCreated @event)
@@ -56,8 +61,28 @@ public sealed record CompanyProjection(
             0,
             0,
             @event.Contact,
-            @event.ContactPersonId
+            @event.ContactPersonId,
+            CompanyProfile.Empty,
+            false,
+            null
         );
+    }
+
+    public CompanyProjection Apply(CompanyProfileUpdated @event)
+    {
+        return this with
+        {
+            Profile = @event.Profile,
+            IsProfileComplete = @event.Profile.IsComplete && !string.IsNullOrWhiteSpace(TaxId),
+            ModifiedBy = @event.ModifiedBy,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedAt = @event.ModifiedAt,
+        };
+    }
+
+    public CompanyProjection Apply(CompanyProfileCompleted @event)
+    {
+        return this with { ProfileCompletedAt = @event.CompletedAt };
     }
 
     public CompanyProjection Apply(CompanyJobPostCreated @event)

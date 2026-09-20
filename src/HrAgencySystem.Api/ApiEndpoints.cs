@@ -66,6 +66,7 @@ internal static class ApiEndpoints
         public const string Update = $"{CompaniesBase}/{{companyId:guid}}";
         public const string GetByTaxId = $"{CompaniesBase}/find-by-tax/{{taxId}}";
         public const string Contacts = $"{CompaniesBase}/{{companyId:guid}}/contacts";
+        public const string CompleteProfile = $"{CompaniesBase}/{{companyId:guid}}/profile";
     }
 
     internal static class CompanyContacts

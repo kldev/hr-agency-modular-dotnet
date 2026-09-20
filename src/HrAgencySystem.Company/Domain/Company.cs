@@ -31,6 +31,24 @@ public sealed class Company
 
     public WebSite WebSite { get; private set; } = null!;
 
+    private CompanyProfile? _profile;
+
+    /// <summary>
+    /// The paperwork half, filled in separately from the lead. See <see cref="CompanyProfile"/>.
+    /// <para>
+    /// Backed by a nullable field because Marten rehydrates an aggregate without running field
+    /// initialisers: a company whose stream carries no profile event would otherwise hand back null
+    /// here, and every reader would have to know that.
+    /// </para>
+    /// </summary>
+    public CompanyProfile Profile => _profile ?? CompanyProfile.Empty;
+
+    /// <summary>
+    /// Computed, never stored: a stored flag would keep claiming completeness after somebody clears
+    /// the address. A project refuses to go live against a company for which this is false.
+    /// </summary>
+    public bool IsProfileComplete => Profile.IsComplete && TaxId is not null;
+
     public static Company Empty()
     {
         return new Company();
@@ -51,6 +69,17 @@ public sealed class Company
         CreatedById = @event.CreatedBy.Id;
         Industry = @event.Industry;
         WebSite = WebSite.Create(@event.Website);
+    }
+
+    public void Apply(CompanyProfileUpdated @event)
+    {
+        _profile = @event.Profile;
+    }
+
+    public void Apply(CompanyProfileCompleted @event)
+    {
+        // Nothing to set: completeness is derived from the profile. The event exists so the stream
+        // records when it happened and who did it.
     }
 
     public void Apply(CompanyUpdated @event)
