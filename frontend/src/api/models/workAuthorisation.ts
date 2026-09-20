@@ -13,12 +13,17 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { WorkAuthorisationKind } from "./workAuthorisationKind.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface WorkAuthorisation {
+	authorisationId: string;
+	kind: WorkAuthorisationKind;
+	country: string;
+	number: string;
+	validFrom: string;
+	validUntil: string;
+	/** @nullable */
+	documentId: string | null;
+	/** @nullable */
+	note: string | null;
+}

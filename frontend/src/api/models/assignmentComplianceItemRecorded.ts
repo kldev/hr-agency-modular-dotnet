@@ -13,12 +13,14 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { ComplianceItem } from "./complianceItem.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface AssignmentComplianceItemRecorded {
+	assignmentId: string;
+	organizationId: string;
+	workerId: string;
+	item: ComplianceItem;
+	modifiedBy: UserSnapshot;
+	modifiedAt: string;
+}

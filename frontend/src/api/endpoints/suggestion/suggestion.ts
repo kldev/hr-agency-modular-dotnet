@@ -33,12 +33,14 @@ import type {
 	GetTagsSuggestionsParams,
 	GetTeamsSuggestionsParams,
 	GetUsersSuggestionsParams,
+	GetWorkerSuggestionsParams,
 	JobPostSuggestion,
 	ProblemDetails,
 	ProjectSuggestion,
 	Tag,
 	TeamSuggestion,
 	UserSuggestion,
+	WorkerSuggestion,
 } from "../../models";
 import type { ErrorType } from "../../mutator.ts";
 import { customInstance } from "../../mutator.ts";
@@ -889,4 +891,88 @@ export const useGetTeamSuggestion = <
 	TContext
 > => {
 	return useMutation(getGetTeamSuggestionMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get top 25 workers
+ */
+export const getWorkerSuggestions = (
+	params?: GetWorkerSuggestionsParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<WorkerSuggestion[]>(
+		{ url: `/api/suggestion/workers`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getGetWorkerSuggestionsMutationKey = () => ["getWorkerSuggestions"] as const;
+
+export const getGetWorkerSuggestionsMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getWorkerSuggestions>>,
+		TError,
+		GetWorkerSuggestionsMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getWorkerSuggestions>>,
+	TError,
+	GetWorkerSuggestionsMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetWorkerSuggestionsMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getWorkerSuggestions>>,
+		GetWorkerSuggestionsMutationVariables
+	> = (props) => {
+		const { params } = props ?? {};
+
+		return getWorkerSuggestions(params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetWorkerSuggestionsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getWorkerSuggestions>>
+>;
+
+export type GetWorkerSuggestionsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetWorkerSuggestionsMutationVariables = { params?: GetWorkerSuggestionsParams };
+
+/**
+ * @summary Get top 25 workers
+ */
+export const useGetWorkerSuggestions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getWorkerSuggestions>>,
+			TError,
+			GetWorkerSuggestionsMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getWorkerSuggestions>>,
+	TError,
+	GetWorkerSuggestionsMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetWorkerSuggestionsMutationOptions(options), queryClient);
 };

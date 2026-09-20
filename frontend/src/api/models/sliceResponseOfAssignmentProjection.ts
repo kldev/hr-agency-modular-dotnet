@@ -13,12 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { AssignmentProjection } from "./assignmentProjection.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface SliceResponseOfAssignmentProjection {
+	content: AssignmentProjection[];
+	hasMore: boolean;
+}

@@ -13,15 +13,23 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { Placement } from "./placement.ts";
+import type { IdentityDocument } from "./identityDocument.ts";
+import type { PostalAddress } from "./postalAddress.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface ProjectUpdated {
-	projectId: string;
+export interface WorkerUpdated {
+	workerId: string;
 	organizationId: string;
-	name: string;
-	description: string;
-	placement: Placement;
+	firstName: string;
+	lastName: string;
+	dateOfBirth: string;
+	citizenship: string;
+	identityDocument: IdentityDocument;
+	/** @nullable */
+	email: string | null;
+	phoneNumber: string;
+	address: null | PostalAddress;
+	note: string;
 	modifiedBy: UserSnapshot;
 	modifiedAt: string;
 }

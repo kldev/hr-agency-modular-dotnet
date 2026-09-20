@@ -13,12 +13,12 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { PostalAddress } from "./postalAddress.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface Placement {
+	workplaceAddress: PostalAddress;
+	workCountry: string;
+	startsOn: string;
+	/** @nullable */
+	endsOn: string | null;
+}

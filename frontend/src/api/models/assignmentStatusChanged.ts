@@ -13,12 +13,18 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { AssignmentStatus } from "./assignmentStatus.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface AssignmentStatusChanged {
+	assignmentId: string;
+	organizationId: string;
+	workerId: string;
+	previousStatus: AssignmentStatus;
+	status: AssignmentStatus;
+	/** @nullable */
+	endsOn: string | null;
+	reason: string;
+	changedBy: UserSnapshot;
+	changedAt: string;
+}

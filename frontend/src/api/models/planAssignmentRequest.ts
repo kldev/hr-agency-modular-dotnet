@@ -13,12 +13,14 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { EngagementType } from "./engagementType.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface PlanAssignmentRequest {
+	workerId: string;
+	projectId: string;
+	engagementType: EngagementType;
+	position: string;
+	startsOn: string;
+	/** @nullable */
+	endsOn?: string | null;
+}

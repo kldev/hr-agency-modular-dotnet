@@ -14,11 +14,12 @@
  * OpenAPI spec version: v1
  */
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface ProjectPlacementSnapshot {
+	projectId: string;
+	projectName: string;
+	clientCompanyId: string;
+	clientCompanyName: string;
+	deliveringEntityId: string;
+	deliveringEntityName: string;
+	workCountry: string;
+}

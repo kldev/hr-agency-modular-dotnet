@@ -13,12 +13,18 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { ComplianceStatus } from "./complianceStatus.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface RecordAssignmentComplianceItemRequest {
+	status: ComplianceStatus;
+	/** @nullable */
+	referenceNumber?: string | null;
+	/** @nullable */
+	validFrom?: string | null;
+	/** @nullable */
+	validTo?: string | null;
+	/** @nullable */
+	documentId?: string | null;
+	/** @nullable */
+	note?: string | null;
+}

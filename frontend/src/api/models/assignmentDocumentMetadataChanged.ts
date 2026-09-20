@@ -13,12 +13,13 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { AssignmentDocument } from "./assignmentDocument.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface AssignmentDocumentMetadataChanged {
+	assignmentId: string;
+	organizationId: string;
+	document: AssignmentDocument;
+	modifiedBy: UserSnapshot;
+	modifiedAt: string;
+}

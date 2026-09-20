@@ -13,12 +13,20 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { AssignmentStatus } from "./assignmentStatus.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export type GetAssignmentsParams = {
+	search?: string;
+	status?: AssignmentStatus[];
+	workerId?: string;
+	projectId?: string;
+	workCountry?: string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	page?: number | string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	pageSize?: number | string;
+};

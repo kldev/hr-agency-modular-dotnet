@@ -13,12 +13,10 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { WorkerStatus } from "./workerStatus.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface ChangeWorkerStatusRequest {
+	status: WorkerStatus;
+	/** @nullable */
+	reason?: string | null;
+}

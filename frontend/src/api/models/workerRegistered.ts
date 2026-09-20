@@ -13,25 +13,25 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CompanySnapshot } from "./companySnapshot.ts";
-import type { DeliveringEntitySnapshot } from "./deliveringEntitySnapshot.ts";
-import type { EngagementType } from "./engagementType.ts";
-import type { Placement } from "./placement.ts";
+import type { IdentityDocument } from "./identityDocument.ts";
+import type { PostalAddress } from "./postalAddress.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface ProjectCreated {
-	projectId: string;
+export interface WorkerRegistered {
+	workerId: string;
 	organizationId: string;
-	company: CompanySnapshot;
-	deliveringEntity: DeliveringEntitySnapshot;
-	name: string;
-	description: string;
-	engagementType: EngagementType;
-	placement: Placement;
+	firstName: string;
+	lastName: string;
+	dateOfBirth: string;
+	citizenship: string;
+	identityDocument: IdentityDocument;
 	/** @nullable */
-	teamId: string | null;
+	email: string | null;
+	phoneNumber: string;
+	address: null | PostalAddress;
+	note: string;
 	/** @nullable */
-	teamName: string | null;
+	sourceCandidateId: string | null;
 	createdBy: UserSnapshot;
 	createdAt: string;
 }

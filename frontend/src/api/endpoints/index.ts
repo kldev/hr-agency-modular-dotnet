@@ -1,3 +1,4 @@
+export * from "./assignments/assignments.ts";
 export * from "./auth/auth.ts";
 export * from "./company/company.ts";
 export * from "./company-contacts/company-contacts.ts";
@@ -14,3 +15,4 @@ export * from "./sales/sales.ts";
 export * from "./suggestion/suggestion.ts";
 export * from "./teams/teams.ts";
 export * from "./users/users.ts";
+export * from "./workers/workers.ts";

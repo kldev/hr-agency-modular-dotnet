@@ -14,11 +14,15 @@
  * OpenAPI spec version: v1
  */
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
+export type WorkerDocumentCategory =
+	(typeof WorkerDocumentCategory)[keyof typeof WorkerDocumentCategory];
 
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
+export const WorkerDocumentCategory = {
+	Identity: "Identity",
+	EmploymentContract: "EmploymentContract",
+	MedicalCertificate: "MedicalCertificate",
+	HealthAndSafety: "HealthAndSafety",
+	Qualification: "Qualification",
+	Legalisation: "Legalisation",
+	Other: "Other",
 } as const;

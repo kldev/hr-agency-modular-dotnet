@@ -36,4 +36,9 @@ export const ComplianceRequirement = {
 	DeUeberlassungAgreement: "DeUeberlassungAgreement",
 	DeConstructionSectorRestriction: "DeConstructionSectorRestriction",
 	DeLongTermPostingNotification: "DeLongTermPostingNotification",
+	DeServiceContractDelimitation: "DeServiceContractDelimitation",
+	BeProhibitedPlacement: "BeProhibitedPlacement",
+	LocalEmploymentContract: "LocalEmploymentContract",
+	DeSocialSecurityRegistration: "DeSocialSecurityRegistration",
+	BeDimonaDeclaration: "BeDimonaDeclaration",
 } as const;

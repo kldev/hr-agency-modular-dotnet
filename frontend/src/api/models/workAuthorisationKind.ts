@@ -13,12 +13,14 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostalAddress } from "./postalAddress.ts";
 
-export interface Assignment {
-	workplaceAddress: PostalAddress;
-	workCountry: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn: string | null;
-}
+export type WorkAuthorisationKind =
+	(typeof WorkAuthorisationKind)[keyof typeof WorkAuthorisationKind];
+
+export const WorkAuthorisationKind = {
+	WorkPermit: "WorkPermit",
+	ResidencePermit: "ResidencePermit",
+	Visa: "Visa",
+	WorkStatement: "WorkStatement",
+	Other: "Other",
+} as const;

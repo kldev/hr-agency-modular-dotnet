@@ -13,12 +13,19 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { WorkerDocumentCategory } from "./workerDocumentCategory.ts";
 
-export type EngagementType = (typeof EngagementType)[keyof typeof EngagementType];
-
-export const EngagementType = {
-	PostingOfWorkers: "PostingOfWorkers",
-	TemporaryAgencyWork: "TemporaryAgencyWork",
-	Outsourcing: "Outsourcing",
-	LocalEmployment: "LocalEmployment",
-} as const;
+export interface WorkerDocument {
+	documentId: string;
+	category: WorkerDocumentCategory;
+	fileId: string;
+	fileName: string;
+	contentType: string;
+	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	size: number | string;
+	documentDate: string;
+	/** @nullable */
+	validUntil: string | null;
+	/** @nullable */
+	note: string | null;
+}
