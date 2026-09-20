@@ -7,7 +7,7 @@ type Props = {
 	children: React.ReactNode;
 	footer?: React.ReactNode;
 	onClose: () => void;
-	maxWidth?: "sm" | "md" | "lg";
+	maxWidth?: "sm" | "md" | "lg" | "wide";
 };
 
 export function Dialog({ open, title, children, footer, onClose, maxWidth = "md" }: Props) {
@@ -35,15 +35,23 @@ export function Dialog({ open, title, children, footer, onClose, maxWidth = "md"
 
 	if (!open) return null;
 
+	// A wizard needs room the three form sizes do not have: 80vw x 80vh on a desktop. On a phone
+	// "80% of the viewport" is just a smaller phone, so it takes the whole screen and reads as a
+	// page instead of a floating card.
 	const widths = {
 		sm: "max-w-[420px]",
 		md: "max-w-[520px]",
 		lg: "max-w-[720px]",
+		wide: "max-w-[80vw] h-[80vh] max-sm:h-full max-sm:max-h-full max-sm:max-w-full max-sm:rounded-none",
 	};
+
+	const isWide = maxWidth === "wide";
 
 	return (
 		<div
-			className="fixed inset-0 z-1000 flex items-center justify-center bg-black/45 p-4"
+			className={`fixed inset-0 z-1000 flex items-center justify-center bg-black/45 p-4 ${
+				isWide ? "max-sm:p-0" : ""
+			}`}
 			role="presentation"
 		>
 			<div
