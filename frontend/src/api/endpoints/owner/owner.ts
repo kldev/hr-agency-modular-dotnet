@@ -233,3 +233,87 @@ export const useGetApiOwners = <
 ): UseMutationResult<Awaited<ReturnType<typeof getApiOwners>>, TError, void, TContext> => {
 	return useMutation(getGetApiOwnersMutationOptions(options), queryClient);
 };
+/**
+ * @summary Get owner
+ */
+export const getApiOwnersOwnerId = (
+	ownerId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<OwnerProjection>(
+		{ url: `/api/owners/${ownerId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetApiOwnersOwnerIdMutationKey = () => ["getApiOwnersOwnerId"] as const;
+
+export const getGetApiOwnersOwnerIdMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getApiOwnersOwnerId>>,
+		TError,
+		GetApiOwnersOwnerIdMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getApiOwnersOwnerId>>,
+	TError,
+	GetApiOwnersOwnerIdMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetApiOwnersOwnerIdMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getApiOwnersOwnerId>>,
+		GetApiOwnersOwnerIdMutationVariables
+	> = (props) => {
+		const { ownerId } = props ?? {};
+
+		return getApiOwnersOwnerId(ownerId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetApiOwnersOwnerIdMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getApiOwnersOwnerId>>
+>;
+
+export type GetApiOwnersOwnerIdMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetApiOwnersOwnerIdMutationVariables = { ownerId: string };
+
+/**
+ * @summary Get owner
+ */
+export const useGetApiOwnersOwnerId = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getApiOwnersOwnerId>>,
+			TError,
+			GetApiOwnersOwnerIdMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getApiOwnersOwnerId>>,
+	TError,
+	GetApiOwnersOwnerIdMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetApiOwnersOwnerIdMutationOptions(options), queryClient);
+};
