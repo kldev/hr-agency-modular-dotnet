@@ -2,7 +2,7 @@ import { z } from "zod";
 import { TeamRole } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
 import { withForm } from "#/forms";
-import { emptyMember, TeamMembersField } from "./TeamMembersField";
+import { createMember, TeamMembersField } from "./TeamMembersField";
 
 interface TeamFormProps {
 	error: Error | null;
@@ -15,6 +15,7 @@ export const teamSchema = z.object({
 	members: z
 		.array(
 			z.object({
+				key: z.string(),
 				userId: z.string().trim().min(1, "Pick a person"),
 				role: z.enum(TeamRole),
 			}),
@@ -28,10 +29,16 @@ export const teamSchema = z.object({
 
 export type TeamFormValues = z.infer<typeof teamSchema>;
 
+/** Only for withForm's type inference - the drawer seeds a fresh roster with createEmptyTeam(). */
 export const emptyTeam: TeamFormValues = {
 	name: "",
-	members: [emptyMember],
+	members: [],
 };
+
+export const createEmptyTeam = (): TeamFormValues => ({
+	name: "",
+	members: [createMember()],
+});
 
 export const TeamForm = withForm({
 	props: {} as TeamFormProps,

@@ -57,12 +57,21 @@ const FormContent: React.FC<{
 		},
 
 		onSubmit: async ({ value }) => {
-			mutation.mutate({
-				userId: user.id,
-				current,
-				teamId: value.teamId || null,
-				role: value.role,
-			});
+			const teamId = value.teamId || null;
+
+			// Saving the state the person is already in would call nothing and still report success.
+			// After a half-done move the snapshot is stale, so nothing counts as unchanged then.
+			const unchanged =
+				!detached &&
+				(current?.id ?? null) === teamId &&
+				(teamId === null || current?.role === value.role);
+
+			if (unchanged) {
+				handleClose();
+				return;
+			}
+
+			mutation.mutate({ userId: user.id, current, teamId, role: value.role });
 		},
 	});
 

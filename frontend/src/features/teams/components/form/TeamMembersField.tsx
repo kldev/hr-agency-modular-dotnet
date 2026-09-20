@@ -1,17 +1,26 @@
 import { useState } from "react";
-import { type TeamRole, TeamRole as TeamRoleValues } from "@/api/models";
+import type { TeamRole } from "@/api/models";
 import { EnumSelectFilter, FieldError, RepeatableField, UsersPicker } from "@/components/ui";
-import { teamRoles } from "../../types";
+import { defaultTeamRole, teamRoles } from "../../types";
 
 export type TeamMemberDraft = {
+	/**
+	 * Identifies the row, not the person. Each row keeps its own search text, so keying by array
+	 * index would leave the previous row's name on screen once a row above it is removed and the
+	 * rows below shift up - the picker only writes a resolved label into an input that is empty.
+	 */
+	key: string;
 	userId: string;
 	role: TeamRole;
 };
 
-export const emptyMember: TeamMemberDraft = {
+let nextRowKey = 0;
+
+export const createMember = (): TeamMemberDraft => ({
+	key: `member-${nextRowKey++}`,
 	userId: "",
-	role: TeamRoleValues.Recruiter,
-};
+	role: defaultTeamRole,
+});
 
 interface TeamMembersFieldProps {
 	members: TeamMemberDraft[];
@@ -31,7 +40,7 @@ export function TeamMembersField({
 	isSubmitting,
 	errors,
 }: TeamMembersFieldProps) {
-	const rows = members.length > 0 ? members : [emptyMember];
+	const rows = members.length > 0 ? members : [createMember()];
 
 	const update = (index: number, patch: Partial<TeamMemberDraft>) =>
 		onChange(rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
@@ -46,8 +55,8 @@ export function TeamMembersField({
 				addLabel="Add member"
 				disabled={isSubmitting}
 				canAdd={rows.every((row) => row.userId.length > 0)}
-				getRowKey={(_, index) => `member-${index}`}
-				onAdd={() => onChange([...rows, emptyMember])}
+				getRowKey={(row) => row.key}
+				onAdd={() => onChange([...rows, createMember()])}
 				onRemove={(index) => onChange(rows.filter((_, i) => i !== index))}
 				renderRow={(row, index) => (
 					<TeamMemberRow

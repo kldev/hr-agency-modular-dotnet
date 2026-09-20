@@ -1,5 +1,5 @@
-export * from "./AddMemberDrawer";
+export type { AddMemberFormCommand } from "./AddMemberDrawer";
 export { default as AddMemberDrawer } from "./AddMemberDrawer";
-export * from "./ChangeMemberRoleDrawer";
+export type { ChangeMemberRoleFormCommand, ChangeRoleTarget } from "./ChangeMemberRoleDrawer";
 export { default as ChangeMemberRoleDrawer } from "./ChangeMemberRoleDrawer";
 export * from "./TeamMembersSection";

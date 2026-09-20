@@ -6,7 +6,7 @@ import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
 import { useAddTeamMember } from "../../pages/hooks";
-import { teamRoles } from "../../types";
+import { defaultTeamRole, teamRoles } from "../../types";
 
 export interface AddMemberFormCommand {
 	add(teamId: string, teamName: string): void;
@@ -41,7 +41,7 @@ const FormContent: React.FC<{
 	});
 
 	const form = useAppForm({
-		defaultValues: { userId: "", role: TeamRole.Recruiter as TeamRole },
+		defaultValues: { userId: "", role: defaultTeamRole },
 
 		validators: {
 			onChange: addMemberSchema,

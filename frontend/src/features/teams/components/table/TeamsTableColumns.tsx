@@ -15,6 +15,20 @@ type ColumnHandlers = {
 
 export function getColumns({ onRename, onAddMember }: ColumnHandlers) {
 	return columnHelper.columns([
+		columnHelper.display({
+			id: "actions",
+			header: () => null,
+			meta: {
+				width: "sm",
+			},
+			cell: ({ row }) => (
+				<TeamActions
+					id={row.original.id}
+					onRename={() => onRename(row.original)}
+					onAddMember={() => onAddMember(row.original)}
+				/>
+			),
+		}),
 		columnHelper.accessor("name", {
 			header: "Team",
 			meta: {
@@ -47,32 +61,22 @@ export function getColumns({ onRename, onAddMember }: ColumnHandlers) {
 				width: "2xl",
 			},
 			cell: ({ row }) => (
-				<span className="truncate">
-					{row.original.members
-						.map(
-							(member) =>
-								`${member.user.fullname ?? member.user.email} (${teamRoles[member.role]})`,
-						)
-						.join(", ")}
-				</span>
+				<div className="flex flex-col gap-3">
+					<span className="truncate">
+						{row.original.members
+							.map(
+								(member) =>
+									`${member.user.fullname ?? member.user.email} (${teamRoles[member.role]})`,
+							)
+							.join(", ")}
+					</span>
+				</div>
 			),
 		}),
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
-		}),
-
-		columnHelper.display({
-			id: "actions",
-			header: () => null,
-			cell: ({ row }) => (
-				<TeamActions
-					id={row.original.id}
-					onRename={() => onRename(row.original)}
-					onAddMember={() => onAddMember(row.original)}
-				/>
-			),
 		}),
 	]);
 }

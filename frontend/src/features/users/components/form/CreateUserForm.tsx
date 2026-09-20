@@ -4,7 +4,7 @@ import { z } from "zod";
 import { OrganizationRoleApi, TeamRole } from "#/api/models";
 import { Button, FieldError, Input } from "#/components/ui";
 import { ApiError } from "#/components/ui/ApiError";
-import { teamRoles } from "#/features/teams/types";
+import { defaultTeamRole, teamRoles } from "#/features/teams/types";
 import { withForm } from "#/forms";
 import { copyToClipboard, generatePassword } from "#/utlis";
 import { organizationRoles } from "../../types";
@@ -53,7 +53,7 @@ export const emptyCreateUser: CreateUserFormValues = {
 	phone: "",
 	password: "",
 	teamId: "",
-	teamRole: TeamRole.Recruiter,
+	teamRole: defaultTeamRole,
 };
 
 export const CreateUserForm = withForm({

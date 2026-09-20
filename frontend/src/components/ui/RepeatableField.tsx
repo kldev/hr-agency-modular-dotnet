@@ -14,11 +14,8 @@ export type RepeatableFieldProps<T> = {
 	addLabel?: string;
 	/** Rows down to this count cannot be removed - the button goes disabled instead of vanishing. */
 	minItems?: number;
-	/** Hides the add button once the list is this long. */
-	maxItems?: number;
 	canAdd?: boolean;
 	disabled?: boolean;
-	emptyHint?: string;
 };
 
 /**
@@ -36,14 +33,11 @@ export function RepeatableField<T>({
 	onRemove,
 	addLabel = "Add item",
 	minItems = 0,
-	maxItems,
 	canAdd = true,
 	disabled,
-	emptyHint,
 }: RepeatableFieldProps<T>) {
 	const rows = items ?? [];
 	const canRemove = rows.length > minItems;
-	const reachedMax = maxItems !== undefined && rows.length >= maxItems;
 
 	return (
 		<div>
@@ -57,10 +51,6 @@ export function RepeatableField<T>({
 			) : null}
 
 			<div className="space-y-2">
-				{rows.length === 0 && emptyHint ? (
-					<p className="text-xs text-(--color-text-muted)">{emptyHint}</p>
-				) : null}
-
 				{rows.map((item, index) => (
 					<div key={getRowKey(item, index)} className="flex items-start gap-2">
 						<div className="min-w-0 flex-1">{renderRow(item, index)}</div>
@@ -84,12 +74,10 @@ export function RepeatableField<T>({
 					</div>
 				))}
 
-				{reachedMax ? null : (
-					<Button type="button" variant="secondary" disabled={disabled || !canAdd} onClick={onAdd}>
-						<Plus size={15} />
-						{addLabel}
-					</Button>
-				)}
+				<Button type="button" variant="secondary" disabled={disabled || !canAdd} onClick={onAdd}>
+					<Plus size={15} />
+					{addLabel}
+				</Button>
 			</div>
 		</div>
 	);

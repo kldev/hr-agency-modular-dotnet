@@ -4,7 +4,7 @@ import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
 import type { CreateTeamRequest } from "@/api/models";
 import { useCreateTeam } from "../../pages/hooks";
-import { emptyTeam, TeamForm, teamSchema } from "./TeamForm";
+import { createEmptyTeam, TeamForm, teamSchema } from "./TeamForm";
 import type { CreateTeamFormCommand } from "./TeamFormCommand";
 
 interface CreateTeamDrawerProps {
@@ -25,7 +25,7 @@ const FormContent: React.FC<{ onSuccess: () => void; handleClose: () => void }> 
 	});
 
 	const form = useAppForm({
-		defaultValues: emptyTeam,
+		defaultValues: createEmptyTeam(),
 
 		validators: {
 			onChange: teamSchema,
@@ -34,7 +34,7 @@ const FormContent: React.FC<{ onSuccess: () => void; handleClose: () => void }> 
 		onSubmit: async ({ value }) => {
 			const request: CreateTeamRequest = {
 				name: value.name.trim(),
-				members: value.members,
+				members: value.members.map(({ userId, role }) => ({ userId, role })),
 			};
 
 			mutation.mutate({ request });

@@ -11,4 +11,4 @@ export const teamRoles: Record<TeamRole, string> = {
 	Operations: "Operations",
 };
 
-export const defaultTeamRole = TeamRole.Recruiter;
+export const defaultTeamRole: TeamRole = TeamRole.Recruiter;

@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { getUser, getUsers } from "#/api/endpoints";
 import type { OrganizationRoleApi } from "#/api/models";
 import {
@@ -17,7 +17,7 @@ import type {
 	TeamRole,
 	UpdateUserRequest,
 } from "@/api/models";
-import { teamsKeys, usersKeys } from "@/api/query-keys";
+import { suggestionKeys, teamsKeys, usersKeys } from "@/api/query-keys";
 import { useProjectionWait } from "@/hooks";
 
 const PAGE_SIZE = 15;
@@ -81,16 +81,16 @@ const changeUserRoleServerFn = createServerFn({
 		return changeUserRole(data.id, data.req, await getFnOptions());
 	});
 
-export function useGetUsersSlice(fillter: UsersFilters) {
+export function useGetUsersSlice(filter: UsersFilters) {
 	return useInfiniteQuery({
-		queryKey: usersKeys.list(fillter),
+		queryKey: usersKeys.list(filter),
 
 		initialPageParam: 1,
 
 		queryFn: ({ pageParam }) =>
 			getUsersliceServerFn({
 				data: {
-					...fillter,
+					...filter,
 					page: pageParam,
 					pageSize: PAGE_SIZE,
 				},
@@ -129,6 +129,7 @@ function useUserMutation<TVariables, TResult>(
 
 			await queryClient.invalidateQueries({ queryKey: usersKeys.all });
 			await queryClient.invalidateQueries({ queryKey: teamsKeys.all });
+			await queryClient.invalidateQueries({ queryKey: suggestionKeys.all });
 
 			onSuccess();
 		},
@@ -181,9 +182,17 @@ export function useChangeUserTeam({ onSuccess }: MutationOptions) {
 	const { wait, waiting } = useProjectionWait();
 	const [detached, setDetached] = useState(false);
 
+	/*
+	 * Sticky until a move finishes. The drawer holds the team the person was on when it opened, and
+	 * a half-done move makes that snapshot a lie - they are already off it. Retrying against the
+	 * stale snapshot would send a second remove, which the domain answers with a 404, and picking
+	 * the old team again would look like "nothing to do" while they sit on no team.
+	 */
+	const detachedRef = useRef(false);
+
 	const mutation = useMutation({
-		mutationFn: async ({ userId, current, teamId, role }: ChangeTeamVariables) => {
-			setDetached(false);
+		mutationFn: async ({ userId, current: snapshot, teamId, role }: ChangeTeamVariables) => {
+			const current = detachedRef.current ? null : snapshot;
 
 			const staysOnTheSameTeam = current && teamId === current.id;
 
@@ -211,6 +220,7 @@ export function useChangeUserTeam({ onSuccess }: MutationOptions) {
 				await addTeamMemberServerFn({ data: { id: teamId, req: { userId, role } } });
 			} catch (error) {
 				if (current) {
+					detachedRef.current = true;
 					setDetached(true);
 				}
 
@@ -219,10 +229,14 @@ export function useChangeUserTeam({ onSuccess }: MutationOptions) {
 		},
 
 		onSuccess: async () => {
+			detachedRef.current = false;
+			setDetached(false);
+
 			await wait();
 
 			await queryClient.invalidateQueries({ queryKey: usersKeys.all });
 			await queryClient.invalidateQueries({ queryKey: teamsKeys.all });
+			await queryClient.invalidateQueries({ queryKey: suggestionKeys.all });
 
 			onSuccess();
 		},
