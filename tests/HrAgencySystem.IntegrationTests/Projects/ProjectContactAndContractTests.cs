@@ -189,10 +189,7 @@ public class ProjectContactAndContractTests(
         Client.WithOrganizationId(organizationId);
         var response = await Client.PutAsJsonAsync(
             $"/api/projects/{project.ProjectId}/contract/status",
-            new MapChangeContractStatus.ChangeContractStatusRequest(
-                ContractStatus.Terminated,
-                null
-            )
+            new MapChangeContractStatus.ChangeContractStatusRequest(ContractStatus.Terminated, null)
         );
         response.EnsureSuccessStatusCode();
 
@@ -215,7 +212,11 @@ public class ProjectContactAndContractTests(
 
         Client.WithOrganizationId(organizationId);
 
-        await SetEmails(project.ProjectId, EmailPurpose.Invoice, ["ap@acme.example.com", "finance@acme.example.com"]);
+        await SetEmails(
+            project.ProjectId,
+            EmailPurpose.Invoice,
+            ["ap@acme.example.com", "finance@acme.example.com"]
+        );
         await SetEmails(project.ProjectId, EmailPurpose.Document, ["docs@acme.example.com"]);
         await SetEmails(project.ProjectId, EmailPurpose.Invoice, ["billing@acme.example.com"]);
 

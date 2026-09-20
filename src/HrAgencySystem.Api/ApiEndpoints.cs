@@ -226,6 +226,10 @@ internal static class ApiEndpoints
         public const string RecordContract = $"{ProjectsBase}/{{projectId:guid}}/contract";
         public const string ChangeContractStatus =
             $"{ProjectsBase}/{{projectId:guid}}/contract/status";
+        public const string RecordCompliance =
+            $"{ProjectsBase}/{{projectId:guid}}/compliance/{{requirement}}";
+        public const string ComplianceCatalogue =
+            $"{ProjectsBase}/{{projectId:guid}}/compliance/catalogue";
     }
 
     internal static class Suggestions

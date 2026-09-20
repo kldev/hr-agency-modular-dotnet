@@ -19,5 +19,7 @@ public static class Endpoint
         Maps.MapSetEmails.Map(group);
         Maps.MapRecordContract.Map(group);
         Maps.MapChangeContractStatus.Map(group);
+        Maps.MapRecordCompliance.Map(group);
+        Maps.MapComplianceCatalogue.Map(group);
     }
 }

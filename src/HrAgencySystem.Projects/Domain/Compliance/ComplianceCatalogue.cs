@@ -79,6 +79,26 @@ public static class ComplianceCatalogue
     ) =>
         Requirements.GetValueOrDefault(((country ?? "").Trim().ToUpperInvariant(), engagement), []);
 
+    /// <summary>
+    /// Requirements that exist as a numbered thing somewhere - a declaration id, a permit number, a
+    /// committee code. Confirming one of these without writing the number down would record that
+    /// somebody remembers doing it, which is not the same as being able to prove it.
+    /// </summary>
+    private static readonly HashSet<ComplianceRequirement> Numbered =
+    [
+        ComplianceRequirement.BeLimosaDeclaration,
+        ComplianceRequirement.BeJointCommittee,
+        ComplianceRequirement.BeUserJointCommittee,
+        ComplianceRequirement.BeTemporaryAgencyRecognition,
+        ComplianceRequirement.DeAuegPermit,
+        ComplianceRequirement.DeAuegNotification,
+        ComplianceRequirement.DeAentgNotification,
+        ComplianceRequirement.DeBranchDetermination,
+    ];
+
+    public static bool RequiresReferenceNumber(ComplianceRequirement requirement) =>
+        Numbered.Contains(requirement);
+
     public static bool Contains(
         string country,
         EngagementType engagement,

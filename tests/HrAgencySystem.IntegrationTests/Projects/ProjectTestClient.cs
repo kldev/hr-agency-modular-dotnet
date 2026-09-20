@@ -45,8 +45,9 @@ public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper outpu
         var response = await client.PostAsJsonAsync("/api/companies", request);
         response.EnsureSuccessStatusCode();
 
-        var created =
-            await response.ReadWithJson<HrAgencySystem.Company.Events.CompanyCreated>(output);
+        var created = await response.ReadWithJson<HrAgencySystem.Company.Events.CompanyCreated>(
+            output
+        );
 
         Assert.NotNull(created);
 
@@ -124,11 +125,7 @@ public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper outpu
         response.EnsureSuccessStatusCode();
     }
 
-    public async Task ChangeStatusAsync(
-        Guid organizationId,
-        Guid projectId,
-        ProjectStatus status
-    )
+    public async Task ChangeStatusAsync(Guid organizationId, Guid projectId, ProjectStatus status)
     {
         client.WithOrganizationId(organizationId);
 

@@ -65,10 +65,11 @@ public sealed class FakeCompanySnapshot(IQuerySession session) : ICompanySnapsho
                 projection.OrganizationId
             );
 
-        var company = await session.Events.AggregateStreamAsync<HrAgencySystem.Company.Domain.Company>(
-            companyId,
-            token: ct
-        );
+        var company =
+            await session.Events.AggregateStreamAsync<HrAgencySystem.Company.Domain.Company>(
+                companyId,
+                token: ct
+            );
 
         if (company is null)
             return (null, null);

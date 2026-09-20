@@ -47,9 +47,7 @@ public class CompanySnapshotRepository(IDocumentSession session) : ICompanySnaps
             .FirstOrDefaultAsync(ct);
 
         if (projection is not null)
-            return projection.OrganizationId == organizationId.Value
-                ? Describe(projection)
-                : null;
+            return projection.OrganizationId == organizationId.Value ? Describe(projection) : null;
 
         var aggregate = await session.Events.AggregateStreamAsync<Domain.Company>(
             companyId,

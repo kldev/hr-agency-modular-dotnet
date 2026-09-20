@@ -197,11 +197,8 @@ public class CreateProjectTests(IntegrationEnvironment env, ITestOutputHelper ou
             var response = await Client.GetAsync("/api/projects");
             response.EnsureSuccessStatusCode();
 
-            var slice = await response.ReadWithJson<
-                HrAgencySystem.SharedKernel.Web.SliceResponse<
-                    HrAgencySystem.Projects.Projections.ProjectProjection
-                >
-            >();
+            var slice =
+                await response.ReadWithJson<HrAgencySystem.SharedKernel.Web.SliceResponse<HrAgencySystem.Projects.Projections.ProjectProjection>>();
 
             Assert.NotNull(slice);
             Assert.Single(slice.Content);

@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Endpoints.Project.Maps;
-using CompanyMaps = HrAgencySystem.Api.Endpoints.Company.Maps;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.SharedKernel.Web.Common;
+using CompanyMaps = HrAgencySystem.Api.Endpoints.Company.Maps;
 
 namespace HrAgencySystem.IntegrationTests.Projects;
 
@@ -77,12 +77,5 @@ internal static class ProjectTestData
     public static MapRecordContract.RecordProjectContractRequest ContractRequest(
         string number = "UM/2026/17",
         ContractStatus status = ContractStatus.Signed
-    ) =>
-        new(
-            number,
-            status,
-            status is ContractStatus.Signed ? SignedOn : null,
-            StartsOn,
-            null
-        );
+    ) => new(number, status, status is ContractStatus.Signed ? SignedOn : null, StartsOn, null);
 }
