@@ -36,6 +36,7 @@ import type {
 	AttachProjectDocumentBody,
 	BadRequestDetails,
 	ChangeContractStatusRequest,
+	ChangeProjectLegalEntityRequest,
 	ChangeProjectStatusRequest,
 	ComplianceItemRecorded,
 	ComplianceRequirement,
@@ -54,6 +55,7 @@ import type {
 	ProjectDocumentMetadataChanged,
 	ProjectDocumentRemoved,
 	ProjectEmailRecipientsChanged,
+	ProjectLegalEntityChanged,
 	ProjectProjection,
 	ProjectStatusChanged,
 	ProjectTeamAssigned,
@@ -653,6 +655,166 @@ export function useChangeProjectStatus<
 	const queryOptions = getChangeProjectStatusQueryOptions(
 		projectId,
 		changeProjectStatusRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Change the delivering legal entity
+ */
+export const changeProjectLegalEntity = (
+	projectId: string,
+	changeProjectLegalEntityRequest: BodyType<ChangeProjectLegalEntityRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<ProjectLegalEntityChanged>(
+		{
+			url: `/api/projects/${projectId}/legal-entity`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: changeProjectLegalEntityRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getChangeProjectLegalEntityQueryKey = (
+	projectId: string,
+	changeProjectLegalEntityRequest?: BodyType<ChangeProjectLegalEntityRequest>,
+) => {
+	return [
+		"PUT",
+		`/api/projects/${projectId}/legal-entity`,
+		changeProjectLegalEntityRequest,
+	] as const;
+};
+
+export const getChangeProjectLegalEntityQueryOptions = <
+	TData = Awaited<ReturnType<typeof changeProjectLegalEntity>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	projectId: string,
+	changeProjectLegalEntityRequest: BodyType<ChangeProjectLegalEntityRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof changeProjectLegalEntity>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getChangeProjectLegalEntityQueryKey(projectId, changeProjectLegalEntityRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof changeProjectLegalEntity>>> = ({
+		signal,
+	}) =>
+		changeProjectLegalEntity(projectId, changeProjectLegalEntityRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: projectId !== null && projectId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof changeProjectLegalEntity>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type ChangeProjectLegalEntityQueryResult = NonNullable<
+	Awaited<ReturnType<typeof changeProjectLegalEntity>>
+>;
+export type ChangeProjectLegalEntityQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useChangeProjectLegalEntity<
+	TData = Awaited<ReturnType<typeof changeProjectLegalEntity>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	projectId: string,
+	changeProjectLegalEntityRequest: BodyType<ChangeProjectLegalEntityRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof changeProjectLegalEntity>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeProjectLegalEntity>>,
+					TError,
+					Awaited<ReturnType<typeof changeProjectLegalEntity>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeProjectLegalEntity<
+	TData = Awaited<ReturnType<typeof changeProjectLegalEntity>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	projectId: string,
+	changeProjectLegalEntityRequest: BodyType<ChangeProjectLegalEntityRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof changeProjectLegalEntity>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof changeProjectLegalEntity>>,
+					TError,
+					Awaited<ReturnType<typeof changeProjectLegalEntity>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useChangeProjectLegalEntity<
+	TData = Awaited<ReturnType<typeof changeProjectLegalEntity>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	projectId: string,
+	changeProjectLegalEntityRequest: BodyType<ChangeProjectLegalEntityRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof changeProjectLegalEntity>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Change the delivering legal entity
+ */
+
+export function useChangeProjectLegalEntity<
+	TData = Awaited<ReturnType<typeof changeProjectLegalEntity>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	projectId: string,
+	changeProjectLegalEntityRequest: BodyType<ChangeProjectLegalEntityRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof changeProjectLegalEntity>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getChangeProjectLegalEntityQueryOptions(
+		projectId,
+		changeProjectLegalEntityRequest,
 		options,
 	);
 

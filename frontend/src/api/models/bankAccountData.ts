@@ -13,24 +13,15 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { EngagementType } from "./engagementType.ts";
+import type { BankAccountPurpose } from "./bankAccountPurpose.ts";
+import type { CurrencyCode } from "./currencyCode.ts";
 
-export interface CreateProjectRequest {
-	companyId: string;
-	legalEntityId: string;
-	name: string;
-	description: string;
-	engagementType: EngagementType;
-	street: string;
-	buildingNumber: string;
+export interface BankAccountData {
+	purpose: BankAccountPurpose;
+	currency: CurrencyCode;
+	iban: string;
 	/** @nullable */
-	unitNumber: string | null;
-	postalCode: string;
-	city: string;
-	countryCode: string;
-	startsOn: string;
+	bic: string | null;
 	/** @nullable */
-	endsOn: string | null;
-	/** @nullable */
-	teamId: string | null;
+	bankName: string | null;
 }

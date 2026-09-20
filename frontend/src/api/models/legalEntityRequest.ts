@@ -13,24 +13,29 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { EngagementType } from "./engagementType.ts";
+import type { BankAccountData } from "./bankAccountData.ts";
 
-export interface CreateProjectRequest {
-	companyId: string;
-	legalEntityId: string;
+export interface LegalEntityRequest {
 	name: string;
-	description: string;
-	engagementType: EngagementType;
+	legalName: string;
+	taxId: string;
 	street: string;
 	buildingNumber: string;
-	/** @nullable */
-	unitNumber: string | null;
 	postalCode: string;
 	city: string;
 	countryCode: string;
-	startsOn: string;
+	presidentFirstName: string;
+	presidentLastName: string;
+	activeFrom: string;
+	bankAccounts: BankAccountData[];
 	/** @nullable */
-	endsOn: string | null;
+	vatNumber?: string | null;
 	/** @nullable */
-	teamId: string | null;
+	unitNumber?: string | null;
+	/** @nullable */
+	description?: string | null;
+	/** @nullable */
+	presidentEmail?: string | null;
+	/** @nullable */
+	activeTo?: string | null;
 }

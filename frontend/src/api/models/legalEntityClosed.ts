@@ -13,24 +13,12 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { EngagementType } from "./engagementType.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface CreateProjectRequest {
-	companyId: string;
+export interface LegalEntityClosed {
 	legalEntityId: string;
-	name: string;
-	description: string;
-	engagementType: EngagementType;
-	street: string;
-	buildingNumber: string;
-	/** @nullable */
-	unitNumber: string | null;
-	postalCode: string;
-	city: string;
-	countryCode: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn: string | null;
-	/** @nullable */
-	teamId: string | null;
+	organizationId: string;
+	activeTo: string;
+	closedBy: UserSnapshot;
+	closedAt: string;
 }

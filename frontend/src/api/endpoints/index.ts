@@ -2,6 +2,7 @@ export * from "./auth/auth.ts";
 export * from "./company/company.ts";
 export * from "./company-contacts/company-contacts.ts";
 export * from "./job-description/job-description.ts";
+export * from "./legal-entities/legal-entities.ts";
 export * from "./organization/organization.ts";
 export * from "./owner/owner.ts";
 export * from "./projects/projects.ts";
