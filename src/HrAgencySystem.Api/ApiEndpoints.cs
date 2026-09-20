@@ -66,6 +66,7 @@ internal static class ApiEndpoints
         public const string Update = $"{CompaniesBase}/{{companyId:guid}}";
         public const string GetByTaxId = $"{CompaniesBase}/find-by-tax/{{taxId}}";
         public const string Contacts = $"{CompaniesBase}/{{companyId:guid}}/contacts";
+        public const string CompleteProfile = $"{CompaniesBase}/{{companyId:guid}}/profile";
     }
 
     internal static class CompanyContacts
@@ -209,6 +210,35 @@ internal static class ApiEndpoints
             $"{TeamsBase}/{{teamId:guid}}/members/{{userId:guid}}/role";
     }
 
+    internal static class Projects
+    {
+        private const string ProjectsBase = $"{Base}/projects";
+
+        public const string Create = ProjectsBase;
+        public const string Slice = ProjectsBase;
+        public const string Get = $"{ProjectsBase}/{{projectId:guid}}";
+        public const string Update = $"{ProjectsBase}/{{projectId:guid}}";
+        public const string ChangeStatus = $"{ProjectsBase}/{{projectId:guid}}/status";
+        public const string AssignTeam = $"{ProjectsBase}/{{projectId:guid}}/team";
+        public const string AssignContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";
+        public const string RemoveContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";
+        public const string SetEmails = $"{ProjectsBase}/{{projectId:guid}}/emails/{{purpose}}";
+        public const string RecordContract = $"{ProjectsBase}/{{projectId:guid}}/contract";
+        public const string ChangeContractStatus =
+            $"{ProjectsBase}/{{projectId:guid}}/contract/status";
+        public const string RecordCompliance =
+            $"{ProjectsBase}/{{projectId:guid}}/compliance/{{requirement}}";
+        public const string ComplianceCatalogue =
+            $"{ProjectsBase}/{{projectId:guid}}/compliance/catalogue";
+        public const string AttachDocument = $"{ProjectsBase}/{{projectId:guid}}/documents";
+        public const string UpdateDocument =
+            $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}";
+        public const string RemoveDocument =
+            $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}";
+        public const string DownloadDocument =
+            $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}/content";
+    }
+
     internal static class Suggestions
     {
         private const string SuggestionBase = $"{Base}/suggestion";
@@ -220,6 +250,7 @@ internal static class ApiEndpoints
         public const string Tags = $"{SuggestionBase}/tags";
         public const string Users = $"{SuggestionBase}/users";
         public const string User = $"{SuggestionBase}/users/{{userId:guid}}";
+        public const string Projects = $"{SuggestionBase}/projects";
         public const string Teams = $"{SuggestionBase}/teams";
         public const string Team = $"{SuggestionBase}/teams/{{teamId:guid}}";
     }

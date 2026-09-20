@@ -8,6 +8,7 @@ using HrAgencySystem.Files;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.Organization;
+using HrAgencySystem.Projects;
 using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
 using HrAgencySystem.SharedKernel.Time;
@@ -36,6 +37,7 @@ public static class SetupApplicationModulesExtensions
             services.AddFeedsModule(configuration);
             services.AddFilesModule(configuration);
             services.AddFileServiceClient(configuration);
+            services.AddProjectsModule();
             services.AddSalesModule();
             services.AddTeamsModule();
         }

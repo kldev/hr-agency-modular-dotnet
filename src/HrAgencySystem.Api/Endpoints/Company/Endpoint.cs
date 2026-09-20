@@ -11,6 +11,7 @@ public static class Endpoint
         Maps.MapGet.Map(group);
         Maps.MapGetByTaxId.Map(group);
         Maps.MapUpdate.Map(group);
+        Maps.MapCompleteProfile.Map(group);
         Maps.MapGetContacts.Map(group);
     }
 }

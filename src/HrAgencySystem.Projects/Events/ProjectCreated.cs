@@ -1,0 +1,18 @@
+using HrAgencySystem.Projects.Domain;
+using HrAgencySystem.SharedKernel.Snapshots;
+
+namespace HrAgencySystem.Projects.Events;
+
+public sealed record ProjectCreated(
+    Guid ProjectId,
+    Guid OrganizationId,
+    CompanySnapshot Company,
+    string Name,
+    string Description,
+    EngagementType EngagementType,
+    Assignment Assignment,
+    Guid? TeamId,
+    string? TeamName,
+    UserSnapshot CreatedBy,
+    DateTimeOffset CreatedAt
+);
