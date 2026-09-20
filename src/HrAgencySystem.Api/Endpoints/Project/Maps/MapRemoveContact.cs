@@ -30,12 +30,7 @@ internal static class MapRemoveContact
     )
     {
         var result = await bus.InvokeAsync<ProjectContactRemoved>(
-            new RemoveProjectContact(
-                projectId,
-                user.GetOrganization.Value,
-                role,
-                user.UserId
-            ),
+            new RemoveProjectContact(projectId, user.GetOrganization.Value, role, user.UserId),
             ct
         );
 

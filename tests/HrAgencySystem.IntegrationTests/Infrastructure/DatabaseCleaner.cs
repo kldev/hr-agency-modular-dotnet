@@ -3,6 +3,7 @@ using HrAgencySystem.Company.Projections;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.JobDescription.Projections;
+using HrAgencySystem.Projects.Projections;
 using HrAgencySystem.Organization.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Projections;
@@ -63,6 +64,11 @@ public sealed class DatabaseCleaner(string connectionString)
     {
         await CleanTable<JobDescriptionProjection>("job_description");
         await CleanTable<JdStatusChangeHistory>("job_description");
+    }
+
+    public async Task CleanProjects()
+    {
+        await CleanTable<ProjectProjection>("projects");
     }
 
     public async Task CleanTeams()

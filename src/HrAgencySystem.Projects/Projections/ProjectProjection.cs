@@ -158,13 +158,12 @@ public sealed record ProjectProjection(
             .Touched(@event.ModifiedBy, @event.ModifiedAt);
 
     public ProjectProjection Apply(ProjectDocumentMetadataChanged @event) =>
-        WithDocuments(
-            [
+        WithDocuments([
                 .. Documents.Select(d =>
                     d.DocumentId == @event.Document.DocumentId ? @event.Document : d
                 ),
-            ]
-        ).Touched(@event.ModifiedBy, @event.ModifiedAt);
+            ])
+            .Touched(@event.ModifiedBy, @event.ModifiedAt);
 
     public ProjectProjection Apply(ProjectDocumentRemoved @event) =>
         WithDocuments([.. Documents.Where(d => d.DocumentId != @event.DocumentId)])
@@ -211,13 +210,16 @@ public sealed record ProjectProjection(
         {
             ComplianceRequiredCount = required.Count,
             ComplianceOutstandingCount = required.Count(r => !settled.Contains(r)),
-            NextComplianceExpiryOn = Compliance
-                .Where(c => c.Status is ComplianceStatus.Confirmed && c.ValidTo is not null)
-                .Select(c => c.ValidTo!.Value)
-                .DefaultIfEmpty()
-                .Min() is var earliest && earliest == default
-                ? null
-                : earliest,
+            NextComplianceExpiryOn =
+                Compliance
+                    .Where(c => c.Status is ComplianceStatus.Confirmed && c.ValidTo is not null)
+                    .Select(c => c.ValidTo!.Value)
+                    .DefaultIfEmpty()
+                    .Min()
+                    is var earliest
+                && earliest == default
+                    ? null
+                    : earliest,
         };
     }
 

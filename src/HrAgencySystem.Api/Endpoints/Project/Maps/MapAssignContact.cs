@@ -46,10 +46,7 @@ internal static class MapAssignContact
         return TypedResults.Ok(result);
     }
 
-    internal sealed record AssignProjectContactRequest(
-        ContactPerson Person,
-        Guid? CompanyContactId
-    )
+    internal sealed record AssignProjectContactRequest(ContactPerson Person, Guid? CompanyContactId)
     {
         public AssignProjectContact ToCommand(
             Guid projectId,
