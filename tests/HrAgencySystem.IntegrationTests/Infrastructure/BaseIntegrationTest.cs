@@ -10,6 +10,7 @@ using HrAgencySystem.IntegrationTests.SalesFollowUpActions;
 using HrAgencySystem.IntegrationTests.SalesOpportunities;
 using HrAgencySystem.IntegrationTests.Teams;
 using HrAgencySystem.IntegrationTests.Users;
+using HrAgencySystem.IntegrationTests.Workers;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
@@ -60,12 +61,17 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
             output
         );
         TeamClient = new TeamTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
+        WorkerClient = new WorkerTestClient(
+            _environment.CreateClient().AsOrganizationRoles(),
+            output
+        );
         //   _environment.SetOutputHelper(output);
     }
 
     protected HttpClient Client => _environment.Client;
 
     protected DatabaseCleaner Cleaner => _environment.Cleaner;
+    protected WorkerTestClient WorkerClient { get; }
     protected ITestOutputHelper OutputHelper { get; }
 
     protected JobDescriptionTestClient JobDescriptionClient { get; }

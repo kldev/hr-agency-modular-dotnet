@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Application.Port;
-using HrAgencySystem.Projects.Domain.Compliance;
 using HrAgencySystem.SharedKernel.Exception;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +12,9 @@ internal static class MapComplianceCatalogue
     internal static void Map(RouteGroupBuilder endpoints)
     {
         // GET /api/projects/{projectId}/compliance/catalogue - what this project has to account for,
-        // so nobody has to know the list in advance to notice that something is missing.
+        // so nobody has to know the list in advance to notice that something is missing. Only the
+        // obligations the engagement carries as a whole; what each posted person needs is on their
+        // assignment, because that is the level those documents are issued at.
         endpoints
             .MapGet(ApiEndpoints.Projects.ComplianceCatalogue, Handler)
             .WithSummary("Get the compliance requirements of a project")
@@ -35,7 +37,7 @@ internal static class MapComplianceCatalogue
         var recorded = project.Compliance.ToDictionary(c => c.Requirement);
 
         var result = ComplianceCatalogue
-            .For(project.WorkCountry, project.EngagementType)
+            .For(project.WorkCountry, project.EngagementType, ComplianceScope.Project)
             .Select(requirement => new ComplianceRequirementView(
                 requirement,
                 ComplianceCatalogue.RequiresReferenceNumber(requirement),

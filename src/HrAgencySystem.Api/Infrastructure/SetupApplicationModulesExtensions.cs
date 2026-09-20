@@ -14,6 +14,7 @@ using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams;
+using HrAgencySystem.Workers;
 
 namespace HrAgencySystem.Api.Infrastructure;
 
@@ -39,6 +40,7 @@ public static class SetupApplicationModulesExtensions
             services.AddFilesModule(configuration);
             services.AddFileServiceClient(configuration);
             services.AddProjectsModule();
+            services.AddWorkersModule();
             services.AddSalesModule();
             services.AddTeamsModule();
             services.AddLegalEntitiesModule();

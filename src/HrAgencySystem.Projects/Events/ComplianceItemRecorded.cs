@@ -1,4 +1,4 @@
-using HrAgencySystem.Projects.Domain.Compliance;
+using HrAgencySystem.Compliance;
 using HrAgencySystem.SharedKernel.Snapshots;
 
 namespace HrAgencySystem.Projects.Events;

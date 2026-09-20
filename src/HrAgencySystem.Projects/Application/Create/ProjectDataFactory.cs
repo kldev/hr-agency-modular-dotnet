@@ -11,7 +11,7 @@ internal static class ProjectDataFactory
     /// Collects every problem into one <see cref="ValidationException"/>, the rhythm the other
     /// factories in this codebase use.
     /// </summary>
-    public static (ProjectName name, LongText description, Assignment assignment) Create(
+    public static (ProjectName name, LongText description, Placement placement) Create(
         IProjectData data
     )
     {
@@ -36,7 +36,7 @@ internal static class ProjectDataFactory
         errors.AddRange(addressErrors);
 
         if (data.EndsOn is not null && data.EndsOn < data.StartsOn)
-            errors.Add(Assignment.EndsBeforeStartMessage);
+            errors.Add(Placement.EndsBeforeStartMessage);
 
         if (errors.Count > 0)
             throw new ValidationException(errors);
@@ -44,7 +44,7 @@ internal static class ProjectDataFactory
         return (
             name!,
             description!,
-            new Assignment(address!, address!.CountryCode, data.StartsOn, data.EndsOn)
+            new Placement(address!, address!.CountryCode, data.StartsOn, data.EndsOn)
         );
     }
 }

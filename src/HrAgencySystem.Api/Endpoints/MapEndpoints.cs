@@ -23,6 +23,8 @@ public static class MapEndpoints
         Teams.Endpoint.Map(app);
         LegalEntity.Endpoint.Map(app);
         Project.Endpoint.Map(app);
+        Worker.Endpoint.Map(app);
+        Assignment.Endpoint.Map(app);
 
         MapPlatformSeeder(app);
     }

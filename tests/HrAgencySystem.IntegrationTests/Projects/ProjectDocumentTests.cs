@@ -2,11 +2,11 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using HrAgencySystem.Api.Endpoints.Project.Maps;
+using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Projects.Application.Documents;
 using HrAgencySystem.Projects.Application.Documents.Remove;
 using HrAgencySystem.Projects.Domain;
-using HrAgencySystem.Projects.Domain.Compliance;
 using HrAgencySystem.Projects.Events;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;
@@ -181,10 +181,10 @@ public class ProjectDocumentTests(IntegrationEnvironment env, ITestOutputHelper 
 
         Client.WithOrganizationId(organizationId);
         var recorded = await Client.PutAsJsonAsync(
-            $"/api/projects/{project}/compliance/{ComplianceRequirement.BeLimosaDeclaration}",
+            $"/api/projects/{project}/compliance/{ComplianceRequirement.BeJointCommittee}",
             new MapRecordCompliance.RecordComplianceItemRequest(
                 ComplianceStatus.Confirmed,
-                "L1-2026-0001",
+                "PC 124.00",
                 null,
                 null,
                 attached.Document.DocumentId,

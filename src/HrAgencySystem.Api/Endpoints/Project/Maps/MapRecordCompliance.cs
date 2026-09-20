@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Application.Compliance.Record;
-using HrAgencySystem.Projects.Domain.Compliance;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Tenant;
 using Microsoft.AspNetCore.Mvc;

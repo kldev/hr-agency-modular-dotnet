@@ -1,3 +1,4 @@
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.Projects.Services;
@@ -119,7 +120,7 @@ internal static class ProjectScenario
                 "Delivery for ACME",
                 "Two developers on site in Brussels.",
                 engagement,
-                new Assignment(Workplace, "BE", StartsOn, null),
+                new Placement(Workplace, "BE", StartsOn, null),
                 null,
                 null,
                 User,

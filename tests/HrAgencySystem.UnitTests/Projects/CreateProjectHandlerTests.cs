@@ -1,3 +1,4 @@
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Application.Create;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Domain.ValueObjects;
@@ -49,8 +50,8 @@ public class CreateProjectHandlerTests : BaseTest
         // and never from where the client is registered.
         var result = await Handle(Command());
 
-        Assert.Equal("BE", result.Assignment.WorkCountry);
-        Assert.Equal("Bruxelles", result.Assignment.WorkplaceAddress.City);
+        Assert.Equal("BE", result.Placement.WorkCountry);
+        Assert.Equal("Bruxelles", result.Placement.WorkplaceAddress.City);
     }
 
     [Fact]
@@ -101,7 +102,7 @@ public class CreateProjectHandlerTests : BaseTest
             Handle(Command() with { EndsOn = ProjectScenario.StartsOn.AddDays(-1) })
         );
 
-        Assert.Contains(Assignment.EndsBeforeStartMessage, error.Errors);
+        Assert.Contains(Placement.EndsBeforeStartMessage, error.Errors);
     }
 
     [Fact]

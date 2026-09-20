@@ -17,6 +17,7 @@ COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.E
 COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/
 COPY src/HrAgencySystem.Audit/HrAgencySystem.Audit.csproj HrAgencySystem.Audit/
 COPY src/HrAgencySystem.Company/HrAgencySystem.Company.csproj HrAgencySystem.Company/
+COPY src/HrAgencySystem.Compliance/HrAgencySystem.Compliance.csproj HrAgencySystem.Compliance/
 COPY src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj HrAgencySystem.Feeds/
 COPY src/HrAgencySystem.Files/HrAgencySystem.Files.csproj HrAgencySystem.Files/
 COPY src/HrAgencySystem.Identity/HrAgencySystem.Identity.csproj HrAgencySystem.Identity/
@@ -30,6 +31,7 @@ COPY src/HrAgencySystem.LegalEntities/HrAgencySystem.LegalEntities.csproj HrAgen
 COPY src/HrAgencySystem.Teams/HrAgencySystem.Teams.csproj HrAgencySystem.Teams/
 COPY src/HrAgencySystem.Teams.Contracts/HrAgencySystem.Teams.Contracts.csproj HrAgencySystem.Teams.Contracts/
 COPY src/HrAgencySystem.Projects/HrAgencySystem.Projects.csproj HrAgencySystem.Projects/
+COPY src/HrAgencySystem.Workers/HrAgencySystem.Workers.csproj HrAgencySystem.Workers/
 COPY src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj services/HrAgencySystem.FileService.Contracts/
 COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
 

@@ -139,7 +139,7 @@ public class CreateProjectTests(IntegrationEnvironment env, ITestOutputHelper ou
         Assert.NotNull(problem);
         Assert.Equal(3, problem.ValidationErrors.Count);
         Assert.Contains(ProjectName.RequiredMessage, problem.ValidationErrors);
-        Assert.Contains(Assignment.EndsBeforeStartMessage, problem.ValidationErrors);
+        Assert.Contains(Placement.EndsBeforeStartMessage, problem.ValidationErrors);
     }
 
     [Fact]

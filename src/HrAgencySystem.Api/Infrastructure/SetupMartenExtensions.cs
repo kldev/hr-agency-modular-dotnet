@@ -8,6 +8,7 @@ using HrAgencySystem.Projects;
 using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
 using HrAgencySystem.Teams;
+using HrAgencySystem.Workers;
 using JasperFx;
 using JasperFx.Events;
 using JasperFx.Events.Daemon;
@@ -52,6 +53,7 @@ public static class SetupMartenExtensions
         JobDescriptionModule.ConfigureMarten(options);
         RecruitmentModule.ConfigureMarten(options);
         ProjectsModule.ConfigureMarten(options);
+        WorkersModule.ConfigureMarten(options);
         SalesModule.ConfigureMarten(options);
         TeamsModule.ConfigureMarten(options);
         LegalEntitiesModule.ConfigureMarten(options);
@@ -86,6 +88,7 @@ public static class SetupMartenExtensions
         options.Discovery.IncludeAssembly(typeof(JobDescriptionModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(RecruitmentModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(ProjectsModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(WorkersModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(TeamsModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(LegalEntitiesModule).Assembly);

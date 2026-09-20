@@ -1,6 +1,6 @@
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Application.Suggestion;
 using HrAgencySystem.Projects.Domain;
-using HrAgencySystem.Projects.Domain.Compliance;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -66,10 +66,10 @@ public sealed record ProjectProjection(
             @event.Description,
             ProjectStatus.Draft,
             @event.EngagementType,
-            @event.Assignment.WorkCountry,
-            @event.Assignment.WorkplaceAddress,
-            @event.Assignment.StartsOn,
-            @event.Assignment.EndsOn,
+            @event.Placement.WorkCountry,
+            @event.Placement.WorkplaceAddress,
+            @event.Placement.StartsOn,
+            @event.Placement.EndsOn,
             @event.TeamId,
             @event.TeamName,
             [],
@@ -79,8 +79,12 @@ public sealed record ProjectProjection(
             [],
             [],
             0,
-            ComplianceCatalogue.For(@event.Assignment.WorkCountry, @event.EngagementType).Count,
-            ComplianceCatalogue.For(@event.Assignment.WorkCountry, @event.EngagementType).Count,
+            ComplianceCatalogue
+                .For(@event.Placement.WorkCountry, @event.EngagementType, ComplianceScope.Project)
+                .Count,
+            ComplianceCatalogue
+                .For(@event.Placement.WorkCountry, @event.EngagementType, ComplianceScope.Project)
+                .Count,
             null,
             @event.CreatedBy.Id,
             @event.CreatedBy,
@@ -108,10 +112,10 @@ public sealed record ProjectProjection(
             {
                 Name = @event.Name,
                 Description = @event.Description,
-                WorkCountry = @event.Assignment.WorkCountry,
-                WorkplaceAddress = @event.Assignment.WorkplaceAddress,
-                StartsOn = @event.Assignment.StartsOn,
-                EndsOn = @event.Assignment.EndsOn,
+                WorkCountry = @event.Placement.WorkCountry,
+                WorkplaceAddress = @event.Placement.WorkplaceAddress,
+                StartsOn = @event.Placement.StartsOn,
+                EndsOn = @event.Placement.EndsOn,
             }
         )
             .WithComplianceCounts()
@@ -213,10 +217,19 @@ public sealed record ProjectProjection(
     /// Recomputed whenever the catalogue's inputs or the recorded items change. "How much is still
     /// open" and "what expires next" are the two things a list has to show without opening a
     /// project, which is the whole reason this module exists.
+    /// <para>
+    /// Counts the project's own obligations only. Per person requirements are counted on each
+    /// assignment, where they can actually be answered - a number here that mixed the two would grow
+    /// with every worker and never reach zero for a reason anybody could point at.
+    /// </para>
     /// </summary>
     private ProjectProjection WithComplianceCounts()
     {
-        var required = ComplianceCatalogue.For(WorkCountry, EngagementType);
+        var required = ComplianceCatalogue.For(
+            WorkCountry,
+            EngagementType,
+            ComplianceScope.Project
+        );
         var settled = Compliance.Where(c => c.IsSettled).Select(c => c.Requirement).ToHashSet();
 
         return this with

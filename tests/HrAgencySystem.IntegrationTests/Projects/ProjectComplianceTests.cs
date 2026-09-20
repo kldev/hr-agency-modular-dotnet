@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.Project.Maps;
+using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Projects.Domain;
-using HrAgencySystem.Projects.Domain.Compliance;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Projects;
@@ -27,11 +27,15 @@ public class ProjectComplianceTests(IntegrationEnvironment env, ITestOutputHelpe
         var catalogue = await GetCatalogue(organizationId, project);
 
         var requirements = catalogue.Select(c => c.Requirement).ToList();
-        Assert.Contains(ComplianceRequirement.BeLimosaDeclaration, requirements);
         Assert.Contains(ComplianceRequirement.BeLiaisonPerson, requirements);
         Assert.Contains(ComplianceRequirement.BeTemporaryAgencyRecognition, requirements);
         Assert.Contains(ComplianceRequirement.BeUserJointCommittee, requirements);
         Assert.DoesNotContain(ComplianceRequirement.DeAuegPermit, requirements);
+
+        // The per person documents are not here: an A1 and a Limosa declaration name one worker
+        // for one period, so they are answered on that person's assignment instead.
+        Assert.DoesNotContain(ComplianceRequirement.A1Certificates, requirements);
+        Assert.DoesNotContain(ComplianceRequirement.BeLimosaDeclaration, requirements);
 
         // Nothing recorded yet, so every row is an empty one rather than an absent one.
         Assert.All(catalogue, c => Assert.Null(c.Item));
@@ -81,10 +85,10 @@ public class ProjectComplianceTests(IntegrationEnvironment env, ITestOutputHelpe
 
         Client.WithOrganizationId(organizationId);
         var response = await Client.PutAsJsonAsync(
-            $"/api/projects/{project}/compliance/{ComplianceRequirement.BeLimosaDeclaration}",
+            $"/api/projects/{project}/compliance/{ComplianceRequirement.BeJointCommittee}",
             new MapRecordCompliance.RecordComplianceItemRequest(
                 ComplianceStatus.Confirmed,
-                "L1-2026-0001",
+                "PC 124.00",
                 new DateOnly(2026, 10, 1),
                 new DateOnly(2027, 9, 30),
                 null,
@@ -136,7 +140,7 @@ public class ProjectComplianceTests(IntegrationEnvironment env, ITestOutputHelpe
 
         Client.WithOrganizationId(organizationId);
         var response = await Client.PutAsJsonAsync(
-            $"/api/projects/{project}/compliance/{ComplianceRequirement.BeLimosaDeclaration}",
+            $"/api/projects/{project}/compliance/{ComplianceRequirement.BeJointCommittee}",
             new MapRecordCompliance.RecordComplianceItemRequest(
                 ComplianceStatus.Confirmed,
                 null,

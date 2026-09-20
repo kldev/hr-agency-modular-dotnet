@@ -1,3 +1,5 @@
+using HrAgencySystem.Compliance;
+
 namespace HrAgencySystem.Api.Endpoints.Project;
 
 public static class Endpoint

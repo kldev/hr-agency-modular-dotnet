@@ -1,6 +1,6 @@
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Application.Compliance.Record;
 using HrAgencySystem.Projects.Domain;
-using HrAgencySystem.Projects.Domain.Compliance;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
@@ -14,14 +14,14 @@ public class RecordComplianceItemHandlerTests : BaseTest
     {
         var (result, _) = await Handle(
             ProjectScenario.Draft(),
-            ComplianceRequirement.BeLimosaDeclaration,
+            ComplianceRequirement.BeJointCommittee,
             ComplianceStatus.Confirmed,
-            reference: "L1-2026-0001",
+            reference: "PC 124.00",
             validTo: new DateOnly(2027, 9, 30)
         );
 
-        Assert.Equal(ComplianceRequirement.BeLimosaDeclaration, result.Item.Requirement);
-        Assert.Equal("L1-2026-0001", result.Item.ReferenceNumber);
+        Assert.Equal(ComplianceRequirement.BeJointCommittee, result.Item.Requirement);
+        Assert.Equal("PC 124.00", result.Item.ReferenceNumber);
         Assert.True(result.Item.IsSettled);
     }
 
@@ -31,7 +31,7 @@ public class RecordComplianceItemHandlerTests : BaseTest
         // Checked and found not to apply is a decision, not a gap.
         var (result, _) = await Handle(
             ProjectScenario.Draft(),
-            ComplianceRequirement.BeMotivatedNotification,
+            ComplianceRequirement.UserConditionsReceived,
             ComplianceStatus.NotApplicable
         );
 
@@ -55,6 +55,24 @@ public class RecordComplianceItemHandlerTests : BaseTest
         Assert.Equal(RecordComplianceItemHandler.NotInCatalogueMessage, error.Message);
     }
 
+    /// <summary>
+    /// The gap CLAUDE.md reported, closed from this side. An A1 is issued to one named person, so
+    /// the project has nowhere to put it and the refusal says where it does belong.
+    /// </summary>
+    [Fact]
+    public async Task Handle_APerPersonRequirement_BelongsToAnAssignmentInstead()
+    {
+        var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(
+                ProjectScenario.Draft(),
+                ComplianceRequirement.A1Certificates,
+                ComplianceStatus.Confirmed
+            )
+        );
+
+        Assert.Equal(RecordComplianceItemHandler.BelongsToAnAssignmentMessage, error.Message);
+    }
+
     [Fact]
     public async Task Handle_ARequirementOnlyPostingCarries_IsRefusedForAgencyWork()
     {
@@ -76,7 +94,7 @@ public class RecordComplianceItemHandlerTests : BaseTest
         var error = await Assert.ThrowsAsync<ValidationException>(() =>
             Handle(
                 ProjectScenario.Draft(),
-                ComplianceRequirement.BeLimosaDeclaration,
+                ComplianceRequirement.BeJointCommittee,
                 ComplianceStatus.Confirmed
             )
         );
@@ -89,7 +107,7 @@ public class RecordComplianceItemHandlerTests : BaseTest
     {
         var (result, _) = await Handle(
             ProjectScenario.Draft(),
-            ComplianceRequirement.A1Certificates,
+            ComplianceRequirement.BeLiaisonPerson,
             ComplianceStatus.Confirmed
         );
 
@@ -101,7 +119,7 @@ public class RecordComplianceItemHandlerTests : BaseTest
     {
         var (result, _) = await Handle(
             ProjectScenario.Draft(),
-            ComplianceRequirement.BeLimosaDeclaration,
+            ComplianceRequirement.BeJointCommittee,
             ComplianceStatus.InProgress
         );
 
@@ -114,9 +132,9 @@ public class RecordComplianceItemHandlerTests : BaseTest
         var error = await Assert.ThrowsAsync<ValidationException>(() =>
             Handle(
                 ProjectScenario.Draft(),
-                ComplianceRequirement.BeLimosaDeclaration,
+                ComplianceRequirement.BeJointCommittee,
                 ComplianceStatus.Confirmed,
-                reference: "L1-2026-0001",
+                reference: "PC 124.00",
                 validFrom: new DateOnly(2026, 10, 1),
                 validTo: new DateOnly(2026, 9, 1)
             )
@@ -131,7 +149,7 @@ public class RecordComplianceItemHandlerTests : BaseTest
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             Handle(
                 ProjectScenario.Draft(),
-                ComplianceRequirement.A1Certificates,
+                ComplianceRequirement.BeLiaisonPerson,
                 ComplianceStatus.Confirmed,
                 documentId: Guid.NewGuid()
             )
@@ -147,21 +165,21 @@ public class RecordComplianceItemHandlerTests : BaseTest
 
         var (first, _) = await Handle(
             project,
-            ComplianceRequirement.BeLimosaDeclaration,
+            ComplianceRequirement.BeJointCommittee,
             ComplianceStatus.InProgress
         );
         project.Apply(first);
 
         var (second, _) = await Handle(
             project,
-            ComplianceRequirement.BeLimosaDeclaration,
+            ComplianceRequirement.BeJointCommittee,
             ComplianceStatus.Confirmed,
-            reference: "L1-2026-0002"
+            reference: "PC 200.00"
         );
         project.Apply(second);
 
         Assert.Single(project.Compliance);
-        Assert.Equal("L1-2026-0002", project.Compliance[0].ReferenceNumber);
+        Assert.Equal("PC 200.00", project.Compliance[0].ReferenceNumber);
     }
 
     private static Task<(ComplianceItemRecorded, Wolverine.Marten.Events)> Handle(

@@ -3,6 +3,7 @@
     <Project Path="src/HrAgencySystem.Api/HrAgencySystem.Api.csproj" />
     <Project Path="src/HrAgencySystem.Audit/HrAgencySystem.Audit.csproj" />
     <Project Path="src/HrAgencySystem.Company/HrAgencySystem.Company.csproj" />
+    <Project Path="src/HrAgencySystem.Compliance/HrAgencySystem.Compliance.csproj" />
     <Project Path="src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj" />
     <Project Path="src/HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj" />
     <Project Path="src/HrAgencySystem.Files/HrAgencySystem.Files.csproj" />
@@ -17,6 +18,7 @@
     <Project Path="src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj" />
     <Project Path="src/HrAgencySystem.LegalEntities/HrAgencySystem.LegalEntities.csproj" />
     <Project Path="src/HrAgencySystem.Teams/HrAgencySystem.Teams.csproj" />
+    <Project Path="src/HrAgencySystem.Workers/HrAgencySystem.Workers.csproj" />
     <Project Path="src\HrAgencySystem.PlatformSeeder\HrAgencySystem.PlatformSeeder.csproj" />
   </Folder>
   <Folder Name="/src/EmailTemplates/">

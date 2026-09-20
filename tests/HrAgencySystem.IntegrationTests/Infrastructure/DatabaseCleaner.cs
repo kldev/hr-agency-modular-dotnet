@@ -14,6 +14,8 @@ using HrAgencySystem.Sales.Documents;
 using HrAgencySystem.Sales.Projections;
 using HrAgencySystem.Teams.Infrastructure.Persistence;
 using HrAgencySystem.Teams.Projections;
+using HrAgencySystem.Workers.Infrastructure.Persistence;
+using HrAgencySystem.Workers.Projections;
 using Npgsql;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
@@ -79,6 +81,14 @@ public sealed class DatabaseCleaner(string connectionString)
     {
         await CleanTable<LegalEntityProjection>("legal_entities");
         await CleanTable<LegalEntityTaxIdReservation>("legal_entities");
+    }
+
+    public async Task CleanWorkers()
+    {
+        await CleanTable<WorkerProjection>("workers");
+        await CleanTable<AssignmentProjection>("workers");
+        await CleanTable<WorkerIdentityDocumentReservation>("workers");
+        await CleanTable<WorkerEmailReservation>("workers");
     }
 
     public async Task CleanTeams()

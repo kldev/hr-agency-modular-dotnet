@@ -1,3 +1,4 @@
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.SharedKernel.Snapshots;
 
@@ -11,7 +12,7 @@ public sealed record ProjectCreated(
     string Name,
     string Description,
     EngagementType EngagementType,
-    Assignment Assignment,
+    Placement Placement,
     Guid? TeamId,
     string? TeamName,
     UserSnapshot CreatedBy,

@@ -37,7 +37,7 @@ public static class ChangeProjectLegalEntityHandler
         var entity = await service.GetLegalEntityAsync(
             aggregate.OrganizationId,
             command.LegalEntityId,
-            aggregate.Assignment.StartsOn,
+            aggregate.Placement.StartsOn,
             ct
         );
 

@@ -8,7 +8,7 @@ public sealed record ProjectUpdated(
     Guid OrganizationId,
     string Name,
     string Description,
-    Assignment Assignment,
+    Placement Placement,
     UserSnapshot ModifiedBy,
     DateTimeOffset ModifiedAt
 );

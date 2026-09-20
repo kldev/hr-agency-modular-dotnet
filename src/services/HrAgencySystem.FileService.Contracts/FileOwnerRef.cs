@@ -12,4 +12,14 @@ public static class FileOwnerKinds
 
     /// <summary>A person's own profile picture. The owner id is the user id.</summary>
     public const string User = "user";
+
+    /// <summary>A document about a person - passport, diploma, medical certificate.</summary>
+    public const string Worker = "worker";
+
+    /// <summary>
+    /// A document about one posting - the A1, the host country filing, the contract naming one
+    /// delivering company. Separate from <see cref="Worker"/> because the two answer different
+    /// questions and the second dies with the posting it belongs to.
+    /// </summary>
+    public const string Assignment = "assignment";
 }

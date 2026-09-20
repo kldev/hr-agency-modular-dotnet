@@ -1,5 +1,5 @@
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Domain;
-using HrAgencySystem.Projects.Domain.Compliance;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.Projects.Services;
 using HrAgencySystem.SharedKernel.Exception;
@@ -13,6 +13,8 @@ public static class RecordComplianceItemHandler
 {
     public const string NotInCatalogueMessage =
         "This requirement does not apply to the project's country and engagement type.";
+    public const string BelongsToAnAssignmentMessage =
+        "This requirement is issued per person and belongs to a worker's assignment, not to the project.";
     public const string ReferenceNumberRequiredMessage =
         "Confirming this requirement needs the reference number it was filed under.";
     public const string ValidToBeforeValidFromMessage = "The validity cannot end before it begins.";
@@ -37,10 +39,19 @@ public static class RecordComplianceItemHandler
 
         // The catalogue decides what belongs here. Recording a German permit against a Belgian
         // project would put a tick next to an obligation nobody has, which reads as compliance.
+        //
+        // The scope is the second half of the same guard, and it is what stops an A1 from ever
+        // becoming a single tick again: a requirement issued to one named person is refused here and
+        // answered on that person's assignment. The two messages differ because "does not apply" and
+        // "applies, but not at this level" send somebody to different places.
+        if (ComplianceCatalogue.ScopeOf(command.Requirement) is ComplianceScope.Assignment)
+            throw new BusinessRuleException(BelongsToAnAssignmentMessage);
+
         if (
             !ComplianceCatalogue.Contains(
-                aggregate.Assignment.WorkCountry,
+                aggregate.Placement.WorkCountry,
                 aggregate.EngagementType,
+                ComplianceScope.Project,
                 command.Requirement
             )
         )

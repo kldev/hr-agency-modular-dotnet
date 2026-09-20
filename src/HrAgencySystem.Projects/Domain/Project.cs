@@ -1,4 +1,4 @@
-using HrAgencySystem.Projects.Domain.Compliance;
+using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Domain.ValueObjects;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -37,7 +37,7 @@ public sealed class Project : IOrganizationDomain
     public ProjectStatus Status { get; private set; }
 
     public EngagementType EngagementType { get; private set; }
-    public Assignment Assignment { get; private set; } = null!;
+    public Placement Placement { get; private set; } = null!;
 
     /// <summary>
     /// The team is a pointer and stays a pointer. A team exists precisely so that assignments
@@ -83,7 +83,7 @@ public sealed class Project : IOrganizationDomain
         Description = LongText.Create(@event.Description, false);
         Status = ProjectStatus.Draft;
         EngagementType = @event.EngagementType;
-        Assignment = @event.Assignment;
+        Placement = @event.Placement;
         TeamId = @event.TeamId;
         TeamName = @event.TeamName;
         CreatedBy = @event.CreatedBy;
@@ -100,7 +100,7 @@ public sealed class Project : IOrganizationDomain
     {
         Name = ProjectName.Create(@event.Name);
         Description = LongText.Create(@event.Description, false);
-        Assignment = @event.Assignment;
+        Placement = @event.Placement;
         Touch(@event.ModifiedBy, @event.ModifiedAt);
     }
 

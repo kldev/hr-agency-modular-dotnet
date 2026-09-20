@@ -256,6 +256,53 @@ internal static class ApiEndpoints
             $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}/content";
     }
 
+    internal static class Workers
+    {
+        private const string WorkersBase = $"{Base}/workers";
+
+        public const string Register = WorkersBase;
+        public const string Slice = WorkersBase;
+        public const string Get = $"{WorkersBase}/{{workerId:guid}}";
+        public const string Update = $"{WorkersBase}/{{workerId:guid}}";
+        public const string ChangeStatus = $"{WorkersBase}/{{workerId:guid}}/status";
+        public const string AttachDocument = $"{WorkersBase}/{{workerId:guid}}/documents";
+        public const string UpdateDocument =
+            $"{WorkersBase}/{{workerId:guid}}/documents/{{documentId:guid}}";
+        public const string RemoveDocument =
+            $"{WorkersBase}/{{workerId:guid}}/documents/{{documentId:guid}}";
+        public const string DownloadDocument =
+            $"{WorkersBase}/{{workerId:guid}}/documents/{{documentId:guid}}/content";
+        public const string RecordAuthorisation =
+            $"{WorkersBase}/{{workerId:guid}}/work-authorisations";
+        public const string RemoveAuthorisation =
+            $"{WorkersBase}/{{workerId:guid}}/work-authorisations/{{authorisationId:guid}}";
+    }
+
+    // A resource of its own rather than a branch of /workers: an assignment is its own aggregate
+    // with its own id, and it is looked up by project at least as often as by person. The same
+    // reason job posts sit beside job descriptions instead of underneath them.
+    internal static class Assignments
+    {
+        private const string AssignmentsBase = $"{Base}/assignments";
+
+        public const string Plan = AssignmentsBase;
+        public const string Slice = AssignmentsBase;
+        public const string Get = $"{AssignmentsBase}/{{assignmentId:guid}}";
+        public const string Update = $"{AssignmentsBase}/{{assignmentId:guid}}";
+        public const string ChangeStatus = $"{AssignmentsBase}/{{assignmentId:guid}}/status";
+        public const string RecordCompliance =
+            $"{AssignmentsBase}/{{assignmentId:guid}}/compliance/{{requirement}}";
+        public const string ComplianceCatalogue =
+            $"{AssignmentsBase}/{{assignmentId:guid}}/compliance/catalogue";
+        public const string AttachDocument = $"{AssignmentsBase}/{{assignmentId:guid}}/documents";
+        public const string UpdateDocument =
+            $"{AssignmentsBase}/{{assignmentId:guid}}/documents/{{documentId:guid}}";
+        public const string RemoveDocument =
+            $"{AssignmentsBase}/{{assignmentId:guid}}/documents/{{documentId:guid}}";
+        public const string DownloadDocument =
+            $"{AssignmentsBase}/{{assignmentId:guid}}/documents/{{documentId:guid}}/content";
+    }
+
     internal static class Suggestions
     {
         private const string SuggestionBase = $"{Base}/suggestion";
@@ -270,6 +317,7 @@ internal static class ApiEndpoints
         public const string Projects = $"{SuggestionBase}/projects";
         public const string Teams = $"{SuggestionBase}/teams";
         public const string Team = $"{SuggestionBase}/teams/{{teamId:guid}}";
+        public const string Workers = $"{SuggestionBase}/workers";
     }
 
     // Anonymous, excluded from OpenAPI: the feed files served next to the public job board.
