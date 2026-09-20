@@ -3,7 +3,6 @@ import { useRef } from "react";
 import { toast } from "sonner";
 import type { ContactRole, EmailPurpose } from "@/api/models";
 import {
-	ActionButton,
 	AuditInformation,
 	DetailsHeader,
 	DetailsLoading,
@@ -45,6 +44,7 @@ import {
 	ProjectOverviewSection,
 	ProjectStatusSidebar,
 } from "./components/details";
+import { ProjectActions } from "./components/table/ProjectActions";
 import { useGetProject, useRemoveProjectContact } from "./hooks";
 
 export function ProjectDetailsPage() {
@@ -96,12 +96,12 @@ export function ProjectDetailsPage() {
 						</>
 					}
 					extraAdd={
-						<ActionButton
-							title="Change status"
-							onClick={() => statusRef.current?.changeStatus(project)}
-						>
-							Change status
-						</ActionButton>
+						<ProjectActions
+							mode="details"
+							id={project.id}
+							onEdit={() => editRef.current?.edit(project)}
+							onChangeStatus={() => statusRef.current?.changeStatus(project)}
+						/>
 					}
 				/>
 
