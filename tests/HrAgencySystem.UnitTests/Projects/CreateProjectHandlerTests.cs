@@ -1,7 +1,7 @@
 using HrAgencySystem.Projects.Application.Create;
 using HrAgencySystem.Projects.Domain;
-using HrAgencySystem.Projects.Events;
 using HrAgencySystem.Projects.Domain.ValueObjects;
+using HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
@@ -34,7 +34,8 @@ public class CreateProjectHandlerTests : BaseTest
         Assert.Equal(ProjectScenario.CompanyId, result.Company.Id);
         Assert.Equal("ACME Corporation", result.Company.Name);
 
-        _session.Events.Received(1)
+        _session
+            .Events.Received(1)
             .StartStream<Project>(
                 result.ProjectId,
                 Arg.Is<ProjectCreated>(e => e.ProjectId == result.ProjectId)
@@ -75,7 +76,10 @@ public class CreateProjectHandlerTests : BaseTest
     {
         // A project begins as a draft precisely so the paperwork and the delivery can be filled in
         // in either order. Going live is where a complete profile becomes a condition.
-        var result = await Handle(Command(), ProjectScenario.Service(ProjectScenario.IncompleteCompany));
+        var result = await Handle(
+            Command(),
+            ProjectScenario.Service(ProjectScenario.IncompleteCompany)
+        );
 
         Assert.False(result.Company.IsProfileComplete);
     }
@@ -138,13 +142,20 @@ public class CreateProjectHandlerTests : BaseTest
                 Arg.Any<Guid>(),
                 Arg.Any<CancellationToken>()
             )
-            .Throws(new BusinessRuleException(HrAgencySystem.Projects.Services.IProjectService.CompanyNotInOrganizationMessage));
+            .Throws(
+                new BusinessRuleException(
+                    HrAgencySystem.Projects.Services.IProjectService.CompanyNotInOrganizationMessage
+                )
+            );
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             Handle(Command(), service)
         );
 
-        Assert.Equal(HrAgencySystem.Projects.Services.IProjectService.CompanyNotInOrganizationMessage, error.Message);
+        Assert.Equal(
+            HrAgencySystem.Projects.Services.IProjectService.CompanyNotInOrganizationMessage,
+            error.Message
+        );
     }
 
     private Task<ProjectCreated> Handle(

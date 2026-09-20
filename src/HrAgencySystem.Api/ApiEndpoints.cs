@@ -210,6 +210,24 @@ internal static class ApiEndpoints
             $"{TeamsBase}/{{teamId:guid}}/members/{{userId:guid}}/role";
     }
 
+    internal static class Projects
+    {
+        private const string ProjectsBase = $"{Base}/projects";
+
+        public const string Create = ProjectsBase;
+        public const string Slice = ProjectsBase;
+        public const string Get = $"{ProjectsBase}/{{projectId:guid}}";
+        public const string Update = $"{ProjectsBase}/{{projectId:guid}}";
+        public const string ChangeStatus = $"{ProjectsBase}/{{projectId:guid}}/status";
+        public const string AssignTeam = $"{ProjectsBase}/{{projectId:guid}}/team";
+        public const string AssignContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";
+        public const string RemoveContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";
+        public const string SetEmails = $"{ProjectsBase}/{{projectId:guid}}/emails/{{purpose}}";
+        public const string RecordContract = $"{ProjectsBase}/{{projectId:guid}}/contract";
+        public const string ChangeContractStatus =
+            $"{ProjectsBase}/{{projectId:guid}}/contract/status";
+    }
+
     internal static class Suggestions
     {
         private const string SuggestionBase = $"{Base}/suggestion";
@@ -221,6 +239,7 @@ internal static class ApiEndpoints
         public const string Tags = $"{SuggestionBase}/tags";
         public const string Users = $"{SuggestionBase}/users";
         public const string User = $"{SuggestionBase}/users/{{userId:guid}}";
+        public const string Projects = $"{SuggestionBase}/projects";
         public const string Teams = $"{SuggestionBase}/teams";
         public const string Team = $"{SuggestionBase}/teams/{{teamId:guid}}";
     }

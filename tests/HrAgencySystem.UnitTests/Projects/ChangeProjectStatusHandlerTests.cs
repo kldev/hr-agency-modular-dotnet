@@ -136,9 +136,7 @@ public class ChangeProjectStatusHandlerTests : BaseTest
     {
         var project = ProjectScenario.Draft();
 
-        await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            Handle(project, ProjectStatus.Draft)
-        );
+        await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(project, ProjectStatus.Draft));
     }
 
     [Fact]
@@ -159,7 +157,11 @@ public class ChangeProjectStatusHandlerTests : BaseTest
     {
         var project = ProjectScenario.Draft();
 
-        var (result, _) = await Handle(project, ProjectStatus.Cancelled, reason: " Client pulled out ");
+        var (result, _) = await Handle(
+            project,
+            ProjectStatus.Cancelled,
+            reason: " Client pulled out "
+        );
 
         Assert.Equal("Client pulled out", result.Reason);
     }

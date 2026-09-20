@@ -34,7 +34,11 @@ public class ProjectEmailRecipientsHandlerTests : BaseTest
         var (documents, _) = await Set(project, EmailPurpose.Document, ["docs@acme.example.com"]);
         project.Apply(documents);
 
-        var (replacement, _) = await Set(project, EmailPurpose.Invoice, ["billing@acme.example.com"]);
+        var (replacement, _) = await Set(
+            project,
+            EmailPurpose.Invoice,
+            ["billing@acme.example.com"]
+        );
         project.Apply(replacement);
 
         Assert.Equal(2, project.EmailRecipients.Count);

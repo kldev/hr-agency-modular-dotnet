@@ -13,6 +13,7 @@ internal static class Endpoint
         Maps.MapCompanyContacts.Map(group);
         Maps.MapJobPosts.Map(group);
         Maps.MapTeams.Map(group);
+        Maps.MapProjects.Map(group);
         Maps.MapTeam.Map(group);
     }
 }

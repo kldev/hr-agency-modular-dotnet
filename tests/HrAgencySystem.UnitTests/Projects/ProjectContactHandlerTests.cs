@@ -15,7 +15,11 @@ public class ProjectContactHandlerTests : BaseTest
     {
         var project = ProjectScenario.Draft();
 
-        var (result, _) = await Assign(project, ContactRole.Responsible, ProjectScenario.Responsible);
+        var (result, _) = await Assign(
+            project,
+            ContactRole.Responsible,
+            ProjectScenario.Responsible
+        );
 
         Assert.Equal(ContactRole.Responsible, result.Role);
         Assert.Equal("Marie", result.Person.FirstName);
@@ -70,7 +74,10 @@ public class ProjectContactHandlerTests : BaseTest
 
         Assert.Equal(2, project.Contacts.Count);
         Assert.Equal("Marie", project.ContactInRole(ContactRole.Responsible)!.Person.FirstName);
-        Assert.Equal("Paul", project.ContactInRole(ContactRole.ContractSignatory)!.Person.FirstName);
+        Assert.Equal(
+            "Paul",
+            project.ContactInRole(ContactRole.ContractSignatory)!.Person.FirstName
+        );
     }
 
     [Fact]

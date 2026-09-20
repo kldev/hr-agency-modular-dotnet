@@ -12,8 +12,7 @@ namespace HrAgencySystem.Projects.Application.ChangeStatus;
 public static class ChangeProjectStatusHandler
 {
     public const string TransitionNotAllowedMessage = "This project status change is not allowed.";
-    public const string ContractRequiredMessage =
-        "An active project requires a signed contract.";
+    public const string ContractRequiredMessage = "An active project requires a signed contract.";
     public const string ResponsibleRequiredMessage =
         "An active project requires a responsible contact on the client side.";
     public const string CompanyProfileRequiredMessage =

@@ -25,8 +25,7 @@ public static class ChangeContractStatusHandler
         ArgumentNullException.ThrowIfNull(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
-        var contract =
-            aggregate.Contract ?? throw new BusinessRuleException(NoContractMessage);
+        var contract = aggregate.Contract ?? throw new BusinessRuleException(NoContractMessage);
 
         if (contract.Status == command.Status)
             throw new BusinessRuleException(SameStatusMessage);
