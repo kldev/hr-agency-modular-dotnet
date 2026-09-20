@@ -72,7 +72,7 @@ const renameTeamServerFn = createServerFn({
 		return renameTeam(data.id, data.req, await getFnOptions());
 	});
 
-const addTeamMemberServerFn = createServerFn({
+export const addTeamMemberServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { id: string; req: AddTeamMemberRequest }) => input)
@@ -80,7 +80,7 @@ const addTeamMemberServerFn = createServerFn({
 		return addTeamMember(data.id, data.req, await getFnOptions());
 	});
 
-const removeTeamMemberServerFn = createServerFn({
+export const removeTeamMemberServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { id: string; userId: string }) => input)
@@ -88,7 +88,7 @@ const removeTeamMemberServerFn = createServerFn({
 		return removeTeamMember(data.id, data.userId, await getFnOptions());
 	});
 
-const changeTeamMemberRoleServerFn = createServerFn({
+export const changeTeamMemberRoleServerFn = createServerFn({
 	method: "POST",
 })
 	.validator((input: { id: string; userId: string; req: ChangeTeamMemberRoleRequest }) => input)

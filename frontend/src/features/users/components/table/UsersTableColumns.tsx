@@ -1,13 +1,20 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
 import type { UserProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
+import { teamRoles } from "@/features/teams/types";
 import { formatDateTime } from "@/utlis/dateUtils";
+import { UserActions } from "./UserActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, UserProjection>();
 
-export function getColumns(onEdit?: (company: UserProjection) => void) {
+export type UserColumnHandlers = {
+	onEdit: (user: UserProjection) => void;
+	onChangeRole: (user: UserProjection) => void;
+	onChangeTeam: (user: UserProjection) => void;
+};
+
+export function getColumns({ onEdit, onChangeRole, onChangeTeam }: UserColumnHandlers) {
 	const columns = columnHelper.columns([
 		columnHelper.accessor("fullName", {
 			header: "User",
@@ -38,6 +45,29 @@ export function getColumns(onEdit?: (company: UserProjection) => void) {
 				width: "sm",
 			},
 		}),
+
+		columnHelper.display({
+			id: "team",
+			header: "Team",
+			meta: {
+				width: "md",
+			},
+			cell: ({ row }) => {
+				const team = row.original.team;
+
+				if (!team) {
+					return <span className="text-(--color-text-muted)">—</span>;
+				}
+
+				return (
+					<div>
+						<div className="data-name">{team.name}</div>
+						<div className="text-xs text-(--color-text-muted)">{teamRoles[team.role]}</div>
+					</div>
+				);
+			},
+		}),
+
 		columnHelper.accessor("phone", {
 			header: "Phone",
 			meta: {
@@ -53,26 +83,17 @@ export function getColumns(onEdit?: (company: UserProjection) => void) {
 		columnHelper.display({
 			id: "actions",
 			header: () => null,
-			cell: ({ row }) => {
-				const user = row.original;
-
-				if (!onEdit) {
-					return null;
-				}
-
-				return (
-					<div className="table-actions">
-						<button
-							type="button"
-							className="table-action-button"
-							aria-label={`Actions for ${user.email}`}
-						>
-							<MoreHorizontal className="size-4" />
-						</button>
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<UserActions
+					id={row.original.id}
+					email={row.original.email}
+					onEdit={() => onEdit(row.original)}
+					onChangeRole={() => onChangeRole(row.original)}
+					onChangeTeam={() => onChangeTeam(row.original)}
+				/>
+			),
 		}),
 	]);
+
 	return columns;
 }

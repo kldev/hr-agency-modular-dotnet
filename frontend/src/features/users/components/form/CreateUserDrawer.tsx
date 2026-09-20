@@ -1,83 +1,95 @@
-import { useMutation } from "@tanstack/react-query";
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
-import { createUser } from "@/api/endpoints";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { toast } from "sonner";
+import { FormDrawer } from "#/components/ui/FormDrawer";
+import { useAppForm } from "#/forms";
 import type { CreateUserRequest } from "@/api/models";
-import { SaveChangesButton } from "@/components/ui";
-import { Drawer } from "@/components/ui/Drawer";
-import { useProjectionWait } from "@/hooks";
-
-import { emptyCreateUser, UserForm } from "./UserForm";
+import { useCreateUser } from "../../pages/hooks";
+import { CreateUserForm, createUserSchema, emptyCreateUser } from "./CreateUserForm";
 import type { CreateUserFormCommand } from "./UserFormCommand";
 
 interface CreateUserDrawerProps {
 	onSuccess: () => void;
 }
 
+const FormContent: React.FC<{ onSuccess: () => void; handleClose: () => void }> = ({
+	onSuccess,
+	handleClose,
+}) => {
+	const { mutation, waiting } = useCreateUser({
+		onSuccess: () => {
+			mutation.reset();
+			toast.success("User created");
+			onSuccess();
+			handleClose();
+		},
+	});
+
+	const form = useAppForm({
+		defaultValues: emptyCreateUser,
+
+		validators: {
+			onChange: createUserSchema,
+		},
+
+		onSubmit: async ({ value }) => {
+			const request: CreateUserRequest = {
+				email: value.email.trim(),
+				firstName: value.firstName.trim(),
+				lastName: value.lastName.trim(),
+				role: value.role,
+				password: value.password,
+				jobTitle: value.jobTitle.trim() || null,
+				phone: value.phone.trim() || null,
+				teamId: value.teamId || null,
+				teamRole: value.teamId ? value.teamRole : null,
+			};
+
+			mutation.mutate({ request });
+		},
+	});
+
+	return (
+		<form.AppForm>
+			<FormDrawer
+				open={true}
+				title="Create user"
+				onClose={handleClose}
+				onSubmit={(event) => {
+					event.preventDefault();
+					void form.handleSubmit();
+				}}
+			>
+				<FormDrawer.Content>
+					<div className="drawer-form">
+						<CreateUserForm form={form} error={mutation.error} isSubmitting={mutation.isPending} />
+					</div>
+				</FormDrawer.Content>
+
+				<FormDrawer.Footer>
+					<form.FormSaveChangesButton wait={waiting} isPending={mutation.isPending} />
+				</FormDrawer.Footer>
+			</FormDrawer>
+		</form.AppForm>
+	);
+};
+
 const CreateUserDrawer = forwardRef<CreateUserFormCommand, CreateUserDrawerProps>(
 	({ onSuccess }, ref) => {
 		const [isOpen, setIsOpen] = useState(false);
-		const [user, setUser] = useState<CreateUserRequest>(emptyCreateUser);
-
-		const { wait, waiting } = useProjectionWait();
-
-		const createMutation = useMutation({
-			mutationFn: (request: CreateUserRequest) => createUser(request),
-
-			onSuccess: async () => {
-				await wait();
-
-				setIsOpen(false);
-				setUser(emptyCreateUser);
-
-				onSuccess();
-			},
-		});
 
 		useImperativeHandle(
 			ref,
 			() => ({
 				create: () => {
-					createMutation.reset();
-					setUser(emptyCreateUser);
 					setIsOpen(true);
 				},
 			}),
-			[createMutation],
+			[],
 		);
 
-		const handleSave = useCallback(
-			(value: CreateUserRequest) => {
-				createMutation.mutate(value);
-			},
-			[createMutation],
-		);
+		if (!isOpen) return null;
 
-		const handleClose = useCallback(() => {
-			if (createMutation.isPending) {
-				return;
-			}
-
-			createMutation.reset();
-			setIsOpen(false);
-		}, [createMutation]);
-
-		return (
-			<Drawer
-				open={isOpen}
-				title="Create user"
-				onClose={handleClose}
-				footer={
-					<SaveChangesButton form="user-form" isPending={createMutation.isPending} wait={waiting} />
-				}
-			>
-				<UserForm
-					initialValue={user}
-					onSubmit={handleSave}
-					error={createMutation.error}
-					isSubmitting={createMutation.isPending}
-				/>
-			</Drawer>
-		);
+		return <FormContent onSuccess={onSuccess} handleClose={() => setIsOpen(false)} />;
 	},
 );
 

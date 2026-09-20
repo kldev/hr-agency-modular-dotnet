@@ -1,107 +1,121 @@
 import { useMutation } from "@tanstack/react-query";
-import { forwardRef, useCallback, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import { toast } from "sonner";
 import { createOrganizationUser } from "@/api/endpoints";
-import type { CreateUserForOrganizationRequest, CreateUserRequest } from "@/api/models";
-import { DetailOverviewHeader, SaveChangesButton } from "@/components/ui";
-import { Drawer } from "@/components/ui/Drawer";
-import { emptyCreateUser, UserForm } from "@/features/users/components";
+import type { CreateUserForOrganizationRequest } from "@/api/models";
+import { DetailOverviewHeader } from "@/components/ui";
+import { FormDrawer } from "@/components/ui/FormDrawer";
+import { useAppForm } from "@/forms";
 import { useProjectionWait } from "@/hooks";
 import type { CreateOrganizationUserFormCommand } from "./CreateOrganizationUserFormCommand";
+import {
+	emptyOrganizationUser,
+	OrganizationUserForm,
+	organizationUserSchema,
+} from "./OrganizationUserForm";
 
 interface CreateOrganizationUserDrawerProps {
 	onSuccess: () => void;
 }
 
-const CreateOrganizationUserDrawer = forwardRef<
-	CreateOrganizationUserFormCommand,
-	CreateOrganizationUserDrawerProps
->(({ onSuccess }, ref) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [organizationId, setOrganizationId] = useState<string | null>(null);
-	const [organizationName, setOrganizationName] = useState<string | null>(null);
-	const [user, setUser] = useState<CreateUserRequest>(emptyCreateUser);
+type Target = {
+	organizationId: string;
+	organizationName: string;
+};
 
+const FormContent: React.FC<{
+	target: Target;
+	onSuccess: () => void;
+	handleClose: () => void;
+}> = ({ target, onSuccess, handleClose }) => {
 	const { wait, waiting } = useProjectionWait();
 
-	const createMutation = useMutation({
+	const mutation = useMutation({
 		mutationFn: (request: CreateUserForOrganizationRequest) => createOrganizationUser(request),
 
 		onSuccess: async () => {
 			await wait();
 
-			setIsOpen(false);
-			setOrganizationId(null);
-			setUser(emptyCreateUser);
-
+			mutation.reset();
+			toast.success("User created");
 			onSuccess();
+			handleClose();
 		},
 	});
+
+	const form = useAppForm({
+		defaultValues: emptyOrganizationUser,
+
+		validators: {
+			onChange: organizationUserSchema,
+		},
+
+		onSubmit: async ({ value }) => {
+			mutation.mutate({
+				email: value.email.trim(),
+				firstName: value.firstName.trim(),
+				lastName: value.lastName.trim(),
+				role: value.role,
+				password: value.password,
+				jobTitle: value.jobTitle.trim() || null,
+				phone: value.phone.trim() || null,
+				organizationId: target.organizationId,
+			});
+		},
+	});
+
+	return (
+		<form.AppForm>
+			<FormDrawer
+				open={true}
+				title="Create organization user"
+				onClose={handleClose}
+				onSubmit={(event) => {
+					event.preventDefault();
+					void form.handleSubmit();
+				}}
+			>
+				<FormDrawer.Content>
+					<div className="drawer-form">
+						<div className="pb-5">
+							<DetailOverviewHeader title={target.organizationName} description="" />
+						</div>
+
+						<OrganizationUserForm
+							form={form}
+							error={mutation.error}
+							isSubmitting={mutation.isPending}
+						/>
+					</div>
+				</FormDrawer.Content>
+
+				<FormDrawer.Footer>
+					<form.FormSaveChangesButton wait={waiting} isPending={mutation.isPending} />
+				</FormDrawer.Footer>
+			</FormDrawer>
+		</form.AppForm>
+	);
+};
+
+const CreateOrganizationUserDrawer = forwardRef<
+	CreateOrganizationUserFormCommand,
+	CreateOrganizationUserDrawerProps
+>(({ onSuccess }, ref) => {
+	const [target, setTarget] = useState<Target | null>(null);
 
 	useImperativeHandle(
 		ref,
 		() => ({
 			create: (id: string, organizationName: string) => {
-				createMutation.reset();
-
-				setOrganizationName(organizationName);
-				setOrganizationId(id);
-				setUser(emptyCreateUser);
-				setIsOpen(true);
+				setTarget({ organizationId: id, organizationName });
 			},
 		}),
-		[createMutation],
+		[],
 	);
 
-	const handleSave = useCallback(
-		(value: CreateUserRequest) => {
-			if (!organizationId) {
-				return;
-			}
+	if (!target) return null;
 
-			createMutation.mutate({
-				email: value.email,
-				firstName: value.firstName,
-				lastName: value.lastName,
-				role: value.role,
-				password: value.password,
-				phone: value.phone,
-				organizationId,
-			});
-		},
-		[organizationId, createMutation],
-	);
-
-	const handleClose = useCallback(() => {
-		if (createMutation.isPending) {
-			return;
-		}
-
-		createMutation.reset();
-		setIsOpen(false);
-		setOrganizationId(null);
-		setOrganizationName(null);
-	}, [createMutation]);
-
-	return (
-		<Drawer
-			open={isOpen}
-			title="Create organization user"
-			onClose={handleClose}
-			footer={
-				<SaveChangesButton form="user-form" isPending={createMutation.isPending} wait={waiting} />
-			}
-		>
-			<div className="pb-5">
-				<DetailOverviewHeader title={organizationName ?? ""} description="" />
-			</div>
-			<UserForm
-				initialValue={user}
-				onSubmit={handleSave}
-				error={createMutation.error}
-				isSubmitting={createMutation.isPending}
-			/>
-		</Drawer>
-	);
+	return <FormContent target={target} onSuccess={onSuccess} handleClose={() => setTarget(null)} />;
 });
 
 CreateOrganizationUserDrawer.displayName = "CreateOrganizationUserDrawer";
