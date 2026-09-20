@@ -1,388 +1,305 @@
 # HR Agency — Modular Monolith with Marten & Wolverine
 
-A **.NET 10 modular monolith** for an HR agency platform, designed around **Domain-Driven Design, CQRS, event-driven architecture, and strong module boundaries**.
+A **.NET 10 modular monolith** for a multi-tenant recruitment-agency SaaS, built around **Domain-Driven Design, CQRS, event sourcing and strict module boundaries**.
 
-The project explores how to build a business-oriented modular monolith using **Marten** as the event store/document database and **Wolverine** for messaging and command handling.
+The project explores how far a well-structured monolith can go using **Marten** as the event store and document database and **Wolverine** as the in-process message bus — with a RabbitMQ hop and background workers only where they genuinely earn their place.
 
 > 🚧 **Work in progress**
 >
-> This project is actively developed. The domain model, modules, APIs, and infrastructure are evolving as new business capabilities are implemented.
+> This is a learning, experimentation and portfolio project. It is never deployed to production, which means there is no data-migration or event-versioning burden — but the quality of the model is the whole point of the exercise.
+
+---
+
+## What the product does
+
+A SaaS for recruitment agencies hiring for IT roles. Agencies post to JustJoinIt, NoFluffJobs and RocketJobs alongside Pracuj.pl and OLX, and `InterviewType` includes `Technical`.
+
+The main flow, including where it currently breaks off:
+
+```text
+SalesOpportunity  ──X──►  (no Project aggregate yet)
+New→…→Won/Lost                    │
+                                  ▼
+                         JobDescription  ──1:N──►  JobPost  ──►  Candidate ──► JobApplication ──► Interview
+                         one per position          candidate-facing copy,
+                         Draft→Open→OnHold         may differ from the description,
+                         →Closed/Cancelled         many per description (e.g. per language)
+```
+
+Alongside that, people are grouped into **teams**:
+
+```text
+Organization (tenant)
+   │
+   ├── User ── OrganizationRole: Admin/Recruiter/Sales/…     ← permissions
+   │      └── Team ── TeamRole: Sales/Recruiter/Operations/Lead
+   │                                                          ← division of work
+   └── Team "Tiggers" ── members (UserId, TeamRole)
+```
+
+A team outlives the people on it: "the Tiggers team handles this" survives recruiter rotation in a way that "Katy handles this" does not.
+
+**Known gaps, on purpose:** a won opportunity should produce a recruitment project, but no `Project` aggregate exists yet — a job description is created independently and only points at a company. Nothing enforces "every job description has at least one job post". There is no integration with the job boards: `PostToChannel` records that a post was published, it does not publish it.
+
+---
 
 ## Architecture
 
-The application is structured as a **modular monolith**: a single deployable application composed of independently organized business modules.
+One deployable API composed of business modules, plus three satellite hosts. Modules never reference each other's projects.
 
-The goal is to keep business capabilities isolated while avoiding the operational complexity of distributed services.
+### Projects
 
-Each module owns its:
+| Project | Responsibility |
+| --- | --- |
+| **Identity** | Users, platform owners, credentials, JWT, refresh tokens, password-reset saga |
+| **Organization** | Tenants, slugs |
+| **Company** | Client companies and their contacts |
+| **Sales** | Sales opportunities and follow-up actions |
+| **JobDescription** | One job description per position |
+| **Recruitment** | Largest module: job posts, channels, candidates, applications, interviews, tags |
+| **Teams** | Teams and role-tagged membership |
+| **Feeds** | Job-feed read model, XML/JSON serializers, task queue — knows nothing about `Recruitment` |
+| **Files** | S3-compatible object storage (RustFS) |
+| **SharedKernel** | Deliberately small: exceptions, `OrganizationId`, `IClock`, paging, snapshot ports |
+| **Audit** | ⚠️ an empty `.csproj` — a placeholder, not wired into composition |
+| **PlatformSeeder** | Demo data, registered only in `Development`/`docker` |
+| **Api** | HTTP endpoints, composition root, infrastructure configuration |
+| **Web** | Separate public job board (Razor Pages) reusing a reduced subset of the modules |
+| **FeedsWorker** | Worker host that generates job feeds — no HTTP surface |
+| **NotificationWorker** | Worker host that consumes mail queues, renders and sends |
 
-* domain model
-* application logic
-* infrastructure
-* events
-* persistence configuration
-* projections
+Anything that crosses a module boundary lives in a dependency-free contracts project:
 
-Modules communicate through explicit contracts and domain events rather than directly depending on each other's internal implementation.
+| Contracts project | Carries |
+| --- | --- |
+| **Recruitment.Contracts** | Integration events from `Recruitment` to other modules |
+| **Teams.Contracts** | `TeamRole`, `TeamInfo`, `TeamMembershipChanged`, `AssignUserToTeam` |
+| **EmailTemplates.Contracts** | The mail messages themselves (`IEmailTemplateContract`) |
 
-### Modules
+Mail delivery is split across two more supporting projects: **EmailTemplates** holds the embedded liquid templates, rendering and sending, and **EmailTemplates.Messaging** is the single description of the mail topology — topics, queues and the publish/consume wiring that both hosts read.
 
-| Module             | Responsibility                                                           |
-| ------------------ | ------------------------------------------------------------------------ |
-| **Identity**       | Users, owners, credentials and identity-related business rules           |
-| **Organization**   | Organizations and organization-level business rules                      |
-| **Company**        | Company-related functionality                                            |
-| **Recruitment**    | Recruitment processes                                                    |
-| **JobDescription** | Job descriptions and related functionality                               |
-| **Sales**          | Sales-related functionality                                              |
-| **Audit**          | Audit-related capabilities                                               |
-| **Suggestion**     | Suggestions and related functionality                                    |
-| **SharedKernel**   | Small set of genuinely shared abstractions and value objects             |
-| **Api**            | HTTP endpoints, application composition and infrastructure configuration |
+There is **no** `Suggestion` project. Typeahead repositories live inside the module that owns the data and are exposed through `Api/Endpoints/Suggestion`.
 
-The current solution structure reflects these module boundaries directly in the source tree.
+### Module anatomy
 
-## Technology Stack
+Every module follows the same internal layout:
+
+```text
+<Module>Module.cs              composition root: Add<X>Module() + static ConfigureMarten(StoreOptions)
+Domain/                        aggregate (Apply(Event) methods), strongly typed ids, ValueObjects/
+Events/                        domain events, stored by Marten
+Application/<UseCase>/         command record + static handler class, one folder per use case
+Application/Port/              interfaces the module needs
+Projections/                   read models (Marten snapshots)
+Documents/                     plain Marten documents
+Infrastructure/Configuration/  Marten + DI registration
+Infrastructure/Persistence/    write-side repos, uniqueness reservation documents
+Infrastructure/Query/          read-side query repositories
+Integration/                   handlers for other modules' integration events
+Services/                      the module's facade over SharedKernel ports
+```
+
+Handlers are **static classes with a static `Handle` method**. Wolverine discovers them and injects `IDocumentSession`, repositories and `IClock` as parameters — there is no `IRequestHandler`-style interface anywhere.
+
+### Cross-module communication
+
+Two sanctioned mechanisms, and nothing else:
+
+* **Integration events** via a `*.Contracts` project. The producing handler returns the event in `OutgoingMessages`; the consuming module translates it into its own domain event inside an `Integration/` folder. For example, `Teams` announces `TeamMembershipChanged`, and `Identity` turns it into `UserTeamChanged` so the user read model can show which team somebody is on.
+* **SharedKernel ports** — `IUserSnapshotRepository`, `ICompanySnapshotRepository`, `IJobDescriptionSnapshotRepository`, `ITeamSnapshotRepository`, `IOrganizationChecker`. Each module implements the port for the data it owns; consumers depend only on the interface.
+
+### Multi-tenancy
+
+Every aggregate, projection and query is scoped by `OrganizationId`, carried in a JWT claim. Marten indexes are declared with `OrganizationId` as the leading column.
+
+### Uniqueness invariants
+
+Cross-aggregate uniqueness — company tax id, user email per organization, organization slug, candidate email, one-team-per-person — is enforced by a dedicated **reservation document** with a unique Marten index, written in the same transaction as the event. The handler checks the reservation first for a friendly error and relies on the unique index to defeat concurrent requests.
+
+### Email over RabbitMQ
+
+Mail leaves the API as a message and becomes an actual email in `NotificationWorker`. The exchange `x.emails` is a **topic** exchange, and one durable queue per source domain means a backlog in one domain cannot stall another.
+
+```text
+Api handler ──returns OutgoingMessages──► outbox ──► x.emails (topic)
+                                                        │ recruitment.#  ──► q.emails.recruitment ─┐
+                                                        │ identity.#     ──► q.emails.identity     ├─► NotificationWorker
+                                                        │ sales.#        ──► q.emails.sales        │
+                                                        └ teams.#        ──► q.emails.teams       ─┘
+```
+
+Rendering and sending are separate concerns: liquid templates are rendered through FluentEmail.Liquid, and `ISendEmail` puts the html on the wire via MailKit. A host without SMTP falls back to a logging sender, so it still runs. Locally, mail lands in Mailpit.
+
+### Long-running processes
+
+`PasswordResetSaga` is a Wolverine saga stored as a Marten document: Wolverine loads it, hands it the message, and deletes it when the handler calls `MarkCompleted()`. The window closing is the document ceasing to exist, not a flag anybody has to remember to check.
+
+### Job feeds
+
+`JobFeedSchedulerWorker` queues a generation task per active organization; `JobFeedGenerationWorker` serializes published posts into S3 under `{organizationId}/jobs.{xml,json}`, served anonymously from `GET /p/{slug}/jobs.xml|json`.
+
+Feed content comes from its **own** read model — the relational table `feeds.job_posts`, filled by an EF Core-backed Marten projection that lives in `Recruitment` (the module that owns the events) and read with Dapper. That table is the entire contract between the two projects.
+
+---
+
+## Technology stack
 
 ### Backend
 
-* **.NET 10**
-* **ASP.NET Core Minimal APIs**
-* **C#**
-* **Marten 9**
-* **Wolverine 6**
+* **.NET 10**, ASP.NET Core Minimal APIs
+* **Marten 9.37** — event store and document database
+* **Wolverine 6.39** — messaging, handler discovery, transactional outbox
 * **PostgreSQL 17**
-* **BCrypt.Net**
-* **OpenAPI**
-* **Scalar**
+* **RabbitMQ 4** — mail transport
+* **EF Core** (feed projection) and **Dapper** (feed reads)
+* **MailKit** + **FluentEmail.Liquid**
+* **BCrypt.Net**, **JWT bearer**
+* **OpenAPI** + **Scalar**
+* **CSharpier** (enforced by a Husky pre-commit hook)
 
-The API project currently targets `net10.0` and uses Marten, Wolverine, Wolverine.Marten, OpenAPI and Scalar.
+### Frontend (`frontend/`)
+
+* **React 19** + **TanStack Start** (Router, Query, Form, Table) on **Vite**
+* **Tailwind CSS 4**, **Zod**, **Zustand**, **axios**
+* **Yarn 4**, **Biome** for lint and format
+* **orval** generates the API client from the running API's OpenAPI document
 
 ### Testing
 
-* **xUnit**
-* Unit tests
-* Integration tests
-* PostgreSQL-backed integration testing
-
-Tests are separated into:
-
 ```text
 tests/
-├── HrAgencySystem.UnitTests/
-└── HrAgencySystem.IntegrationTests/
+├── HrAgencySystem.UnitTests/               static handlers + NSubstitute + FixedClock
+├── HrAgencySystem.IntegrationTests/        real HTTP against a PostgreSQL Testcontainer
+└── HrAgencySystem.EmailTemplates.UnitTests/ renders every liquid template
 ```
 
-### Infrastructure
-
-* **PostgreSQL**
-* **Docker Compose**
-* **RustFS** for S3-compatible object storage
-
-The development infrastructure is defined in `docker-compose.yml`. PostgreSQL and RustFS are provided as local infrastructure dependencies.
+Integration tests spin up their **own** PostgreSQL 17 Testcontainer, so Docker must be running but the local compose stack is not required. External Wolverine transports are stubbed, so no broker is needed either. Because projections run in an async daemon, read-model assertions are wrapped in `Eventually.AssertAsync(...)`.
 
 ---
 
-## Architectural Principles
-
-The project focuses on several architectural principles.
-
-### Modular Monolith
-
-The application is deployed as one application, but the codebase is divided into business modules.
-
-This provides:
-
-* simple local development
-* simple deployment
-* transactional consistency where appropriate
-* clear business boundaries
-* lower operational complexity than a distributed microservice architecture
-
-At the same time, explicit module boundaries make individual modules easier to evolve or extract later if there is a genuine business or scaling reason to do so.
-
-### Domain-Driven Design
-
-Business rules belong to the domain rather than being scattered across controllers, persistence code, or infrastructure services.
-
-The domain model uses concepts such as:
-
-* aggregates
-* value objects
-* domain events
-* domain-specific exceptions
-* business invariants
-
-### CQRS
-
-Commands and queries are treated as separate use cases.
-
-Commands modify the domain and produce events, while queries are optimized around the data required by the API.
-
-### Event-Driven Architecture
-
-Domain changes are represented as typed events.
-
-For example:
-
-```text
-UserCreated
-OrganizationCreated
-PlatformOwnerCreated
-OrganizationSlugUpdated
-```
-
-Events are handled and projected independently from the write model.
-
-### Event Sourcing / Marten
-
-Marten is used for event storage and document persistence.
-
-The Identity module, for example, configures event types and projections through Marten and maintains dedicated database schemas and indexes.
-
-This allows the application to model important business changes as events rather than treating the database as the only representation of application state.
-
-### Wolverine
-
-Wolverine is used for message handling and application messaging.
-
-The API configures Wolverine together with Marten during application startup.
-
-This keeps HTTP transport concerns separate from command and message handling.
-
----
-
-## Example: Identity
-
-The Identity module demonstrates several of the architectural concepts used throughout the project.
-
-A user belongs to an organization, and the user's email must be unique **within that organization**.
-
-This invariant is enforced at the persistence level using a unique Marten index over:
-
-```text
-OrganizationId + Email
-```
-
-Conceptually:
-
-```text
-Organization
-     │
-     ├── User
-     │    ├── Email
-     │    ├── FirstName
-     │    └── LastName
-     │
-     └── User email uniqueness
-```
-
-This is an example of keeping a business invariant explicit rather than relying only on application-level checks.
-
----
-
-## Example: Organization
-
-The Organization module owns organization-specific functionality such as slug management.
-
-Organization slugs are protected by a unique persistence constraint:
-
-```text
-Slug
-```
-
-and organization-related changes are represented using domain events.
-
-This keeps organization-specific rules inside the Organization module instead of exposing persistence details to other modules.
-
----
-
-## Project Structure
-
-```text
-hr-agency-modular-dotnet/
-│
-├── src/
-│   ├── HrAgencySystem.Api/
-│   │
-│   ├── HrAgencySystem.Identity/
-│   ├── HrAgencySystem.Organization/
-│   ├── HrAgencySystem.Company/
-│   ├── HrAgencySystem.Recruitment/
-│   ├── HrAgencySystem.JobDescription/
-│   ├── HrAgencySystem.Sales/
-│   ├── HrAgencySystem.Audit/
-│   ├── HrAgencySystem.Suggestion/
-│   │
-│   └── HrAgencySystem.SharedKernel/
-│
-├── tests/
-│   ├── HrAgencySystem.UnitTests/
-│   └── HrAgencySystem.IntegrationTests/
-│
-├── http/
-│   ├── company.http
-│   └── organization.http
-│
-├── docker-compose.yml
-└── HrAgencySystem.slnx
-```
-
-The repository currently contains separate source projects for the API and business modules, together with dedicated unit and integration test projects.
-
----
-
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
-Make sure you have installed:
-
 * [.NET 10 SDK](https://dotnet.microsoft.com/)
-* [Docker](https://www.docker.com/)
-* Docker Compose
+* [Docker](https://www.docker.com/) and Docker Compose
+* [Node.js](https://nodejs.org/) with Yarn 4 (frontend only)
 
-### 1. Clone the repository
+### 1. Clone
 
 ```bash
 git clone https://github.com/kldev/hr-agency-modular-dotnet.git
-
 cd hr-agency-modular-dotnet
 ```
 
 ### 2. Start infrastructure
 
-Start PostgreSQL and RustFS:
-
 ```bash
 docker compose up -d
 ```
 
-The default development PostgreSQL instance is exposed on:
+| Service | Port | Notes |
+| --- | --- | --- |
+| PostgreSQL 17 | `5432` | |
+| RustFS (S3) | `9000` | console on `9001` |
+| RabbitMQ | `5672` | management UI on `15672`, vhost `development` |
+| Mailpit | `1025` | web UI on [localhost:8025](http://localhost:8025) |
 
-```text
-localhost:5432
-```
-
-The S3-compatible RustFS service is exposed on:
-
-```text
-localhost:9000
-```
-
-and its management console on:
-
-```text
-localhost:9001
-```
-
-These ports and services are defined in the repository's Docker Compose configuration.
-
-### 3. Run the application
+There is also a full stack including the containerized API:
 
 ```bash
-dotnet run --project src/HrAgencySystem.Api
+./infrastructure/start.sh --build     # bring everything up
+./infrastructure/start.sh --logs      # tail webapi logs;  --stop, --clean
 ```
 
-The API will start using the configured development environment.
+`infrastructure/docker-compose.yml` requires the environment variables `SecretKey`, `RustFsAccessKey`, `RustFsSecretKey`, `Cors`, `RabbitMqUser` and `RabbitMqPassword`.
 
-### 4. API documentation
+### 3. Run the hosts
 
-The application exposes OpenAPI documentation and Scalar during development.
+```bash
+dotnet run --project src/HrAgencySystem.Api        # API           → http://localhost:5000  (Scalar at /docs)
+dotnet run --project src/HrAgencySystem.Web        # job board     → http://localhost:5050
+dotnet run --project src/HrAgencySystem.FeedsWorker              # feed generation, no HTTP
+dotnet run --project src/services/HrAgencySystem.NotificationWorker  # email delivery, no HTTP
+```
 
-After starting the application, open the Scalar UI provided by the API host.
+Start `NotificationWorker` **before** triggering the first email: it declares the queues and bindings, and a topic exchange silently drops a message that matches no binding.
+
+### 4. Frontend
+
+```bash
+cd frontend
+yarn dev            # http://localhost:4300
+yarn check          # biome lint + format
+yarn api:gen        # regenerate the API client — the API must be running
+```
+
+### 5. Seed demo data
+
+Available only in the `Development` and `docker` environments:
+
+```text
+GET /api/development/seed
+GET /api/development/seed/{type}
+GET /api/development/seed-sales?count=N
+```
 
 ---
 
-## Running Tests
-
-Run all tests:
+## Running tests
 
 ```bash
-dotnet test
-```
-
-Run unit tests:
-
-```bash
+dotnet test                                       # everything
 dotnet test tests/HrAgencySystem.UnitTests
-```
-
-Run integration tests:
-
-```bash
 dotnet test tests/HrAgencySystem.IntegrationTests
+dotnet test tests/HrAgencySystem.UnitTests --filter "FullyQualifiedName~CreateCompanyHandlerTests"
 ```
-
-Integration tests use a real PostgreSQL instance rather than replacing persistence with mocks.
 
 ---
 
-## HTTP Examples
+## HTTP examples
 
-The repository contains `.http` files with example requests:
+`http/` holds request samples that run directly from JetBrains Rider or VS Code:
 
 ```text
-http/
-├── company.http
-└── organization.http
+auth · candidate · company · company-contacts · interviews · job-applications
+job-description · job-post · organization · owner · sales · seed · suggestion · user
 ```
-
-These can be executed directly from IDEs such as JetBrains Rider or Visual Studio Code with the appropriate HTTP client support.
 
 ---
 
-## Why a Modular Monolith?
+## Architectural principles
 
-Microservices are not automatically the next step after a monolith.
+### Why a modular monolith
 
-For an HR platform, a modular monolith provides a useful balance:
+Microservices are not automatically the next step after a monolith. For a platform this size, a modular monolith buys simple local development, simple deployment and transactional consistency where it matters, while explicit boundaries keep any individual module extractable later — if a real business or scaling reason ever appears.
 
-```text
-                    HR Agency Application
-                             │
-              ┌──────────────┴──────────────┐
-              │                             │
-        Single Deployment             Independent Modules
-              │                             │
-              │            ┌────────────────┼────────────────┐
-              │            │                │                │
-              │         Identity       Organization     Recruitment
-              │            │                │                │
-              │         Company       JobDescription       Sales
-              │            │                │                │
-              │          Audit          Suggestion
-              │
-              └──────────── PostgreSQL ────────────
-```
+The boundaries are enforced by the project graph, not by convention: a module that wanted to reach into another one would have to add a project reference that does not exist.
 
-The architecture aims to gain the organizational benefits of modularity without introducing distributed-system complexity before it is actually necessary.
+### Domain-Driven Design
+
+Business rules live in the domain rather than being scattered across endpoints, persistence code or infrastructure services: aggregates, value objects, domain events, domain-specific exceptions and explicit invariants.
+
+Value objects are records with a private constructor and a `TryCreate` returning `(value, error)`. Handlers accumulate errors and throw a single `ValidationException`, and the messages are `public const string` fields so tests assert on the constant rather than on a string literal.
+
+### CQRS and event sourcing
+
+Commands modify the domain and produce events; queries are optimized around what the API actually returns. Marten stores the events and builds read models as async projections, so a read that follows a write has to wait for the daemon — the API layer, the tests and the frontend each have an explicit way of doing that.
+
+### Endpoints stay thin
+
+`Endpoints/<Area>/Maps/Map<Verb>.cs` maps one operation, translates HTTP into a command and calls `bus.InvokeAsync<TEvent>(...)`. No business logic. Authorization is fallback-deny, so public endpoints must opt out explicitly, and a global exception handler maps domain exceptions onto ProblemDetails.
 
 ---
 
-## Design Goals
+## Design goals
 
-The project is primarily focused on demonstrating and experimenting with:
+The point is not to maximize the number of technologies used, but to keep the architecture understandable and make business rules explicit:
 
-* Modular Monolith architecture
-* Domain-Driven Design
-* CQRS
-* Event-driven architecture
-* Event sourcing
-* Domain events
-* Marten projections
-* Wolverine message handling
-* explicit module boundaries
-* business invariants
-* value objects
-* Minimal APIs
-* integration testing
-* PostgreSQL-backed persistence
-
-The goal is not to maximize the number of technologies used, but to keep the architecture understandable and make business rules explicit.
+modular monolith · DDD · CQRS · event sourcing · domain and integration events · Marten projections · Wolverine handlers, sagas and outbox · explicit module boundaries · business invariants · value objects · multi-tenancy · Minimal APIs · integration testing against real PostgreSQL
 
 ---
 
 ## License
 
-This project is currently intended primarily as a learning, experimentation, and portfolio project.
+A learning, experimentation and portfolio project.
