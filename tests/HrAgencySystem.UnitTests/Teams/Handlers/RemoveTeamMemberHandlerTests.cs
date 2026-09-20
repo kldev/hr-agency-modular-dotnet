@@ -1,7 +1,9 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Members.Remove;
+using HrAgencySystem.Teams.Application.Port;
 using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
@@ -14,6 +16,8 @@ namespace HrAgencySystem.UnitTests.Teams.Handlers;
 public sealed class RemoveTeamMemberHandlerTests
 {
     private readonly ITeamsService _service = Substitute.For<ITeamsService>();
+    private readonly ITeamMembershipReservationRepository _reservations =
+        Substitute.For<ITeamMembershipReservationRepository>();
     private readonly IClock _clock = Substitute.For<IClock>();
 
     public RemoveTeamMemberHandlerTests()
@@ -27,7 +31,7 @@ public sealed class RemoveTeamMemberHandlerTests
     [Fact]
     public async Task Handle_WithTwoMembers_RemovesTheOneAskedFor()
     {
-        var (@event, _) = await Handle(TeamsTestData.RecruiterUser.Id);
+        var (@event, _, _) = await Handle(TeamsTestData.RecruiterUser.Id);
 
         Assert.Equal(TeamsTestData.TeamStreamId, @event.TeamId);
         Assert.Equal(TeamsTestData.RecruiterUser, @event.Member.User);
@@ -60,10 +64,25 @@ public sealed class RemoveTeamMemberHandlerTests
         _service.GetUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
     }
 
-    private async Task<(TeamMemberRemoved, Wolverine.Marten.Events)> Handle(
-        Guid userId,
-        params TeamMemberSnapshot[] roster
-    )
+    [Fact]
+    public async Task Handle_ReleasesTheSeat()
+    {
+        await Handle(TeamsTestData.RecruiterUser.Id);
+
+        await _reservations
+            .Received(1)
+            .ReleaseAsync(
+                Arg.Any<OrganizationId>(),
+                TeamsTestData.RecruiterUser.Id,
+                Arg.Any<CancellationToken>()
+            );
+    }
+
+    private async Task<(
+        TeamMemberRemoved,
+        Wolverine.Marten.Events,
+        Wolverine.OutgoingMessages
+    )> Handle(Guid userId, params TeamMemberSnapshot[] roster)
     {
         TeamMemberSnapshot[] members =
             roster.Length > 0
@@ -85,6 +104,7 @@ public sealed class RemoveTeamMemberHandlerTests
             command,
             TeamsTestData.CreateAggregate(members),
             _service,
+            _reservations,
             _clock,
             CancellationToken.None
         );

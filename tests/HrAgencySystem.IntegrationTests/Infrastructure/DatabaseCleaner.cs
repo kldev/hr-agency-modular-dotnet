@@ -8,6 +8,7 @@ using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.Sales.Documents;
 using HrAgencySystem.Sales.Projections;
+using HrAgencySystem.Teams.Infrastructure.Persistence;
 using HrAgencySystem.Teams.Projections;
 using Npgsql;
 
@@ -67,6 +68,7 @@ public sealed class DatabaseCleaner(string connectionString)
     public async Task CleanTeams()
     {
         await CleanTable<TeamProjection>("teams");
+        await CleanTable<TeamMembershipReservation>("teams");
     }
 
     public async Task CleanInterviews()

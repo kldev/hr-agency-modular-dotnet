@@ -19,6 +19,8 @@ internal sealed class TeamScenario(IMessageBus bus)
         "The Pipeline",
     ];
 
+    private const int MembersPerTeam = 3;
+
     internal async Task<IReadOnlyList<Guid>> Create(
         Guid organizationId,
         IReadOnlyList<Guid> userIds,
@@ -26,10 +28,12 @@ internal sealed class TeamScenario(IMessageBus bus)
         int seedCount = 3
     )
     {
-        if (userIds.Count < 3)
+        if (userIds.Count < MembersPerTeam)
             return [];
 
-        var count = Math.Min(seedCount, Names.Length);
+        // Nobody may sit on two teams, so the number of teams is capped by the people available —
+        // the roster below walks the list without wrapping around.
+        var count = Math.Min(Math.Min(seedCount, Names.Length), userIds.Count / MembersPerTeam);
         var teamIds = new List<Guid>(count);
 
         for (var index = 0; index < count; index++)
@@ -46,17 +50,17 @@ internal sealed class TeamScenario(IMessageBus bus)
         return teamIds;
     }
 
-    // One seat per role, walking the user list so teams do not all share the same people. Roles
-    // here are team roles, unrelated to whatever OrganizationRole those users hold.
+    // One seat per role, walking the user list so no two teams share a person. Roles here are team
+    // roles, unrelated to whatever OrganizationRole those users hold.
     private static List<CreateTeamMember> BuildRoster(IReadOnlyList<Guid> userIds, int index)
     {
-        var offset = index * 3;
+        var offset = index * MembersPerTeam;
 
         return
         [
-            new CreateTeamMember(userIds[offset % userIds.Count], TeamRole.Sales),
-            new CreateTeamMember(userIds[(offset + 1) % userIds.Count], TeamRole.Recruiter),
-            new CreateTeamMember(userIds[(offset + 2) % userIds.Count], TeamRole.Operations),
+            new CreateTeamMember(userIds[offset], TeamRole.Sales),
+            new CreateTeamMember(userIds[offset + 1], TeamRole.Recruiter),
+            new CreateTeamMember(userIds[offset + 2], TeamRole.Operations),
         ];
     }
 }

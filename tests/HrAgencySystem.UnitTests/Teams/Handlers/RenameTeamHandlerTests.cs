@@ -24,7 +24,7 @@ public sealed class RenameTeamHandlerTests
     [Fact]
     public async Task Handle_WithANewName_ReturnsTeamRenamed()
     {
-        var (@event, _) = await Handle("Tiggers");
+        var (@event, _, _) = await Handle("Tiggers");
 
         Assert.Equal(TeamsTestData.TeamStreamId, @event.TeamId);
         Assert.Equal(TeamsTestData.OrgId, @event.OrganizationId);
@@ -59,7 +59,9 @@ public sealed class RenameTeamHandlerTests
         await Assert.ThrowsAsync<OrganizationAccessDeniedException>(() => Handle("Tiggers"));
     }
 
-    private async Task<(TeamRenamed, Wolverine.Marten.Events)> Handle(string name)
+    private async Task<(TeamRenamed, Wolverine.Marten.Events, Wolverine.OutgoingMessages)> Handle(
+        string name
+    )
     {
         var command = new RenameTeam(
             TeamsTestData.TeamStreamId,

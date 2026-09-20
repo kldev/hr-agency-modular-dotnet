@@ -1,9 +1,11 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Domain.ValueObjects;
 using HrAgencySystem.Teams.Events;
 using HrAgencySystem.Teams.Services;
+using Wolverine;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Teams.Application.Rename;
@@ -13,7 +15,7 @@ public static class RenameTeamHandler
     public const string SameNameMessage = "The team already goes by this name.";
 
     [AggregateHandler]
-    public static async Task<(TeamRenamed, Wolverine.Marten.Events)> Handle(
+    public static async Task<(TeamRenamed, Wolverine.Marten.Events, OutgoingMessages)> Handle(
         RenameTeam command,
         Team aggregate,
         ITeamsService service,
@@ -42,6 +44,24 @@ public static class RenameTeamHandler
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        // Everybody holding a copy of the old name has to hear about it, and the aggregate already
+        // knows who that is — no roster lookup needed.
+        var messages = new OutgoingMessages();
+
+        foreach (var member in aggregate.Members)
+        {
+            messages.Add(
+                TeamMembershipChanged.OnTeam(
+                    member.UserId,
+                    aggregate.OrganizationId.Value,
+                    aggregate.Id.Value,
+                    name.Value,
+                    member.Role,
+                    @event.ModifiedAt
+                )
+            );
+        }
+
+        return (@event, [@event], messages);
     }
 }

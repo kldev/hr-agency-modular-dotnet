@@ -1,5 +1,7 @@
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.Teams.Application.Port;
 using HrAgencySystem.Teams.Application.Suggestion;
+using HrAgencySystem.Teams.Infrastructure.Persistence;
 using HrAgencySystem.Teams.Infrastructure.Query;
 using HrAgencySystem.Teams.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +17,11 @@ internal static class TeamsServiceCollectionExtensions
             services.AddScoped<ITeamsQueryRepository, TeamsQueryRepository>();
             services.AddScoped<ITeamSuggestionRepository, TeamSuggestionRepository>();
             services.AddScoped<ITeamsService, TeamsService>();
+            services.AddScoped<ITeamSnapshotRepository, TeamSnapshotRepository>();
+            services.AddScoped<
+                ITeamMembershipReservationRepository,
+                TeamMembershipReservationRepository
+            >();
         }
     }
 }

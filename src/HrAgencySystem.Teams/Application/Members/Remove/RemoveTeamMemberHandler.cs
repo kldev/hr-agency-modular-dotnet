@@ -1,8 +1,11 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.Teams.Application.Port;
+using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Events;
 using HrAgencySystem.Teams.Services;
+using Wolverine;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Teams.Application.Members.Remove;
@@ -13,10 +16,11 @@ public static class RemoveTeamMemberHandler
         "The last member cannot be removed — a team without anybody on it handles nothing.";
 
     [AggregateHandler]
-    public static async Task<(TeamMemberRemoved, Wolverine.Marten.Events)> Handle(
+    public static async Task<(TeamMemberRemoved, Wolverine.Marten.Events, OutgoingMessages)> Handle(
         RemoveTeamMember command,
         Team aggregate,
         ITeamsService service,
+        ITeamMembershipReservationRepository reservations,
         IClock clock,
         CancellationToken ct
     )
@@ -32,6 +36,10 @@ public static class RemoveTeamMemberHandler
             throw new BusinessRuleException(LastMemberMessage);
 
         var removed = await service.GetUserAsync(command.UserId, ct);
+
+        // Releasing here rather than on the projection: the reservation guards the write side, so it
+        // has to fall in the same transaction as the event that empties the seat.
+        await reservations.ReleaseAsync(aggregate.OrganizationId, command.UserId, ct);
         var removedBy = await service.GetUserAsync(command.ModifiedBy, ct);
 
         // No mail: in this system a notification goes to whoever gains a responsibility, never to
@@ -44,6 +52,17 @@ public static class RemoveTeamMemberHandler
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        // No mail, but the membership notice still goes out: losing a team is not news to tell
+        // somebody, it is a fact other modules keep a copy of.
+        var messages = new OutgoingMessages
+        {
+            TeamMembershipChanged.NoTeam(
+                command.UserId,
+                aggregate.OrganizationId.Value,
+                @event.OccurredAt
+            ),
+        };
+
+        return (@event, [@event], messages);
     }
 }

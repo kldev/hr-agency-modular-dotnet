@@ -2,6 +2,7 @@ using HrAgencySystem.EmailTemplates.Contracts.Teams;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Events;
 using HrAgencySystem.Teams.Services;
@@ -53,7 +54,17 @@ public static class ChangeTeamMemberRoleHandler
             clock.UtcNow
         );
 
-        var messages = new OutgoingMessages();
+        var messages = new OutgoingMessages
+        {
+            TeamMembershipChanged.OnTeam(
+                member.Id,
+                aggregate.OrganizationId.Value,
+                aggregate.Id.Value,
+                aggregate.Name.Value,
+                command.Role,
+                @event.OccurredAt
+            ),
+        };
 
         // Changing your own role is not worth an email.
         if (member.Id != changedBy.Id)

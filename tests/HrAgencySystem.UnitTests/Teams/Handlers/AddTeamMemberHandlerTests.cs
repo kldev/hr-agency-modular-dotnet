@@ -4,7 +4,9 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Members.Add;
+using HrAgencySystem.Teams.Application.Port;
 using HrAgencySystem.Teams.Contracts;
+using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using NSubstitute;
@@ -17,7 +19,11 @@ namespace HrAgencySystem.UnitTests.Teams.Handlers;
 public sealed class AddTeamMemberHandlerTests
 {
     private readonly ITeamsService _service = Substitute.For<ITeamsService>();
+    private readonly ITeamMembershipReservationRepository _reservations =
+        Substitute.For<ITeamMembershipReservationRepository>();
     private readonly IClock _clock = Substitute.For<IClock>();
+
+    private bool _alreadyOnATeam;
 
     public AddTeamMemberHandlerTests()
     {
@@ -50,7 +56,10 @@ public sealed class AddTeamMemberHandlerTests
             TeamsTestData.RecruiterUser
         );
 
-        Assert.Empty(messages);
+        // The membership notice always goes out — it is how other modules keep their copy. The mail
+        // is what self-assignment suppresses.
+        Assert.Empty(messages.OfType<SendTeamMemberAdded>());
+        Assert.Single(messages.OfType<TeamMembershipChanged>());
     }
 
     [Fact]
@@ -75,6 +84,32 @@ public sealed class AddTeamMemberHandlerTests
         );
     }
 
+    [Fact]
+    public async Task Handle_WithSomebodyAlreadyOnAnotherTeam_Throws()
+    {
+        _alreadyOnATeam = true;
+
+        var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(TeamsTestData.RecruiterUser, TeamsTestData.Actor)
+        );
+
+        Assert.Equal(ITeamMembershipReservationRepository.AlreadyOnTeamMessage, error.Message);
+    }
+
+    [Fact]
+    public async Task Handle_ReservesTheSeat()
+    {
+        await Handle(TeamsTestData.RecruiterUser, TeamsTestData.Actor);
+
+        await _reservations
+            .Received(1)
+            .ReserveAsync(
+                Arg.Any<OrganizationId>(),
+                TeamsTestData.RecruiterUser.Id,
+                TeamsTestData.TeamStreamId
+            );
+    }
+
     private async Task<(TeamMemberAdded, Wolverine.Marten.Events, OutgoingMessages)> Handle(
         UserSnapshot member,
         UserSnapshot addedBy
@@ -97,12 +132,21 @@ public sealed class AddTeamMemberHandlerTests
             .Returns(member);
         _service.GetUserAsync(addedBy.Id, Arg.Any<CancellationToken>()).Returns(addedBy);
 
+        _reservations
+            .FindAssignedAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<IReadOnlyList<Guid>>(),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns<IReadOnlyList<Guid>>(_alreadyOnATeam ? [command.UserId] : []);
+
         return await AddTeamMemberHandler.Handle(
             command,
             TeamsTestData.CreateAggregate(
                 new TeamMemberSnapshot(TeamsTestData.SalesUser, TeamRole.Sales)
             ),
             _service,
+            _reservations,
             _clock,
             CancellationToken.None
         );

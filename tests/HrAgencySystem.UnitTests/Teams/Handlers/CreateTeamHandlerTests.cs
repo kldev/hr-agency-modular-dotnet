@@ -3,7 +3,9 @@ using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Create;
+using HrAgencySystem.Teams.Application.Port;
 using HrAgencySystem.Teams.Contracts;
+using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using Marten;
@@ -16,11 +18,14 @@ public sealed class CreateTeamHandlerTests
 {
     private readonly IDocumentSession _session = Substitute.For<IDocumentSession>();
     private readonly ITeamsService _service = Substitute.For<ITeamsService>();
+    private readonly ITeamMembershipReservationRepository _reservations =
+        Substitute.For<ITeamMembershipReservationRepository>();
     private readonly IClock _clock = Substitute.For<IClock>();
 
     public CreateTeamHandlerTests()
     {
         _clock.UtcNow.Returns(TeamsTestData.Now);
+        NobodyIsOnATeam();
         _service
             .GetUserAsync(TeamsTestData.Actor.Id, Arg.Any<CancellationToken>())
             .Returns(TeamsTestData.Actor);
@@ -32,7 +37,7 @@ public sealed class CreateTeamHandlerTests
     [Fact]
     public async Task Handle_WithFullRoster_ReturnsTeamCreatedWithEveryMember()
     {
-        var @event = await Handle(
+        var (@event, _) = await Handle(
             new CreateTeamMember(TeamsTestData.SalesUser.Id, TeamRole.Sales),
             new CreateTeamMember(TeamsTestData.RecruiterUser.Id, TeamRole.Recruiter),
             new CreateTeamMember(TeamsTestData.OpsUser.Id, TeamRole.Operations)
@@ -53,7 +58,7 @@ public sealed class CreateTeamHandlerTests
     [Fact]
     public async Task Handle_TrimsTheName()
     {
-        var @event = await Handle(
+        var (@event, _) = await Handle(
             "   Tiggers  ",
             new CreateTeamMember(TeamsTestData.SalesUser.Id, TeamRole.Sales)
         );
@@ -120,6 +125,55 @@ public sealed class CreateTeamHandlerTests
         Assert.Equal(ITeamsService.MemberNotInOrganizationMessage, error.Message);
     }
 
+    [Fact]
+    public async Task Handle_ReservesEveryMember()
+    {
+        await Handle(
+            new CreateTeamMember(TeamsTestData.SalesUser.Id, TeamRole.Sales),
+            new CreateTeamMember(TeamsTestData.RecruiterUser.Id, TeamRole.Recruiter)
+        );
+
+        await _reservations
+            .Received(1)
+            .ReserveAsync(Arg.Any<OrganizationId>(), TeamsTestData.SalesUser.Id, Arg.Any<Guid>());
+        await _reservations
+            .Received(1)
+            .ReserveAsync(
+                Arg.Any<OrganizationId>(),
+                TeamsTestData.RecruiterUser.Id,
+                Arg.Any<Guid>()
+            );
+    }
+
+    [Fact]
+    public async Task Handle_WithSomebodyAlreadyOnAnotherTeam_Throws()
+    {
+        _reservations
+            .FindAssignedAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<IReadOnlyList<Guid>>(),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns<IReadOnlyList<Guid>>([TeamsTestData.SalesUser.Id]);
+
+        var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Handle(new CreateTeamMember(TeamsTestData.SalesUser.Id, TeamRole.Sales))
+        );
+
+        Assert.Equal(ITeamMembershipReservationRepository.AlreadyOnTeamMessage, error.Message);
+    }
+
+    private void NobodyIsOnATeam()
+    {
+        _reservations
+            .FindAssignedAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<IReadOnlyList<Guid>>(),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns<IReadOnlyList<Guid>>([]);
+    }
+
     private void KnowMember(UserSnapshot user)
     {
         _service
@@ -131,10 +185,14 @@ public sealed class CreateTeamHandlerTests
             .Returns(user);
     }
 
-    private Task<TeamCreated> Handle(params CreateTeamMember[] members) =>
-        Handle("ShawSzenk", members);
+    private Task<(TeamCreated Event, Wolverine.OutgoingMessages Messages)> Handle(
+        params CreateTeamMember[] members
+    ) => Handle("ShawSzenk", members);
 
-    private async Task<TeamCreated> Handle(string name, params CreateTeamMember[] members)
+    private async Task<(TeamCreated Event, Wolverine.OutgoingMessages Messages)> Handle(
+        string name,
+        params CreateTeamMember[] members
+    )
     {
         var command = new CreateTeam(TeamsTestData.OrgId, name, members, TeamsTestData.Actor.Id);
 
@@ -142,6 +200,7 @@ public sealed class CreateTeamHandlerTests
             command,
             _session,
             _service,
+            _reservations,
             _clock,
             CancellationToken.None
         );

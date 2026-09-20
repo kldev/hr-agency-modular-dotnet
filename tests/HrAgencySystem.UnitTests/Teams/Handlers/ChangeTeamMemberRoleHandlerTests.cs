@@ -5,6 +5,7 @@ using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Members.ChangeRole;
 using HrAgencySystem.Teams.Contracts;
+using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using NSubstitute;
@@ -52,7 +53,10 @@ public sealed class ChangeTeamMemberRoleHandlerTests
             TeamRole.Lead
         );
 
-        Assert.Empty(messages);
+        // The membership notice always goes out — it is how other modules keep their copy. The mail
+        // is what changing your own role suppresses.
+        Assert.Empty(messages.OfType<SendTeamMemberRoleChanged>());
+        Assert.Single(messages.OfType<TeamMembershipChanged>());
     }
 
     [Fact]
