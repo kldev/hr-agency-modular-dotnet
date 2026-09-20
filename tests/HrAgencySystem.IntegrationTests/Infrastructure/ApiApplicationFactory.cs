@@ -1,7 +1,7 @@
 using HrAgencySystem.Api;
 using HrAgencySystem.Company.Services;
-using HrAgencySystem.Identity.Services;
 using HrAgencySystem.FileService.Contracts;
+using HrAgencySystem.Identity.Services;
 using HrAgencySystem.IntegrationTests.Infrastructure.Fakes;
 using HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 using HrAgencySystem.JobDescription.Services;

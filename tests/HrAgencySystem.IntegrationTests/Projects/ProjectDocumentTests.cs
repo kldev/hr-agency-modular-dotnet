@@ -72,11 +72,7 @@ public class ProjectDocumentTests(IntegrationEnvironment env, ITestOutputHelper 
         var organizationId = Guid.NewGuid();
         var project = await CreateProject(organizationId);
 
-        var response = await Upload(
-            organizationId,
-            project,
-            validUntil: DocumentDate.AddDays(-1)
-        );
+        var response = await Upload(organizationId, project, validUntil: DocumentDate.AddDays(-1));
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
