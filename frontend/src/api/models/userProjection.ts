@@ -15,6 +15,7 @@
  */
 import type { OrganizationInfo } from "./organizationInfo.ts";
 import type { OrganizationRole } from "./organizationRole.ts";
+import type { TeamInfo } from "./teamInfo.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface UserProjection {
@@ -33,6 +34,7 @@ export interface UserProjection {
 	/** @nullable */
 	modifiedAt?: string | null;
 	jobTitle?: string;
+	team?: null | TeamInfo;
 	/** @nullable */
 	fullName?: string | null;
 }

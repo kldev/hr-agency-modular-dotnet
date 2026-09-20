@@ -13,20 +13,21 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { ContactPerson } from "./contactPerson.ts";
-import type { OrganizationInfo } from "./organizationInfo.ts";
-import type { OrganizationRole } from "./organizationRole.ts";
-import type { TeamInfo } from "./teamInfo.ts";
+import type { TeamMemberSnapshot } from "./teamMemberSnapshot.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface UserCreated {
-	userId: string;
+export interface TeamProjection {
+	id: string;
 	organizationId: string;
-	role: OrganizationRole;
-	passwordHash: string;
-	organization: OrganizationInfo;
+	name: string;
+	members: TeamMemberSnapshot[];
+	memberIds: string[];
+	createdById: string;
 	createdBy: UserSnapshot;
-	contact: ContactPerson;
 	createdAt: string;
-	team?: null | TeamInfo;
+	/** @nullable */
+	modifiedById: string | null;
+	modifiedBy: null | UserSnapshot;
+	/** @nullable */
+	modifiedAt: string | null;
 }

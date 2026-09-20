@@ -30,10 +30,12 @@ import type {
 	GetCompanyContactsSuggestionsParams,
 	GetJobPostSuggestionsParams,
 	GetTagsSuggestionsParams,
+	GetTeamsSuggestionsParams,
 	GetUsersSuggestionsParams,
 	JobPostSuggestion,
 	ProblemDetails,
 	Tag,
+	TeamSuggestion,
 	UserSuggestion,
 } from "../../models";
 import type { ErrorType } from "../../mutator.ts";
@@ -633,4 +635,172 @@ export const useGetJobPostSuggestions = <
 	TContext
 > => {
 	return useMutation(getGetJobPostSuggestionsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get top 25 teams
+ */
+export const getTeamsSuggestions = (
+	params?: GetTeamsSuggestionsParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<TeamSuggestion[]>(
+		{ url: `/api/suggestion/teams`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getGetTeamsSuggestionsMutationKey = () => ["getTeamsSuggestions"] as const;
+
+export const getGetTeamsSuggestionsMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getTeamsSuggestions>>,
+		TError,
+		GetTeamsSuggestionsMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getTeamsSuggestions>>,
+	TError,
+	GetTeamsSuggestionsMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetTeamsSuggestionsMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getTeamsSuggestions>>,
+		GetTeamsSuggestionsMutationVariables
+	> = (props) => {
+		const { params } = props ?? {};
+
+		return getTeamsSuggestions(params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetTeamsSuggestionsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getTeamsSuggestions>>
+>;
+
+export type GetTeamsSuggestionsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetTeamsSuggestionsMutationVariables = { params?: GetTeamsSuggestionsParams };
+
+/**
+ * @summary Get top 25 teams
+ */
+export const useGetTeamsSuggestions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getTeamsSuggestions>>,
+			TError,
+			GetTeamsSuggestionsMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getTeamsSuggestions>>,
+	TError,
+	GetTeamsSuggestionsMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetTeamsSuggestionsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get a single team suggestion
+ */
+export const getTeamSuggestion = (
+	teamId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<TeamSuggestion>(
+		{ url: `/api/suggestion/teams/${teamId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetTeamSuggestionMutationKey = () => ["getTeamSuggestion"] as const;
+
+export const getGetTeamSuggestionMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getTeamSuggestion>>,
+		TError,
+		GetTeamSuggestionMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getTeamSuggestion>>,
+	TError,
+	GetTeamSuggestionMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetTeamSuggestionMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getTeamSuggestion>>,
+		GetTeamSuggestionMutationVariables
+	> = (props) => {
+		const { teamId } = props ?? {};
+
+		return getTeamSuggestion(teamId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetTeamSuggestionMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getTeamSuggestion>>
+>;
+
+export type GetTeamSuggestionMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetTeamSuggestionMutationVariables = { teamId: string };
+
+/**
+ * @summary Get a single team suggestion
+ */
+export const useGetTeamSuggestion = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getTeamSuggestion>>,
+			TError,
+			GetTeamSuggestionMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getTeamSuggestion>>,
+	TError,
+	GetTeamSuggestionMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetTeamSuggestionMutationOptions(options), queryClient);
 };

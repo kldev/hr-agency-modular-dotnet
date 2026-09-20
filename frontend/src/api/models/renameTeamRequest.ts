@@ -13,20 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationRoleApi } from "./organizationRoleApi.ts";
-import type { TeamRole } from "./teamRole.ts";
 
-export interface CreateUserRequest {
-	email: string;
-	firstName: string;
-	lastName: string;
-	role: OrganizationRoleApi;
-	password: string;
-	/** @nullable */
-	jobTitle?: string | null;
-	/** @nullable */
-	phone?: string | null;
-	/** @nullable */
-	teamId?: string | null;
-	teamRole?: null | TeamRole;
+export interface RenameTeamRequest {
+	name: string;
 }

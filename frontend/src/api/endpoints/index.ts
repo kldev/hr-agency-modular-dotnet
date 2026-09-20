@@ -10,4 +10,5 @@ export * from "./recruitment-job-applications/recruitment-job-applications.ts";
 export * from "./recruitment-job-posting/recruitment-job-posting.ts";
 export * from "./sales/sales.ts";
 export * from "./suggestion/suggestion.ts";
+export * from "./teams/teams.ts";
 export * from "./users/users.ts";
