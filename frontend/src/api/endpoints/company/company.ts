@@ -34,8 +34,10 @@ import type {
 	BadRequestDetails,
 	CompanyContact,
 	CompanyCreated,
+	CompanyProfileUpdated,
 	CompanyProjection,
 	CompanyUpdated,
+	CompleteCompanyProfileRequest,
 	CreateCompanyRequest,
 	GetCompaniesParams,
 	ProblemDetails,
@@ -571,6 +573,160 @@ export const useGetCompanyByTax = <
 > => {
 	return useMutation(getGetCompanyByTaxMutationOptions(options), queryClient);
 };
+/**
+ * @summary Complete company profile
+ */
+export const completeCompanyProfile = (
+	companyId: string,
+	completeCompanyProfileRequest: BodyType<CompleteCompanyProfileRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<CompanyProfileUpdated>(
+		{
+			url: `/api/companies/${companyId}/profile`,
+			method: "PUT",
+			headers: { "Content-Type": "application/json" },
+			data: completeCompanyProfileRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getCompleteCompanyProfileQueryKey = (
+	companyId: string,
+	completeCompanyProfileRequest?: BodyType<CompleteCompanyProfileRequest>,
+) => {
+	return ["PUT", `/api/companies/${companyId}/profile`, completeCompanyProfileRequest] as const;
+};
+
+export const getCompleteCompanyProfileQueryOptions = <
+	TData = Awaited<ReturnType<typeof completeCompanyProfile>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	companyId: string,
+	completeCompanyProfileRequest: BodyType<CompleteCompanyProfileRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completeCompanyProfile>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ??
+		getCompleteCompanyProfileQueryKey(companyId, completeCompanyProfileRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof completeCompanyProfile>>> = ({ signal }) =>
+		completeCompanyProfile(companyId, completeCompanyProfileRequest, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: companyId !== null && companyId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof completeCompanyProfile>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type CompleteCompanyProfileQueryResult = NonNullable<
+	Awaited<ReturnType<typeof completeCompanyProfile>>
+>;
+export type CompleteCompanyProfileQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useCompleteCompanyProfile<
+	TData = Awaited<ReturnType<typeof completeCompanyProfile>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	companyId: string,
+	completeCompanyProfileRequest: BodyType<CompleteCompanyProfileRequest>,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completeCompanyProfile>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof completeCompanyProfile>>,
+					TError,
+					Awaited<ReturnType<typeof completeCompanyProfile>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCompleteCompanyProfile<
+	TData = Awaited<ReturnType<typeof completeCompanyProfile>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	companyId: string,
+	completeCompanyProfileRequest: BodyType<CompleteCompanyProfileRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completeCompanyProfile>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof completeCompanyProfile>>,
+					TError,
+					Awaited<ReturnType<typeof completeCompanyProfile>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useCompleteCompanyProfile<
+	TData = Awaited<ReturnType<typeof completeCompanyProfile>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	companyId: string,
+	completeCompanyProfileRequest: BodyType<CompleteCompanyProfileRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completeCompanyProfile>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Complete company profile
+ */
+
+export function useCompleteCompanyProfile<
+	TData = Awaited<ReturnType<typeof completeCompanyProfile>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	companyId: string,
+	completeCompanyProfileRequest: BodyType<CompleteCompanyProfileRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof completeCompanyProfile>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getCompleteCompanyProfileQueryOptions(
+		companyId,
+		completeCompanyProfileRequest,
+		options,
+	);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
 /**
  * @summary Get contacts
  */

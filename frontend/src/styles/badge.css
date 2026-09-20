@@ -42,6 +42,25 @@
 }
 
 /* =========================================================
+   Project lifecycle
+   ========================================================= */
+.badge-draft {
+	background: var(--color-surface-subtle);
+	border-color: var(--color-border);
+	color: var(--color-text-secondary);
+}
+
+.badge-completed {
+	background: var(--color-info-soft);
+	color: var(--color-info);
+}
+
+.badge-cancelled {
+	background: var(--color-danger-soft);
+	color: var(--color-danger);
+}
+
+/* =========================================================
    Opportunity Stages
    ========================================================= */
 .badge-new {

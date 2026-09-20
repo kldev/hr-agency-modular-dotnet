@@ -1,0 +1,109 @@
+/* =========================================================
+   Project details
+   ========================================================= */
+
+.project-section-list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+}
+
+.project-role-row {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--space-4);
+	padding: var(--space-3) 0;
+	border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.project-role-row:last-child {
+	border-bottom: none;
+}
+
+.project-role-label {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	color: var(--color-text);
+}
+
+.project-role-description,
+.project-role-empty {
+	font-size: var(--font-size-xs);
+	color: var(--color-text-muted);
+}
+
+.project-role-person {
+	font-size: var(--font-size-sm);
+	color: var(--color-text-secondary);
+}
+
+/* Ours, not the client's - the separation is the point, so it is drawn. */
+.project-role-group-title {
+	margin-top: var(--space-4);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--color-text-muted);
+}
+
+.project-email-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+}
+
+.project-inline-warning {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--space-2);
+	margin-top: var(--space-3);
+	padding: var(--space-3);
+	border: 1px solid var(--color-warning, var(--color-border));
+	border-radius: var(--radius-md);
+	background: var(--color-warning-soft, var(--color-surface-subtle));
+	font-size: var(--font-size-xs);
+	color: var(--color-text-secondary);
+}
+
+.project-golive-checklist ul {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-2);
+	margin-top: var(--space-2);
+}
+
+.project-golive-checklist li {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	font-size: var(--font-size-xs);
+}
+
+.project-golive-checklist .is-met {
+	color: var(--color-success);
+}
+
+.project-golive-checklist .is-missing {
+	color: var(--color-danger);
+}
+
+.project-upload-progress {
+	height: 6px;
+	margin-top: var(--space-2);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface-subtle);
+	overflow: hidden;
+}
+
+.project-upload-progress-bar {
+	height: 100%;
+	background: var(--color-primary);
+	transition: width 120ms linear;
+}
+
+.project-file-name {
+	font-size: var(--font-size-xs);
+	color: var(--color-text-muted);
+}

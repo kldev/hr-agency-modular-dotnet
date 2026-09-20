@@ -5,6 +5,7 @@ import {
 	ChessRook,
 	ClipboardList,
 	DollarSign,
+	FolderKanban,
 	LayoutDashboard,
 	MessageSquare,
 	Users,
@@ -34,6 +35,10 @@ const menuGroups: MenuGroup[] = [
 			{ label: "Companies", icon: Building2, link: "/app/companies" },
 			{ label: "Sales", icon: DollarSign, link: "/app/sales" },
 		],
+	},
+	{
+		title: "Delivery",
+		items: [{ label: "Projects", icon: FolderKanban, link: "/app/projects" }],
 	},
 	{
 		title: "Users",

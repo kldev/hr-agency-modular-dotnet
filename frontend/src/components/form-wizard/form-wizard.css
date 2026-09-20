@@ -11,6 +11,16 @@
 	padding: 10px;
 }
 
+/*
+ * The same wizard, hosted in a dialog instead of a route: the dialog has already decided how big
+ * the box is, so filling the viewport and painting the page background would only fight it.
+ */
+.form-wizard--in-dialog {
+	min-height: 0;
+	padding: 0;
+	background: transparent;
+}
+
 .form-wizard__header {
 	position: sticky;
 	top: 0;

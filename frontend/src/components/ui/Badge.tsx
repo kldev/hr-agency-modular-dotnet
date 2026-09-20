@@ -3,8 +3,17 @@ import { applicationSources, applicationStatuses } from "#/features/applications
 import { interviewFormats, interviewStatuses, interviewTypes } from "#/features/interviews/type";
 import { jobDescriptionStatuses } from "#/features/job-descriptions/type";
 import { jobPostsStatuses } from "#/features/job-posts/type";
+import {
+	complianceStatusClass,
+	complianceStatuses,
+	contractStatusClass,
+	contractStatuses,
+	projectStatuses,
+} from "#/features/projects/types";
 import type {
 	CandidateSource,
+	ComplianceStatus,
+	ContractStatus,
 	InterviewFormat,
 	InterviewStatus,
 	InterviewType,
@@ -12,6 +21,7 @@ import type {
 	JobDescriptionStatus,
 	JobPostStatus,
 	OpportunityStage,
+	ProjectStatus,
 } from "@/api/models";
 
 const opportunityClass: Record<OpportunityStage, string> = {
@@ -113,4 +123,30 @@ export function InterviewTypeBadge({ status }: { status: InterviewType }) {
 
 export function CandidateSourceBadge({ source }: { source: CandidateSource }) {
 	return <span className="badge badge-contacted">{applicationSources[source]}</span>;
+}
+
+const projectClass: Record<ProjectStatus, string> = {
+	Draft: "badge-draft",
+	Active: "badge-active",
+	Suspended: "badge-suspended",
+	Completed: "badge-completed",
+	Cancelled: "badge-cancelled",
+};
+
+export function ProjectStatusBadge({ status }: { status: ProjectStatus }) {
+	return <span className={clsx("badge", projectClass[status])}>{projectStatuses[status]}</span>;
+}
+
+export function ContractStatusBadge({ status }: { status: ContractStatus }) {
+	return (
+		<span className={clsx("badge", contractStatusClass[status])}>{contractStatuses[status]}</span>
+	);
+}
+
+export function ComplianceStatusBadge({ status }: { status: ComplianceStatus }) {
+	return (
+		<span className={clsx("badge", complianceStatusClass[status])}>
+			{complianceStatuses[status]}
+		</span>
+	);
 }
