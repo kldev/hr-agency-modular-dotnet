@@ -5,8 +5,12 @@ import "./components/details/company-details.css";
 import { useParams } from "@tanstack/react-router";
 import type { CreateOpportunityRef } from "#/features/sales/components";
 import type { CompanyContact } from "@/api/models";
-import { DetailsHeader, DetailsLoading } from "@/components/ui";
+import { ActionButton, DetailsHeader, DetailsLoading } from "@/components/ui";
 import { DataDetails, DataDetailsLayout } from "@/components/ui/details/DataDetails";
+import {
+	type CompleteCompanyProfileCommand,
+	CompleteCompanyProfileWizardDialog,
+} from "../wizards/complete-profile/CompleteCompanyProfileWizardDialog";
 import {
 	CompanyContacts,
 	CompanyOverview,
@@ -20,6 +24,7 @@ export function CompanyDetailsPage() {
 	const { id } = useParams({ from: "/app/companies/$id" });
 	const editRef = useRef<EditCompanyFormCommand>(null);
 	const oppRef = useRef<CreateOpportunityRef>(null);
+	const profileRef = useRef<CompleteCompanyProfileCommand>(null);
 
 	const query = useGetCompany(id);
 	const contactsQuery = useGetCompanyContacts(id);
@@ -41,6 +46,16 @@ export function CompanyDetailsPage() {
 					name={company.name}
 					website={company.website}
 					onEdit={() => editRef.current?.edit(company.id)}
+					extraAdd={
+						company.isProfileComplete ? null : (
+							<ActionButton
+								title="Complete client data"
+								onClick={() => profileRef.current?.complete(company.id)}
+							>
+								Complete client data
+							</ActionButton>
+						)
+					}
 					detailsAddons={
 						<CompanyActions
 							mode="details"
@@ -79,6 +94,13 @@ export function CompanyDetailsPage() {
 
 			<EditCompanyDrawer
 				ref={editRef}
+				onSuccess={() => {
+					void query.refetch();
+				}}
+			/>
+
+			<CompleteCompanyProfileWizardDialog
+				ref={profileRef}
 				onSuccess={() => {
 					void query.refetch();
 				}}
