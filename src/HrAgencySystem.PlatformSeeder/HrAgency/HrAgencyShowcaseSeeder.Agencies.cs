@@ -92,7 +92,7 @@ public sealed partial class HrAgencyShowcaseSeeder
             organization.OrganizationId
         );
 
-        await GenerateApplicants(20);
+        await GenerateApplicants(20, true);
 
         logger.LogInformation(
             "Generated applicants for organization {OrganizationId}",
@@ -135,7 +135,7 @@ public sealed partial class HrAgencyShowcaseSeeder
 
         await PostToChannel(userIds);
 
-        await GenerateApplicants(20);
+        await GenerateApplicants(20, false);
 
         await new TagsScenario(bus, session).Seed(organization.OrganizationId, userIds);
     }

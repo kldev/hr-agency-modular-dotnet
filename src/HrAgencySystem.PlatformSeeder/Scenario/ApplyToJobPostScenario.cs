@@ -10,16 +10,20 @@ namespace HrAgencySystem.PlatformSeeder.Scenario;
 
 public sealed class ApplyToJobPostScenario(IMessageBus bus, IQuerySession session)
 {
-    private const int ApplicationsPerCandidate = 5;
+    private const int ApplicationsPerCandidate = 1;
 
-    public async Task Execute(int count = 500)
+    public async Task Execute(int count = 500, bool includeShowcase = false)
     {
         var jobs = await GetJobs();
 
         if (jobs.Count == 0)
             return;
 
-        await CreateShowcaseCandidates(jobs);
+        if (includeShowcase)
+        {
+            await CreateShowcaseCandidates(jobs);
+        }
+
         await CreateRandomCandidates(count, jobs);
     }
 

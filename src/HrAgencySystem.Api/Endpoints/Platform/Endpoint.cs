@@ -55,8 +55,10 @@ internal static class Endpoint
             await seeder.SeedShowcase();
             return TypedResults.Text("Seed showcase applicants completed");
         }
-        await seeder.SeedApplicants(Math.Clamp(count, 50, 200));
-        return TypedResults.Text("Seed applicants completed");
+
+        var clamp = Math.Clamp(count, 1, 200);
+        await seeder.SeedApplicants(clamp);
+        return TypedResults.Text($"Seed applicants completed. Count: {clamp}");
     }
 
     private static async Task<IResult> HandlerSales(
@@ -66,8 +68,9 @@ internal static class Endpoint
         CancellationToken ct = default
     )
     {
-        await seeder.Seed(Math.Clamp(count, 50, 2000), slug, ct);
+        var clamp = Math.Clamp(count, 1, 2000);
+        await seeder.Seed(clamp, slug, ct);
 
-        return TypedResults.Text("Seed completed");
+        return TypedResults.Text($"Seed completed. Count: {clamp}");
     }
 }
