@@ -15,7 +15,7 @@ internal static class MapFeed
 
     private static async Task<IResult> HandlerXml(
         IOrganizationSlugReservationRepository repository,
-        IFileStorage storage,
+        IObjectStorage storage,
         string slug,
         CancellationToken ct
     )
@@ -39,7 +39,7 @@ internal static class MapFeed
     private static async Task<IResult> HandlerJson(
         IOrganizationSlugReservationRepository repository,
         string slug,
-        IFileStorage storage,
+        IObjectStorage storage,
         CancellationToken ct
     )
     {

@@ -7,18 +7,12 @@ namespace HrAgencySystem.Files;
 
 public static class FilesModule
 {
-    public static void AddFilesModule(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    extension(IServiceCollection services)
     {
-        var section = configuration.GetSection(S3Config.SectionName);
-        services.Configure<S3Config>(ops =>
+        public void AddFilesModule(IConfiguration configuration)
         {
-            ops.AccessKey = section[nameof(S3Config.AccessKey)] ?? "";
-            ops.SecretKey = section[nameof(S3Config.SecretKey)] ?? "";
-            ops.Endpoint = section[nameof(S3Config.Endpoint)] ?? "";
-        });
-        services.AddSingleton<IFileStorage, RustFsS3Service>();
+            services.Configure<S3Config>(configuration.GetSection(S3Config.SectionName));
+            services.AddSingleton<IObjectStorage, S3ObjectStorage>();
+        }
     }
 }
