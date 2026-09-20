@@ -1,8 +1,9 @@
 import { Banknote, Building2, MapPin, UserCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import type { BadRequestDetails, CompanyProjection } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
+import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
 import { ApiError } from "#/components/ui/ApiError";
 import { useAppForm } from "#/forms";
 import { type CompanyProfileFormValues, companyProfileSchema, toFormValues } from "./schema";
@@ -85,11 +86,7 @@ export function CompleteCompanyProfileWizard({
 
 		const fieldMeta = form.state.fieldMeta as Record<string, { errors: Array<unknown> }>;
 
-		const hasErrors = Object.entries(fieldMeta).some(
-			([name, meta]) => meta.errors.length > 0 && fields.some((field) => name === field),
-		);
-
-		if (hasErrors) {
+		if (stepHasErrors(fieldMeta, fields)) {
 			return;
 		}
 
@@ -447,19 +444,4 @@ function SummaryItem({ label, value }: { label: string; value: string }) {
 			<span className="form-wizard__summary-value">{value || "—"}</span>
 		</div>
 	);
-}
-
-/** Lets the dialog above know whether closing would throw anything away. */
-function DirtyReporter({
-	isDirty,
-	onDirtyChange,
-}: {
-	isDirty: boolean;
-	onDirtyChange: (dirty: boolean) => void;
-}) {
-	useEffect(() => {
-		onDirtyChange(isDirty);
-	}, [isDirty, onDirtyChange]);
-
-	return null;
 }

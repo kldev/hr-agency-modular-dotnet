@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import type { ProjectProjection } from "#/api/models";
 import { DetailItem, ProjectStatusBadge } from "#/components/ui";
-import { formatDate } from "#/utlis/dateUtils";
+
 import {
 	ChangeProjectStatusDrawer,
 	type ChangeProjectStatusFormCommand,
@@ -10,6 +10,7 @@ import {
 	type EditProjectFormCommand,
 } from "../../../drawers";
 import { engagementTypes } from "../../../types";
+import { formatPeriod } from "../../../utils";
 import { ComplianceChip } from "../ComplianceChip";
 import { ProjectActions } from "./ProjectActions";
 
@@ -65,9 +66,7 @@ export function ProjectsCardList({ projects, onRefresh }: ProjectsCardListProps)
 
 						<DetailItem label="Country">{project.workCountry}</DetailItem>
 
-						<DetailItem label="Period">
-							{formatDate(project.startsOn)} – {project.endsOn ? formatDate(project.endsOn) : "—"}
-						</DetailItem>
+						<DetailItem label="Period">{formatPeriod(project.startsOn, project.endsOn)}</DetailItem>
 
 						<DetailItem label="Responsible">
 							{project.responsibleContact?.fullname ?? "—"}

@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { ConfirmDialog, DetailsLoading, Dialog } from "#/components/ui";
+import { ConfirmDialog, DetailsLoading, Dialog, useUnsavedChangesGuard } from "#/components/ui";
 import { useGetCompany } from "../../pages/hooks";
 import { CompleteCompanyProfileWizard } from "./CompleteCompanyProfileWizard";
 
@@ -21,8 +21,10 @@ const CompleteCompanyProfileWizardDialog = forwardRef<
 	CompleteCompanyProfileWizardDialogProps
 >(({ onSuccess }, ref) => {
 	const [companyId, setCompanyId] = useState<string | null>(null);
-	const [dirty, setDirty] = useState(false);
-	const [confirmingClose, setConfirmingClose] = useState(false);
+
+	const { setDirty, confirming, requestClose, discard, keepEditing } = useUnsavedChangesGuard(() =>
+		setCompanyId(null),
+	);
 
 	useImperativeHandle(
 		ref,
@@ -32,25 +34,10 @@ const CompleteCompanyProfileWizardDialog = forwardRef<
 				setCompanyId(id);
 			},
 		}),
-		[],
+		[setDirty],
 	);
 
 	const query = useGetCompany(companyId ?? "");
-
-	const close = () => {
-		setConfirmingClose(false);
-		setDirty(false);
-		setCompanyId(null);
-	};
-
-	const requestClose = () => {
-		if (dirty) {
-			setConfirmingClose(true);
-			return;
-		}
-
-		close();
-	};
 
 	if (!companyId) {
 		return null;
@@ -71,7 +58,7 @@ const CompleteCompanyProfileWizardDialog = forwardRef<
 						onDirtyChange={setDirty}
 						onCancel={requestClose}
 						onSaved={() => {
-							close();
+							discard();
 							onSuccess();
 						}}
 					/>
@@ -79,12 +66,12 @@ const CompleteCompanyProfileWizardDialog = forwardRef<
 			</Dialog>
 
 			<ConfirmDialog
-				open={confirmingClose}
+				open={confirming}
 				title="Discard these changes?"
 				description="Nothing has been saved yet. Closing now throws away everything filled in so far."
 				confirmLabel="Discard"
-				onConfirm={close}
-				onClose={() => setConfirmingClose(false)}
+				onConfirm={discard}
+				onClose={keepEditing}
 			/>
 		</>
 	);

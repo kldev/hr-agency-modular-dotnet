@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import type { BadRequestDetails, EngagementType } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
+import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
 import { ApiError } from "#/components/ui/ApiError";
 import { useAppForm } from "#/forms";
 import { useCompanySuggestion } from "#/hooks";
@@ -91,15 +92,7 @@ export function CreateProjectWizard({
 
 		const fieldMeta = form.state.fieldMeta as Record<string, { errors: Array<unknown> }>;
 
-		const hasErrors = Object.entries(fieldMeta).some(
-			([name, meta]) =>
-				meta.errors.length > 0 &&
-				fields.some(
-					(field) => name === field || name.startsWith(`${field}[`) || name.startsWith(`${field}.`),
-				),
-		);
-
-		if (hasErrors) {
+		if (stepHasErrors(fieldMeta, fields)) {
 			return;
 		}
 
@@ -149,19 +142,4 @@ export function CreateProjectWizard({
 			</FormWizard.Body>
 		</FormWizard>
 	);
-}
-
-/** Lets the dialog above know whether closing would throw anything away. */
-function DirtyReporter({
-	isDirty,
-	onDirtyChange,
-}: {
-	isDirty: boolean;
-	onDirtyChange: (dirty: boolean) => void;
-}) {
-	useEffect(() => {
-		onDirtyChange(isDirty);
-	}, [isDirty, onDirtyChange]);
-
-	return null;
 }

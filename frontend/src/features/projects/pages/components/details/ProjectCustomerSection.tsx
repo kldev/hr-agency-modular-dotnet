@@ -2,6 +2,7 @@ import { AlertTriangle } from "lucide-react";
 import type { ProjectProjection } from "@/api/models";
 import { Button, DetailItem, DetailOverviewHeader } from "@/components/ui";
 import { useGetCompany } from "@/features/companies/pages/hooks";
+import { formatAddress } from "../../../utils";
 
 interface ProjectCustomerSectionProps {
 	project: ProjectProjection;
@@ -39,13 +40,7 @@ export function ProjectCustomerSection({
 
 				<DetailItem label="VAT number">{profile?.vatNumber ?? "—"}</DetailItem>
 
-				<DetailItem label="Registered address">
-					{address
-						? `${address.street} ${address.buildingNumber}${
-								address.unitNumber ? `/${address.unitNumber}` : ""
-							}, ${address.postalCode} ${address.city}, ${address.countryCode}`
-						: "—"}
-				</DetailItem>
+				<DetailItem label="Registered address">{address ? formatAddress(address) : "—"}</DetailItem>
 
 				<DetailItem label="Bank account">{profile?.iban ?? "—"}</DetailItem>
 			</dl>

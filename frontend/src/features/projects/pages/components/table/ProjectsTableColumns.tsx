@@ -3,8 +3,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { ProjectProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark, ProjectStatusBadge } from "@/components/ui";
-import { formatDate } from "@/utlis/dateUtils";
 import { engagementTypes } from "../../../types";
+import { formatPeriod } from "../../../utils";
 import { ComplianceChip } from "../ComplianceChip";
 import { ProjectActions } from "./ProjectActions";
 
@@ -14,10 +14,6 @@ type projectsActions = {
 	onEdit: (project: ProjectProjection) => void;
 	onChangeStatus: (project: ProjectProjection) => void;
 };
-
-function formatPeriod(startsOn: string, endsOn: string | null) {
-	return `${formatDate(startsOn)} – ${endsOn ? formatDate(endsOn) : "—"}`;
-}
 
 export function getColumns(actions: projectsActions) {
 	return columnHelper.columns([

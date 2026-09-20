@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { ConfirmDialog, Dialog } from "#/components/ui";
+import { ConfirmDialog, Dialog, useUnsavedChangesGuard } from "#/components/ui";
 import { CreateProjectWizard } from "./CreateProjectWizard";
 
 export interface CreateProjectWizardCommand {
@@ -20,8 +20,10 @@ const CreateProjectWizardDialog = forwardRef<
 	CreateProjectWizardDialogProps
 >(({ onSuccess }, ref) => {
 	const [open, setOpen] = useState(false);
-	const [dirty, setDirty] = useState(false);
-	const [confirmingClose, setConfirmingClose] = useState(false);
+
+	const { setDirty, confirming, requestClose, discard, keepEditing } = useUnsavedChangesGuard(() =>
+		setOpen(false),
+	);
 
 	useImperativeHandle(
 		ref,
@@ -31,23 +33,8 @@ const CreateProjectWizardDialog = forwardRef<
 				setOpen(true);
 			},
 		}),
-		[],
+		[setDirty],
 	);
-
-	const close = () => {
-		setConfirmingClose(false);
-		setDirty(false);
-		setOpen(false);
-	};
-
-	const requestClose = () => {
-		if (dirty) {
-			setConfirmingClose(true);
-			return;
-		}
-
-		close();
-	};
 
 	if (!open) {
 		return null;
@@ -60,19 +47,19 @@ const CreateProjectWizardDialog = forwardRef<
 					onDirtyChange={setDirty}
 					onCancel={requestClose}
 					onCreated={(projectId) => {
-						close();
+						discard();
 						onSuccess(projectId);
 					}}
 				/>
 			</Dialog>
 
 			<ConfirmDialog
-				open={confirmingClose}
+				open={confirming}
 				title="Discard this project?"
 				description="Nothing has been saved yet. Closing now throws away everything filled in so far."
 				confirmLabel="Discard"
-				onConfirm={close}
-				onClose={() => setConfirmingClose(false)}
+				onConfirm={discard}
+				onClose={keepEditing}
 			/>
 		</>
 	);

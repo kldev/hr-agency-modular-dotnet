@@ -3,6 +3,7 @@ import type { EmailPurpose, ProjectProjection } from "@/api/models";
 import { Button, ContractStatusBadge, DetailItem, DetailOverviewHeader } from "@/components/ui";
 import { formatDate } from "@/utlis/dateUtils";
 import { emailPurposeDescriptions, emailPurposes } from "../../../types";
+import { formatAddress } from "../../../utils";
 
 interface ProjectContractSectionProps {
 	project: ProjectProjection;
@@ -57,7 +58,7 @@ export function ProjectContractSection({
 					</DetailItem>
 
 					<DetailItem label="Party address">
-						{`${contract.party.registeredAddress.street} ${contract.party.registeredAddress.buildingNumber}, ${contract.party.registeredAddress.postalCode} ${contract.party.registeredAddress.city}, ${contract.party.registeredAddress.countryCode}`}
+						{formatAddress(contract.party.registeredAddress)}
 					</DetailItem>
 				</dl>
 			) : (

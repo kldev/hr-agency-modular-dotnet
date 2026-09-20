@@ -4,7 +4,6 @@ import { getFnOptions } from "#/server/axios";
 import {
 	assignProjectContact,
 	assignProjectTeam,
-	changeContractStatus,
 	changeProjectStatus,
 	createProject,
 	recordComplianceItem,
@@ -17,7 +16,6 @@ import {
 import type {
 	AssignProjectContactRequest,
 	AssignProjectTeamRequest,
-	ChangeContractStatusRequest,
 	ChangeProjectStatusRequest,
 	ComplianceRequirement,
 	ContactRole,
@@ -99,14 +97,6 @@ const recordProjectContractServerFn = createServerFn({
 	.validator((input: { id: string; req: RecordProjectContractRequest }) => input)
 	.handler(async ({ data }) => {
 		return recordProjectContract(data.id, data.req, await getFnOptions());
-	});
-
-const changeContractStatusServerFn = createServerFn({
-	method: "POST",
-})
-	.validator((input: { id: string; req: ChangeContractStatusRequest }) => input)
-	.handler(async ({ data }) => {
-		return changeContractStatus(data.id, data.req, await getFnOptions());
 	});
 
 const recordComplianceItemServerFn = createServerFn({
@@ -233,14 +223,6 @@ export function useRecordProjectContract(options: MutationOptions) {
 	return useProjectMutation(
 		({ projectId, request }: { projectId: string; request: RecordProjectContractRequest }) =>
 			recordProjectContractServerFn({ data: { id: projectId, req: request } }),
-		options,
-	);
-}
-
-export function useChangeContractStatus(options: MutationOptions) {
-	return useProjectMutation(
-		({ projectId, request }: { projectId: string; request: ChangeContractStatusRequest }) =>
-			changeContractStatusServerFn({ data: { id: projectId, req: request } }),
 		options,
 	);
 }

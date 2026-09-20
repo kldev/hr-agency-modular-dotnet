@@ -3,19 +3,11 @@ import type { ProjectProjection } from "@/api/models";
 import { Button, DetailItem, DetailOverviewHeader } from "@/components/ui";
 import { formatDate } from "@/utlis/dateUtils";
 import { engagementTypes } from "../../../types";
+import { formatAddress } from "../../../utils";
 
 interface ProjectOverviewSectionProps {
 	project: ProjectProjection;
 	onAssignTeam: () => void;
-}
-
-function formatAddress(project: ProjectProjection) {
-	const address = project.workplaceAddress;
-	const building = address.unitNumber
-		? `${address.buildingNumber}/${address.unitNumber}`
-		: address.buildingNumber;
-
-	return `${address.street} ${building}, ${address.postalCode} ${address.city}, ${address.countryCode}`;
 }
 
 export function ProjectOverviewSection({ project, onAssignTeam }: ProjectOverviewSectionProps) {
@@ -29,7 +21,7 @@ export function ProjectOverviewSection({ project, onAssignTeam }: ProjectOvervie
 			<dl className="data-details-list">
 				<DetailItem label="Engagement type">{engagementTypes[project.engagementType]}</DetailItem>
 
-				<DetailItem label="Place of work">{formatAddress(project)}</DetailItem>
+				<DetailItem label="Place of work">{formatAddress(project.workplaceAddress)}</DetailItem>
 
 				<DetailItem label="Starts on">{formatDate(project.startsOn)}</DetailItem>
 
