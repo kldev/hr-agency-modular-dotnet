@@ -13,6 +13,8 @@ import { DataDetails, DataDetailsLayout } from "@/components/ui/details/DataDeta
 import {
 	AssignProjectContactDrawer,
 	type AssignProjectContactFormCommand,
+	AttachDocumentDrawer,
+	type AttachDocumentFormCommand,
 	ChangeProjectStatusDrawer,
 	type ChangeProjectStatusFormCommand,
 	EditProjectDrawer,
@@ -34,6 +36,7 @@ import {
 	ProjectContactsSection,
 	ProjectContractSection,
 	ProjectCustomerSection,
+	ProjectDocumentsSection,
 	ProjectOverviewSection,
 	ProjectStatusSidebar,
 } from "./components/details";
@@ -47,6 +50,7 @@ export function ProjectDetailsPage() {
 	const contactRef = useRef<AssignProjectContactFormCommand>(null);
 	const emailsRef = useRef<SetProjectEmailsFormCommand>(null);
 	const contractRef = useRef<RecordContractFormCommand>(null);
+	const documentRef = useRef<AttachDocumentFormCommand>(null);
 	const profileRef = useRef<CompleteCompanyProfileCommand>(null);
 
 	const query = useGetProject(id);
@@ -127,6 +131,14 @@ export function ProjectDetailsPage() {
 									}
 								/>
 							</section>
+
+							<section className="data-details-section">
+								<ProjectDocumentsSection
+									project={project}
+									onAttach={() => documentRef.current?.attach(project.id)}
+									onRefresh={refresh}
+								/>
+							</section>
 						</>
 					}
 					sidebar={
@@ -151,6 +163,7 @@ export function ProjectDetailsPage() {
 			<AssignProjectContactDrawer ref={contactRef} onSuccess={refresh} />
 			<SetProjectEmailsDrawer ref={emailsRef} onSuccess={refresh} />
 			<RecordContractDrawer ref={contractRef} onSuccess={refresh} />
+			<AttachDocumentDrawer ref={documentRef} onSuccess={refresh} />
 			<CompleteCompanyProfileWizardDialog ref={profileRef} onSuccess={refresh} />
 		</>
 	);

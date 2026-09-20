@@ -1,4 +1,5 @@
 export { default as AssignProjectContactDrawer } from "./AssignProjectContactDrawer";
+export { default as AttachDocumentDrawer } from "./AttachDocumentDrawer";
 export { default as ChangeProjectStatusDrawer } from "./ChangeProjectStatusDrawer";
 export { default as EditProjectDrawer } from "./EditProjectDrawer";
 export * from "./ProjectFormCommand";
