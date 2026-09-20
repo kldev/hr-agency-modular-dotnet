@@ -5,6 +5,8 @@ import type { AttachProjectDocumentBody } from "@/api/models";
 import { projectsKeys } from "@/api/query-keys";
 import { useProjectionWait } from "@/hooks";
 
+export { formatFileSize } from "@/utlis";
+
 export const MAX_DOCUMENT_SIZE_BYTES = 25 * 1024 * 1024;
 
 /**
@@ -23,13 +25,6 @@ export const ALLOWED_DOCUMENT_TYPES = [
 ];
 
 export const DOCUMENT_ACCEPT = ".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx";
-
-export function formatFileSize(bytes: number) {
-	if (bytes < 1024) return `${bytes} B`;
-	if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
-
-	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
 
 type AttachVariables = {
 	projectId: string;
