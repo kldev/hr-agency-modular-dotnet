@@ -1,4 +1,6 @@
+import { KeyRound } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import type {
 	CompanySuggestion,
 	OrganizationRole,
@@ -8,6 +10,7 @@ import type {
 import {
 	ArrayField,
 	type ArrayFieldProps,
+	Button,
 	ChoiceGroup,
 	CompaniesPicker,
 	CountrySelect,
@@ -29,6 +32,7 @@ import {
 	UsersPicker,
 } from "#/components/ui";
 import { parseScheduledAt } from "#/features/interviews/utils";
+import { copyToClipboard, generatePassword } from "#/utlis";
 import { formatLocalDateTime } from "#/utlis/formatLocalDateTime";
 import type { FormDateTimeValue } from ".";
 
@@ -68,6 +72,65 @@ export function FormInput({
 				onBlur={onBlur}
 				onChange={(event) => handleChange(event.target.value)}
 			/>
+
+			<FieldError errors={errors} />
+		</div>
+	);
+}
+
+type FormPasswordInputProps = {
+	hint?: string;
+} & InputProps &
+	AppInputProps<string>;
+
+/**
+ * A password field with the generate-and-copy affordance the user-creation forms need. The generated
+ * value goes to the clipboard because whoever creates the account has to pass it on - it is never
+ * shown again.
+ */
+export function FormPasswordInput({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	onBlur,
+	handleChange,
+	errors,
+	hint,
+	...props
+}: FormPasswordInputProps) {
+	return (
+		<div className="form-field">
+			<label className="form-label" htmlFor={fieldName}>
+				{label}
+			</label>
+
+			<div className="form-input-action">
+				<Input
+					{...props}
+					id={fieldName}
+					name={fieldName}
+					type="password"
+					autoComplete="new-password"
+					value={fieldValue ?? ""}
+					disabled={isSubmitting}
+					onBlur={onBlur}
+					onChange={(event) => handleChange(event.target.value)}
+				/>
+
+				<Button
+					variant="ghost"
+					icon={<KeyRound size={16} />}
+					onClick={async () => {
+						const password = generatePassword();
+						await copyToClipboard(`User password: ${password}`);
+						handleChange(password);
+						toast.info("Password copied to clipboard");
+					}}
+				></Button>
+			</div>
+
+			{hint ? <div className="form-hint">{hint}</div> : null}
 
 			<FieldError errors={errors} />
 		</div>
