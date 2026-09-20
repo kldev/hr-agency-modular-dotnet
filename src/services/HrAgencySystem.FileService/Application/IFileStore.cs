@@ -19,12 +19,7 @@ public interface IFileStore
 
     Task<FileContent?> OpenReadAsync(Guid organizationId, Guid fileId, CancellationToken ct);
 
-    Task<bool> DeleteAsync(
-        Guid organizationId,
-        Guid fileId,
-        Guid deletedBy,
-        CancellationToken ct
-    );
+    Task<bool> DeleteAsync(Guid organizationId, Guid fileId, Guid deletedBy, CancellationToken ct);
 }
 
 /// <summary>

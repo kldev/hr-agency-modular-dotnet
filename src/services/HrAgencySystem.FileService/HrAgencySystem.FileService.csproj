@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
-    <ProjectReference
-      Include="..\HrAgencySystem.FileService.Contracts\HrAgencySystem.FileService.Contracts.csproj"
-    />
+    <ProjectReference Include="..\HrAgencySystem.FileService.Contracts\HrAgencySystem.FileService.Contracts.csproj" />
   </ItemGroup>
 </Project>

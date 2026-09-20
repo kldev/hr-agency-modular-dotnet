@@ -32,6 +32,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/HrAgencySystem.EmailTemplates.UnitTests/HrAgencySystem.EmailTemplates.UnitTests.csproj" />
+    <Project Path="tests/HrAgencySystem.FileService.UnitTests/HrAgencySystem.FileService.UnitTests.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.UnitTests/HrAgencySystem.UnitTests.csproj" />
   </Folder>

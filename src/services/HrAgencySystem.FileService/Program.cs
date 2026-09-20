@@ -1,8 +1,8 @@
+using HrAgencySystem.Files;
 using HrAgencySystem.FileService.Application;
 using HrAgencySystem.FileService.Config;
 using HrAgencySystem.FileService.Endpoints;
 using HrAgencySystem.FileService.Infrastructure;
-using HrAgencySystem.Files;
 using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);

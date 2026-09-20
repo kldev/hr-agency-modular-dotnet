@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
-using HrAgencySystem.FileService.Contracts;
-using HrAgencySystem.FileService.Domain;
 using HrAgencySystem.Files.Model;
 using HrAgencySystem.Files.Service;
+using HrAgencySystem.FileService.Contracts;
+using HrAgencySystem.FileService.Domain;
 using Marten;
 
 namespace HrAgencySystem.FileService.Application;
@@ -160,9 +160,7 @@ public sealed class FileStore(
     private Task<StoredFile?> Find(Guid organizationId, Guid fileId, CancellationToken ct) =>
         session
             .Query<StoredFile>()
-            .Where(f =>
-                f.Id == fileId && f.OrganizationId == organizationId && f.DeletedAt == null
-            )
+            .Where(f => f.Id == fileId && f.OrganizationId == organizationId && f.DeletedAt == null)
             .FirstOrDefaultAsync(ct);
 
     private static FileDescriptor Describe(StoredFile stored) =>

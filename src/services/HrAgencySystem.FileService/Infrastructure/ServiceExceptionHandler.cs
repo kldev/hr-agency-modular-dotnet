@@ -27,7 +27,12 @@ internal sealed class ServiceExceptionHandler(ILogger<ServiceExceptionHandler> l
         if (status == StatusCodes.Status500InternalServerError)
             logger.LogError(exception, "Unhandled failure on {Path}.", context.Request.Path);
         else
-            logger.LogWarning("{Title} on {Path}: {Message}", title, context.Request.Path, exception.Message);
+            logger.LogWarning(
+                "{Title} on {Path}: {Message}",
+                title,
+                context.Request.Path,
+                exception.Message
+            );
 
         context.Response.StatusCode = status;
         await context.Response.WriteAsJsonAsync(
@@ -35,9 +40,8 @@ internal sealed class ServiceExceptionHandler(ILogger<ServiceExceptionHandler> l
             {
                 Status = status,
                 Title = title,
-                Detail = status == StatusCodes.Status500InternalServerError
-                    ? null
-                    : exception.Message,
+                Detail =
+                    status == StatusCodes.Status500InternalServerError ? null : exception.Message,
             },
             ct
         );

@@ -1,9 +1,7 @@
-using System.Text;
+using HrAgencySystem.FileService.Auth;
 using HrAgencySystem.FileService.Config;
-using HrAgencySystem.FileService.Contracts;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.Tokens;
 
 namespace HrAgencySystem.FileService.Infrastructure;
 
@@ -40,19 +38,9 @@ public static class AuthenticationExtensions
                     // would rename 'sub' and leave the binder looking for a claim that is no longer
                     // there.
                     options.MapInboundClaims = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = FileServiceToken.Issuer,
-                        ValidAudience = FileServiceToken.Audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(config.Secret)
-                        ),
-                        ClockSkew = TimeSpan.FromSeconds(30),
-                    };
+                    options.TokenValidationParameters = ServiceTokenParameters.Create(
+                        config.Secret
+                    );
                 });
         }
     }
