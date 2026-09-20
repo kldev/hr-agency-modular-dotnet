@@ -29,11 +29,13 @@ import type {
 	GetCompaniesSuggestionsParams,
 	GetCompanyContactsSuggestionsParams,
 	GetJobPostSuggestionsParams,
+	GetProjectSuggestionsParams,
 	GetTagsSuggestionsParams,
 	GetTeamsSuggestionsParams,
 	GetUsersSuggestionsParams,
 	JobPostSuggestion,
 	ProblemDetails,
+	ProjectSuggestion,
 	Tag,
 	TeamSuggestion,
 	UserSuggestion,
@@ -719,6 +721,90 @@ export const useGetTeamsSuggestions = <
 	TContext
 > => {
 	return useMutation(getGetTeamsSuggestionsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get top 25 projects
+ */
+export const getProjectSuggestions = (
+	params?: GetProjectSuggestionsParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<ProjectSuggestion[]>(
+		{ url: `/api/suggestion/projects`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getGetProjectSuggestionsMutationKey = () => ["getProjectSuggestions"] as const;
+
+export const getGetProjectSuggestionsMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getProjectSuggestions>>,
+		TError,
+		GetProjectSuggestionsMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getProjectSuggestions>>,
+	TError,
+	GetProjectSuggestionsMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetProjectSuggestionsMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getProjectSuggestions>>,
+		GetProjectSuggestionsMutationVariables
+	> = (props) => {
+		const { params } = props ?? {};
+
+		return getProjectSuggestions(params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetProjectSuggestionsMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getProjectSuggestions>>
+>;
+
+export type GetProjectSuggestionsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetProjectSuggestionsMutationVariables = { params?: GetProjectSuggestionsParams };
+
+/**
+ * @summary Get top 25 projects
+ */
+export const useGetProjectSuggestions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getProjectSuggestions>>,
+			TError,
+			GetProjectSuggestionsMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getProjectSuggestions>>,
+	TError,
+	GetProjectSuggestionsMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetProjectSuggestionsMutationOptions(options), queryClient);
 };
 /**
  * @summary Get a single team suggestion

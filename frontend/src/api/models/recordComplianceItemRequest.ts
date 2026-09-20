@@ -13,18 +13,18 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostalAddress } from "./postalAddress.ts";
+import type { ComplianceStatus } from "./complianceStatus.ts";
 
-export interface CompanySnapshot {
-	id: string;
-	name: string;
-	taxId: string;
-	isProfileComplete?: boolean;
-	registeredAddress?: null | PostalAddress;
+export interface RecordComplianceItemRequest {
+	status: ComplianceStatus;
 	/** @nullable */
-	legalName?: string | null;
+	referenceNumber: string | null;
 	/** @nullable */
-	vatNumber?: string | null;
+	validFrom: string | null;
 	/** @nullable */
-	contractName?: string | null;
+	validTo: string | null;
+	/** @nullable */
+	documentId: string | null;
+	/** @nullable */
+	note: string | null;
 }

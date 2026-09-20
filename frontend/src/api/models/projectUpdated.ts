@@ -13,18 +13,15 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostalAddress } from "./postalAddress.ts";
+import type { Assignment } from "./assignment.ts";
+import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface CompanySnapshot {
-	id: string;
+export interface ProjectUpdated {
+	projectId: string;
+	organizationId: string;
 	name: string;
-	taxId: string;
-	isProfileComplete?: boolean;
-	registeredAddress?: null | PostalAddress;
-	/** @nullable */
-	legalName?: string | null;
-	/** @nullable */
-	vatNumber?: string | null;
-	/** @nullable */
-	contractName?: string | null;
+	description: string;
+	assignment: Assignment;
+	modifiedBy: UserSnapshot;
+	modifiedAt: string;
 }

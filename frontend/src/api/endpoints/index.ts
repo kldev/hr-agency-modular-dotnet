@@ -4,6 +4,7 @@ export * from "./company-contacts/company-contacts.ts";
 export * from "./job-description/job-description.ts";
 export * from "./organization/organization.ts";
 export * from "./owner/owner.ts";
+export * from "./projects/projects.ts";
 export * from "./recruitment-candidates/recruitment-candidates.ts";
 export * from "./recruitment-interviews/recruitment-interviews.ts";
 export * from "./recruitment-job-applications/recruitment-job-applications.ts";

@@ -13,18 +13,19 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostalAddress } from "./postalAddress.ts";
+import type { DocumentCategory } from "./documentCategory.ts";
 
-export interface CompanySnapshot {
-	id: string;
-	name: string;
-	taxId: string;
-	isProfileComplete?: boolean;
-	registeredAddress?: null | PostalAddress;
+export interface ProjectDocument {
+	documentId: string;
+	category: DocumentCategory;
+	fileId: string;
+	fileName: string;
+	contentType: string;
+	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	size: number | string;
+	documentDate: string;
 	/** @nullable */
-	legalName?: string | null;
+	validUntil: string | null;
 	/** @nullable */
-	vatNumber?: string | null;
-	/** @nullable */
-	contractName?: string | null;
+	note: string | null;
 }

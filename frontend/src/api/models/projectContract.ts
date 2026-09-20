@@ -13,18 +13,21 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostalAddress } from "./postalAddress.ts";
+import type { CompanyPartySnapshot } from "./companyPartySnapshot.ts";
+import type { ContactPerson } from "./contactPerson.ts";
+import type { ContractStatus } from "./contractStatus.ts";
 
-export interface CompanySnapshot {
-	id: string;
-	name: string;
-	taxId: string;
-	isProfileComplete?: boolean;
-	registeredAddress?: null | PostalAddress;
+export interface ProjectContract {
+	contractNumber: string;
+	status: ContractStatus;
 	/** @nullable */
-	legalName?: string | null;
+	signedOn: string | null;
+	validFrom: string;
 	/** @nullable */
-	vatNumber?: string | null;
+	validTo: string | null;
+	signedBy: null | ContactPerson;
+	party: CompanyPartySnapshot;
 	/** @nullable */
-	contractName?: string | null;
+	documentId: string | null;
+	isSigned?: boolean;
 }

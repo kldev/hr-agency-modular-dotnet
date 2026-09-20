@@ -13,18 +13,18 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { PostalAddress } from "./postalAddress.ts";
 
-export interface CompanySnapshot {
-	id: string;
+export interface UpdateProjectRequest {
 	name: string;
-	taxId: string;
-	isProfileComplete?: boolean;
-	registeredAddress?: null | PostalAddress;
+	description: string;
+	street: string;
+	buildingNumber: string;
 	/** @nullable */
-	legalName?: string | null;
+	unitNumber: string | null;
+	postalCode: string;
+	city: string;
+	countryCode: string;
+	startsOn: string;
 	/** @nullable */
-	vatNumber?: string | null;
-	/** @nullable */
-	contractName?: string | null;
+	endsOn: string | null;
 }

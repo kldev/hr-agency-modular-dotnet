@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { CompanyProfile } from "./companyProfile.ts";
 import type { CompanyStatus } from "./companyStatus.ts";
 import type { ContactPerson } from "./contactPerson.ts";
 import type { Industry } from "./industry.ts";
@@ -45,4 +46,8 @@ export interface CompanyProjection {
 	contact: null | ContactPerson;
 	/** @nullable */
 	contactPersonId: string | null;
+	profile: CompanyProfile;
+	isProfileComplete: boolean;
+	/** @nullable */
+	profileCompletedAt: string | null;
 }
