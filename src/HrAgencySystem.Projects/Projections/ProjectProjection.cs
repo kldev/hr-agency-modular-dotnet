@@ -24,6 +24,7 @@ public sealed record ProjectProjection(
     Guid CompanyId,
     string CompanyName,
     string CompanyTaxId,
+    DeliveringEntitySnapshot DeliveringEntity,
     string Name,
     string Description,
     ProjectStatus Status,
@@ -60,6 +61,7 @@ public sealed record ProjectProjection(
             @event.Company.Id,
             @event.Company.Name,
             @event.Company.TaxId,
+            @event.DeliveringEntity,
             @event.Name,
             @event.Description,
             ProjectStatus.Draft,
@@ -87,6 +89,17 @@ public sealed record ProjectProjection(
             null,
             null
         ).WithComplianceCounts();
+    }
+
+    public ProjectProjection Apply(ProjectLegalEntityChanged @event)
+    {
+        return this with
+        {
+            DeliveringEntity = @event.DeliveringEntity,
+            ModifiedById = @event.ModifiedBy.Id,
+            ModifiedBy = @event.ModifiedBy,
+            ModifiedAt = @event.ModifiedAt,
+        };
     }
 
     public ProjectProjection Apply(ProjectUpdated @event) =>

@@ -175,6 +175,7 @@ public class CreateProjectHandlerTests : BaseTest
         new(
             ProjectScenario.OrganizationId,
             ProjectScenario.CompanyId,
+            ProjectScenario.LegalEntityId,
             "  Delivery for ACME  ",
             "Two developers on site in Brussels.",
             EngagementType.TemporaryAgencyWork,

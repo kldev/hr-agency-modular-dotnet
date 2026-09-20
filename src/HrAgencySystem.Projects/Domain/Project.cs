@@ -29,6 +29,9 @@ public sealed class Project : IOrganizationDomain
     public OrganizationId OrganizationId { get; private set; }
 
     public CompanySnapshot Company { get; private set; } = null!;
+
+    /// <summary>Our side of the engagement - see <see cref="DeliveringEntitySnapshot"/>.</summary>
+    public DeliveringEntitySnapshot DeliveringEntity { get; private set; } = null!;
     public ProjectName Name { get; private set; } = null!;
     public LongText Description { get; private set; } = null!;
     public ProjectStatus Status { get; private set; }
@@ -75,6 +78,7 @@ public sealed class Project : IOrganizationDomain
         Id = ProjectId.From(@event.ProjectId);
         OrganizationId = OrganizationId.From(@event.OrganizationId);
         Company = @event.Company;
+        DeliveringEntity = @event.DeliveringEntity;
         Name = ProjectName.Create(@event.Name);
         Description = LongText.Create(@event.Description, false);
         Status = ProjectStatus.Draft;
@@ -84,6 +88,12 @@ public sealed class Project : IOrganizationDomain
         TeamName = @event.TeamName;
         CreatedBy = @event.CreatedBy;
         CreatedAt = @event.CreatedAt;
+    }
+
+    public void Apply(ProjectLegalEntityChanged @event)
+    {
+        DeliveringEntity = @event.DeliveringEntity;
+        Touch(@event.ModifiedBy, @event.ModifiedAt);
     }
 
     public void Apply(ProjectUpdated @event)

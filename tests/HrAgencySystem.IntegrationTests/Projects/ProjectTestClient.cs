@@ -54,20 +54,48 @@ public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper outpu
         return created.CompanyId;
     }
 
+    /// <summary>
+    /// One of the agency's own companies, which every project now needs. Created on the spot unless
+    /// a test cares which one it is.
+    /// </summary>
+    public async Task<Guid> CreateLegalEntityAsync(Guid organizationId)
+    {
+        client.WithOrganizationId(organizationId);
+
+        var response = await client.PostAsJsonAsync(
+            "/api/legal-entities",
+            LegalEntities.LegalEntityTestData.Request()
+        );
+        response.EnsureSuccessStatusCode();
+
+        var created =
+            await response.ReadWithJson<HrAgencySystem.LegalEntities.Events.LegalEntityCreated>(
+                output
+            );
+
+        Assert.NotNull(created);
+
+        return created.LegalEntityId;
+    }
+
     public async Task<ProjectCreated> CreateAsync(
         Guid organizationId,
         Guid companyId,
         EngagementType engagementType = EngagementType.TemporaryAgencyWork,
         string countryCode = "be",
-        Guid? teamId = null
+        Guid? teamId = null,
+        Guid? legalEntityId = null
     )
     {
+        var entity = legalEntityId ?? await CreateLegalEntityAsync(organizationId);
+
         client.WithOrganizationId(organizationId);
 
         var response = await client.PostAsJsonAsync(
             "/api/projects",
             ProjectTestData.CreateRequest(
                 companyId,
+                entity,
                 engagementType: engagementType,
                 countryCode: countryCode,
                 teamId: teamId

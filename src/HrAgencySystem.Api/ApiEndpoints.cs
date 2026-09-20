@@ -235,6 +235,7 @@ internal static class ApiEndpoints
         public const string Get = $"{ProjectsBase}/{{projectId:guid}}";
         public const string Update = $"{ProjectsBase}/{{projectId:guid}}";
         public const string ChangeStatus = $"{ProjectsBase}/{{projectId:guid}}/status";
+        public const string ChangeLegalEntity = $"{ProjectsBase}/{{projectId:guid}}/legal-entity";
         public const string AssignTeam = $"{ProjectsBase}/{{projectId:guid}}/team";
         public const string AssignContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";
         public const string RemoveContact = $"{ProjectsBase}/{{projectId:guid}}/contacts/{{role}}";

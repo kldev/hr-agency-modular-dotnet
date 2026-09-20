@@ -23,6 +23,13 @@ public static class CreateProjectHandler
         await service.ValidateOrganization(command.OrganizationId, ct);
 
         var company = await service.GetCompanyAsync(organizationId, command.CompanyId, ct);
+        var legalEntity = await service.GetLegalEntityAsync(
+            organizationId,
+            command.LegalEntityId,
+            command.StartsOn,
+            ct
+        );
+
         var createdBy = await service.GetUserAsync(command.CreatedBy, ct);
 
         // A project may start on a company whose paperwork is not finished yet - it starts as a
@@ -38,6 +45,7 @@ public static class CreateProjectHandler
             projectId.Value,
             organizationId.Value,
             company,
+            DeliveringEntity.From(legalEntity),
             name.Value,
             description.Value,
             command.EngagementType,

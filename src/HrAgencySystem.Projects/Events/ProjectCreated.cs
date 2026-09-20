@@ -7,6 +7,7 @@ public sealed record ProjectCreated(
     Guid ProjectId,
     Guid OrganizationId,
     CompanySnapshot Company,
+    DeliveringEntitySnapshot DeliveringEntity,
     string Name,
     string Description,
     EngagementType EngagementType,
