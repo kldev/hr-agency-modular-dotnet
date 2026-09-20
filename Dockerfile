@@ -28,6 +28,8 @@ COPY src/HrAgencySystem.Recruitment.Contracts/HrAgencySystem.Recruitment.Contrac
 COPY src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj HrAgencySystem.Sales/
 COPY src/HrAgencySystem.Teams/HrAgencySystem.Teams.csproj HrAgencySystem.Teams/
 COPY src/HrAgencySystem.Teams.Contracts/HrAgencySystem.Teams.Contracts.csproj HrAgencySystem.Teams.Contracts/
+COPY src/HrAgencySystem.Projects/HrAgencySystem.Projects.csproj HrAgencySystem.Projects/
+COPY src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj services/HrAgencySystem.FileService.Contracts/
 COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
 
 RUN dotnet restore HrAgencySystem.Api/HrAgencySystem.Api.csproj
