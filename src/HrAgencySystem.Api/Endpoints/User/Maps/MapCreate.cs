@@ -6,6 +6,7 @@ using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Web.Common;
+using HrAgencySystem.Teams.Contracts;
 using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.User.Maps;
@@ -17,7 +18,9 @@ internal sealed record CreateUserRequest(
     OrganizationRoleApi Role,
     string Password,
     string? JobTitle = null,
-    string? Phone = null
+    string? Phone = null,
+    Guid? TeamId = null,
+    TeamRole? TeamRole = null
 )
 {
     internal CreateUser ToCommand(OrganizationId organizationId, Guid createdBy)
@@ -33,7 +36,9 @@ internal sealed record CreateUserRequest(
             ),
             Role.ToDomainRole(),
             Password,
-            createdBy
+            createdBy,
+            TeamId,
+            TeamRole
         );
     }
 }

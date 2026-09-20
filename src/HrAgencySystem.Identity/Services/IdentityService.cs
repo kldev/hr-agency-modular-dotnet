@@ -9,6 +9,7 @@ namespace HrAgencySystem.Identity.Services;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class IdentityService(
     IUserSnapshotRepository userSnapshotRepository,
+    ITeamSnapshotRepository teamSnapshotRepository,
     IOrganizationChecker checker,
     IQueryOrganizationRepository organizationRepository
 ) : IIdentityService
@@ -35,6 +36,16 @@ public sealed class IdentityService(
     {
         var info = await organizationRepository.GetOrganization(organizationId, ct);
         return info ?? throw new NotFoundException("Organization", organizationId.Value);
+    }
+
+    public async Task<TeamSnapshot> GetTeamAsync(
+        Guid teamId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
+    {
+        var team = await teamSnapshotRepository.GetTeamAsync(teamId, organizationId, ct);
+        return team ?? throw new BusinessRuleException(ITeamSnapshotRepository.NotFoundMessage);
     }
 
     public async Task<string> GetOrganizationSlug(

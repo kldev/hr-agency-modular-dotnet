@@ -12,7 +12,7 @@ using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
-public class FakeModuleService
+public class FakeModuleService(ITeamSnapshotRepository teams)
     : IRecruitmentService,
         ICompanyService,
         IJobDescriptionService,
@@ -65,6 +65,22 @@ public class FakeModuleService
         );
 
         return Task.FromResult(result);
+    }
+
+    /// <summary>
+    /// The only member here backed by the real thing. The other fakes stand in for data these tests
+    /// never create; a team, by contrast, is created over HTTP by the test itself, so faking the
+    /// lookup would hide both the happy path and the "no such team" rule.
+    /// </summary>
+    public async Task<TeamSnapshot> GetTeamAsync(
+        Guid teamId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
+    {
+        var team = await teams.GetTeamAsync(teamId, organizationId, ct);
+
+        return team ?? throw new BusinessRuleException(ITeamSnapshotRepository.NotFoundMessage);
     }
 
     public Task<string> GetOrganizationSlug(OrganizationId organizationId, CancellationToken ct)

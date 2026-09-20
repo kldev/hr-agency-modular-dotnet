@@ -12,6 +12,8 @@ using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.SharedKernel.Web.Common;
+using HrAgencySystem.Teams.Contracts;
+using HrAgencySystem.Teams.Contracts.IntegrationCommands;
 using Marten;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -78,7 +80,7 @@ public class CreateUserHandlerTests : BaseTest
 
         var clock = new FixedClock(now);
 
-        var result = await CreateUserHandler.Handle(
+        var (result, messages) = await CreateUserHandler.Handle(
             command,
             _documentSession,
             _hasher,
@@ -100,6 +102,8 @@ public class CreateUserHandlerTests : BaseTest
         Assert.Equal(organization, result.Organization);
         Assert.Equal(Admin, result.CreatedBy);
         Assert.Equal(now, result.CreatedAt);
+        Assert.Null(result.Team);
+        Assert.Empty(messages);
 
         await _service
             .Received(1)
@@ -134,6 +138,91 @@ public class CreateUserHandlerTests : BaseTest
         Assert.Equal(OrganizationRole.Admin, @event.Role);
         Assert.Equal(passwordHash, @event.PasswordHash);
         Assert.Equal(now, @event.CreatedAt);
+    }
+
+    [Fact]
+    public async Task Handle_WithTeam_CarriesItAndAsksTeamsToSeatThePerson()
+    {
+        var organizationId = Guid.NewGuid();
+        var teamId = Guid.NewGuid();
+        var createdBy = Guid.NewGuid();
+
+        Arrange(organizationId);
+
+        _service
+            .GetTeamAsync(teamId, Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .Returns(new TeamSnapshot(teamId, "Tiggers"));
+
+        var command = CommandWith("john.doe@example.com", "John", "Doe") with
+        {
+            OrganizationId = organizationId,
+            CreatedBy = createdBy,
+            TeamId = teamId,
+            TeamRole = TeamRole.Recruiter,
+        };
+
+        var (result, messages) = await Handle(command);
+
+        Assert.NotNull(result.Team);
+        Assert.Equal(teamId, result.Team.Id);
+        Assert.Equal("Tiggers", result.Team.Name);
+        Assert.Equal(TeamRole.Recruiter, result.Team.Role);
+
+        var assignment = Assert.Single(messages.OfType<AssignUserToTeam>());
+
+        Assert.Equal(teamId, assignment.TeamId);
+        Assert.Equal(organizationId, assignment.OrganizationId);
+        Assert.Equal(result.UserId, assignment.UserId);
+        Assert.Equal(TeamRole.Recruiter, assignment.Role);
+        Assert.Equal(createdBy, assignment.RequestedBy);
+    }
+
+    [Fact]
+    public async Task Handle_WithUnknownTeam_ThrowsBeforeTheUserExists()
+    {
+        var organizationId = Guid.NewGuid();
+
+        Arrange(organizationId);
+
+        _service
+            .GetTeamAsync(Arg.Any<Guid>(), Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .Returns<TeamSnapshot>(_ =>
+                throw new BusinessRuleException(ITeamSnapshotRepository.NotFoundMessage)
+            );
+
+        var command = CommandWith("john.doe@example.com", "John", "Doe") with
+        {
+            OrganizationId = organizationId,
+            TeamId = Guid.NewGuid(),
+            TeamRole = TeamRole.Sales,
+        };
+
+        var error = await Assert.ThrowsAsync<BusinessRuleException>(() => Handle(command));
+
+        Assert.Equal(ITeamSnapshotRepository.NotFoundMessage, error.Message);
+
+        _documentSession
+            .Events.DidNotReceive()
+            .StartStream<User>(Arg.Any<Guid>(), Arg.Any<object>());
+    }
+
+    [Theory]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public async Task Handle_WithTeamAndRoleApart_ThrowsValidationException(
+        bool withTeam,
+        bool withRole
+    )
+    {
+        var command = CommandWith("john.doe@example.com", "John", "Doe") with
+        {
+            TeamId = withTeam ? Guid.NewGuid() : null,
+            TeamRole = withRole ? TeamRole.Sales : null,
+        };
+
+        var error = await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
+
+        Assert.Equal([CreateUserHandler.TeamAndRoleTogetherMessage], error.Errors);
     }
 
     [Fact]
@@ -425,6 +514,31 @@ public class CreateUserHandlerTests : BaseTest
             OrganizationRole.Recruiter,
             password,
             Guid.NewGuid()
+        );
+    }
+
+    private void Arrange(Guid organizationId)
+    {
+        _hasher.Hash(Arg.Any<string>()).Returns("hashed-password");
+        _service.GetUserAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Admin);
+        _service
+            .GetOrganization(Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .Returns(new OrganizationInfo(organizationId, "hr-agency", "HR Agency"));
+        _emailReservationRepository
+            .ExistAsync(Arg.Any<OrganizationId>(), Arg.Any<Email>(), Arg.Any<CancellationToken>())
+            .Returns(false);
+    }
+
+    private Task<(UserCreated, Wolverine.OutgoingMessages)> Handle(CreateUser command)
+    {
+        return CreateUserHandler.Handle(
+            command,
+            _documentSession,
+            _hasher,
+            _emailReservationRepository,
+            _service,
+            new FixedClock(DateTimeOffset.Now),
+            CancellationToken.None
         );
     }
 
