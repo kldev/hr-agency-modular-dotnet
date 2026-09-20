@@ -8,6 +8,7 @@ import {
 	LayoutDashboard,
 	MessageSquare,
 	Users,
+	UsersRound,
 } from "lucide-react";
 import type { MenuGroup } from "./types/sidebar";
 
@@ -36,7 +37,10 @@ const menuGroups: MenuGroup[] = [
 	},
 	{
 		title: "Users",
-		items: [{ label: "Users", icon: Users, link: "/app/users" }],
+		items: [
+			{ label: "Users", icon: Users, link: "/app/users" },
+			{ label: "Teams", icon: UsersRound, link: "/app/teams" },
+		],
 	},
 ];
 
