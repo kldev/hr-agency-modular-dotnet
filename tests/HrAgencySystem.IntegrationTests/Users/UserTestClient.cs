@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.User.Maps;
 using HrAgencySystem.Identity.Domain;
+using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Teams.Contracts;
@@ -61,6 +62,37 @@ public sealed class UserTestClient(HttpClient client, ITestOutputHelper output)
         client.WithOrganizationId(organizationId);
 
         return await client.GetAsync($"/api/users/{userId}");
+    }
+
+    public async Task<RoleChanged> ChangeRoleAsync(
+        Guid organizationId,
+        Guid userId,
+        OrganizationRoleApi role
+    )
+    {
+        var response = await ChangeRoleRawAsync(organizationId, userId, role);
+
+        response.EnsureSuccessStatusCode();
+
+        var result = await response.ReadWithJson<RoleChanged>(output);
+
+        Assert.NotNull(result);
+
+        return result;
+    }
+
+    public async Task<HttpResponseMessage> ChangeRoleRawAsync(
+        Guid organizationId,
+        Guid userId,
+        OrganizationRoleApi role
+    )
+    {
+        client.WithOrganizationId(organizationId);
+
+        return await client.PutAsJsonAsync(
+            $"/api/users/{userId}/role",
+            new ChangeUserRoleRequest(role)
+        );
     }
 
     public async Task<HttpResponseMessage> CreateRawAsync(
