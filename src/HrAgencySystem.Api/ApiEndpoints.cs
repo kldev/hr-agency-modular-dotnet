@@ -230,6 +230,13 @@ internal static class ApiEndpoints
             $"{ProjectsBase}/{{projectId:guid}}/compliance/{{requirement}}";
         public const string ComplianceCatalogue =
             $"{ProjectsBase}/{{projectId:guid}}/compliance/catalogue";
+        public const string AttachDocument = $"{ProjectsBase}/{{projectId:guid}}/documents";
+        public const string UpdateDocument =
+            $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}";
+        public const string RemoveDocument =
+            $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}";
+        public const string DownloadDocument =
+            $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}/content";
     }
 
     internal static class Suggestions

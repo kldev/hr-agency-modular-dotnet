@@ -62,7 +62,11 @@ public class RecordComplianceItemHandlerTests : BaseTest
 
         // Posting does not involve a user undertaking, so there is nobody to receive conditions from.
         await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            Handle(posting, ComplianceRequirement.UserConditionsReceived, ComplianceStatus.Confirmed)
+            Handle(
+                posting,
+                ComplianceRequirement.UserConditionsReceived,
+                ComplianceStatus.Confirmed
+            )
         );
     }
 

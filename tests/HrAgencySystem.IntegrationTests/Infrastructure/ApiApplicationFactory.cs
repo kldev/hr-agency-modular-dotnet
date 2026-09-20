@@ -1,6 +1,8 @@
 using HrAgencySystem.Api;
 using HrAgencySystem.Company.Services;
 using HrAgencySystem.Identity.Services;
+using HrAgencySystem.FileService.Contracts;
+using HrAgencySystem.IntegrationTests.Infrastructure.Fakes;
 using HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
@@ -35,6 +37,10 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
 
             services.Replace(
                 ServiceDescriptor.Scoped<IOrganizationChecker, FakeOrganizationChecker>()
+            );
+            // Singleton so that a file uploaded in one request is still there in the next one.
+            services.Replace(
+                ServiceDescriptor.Singleton<IFileServiceClient, FakeFileServiceClient>()
             );
             services.Replace(ServiceDescriptor.Scoped<IUserSnapshotRepository, FakeUserSnapshot>());
             services.Replace(

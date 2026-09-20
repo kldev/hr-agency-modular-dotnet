@@ -15,8 +15,7 @@ public static class RecordComplianceItemHandler
         "This requirement does not apply to the project's country and engagement type.";
     public const string ReferenceNumberRequiredMessage =
         "Confirming this requirement needs the reference number it was filed under.";
-    public const string ValidToBeforeValidFromMessage =
-        "The validity cannot end before it begins.";
+    public const string ValidToBeforeValidFromMessage = "The validity cannot end before it begins.";
     public const string UnknownDocumentMessage =
         "The referenced document is not attached to this project.";
     public const string ReferenceNumberMaxLengthMessage =
@@ -47,7 +46,10 @@ public static class RecordComplianceItemHandler
         )
             throw new BusinessRuleException(NotInCatalogueMessage);
 
-        if (command.DocumentId is not null && aggregate.DocumentById(command.DocumentId.Value) is null)
+        if (
+            command.DocumentId is not null
+            && aggregate.DocumentById(command.DocumentId.Value) is null
+        )
             throw new BusinessRuleException(UnknownDocumentMessage);
 
         var item = BuildItem(command);
@@ -80,7 +82,11 @@ public static class RecordComplianceItemHandler
         )
             errors.Add(ReferenceNumberRequiredMessage);
 
-        if (command.ValidTo is not null && command.ValidFrom is not null && command.ValidTo < command.ValidFrom)
+        if (
+            command.ValidTo is not null
+            && command.ValidFrom is not null
+            && command.ValidTo < command.ValidFrom
+        )
             errors.Add(ValidToBeforeValidFromMessage);
 
         var (note, noteError) = ShortNote.TryCreate(command.Note ?? "", false);

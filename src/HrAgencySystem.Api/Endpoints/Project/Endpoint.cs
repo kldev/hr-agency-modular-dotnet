@@ -21,5 +21,9 @@ public static class Endpoint
         Maps.MapChangeContractStatus.Map(group);
         Maps.MapRecordCompliance.Map(group);
         Maps.MapComplianceCatalogue.Map(group);
+        Maps.MapAttachDocument.Map(group);
+        Maps.MapUpdateDocument.Map(group);
+        Maps.MapRemoveDocument.Map(group);
+        Maps.MapDownloadDocument.Map(group);
     }
 }

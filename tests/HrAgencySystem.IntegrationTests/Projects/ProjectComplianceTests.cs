@@ -173,9 +173,7 @@ public class ProjectComplianceTests(IntegrationEnvironment env, ITestOutputHelpe
 
         await Eventually.AssertAsync(async () =>
         {
-            var response = await Client.GetAsync(
-                $"/api/projects/{projectId}/compliance/catalogue"
-            );
+            var response = await Client.GetAsync($"/api/projects/{projectId}/compliance/catalogue");
             response.EnsureSuccessStatusCode();
 
             catalogue =
