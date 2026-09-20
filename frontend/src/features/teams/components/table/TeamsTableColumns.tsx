@@ -1,4 +1,5 @@
 import { createColumnHelper } from "@tanstack/react-table";
+import { MessagePreview } from "#/components/ui/MessagePreview";
 import type { TeamProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
@@ -19,20 +20,22 @@ export function getColumns({ onRename, onAddMember }: ColumnHandlers) {
 			id: "actions",
 			header: () => null,
 			meta: {
-				width: "sm",
+				width: "xxs",
 			},
 			cell: ({ row }) => (
-				<TeamActions
-					id={row.original.id}
-					onRename={() => onRename(row.original)}
-					onAddMember={() => onAddMember(row.original)}
-				/>
+				<div className="table-cell-content">
+					<TeamActions
+						id={row.original.id}
+						onRename={() => onRename(row.original)}
+						onAddMember={() => onAddMember(row.original)}
+					/>
+				</div>
 			),
 		}),
 		columnHelper.accessor("name", {
 			header: "Team",
 			meta: {
-				width: "2xl",
+				width: "xl",
 			},
 
 			cell: ({ row, getValue }) => (
@@ -60,18 +63,20 @@ export function getColumns({ onRename, onAddMember }: ColumnHandlers) {
 			meta: {
 				width: "2xl",
 			},
-			cell: ({ row }) => (
-				<div className="flex flex-col gap-3">
-					<span className="truncate">
-						{row.original.members
-							.map(
-								(member) =>
-									`${member.user.fullname ?? member.user.email} (${teamRoles[member.role]})`,
-							)
-							.join(", ")}
-					</span>
-				</div>
-			),
+			cell: ({ row }) => {
+				const members = row.original.members
+					.map(
+						(member) => `${member.user.fullname ?? member.user.email} (${teamRoles[member.role]})`,
+					)
+					.join(", ");
+				return (
+					<div className="flex flex-col gap-3">
+						<span className="truncate">
+							<MessagePreview message={members} />
+						</span>
+					</div>
+				);
+			},
 		}),
 
 		columnHelper.accessor("createdAt", {
