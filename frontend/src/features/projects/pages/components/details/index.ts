@@ -1,3 +1,4 @@
+export * from "./ProjectComplianceSection";
 export * from "./ProjectContactsSection";
 export * from "./ProjectContractSection";
 export * from "./ProjectCustomerSection";

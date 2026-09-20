@@ -1,10 +1,12 @@
+import { UsersRound } from "lucide-react";
 import type { ProjectProjection } from "@/api/models";
-import { DetailItem, DetailOverviewHeader } from "@/components/ui";
+import { Button, DetailItem, DetailOverviewHeader } from "@/components/ui";
 import { formatDate } from "@/utlis/dateUtils";
 import { engagementTypes } from "../../../types";
 
 interface ProjectOverviewSectionProps {
 	project: ProjectProjection;
+	onAssignTeam: () => void;
 }
 
 function formatAddress(project: ProjectProjection) {
@@ -16,7 +18,7 @@ function formatAddress(project: ProjectProjection) {
 	return `${address.street} ${building}, ${address.postalCode} ${address.city}, ${address.countryCode}`;
 }
 
-export function ProjectOverviewSection({ project }: ProjectOverviewSectionProps) {
+export function ProjectOverviewSection({ project, onAssignTeam }: ProjectOverviewSectionProps) {
 	return (
 		<div className="data-overview">
 			<DetailOverviewHeader
@@ -39,6 +41,15 @@ export function ProjectOverviewSection({ project }: ProjectOverviewSectionProps)
 
 				<DetailItem label="Description">{project.description}</DetailItem>
 			</dl>
+
+			<Button
+				variant="ghost"
+				className="mt-3"
+				icon={<UsersRound size={15} />}
+				onClick={onAssignTeam}
+			>
+				{project.teamId ? "Change team" : "Assign team"}
+			</Button>
 		</div>
 	);
 }

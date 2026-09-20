@@ -9,6 +9,10 @@ export interface EditProjectFormCommand {
 	edit: (project: ProjectProjection) => void;
 }
 
+export interface AssignProjectTeamFormCommand {
+	assignTeam: (project: ProjectProjection) => void;
+}
+
 export interface ChangeProjectStatusFormCommand {
 	changeStatus: (project: ProjectProjection) => void;
 }

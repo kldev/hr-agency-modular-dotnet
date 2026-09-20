@@ -13,12 +13,16 @@ import { DataDetails, DataDetailsLayout } from "@/components/ui/details/DataDeta
 import {
 	AssignProjectContactDrawer,
 	type AssignProjectContactFormCommand,
+	AssignProjectTeamDrawer,
+	type AssignProjectTeamFormCommand,
 	AttachDocumentDrawer,
 	type AttachDocumentFormCommand,
 	ChangeProjectStatusDrawer,
 	type ChangeProjectStatusFormCommand,
 	EditProjectDrawer,
 	type EditProjectFormCommand,
+	RecordComplianceDrawer,
+	type RecordComplianceFormCommand,
 	RecordContractDrawer,
 	type RecordContractFormCommand,
 	SetProjectEmailsDrawer,
@@ -33,6 +37,7 @@ import {
 	CompleteCompanyProfileWizardDialog,
 } from "#/features/companies/wizards/complete-profile/CompleteCompanyProfileWizardDialog";
 import {
+	ProjectComplianceSection,
 	ProjectContactsSection,
 	ProjectContractSection,
 	ProjectCustomerSection,
@@ -51,6 +56,8 @@ export function ProjectDetailsPage() {
 	const emailsRef = useRef<SetProjectEmailsFormCommand>(null);
 	const contractRef = useRef<RecordContractFormCommand>(null);
 	const documentRef = useRef<AttachDocumentFormCommand>(null);
+	const complianceRef = useRef<RecordComplianceFormCommand>(null);
+	const teamRef = useRef<AssignProjectTeamFormCommand>(null);
 	const profileRef = useRef<CompleteCompanyProfileCommand>(null);
 
 	const query = useGetProject(id);
@@ -102,7 +109,10 @@ export function ProjectDetailsPage() {
 					main={
 						<>
 							<section className="data-details-section">
-								<ProjectOverviewSection project={project} />
+								<ProjectOverviewSection
+									project={project}
+									onAssignTeam={() => teamRef.current?.assignTeam(project)}
+								/>
 							</section>
 
 							<section className="data-details-section">
@@ -139,6 +149,13 @@ export function ProjectDetailsPage() {
 									onRefresh={refresh}
 								/>
 							</section>
+
+							<section className="data-details-section">
+								<ProjectComplianceSection
+									project={project}
+									onRecord={(view) => complianceRef.current?.record(project, view)}
+								/>
+							</section>
 						</>
 					}
 					sidebar={
@@ -164,6 +181,8 @@ export function ProjectDetailsPage() {
 			<SetProjectEmailsDrawer ref={emailsRef} onSuccess={refresh} />
 			<RecordContractDrawer ref={contractRef} onSuccess={refresh} />
 			<AttachDocumentDrawer ref={documentRef} onSuccess={refresh} />
+			<RecordComplianceDrawer ref={complianceRef} onSuccess={refresh} />
+			<AssignProjectTeamDrawer ref={teamRef} onSuccess={refresh} />
 			<CompleteCompanyProfileWizardDialog ref={profileRef} onSuccess={refresh} />
 		</>
 	);

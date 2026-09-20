@@ -13,7 +13,6 @@ import {
 	removeProjectDocument,
 	setProjectEmailRecipients,
 	updateProject,
-	updateProjectDocumentMetadata,
 } from "@/api/endpoints";
 import type {
 	AssignProjectContactRequest,
@@ -27,7 +26,6 @@ import type {
 	RecordComplianceItemRequest,
 	RecordProjectContractRequest,
 	SetProjectEmailRecipientsRequest,
-	UpdateProjectDocumentRequest,
 	UpdateProjectRequest,
 } from "@/api/models";
 import { projectsKeys } from "@/api/query-keys";
@@ -120,16 +118,6 @@ const recordComplianceItemServerFn = createServerFn({
 	)
 	.handler(async ({ data }) => {
 		return recordComplianceItem(data.id, data.requirement, data.req, await getFnOptions());
-	});
-
-const updateProjectDocumentServerFn = createServerFn({
-	method: "POST",
-})
-	.validator(
-		(input: { id: string; documentId: string; req: UpdateProjectDocumentRequest }) => input,
-	)
-	.handler(async ({ data }) => {
-		return updateProjectDocumentMetadata(data.id, data.documentId, data.req, await getFnOptions());
 	});
 
 const removeProjectDocumentServerFn = createServerFn({
@@ -268,21 +256,6 @@ export function useRecordComplianceItem(options: MutationOptions) {
 			requirement: ComplianceRequirement;
 			request: RecordComplianceItemRequest;
 		}) => recordComplianceItemServerFn({ data: { id: projectId, requirement, req: request } }),
-		options,
-	);
-}
-
-export function useUpdateProjectDocument(options: MutationOptions) {
-	return useProjectMutation(
-		({
-			projectId,
-			documentId,
-			request,
-		}: {
-			projectId: string;
-			documentId: string;
-			request: UpdateProjectDocumentRequest;
-		}) => updateProjectDocumentServerFn({ data: { id: projectId, documentId, req: request } }),
 		options,
 	);
 }
