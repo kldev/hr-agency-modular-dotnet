@@ -16,6 +16,22 @@ export type UserColumnHandlers = {
 
 export function getColumns({ onEdit, onChangeRole, onChangeTeam }: UserColumnHandlers) {
 	const columns = columnHelper.columns([
+		columnHelper.display({
+			id: "actions",
+			meta: {
+				width: "xxs",
+			},
+			header: () => null,
+			cell: ({ row }) => (
+				<UserActions
+					id={row.original.id}
+					email={row.original.email}
+					onEdit={() => onEdit(row.original)}
+					onChangeRole={() => onChangeRole(row.original)}
+					onChangeTeam={() => onChangeTeam(row.original)}
+				/>
+			),
+		}),
 		columnHelper.accessor("fullName", {
 			header: "User",
 			meta: {
@@ -77,21 +93,10 @@ export function getColumns({ onEdit, onChangeRole, onChangeTeam }: UserColumnHan
 
 		columnHelper.accessor("createdAt", {
 			header: "Created at",
+			meta: {
+				width: "md",
+			},
 			cell: ({ getValue }) => <span className="table-number">{formatDateTime(getValue())}</span>,
-		}),
-
-		columnHelper.display({
-			id: "actions",
-			header: () => null,
-			cell: ({ row }) => (
-				<UserActions
-					id={row.original.id}
-					email={row.original.email}
-					onEdit={() => onEdit(row.original)}
-					onChangeRole={() => onChangeRole(row.original)}
-					onChangeTeam={() => onChangeTeam(row.original)}
-				/>
-			),
 		}),
 	]);
 
