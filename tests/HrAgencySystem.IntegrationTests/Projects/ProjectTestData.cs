@@ -1,7 +1,7 @@
 using HrAgencySystem.Api.Endpoints.Project.Maps;
 using HrAgencySystem.Compliance;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Projects.Domain;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.SharedKernel.Web.Common;
 using CompanyMaps = HrAgencySystem.Api.Endpoints.Company.Maps;
 using PositionMaps = HrAgencySystem.Api.Endpoints.Position.Maps;

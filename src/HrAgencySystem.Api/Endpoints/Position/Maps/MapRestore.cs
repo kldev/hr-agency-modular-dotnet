@@ -28,12 +28,7 @@ internal static class MapRestore
     ) =>
         TypedResults.Ok(
             await bus.InvokeAsync<ProjectPositionRestored>(
-                new RestorePosition(
-                    projectId,
-                    user.GetOrganization.Value,
-                    positionId,
-                    user.UserId
-                ),
+                new RestorePosition(projectId, user.GetOrganization.Value, positionId, user.UserId),
                 ct
             )
         );

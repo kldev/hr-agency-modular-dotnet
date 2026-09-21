@@ -2,9 +2,9 @@ using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.Project.Maps;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.Projects.Application.Port;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;
-using HrAgencySystem.Projects.Application.Port;
 using HrAgencySystem.Projects.Projections;
 using HrAgencySystem.SharedKernel.Web;
 using Xunit.Abstractions;
@@ -17,6 +17,9 @@ namespace HrAgencySystem.IntegrationTests.Projects;
 /// </summary>
 public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper output)
 {
+    /// <summary>A project and a role on it, handed out together because they are used together.</summary>
+    public sealed record SeededDelivery(Guid ProjectId, Guid PositionId);
+
     public async Task<Guid> CreateCompanyWithProfileAsync(Guid organizationId)
     {
         client.WithOrganizationId(organizationId);
@@ -189,6 +192,23 @@ public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper outpu
         return opened;
     }
 
+    /// <summary>
+    /// A delivery with one role open on it, which is the smallest fixture an assignment needs now:
+    /// nobody is put on a project any more, they are put on a role inside one.
+    /// </summary>
+    public async Task<SeededDelivery> CreateWithPositionAsync(
+        Guid organizationId,
+        EngagementType engagementType = EngagementType.PostingOfWorkers,
+        string positionName = "Painter"
+    )
+    {
+        var companyId = await CreateCompanyWithProfileAsync(organizationId);
+        var project = await CreateAsync(organizationId, companyId, engagementType);
+        var position = await OpenPositionAsync(organizationId, project.ProjectId, positionName);
+
+        return new SeededDelivery(project.ProjectId, position.Position.PositionId);
+    }
+
     public async Task<HttpResponseMessage> OpenPositionResponseAsync(
         Guid organizationId,
         Guid projectId,
@@ -201,6 +221,22 @@ public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper outpu
             $"/api/projects/{projectId}/positions",
             ProjectTestData.PositionRequest(name)
         );
+    }
+
+    public async Task RenamePositionAsync(
+        Guid organizationId,
+        Guid projectId,
+        Guid positionId,
+        string name
+    )
+    {
+        client.WithOrganizationId(organizationId);
+
+        var response = await client.PutAsJsonAsync(
+            $"/api/projects/{projectId}/positions/{positionId}",
+            ProjectTestData.PositionRequest(name)
+        );
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task ArchivePositionAsync(Guid organizationId, Guid projectId, Guid positionId)

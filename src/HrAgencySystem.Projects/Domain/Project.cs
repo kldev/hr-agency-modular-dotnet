@@ -226,8 +226,11 @@ public sealed class Project : IOrganizationDomain
         Touch(@event.ModifiedBy, @event.ModifiedAt);
     }
 
-    private static ProjectPosition Archive(ProjectPosition position, Guid positionId, bool archived) =>
-        position.PositionId == positionId ? position with { IsArchived = archived } : position;
+    private static ProjectPosition Archive(
+        ProjectPosition position,
+        Guid positionId,
+        bool archived
+    ) => position.PositionId == positionId ? position with { IsArchived = archived } : position;
 
     public void Apply(ComplianceItemRecorded @event)
     {

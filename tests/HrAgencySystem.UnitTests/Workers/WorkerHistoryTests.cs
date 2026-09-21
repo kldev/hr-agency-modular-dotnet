@@ -167,7 +167,11 @@ public class WorkerHistoryTests
                 workCountry
             ),
             EngagementType.PostingOfWorkers,
-            "Backend developer",
+            new AssignmentPosition(
+                WorkerScenario.PositionId,
+                WorkerScenario.PositionName,
+                WorkerScenario.PositionName
+            ),
             startsOn,
             null,
             WorkerScenario.User,

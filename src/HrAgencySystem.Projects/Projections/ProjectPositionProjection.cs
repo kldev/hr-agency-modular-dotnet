@@ -73,6 +73,27 @@ public sealed record ProjectPositionProjection(
             ModifiedAt = @event.ModifiedAt,
         };
 
+    /// <summary>
+    /// Adding an id that is already there is the whole reason this is a set: the message that
+    /// carries it is delivered at least once and may arrive twice.
+    /// </summary>
+    public ProjectPositionProjection Apply(ProjectPositionStaffed @event) =>
+        AssignedAssignmentIds.Contains(@event.AssignmentId)
+            ? this
+            : this with
+            {
+                AssignedAssignmentIds = [.. AssignedAssignmentIds, @event.AssignmentId],
+            };
+
+    public ProjectPositionProjection Apply(ProjectPositionUnstaffed @event) =>
+        this with
+        {
+            AssignedAssignmentIds =
+            [
+                .. AssignedAssignmentIds.Where(id => id != @event.AssignmentId),
+            ],
+        };
+
     public ProjectPositionProjection Apply(ProjectPositionRestored @event) =>
         this with
         {

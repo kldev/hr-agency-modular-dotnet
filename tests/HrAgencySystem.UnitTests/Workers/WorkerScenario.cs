@@ -25,6 +25,9 @@ internal static class WorkerScenario
     public static readonly Guid UserId = Guid.Parse("55555555-5555-5555-5555-555555555555");
     public static readonly Guid CompanyId = Guid.Parse("66666666-6666-6666-6666-666666666666");
     public static readonly Guid LegalEntityId = Guid.Parse("77777777-7777-7777-7777-777777777777");
+    public static readonly Guid PositionId = Guid.Parse("88888888-8888-8888-8888-888888888888");
+
+    public const string PositionName = "Backend developer";
 
     public static UserSnapshot User { get; } =
         new(UserId, "Alice", "Wells", "alice-wells@hr-agency.com");
@@ -60,7 +63,18 @@ internal static class WorkerScenario
             open
         );
 
-    public static IWorkersService Service(ProjectSnapshot? project = null, Worker? worker = null)
+    public static PositionSnapshot Position(
+        Guid? positionId = null,
+        Guid? projectId = null,
+        string name = PositionName,
+        bool archived = false
+    ) => new(positionId ?? PositionId, projectId ?? ProjectId, name, name, archived);
+
+    public static IWorkersService Service(
+        ProjectSnapshot? project = null,
+        Worker? worker = null,
+        PositionSnapshot? position = null
+    )
     {
         var service = Substitute.For<IWorkersService>();
 
@@ -79,6 +93,14 @@ internal static class WorkerScenario
                 Arg.Any<CancellationToken>()
             )
             .Returns(worker ?? Registered().Employed());
+        service
+            .GetPositionAsync(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<Guid>(),
+                Arg.Any<Guid>(),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(position ?? Position());
 
         return service;
     }
@@ -98,6 +120,14 @@ internal static class WorkerScenario
                 Arg.Any<CancellationToken>()
             )
             .Returns(overlapping);
+
+        repository
+            .GetAssignmentsOnPosition(
+                Arg.Any<OrganizationId>(),
+                Arg.Any<Guid>(),
+                Arg.Any<CancellationToken>()
+            )
+            .Returns([]);
 
         return repository;
     }
@@ -270,7 +300,7 @@ internal static class WorkerScenario
                     workCountry
                 ),
                 engagement,
-                "Backend developer",
+                new AssignmentPosition(PositionId, PositionName, PositionName),
                 StartsOn,
                 endsOn,
                 User,

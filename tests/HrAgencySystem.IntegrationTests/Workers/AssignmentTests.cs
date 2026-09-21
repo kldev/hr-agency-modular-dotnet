@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.IntegrationTests.Projects;
 using HrAgencySystem.Workers.Application.PlanAssignment;
 using HrAgencySystem.Workers.Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,12 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         var workerId = await WorkerClient.EmployedAsync(organizationId);
         var project = await NewProjectAsync(organizationId);
 
-        var planned = await WorkerClient.PlanAsync(organizationId, workerId, project);
+        var planned = await WorkerClient.PlanAsync(
+            organizationId,
+            workerId,
+            project.ProjectId,
+            project.PositionId
+        );
 
         await Eventually.AssertAsync(async () =>
         {
@@ -65,7 +71,8 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         var firstPosting = await WorkerClient.PlanAsync(
             organizationId,
             workerId,
-            first,
+            first.ProjectId,
+            first.PositionId,
             startsOn: new DateOnly(2026, 10, 1),
             endsOn: new DateOnly(2026, 12, 31)
         );
@@ -84,7 +91,8 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         var secondPosting = await WorkerClient.PlanAsync(
             organizationId,
             workerId,
-            second,
+            second.ProjectId,
+            second.PositionId,
             startsOn: new DateOnly(2027, 1, 1)
         );
 
@@ -96,7 +104,7 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
             );
 
             Assert.NotNull(completed);
-            Assert.Equal(first, completed.ProjectId);
+            Assert.Equal(first.ProjectId, completed.ProjectId);
             Assert.Equal(AssignmentStatus.Completed, completed.Status);
             Assert.Equal(new DateOnly(2026, 12, 31), completed.EndsOn);
 
@@ -119,7 +127,8 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         await WorkerClient.PlanAsync(
             organizationId,
             workerId,
-            first,
+            first.ProjectId,
+            first.PositionId,
             startsOn: new DateOnly(2026, 10, 1),
             endsOn: new DateOnly(2026, 12, 31)
         );
@@ -132,7 +141,8 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
                 "/api/assignments",
                 WorkerTestData.PlanRequest(
                     workerId,
-                    second,
+                    second.ProjectId,
+                    second.PositionId,
                     startsOn: new DateOnly(2026, 12, 1),
                     endsOn: new DateOnly(2027, 3, 31)
                 )
@@ -156,7 +166,8 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         var posting = await WorkerClient.PlanAsync(
             organizationId,
             workerId,
-            first,
+            first.ProjectId,
+            first.PositionId,
             startsOn: new DateOnly(2026, 10, 1),
             endsOn: new DateOnly(2026, 12, 31)
         );
@@ -174,7 +185,8 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
                 "/api/assignments",
                 WorkerTestData.PlanRequest(
                     workerId,
-                    second,
+                    second.ProjectId,
+                    second.PositionId,
                     startsOn: new DateOnly(2026, 10, 1),
                     endsOn: new DateOnly(2026, 12, 31)
                 )
@@ -206,7 +218,12 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         var project = await NewProjectAsync(organizationId);
 
         // Planning them is fine - that is how a crew gets scheduled while legalisation works.
-        var planned = await WorkerClient.PlanAsync(organizationId, worker.WorkerId, project);
+        var planned = await WorkerClient.PlanAsync(
+            organizationId,
+            worker.WorkerId,
+            project.ProjectId,
+            project.PositionId
+        );
 
         Client.WithOrganizationId(organizationId);
         var response = await Client.PutAsJsonAsync(
@@ -223,7 +240,12 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         var organizationId = Guid.NewGuid();
         var workerId = await WorkerClient.EmployedAsync(organizationId);
         var project = await NewProjectAsync(organizationId);
-        var planned = await WorkerClient.PlanAsync(organizationId, workerId, project);
+        var planned = await WorkerClient.PlanAsync(
+            organizationId,
+            workerId,
+            project.ProjectId,
+            project.PositionId
+        );
 
         Client.WithOrganizationId(Guid.NewGuid());
         var response = await Client.GetAsync($"/api/assignments/{planned.AssignmentId}");
@@ -231,15 +253,6 @@ public class AssignmentTests(IntegrationEnvironment env, ITestOutputHelper outpu
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 
-    private async Task<Guid> NewProjectAsync(Guid organizationId)
-    {
-        var companyId = await ProjectClient.CreateCompanyWithProfileAsync(organizationId);
-        var project = await ProjectClient.CreateAsync(
-            organizationId,
-            companyId,
-            EngagementType.PostingOfWorkers
-        );
-
-        return project.ProjectId;
-    }
+    private Task<ProjectTestClient.SeededDelivery> NewProjectAsync(Guid organizationId) =>
+        ProjectClient.CreateWithPositionAsync(organizationId);
 }

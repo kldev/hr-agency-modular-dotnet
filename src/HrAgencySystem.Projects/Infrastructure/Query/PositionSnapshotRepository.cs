@@ -7,10 +7,14 @@ using Marten;
 namespace HrAgencySystem.Projects.Infrastructure.Query;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed class PositionSnapshotRepository(IDocumentSession session)
+// Public, not internal: Wolverine generates handler code into another assembly, and a handler that
+// reaches this through IWorkersService cannot see an internal type - it falls back to service
+// location and throws at runtime.
+public sealed class PositionSnapshotRepository(IDocumentSession session)
     : IPositionSnapshotRepository
 {
     public async Task<PositionSnapshot?> GetPositionAsync(
+        Guid projectId,
         Guid positionId,
         OrganizationId organizationId,
         CancellationToken ct
@@ -18,7 +22,11 @@ internal sealed class PositionSnapshotRepository(IDocumentSession session)
     {
         var projection = await session
             .Query<ProjectPositionProjection>()
-            .Where(p => p.Id == positionId && p.OrganizationId == organizationId.Value)
+            .Where(p =>
+                p.Id == positionId
+                && p.ProjectId == projectId
+                && p.OrganizationId == organizationId.Value
+            )
             .FirstOrDefaultAsync(ct);
 
         if (projection is not null)
@@ -32,28 +40,22 @@ internal sealed class PositionSnapshotRepository(IDocumentSession session)
 
         // The same fallback ProjectSnapshotRepository makes, and needed more here: a role is
         // typically opened seconds before somebody is planned onto it, and the daemon is behind.
-        // Without this, the position would simply not exist yet at the one moment it is asked for.
+        // Without this, the position would not exist yet at the one moment it is asked for.
         //
-        // The position lives on the project's stream, so finding it means replaying the project -
-        // and the only way in is the project id, which this method does not have. Hence the query
-        // by position id below: it reads the projection of the project that owns it.
-        var project = await session
-            .Query<ProjectProjection>()
-            .Where(p => p.OrganizationId == organizationId.Value)
-            .Where(p => p.Positions.Any(position => position.PositionId == positionId))
-            .FirstOrDefaultAsync(ct);
+        // The role lives on the project's stream, which is why the project is a parameter: reading
+        // it out of a second projection would only move the lag somewhere else.
+        var replayed = await session.Events.AggregateStreamAsync<Project>(projectId, token: ct);
 
-        if (project is null)
+        if (replayed is null || replayed.OrganizationId.Value != organizationId.Value)
             return null;
 
-        var replayed = await session.Events.AggregateStreamAsync<Project>(project.Id, token: ct);
-        var found = replayed?.PositionById(positionId);
+        var found = replayed.PositionById(positionId);
 
         return found is null
             ? null
             : Describe(
                 found.PositionId,
-                replayed!.Id.Value,
+                replayed.Id.Value,
                 found.Name,
                 found.ContractName,
                 found.IsArchived

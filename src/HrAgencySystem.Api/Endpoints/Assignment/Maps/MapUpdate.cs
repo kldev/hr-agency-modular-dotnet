@@ -43,7 +43,7 @@ internal static class MapUpdate
     }
 
     internal sealed record UpdateAssignmentRequest(
-        string Position,
+        Guid PositionId,
         DateOnly StartsOn,
         DateOnly? EndsOn = null
     )
@@ -52,6 +52,6 @@ internal static class MapUpdate
             Guid assignmentId,
             OrganizationId organizationId,
             Guid modifiedBy
-        ) => new(assignmentId, organizationId.Value, Position, StartsOn, EndsOn, modifiedBy);
+        ) => new(assignmentId, organizationId.Value, PositionId, StartsOn, EndsOn, modifiedBy);
     }
 }

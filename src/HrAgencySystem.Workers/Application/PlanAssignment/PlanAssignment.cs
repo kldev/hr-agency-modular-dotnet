@@ -13,7 +13,7 @@ public sealed record PlanAssignment(
     Guid WorkerId,
     Guid ProjectId,
     EngagementType EngagementType,
-    string Position,
+    Guid PositionId,
     DateOnly StartsOn,
     DateOnly? EndsOn,
     Guid CreatedBy

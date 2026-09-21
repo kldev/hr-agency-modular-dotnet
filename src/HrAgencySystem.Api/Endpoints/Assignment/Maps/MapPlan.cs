@@ -42,7 +42,8 @@ internal static class MapPlan
         Guid WorkerId,
         Guid ProjectId,
         EngagementType EngagementType,
-        string Position,
+        /// <summary>A role opened in that project - the name is the position's, not this request's.</summary>
+        Guid PositionId,
         DateOnly StartsOn,
         DateOnly? EndsOn = null
     )
@@ -53,7 +54,7 @@ internal static class MapPlan
                 WorkerId,
                 ProjectId,
                 EngagementType,
-                Position,
+                PositionId,
                 StartsOn,
                 EndsOn,
                 createdBy

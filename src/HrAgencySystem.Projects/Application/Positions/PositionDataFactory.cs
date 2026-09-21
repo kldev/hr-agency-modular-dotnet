@@ -24,8 +24,7 @@ internal sealed record ValidatedPositionData(
 
 internal static class PositionDataFactory
 {
-    public const string RateCurrencyRequiredMessage =
-        "A rate needs the currency it is quoted in.";
+    public const string RateCurrencyRequiredMessage = "A rate needs the currency it is quoted in.";
 
     public const string WeeklyHoursOutOfRangeMessage =
         "Weekly hours have to be greater than zero and cannot exceed 168.";

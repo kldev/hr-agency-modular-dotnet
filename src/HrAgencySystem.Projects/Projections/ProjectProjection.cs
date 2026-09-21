@@ -216,8 +216,7 @@ public sealed record ProjectProjection(
         };
 
     public ProjectProjection Apply(ProjectPositionOpened @event) =>
-        WithPositions([.. Positions, @event.Position])
-            .Touched(@event.OpenedBy, @event.OpenedAt);
+        WithPositions([.. Positions, @event.Position]).Touched(@event.OpenedBy, @event.OpenedAt);
 
     public ProjectProjection Apply(ProjectPositionUpdated @event) =>
         WithPositions([
@@ -235,8 +234,11 @@ public sealed record ProjectProjection(
         WithPositions([.. Positions.Select(p => Archived(p, @event.PositionId, false))])
             .Touched(@event.ModifiedBy, @event.ModifiedAt);
 
-    private static ProjectPosition Archived(ProjectPosition position, Guid positionId, bool archived) =>
-        position.PositionId == positionId ? position with { IsArchived = archived } : position;
+    private static ProjectPosition Archived(
+        ProjectPosition position,
+        Guid positionId,
+        bool archived
+    ) => position.PositionId == positionId ? position with { IsArchived = archived } : position;
 
     /// <summary>
     /// The count is of live roles only: a project with fifteen archived positions and two open ones

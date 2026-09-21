@@ -5,6 +5,7 @@ using System.Text;
 using HrAgencySystem.Api.Endpoints.Assignment.Maps;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
+using HrAgencySystem.IntegrationTests.Projects;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
 using Microsoft.AspNetCore.Mvc;
@@ -134,7 +135,8 @@ public class AssignmentComplianceTests(IntegrationEnvironment env, ITestOutputHe
         var planned = await WorkerClient.PlanAsync(
             organizationId,
             workerId,
-            projectId,
+            projectId.ProjectId,
+            projectId.PositionId,
             EngagementType.LocalEmployment
         );
 
@@ -183,14 +185,19 @@ public class AssignmentComplianceTests(IntegrationEnvironment env, ITestOutputHe
         var organizationId = Guid.NewGuid();
         var projectId = await NewProjectAsync(organizationId);
         var workerId = await WorkerClient.EmployedAsync(organizationId);
-        var planned = await WorkerClient.PlanAsync(organizationId, workerId, projectId);
+        var planned = await WorkerClient.PlanAsync(
+            organizationId,
+            workerId,
+            projectId.ProjectId,
+            projectId.PositionId
+        );
 
         return (organizationId, planned.AssignmentId);
     }
 
     private async Task<Guid> PlanForNewWorkerAsync(
         Guid organizationId,
-        Guid projectId,
+        ProjectTestClient.SeededDelivery delivery,
         string firstName,
         string lastName
     )
@@ -200,7 +207,12 @@ public class AssignmentComplianceTests(IntegrationEnvironment env, ITestOutputHe
             firstName: firstName,
             lastName: lastName
         );
-        var planned = await WorkerClient.PlanAsync(organizationId, worker.WorkerId, projectId);
+        var planned = await WorkerClient.PlanAsync(
+            organizationId,
+            worker.WorkerId,
+            delivery.ProjectId,
+            delivery.PositionId
+        );
 
         return planned.AssignmentId;
     }
@@ -247,15 +259,6 @@ public class AssignmentComplianceTests(IntegrationEnvironment env, ITestOutputHe
         return attached;
     }
 
-    private async Task<Guid> NewProjectAsync(Guid organizationId)
-    {
-        var companyId = await ProjectClient.CreateCompanyWithProfileAsync(organizationId);
-        var project = await ProjectClient.CreateAsync(
-            organizationId,
-            companyId,
-            EngagementType.PostingOfWorkers
-        );
-
-        return project.ProjectId;
-    }
+    private Task<ProjectTestClient.SeededDelivery> NewProjectAsync(Guid organizationId) =>
+        ProjectClient.CreateWithPositionAsync(organizationId);
 }

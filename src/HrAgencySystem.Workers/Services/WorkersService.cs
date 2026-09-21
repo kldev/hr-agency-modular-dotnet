@@ -10,6 +10,7 @@ namespace HrAgencySystem.Workers.Services;
 public sealed class WorkersService(
     IUserSnapshotRepository users,
     IProjectSnapshotRepository projects,
+    IPositionSnapshotRepository positions,
     IOrganizationChecker checker,
     IWorkerRepository workers
 ) : IWorkersService
@@ -59,6 +60,27 @@ public sealed class WorkersService(
             throw new BusinessRuleException(IWorkersService.ProjectClosedMessage);
 
         return project;
+    }
+
+    public async Task<PositionSnapshot> GetPositionAsync(
+        OrganizationId organizationId,
+        Guid projectId,
+        Guid positionId,
+        CancellationToken ct
+    )
+    {
+        var position = await positions.GetPositionAsync(projectId, positionId, organizationId, ct);
+
+        // One refusal for an id that never existed, one that belongs to another delivery and one
+        // from another agency. Whoever picked it made the same mistake either way, and a message
+        // that told them apart would be telling them which ids exist elsewhere.
+        if (position is null)
+            throw new BusinessRuleException(IWorkersService.PositionNotOnProjectMessage);
+
+        if (!position.IsOpenForAssignments)
+            throw new BusinessRuleException(IWorkersService.PositionArchivedMessage);
+
+        return position;
     }
 
     public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)

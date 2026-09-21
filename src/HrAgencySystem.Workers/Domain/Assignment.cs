@@ -47,7 +47,7 @@ public sealed class Assignment : IOrganizationDomain
     /// </summary>
     public EngagementType EngagementType { get; private set; }
 
-    public PersonJobTitle Position { get; private set; } = null!;
+    public AssignmentPosition Position { get; private set; } = null!;
 
     public DateOnly StartsOn { get; private set; }
     public DateOnly? EndsOn { get; private set; }
@@ -76,7 +76,7 @@ public sealed class Assignment : IOrganizationDomain
         WorkerFullName = @event.WorkerFullName;
         Project = @event.Project;
         EngagementType = @event.EngagementType;
-        Position = PersonJobTitle.Create(@event.Position, true);
+        Position = @event.Position;
         StartsOn = @event.StartsOn;
         EndsOn = @event.EndsOn;
         Status = AssignmentStatus.Planned;
@@ -84,9 +84,18 @@ public sealed class Assignment : IOrganizationDomain
         CreatedAt = @event.CreatedAt;
     }
 
+    /// <summary>
+    /// The role kept its id and changed its name. Nothing the assignment decides depends on it,
+    /// which is exactly why the name is allowed to follow the project while the id never does.
+    /// </summary>
+    public void Apply(AssignmentPositionRenamed @event)
+    {
+        Position = Position with { Name = @event.Name, ContractName = @event.ContractName };
+    }
+
     public void Apply(AssignmentUpdated @event)
     {
-        Position = PersonJobTitle.Create(@event.Position, true);
+        Position = @event.Position;
         StartsOn = @event.StartsOn;
         EndsOn = @event.EndsOn;
         Touch(@event.ModifiedBy, @event.ModifiedAt);

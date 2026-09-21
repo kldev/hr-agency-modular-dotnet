@@ -8,7 +8,8 @@ namespace HrAgencySystem.Projects.Projections;
 /// by the position they are about. The same shape <c>WorkerProjector</c> uses to fold assignment
 /// events onto the person they belong to.
 /// </summary>
-public sealed class ProjectPositionProjector : MultiStreamProjection<ProjectPositionProjection, Guid>
+public sealed class ProjectPositionProjector
+    : MultiStreamProjection<ProjectPositionProjection, Guid>
 {
     public ProjectPositionProjector()
     {
@@ -16,5 +17,7 @@ public sealed class ProjectPositionProjector : MultiStreamProjection<ProjectPosi
         Identity<ProjectPositionUpdated>(@event => @event.Position.PositionId);
         Identity<ProjectPositionArchived>(@event => @event.PositionId);
         Identity<ProjectPositionRestored>(@event => @event.PositionId);
+        Identity<ProjectPositionStaffed>(@event => @event.PositionId);
+        Identity<ProjectPositionUnstaffed>(@event => @event.PositionId);
     }
 }

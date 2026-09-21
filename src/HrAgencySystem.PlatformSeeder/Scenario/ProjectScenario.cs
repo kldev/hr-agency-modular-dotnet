@@ -5,8 +5,10 @@ using HrAgencySystem.Projects.Application.ChangeStatus;
 using HrAgencySystem.Projects.Application.Contacts.Assign;
 using HrAgencySystem.Projects.Application.Contract.Record;
 using HrAgencySystem.Projects.Application.Create;
+using HrAgencySystem.Projects.Application.Positions.Open;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.SharedKernel.Web.Common;
 using Wolverine;
 
@@ -26,8 +28,12 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
         string WorkCountry,
         EngagementType EngagementType,
         DateOnly StartsOn,
-        DateOnly? EndsOn
+        DateOnly? EndsOn,
+        IReadOnlyList<PositionData> Positions
     );
+
+    /// <summary>A role opened in the project, which is what an assignment is now held against.</summary>
+    internal sealed record PositionData(Guid PositionId, string Name);
 
     private sealed record Spec(
         string Name,
@@ -45,7 +51,12 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
         /// responsible contact and a complete client profile, so two are left in Draft on purpose -
         /// that is the state the go-live checklist exists to explain.
         /// </summary>
-        bool GoLive
+        bool GoLive,
+        /// <summary>
+        /// The roles this delivery is staffed with. Assignments point at one of these, so the seeded
+        /// register shows what it is meant to show: several roles in one project for one client.
+        /// </summary>
+        string[] Positions
     );
 
     private static readonly Spec[] Specs =
@@ -61,7 +72,8 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
             "DE",
             -8,
             10,
-            true
+            true,
+            ["Senior Java Developer", "Business Analyst", "QA Engineer", "DevOps Engineer"]
         ),
         new(
             "Hamburg logistics platform",
@@ -74,7 +86,8 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
             "DE",
             -5,
             14,
-            true
+            true,
+            ["Backend Developer", "Mobile Developer", "Support Engineer"]
         ),
         new(
             "Berlin data platform (local hires)",
@@ -87,7 +100,8 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
             "DE",
             -3,
             18,
-            false
+            false,
+            ["Data Engineer", "Mobile Developer"]
         ),
         new(
             "Brussels payments integration",
@@ -100,7 +114,8 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
             "BE",
             -6,
             12,
-            true
+            true,
+            ["DevOps Engineer", "Integration Engineer"]
         ),
         new(
             "Kraków internal tooling",
@@ -113,7 +128,8 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
             "PL",
             -4,
             null,
-            false
+            false,
+            ["Frontend Developer"]
         ),
     ];
 
@@ -170,6 +186,13 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
                     )
                 );
 
+            var positions = await OpenPositions(
+                organizationId,
+                result.ProjectId,
+                spec,
+                userIds[index % userIds.Count]
+            );
+
             created.Add(
                 new ProjectData(
                     result.ProjectId,
@@ -177,7 +200,8 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
                     spec.CountryCode,
                     spec.EngagementType,
                     startsOn,
-                    endsOn
+                    endsOn,
+                    positions
                 )
             );
         }
@@ -211,6 +235,61 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
     /// The client's paperwork. A profile counts as complete only once it has a legal name and a
     /// registered address, and both the contract and the go-live check refuse without them.
     /// </summary>
+    /// <summary>
+    /// The roles the delivery is staffed with, opened right after the project so the assignments
+    /// seeded later have something to point at. Terms are deliberately plain here - the seeder is
+    /// showing the shape of the register, not pretending to be somebody's real contract.
+    /// </summary>
+    private async Task<IReadOnlyList<PositionData>> OpenPositions(
+        Guid organizationId,
+        Guid projectId,
+        Spec spec,
+        Guid openedBy
+    )
+    {
+        var opened = new List<PositionData>();
+
+        foreach (var name in spec.Positions)
+        {
+            var result = await bus.InvokeAsync<ProjectPositionOpened>(
+                new OpenPosition(
+                    projectId,
+                    organizationId,
+                    name,
+                    null,
+                    $"Work carried out as {name} on {spec.Name}.",
+                    ["Deliver the agreed scope", "Report progress to the site lead"],
+                    [],
+                    WorkerContractType.EmploymentContract,
+                    32m,
+                    "PLN",
+                    RateUnit.Hourly,
+                    RateBasis.Gross,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    40m,
+                    new TimeOnly(8, 0),
+                    "One shift, Monday to Friday",
+                    10,
+                    null,
+                    null,
+                    [],
+                    2,
+                    spec.EngagementType,
+                    openedBy
+                )
+            );
+
+            opened.Add(new PositionData(result.Position.PositionId, name));
+        }
+
+        return opened;
+    }
+
     private async Task CompleteClientProfile(Guid organizationId, PendingGoLive goLive)
     {
         await bus.InvokeAsync<CompanyProfileCompleted>(

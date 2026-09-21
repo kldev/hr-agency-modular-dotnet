@@ -33,6 +33,7 @@ public sealed class WorkerProjector : MultiStreamProjection<WorkerProjection, Gu
         Identity<AssignmentPlanned>(@event => @event.WorkerId);
         Identity<AssignmentUpdated>(@event => @event.WorkerId);
         Identity<AssignmentStatusChanged>(@event => @event.WorkerId);
+        Identity<AssignmentPositionRenamed>(@event => @event.WorkerId);
     }
 
     public WorkerProjection Create(WorkerRegistered @event)
@@ -149,7 +150,8 @@ public sealed class WorkerProjector : MultiStreamProjection<WorkerProjection, Gu
             @event.Project.DeliveringEntityName,
             @event.Project.WorkCountry,
             @event.EngagementType,
-            @event.Position,
+            @event.Position.PositionId,
+            @event.Position.Name,
             @event.StartsOn,
             @event.EndsOn,
             AssignmentStatus.Planned
@@ -170,10 +172,18 @@ public sealed class WorkerProjector : MultiStreamProjection<WorkerProjection, Gu
             summary =>
                 summary with
                 {
-                    Position = @event.Position,
+                    PositionId = @event.Position.PositionId,
+                    PositionName = @event.Position.Name,
                     StartsOn = @event.StartsOn,
                     EndsOn = @event.EndsOn,
                 }
+        );
+
+    public void Apply(WorkerProjection worker, AssignmentPositionRenamed @event) =>
+        Replace(
+            worker,
+            @event.AssignmentId,
+            summary => summary with { PositionName = @event.Name }
         );
 
     public void Apply(WorkerProjection worker, AssignmentStatusChanged @event) =>

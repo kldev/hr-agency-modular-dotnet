@@ -77,10 +77,10 @@ public sealed class WorkerTestClient(HttpClient client, ITestOutputHelper output
         Guid organizationId,
         Guid workerId,
         Guid projectId,
+        Guid positionId,
         EngagementType engagementType = EngagementType.PostingOfWorkers,
         DateOnly? startsOn = null,
-        DateOnly? endsOn = null,
-        string position = "Backend developer"
+        DateOnly? endsOn = null
     )
     {
         client.WithOrganizationId(organizationId);
@@ -90,8 +90,8 @@ public sealed class WorkerTestClient(HttpClient client, ITestOutputHelper output
             WorkerTestData.PlanRequest(
                 workerId,
                 projectId,
+                positionId,
                 engagementType,
-                position,
                 startsOn,
                 endsOn
             )

@@ -5,10 +5,10 @@ using HrAgencySystem.Projects.Application.Positions.Open;
 using HrAgencySystem.Projects.Application.Positions.Restore;
 using HrAgencySystem.Projects.Application.Positions.Update;
 using HrAgencySystem.Projects.Domain;
-using Events = HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using Events = HrAgencySystem.Projects.Events;
 
 namespace HrAgencySystem.UnitTests.Projects;
 
@@ -58,9 +58,7 @@ public class ProjectPositionHandlerTests : BaseTest
     {
         var project = await ProjectWith("Painter");
 
-        var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
-            Open(project, "painter")
-        );
+        var error = await Assert.ThrowsAsync<BusinessRuleException>(() => Open(project, "painter"));
 
         Assert.Equal(OpenPositionHandler.NameAlreadyUsedMessage, error.Message);
     }
@@ -123,7 +121,7 @@ public class ProjectPositionHandlerTests : BaseTest
         var project = await ProjectWith("Painter");
         var positionId = project.Positions[0].PositionId;
 
-        var (result, _) = await Update(project, positionId, "Painter Belgium");
+        var (result, _, _) = await Update(project, positionId, "Painter Belgium");
 
         Assert.True(result.NameChanged);
         Assert.Equal("Painter Belgium", result.Position.Name);
@@ -135,7 +133,7 @@ public class ProjectPositionHandlerTests : BaseTest
         var project = await ProjectWith("Painter");
         var positionId = project.Positions[0].PositionId;
 
-        var (result, _) = await Update(project, positionId, "Painter", weeklyHours: 42m);
+        var (result, _, _) = await Update(project, positionId, "Painter", weeklyHours: 42m);
 
         Assert.False(result.NameChanged);
         Assert.Equal(42m, result.Position.WeeklyHours);
@@ -284,12 +282,11 @@ public class ProjectPositionHandlerTests : BaseTest
             CancellationToken.None
         );
 
-    private static Task<(Events.ProjectPositionUpdated, Wolverine.Marten.Events)> Update(
-        Project project,
-        Guid positionId,
-        string name,
-        decimal? weeklyHours = null
-    ) =>
+    private static Task<(
+        Events.ProjectPositionUpdated,
+        Wolverine.Marten.Events,
+        Wolverine.OutgoingMessages
+    )> Update(Project project, Guid positionId, string name, decimal? weeklyHours = null) =>
         UpdatePositionHandler.Handle(
             new UpdatePosition(
                 ProjectScenario.ProjectId,

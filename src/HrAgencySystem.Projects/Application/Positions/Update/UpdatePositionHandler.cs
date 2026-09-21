@@ -1,9 +1,11 @@
 using HrAgencySystem.Projects.Application.Positions.Open;
+using HrAgencySystem.Projects.Contracts.IntegrationEvents;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.Projects.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
+using Wolverine;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Projects.Application.Positions.Update;
@@ -13,7 +15,11 @@ public static class UpdatePositionHandler
     public const string UnknownPositionMessage = "This project has no such position.";
 
     [AggregateHandler]
-    public static async Task<(ProjectPositionUpdated, Wolverine.Marten.Events)> Handle(
+    public static async Task<(
+        ProjectPositionUpdated,
+        Wolverine.Marten.Events,
+        OutgoingMessages
+    )> Handle(
         UpdatePosition command,
         Project aggregate,
         IProjectService service,
@@ -72,6 +78,28 @@ public static class UpdatePositionHandler
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        var messages = new OutgoingMessages();
+
+        // Assignments froze both names when they were planned, so both are worth chasing - the
+        // contract name only ever reaches a document, but a stale one there is the expensive kind.
+        if (
+            nameChanged
+            || !string.Equals(
+                existing.ContractName,
+                position.ContractName,
+                StringComparison.Ordinal
+            )
+        )
+            messages.Add(
+                new ProjectPositionRenamed(
+                    aggregate.OrganizationId.Value,
+                    aggregate.Id.Value,
+                    position.PositionId,
+                    position.Name,
+                    position.ContractName
+                )
+            );
+
+        return (@event, [@event], messages);
     }
 }

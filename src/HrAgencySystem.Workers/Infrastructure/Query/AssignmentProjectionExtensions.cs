@@ -21,6 +21,7 @@ internal static class AssignmentProjectionExtensions
             return query.Where(a =>
                 a.WorkerFullName.Contains(term, StringComparison.OrdinalIgnoreCase)
                 || a.ProjectName.Contains(term, StringComparison.OrdinalIgnoreCase)
+                || a.PositionName.Contains(term, StringComparison.OrdinalIgnoreCase)
             );
         }
 
@@ -34,6 +35,9 @@ internal static class AssignmentProjectionExtensions
 
             if (filters.ProjectId is not null)
                 query = query.Where(a => a.ProjectId == filters.ProjectId);
+
+            if (filters.PositionId is not null)
+                query = query.Where(a => a.PositionId == filters.PositionId);
 
             if (!string.IsNullOrWhiteSpace(filters.WorkCountry))
             {

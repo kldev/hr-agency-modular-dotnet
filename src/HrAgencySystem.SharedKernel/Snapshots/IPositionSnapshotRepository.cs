@@ -11,10 +11,18 @@ public interface IPositionSnapshotRepository
     public const string NotFoundMessage = "Required position data not found.";
 
     /// <summary>
-    /// Resolves a position only when it belongs to the given organization, for the same reason a
-    /// project is resolved that way: nobody is ever assigned to another agency's role.
+    /// Resolves a role inside the delivery it belongs to, and only within the given organization -
+    /// nobody is ever assigned to another agency's role.
+    /// <para>
+    /// The project is asked for rather than derived, and that is what makes the lookup work at the
+    /// moment it is actually made: a role is typically opened seconds before somebody is planned
+    /// onto it, both read models are still behind, and knowing the project is what lets the stream
+    /// be replayed instead. A role from a different delivery simply is not found here, which is the
+    /// same answer as an id that never existed and reads the same to whoever picked it.
+    /// </para>
     /// </summary>
     Task<PositionSnapshot?> GetPositionAsync(
+        Guid projectId,
         Guid positionId,
         OrganizationId organizationId,
         CancellationToken ct
@@ -47,10 +55,4 @@ public sealed record PositionSnapshot(
     /// people work out their notice.
     /// </summary>
     public bool IsOpenForAssignments => !IsArchived;
-
-    /// <summary>
-    /// Whether this role belongs to the delivery somebody is being assigned to. Asked because the
-    /// assignment names both, and two ids that disagree mean one of them was picked by mistake.
-    /// </summary>
-    public bool BelongsTo(Guid projectId) => ProjectId == projectId;
 }

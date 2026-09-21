@@ -68,9 +68,7 @@ internal sealed class PositionsQueryRepository(IQuerySession session) : IPositio
     {
         var ids = projectIds.Distinct().ToArray();
 
-        return ids.Length == 0
-            ? []
-            : await session.LoadManyAsync<ProjectProjection>(ct, ids);
+        return ids.Length == 0 ? [] : await session.LoadManyAsync<ProjectProjection>(ct, ids);
     }
 
     private static ProjectProjection? Find(

@@ -31,7 +31,9 @@ COPY src/HrAgencySystem.LegalEntities/HrAgencySystem.LegalEntities.csproj HrAgen
 COPY src/HrAgencySystem.Teams/HrAgencySystem.Teams.csproj HrAgencySystem.Teams/
 COPY src/HrAgencySystem.Teams.Contracts/HrAgencySystem.Teams.Contracts.csproj HrAgencySystem.Teams.Contracts/
 COPY src/HrAgencySystem.Projects/HrAgencySystem.Projects.csproj HrAgencySystem.Projects/
+COPY src/HrAgencySystem.Projects.Contracts/HrAgencySystem.Projects.Contracts.csproj HrAgencySystem.Projects.Contracts/
 COPY src/HrAgencySystem.Workers/HrAgencySystem.Workers.csproj HrAgencySystem.Workers/
+COPY src/HrAgencySystem.Workers.Contracts/HrAgencySystem.Workers.Contracts.csproj HrAgencySystem.Workers.Contracts/
 COPY src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj services/HrAgencySystem.FileService.Contracts/
 COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
 

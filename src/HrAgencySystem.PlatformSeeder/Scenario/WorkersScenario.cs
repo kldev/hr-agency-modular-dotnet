@@ -576,7 +576,7 @@ internal sealed class WorkersScenario(IMessageBus bus, Func<Task> waitForProject
                         workerId,
                         project.ProjectId,
                         project.EngagementType,
-                        assignment.Position,
+                        PositionOf(project, assignment.Position),
                         Clamp(today.AddMonths(assignment.StartOffsetMonths), project),
                         assignment.EndOffsetMonths is null
                             ? null
@@ -635,6 +635,19 @@ internal sealed class WorkersScenario(IMessageBus bus, Func<Task> waitForProject
     /// The period has to sit inside the project's own, which the offsets above only approximately
     /// respect - a demo is not worth a validation error.
     /// </summary>
+    /// <summary>
+    /// The role an assignment is planned against. Matched by the name the spec uses; when a spec
+    /// names a role its project does not have, the project's first role stands in - a seeder that
+    /// threw here would be one typo away from producing no data at all.
+    /// </summary>
+    private static Guid PositionOf(ProjectScenario.ProjectData project, string name) =>
+        project
+            .Positions.FirstOrDefault(p =>
+                string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase)
+            )
+            ?.PositionId
+        ?? project.Positions[0].PositionId;
+
     private static DateOnly Clamp(DateOnly date, ProjectScenario.ProjectData project)
     {
         if (date < project.StartsOn)

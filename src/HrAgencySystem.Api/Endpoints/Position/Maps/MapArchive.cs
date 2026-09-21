@@ -29,12 +29,7 @@ internal static class MapArchive
     ) =>
         TypedResults.Ok(
             await bus.InvokeAsync<ProjectPositionArchived>(
-                new ArchivePosition(
-                    projectId,
-                    user.GetOrganization.Value,
-                    positionId,
-                    user.UserId
-                ),
+                new ArchivePosition(projectId, user.GetOrganization.Value, positionId, user.UserId),
                 ct
             )
         );

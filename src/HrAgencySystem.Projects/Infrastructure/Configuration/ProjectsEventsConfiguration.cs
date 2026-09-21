@@ -26,6 +26,8 @@ internal static class ProjectsEventsConfiguration
             options.Events.AddEventType<ProjectPositionUpdated>();
             options.Events.AddEventType<ProjectPositionArchived>();
             options.Events.AddEventType<ProjectPositionRestored>();
+            options.Events.AddEventType<ProjectPositionStaffed>();
+            options.Events.AddEventType<ProjectPositionUnstaffed>();
             options.Events.AddEventType<ComplianceItemRecorded>();
         }
     }

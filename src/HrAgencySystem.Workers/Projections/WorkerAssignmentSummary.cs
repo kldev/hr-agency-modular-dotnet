@@ -16,7 +16,8 @@ public sealed record WorkerAssignmentSummary(
     string DeliveringEntityName,
     string WorkCountry,
     EngagementType EngagementType,
-    string Position,
+    Guid PositionId,
+    string PositionName,
     DateOnly StartsOn,
     DateOnly? EndsOn,
     AssignmentStatus Status

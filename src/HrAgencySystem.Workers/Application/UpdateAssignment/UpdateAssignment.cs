@@ -6,7 +6,7 @@ namespace HrAgencySystem.Workers.Application.UpdateAssignment;
 public sealed record UpdateAssignment(
     [property: Identity] Guid AssignmentId,
     Guid OrganizationId,
-    string Position,
+    Guid PositionId,
     DateOnly StartsOn,
     DateOnly? EndsOn,
     Guid ModifiedBy

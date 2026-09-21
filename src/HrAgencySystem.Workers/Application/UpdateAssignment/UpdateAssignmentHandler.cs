@@ -4,9 +4,11 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Application.PlanAssignment;
 using HrAgencySystem.Workers.Application.Port;
+using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
 using HrAgencySystem.Workers.Services;
+using Wolverine;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Workers.Application.UpdateAssignment;
@@ -23,7 +25,7 @@ public static class UpdateAssignmentHandler
         "This assignment has finished, so its terms cannot be changed.";
 
     [AggregateHandler]
-    public static async Task<(AssignmentUpdated, Wolverine.Marten.Events)> Handle(
+    public static async Task<(AssignmentUpdated, Wolverine.Marten.Events, OutgoingMessages)> Handle(
         UpdateAssignment command,
         Domain.Assignment aggregate,
         IWorkersService service,
@@ -38,7 +40,7 @@ public static class UpdateAssignmentHandler
         if (AssignmentStatusChangePolicy.IsFinal(aggregate.Status))
             throw new BusinessRuleException(AlreadyFinishedMessage);
 
-        var position = ReadPosition(command);
+        ReadPeriod(command);
 
         var project = await service.GetProjectAsync(
             OrganizationId.From(command.OrganizationId),
@@ -48,6 +50,15 @@ public static class UpdateAssignmentHandler
 
         if (!project.Covers(command.StartsOn, command.EndsOn))
             throw new BusinessRuleException(PlanAssignmentHandler.OutsideProjectPeriodMessage);
+
+        // The project cannot be corrected here, so the role is resolved inside the one the posting
+        // already names - a role from anywhere else is simply not a role on this posting.
+        var position = await service.GetPositionAsync(
+            OrganizationId.From(command.OrganizationId),
+            aggregate.Project.ProjectId,
+            command.PositionId,
+            ct
+        );
 
         // The person's other postings still may not overlap - this one excluded, since moving its
         // own dates is the whole point.
@@ -69,30 +80,44 @@ public static class UpdateAssignmentHandler
             aggregate.Id.Value,
             aggregate.OrganizationId.Value,
             aggregate.WorkerId.Value,
-            position.Value,
+            AssignmentPosition.From(position),
             command.StartsOn,
             command.EndsOn,
             user,
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        var messages = new OutgoingMessages();
+
+        // Correcting the role moves the seat rather than adding one. Whether this should be a
+        // correction at all is the open question on the plan - either way the counts may not be
+        // left describing a role this person no longer sits on.
+        if (aggregate.Position.PositionId != command.PositionId)
+        {
+            messages.Add(
+                new AssignmentPositionUnstaffed(
+                    aggregate.OrganizationId.Value,
+                    aggregate.Project.ProjectId,
+                    aggregate.Position.PositionId,
+                    aggregate.Id.Value
+                )
+            );
+            messages.Add(
+                new AssignmentPositionStaffed(
+                    aggregate.OrganizationId.Value,
+                    aggregate.Project.ProjectId,
+                    command.PositionId,
+                    aggregate.Id.Value
+                )
+            );
+        }
+
+        return (@event, [@event], messages);
     }
 
-    private static PersonJobTitle ReadPosition(UpdateAssignment command)
+    private static void ReadPeriod(UpdateAssignment command)
     {
-        var errors = new List<string>();
-
-        var (position, positionError) = PersonJobTitle.TryCreate(command.Position, true);
-        if (positionError is not null)
-            errors.Add(positionError);
-
         if (command.EndsOn is not null && command.EndsOn < command.StartsOn)
-            errors.Add(PlanAssignmentHandler.EndsBeforeStartMessage);
-
-        if (errors.Count > 0)
-            throw new ValidationException(errors);
-
-        return position!;
+            throw new ValidationException([PlanAssignmentHandler.EndsBeforeStartMessage]);
     }
 }

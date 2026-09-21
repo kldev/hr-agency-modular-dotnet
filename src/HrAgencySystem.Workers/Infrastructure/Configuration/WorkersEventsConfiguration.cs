@@ -21,6 +21,7 @@ internal static class WorkersEventsConfiguration
             options.Events.AddEventType<AssignmentPlanned>();
             options.Events.AddEventType<AssignmentUpdated>();
             options.Events.AddEventType<AssignmentStatusChanged>();
+            options.Events.AddEventType<AssignmentPositionRenamed>();
             options.Events.AddEventType<AssignmentDocumentAttached>();
             options.Events.AddEventType<AssignmentDocumentMetadataChanged>();
             options.Events.AddEventType<AssignmentDocumentRemoved>();

@@ -8,9 +8,18 @@ namespace HrAgencySystem.Api.Common.Errors;
 
 public sealed class GlobalExceptionHandler(
     ILogger<GlobalExceptionHandler> logger,
-    IProblemDetailsService service
+    IProblemDetailsService service,
+    IHostEnvironment environment
 ) : IExceptionHandler
 {
+    /// <summary>
+    /// Whether the person reading the response is the person who can fix it. Locally a 500 says
+    /// what actually went wrong; anywhere else it says nothing, because an exception message names
+    /// internal types and a stack trace names the source tree.
+    /// </summary>
+    private bool ShowsInternals =>
+        environment.IsDevelopment() || environment.EnvironmentName == "docker";
+
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
@@ -128,7 +137,7 @@ public sealed class GlobalExceptionHandler(
                     httpContext,
                     StatusCodes.Status500InternalServerError,
                     "Internal server error",
-                    "An unexpected error occurred.",
+                    ShowsInternals ? exception.Message : "An unexpected error occurred.",
                     exception
                 );
         }
@@ -143,16 +152,26 @@ public sealed class GlobalExceptionHandler(
     )
     {
         context.Response.StatusCode = statusCode;
+        var details = new ProblemDetails
+        {
+            Type = exception.GetType().Name,
+            Title = title,
+            Detail = detail,
+        };
+
+        if (ShowsInternals)
+        {
+            details.Extensions["exception"] = exception.ToString();
+
+            if (exception.InnerException is not null)
+                details.Extensions["innerException"] = exception.InnerException.ToString();
+        }
+
         var problem = new ProblemDetailsContext
         {
             HttpContext = context,
             Exception = exception,
-            ProblemDetails = new ProblemDetails
-            {
-                Type = exception.GetType().Name,
-                Title = title,
-                Detail = detail,
-            },
+            ProblemDetails = details,
         };
 
         await service.TryWriteAsync(problem);

@@ -57,6 +57,13 @@ internal static class WorkersProjectionsConfiguration
                     {
                         idx.Name = "mt_idx_assignment_project";
                     }
+                )
+                .Index(
+                    x => new { x.OrganizationId, x.PositionId },
+                    idx =>
+                    {
+                        idx.Name = "mt_idx_assignment_position";
+                    }
                 );
         }
     }
