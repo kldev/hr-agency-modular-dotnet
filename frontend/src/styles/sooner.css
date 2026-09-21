@@ -2,28 +2,50 @@
    Sonner
    HR Agency Portal
    ========================================================= */
-/** biome-ignore-all lint/complexity/noImportantStyles: false */
+/** biome-ignore-all lint/complexity/noImportantStyles: sonner ships its own styles and wins without this */
+
+/*
+ * A toast is a floating panel, so it is built like every other panel in this app: the plain surface
+ * colour, one hairline border, the 3px radius the design system uses everywhere.
+ *
+ * The type is carried by an accent down the left edge and by the icon, not by tinting the whole
+ * card. Nothing else here fills a surface with colour - a filled panel reads as an alert that has
+ * to be dealt with, which is the wrong weight for "Team created".
+ */
 
 [data-sonner-toaster] {
 	--normal-bg: var(--color-surface);
 	--normal-border: var(--color-border);
 	--normal-text: var(--color-text);
 
-	--success-bg: var(--color-success-soft);
-	--success-border: var(--color-success);
+	/* Sonner tints per type by default; every type keeps the neutral surface instead. */
+	--success-bg: var(--color-surface);
+	--success-border: var(--color-border);
 	--success-text: var(--color-text);
 
-	--error-bg: var(--color-danger-soft);
-	--error-border: var(--color-danger);
+	--error-bg: var(--color-surface);
+	--error-border: var(--color-border);
 	--error-text: var(--color-text);
 
-	--warning-bg: var(--color-warning-soft);
-	--warning-border: var(--color-warning);
+	--warning-bg: var(--color-surface);
+	--warning-border: var(--color-border);
 	--warning-text: var(--color-text);
 
-	--info-bg: var(--color-info-soft);
-	--info-border: var(--color-info);
+	--info-bg: var(--color-surface);
+	--info-border: var(--color-border);
 	--info-text: var(--color-text);
+
+	/*
+	 * Kept local rather than promoted to a token: it is the one elevation in the app that sits over
+	 * arbitrary content without a backdrop behind it, so it needs more lift than `--shadow-subtle`
+	 * and less than the dialog, which dims the page first.
+	 */
+	--toast-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
+	--toast-accent: transparent;
+}
+
+[data-theme="dark"] [data-sonner-toaster] {
+	--toast-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 
 /* =========================================================
@@ -33,38 +55,45 @@
 [data-sonner-toast] {
 	font-family: var(--font-family) !important;
 
-	width: 360px !important;
-	min-height: 52px !important;
+	width: 356px !important;
 
-	padding: 10px 12px !important;
+	padding: var(--space-3) var(--space-4) !important;
 
 	background: var(--color-surface) !important;
 	border: 1px solid var(--color-border) !important;
-	border-radius: var(--radius-lg) !important;
+	border-radius: var(--radius-md) !important;
 
 	color: var(--color-text) !important;
 
-	box-shadow: var(--shadow-subtle) !important;
+	/* The inset is the type accent; the outer half is the lift. */
+	box-shadow:
+		inset 3px 0 0 var(--toast-accent),
+		var(--toast-shadow) !important;
 }
 
 /* =========================================================
    Content
    ========================================================= */
 
+[data-sonner-toast] [data-content] {
+	/* Room for the close button, which is absolutely positioned over the top right corner. */
+	padding-right: var(--space-4) !important;
+}
+
 [data-sonner-toast] [data-title] {
 	font-size: var(--font-size-md) !important;
-	font-weight: var(--font-weight-semibold) !important;
-	line-height: 18px !important;
+	font-weight: var(--font-weight-medium) !important;
+	line-height: 1.35 !important;
 
 	color: var(--color-text) !important;
 }
 
 [data-sonner-toast] [data-description] {
-	margin-top: 2px !important;
+	margin-top: var(--space-1) !important;
 
 	font-size: var(--font-size-sm) !important;
 	font-weight: var(--font-weight-normal) !important;
-	line-height: 17px !important;
+	line-height: 1.4 !important;
 
 	color: var(--color-text-secondary) !important;
 }
@@ -74,10 +103,12 @@
    ========================================================= */
 
 [data-sonner-toast] [data-icon] {
-	width: 18px !important;
-	height: 18px !important;
+	width: 16px !important;
+	height: 16px !important;
 
-	margin-right: 8px !important;
+	margin-right: var(--space-3) !important;
+
+	color: var(--color-text-muted) !important;
 }
 
 /* =========================================================
@@ -85,11 +116,12 @@
    ========================================================= */
 
 [data-sonner-toast] [data-close-button] {
-	top: 8px !important;
-	right: 8px !important;
+	top: var(--space-2) !important;
+	right: var(--space-2) !important;
+	left: auto !important;
 
-	width: 22px !important;
-	height: 22px !important;
+	width: 20px !important;
+	height: 20px !important;
 
 	background: transparent !important;
 	border: 1px solid transparent !important;
@@ -111,14 +143,14 @@
 }
 
 /* =========================================================
-   Actions
+   Actions - the same two buttons the rest of the app uses
    ========================================================= */
 
 [data-sonner-toast] [data-button] {
-	height: 28px !important;
-	padding: 0 9px !important;
+	height: 26px !important;
+	padding: 0 var(--space-3) !important;
 
-	border-radius: var(--radius-sm) !important;
+	border-radius: var(--radius-md) !important;
 
 	font-family: var(--font-family) !important;
 	font-size: var(--font-size-sm) !important;
@@ -126,15 +158,13 @@
 
 	cursor: pointer !important;
 
-	transition:
-		background var(--transition-fast),
-		border-color var(--transition-fast) !important;
-}
-
-[data-sonner-toast] [data-button] {
 	background: var(--color-primary) !important;
 	border: 1px solid var(--color-primary) !important;
 	color: #ffffff !important;
+
+	transition:
+		background var(--transition-fast),
+		border-color var(--transition-fast) !important;
 }
 
 [data-sonner-toast] [data-button]:hover {
@@ -155,76 +185,47 @@
 }
 
 /* =========================================================
-   Success
+   Types - accent and icon only
    ========================================================= */
 
 [data-sonner-toast][data-type="success"] {
-	background: var(--color-success-soft) !important;
-	border-color: var(--color-success) !important;
+	--toast-accent: var(--color-success);
 }
 
 [data-sonner-toast][data-type="success"] [data-icon] {
 	color: var(--color-success) !important;
 }
 
-/* =========================================================
-   Error
-   ========================================================= */
-
 [data-sonner-toast][data-type="error"] {
-	background: var(--color-danger-soft) !important;
-	border-color: var(--color-danger) !important;
+	--toast-accent: var(--color-danger);
 }
 
 [data-sonner-toast][data-type="error"] [data-icon] {
 	color: var(--color-danger) !important;
 }
 
-/* =========================================================
-   Warning
-   ========================================================= */
-
 [data-sonner-toast][data-type="warning"] {
-	background: var(--color-warning-soft) !important;
-	border-color: var(--color-warning) !important;
+	--toast-accent: var(--color-warning);
 }
 
 [data-sonner-toast][data-type="warning"] [data-icon] {
 	color: var(--color-warning) !important;
 }
 
-/* =========================================================
-   Info
-   ========================================================= */
-
 [data-sonner-toast][data-type="info"] {
-	background: var(--color-info-soft) !important;
-	border-color: var(--color-info) !important;
+	--toast-accent: var(--color-info);
 }
 
 [data-sonner-toast][data-type="info"] [data-icon] {
 	color: var(--color-info) !important;
 }
 
-/* =========================================================
-   Loading
-   ========================================================= */
-
 [data-sonner-toast][data-type="loading"] {
-	background: var(--color-surface) !important;
-	border-color: var(--color-border) !important;
+	--toast-accent: var(--color-border-strong);
 }
 
 [data-sonner-toast][data-type="loading"] [data-icon] {
-	color: var(--color-primary) !important;
-}
-
-/* =========================================================
-   Dark mode adjustments
-   ========================================================= */
-
-[data-theme="dark"] [data-sonner-toast] {
-	box-shadow: var(--shadow-subtle) !important;
+	color: var(--color-text-secondary) !important;
 }
 
 /* =========================================================
@@ -233,7 +234,7 @@
 
 @media (max-width: 640px) {
 	[data-sonner-toast] {
-		width: calc(100vw - 24px) !important;
+		width: calc(100vw - var(--space-6)) !important;
 		max-width: none !important;
 	}
 }
