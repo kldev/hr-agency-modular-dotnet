@@ -315,9 +315,11 @@ internal static class ApiEndpoints
         public const string Users = $"{SuggestionBase}/users";
         public const string User = $"{SuggestionBase}/users/{{userId:guid}}";
         public const string Projects = $"{SuggestionBase}/projects";
+        public const string Project = $"{SuggestionBase}/projects/{{projectId:guid}}";
         public const string Teams = $"{SuggestionBase}/teams";
         public const string Team = $"{SuggestionBase}/teams/{{teamId:guid}}";
         public const string Workers = $"{SuggestionBase}/workers";
+        public const string Worker = $"{SuggestionBase}/workers/{{workerId:guid}}";
     }
 
     // Anonymous, excluded from OpenAPI: the feed files served next to the public job board.

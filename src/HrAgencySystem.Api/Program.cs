@@ -1,10 +1,8 @@
 using HrAgencySystem.Api;
-using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
 using HrAgencySystem.Api.Infrastructure.FileServiceClient;
 using HrAgencySystem.PlatformSeeder;
-using JasperFx;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -19,8 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
     {
         builder.Services.AddPlatformSeederModule();
     }
-
-    builder.Host.ApplyJasperFxExtensions();
 }
 
 var app = builder.Build();
@@ -46,5 +42,5 @@ var app = builder.Build();
     Console.WriteLine("HR agency API started");
     Console.WriteLine("Environment: " + app.Environment.EnvironmentName);
 
-    await app.RunJasperFxCommands(args);
+    await app.RunAsync();
 }

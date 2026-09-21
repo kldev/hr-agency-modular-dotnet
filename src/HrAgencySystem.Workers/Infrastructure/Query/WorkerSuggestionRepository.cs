@@ -27,4 +27,18 @@ internal sealed class WorkerSuggestionRepository(IQuerySession session)
 
         return [.. workers.Select(w => w.ToSuggestion())];
     }
+
+    public async Task<WorkerSuggestion?> ById(
+        OrganizationId organizationId,
+        Guid workerId,
+        CancellationToken ct
+    )
+    {
+        var worker = await session
+            .Query<WorkerProjection>()
+            .WithOrganizationId(organizationId)
+            .FirstOrDefaultAsync(w => w.Id == workerId, ct);
+
+        return worker?.ToSuggestion();
+    }
 }
