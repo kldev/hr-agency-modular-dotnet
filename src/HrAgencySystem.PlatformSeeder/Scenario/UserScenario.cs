@@ -127,6 +127,9 @@ internal class UserScenario(IMessageBus bus)
             OrganizationRole.HiringManager => "Hiring Manager",
             OrganizationRole.Interviewer => "Interviewer",
             OrganizationRole.Sales => "Sales Specialist",
+            OrganizationRole.HumanResources => "HR Specialist",
+            OrganizationRole.Finance => "Finance Specialist",
+            OrganizationRole.Administration => "Office Administrator",
             _ => "Employee",
         };
 }

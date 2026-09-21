@@ -65,7 +65,7 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
             "Joanna",
             "Krol",
             "Head of Finance",
-            OrganizationRole.Admin
+            OrganizationRole.Finance
         ),
         new(
             "Administration",
@@ -73,7 +73,7 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
             "Beata",
             "Sikora",
             "Head of Administration",
-            OrganizationRole.Admin
+            OrganizationRole.Administration
         ),
         new(
             "Recruitment",
@@ -97,7 +97,7 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
             "Halina",
             "Dabrowska",
             "Head of Payroll",
-            OrganizationRole.Admin,
+            OrganizationRole.HumanResources,
             Children:
             [
                 new(
@@ -106,7 +106,7 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
                     "Ewa",
                     "Nowicka",
                     "Payroll Poland lead",
-                    OrganizationRole.Admin
+                    OrganizationRole.HumanResources
                 ),
                 new(
                     "Payroll abroad",
@@ -114,7 +114,7 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
                     "Monika",
                     "Bak",
                     "Payroll abroad lead",
-                    OrganizationRole.Admin
+                    OrganizationRole.HumanResources
                 ),
             ]
         ),
