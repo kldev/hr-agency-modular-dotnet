@@ -1,7 +1,7 @@
 import type { ProjectProjection } from "@/api/models";
 import { DetailItem, DetailOverviewHeader, ProjectStatusBadge } from "@/components/ui";
+import { ComplianceChip } from "@/features/compliance";
 import { formatDate } from "@/utlis/dateUtils";
-import { ComplianceChip } from "../ComplianceChip";
 
 interface ProjectStatusSidebarProps {
 	project: ProjectProjection;

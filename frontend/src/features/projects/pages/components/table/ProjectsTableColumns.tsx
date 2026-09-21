@@ -3,9 +3,9 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { ProjectProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark, ProjectStatusBadge } from "@/components/ui";
+import { ComplianceChip } from "@/features/compliance";
 import { engagementTypes } from "../../../types";
 import { formatPeriod } from "../../../utils";
-import { ComplianceChip } from "../ComplianceChip";
 import { ProjectActions } from "./ProjectActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, ProjectProjection>();

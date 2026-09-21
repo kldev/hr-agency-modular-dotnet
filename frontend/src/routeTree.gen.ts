@@ -28,6 +28,8 @@ import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as AdminUsersIdRouteImport } from './routes/admin/users/$id'
 import { Route as AppApplicationsIndexRouteImport } from './routes/app/applications/index'
 import { Route as AppApplicationsIdRouteImport } from './routes/app/applications/$id'
+import { Route as AppAssignmentsIndexRouteImport } from './routes/app/assignments/index'
+import { Route as AppAssignmentsIdRouteImport } from './routes/app/assignments/$id'
 import { Route as AppCalendarIndexRouteImport } from './routes/app/calendar/index'
 import { Route as AppCandidatesIndexRouteImport } from './routes/app/candidates/index'
 import { Route as AppCandidatesIdRouteImport } from './routes/app/candidates/$id'
@@ -52,6 +54,9 @@ import { Route as AppTeamsIndexRouteImport } from './routes/app/teams/index'
 import { Route as AppTeamsIdRouteImport } from './routes/app/teams/$id'
 import { Route as AppUsersIndexRouteImport } from './routes/app/users/index'
 import { Route as AppUsersIdRouteImport } from './routes/app/users/$id'
+import { Route as AppWorkersIndexRouteImport } from './routes/app/workers/index'
+import { Route as AppWorkersIdRouteImport } from './routes/app/workers/$id'
+import { Route as AppWorkersAbroadRouteImport } from './routes/app/workers/abroad'
 import { Route as AppJobDescriptionsEditIdRouteImport } from './routes/app/job-descriptions/edit.$id'
 import { Route as AppJobsEditIdRouteImport } from './routes/app/jobs/edit.$id'
 import { Route as AppSalesOpportunitiesIdRouteImport } from './routes/app/sales/opportunities.$id'
@@ -149,6 +154,16 @@ const AppApplicationsIndexRoute = AppApplicationsIndexRouteImport.update({
 const AppApplicationsIdRoute = AppApplicationsIdRouteImport.update({
   id: '/applications/$id',
   path: '/applications/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppAssignmentsIndexRoute = AppAssignmentsIndexRouteImport.update({
+  id: '/assignments/',
+  path: '/assignments/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppAssignmentsIdRoute = AppAssignmentsIdRouteImport.update({
+  id: '/assignments/$id',
+  path: '/assignments/$id',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppCalendarIndexRoute = AppCalendarIndexRouteImport.update({
@@ -271,6 +286,21 @@ const AppUsersIdRoute = AppUsersIdRouteImport.update({
   path: '/users/$id',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppWorkersIndexRoute = AppWorkersIndexRouteImport.update({
+  id: '/workers/',
+  path: '/workers/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppWorkersIdRoute = AppWorkersIdRouteImport.update({
+  id: '/workers/$id',
+  path: '/workers/$id',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppWorkersAbroadRoute = AppWorkersAbroadRouteImport.update({
+  id: '/workers/abroad',
+  path: '/workers/abroad',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppJobDescriptionsEditIdRoute =
   AppJobDescriptionsEditIdRouteImport.update({
     id: '/job-descriptions/edit/$id',
@@ -305,6 +335,7 @@ export interface FileRoutesByFullPath {
   '/admin/organizations/$id': typeof AdminOrganizationsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/app/applications/$id': typeof AppApplicationsIdRoute
+  '/app/assignments/$id': typeof AppAssignmentsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
   '/app/interviews/$id': typeof AppInterviewsIdRoute
@@ -316,9 +347,12 @@ export interface FileRoutesByFullPath {
   '/app/projects/$id': typeof AppProjectsIdRoute
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
+  '/app/workers/$id': typeof AppWorkersIdRoute
+  '/app/workers/abroad': typeof AppWorkersAbroadRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
+  '/app/assignments/': typeof AppAssignmentsIndexRoute
   '/app/calendar/': typeof AppCalendarIndexRoute
   '/app/candidates/': typeof AppCandidatesIndexRoute
   '/app/companies/': typeof AppCompaniesIndexRoute
@@ -332,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
   '/app/users/': typeof AppUsersIndexRoute
+  '/app/workers/': typeof AppWorkersIndexRoute
   '/app/job-descriptions/edit/$id': typeof AppJobDescriptionsEditIdRoute
   '/app/jobs/edit/$id': typeof AppJobsEditIdRoute
   '/app/sales/opportunities/$id': typeof AppSalesOpportunitiesIdRoute
@@ -351,6 +386,7 @@ export interface FileRoutesByTo {
   '/admin/organizations/$id': typeof AdminOrganizationsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/app/applications/$id': typeof AppApplicationsIdRoute
+  '/app/assignments/$id': typeof AppAssignmentsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
   '/app/interviews/$id': typeof AppInterviewsIdRoute
@@ -362,9 +398,12 @@ export interface FileRoutesByTo {
   '/app/projects/$id': typeof AppProjectsIdRoute
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
+  '/app/workers/$id': typeof AppWorkersIdRoute
+  '/app/workers/abroad': typeof AppWorkersAbroadRoute
   '/admin/organizations': typeof AdminOrganizationsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/app/applications': typeof AppApplicationsIndexRoute
+  '/app/assignments': typeof AppAssignmentsIndexRoute
   '/app/calendar': typeof AppCalendarIndexRoute
   '/app/candidates': typeof AppCandidatesIndexRoute
   '/app/companies': typeof AppCompaniesIndexRoute
@@ -378,6 +417,7 @@ export interface FileRoutesByTo {
   '/app/sales': typeof AppSalesIndexRoute
   '/app/teams': typeof AppTeamsIndexRoute
   '/app/users': typeof AppUsersIndexRoute
+  '/app/workers': typeof AppWorkersIndexRoute
   '/app/job-descriptions/edit/$id': typeof AppJobDescriptionsEditIdRoute
   '/app/jobs/edit/$id': typeof AppJobsEditIdRoute
   '/app/sales/opportunities/$id': typeof AppSalesOpportunitiesIdRoute
@@ -400,6 +440,7 @@ export interface FileRoutesById {
   '/admin/organizations/$id': typeof AdminOrganizationsIdRoute
   '/admin/users/$id': typeof AdminUsersIdRoute
   '/app/applications/$id': typeof AppApplicationsIdRoute
+  '/app/assignments/$id': typeof AppAssignmentsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
   '/app/interviews/$id': typeof AppInterviewsIdRoute
@@ -411,9 +452,12 @@ export interface FileRoutesById {
   '/app/projects/$id': typeof AppProjectsIdRoute
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
+  '/app/workers/$id': typeof AppWorkersIdRoute
+  '/app/workers/abroad': typeof AppWorkersAbroadRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
+  '/app/assignments/': typeof AppAssignmentsIndexRoute
   '/app/calendar/': typeof AppCalendarIndexRoute
   '/app/candidates/': typeof AppCandidatesIndexRoute
   '/app/companies/': typeof AppCompaniesIndexRoute
@@ -427,6 +471,7 @@ export interface FileRoutesById {
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
   '/app/users/': typeof AppUsersIndexRoute
+  '/app/workers/': typeof AppWorkersIndexRoute
   '/app/job-descriptions/edit/$id': typeof AppJobDescriptionsEditIdRoute
   '/app/jobs/edit/$id': typeof AppJobsEditIdRoute
   '/app/sales/opportunities/$id': typeof AppSalesOpportunitiesIdRoute
@@ -450,6 +495,7 @@ export interface FileRouteTypes {
     | '/admin/organizations/$id'
     | '/admin/users/$id'
     | '/app/applications/$id'
+    | '/app/assignments/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
     | '/app/interviews/$id'
@@ -461,9 +507,12 @@ export interface FileRouteTypes {
     | '/app/projects/$id'
     | '/app/teams/$id'
     | '/app/users/$id'
+    | '/app/workers/$id'
+    | '/app/workers/abroad'
     | '/admin/organizations/'
     | '/admin/users/'
     | '/app/applications/'
+    | '/app/assignments/'
     | '/app/calendar/'
     | '/app/candidates/'
     | '/app/companies/'
@@ -477,6 +526,7 @@ export interface FileRouteTypes {
     | '/app/sales/'
     | '/app/teams/'
     | '/app/users/'
+    | '/app/workers/'
     | '/app/job-descriptions/edit/$id'
     | '/app/jobs/edit/$id'
     | '/app/sales/opportunities/$id'
@@ -496,6 +546,7 @@ export interface FileRouteTypes {
     | '/admin/organizations/$id'
     | '/admin/users/$id'
     | '/app/applications/$id'
+    | '/app/assignments/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
     | '/app/interviews/$id'
@@ -507,9 +558,12 @@ export interface FileRouteTypes {
     | '/app/projects/$id'
     | '/app/teams/$id'
     | '/app/users/$id'
+    | '/app/workers/$id'
+    | '/app/workers/abroad'
     | '/admin/organizations'
     | '/admin/users'
     | '/app/applications'
+    | '/app/assignments'
     | '/app/calendar'
     | '/app/candidates'
     | '/app/companies'
@@ -523,6 +577,7 @@ export interface FileRouteTypes {
     | '/app/sales'
     | '/app/teams'
     | '/app/users'
+    | '/app/workers'
     | '/app/job-descriptions/edit/$id'
     | '/app/jobs/edit/$id'
     | '/app/sales/opportunities/$id'
@@ -544,6 +599,7 @@ export interface FileRouteTypes {
     | '/admin/organizations/$id'
     | '/admin/users/$id'
     | '/app/applications/$id'
+    | '/app/assignments/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
     | '/app/interviews/$id'
@@ -555,9 +611,12 @@ export interface FileRouteTypes {
     | '/app/projects/$id'
     | '/app/teams/$id'
     | '/app/users/$id'
+    | '/app/workers/$id'
+    | '/app/workers/abroad'
     | '/admin/organizations/'
     | '/admin/users/'
     | '/app/applications/'
+    | '/app/assignments/'
     | '/app/calendar/'
     | '/app/candidates/'
     | '/app/companies/'
@@ -571,6 +630,7 @@ export interface FileRouteTypes {
     | '/app/sales/'
     | '/app/teams/'
     | '/app/users/'
+    | '/app/workers/'
     | '/app/job-descriptions/edit/$id'
     | '/app/jobs/edit/$id'
     | '/app/sales/opportunities/$id'
@@ -722,6 +782,20 @@ declare module '@tanstack/react-router' {
       path: '/applications/$id'
       fullPath: '/app/applications/$id'
       preLoaderRoute: typeof AppApplicationsIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/assignments/': {
+      id: '/app/assignments/'
+      path: '/assignments'
+      fullPath: '/app/assignments/'
+      preLoaderRoute: typeof AppAssignmentsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/assignments/$id': {
+      id: '/app/assignments/$id'
+      path: '/assignments/$id'
+      fullPath: '/app/assignments/$id'
+      preLoaderRoute: typeof AppAssignmentsIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/app/calendar/': {
@@ -892,6 +966,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppUsersIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/workers/': {
+      id: '/app/workers/'
+      path: '/workers'
+      fullPath: '/app/workers/'
+      preLoaderRoute: typeof AppWorkersIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/workers/$id': {
+      id: '/app/workers/$id'
+      path: '/workers/$id'
+      fullPath: '/app/workers/$id'
+      preLoaderRoute: typeof AppWorkersIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/workers/abroad': {
+      id: '/app/workers/abroad'
+      path: '/workers/abroad'
+      fullPath: '/app/workers/abroad'
+      preLoaderRoute: typeof AppWorkersAbroadRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/job-descriptions/edit/$id': {
       id: '/app/job-descriptions/edit/$id'
       path: '/job-descriptions/edit/$id'
@@ -941,6 +1036,7 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 interface AppRouteRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
+  AppAssignmentsIdRoute: typeof AppAssignmentsIdRoute
   AppCandidatesIdRoute: typeof AppCandidatesIdRoute
   AppCompaniesIdRoute: typeof AppCompaniesIdRoute
   AppInterviewsIdRoute: typeof AppInterviewsIdRoute
@@ -952,7 +1048,10 @@ interface AppRouteRouteChildren {
   AppProjectsIdRoute: typeof AppProjectsIdRoute
   AppTeamsIdRoute: typeof AppTeamsIdRoute
   AppUsersIdRoute: typeof AppUsersIdRoute
+  AppWorkersIdRoute: typeof AppWorkersIdRoute
+  AppWorkersAbroadRoute: typeof AppWorkersAbroadRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
+  AppAssignmentsIndexRoute: typeof AppAssignmentsIndexRoute
   AppCalendarIndexRoute: typeof AppCalendarIndexRoute
   AppCandidatesIndexRoute: typeof AppCandidatesIndexRoute
   AppCompaniesIndexRoute: typeof AppCompaniesIndexRoute
@@ -966,6 +1065,7 @@ interface AppRouteRouteChildren {
   AppSalesIndexRoute: typeof AppSalesIndexRoute
   AppTeamsIndexRoute: typeof AppTeamsIndexRoute
   AppUsersIndexRoute: typeof AppUsersIndexRoute
+  AppWorkersIndexRoute: typeof AppWorkersIndexRoute
   AppJobDescriptionsEditIdRoute: typeof AppJobDescriptionsEditIdRoute
   AppJobsEditIdRoute: typeof AppJobsEditIdRoute
   AppSalesOpportunitiesIdRoute: typeof AppSalesOpportunitiesIdRoute
@@ -974,6 +1074,7 @@ interface AppRouteRouteChildren {
 const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
+  AppAssignmentsIdRoute: AppAssignmentsIdRoute,
   AppCandidatesIdRoute: AppCandidatesIdRoute,
   AppCompaniesIdRoute: AppCompaniesIdRoute,
   AppInterviewsIdRoute: AppInterviewsIdRoute,
@@ -985,7 +1086,10 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppProjectsIdRoute: AppProjectsIdRoute,
   AppTeamsIdRoute: AppTeamsIdRoute,
   AppUsersIdRoute: AppUsersIdRoute,
+  AppWorkersIdRoute: AppWorkersIdRoute,
+  AppWorkersAbroadRoute: AppWorkersAbroadRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
+  AppAssignmentsIndexRoute: AppAssignmentsIndexRoute,
   AppCalendarIndexRoute: AppCalendarIndexRoute,
   AppCandidatesIndexRoute: AppCandidatesIndexRoute,
   AppCompaniesIndexRoute: AppCompaniesIndexRoute,
@@ -999,6 +1103,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppSalesIndexRoute: AppSalesIndexRoute,
   AppTeamsIndexRoute: AppTeamsIndexRoute,
   AppUsersIndexRoute: AppUsersIndexRoute,
+  AppWorkersIndexRoute: AppWorkersIndexRoute,
   AppJobDescriptionsEditIdRoute: AppJobDescriptionsEditIdRoute,
   AppJobsEditIdRoute: AppJobsEditIdRoute,
   AppSalesOpportunitiesIdRoute: AppSalesOpportunitiesIdRoute,

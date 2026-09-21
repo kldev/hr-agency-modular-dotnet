@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import type { ProjectProjection } from "#/api/models";
 import { DetailItem, ProjectStatusBadge } from "#/components/ui";
-
+import { ComplianceChip } from "@/features/compliance";
 import {
 	ChangeProjectStatusDrawer,
 	type ChangeProjectStatusFormCommand,
@@ -11,7 +11,6 @@ import {
 } from "../../../drawers";
 import { engagementTypes } from "../../../types";
 import { formatPeriod } from "../../../utils";
-import { ComplianceChip } from "../ComplianceChip";
 import { ProjectActions } from "./ProjectActions";
 
 interface ProjectsCardListProps {
