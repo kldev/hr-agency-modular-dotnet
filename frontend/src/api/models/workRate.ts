@@ -13,10 +13,13 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { RateBasis } from "./rateBasis.ts";
+import type { RateUnit } from "./rateUnit.ts";
 
-export interface UpdateAssignmentRequest {
-	positionId: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn?: string | null;
+export interface WorkRate {
+	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	amount: number | string;
+	currency: string;
+	unit: RateUnit;
+	basis: RateBasis;
 }

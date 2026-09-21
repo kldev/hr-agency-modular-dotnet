@@ -13,10 +13,19 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { WorkerContractType } from "./workerContractType.ts";
 
-export interface UpdateAssignmentRequest {
-	positionId: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn?: string | null;
-}
+export type GetPositionsParams = {
+	search?: string;
+	projectId?: string;
+	contractType?: WorkerContractType;
+	includeArchived?: boolean;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	page?: number | string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	pageSize?: number | string;
+};

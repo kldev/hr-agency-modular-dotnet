@@ -19,7 +19,7 @@ export interface PlanAssignmentRequest {
 	workerId: string;
 	projectId: string;
 	engagementType: EngagementType;
-	position: string;
+	positionId: string;
 	startsOn: string;
 	/** @nullable */
 	endsOn?: string | null;

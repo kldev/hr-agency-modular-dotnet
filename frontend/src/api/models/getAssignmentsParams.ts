@@ -20,6 +20,7 @@ export type GetAssignmentsParams = {
 	status?: AssignmentStatus[];
 	workerId?: string;
 	projectId?: string;
+	positionId?: string;
 	workCountry?: string;
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$

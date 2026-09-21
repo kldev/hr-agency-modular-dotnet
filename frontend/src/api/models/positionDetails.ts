@@ -13,10 +13,14 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { PostalAddress } from "./postalAddress.ts";
+import type { ProjectPositionProjection } from "./projectPositionProjection.ts";
 
-export interface UpdateAssignmentRequest {
-	positionId: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn?: string | null;
+export interface PositionDetails {
+	position: ProjectPositionProjection;
+	projectId: string;
+	projectName: string;
+	clientCompanyName: string;
+	workCountry: string;
+	workplaceAddress: PostalAddress;
 }

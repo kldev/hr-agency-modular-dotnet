@@ -14,9 +14,8 @@
  * OpenAPI spec version: v1
  */
 
-export interface UpdateAssignmentRequest {
+export interface AssignmentPosition {
 	positionId: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn?: string | null;
+	name: string;
+	contractName: string;
 }

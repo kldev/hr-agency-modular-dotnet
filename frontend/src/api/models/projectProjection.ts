@@ -22,6 +22,7 @@ import type { ProjectContact } from "./projectContact.ts";
 import type { ProjectContract } from "./projectContract.ts";
 import type { ProjectDocument } from "./projectDocument.ts";
 import type { ProjectEmailRecipient } from "./projectEmailRecipient.ts";
+import type { ProjectPosition } from "./projectPosition.ts";
 import type { ProjectStatus } from "./projectStatus.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
@@ -50,9 +51,12 @@ export interface ProjectProjection {
 	emailRecipients: ProjectEmailRecipient[];
 	contract: null | ProjectContract;
 	documents: ProjectDocument[];
+	positions: ProjectPosition[];
 	compliance: ComplianceItem[];
 	/** @pattern ^-?(?:0|[1-9]\d*)$ */
 	documentCount: number | string;
+	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	openPositionCount: number | string;
 	/** @pattern ^-?(?:0|[1-9]\d*)$ */
 	complianceRequiredCount: number | string;
 	/** @pattern ^-?(?:0|[1-9]\d*)$ */

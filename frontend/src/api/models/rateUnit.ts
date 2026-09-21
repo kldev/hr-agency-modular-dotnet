@@ -14,9 +14,10 @@
  * OpenAPI spec version: v1
  */
 
-export interface UpdateAssignmentRequest {
-	positionId: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn?: string | null;
-}
+export type RateUnit = (typeof RateUnit)[keyof typeof RateUnit];
+
+export const RateUnit = {
+	Hourly: "Hourly",
+	Daily: "Daily",
+	Monthly: "Monthly",
+} as const;

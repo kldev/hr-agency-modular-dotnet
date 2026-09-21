@@ -13,10 +13,9 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { PositionListItem } from "./positionListItem.ts";
 
-export interface UpdateAssignmentRequest {
-	positionId: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn?: string | null;
+export interface SliceResponseOfPositionListItem {
+	content: PositionListItem[];
+	hasMore: boolean;
 }

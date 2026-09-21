@@ -14,9 +14,12 @@
  * OpenAPI spec version: v1
  */
 
-export interface UpdateAssignmentRequest {
-	positionId: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn?: string | null;
-}
+export type WorkerContractType = (typeof WorkerContractType)[keyof typeof WorkerContractType];
+
+export const WorkerContractType = {
+	EmploymentContract: "EmploymentContract",
+	TemporaryEmploymentContract: "TemporaryEmploymentContract",
+	MandateContract: "MandateContract",
+	SelfEmployed: "SelfEmployed",
+	Other: "Other",
+} as const;

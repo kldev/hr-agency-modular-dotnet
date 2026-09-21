@@ -32,7 +32,8 @@ export interface AssignmentProjection {
 	deliveringEntityName: string;
 	workCountry: string;
 	engagementType: EngagementType;
-	position: string;
+	positionId: string;
+	positionName: string;
 	startsOn: string;
 	/** @nullable */
 	endsOn: string | null;

@@ -13,13 +13,14 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { AssignmentPosition } from "./assignmentPosition.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface AssignmentUpdated {
 	assignmentId: string;
 	organizationId: string;
 	workerId: string;
-	position: string;
+	position: AssignmentPosition;
 	startsOn: string;
 	/** @nullable */
 	endsOn: string | null;

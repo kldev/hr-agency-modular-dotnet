@@ -13,22 +13,21 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { AssignmentStatus } from "./assignmentStatus.ts";
 import type { EngagementType } from "./engagementType.ts";
+import type { WorkerContractType } from "./workerContractType.ts";
 
-export interface WorkerAssignmentSummary {
-	assignmentId: string;
+export interface PositionSuggestion {
+	id: string;
 	projectId: string;
-	projectName: string;
-	clientCompanyName: string;
-	deliveringEntityName: string;
-	workCountry: string;
-	engagementType: EngagementType;
-	positionId: string;
-	positionName: string;
-	startsOn: string;
-	/** @nullable */
-	endsOn: string | null;
-	status: AssignmentStatus;
-	occupies?: boolean;
+	name: string;
+	contractName: string;
+	contractType: WorkerContractType;
+	defaultEngagementType: null | EngagementType;
+	/**
+	 * @nullable
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	plannedHeadcount: number | string | null;
+	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	assignedCount: number | string;
 }
