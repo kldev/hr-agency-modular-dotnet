@@ -22,5 +22,8 @@ export const OrganizationRole = {
 	HiringManager: "HiringManager",
 	Interviewer: "Interviewer",
 	Sales: "Sales",
+	HumanResources: "HumanResources",
+	Finance: "Finance",
+	Administration: "Administration",
 	System: "System",
 } as const;

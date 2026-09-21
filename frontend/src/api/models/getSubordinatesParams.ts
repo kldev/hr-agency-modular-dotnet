@@ -14,15 +14,6 @@
  * OpenAPI spec version: v1
  */
 
-export type OrganizationRoleApi = (typeof OrganizationRoleApi)[keyof typeof OrganizationRoleApi];
-
-export const OrganizationRoleApi = {
-	Admin: "Admin",
-	Recruiter: "Recruiter",
-	HiringManager: "HiringManager",
-	Interviewer: "Interviewer",
-	Sales: "Sales",
-	HumanResources: "HumanResources",
-	Finance: "Finance",
-	Administration: "Administration",
-} as const;
+export type GetSubordinatesParams = {
+	wholeSubtree?: boolean;
+};

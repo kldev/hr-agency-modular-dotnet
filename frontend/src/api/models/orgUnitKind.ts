@@ -14,15 +14,10 @@
  * OpenAPI spec version: v1
  */
 
-export type OrganizationRoleApi = (typeof OrganizationRoleApi)[keyof typeof OrganizationRoleApi];
+export type OrgUnitKind = (typeof OrgUnitKind)[keyof typeof OrgUnitKind];
 
-export const OrganizationRoleApi = {
-	Admin: "Admin",
-	Recruiter: "Recruiter",
-	HiringManager: "HiringManager",
-	Interviewer: "Interviewer",
-	Sales: "Sales",
-	HumanResources: "HumanResources",
-	Finance: "Finance",
-	Administration: "Administration",
+export const OrgUnitKind = {
+	Board: "Board",
+	Department: "Department",
+	Section: "Section",
 } as const;

@@ -13,16 +13,17 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { OrgUnitKind } from "./orgUnitKind.ts";
+import type { OrgUnitMember } from "./orgUnitMember.ts";
 
-export type OrganizationRoleApi = (typeof OrganizationRoleApi)[keyof typeof OrganizationRoleApi];
-
-export const OrganizationRoleApi = {
-	Admin: "Admin",
-	Recruiter: "Recruiter",
-	HiringManager: "HiringManager",
-	Interviewer: "Interviewer",
-	Sales: "Sales",
-	HumanResources: "HumanResources",
-	Finance: "Finance",
-	Administration: "Administration",
-} as const;
+export interface OrgUnitRow {
+	unitId: string;
+	/** @nullable */
+	parentId: string | null;
+	name: string;
+	kind: OrgUnitKind;
+	/** @nullable */
+	headUserId: string | null;
+	members: OrgUnitMember[];
+	isArchived: boolean;
+}
