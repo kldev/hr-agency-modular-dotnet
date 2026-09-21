@@ -44,10 +44,10 @@ export function WorkerAssignmentsSection({
 							<th>Project</th>
 							<th>Client</th>
 							<th>Posted by</th>
-							<th>Country</th>
+							<th className="table-header-ssm">Country</th>
 							<th>Position</th>
-							<th>Period</th>
-							<th>Status</th>
+							<th className="table-header-md">Period</th>
+							<th className="table-header-sm">Status</th>
 						</tr>
 					</thead>
 
@@ -81,7 +81,7 @@ export function WorkerAssignmentsSection({
 									<span className="data-meta"> · {engagementTypes[assignment.engagementType]}</span>
 								</td>
 
-								<td className="table-number">
+								<td className="table-figure">
 									{formatPeriod(assignment.startsOn, assignment.endsOn)}
 								</td>
 

@@ -49,9 +49,9 @@ export function WorkerDocumentsSection({
 							<tr>
 								<th>Category</th>
 								<th>File</th>
-								<th>Issued</th>
-								<th>Valid until</th>
-								<th>Size</th>
+								<th className="table-header-sm">Issued</th>
+								<th className="table-header-sm">Valid until</th>
+								<th className="table-header-ssm">Size</th>
 								<th />
 							</tr>
 						</thead>
@@ -69,13 +69,13 @@ export function WorkerDocumentsSection({
 										</a>
 									</td>
 
-									<td className="table-number">{formatDate(document.documentDate)}</td>
+									<td className="table-figure">{formatDate(document.documentDate)}</td>
 
-									<td className="table-number">
+									<td className="table-figure">
 										{document.validUntil ? formatDate(document.validUntil) : "—"}
 									</td>
 
-									<td className="table-number">{formatFileSize(Number(document.size))}</td>
+									<td className="table-figure">{formatFileSize(Number(document.size))}</td>
 
 									<td>
 										<div className="flex justify-end">

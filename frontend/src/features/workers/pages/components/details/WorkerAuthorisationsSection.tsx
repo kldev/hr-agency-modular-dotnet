@@ -58,7 +58,7 @@ export function WorkerAuthorisationsSection({
 								<th>Kind</th>
 								<th>Country</th>
 								<th>Number</th>
-								<th>Valid</th>
+								<th className="table-header-md">Valid</th>
 								<th />
 							</tr>
 						</thead>
@@ -69,7 +69,7 @@ export function WorkerAuthorisationsSection({
 									<td>{workAuthorisationKinds[authorisation.kind]}</td>
 									<td>{getCountryLabel(authorisation.country)}</td>
 									<td>{authorisation.number}</td>
-									<td className="table-number">
+									<td className="table-figure">
 										{formatPeriod(authorisation.validFrom, authorisation.validUntil)}
 									</td>
 
