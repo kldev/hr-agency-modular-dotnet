@@ -1,0 +1,16 @@
+/* Neutral copies of the two project-details helpers, so the shared checklist does not reach into
+   another feature's stylesheet for a loading line and an error line. */
+
+.compliance-section-body {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--space-3);
+
+	padding: var(--space-4);
+}
+
+.compliance-note {
+	font-size: var(--font-size-xs);
+	color: var(--color-text-muted);
+}

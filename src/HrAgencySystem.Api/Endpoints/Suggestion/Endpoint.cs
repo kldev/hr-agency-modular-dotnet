@@ -14,7 +14,9 @@ internal static class Endpoint
         Maps.MapJobPosts.Map(group);
         Maps.MapTeams.Map(group);
         Maps.MapProjects.Map(group);
+        Maps.MapProject.Map(group);
         Maps.MapTeam.Map(group);
         Maps.MapWorkers.Map(group);
+        Maps.MapWorker.Map(group);
     }
 }

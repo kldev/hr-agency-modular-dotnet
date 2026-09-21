@@ -13,6 +13,9 @@ public sealed partial class HrAgencyShowcaseSeeder(
     ILogger<HrAgency.HrAgencyShowcaseSeeder> logger
 ) : IPlatformSeeder
 {
+    /// <summary>The one agency that gets projects, workers and assignments.</summary>
+    private const string DeliverySlug = "hr-agency";
+
     public async Task Seed()
     {
         var stopwatch = Stopwatch.StartNew();
@@ -39,6 +42,11 @@ public sealed partial class HrAgencyShowcaseSeeder(
             owner.PlatformOwnerId,
             new SeedConfig(Name: "Tech Jobs", Slug: "tech-jobs", UsersCount: 5, CompaniesCount: 20)
         );
+
+        // Last, and against one named agency rather than inside SeedAgency: this is the slowest
+        // scenario and the one most likely to trip over a domain rule, and neither is a reason for
+        // the other two agencies to end up half seeded.
+        await SeedDelivery(DeliverySlug);
 
         logger.LogInformation(
             "HR Agency showcase seeding completed in {Elapsed}",

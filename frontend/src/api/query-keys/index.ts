@@ -1,4 +1,5 @@
 export * from "./applicationKeys";
+export * from "./assignmentsKeys";
 export * from "./candidatesKeys";
 export * from "./companiesKeys";
 export * from "./interviewKeys";
@@ -12,3 +13,4 @@ export * from "./salesKeys";
 export * from "./suggestionKeys";
 export * from "./teamsKeys";
 export * from "./usersKeys";
+export * from "./workersKeys";

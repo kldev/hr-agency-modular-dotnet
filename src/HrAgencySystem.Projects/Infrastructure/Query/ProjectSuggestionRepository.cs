@@ -26,4 +26,18 @@ internal sealed class ProjectSuggestionRepository(IQuerySession session)
 
         return [.. projects.Select(p => p.ToSuggestion())];
     }
+
+    public async Task<ProjectSuggestion?> ById(
+        OrganizationId organizationId,
+        Guid projectId,
+        CancellationToken ct
+    )
+    {
+        var project = await session
+            .Query<ProjectProjection>()
+            .WithOrganizationId(organizationId)
+            .FirstOrDefaultAsync(p => p.Id == projectId, ct);
+
+        return project?.ToSuggestion();
+    }
 }

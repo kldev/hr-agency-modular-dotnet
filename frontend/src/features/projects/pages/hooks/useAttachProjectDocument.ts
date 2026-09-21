@@ -7,24 +7,12 @@ import { useProjectionWait } from "@/hooks";
 
 export { formatFileSize } from "@/utlis";
 
-export const MAX_DOCUMENT_SIZE_BYTES = 25 * 1024 * 1024;
-
-/**
- * Kept next to the `accept` attribute of the file input and checked again before the upload starts.
- * The backend checks the same things; this is here so that a 30 MB file fails in the moment the
- * user picks it instead of after a minute of uploading.
- */
-export const ALLOWED_DOCUMENT_TYPES = [
-	"application/pdf",
-	"image/jpeg",
-	"image/png",
-	"application/msword",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-	"application/vnd.ms-excel",
-	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-];
-
-export const DOCUMENT_ACCEPT = ".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx";
+/* The limits moved to `utlis/documentUpload` once workers and assignments needed the same ones. */
+export {
+	ALLOWED_DOCUMENT_TYPES,
+	DOCUMENT_ACCEPT,
+	MAX_DOCUMENT_SIZE_BYTES,
+} from "@/utlis/documentUpload";
 
 type AttachVariables = {
 	projectId: string;

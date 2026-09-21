@@ -3,12 +3,15 @@ import {
 	Building2,
 	CalendarDays,
 	ChessRook,
+	ClipboardCheck,
 	ClipboardList,
 	DollarSign,
 	FolderKanban,
+	HardHat,
 	Landmark,
 	LayoutDashboard,
 	MessageSquare,
+	Plane,
 	Users,
 	UsersRound,
 } from "lucide-react";
@@ -39,7 +42,12 @@ const menuGroups: MenuGroup[] = [
 	},
 	{
 		title: "Delivery",
-		items: [{ label: "Projects", icon: FolderKanban, link: "/app/projects" }],
+		items: [
+			{ label: "Projects", icon: FolderKanban, link: "/app/projects" },
+			{ label: "Workers", icon: HardHat, link: "/app/workers" },
+			{ label: "Workers abroad", icon: Plane, link: "/app/workers-abroad" },
+			{ label: "Assignments", icon: ClipboardCheck, link: "/app/assignments" },
+		],
 	},
 	{
 		title: "Organization",

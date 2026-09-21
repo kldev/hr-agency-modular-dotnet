@@ -1,5 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCompanySuggestion, getTeamSuggestion, getUserSuggestion } from "#/api/endpoints";
+import {
+	getCompanySuggestion,
+	getProjectSuggestion,
+	getTeamSuggestion,
+	getUserSuggestion,
+	getWorkerSuggestion,
+} from "#/api/endpoints";
 import { suggestionKeys } from "#/api/query-keys";
 
 const SUGGESTION_STALE_TIME = 5 * 60 * 1000;
@@ -34,6 +40,26 @@ export function useTeamSuggestion(teamId: string) {
 		queryKey: suggestionKeys.team(teamId),
 		queryFn: ({ signal }) => getTeamSuggestion(teamId, undefined, signal),
 		enabled: Boolean(teamId),
+		staleTime: SUGGESTION_STALE_TIME,
+		retry: false,
+	});
+}
+
+export function useWorkerSuggestion(workerId: string) {
+	return useQuery({
+		queryKey: suggestionKeys.worker(workerId),
+		queryFn: ({ signal }) => getWorkerSuggestion(workerId, undefined, signal),
+		enabled: Boolean(workerId),
+		staleTime: SUGGESTION_STALE_TIME,
+		retry: false,
+	});
+}
+
+export function useProjectSuggestion(projectId: string) {
+	return useQuery({
+		queryKey: suggestionKeys.project(projectId),
+		queryFn: ({ signal }) => getProjectSuggestion(projectId, undefined, signal),
+		enabled: Boolean(projectId),
 		staleTime: SUGGESTION_STALE_TIME,
 		retry: false,
 	});

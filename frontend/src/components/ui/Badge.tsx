@@ -1,16 +1,14 @@
 import clsx from "clsx";
 import { applicationSources, applicationStatuses } from "#/features/applications/types";
+import { assignmentStatusClass, assignmentStatuses } from "#/features/assignments/types";
+import { complianceStatusClass, complianceStatuses } from "#/features/compliance/types";
 import { interviewFormats, interviewStatuses, interviewTypes } from "#/features/interviews/type";
 import { jobDescriptionStatuses } from "#/features/job-descriptions/type";
 import { jobPostsStatuses } from "#/features/job-posts/type";
-import {
-	complianceStatusClass,
-	complianceStatuses,
-	contractStatusClass,
-	contractStatuses,
-	projectStatuses,
-} from "#/features/projects/types";
+import { contractStatusClass, contractStatuses, projectStatuses } from "#/features/projects/types";
+import { workerStatusClass, workerStatuses } from "#/features/workers/types";
 import type {
+	AssignmentStatus,
 	CandidateSource,
 	ComplianceStatus,
 	ContractStatus,
@@ -22,6 +20,7 @@ import type {
 	JobPostStatus,
 	OpportunityStage,
 	ProjectStatus,
+	WorkerStatus,
 } from "@/api/models";
 
 const opportunityClass: Record<OpportunityStage, string> = {
@@ -159,6 +158,18 @@ export function ComplianceStatusBadge({ status }: { status: ComplianceStatus }) 
 	return (
 		<span className={clsx("badge", complianceStatusClass[status])}>
 			{complianceStatuses[status]}
+		</span>
+	);
+}
+
+export function WorkerStatusBadge({ status }: { status: WorkerStatus }) {
+	return <span className={clsx("badge", workerStatusClass[status])}>{workerStatuses[status]}</span>;
+}
+
+export function AssignmentStatusBadge({ status }: { status: AssignmentStatus }) {
+	return (
+		<span className={clsx("badge", assignmentStatusClass[status])}>
+			{assignmentStatuses[status]}
 		</span>
 	);
 }

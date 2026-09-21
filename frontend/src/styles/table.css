@@ -79,6 +79,16 @@
 	font-variant-numeric: tabular-nums;
 }
 
+/*
+ * A date or a size inside a detail section's table. Tabular figures so the digits line up, but
+ * aligned left like every other cell: these tables have no column widths, so a right aligned value
+ * drifts to the far edge of a wide column and reads as if it belonged to the next header.
+ */
+.table-figure {
+	text-align: left;
+	font-variant-numeric: tabular-nums;
+}
+
 .table-cell-content {
 	display: flex;
 	align-items: center;
