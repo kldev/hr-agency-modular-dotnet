@@ -40,8 +40,15 @@ public sealed record ProjectProjection(
     IReadOnlyList<ProjectEmailRecipient> EmailRecipients,
     ProjectContract? Contract,
     IReadOnlyList<ProjectDocument> Documents,
+    /// <summary>
+    /// The roles opened in this delivery, for the project's own page. The register that lists them
+    /// across projects reads <c>ProjectPositionProjection</c> instead - filtering an array is what
+    /// Marten does worst, and that list filters on every field.
+    /// </summary>
+    IReadOnlyList<ProjectPosition> Positions,
     IReadOnlyList<ComplianceItem> Compliance,
     int DocumentCount,
+    int OpenPositionCount,
     int ComplianceRequiredCount,
     int ComplianceOutstandingCount,
     DateOnly? NextComplianceExpiryOn,
@@ -78,6 +85,8 @@ public sealed record ProjectProjection(
             null,
             [],
             [],
+            [],
+            0,
             0,
             ComplianceCatalogue
                 .For(@event.Placement.WorkCountry, @event.EngagementType, ComplianceScope.Project)
@@ -204,6 +213,40 @@ public sealed record ProjectProjection(
             ResponsibleContact = contacts
                 .FirstOrDefault(c => c.Role == ContactRole.Responsible)
                 ?.Person,
+        };
+
+    public ProjectProjection Apply(ProjectPositionOpened @event) =>
+        WithPositions([.. Positions, @event.Position])
+            .Touched(@event.OpenedBy, @event.OpenedAt);
+
+    public ProjectProjection Apply(ProjectPositionUpdated @event) =>
+        WithPositions([
+                .. Positions.Select(p =>
+                    p.PositionId == @event.Position.PositionId ? @event.Position : p
+                ),
+            ])
+            .Touched(@event.ModifiedBy, @event.ModifiedAt);
+
+    public ProjectProjection Apply(ProjectPositionArchived @event) =>
+        WithPositions([.. Positions.Select(p => Archived(p, @event.PositionId, true))])
+            .Touched(@event.ModifiedBy, @event.ModifiedAt);
+
+    public ProjectProjection Apply(ProjectPositionRestored @event) =>
+        WithPositions([.. Positions.Select(p => Archived(p, @event.PositionId, false))])
+            .Touched(@event.ModifiedBy, @event.ModifiedAt);
+
+    private static ProjectPosition Archived(ProjectPosition position, Guid positionId, bool archived) =>
+        position.PositionId == positionId ? position with { IsArchived = archived } : position;
+
+    /// <summary>
+    /// The count is of live roles only: a project with fifteen archived positions and two open ones
+    /// employs two kinds of people, and the list has to say two.
+    /// </summary>
+    private ProjectProjection WithPositions(IReadOnlyList<ProjectPosition> positions) =>
+        this with
+        {
+            Positions = positions,
+            OpenPositionCount = positions.Count(p => !p.IsArchived),
         };
 
     private ProjectProjection WithDocuments(IReadOnlyList<ProjectDocument> documents) =>
