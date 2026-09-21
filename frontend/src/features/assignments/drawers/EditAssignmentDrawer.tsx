@@ -4,6 +4,7 @@ import { z } from "zod";
 import type { AssignmentProjection } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
+import { PositionsPicker } from "#/components/ui/pickers";
 import { useAppForm } from "#/forms";
 import { toDateOnly } from "@/utlis/formatRecord";
 import { useUpdateAssignment } from "../pages/hooks";
@@ -15,11 +16,7 @@ interface EditAssignmentDrawerProps {
 
 const assignmentSchema = z
 	.object({
-		position: z
-			.string()
-			.trim()
-			.min(1, "Position is required")
-			.max(200, "Position cannot exceed 200 characters."),
+		positionId: z.string().min(1, "Pick the role this person is taking"),
 		startsOn: z.string().min(1, "The start date is required"),
 		endsOn: z.string(),
 	})
@@ -38,6 +35,8 @@ const FormContent: React.FC<{
 	onSuccess: () => void;
 	handleClose: () => void;
 }> = ({ assignment, onSuccess, handleClose }) => {
+	const [roleInput, setRoleInput] = useState("");
+
 	const { mutation, waiting } = useUpdateAssignment({
 		onSuccess: () => {
 			mutation.reset();
@@ -49,7 +48,7 @@ const FormContent: React.FC<{
 
 	const form = useAppForm({
 		defaultValues: {
-			position: assignment.position,
+			positionId: assignment.positionId,
 			startsOn: assignment.startsOn,
 			endsOn: assignment.endsOn ?? "",
 		},
@@ -60,7 +59,7 @@ const FormContent: React.FC<{
 			mutation.mutate({
 				assignmentId: assignment.id,
 				request: {
-					position: value.position.trim(),
+					positionId: value.positionId,
 					startsOn: toDateOnly(value.startsOn),
 					endsOn: value.endsOn ? toDateOnly(value.endsOn) : null,
 				},
@@ -89,22 +88,28 @@ const FormContent: React.FC<{
 						 */}
 						<div className="form-hint">
 							{assignment.workerFullName} on {assignment.projectName}, posted by{" "}
-							{assignment.deliveringEntityName}. Only the position and the period can be corrected
-							here.
+							{assignment.deliveringEntityName}. Only the role and the period can be corrected here.
 						</div>
 
-						<form.AppField name="position">
-							{(field) => (
-								<field.FormInput
-									label="Position"
-									fieldValue={field.state.value}
-									errors={field.state.meta.errors}
-									fieldName={field.name}
-									handleChange={(value) => field.handleChange(value)}
-									isSubmitting={mutation.isPending}
-								/>
+						{/* Scoped to the posting's own project: the role cannot move to another delivery. */}
+						<form.Subscribe selector={(state) => state.values.positionId}>
+							{(positionId) => (
+								<div className="form-field">
+									<label className="form-label" htmlFor="positionId">
+										Position
+									</label>
+
+									<PositionsPicker
+										projectId={assignment.projectId}
+										disabled={mutation.isPending}
+										value={positionId}
+										inputValue={roleInput}
+										onInputChange={setRoleInput}
+										onChange={(id) => form.setFieldValue("positionId", id ?? "")}
+									/>
+								</div>
 							)}
-						</form.AppField>
+						</form.Subscribe>
 
 						<form.AppField name="startsOn">
 							{(field) => (

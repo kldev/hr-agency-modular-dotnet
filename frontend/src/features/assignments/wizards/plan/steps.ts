@@ -25,7 +25,7 @@ export const termsStepDef = {
 	id: "terms",
 	title: "Terms",
 	description: "Under what arrangement, and for how long",
-	fields: ["engagementType", "position", "startsOn", "endsOn"],
+	fields: ["engagementType", "positionId", "startsOn", "endsOn"],
 } as const satisfies PlanAssignmentStep;
 
 export const reviewStepDef = {

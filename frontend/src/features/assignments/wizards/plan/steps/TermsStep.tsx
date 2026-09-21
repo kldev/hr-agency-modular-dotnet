@@ -1,6 +1,8 @@
 import { CalendarRange } from "lucide-react";
+import { useState } from "react";
 import type { EngagementType } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
+import { PositionsPicker } from "#/components/ui/pickers";
 import { withForm } from "#/forms";
 import { engagementTypeDescriptions, engagementTypes } from "@/features/compliance";
 import { emptyPlanAssignment } from "../schema";
@@ -18,12 +20,14 @@ export const TermsStep = withForm({
 	} as { isSubmitting: boolean },
 
 	render: function Render({ form, isSubmitting }) {
+		const [roleInput, setRoleInput] = useState("");
+
 		return (
 			<FormWizard.Section>
 				<FormWizard.SectionHeader
 					icon={CalendarRange}
 					title="Terms"
-					description="How this person is engaged, in what position and for how long."
+					description="How this person is engaged, which role they take and for how long."
 				/>
 
 				<form.AppField name="engagementType">
@@ -42,18 +46,34 @@ export const TermsStep = withForm({
 					)}
 				</form.AppField>
 
-				<form.AppField name="position">
-					{(field) => (
-						<field.FormInput
-							label="Position"
-							fieldValue={field.state.value}
-							errors={field.state.meta.errors}
-							fieldName={field.name}
-							handleChange={(value) => field.handleChange(value)}
-							isSubmitting={isSubmitting}
-						/>
+				{/*
+				 * The roles on offer are the ones opened on the project picked a step earlier, which
+				 * is why this reads the form rather than taking a prop: the backend resolves the role
+				 * inside that project and refuses anything else.
+				 */}
+				<form.Subscribe selector={(state) => [state.values.projectId, state.values.positionId]}>
+					{([projectId, positionId]) => (
+						<div className="form-field">
+							<label className="form-label" htmlFor="positionId">
+								Position
+							</label>
+
+							<PositionsPicker
+								projectId={projectId}
+								disabled={isSubmitting}
+								value={positionId}
+								inputValue={roleInput}
+								onInputChange={setRoleInput}
+								onChange={(id) => form.setFieldValue("positionId", id ?? "")}
+							/>
+
+							<div className="form-hint">
+								Roles are opened on the project. If the one you need is not here, open it there
+								first.
+							</div>
+						</div>
 					)}
-				</form.AppField>
+				</form.Subscribe>
 
 				<form.AppField name="startsOn">
 					{(field) => (

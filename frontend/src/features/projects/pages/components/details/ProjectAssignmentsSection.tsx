@@ -70,8 +70,8 @@ export function ProjectAssignmentsSection({
 										</Link>
 									</td>
 
-									<td className="table-cell-truncate" title={assignment.position}>
-										{assignment.position}
+									<td className="table-cell-truncate" title={assignment.positionName}>
+										{assignment.positionName}
 									</td>
 
 									<td>{engagementTypes[assignment.engagementType]}</td>

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
 	getCompanySuggestion,
+	getPositionSuggestion,
 	getProjectSuggestion,
 	getTeamSuggestion,
 	getUserSuggestion,
@@ -60,6 +61,17 @@ export function useProjectSuggestion(projectId: string) {
 		queryKey: suggestionKeys.project(projectId),
 		queryFn: ({ signal }) => getProjectSuggestion(projectId, undefined, signal),
 		enabled: Boolean(projectId),
+		staleTime: SUGGESTION_STALE_TIME,
+		retry: false,
+	});
+}
+
+/** A role inside a project. Filled by PositionsPicker, read back by anything showing an assignment. */
+export function usePositionSuggestion(positionId: string) {
+	return useQuery({
+		queryKey: suggestionKeys.position(positionId),
+		queryFn: ({ signal }) => getPositionSuggestion(positionId, undefined, signal),
+		enabled: Boolean(positionId),
 		staleTime: SUGGESTION_STALE_TIME,
 		retry: false,
 	});

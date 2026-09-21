@@ -56,7 +56,7 @@ export function PlanAssignmentWizard({
 				workerId: value.workerId,
 				projectId: value.projectId,
 				engagementType: value.engagementType as EngagementType,
-				position: value.position.trim(),
+				positionId: value.positionId,
 				startsOn: toDateOnly(value.startsOn),
 				endsOn: value.endsOn ? toDateOnly(value.endsOn) : null,
 			};

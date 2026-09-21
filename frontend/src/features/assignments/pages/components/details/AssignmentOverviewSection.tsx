@@ -52,7 +52,7 @@ export function AssignmentOverviewSection({ assignment }: AssignmentOverviewSect
 
 				<DetailItem label="Engagement">{engagementTypes[assignment.engagementType]}</DetailItem>
 
-				<DetailItem label="Position">{assignment.position}</DetailItem>
+				<DetailItem label="Position">{assignment.positionName}</DetailItem>
 
 				<DetailItem label="Period">
 					{formatPeriod(assignment.startsOn, assignment.endsOn)}

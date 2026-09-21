@@ -76,8 +76,8 @@ export function WorkerAssignmentsSection({
 
 								<td>{assignment.workCountry}</td>
 
-								<td className="table-cell-truncate" title={assignment.position}>
-									{assignment.position}
+								<td className="table-cell-truncate" title={assignment.positionName}>
+									{assignment.positionName}
 									<span className="data-meta"> · {engagementTypes[assignment.engagementType]}</span>
 								</td>
 

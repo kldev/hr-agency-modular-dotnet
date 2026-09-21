@@ -46,7 +46,7 @@ export function getColumns(actions: assignmentsActions) {
 								</Link>
 							</div>
 
-							<div className="data-meta max-w-67.5 truncate">{assignment.position}</div>
+							<div className="data-meta max-w-67.5 truncate">{assignment.positionName}</div>
 						</div>
 					</div>
 				);

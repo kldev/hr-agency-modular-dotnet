@@ -9,7 +9,7 @@ import {
 	previewComplianceRequirements,
 } from "@/features/compliance";
 import { useGetProject } from "@/features/projects/pages/hooks";
-import { useWorkerSuggestion } from "@/hooks";
+import { usePositionSuggestion, useWorkerSuggestion } from "@/hooks";
 import { formatPeriod } from "@/utlis/formatRecord";
 import { emptyPlanAssignment } from "../schema";
 import { planAssignmentSteps } from "../steps";
@@ -21,6 +21,9 @@ export const ReviewStep = withForm({
 		const values = form.state.values;
 
 		const worker = useWorkerSuggestion(values.workerId);
+
+		/* The form holds the role's id; its name comes from the same cache the picker filled. */
+		const position = usePositionSuggestion(values.positionId);
 		const project = useGetProject(values.projectId);
 
 		/*
@@ -81,7 +84,7 @@ export const ReviewStep = withForm({
 								}
 							/>
 
-							<SummaryItem label="Position" value={values.position} />
+							<SummaryItem label="Position" value={position.data?.name ?? ""} />
 
 							<SummaryItem
 								label="Period"

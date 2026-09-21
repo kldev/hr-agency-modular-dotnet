@@ -3,19 +3,18 @@ import { z } from "zod";
 /*
  * One posting: one person, one project, one period. Everything here is frozen the moment it is
  * planned - the delivering company, the client and the work country are read from the project and
- * copied onto the assignment, because that is what an A1 is issued against. Only the position and
- * the period can be corrected afterwards.
+ * copied onto the assignment, because that is what an A1 is issued against. Only the role and the
+ * period can be corrected afterwards.
+ *
+ * The role is an id, not a name: it is opened on the project first, and picking it is what lets the
+ * project say how many people a role still needs.
  */
 export const planAssignmentSchema = z
 	.object({
 		workerId: z.string().min(1, "Pick the person"),
 		projectId: z.string().min(1, "Pick the project"),
 		engagementType: z.string().min(1, "Pick how this person is engaged"),
-		position: z
-			.string()
-			.trim()
-			.min(1, "Position is required")
-			.max(200, "Position cannot exceed 200 characters."),
+		positionId: z.string().min(1, "Pick the role this person is taking"),
 		startsOn: z.string().min(1, "The start date is required"),
 		endsOn: z.string(),
 	})
@@ -43,7 +42,7 @@ export const emptyPlanAssignment: PlanAssignmentFormValues = {
 	workerId: "",
 	projectId: "",
 	engagementType: "",
-	position: "",
+	positionId: "",
 	startsOn: "",
 	endsOn: "",
 };

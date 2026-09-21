@@ -50,7 +50,7 @@ export function AssignmentsCardList({
 						<DetailItem label="Client">{assignment.clientCompanyName}</DetailItem>
 						<DetailItem label="Posted by">{assignment.deliveringEntityName}</DetailItem>
 						<DetailItem label="Country">{assignment.workCountry}</DetailItem>
-						<DetailItem label="Position">{assignment.position}</DetailItem>
+						<DetailItem label="Position">{assignment.positionName}</DetailItem>
 
 						<DetailItem label="Engagement">{engagementTypes[assignment.engagementType]}</DetailItem>
 

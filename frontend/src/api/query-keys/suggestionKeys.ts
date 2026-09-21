@@ -10,4 +10,6 @@ export const suggestionKeys = {
 	worker: (id: string) => [...suggestionKeys.all, "worker", id] as const,
 
 	project: (id: string) => [...suggestionKeys.all, "project", id] as const,
+
+	position: (id: string) => [...suggestionKeys.all, "position", id] as const,
 };
