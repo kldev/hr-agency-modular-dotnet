@@ -1,15 +1,10 @@
 import clsx from "clsx";
 import { applicationSources, applicationStatuses } from "#/features/applications/types";
+import { complianceStatusClass, complianceStatuses } from "#/features/compliance/types";
 import { interviewFormats, interviewStatuses, interviewTypes } from "#/features/interviews/type";
 import { jobDescriptionStatuses } from "#/features/job-descriptions/type";
 import { jobPostsStatuses } from "#/features/job-posts/type";
-import {
-	complianceStatusClass,
-	complianceStatuses,
-	contractStatusClass,
-	contractStatuses,
-	projectStatuses,
-} from "#/features/projects/types";
+import { contractStatusClass, contractStatuses, projectStatuses } from "#/features/projects/types";
 import type {
 	CandidateSource,
 	ComplianceStatus,
