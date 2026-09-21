@@ -47,13 +47,21 @@ internal static class Endpoint
     private static async Task<IResult> HandlerApplicants(
         IPlatformSeeder seeder,
         [FromQuery] int count = 100,
-        string type = "random"
+        string type = "random",
+        [FromQuery] string slug = "hr-agency"
     )
     {
         if (type == "show")
         {
             await seeder.SeedShowcase();
             return TypedResults.Text("Seed showcase applicants completed");
+        }
+
+        // Legal entities, projects, workers and assignments for an agency that already exists.
+        if (type == "delivery")
+        {
+            await seeder.SeedDelivery(slug);
+            return TypedResults.Text($"Seed delivery completed for '{slug}'");
         }
 
         var clamp = Math.Clamp(count, 1, 200);
