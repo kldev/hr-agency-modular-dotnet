@@ -1,6 +1,6 @@
 import type { WorkerProjection } from "@/api/models";
 import { DetailItem, DetailOverviewHeader, WorkerStatusBadge } from "@/components/ui";
-import { responsibleDepartments, workerStatusDescriptions } from "../../../types";
+import { workerStatusDescriptions } from "../../../types";
 import { WorkerExpiryChip } from "../WorkerExpiryChip";
 
 interface WorkerPipelineSidebarProps {
@@ -21,10 +21,6 @@ export function WorkerPipelineSidebar({ worker }: WorkerPipelineSidebarProps) {
 			<dl className="data-details-list">
 				<DetailItem label="Status">
 					<WorkerStatusBadge status={status} />
-				</DetailItem>
-
-				<DetailItem label="Whose desk">
-					{responsibleDepartments[worker.department ?? "None"]}
 				</DetailItem>
 
 				<DetailItem label="Works in">{worker.currentWorkCountry ?? "Not on a project"}</DetailItem>

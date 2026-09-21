@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { getFnOptions } from "#/server/axios";
 import { getWorker, getWorkers } from "@/api/endpoints";
-import type { ResponsibleDepartment, WorkerStatus } from "@/api/models";
+import type { WorkerStatus } from "@/api/models";
 import { workersKeys } from "@/api/query-keys";
 
 const PAGE_SIZE = 15;
@@ -10,7 +10,6 @@ const PAGE_SIZE = 15;
 export type WorkersFilters = {
 	search?: string;
 	status?: WorkerStatus[];
-	department?: ResponsibleDepartment[];
 	citizenship?: string;
 	/** Where they currently work. The two register views are built from these two. */
 	workCountry?: string[];
@@ -28,7 +27,6 @@ const getWorkersSliceServerFn = createServerFn({
 			{
 				search: data.search ?? "",
 				...(data.status?.length ? { status: data.status } : {}),
-				...(data.department?.length ? { department: data.department } : {}),
 				...(data.citizenship ? { citizenship: data.citizenship } : {}),
 				...(data.workCountry?.length ? { workCountry: data.workCountry } : {}),
 				...(data.excludeWorkCountry?.length ? { excludeWorkCountry: data.excludeWorkCountry } : {}),

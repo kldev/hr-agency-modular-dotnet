@@ -1,6 +1,5 @@
 import type {
 	IdentityDocumentKind,
-	ResponsibleDepartment,
 	WorkAuthorisationKind,
 	WorkerDocumentCategory,
 	WorkerStatus,
@@ -41,14 +40,6 @@ export const workerStatusDescriptions: Record<WorkerStatus, string> = {
 	Employed: "Working, or available to be put on a project.",
 	ProjectChange: "Moving between projects. Still ours, still ready to start.",
 	Terminated: "Gone. They can be taken back on, but not into recruitment.",
-};
-
-export const responsibleDepartments: Record<ResponsibleDepartment, string> = {
-	Recruitment: "Recruitment",
-	HumanResources: "Human resources",
-	Legalisation: "Legalisation",
-	Operations: "Operations",
-	None: "—",
 };
 
 export const identityDocumentKinds: Record<IdentityDocumentKind, string> = {

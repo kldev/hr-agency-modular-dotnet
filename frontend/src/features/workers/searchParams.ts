@@ -1,4 +1,4 @@
-import type { ResponsibleDepartment, WorkerStatus } from "@/api/models";
+import type { WorkerStatus } from "@/api/models";
 
 /**
  * Shared by the two register routes, which render the same page over a different half of it. The
@@ -8,7 +8,6 @@ import type { ResponsibleDepartment, WorkerStatus } from "@/api/models";
 export type WorkersSearch = {
 	search?: string;
 	status?: WorkerStatus;
-	department?: ResponsibleDepartment;
 	citizenship?: string;
 };
 
@@ -16,10 +15,6 @@ export function validateWorkersSearch(search: Record<string, unknown>): WorkersS
 	return {
 		search: typeof search.search === "string" ? search.search : undefined,
 		status: typeof search.status === "string" ? (search.status as WorkerStatus) : undefined,
-		department:
-			typeof search.department === "string"
-				? (search.department as ResponsibleDepartment)
-				: undefined,
 		citizenship: typeof search.citizenship === "string" ? search.citizenship : undefined,
 	};
 }
@@ -27,6 +22,5 @@ export function validateWorkersSearch(search: Record<string, unknown>): WorkersS
 export const emptyWorkersSearch: WorkersSearch = {
 	search: undefined,
 	status: undefined,
-	department: undefined,
 	citizenship: undefined,
 };
