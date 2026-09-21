@@ -47,6 +47,7 @@ import { Route as AppJobsIdRouteImport } from './routes/app/jobs/$id'
 import { Route as AppJobsAddRouteImport } from './routes/app/jobs/add'
 import { Route as AppLegalEntitiesIndexRouteImport } from './routes/app/legal-entities/index'
 import { Route as AppLegalEntitiesIdRouteImport } from './routes/app/legal-entities/$id'
+import { Route as AppPositionsIndexRouteImport } from './routes/app/positions/index'
 import { Route as AppProfileIndexRouteImport } from './routes/app/profile/index'
 import { Route as AppProjectsIndexRouteImport } from './routes/app/projects/index'
 import { Route as AppProjectsIdRouteImport } from './routes/app/projects/$id'
@@ -251,6 +252,11 @@ const AppLegalEntitiesIdRoute = AppLegalEntitiesIdRouteImport.update({
   path: '/legal-entities/$id',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppPositionsIndexRoute = AppPositionsIndexRouteImport.update({
+  id: '/positions/',
+  path: '/positions/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
   id: '/profile/',
   path: '/profile/',
@@ -361,6 +367,7 @@ export interface FileRoutesByFullPath {
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
   '/app/legal-entities/': typeof AppLegalEntitiesIndexRoute
+  '/app/positions/': typeof AppPositionsIndexRoute
   '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
@@ -412,6 +419,7 @@ export interface FileRoutesByTo {
   '/app/job-descriptions': typeof AppJobDescriptionsIndexRoute
   '/app/jobs': typeof AppJobsIndexRoute
   '/app/legal-entities': typeof AppLegalEntitiesIndexRoute
+  '/app/positions': typeof AppPositionsIndexRoute
   '/app/profile': typeof AppProfileIndexRoute
   '/app/projects': typeof AppProjectsIndexRoute
   '/app/sales': typeof AppSalesIndexRoute
@@ -466,6 +474,7 @@ export interface FileRoutesById {
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
   '/app/legal-entities/': typeof AppLegalEntitiesIndexRoute
+  '/app/positions/': typeof AppPositionsIndexRoute
   '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
@@ -521,6 +530,7 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/'
     | '/app/jobs/'
     | '/app/legal-entities/'
+    | '/app/positions/'
     | '/app/profile/'
     | '/app/projects/'
     | '/app/sales/'
@@ -572,6 +582,7 @@ export interface FileRouteTypes {
     | '/app/job-descriptions'
     | '/app/jobs'
     | '/app/legal-entities'
+    | '/app/positions'
     | '/app/profile'
     | '/app/projects'
     | '/app/sales'
@@ -625,6 +636,7 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/'
     | '/app/jobs/'
     | '/app/legal-entities/'
+    | '/app/positions/'
     | '/app/profile/'
     | '/app/projects/'
     | '/app/sales/'
@@ -917,6 +929,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLegalEntitiesIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/positions/': {
+      id: '/app/positions/'
+      path: '/positions'
+      fullPath: '/app/positions/'
+      preLoaderRoute: typeof AppPositionsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/profile/': {
       id: '/app/profile/'
       path: '/profile'
@@ -1060,6 +1079,7 @@ interface AppRouteRouteChildren {
   AppJobDescriptionsIndexRoute: typeof AppJobDescriptionsIndexRoute
   AppJobsIndexRoute: typeof AppJobsIndexRoute
   AppLegalEntitiesIndexRoute: typeof AppLegalEntitiesIndexRoute
+  AppPositionsIndexRoute: typeof AppPositionsIndexRoute
   AppProfileIndexRoute: typeof AppProfileIndexRoute
   AppProjectsIndexRoute: typeof AppProjectsIndexRoute
   AppSalesIndexRoute: typeof AppSalesIndexRoute
@@ -1098,6 +1118,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppJobDescriptionsIndexRoute: AppJobDescriptionsIndexRoute,
   AppJobsIndexRoute: AppJobsIndexRoute,
   AppLegalEntitiesIndexRoute: AppLegalEntitiesIndexRoute,
+  AppPositionsIndexRoute: AppPositionsIndexRoute,
   AppProfileIndexRoute: AppProfileIndexRoute,
   AppProjectsIndexRoute: AppProjectsIndexRoute,
   AppSalesIndexRoute: AppSalesIndexRoute,

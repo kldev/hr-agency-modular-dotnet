@@ -5,4 +5,5 @@ export * from "./ProjectContractSection";
 export * from "./ProjectCustomerSection";
 export * from "./ProjectDocumentsSection";
 export * from "./ProjectOverviewSection";
+export * from "./ProjectPositionsSection";
 export * from "./ProjectStatusSidebar";

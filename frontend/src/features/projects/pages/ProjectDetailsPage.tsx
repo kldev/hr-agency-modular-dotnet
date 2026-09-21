@@ -43,6 +43,10 @@ import {
 	CompleteCompanyProfileWizardDialog,
 } from "#/features/companies/wizards/complete-profile/CompleteCompanyProfileWizardDialog";
 import {
+	type PositionWizardCommand,
+	PositionWizardDialog,
+} from "#/features/positions/wizards/position/PositionWizardDialog";
+import {
 	type ProjectWizardCommand,
 	ProjectWizardDialog,
 } from "../wizards/project/ProjectWizardDialog";
@@ -54,16 +58,24 @@ import {
 	ProjectCustomerSection,
 	ProjectDocumentsSection,
 	ProjectOverviewSection,
+	ProjectPositionsSection,
 	ProjectStatusSidebar,
 } from "./components/details";
 import { ProjectActions } from "./components/table/ProjectActions";
 import { useGetProject, useRemoveProjectContact } from "./hooks";
 
-export type ProjectTab = "overview" | "contract" | "people" | "documents" | "compliance";
+export type ProjectTab =
+	| "overview"
+	| "contract"
+	| "positions"
+	| "people"
+	| "documents"
+	| "compliance";
 
 export const projectTabs: readonly ProjectTab[] = [
 	"overview",
 	"contract",
+	"positions",
 	"people",
 	"documents",
 	"compliance",
@@ -94,6 +106,7 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 	const teamRef = useRef<AssignProjectTeamFormCommand>(null);
 	const profileRef = useRef<CompleteCompanyProfileCommand>(null);
 	const planAssignmentRef = useRef<PlanAssignmentWizardCommand>(null);
+	const positionRef = useRef<PositionWizardCommand>(null);
 
 	const query = useGetProject(id);
 
@@ -118,6 +131,8 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 	const tabs: TabDefinition<ProjectTab>[] = [
 		{ id: "overview", label: "Overview" },
 		{ id: "contract", label: "Contract & contacts", count: project.contacts.length },
+		/* The roles this delivery is staffed with; the people on them are the next tab along. */
+		{ id: "positions", label: "Positions", count: Number(project.openPositionCount ?? 0) },
 		{ id: "people", label: "People" },
 		{ id: "documents", label: "Documents", count: Number(project.documentCount ?? 0) },
 		{
@@ -204,6 +219,16 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 								</>
 							) : null}
 
+							{active === "positions" ? (
+								<section className="data-details-section">
+									<ProjectPositionsSection
+										project={project}
+										onOpenPosition={() => positionRef.current?.open(project.id)}
+										onEditPosition={(position) => positionRef.current?.edit(position.id)}
+									/>
+								</section>
+							) : null}
+
 							{active === "people" ? (
 								<section className="data-details-section">
 									<ProjectAssignmentsSection
@@ -265,6 +290,7 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 			<AssignProjectTeamDrawer ref={teamRef} onSuccess={refresh} />
 			<CompleteCompanyProfileWizardDialog ref={profileRef} onSuccess={refresh} />
 			<PlanAssignmentWizardDialog ref={planAssignmentRef} onSuccess={refresh} />
+			<PositionWizardDialog ref={positionRef} onSuccess={refresh} />
 		</>
 	);
 }

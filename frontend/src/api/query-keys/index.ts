@@ -7,6 +7,7 @@ export * from "./jobDescriptionKeys";
 export * from "./jobPostsKeys";
 export * from "./legalEntitiesKeys";
 export * from "./organizationKeys";
+export * from "./positionsKeys";
 export * from "./profileKeys";
 export * from "./projectsKeys";
 export * from "./salesKeys";
