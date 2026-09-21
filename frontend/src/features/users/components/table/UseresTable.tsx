@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useTable } from "@tanstack/react-table";
 import { useRef } from "react";
-import type { UserProjection } from "@/api/models";
+import type { OrgUnitRow, UserProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
 import {
@@ -16,10 +16,11 @@ import { getColumns } from "./UsersTableColumns";
 
 interface UseresTableProps {
 	users: UserProjection[];
+	unitOf: (userId: string) => OrgUnitRow | undefined;
 	onRefresh: () => void;
 }
 
-export function UseresTable({ users, onRefresh }: UseresTableProps) {
+export function UseresTable({ users, unitOf, onRefresh }: UseresTableProps) {
 	const navigate = useNavigate();
 	const editRef = useRef<EditUserFormCommand>(null);
 	const roleRef = useRef<ChangeUserRoleFormCommand>(null);
@@ -32,6 +33,7 @@ export function UseresTable({ users, onRefresh }: UseresTableProps) {
 				onEdit: (user) => editRef.current?.edit(user),
 				onChangeRole: (user) => roleRef.current?.changeRole(user),
 				onChangeTeam: (user) => teamRef.current?.changeTeam(user),
+				unitOf,
 			}),
 			data: users,
 			getRowId: (user) => user.id,

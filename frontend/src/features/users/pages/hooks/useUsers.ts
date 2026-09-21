@@ -22,6 +22,9 @@ import { useProjectionWait } from "@/hooks";
 
 const PAGE_SIZE = 15;
 
+/** The server clamps this to 500, which is far more staff than an agency has. */
+const DIRECTORY_PAGE_SIZE = 500;
+
 export type UsersFilters = {
 	search?: string;
 	role?: OrganizationRoleApi;
@@ -99,6 +102,20 @@ export function useGetUsersSlice(filter: UsersFilters) {
 		getNextPageParam: (lastPage, _pages, lastPageParam) => {
 			return lastPage.hasMore ? lastPageParam + 1 : undefined;
 		},
+	});
+}
+
+/**
+ * Everybody in the organization, in one page, as a directory to resolve ids against.
+ *
+ * The org chart carries user ids and no names, so something has to turn them into people. One call
+ * rather than one per id: the backend clamps `pageSize` to 500 and an agency is tens of people, so
+ * the whole staff arrives at once and every unit, head and member row reads from the same map.
+ */
+export function useAllOrganizationUsers() {
+	return useQuery({
+		queryKey: usersKeys.list({ directory: true }),
+		queryFn: () => getUsersliceServerFn({ data: { page: 1, pageSize: DIRECTORY_PAGE_SIZE } }),
 	});
 }
 

@@ -1,7 +1,9 @@
 import { Users } from "lucide-react";
 import type React from "react";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
+import { useGetOrgStructure } from "#/features/org-structure/pages/hooks";
+import { unitByMemberId } from "#/features/org-structure/types";
 import { Route } from "#/routes/app/users";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
@@ -22,6 +24,18 @@ const UsersPage: React.FC = () => {
 	const search = Route.useSearch() as UsersFilters;
 
 	const query = useGetUsersSlice(search);
+
+	/*
+	 * The chart answers "who sits where" for the unit column. It is one small document and it shares
+	 * a cache key with the org structure page, so arriving from there costs nothing.
+	 */
+	const structure = useGetOrgStructure();
+
+	const unitsByMember = useMemo(
+		() => unitByMemberId(structure.data?.units ?? []),
+		[structure.data],
+	);
+
 	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
 	const isEmpty = query.isFetched && items.length === 0;
@@ -59,7 +73,11 @@ const UsersPage: React.FC = () => {
 					navigate({ search: (previous) => ({ ...previous, role: s }) });
 				}}
 			/>
-			<UseresTable users={items} onRefresh={() => query.refetch()} />
+			<UseresTable
+				users={items}
+				unitOf={(userId) => unitsByMember.get(userId)}
+				onRefresh={() => query.refetch()}
+			/>
 			<UsersCardList items={items} />
 			<LoadMore
 				loading={query.isPending}

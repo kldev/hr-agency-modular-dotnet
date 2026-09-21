@@ -21,6 +21,7 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as ApiHealthzRouteImport } from './routes/api/healthz'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppOrgStructureRouteImport } from './routes/app/org-structure'
 import { Route as AppWorkersAbroadRouteImport } from './routes/app/workers-abroad'
 import { Route as OwnerIndexRouteImport } from './routes/owner/index'
 import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
@@ -120,6 +121,11 @@ const ApiHealthzRoute = ApiHealthzRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppOrgStructureRoute = AppOrgStructureRouteImport.update({
+  id: '/org-structure',
+  path: '/org-structure',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppWorkersAbroadRoute = AppWorkersAbroadRouteImport.update({
@@ -335,6 +341,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/org-structure': typeof AppOrgStructureRoute
   '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
@@ -387,6 +394,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/org-structure': typeof AppOrgStructureRoute
   '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
@@ -442,6 +450,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/org-structure': typeof AppOrgStructureRoute
   '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
@@ -498,6 +507,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/org-structure'
     | '/app/workers-abroad'
     | '/admin/'
     | '/app/'
@@ -550,6 +560,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/org-structure'
     | '/app/workers-abroad'
     | '/admin'
     | '/app'
@@ -604,6 +615,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/org-structure'
     | '/app/workers-abroad'
     | '/admin/'
     | '/app/'
@@ -745,6 +757,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/org-structure': {
+      id: '/app/org-structure'
+      path: '/org-structure'
+      fullPath: '/app/org-structure'
+      preLoaderRoute: typeof AppOrgStructureRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/app/workers-abroad': {
@@ -1053,6 +1072,7 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 )
 
 interface AppRouteRouteChildren {
+  AppOrgStructureRoute: typeof AppOrgStructureRoute
   AppWorkersAbroadRoute: typeof AppWorkersAbroadRoute
   AppIndexRoute: typeof AppIndexRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
@@ -1092,6 +1112,7 @@ interface AppRouteRouteChildren {
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppOrgStructureRoute: AppOrgStructureRoute,
   AppWorkersAbroadRoute: AppWorkersAbroadRoute,
   AppIndexRoute: AppIndexRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,

@@ -8,6 +8,8 @@ export interface ActionMenuItem {
 	icon?: ComponentType<{ size?: number }>;
 	dividerAfter?: boolean;
 	disabled?: boolean;
+	/** Shown on hover; the place to say why a disabled action is disabled. */
+	hint?: string;
 }
 
 interface ActionMenuProps {
@@ -48,6 +50,7 @@ export function ActionMenu({
 								<DropdownItem
 									key={`drop-item-${index}`}
 									disabled={item.disabled}
+									title={item.hint}
 									onClick={() => {
 										item.action();
 										setOpen(false);

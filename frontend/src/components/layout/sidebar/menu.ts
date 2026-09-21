@@ -11,6 +11,7 @@ import {
 	Landmark,
 	LayoutDashboard,
 	MessageSquare,
+	Network,
 	Plane,
 	Users,
 	UsersRound,
@@ -55,6 +56,7 @@ const menuGroups: MenuGroup[] = [
 		items: [
 			{ label: "Users", icon: Users, link: "/app/users" },
 			{ label: "Teams", icon: UsersRound, link: "/app/teams" },
+			{ label: "Org structure", icon: Network, link: "/app/org-structure" },
 			{ label: "Legal entities", icon: Landmark, link: "/app/legal-entities" },
 		],
 	},

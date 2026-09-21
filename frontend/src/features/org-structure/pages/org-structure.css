@@ -1,0 +1,214 @@
+/* =========================================================
+   Org structure
+   ========================================================= */
+
+/*
+ * Two panes on a desktop: the chart on the left, the selected box on the right. Below 1100px they
+ * stack, the same breakpoint `.data-details-layout` uses - a chart read on a phone is a list.
+ */
+.org-structure-layout {
+	display: grid;
+	grid-template-columns: minmax(280px, 0.9fr) 1.6fr;
+	gap: var(--space-5);
+	align-items: start;
+}
+
+@media (max-width: 1100px) {
+	.org-structure-layout {
+		grid-template-columns: 1fr;
+	}
+}
+
+.org-structure-pane {
+	min-width: 0;
+
+	border: 1px solid var(--color-border);
+	background: var(--color-surface);
+}
+
+.org-structure-pane-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--space-3);
+
+	padding: var(--space-3) var(--space-4);
+	border-bottom: 1px solid var(--color-border);
+}
+
+.org-structure-pane-header h2 {
+	margin: 0;
+
+	font-size: var(--font-size-md);
+	font-weight: var(--font-weight-semibold);
+}
+
+/* ---------------------------------------------------------
+   The tree
+   --------------------------------------------------------- */
+
+.org-tree,
+.org-tree ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.org-tree {
+	padding: var(--space-2) 0;
+}
+
+.org-tree-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-1);
+
+	padding-right: var(--space-3);
+
+	border-left: 2px solid transparent;
+}
+
+.org-tree-row:hover {
+	background: var(--color-surface-hover);
+}
+
+.org-tree-row-selected {
+	background: var(--color-surface-selected);
+	border-left-color: var(--color-primary);
+}
+
+.org-tree-toggle,
+.org-tree-toggle-spacer {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 20px;
+	height: 20px;
+
+	flex-shrink: 0;
+}
+
+.org-tree-toggle {
+	color: var(--color-text-muted);
+	cursor: pointer;
+
+	border-radius: var(--radius-md);
+}
+
+.org-tree-toggle:hover {
+	color: var(--color-text);
+	background: var(--color-surface-hover);
+}
+
+.org-tree-name {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+
+	flex: 1;
+	min-width: 0;
+
+	padding: var(--space-2) var(--space-1);
+
+	text-align: left;
+	cursor: pointer;
+}
+
+.org-tree-label {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+
+	color: var(--color-text);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+
+	/* A long department name wins over the row, so it is cut with a hint rather than mid-letter. */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.org-tree-meta {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.org-tree-archived {
+	flex-shrink: 0;
+
+	padding: 0 var(--space-2);
+
+	border: 1px solid var(--color-border-strong);
+	border-radius: var(--radius-md);
+
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-medium);
+	text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------
+   The unit panel
+   --------------------------------------------------------- */
+
+.org-unit-section {
+	padding: var(--space-4);
+	border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.org-unit-section:last-child {
+	border-bottom: none;
+}
+
+.org-unit-section-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: var(--space-4);
+
+	margin-bottom: var(--space-3);
+}
+
+.org-unit-section-header h3 {
+	margin: 0;
+
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+}
+
+.org-unit-section-header p {
+	margin: var(--space-1) 0 0;
+
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+}
+
+.org-unit-member {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+
+	padding: var(--space-2) 0;
+}
+
+.org-unit-member-name {
+	color: var(--color-text);
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+}
+
+.org-unit-member-meta {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+}
+
+.org-unit-empty {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+}

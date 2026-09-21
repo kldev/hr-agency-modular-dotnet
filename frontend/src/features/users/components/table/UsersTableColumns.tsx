@@ -1,9 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import type { UserProjection } from "@/api/models";
+import type { OrgUnitRow, UserProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark } from "@/components/ui";
 import { teamRoles } from "@/features/teams/types";
 import { formatDateTime } from "@/utlis/dateUtils";
+import { organizationRoleLabel } from "../../types";
 import { UserActions } from "./UserActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, UserProjection>();
@@ -12,9 +13,14 @@ export type UserColumnHandlers = {
 	onEdit: (user: UserProjection) => void;
 	onChangeRole: (user: UserProjection) => void;
 	onChangeTeam: (user: UserProjection) => void;
+	/*
+	 * The unit is not on `UserProjection` the way the team is - the chart is never mirrored onto the
+	 * person - so the page resolves it from the org structure and hands the lookup down.
+	 */
+	unitOf: (userId: string) => OrgUnitRow | undefined;
 };
 
-export function getColumns({ onEdit, onChangeRole, onChangeTeam }: UserColumnHandlers) {
+export function getColumns({ onEdit, onChangeRole, onChangeTeam, unitOf }: UserColumnHandlers) {
 	const columns = columnHelper.columns([
 		columnHelper.display({
 			id: "actions",
@@ -60,6 +66,7 @@ export function getColumns({ onEdit, onChangeRole, onChangeTeam }: UserColumnHan
 			meta: {
 				width: "sm",
 			},
+			cell: ({ getValue }) => organizationRoleLabel(getValue()),
 		}),
 
 		columnHelper.display({
@@ -79,6 +86,31 @@ export function getColumns({ onEdit, onChangeRole, onChangeTeam }: UserColumnHan
 					<div>
 						<div className="data-name">{team.name}</div>
 						<div className="text-xs text-(--color-text-muted)">{teamRoles[team.role]}</div>
+					</div>
+				);
+			},
+		}),
+
+		columnHelper.display({
+			id: "unit",
+			header: "Unit",
+			meta: {
+				width: "md",
+			},
+			cell: ({ row }) => {
+				const unit = unitOf(row.original.id);
+
+				if (!unit) {
+					return <span className="text-(--color-text-muted)">—</span>;
+				}
+
+				return (
+					<div className="table-cell-truncate" title={unit.name}>
+						<div className="data-name">{unit.name}</div>
+
+						{unit.headUserId === row.original.id ? (
+							<div className="text-xs text-(--color-text-muted)">Heads it</div>
+						) : null}
 					</div>
 				);
 			},
