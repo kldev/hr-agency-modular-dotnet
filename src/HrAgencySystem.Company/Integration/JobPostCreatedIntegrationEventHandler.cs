@@ -24,7 +24,7 @@ public class JobPostCreatedIntegrationEventHandler
 
 public static class JobPostCreatedHandler
 {
-    [AggregateHandler]
+    [AggregateHandler(ConcurrencyStyle.Exclusive)]
     public static Task<CompanyJobPostCreated> Handle(
         CompanyJobPostCreated command,
         Domain.Company aggregate
