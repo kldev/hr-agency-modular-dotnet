@@ -237,6 +237,40 @@ public class OrgStructureTests(IntegrationEnvironment env, ITestOutputHelper out
         });
     }
 
+    /// <summary>
+    /// The chart is opened for an organization that really exists as an aggregate, not for a bare
+    /// guid. That difference is not cosmetic: Marten's streams share one table across every module
+    /// and the organization aggregate already owns the stream whose id is the organization id, so
+    /// a chart sitting on that same id dies with "Stream #… already exists". Every other test here
+    /// uses a loose guid and would never have noticed - the seeder did.
+    /// </summary>
+    [Fact]
+    public async Task A_chart_can_be_opened_for_a_real_organization()
+    {
+        var slug = $"agency-{Guid.NewGuid():N}"[..20];
+
+        // Creating an organization is the platform owner's call, not an agency user's.
+        var organization = await new Organization.OrganizationTestClient(
+            Env.CreateClient().AsOwner(),
+            OutputHelper
+        ).CreateAsync($"Agency {slug}", slug);
+
+        var board = await OrgStructureClient.CreateUnitAsync(
+            organization.OrganizationId,
+            null,
+            "Board",
+            OrgUnitKind.Board
+        );
+
+        var payroll = await OrgStructureClient.CreateUnitAsync(
+            organization.OrganizationId,
+            board,
+            "Payroll"
+        );
+
+        Assert.NotEqual(Guid.Empty, payroll);
+    }
+
     private async Task<Guid> NewUserAsync(Guid organizationId, string handle)
     {
         var user = await UserClient.CreateAsync(

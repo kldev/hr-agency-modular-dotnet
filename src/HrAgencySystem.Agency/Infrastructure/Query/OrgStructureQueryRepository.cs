@@ -20,7 +20,9 @@ public sealed class OrgStructureQueryRepository(
         CancellationToken ct
     )
     {
-        var projection = await session.LoadAsync<OrgStructureProjection>(organizationId.Value, ct);
+        var streamId = OrgStructureId.For(organizationId.Value);
+
+        var projection = await session.LoadAsync<OrgStructureProjection>(streamId, ct);
 
         if (projection is not null)
             return projection;
@@ -32,7 +34,7 @@ public sealed class OrgStructureQueryRepository(
          * like the legitimate answer for the person at the top.
          */
         var structure = await session.Events.AggregateStreamAsync<OrgStructure>(
-            organizationId.Value,
+            streamId,
             token: ct
         );
 
@@ -40,7 +42,7 @@ public sealed class OrgStructureQueryRepository(
             return null;
 
         return new OrgStructureProjection(
-            organizationId.Value,
+            streamId,
             organizationId.Value,
             [
                 .. structure.Units.Select(unit => new OrgUnitRow(

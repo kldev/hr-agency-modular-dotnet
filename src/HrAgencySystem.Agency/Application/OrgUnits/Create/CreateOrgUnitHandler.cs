@@ -40,8 +40,11 @@ public static class CreateOrgUnitHandler
         if (error is not null)
             throw new ValidationException(error);
 
+        // The chart sits on its own stream, derived from the organization - see OrgStructureId.
+        var streamId = OrgStructureId.For(command.OrganizationId);
+
         var structure = await session.Events.AggregateStreamAsync<OrgStructure>(
-            command.OrganizationId,
+            streamId,
             token: ct
         );
 
@@ -60,9 +63,9 @@ public static class CreateOrgUnitHandler
         );
 
         if (structure is null)
-            session.Events.StartStream<OrgStructure>(command.OrganizationId, @event);
+            session.Events.StartStream<OrgStructure>(streamId, @event);
         else
-            await session.Events.AppendExclusive(command.OrganizationId, @event);
+            await session.Events.AppendExclusive(streamId, @event);
 
         return @event;
     }

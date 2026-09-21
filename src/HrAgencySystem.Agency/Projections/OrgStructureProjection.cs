@@ -28,7 +28,7 @@ public sealed record OrgStructureProjection(
     public static OrgStructureProjection Create(OrgUnitCreated @event)
     {
         var empty = new OrgStructureProjection(
-            @event.OrganizationId,
+            OrgStructureId.For(@event.OrganizationId),
             @event.OrganizationId,
             [],
             @event.CreatedBy,

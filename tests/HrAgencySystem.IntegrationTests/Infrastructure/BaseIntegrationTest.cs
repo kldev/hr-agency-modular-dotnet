@@ -76,6 +76,9 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     protected HttpClient Client => _environment.Client;
 
     protected DatabaseCleaner Cleaner => _environment.Cleaner;
+
+    /// <summary>For the rare test that needs a client with different credentials than its own.</summary>
+    protected IntegrationEnvironment Env => _environment;
     protected WorkerTestClient WorkerClient { get; }
     protected ITestOutputHelper OutputHelper { get; }
 
