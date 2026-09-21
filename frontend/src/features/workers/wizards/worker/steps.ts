@@ -66,11 +66,25 @@ const allSteps = [
 ] as const satisfies readonly WorkerStep[];
 
 /**
- * Editing drops the Source step: the API ignores `sourceCandidateId` on an update, so offering it
- * would be a field that silently does nothing.
+ * The Source step drops out in two cases, for two different reasons.
+ *
+ * Editing: the API ignores `sourceCandidateId` on an update, because somebody's origin does not
+ * change, so the field would silently do nothing.
+ *
+ * Registering straight from an application: the caller has just clicked that application and handed
+ * us its name, e-mail, phone and candidate id. A step that asks for what was clicked a second ago is
+ * a step that gets clicked through without being read.
  */
-export function workerStepsFor(mode: "register" | "edit"): readonly WorkerStep[] {
-	return mode === "register" ? allSteps : allSteps.filter((step) => step.id !== "source");
+export function workerStepsFor({
+	mode,
+	knownSource,
+}: {
+	mode: "register" | "edit";
+	knownSource: boolean;
+}): readonly WorkerStep[] {
+	return mode === "register" && !knownSource
+		? allSteps
+		: allSteps.filter((step) => step.id !== "source");
 }
 
 export const workerSteps = allSteps;

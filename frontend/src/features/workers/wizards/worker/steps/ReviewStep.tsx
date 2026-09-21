@@ -43,6 +43,15 @@ export const ReviewStep = withForm({
 							<SummaryItem label="Date of birth" value={values.dateOfBirth.slice(0, 10)} />
 							<SummaryItem label="Citizenship" value={getCountryLabel(values.citizenship) ?? ""} />
 						</div>
+
+						{/* The Source step is skipped when the wizard was opened from an application, so the
+						    link to the candidate would otherwise be invisible right where it is confirmed. */}
+						{values.sourceCandidateId ? (
+							<p className="form-wizard__section-description">
+								Registered from their application; the name, e-mail and phone above came from it and
+								the candidate record stays linked.
+							</p>
+						) : null}
 					</div>
 
 					<div className="form-wizard__summary-section">

@@ -38,7 +38,11 @@ export function WorkerWizard({
 }: WorkerWizardProps) {
 	const [currentStep, setCurrentStep] = useState(0);
 	const editing = Boolean(workerId);
-	const steps = workerStepsFor(editing ? "edit" : "register");
+
+	/* Seeded from an application: everything the Source step would ask for is already in hand. */
+	const knownSource = Boolean(initialValues.sourceApplicationId);
+
+	const steps = workerStepsFor({ mode: editing ? "edit" : "register", knownSource });
 
 	const register = useRegisterWorker({
 		onSuccess: () => toast.success("Worker registered"),
