@@ -4,12 +4,19 @@ import type { AssignmentProjection } from "#/api/models";
 import { AssignmentStatusBadge, DetailItem } from "#/components/ui";
 import { ComplianceChip, engagementTypes } from "@/features/compliance";
 import { formatPeriod } from "@/utlis/formatRecord";
+import { AssignmentActions } from "./AssignmentActions";
 
 interface AssignmentsCardListProps {
 	assignments: AssignmentProjection[];
+	onEdit?: (assignment: AssignmentProjection) => void;
+	onChangeStatus?: (assignment: AssignmentProjection) => void;
 }
 
-export function AssignmentsCardList({ assignments }: AssignmentsCardListProps) {
+export function AssignmentsCardList({
+	assignments,
+	onEdit,
+	onChangeStatus,
+}: AssignmentsCardListProps) {
 	return (
 		<div className="data-mobile-view">
 			{assignments.map<React.ReactNode>((assignment) => (
@@ -30,6 +37,12 @@ export function AssignmentsCardList({ assignments }: AssignmentsCardListProps) {
 								</Link>
 							</dd>
 						</div>
+
+						<AssignmentActions
+							id={assignment.id}
+							onEdit={onEdit && (() => onEdit(assignment))}
+							onChangeStatus={onChangeStatus && (() => onChangeStatus(assignment))}
+						/>
 					</div>
 
 					<dl className="data-details-list">

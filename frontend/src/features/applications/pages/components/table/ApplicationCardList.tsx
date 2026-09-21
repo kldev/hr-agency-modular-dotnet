@@ -97,7 +97,7 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 					navigate({
 						to: "/app/workers/$id",
 						params: { id: workerId },
-						search: { search: undefined },
+						search: { search: undefined, tab: undefined },
 					});
 				}}
 			/>

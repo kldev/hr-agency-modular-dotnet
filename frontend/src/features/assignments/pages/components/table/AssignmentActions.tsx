@@ -1,29 +1,27 @@
 import { useNavigate } from "@tanstack/react-router";
-import { CalendarPlus, Pencil, Settings2, Shuffle } from "lucide-react";
+import { Pencil, Settings2, Shuffle } from "lucide-react";
 import { ActionMenu } from "@/components/ui/ActionMenu";
 
-interface WorkerActionsProps {
+interface AssignmentActionsProps {
 	id: string;
 	onEdit?: () => void;
 	onChangeStatus?: () => void;
-	onPlanAssignment?: () => void;
 	mode?: "table" | "details";
 }
 
 /**
- * The same menu in the register and in the details header: on the details page "Open details" leads
- * where we already are and the header carries its own Edit button, so both drop out.
+ * The same menu in the list and in the details header, as with workers: on the details page "Open
+ * details" leads where we already are and the header carries its own Edit button, so both drop out.
  *
- * Every action is optional and an absent one is simply not offered, which is how this menu stays
- * honest while the drawers behind it are still being built.
+ * There is deliberately no "Move to another project": the backend has no command that repoints an
+ * assignment, because a move is this one ending and another one opening.
  */
-export function WorkerActions({
+export function AssignmentActions({
 	id,
 	onEdit,
 	onChangeStatus,
-	onPlanAssignment,
 	mode = "table",
-}: WorkerActionsProps) {
+}: AssignmentActionsProps) {
 	const navigate = useNavigate();
 
 	const actions = [
@@ -34,9 +32,9 @@ export function WorkerActions({
 						icon: Settings2,
 						action: () => {
 							navigate({
-								to: "/app/workers/$id",
+								to: "/app/assignments/$id",
 								params: { id },
-								search: { search: undefined, tab: undefined },
+								search: { search: undefined },
 							});
 						},
 					},
@@ -44,9 +42,6 @@ export function WorkerActions({
 			: []),
 		...(mode === "table" && onEdit ? [{ label: "Edit", icon: Pencil, action: onEdit }] : []),
 		...(onChangeStatus ? [{ label: "Change status", icon: Shuffle, action: onChangeStatus }] : []),
-		...(onPlanAssignment
-			? [{ label: "Plan assignment", icon: CalendarPlus, action: onPlanAssignment }]
-			: []),
 	];
 
 	return (

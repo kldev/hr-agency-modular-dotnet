@@ -21,6 +21,7 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as ApiHealthzRouteImport } from './routes/api/healthz'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppWorkersAbroadRouteImport } from './routes/app/workers-abroad'
 import { Route as OwnerIndexRouteImport } from './routes/owner/index'
 import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
 import { Route as AdminOrganizationsIdRouteImport } from './routes/admin/organizations/$id'
@@ -56,11 +57,9 @@ import { Route as AppUsersIndexRouteImport } from './routes/app/users/index'
 import { Route as AppUsersIdRouteImport } from './routes/app/users/$id'
 import { Route as AppWorkersIndexRouteImport } from './routes/app/workers/index'
 import { Route as AppWorkersIdRouteImport } from './routes/app/workers/$id'
-import { Route as AppWorkersAbroadRouteImport } from './routes/app/workers/abroad'
 import { Route as AppJobDescriptionsEditIdRouteImport } from './routes/app/job-descriptions/edit.$id'
 import { Route as AppJobsEditIdRouteImport } from './routes/app/jobs/edit.$id'
 import { Route as AppSalesOpportunitiesIdRouteImport } from './routes/app/sales/opportunities.$id'
-import { Route as AppWorkersTabsIdRouteImport } from './routes/app/workers/tabs.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -120,6 +119,11 @@ const ApiHealthzRoute = ApiHealthzRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppWorkersAbroadRoute = AppWorkersAbroadRouteImport.update({
+  id: '/workers-abroad',
+  path: '/workers-abroad',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const OwnerIndexRoute = OwnerIndexRouteImport.update({
@@ -297,11 +301,6 @@ const AppWorkersIdRoute = AppWorkersIdRouteImport.update({
   path: '/workers/$id',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppWorkersAbroadRoute = AppWorkersAbroadRouteImport.update({
-  id: '/workers/abroad',
-  path: '/workers/abroad',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 const AppJobDescriptionsEditIdRoute =
   AppJobDescriptionsEditIdRouteImport.update({
     id: '/job-descriptions/edit/$id',
@@ -318,11 +317,6 @@ const AppSalesOpportunitiesIdRoute = AppSalesOpportunitiesIdRouteImport.update({
   path: '/sales/opportunities/$id',
   getParentRoute: () => AppRouteRoute,
 } as any)
-const AppWorkersTabsIdRoute = AppWorkersTabsIdRouteImport.update({
-  id: '/workers/tabs/$id',
-  path: '/workers/tabs/$id',
-  getParentRoute: () => AppRouteRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -335,6 +329,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/owner/': typeof OwnerIndexRoute
@@ -354,7 +349,6 @@ export interface FileRoutesByFullPath {
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/app/workers/$id': typeof AppWorkersIdRoute
-  '/app/workers/abroad': typeof AppWorkersAbroadRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
@@ -376,7 +370,6 @@ export interface FileRoutesByFullPath {
   '/app/job-descriptions/edit/$id': typeof AppJobDescriptionsEditIdRoute
   '/app/jobs/edit/$id': typeof AppJobsEditIdRoute
   '/app/sales/opportunities/$id': typeof AppSalesOpportunitiesIdRoute
-  '/app/workers/tabs/$id': typeof AppWorkersTabsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -387,6 +380,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/owner': typeof OwnerIndexRoute
@@ -406,7 +400,6 @@ export interface FileRoutesByTo {
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/app/workers/$id': typeof AppWorkersIdRoute
-  '/app/workers/abroad': typeof AppWorkersAbroadRoute
   '/admin/organizations': typeof AdminOrganizationsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/app/applications': typeof AppApplicationsIndexRoute
@@ -428,7 +421,6 @@ export interface FileRoutesByTo {
   '/app/job-descriptions/edit/$id': typeof AppJobDescriptionsEditIdRoute
   '/app/jobs/edit/$id': typeof AppJobsEditIdRoute
   '/app/sales/opportunities/$id': typeof AppSalesOpportunitiesIdRoute
-  '/app/workers/tabs/$id': typeof AppWorkersTabsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -442,6 +434,7 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/owner/': typeof OwnerIndexRoute
@@ -461,7 +454,6 @@ export interface FileRoutesById {
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/app/workers/$id': typeof AppWorkersIdRoute
-  '/app/workers/abroad': typeof AppWorkersAbroadRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
@@ -483,7 +475,6 @@ export interface FileRoutesById {
   '/app/job-descriptions/edit/$id': typeof AppJobDescriptionsEditIdRoute
   '/app/jobs/edit/$id': typeof AppJobsEditIdRoute
   '/app/sales/opportunities/$id': typeof AppSalesOpportunitiesIdRoute
-  '/app/workers/tabs/$id': typeof AppWorkersTabsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -498,6 +489,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/workers-abroad'
     | '/admin/'
     | '/app/'
     | '/owner/'
@@ -517,7 +509,6 @@ export interface FileRouteTypes {
     | '/app/teams/$id'
     | '/app/users/$id'
     | '/app/workers/$id'
-    | '/app/workers/abroad'
     | '/admin/organizations/'
     | '/admin/users/'
     | '/app/applications/'
@@ -539,7 +530,6 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/edit/$id'
     | '/app/jobs/edit/$id'
     | '/app/sales/opportunities/$id'
-    | '/app/workers/tabs/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -550,6 +540,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/workers-abroad'
     | '/admin'
     | '/app'
     | '/owner'
@@ -569,7 +560,6 @@ export interface FileRouteTypes {
     | '/app/teams/$id'
     | '/app/users/$id'
     | '/app/workers/$id'
-    | '/app/workers/abroad'
     | '/admin/organizations'
     | '/admin/users'
     | '/app/applications'
@@ -591,7 +581,6 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/edit/$id'
     | '/app/jobs/edit/$id'
     | '/app/sales/opportunities/$id'
-    | '/app/workers/tabs/$id'
   id:
     | '__root__'
     | '/'
@@ -604,6 +593,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/workers-abroad'
     | '/admin/'
     | '/app/'
     | '/owner/'
@@ -623,7 +613,6 @@ export interface FileRouteTypes {
     | '/app/teams/$id'
     | '/app/users/$id'
     | '/app/workers/$id'
-    | '/app/workers/abroad'
     | '/admin/organizations/'
     | '/admin/users/'
     | '/app/applications/'
@@ -645,7 +634,6 @@ export interface FileRouteTypes {
     | '/app/job-descriptions/edit/$id'
     | '/app/jobs/edit/$id'
     | '/app/sales/opportunities/$id'
-    | '/app/workers/tabs/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -745,6 +733,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/workers-abroad': {
+      id: '/app/workers-abroad'
+      path: '/workers-abroad'
+      fullPath: '/app/workers-abroad'
+      preLoaderRoute: typeof AppWorkersAbroadRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/owner/': {
@@ -992,13 +987,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWorkersIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
-    '/app/workers/abroad': {
-      id: '/app/workers/abroad'
-      path: '/workers/abroad'
-      fullPath: '/app/workers/abroad'
-      preLoaderRoute: typeof AppWorkersAbroadRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
     '/app/job-descriptions/edit/$id': {
       id: '/app/job-descriptions/edit/$id'
       path: '/job-descriptions/edit/$id'
@@ -1018,13 +1006,6 @@ declare module '@tanstack/react-router' {
       path: '/sales/opportunities/$id'
       fullPath: '/app/sales/opportunities/$id'
       preLoaderRoute: typeof AppSalesOpportunitiesIdRouteImport
-      parentRoute: typeof AppRouteRoute
-    }
-    '/app/workers/tabs/$id': {
-      id: '/app/workers/tabs/$id'
-      path: '/workers/tabs/$id'
-      fullPath: '/app/workers/tabs/$id'
-      preLoaderRoute: typeof AppWorkersTabsIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
   }
@@ -1053,6 +1034,7 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 )
 
 interface AppRouteRouteChildren {
+  AppWorkersAbroadRoute: typeof AppWorkersAbroadRoute
   AppIndexRoute: typeof AppIndexRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
   AppAssignmentsIdRoute: typeof AppAssignmentsIdRoute
@@ -1068,7 +1050,6 @@ interface AppRouteRouteChildren {
   AppTeamsIdRoute: typeof AppTeamsIdRoute
   AppUsersIdRoute: typeof AppUsersIdRoute
   AppWorkersIdRoute: typeof AppWorkersIdRoute
-  AppWorkersAbroadRoute: typeof AppWorkersAbroadRoute
   AppApplicationsIndexRoute: typeof AppApplicationsIndexRoute
   AppAssignmentsIndexRoute: typeof AppAssignmentsIndexRoute
   AppCalendarIndexRoute: typeof AppCalendarIndexRoute
@@ -1088,10 +1069,10 @@ interface AppRouteRouteChildren {
   AppJobDescriptionsEditIdRoute: typeof AppJobDescriptionsEditIdRoute
   AppJobsEditIdRoute: typeof AppJobsEditIdRoute
   AppSalesOpportunitiesIdRoute: typeof AppSalesOpportunitiesIdRoute
-  AppWorkersTabsIdRoute: typeof AppWorkersTabsIdRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppWorkersAbroadRoute: AppWorkersAbroadRoute,
   AppIndexRoute: AppIndexRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
   AppAssignmentsIdRoute: AppAssignmentsIdRoute,
@@ -1107,7 +1088,6 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppTeamsIdRoute: AppTeamsIdRoute,
   AppUsersIdRoute: AppUsersIdRoute,
   AppWorkersIdRoute: AppWorkersIdRoute,
-  AppWorkersAbroadRoute: AppWorkersAbroadRoute,
   AppApplicationsIndexRoute: AppApplicationsIndexRoute,
   AppAssignmentsIndexRoute: AppAssignmentsIndexRoute,
   AppCalendarIndexRoute: AppCalendarIndexRoute,
@@ -1127,7 +1107,6 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppJobDescriptionsEditIdRoute: AppJobDescriptionsEditIdRoute,
   AppJobsEditIdRoute: AppJobsEditIdRoute,
   AppSalesOpportunitiesIdRoute: AppSalesOpportunitiesIdRoute,
-  AppWorkersTabsIdRoute: AppWorkersTabsIdRoute,
 }
 
 const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(

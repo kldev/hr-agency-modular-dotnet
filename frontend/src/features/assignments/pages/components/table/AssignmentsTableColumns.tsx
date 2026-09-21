@@ -5,10 +5,16 @@ import type { appTableFeaturesType } from "@/components/table";
 import { AssignmentStatusBadge, ItemMark } from "@/components/ui";
 import { ComplianceChip, engagementTypes } from "@/features/compliance";
 import { formatPeriod } from "@/utlis/formatRecord";
+import { AssignmentActions } from "./AssignmentActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, AssignmentProjection>();
 
-export function getColumns() {
+type assignmentsActions = {
+	onEdit?: (assignment: AssignmentProjection) => void;
+	onChangeStatus?: (assignment: AssignmentProjection) => void;
+};
+
+export function getColumns(actions: assignmentsActions) {
 	return columnHelper.columns([
 		columnHelper.accessor("workerFullName", {
 			header: "Worker",
@@ -19,6 +25,14 @@ export function getColumns() {
 
 				return (
 					<div className="table-cell-content">
+						<AssignmentActions
+							id={assignment.id}
+							onEdit={actions.onEdit && (() => actions.onEdit?.(assignment))}
+							onChangeStatus={
+								actions.onChangeStatus && (() => actions.onChangeStatus?.(assignment))
+							}
+						/>
+
 						<ItemMark name={assignment.workerFullName} />
 
 						<div>
@@ -26,7 +40,7 @@ export function getColumns() {
 								<Link
 									to="/app/workers/$id"
 									params={{ id: assignment.workerId }}
-									search={{ search: undefined }}
+									search={{ search: undefined, tab: undefined }}
 								>
 									{getValue()}
 								</Link>

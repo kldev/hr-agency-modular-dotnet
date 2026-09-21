@@ -34,10 +34,15 @@ import { engagementTypes } from "../types";
 import "./components/details/project-details.css";
 
 import {
+	type PlanAssignmentWizardCommand,
+	PlanAssignmentWizardDialog,
+} from "#/features/assignments/wizards/plan/PlanAssignmentWizardDialog";
+import {
 	type CompleteCompanyProfileCommand,
 	CompleteCompanyProfileWizardDialog,
 } from "#/features/companies/wizards/complete-profile/CompleteCompanyProfileWizardDialog";
 import {
+	ProjectAssignmentsSection,
 	ProjectComplianceSection,
 	ProjectContactsSection,
 	ProjectContractSection,
@@ -62,6 +67,7 @@ export function ProjectDetailsPage() {
 	const complianceRef = useRef<RecordComplianceFormCommand>(null);
 	const teamRef = useRef<AssignProjectTeamFormCommand>(null);
 	const profileRef = useRef<CompleteCompanyProfileCommand>(null);
+	const planAssignmentRef = useRef<PlanAssignmentWizardCommand>(null);
 
 	const query = useGetProject(id);
 
@@ -155,6 +161,15 @@ export function ProjectDetailsPage() {
 							</section>
 
 							<section className="data-details-section">
+								<ProjectAssignmentsSection
+									project={project}
+									onPlanAssignment={() =>
+										planAssignmentRef.current?.plan({ projectId: project.id })
+									}
+								/>
+							</section>
+
+							<section className="data-details-section">
 								<ProjectComplianceSection
 									project={project}
 									onRecord={(view) => complianceRef.current?.record(project, view)}
@@ -189,6 +204,7 @@ export function ProjectDetailsPage() {
 			<RecordComplianceDrawer ref={complianceRef} onSuccess={refresh} />
 			<AssignProjectTeamDrawer ref={teamRef} onSuccess={refresh} />
 			<CompleteCompanyProfileWizardDialog ref={profileRef} onSuccess={refresh} />
+			<PlanAssignmentWizardDialog ref={planAssignmentRef} onSuccess={refresh} />
 		</>
 	);
 }

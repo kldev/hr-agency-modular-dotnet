@@ -1,6 +1,10 @@
 import { HardHat } from "lucide-react";
 import type React from "react";
 import { useRef } from "react";
+import {
+	type PlanAssignmentWizardCommand,
+	PlanAssignmentWizardDialog,
+} from "#/features/assignments/wizards/plan/PlanAssignmentWizardDialog";
 import type { WorkerProjection } from "@/api/models";
 import { Page } from "@/components/layout";
 import { EmptyState, LoadMore } from "@/components/ui";
@@ -34,10 +38,10 @@ interface WorkersPageProps {
 const WorkersPage: React.FC<WorkersPageProps> = ({ scope, search, onSearchChange, onClear }) => {
 	const wizardRef = useRef<WorkerWizardCommand>(null);
 	const statusRef = useRef<ChangeWorkerStatusFormCommand>(null);
+	const planAssignmentRef = useRef<PlanAssignmentWizardCommand>(null);
 	const query = useGetWorkersSlice({
 		search: search.search,
 		status: search.status ? [search.status] : undefined,
-		department: search.department ? [search.department] : undefined,
 		citizenship: search.citizenship,
 		excludeWorkCountry: scope === "abroad" ? [HOME_WORK_COUNTRY] : undefined,
 	});
@@ -50,6 +54,9 @@ const WorkersPage: React.FC<WorkersPageProps> = ({ scope, search, onSearchChange
 
 	const onEdit = (worker: WorkerProjection) => wizardRef.current?.edit(worker);
 	const onChangeStatus = (worker: WorkerProjection) => statusRef.current?.changeStatus(worker);
+
+	const onPlanAssignment = (worker: WorkerProjection) =>
+		planAssignmentRef.current?.plan({ workerId: worker.id ?? "" });
 
 	return (
 		<>
@@ -73,17 +80,25 @@ const WorkersPage: React.FC<WorkersPageProps> = ({ scope, search, onSearchChange
 				<WorkersToolbar
 					search={search.search ?? ""}
 					status={search.status ?? null}
-					department={search.department ?? null}
 					onSearchChange={(value) => onSearchChange({ search: value })}
 					onStatusChange={(value) => onSearchChange({ status: value ?? undefined })}
-					onDepartmentChange={(value) => onSearchChange({ department: value ?? undefined })}
 					onClear={onClear}
 					onAdd={() => wizardRef.current?.register()}
 				/>
 
-				<WorkersTable workers={items} onEdit={onEdit} onChangeStatus={onChangeStatus} />
+				<WorkersTable
+					workers={items}
+					onEdit={onEdit}
+					onChangeStatus={onChangeStatus}
+					onPlanAssignment={onPlanAssignment}
+				/>
 
-				<WorkersCardList workers={items} onEdit={onEdit} onChangeStatus={onChangeStatus} />
+				<WorkersCardList
+					workers={items}
+					onEdit={onEdit}
+					onChangeStatus={onChangeStatus}
+					onPlanAssignment={onPlanAssignment}
+				/>
 
 				<LoadMore
 					loading={query.isPending}
@@ -96,6 +111,7 @@ const WorkersPage: React.FC<WorkersPageProps> = ({ scope, search, onSearchChange
 
 			<WorkerWizardDialog ref={wizardRef} onSuccess={refresh} />
 			<ChangeWorkerStatusDrawer ref={statusRef} onSuccess={refresh} />
+			<PlanAssignmentWizardDialog ref={planAssignmentRef} onSuccess={refresh} />
 		</>
 	);
 };

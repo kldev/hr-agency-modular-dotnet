@@ -1,12 +1,19 @@
-import { Link, useParams } from "@tanstack/react-router";
+import { useParams } from "@tanstack/react-router";
 import type React from "react";
 import { useRef } from "react";
+import {
+	type PlanAssignmentWizardCommand,
+	PlanAssignmentWizardDialog,
+} from "#/features/assignments/wizards/plan/PlanAssignmentWizardDialog";
 import type { UserSnapshot } from "@/api/models";
 import { getCountryLabel } from "@/components/labels";
 import {
 	AuditInformation,
 	DetailsHeader,
 	DetailsLoading,
+	type TabDefinition,
+	TabPanel,
+	Tabs,
 	WorkerStatusBadge,
 } from "@/components/ui";
 import { DataDetails, DataDetailsLayout } from "@/components/ui/details/DataDetails";
@@ -30,13 +37,37 @@ import {
 import { WorkerActions } from "./components/table/WorkerActions";
 import { useGetWorker } from "./hooks";
 
-const WorkerDetailsPage: React.FC = () => {
+export type WorkerTab = "overview" | "documents" | "permissions" | "assignments";
+
+export const workerTabs: readonly WorkerTab[] = [
+	"overview",
+	"documents",
+	"permissions",
+	"assignments",
+];
+
+interface WorkerDetailsPageProps {
+	tab: WorkerTab;
+	onTabChange: (tab: WorkerTab) => void;
+}
+
+/**
+ * Tabs rather than one long page, which is the first tabbed screen in the app and was chosen after
+ * running both layouts side by side: somebody with thirty documents and a dozen postings turns a
+ * stacked page into a scroll where the sections that matter are the ones furthest down. Each
+ * section gets the full width and a count that can be read without scrolling.
+ *
+ * The selected tab lives in the URL, so a link can point at somebody's documents rather than at
+ * their page.
+ */
+const WorkerDetailsPage: React.FC<WorkerDetailsPageProps> = ({ tab, onTabChange }) => {
 	const { id } = useParams({ from: "/app/workers/$id" });
 
 	const wizardRef = useRef<WorkerWizardCommand>(null);
 	const statusRef = useRef<ChangeWorkerStatusFormCommand>(null);
 	const authorisationRef = useRef<RecordWorkAuthorisationFormCommand>(null);
 	const documentRef = useRef<AttachWorkerDocumentFormCommand>(null);
+	const planAssignmentRef = useRef<PlanAssignmentWizardCommand>(null);
 
 	const query = useGetWorker(id);
 	const worker = query.data;
@@ -48,6 +79,29 @@ const WorkerDetailsPage: React.FC = () => {
 			<DetailsLoading id={id} isLoading={query.isLoading} isError={query.isError || !worker} />
 		);
 	}
+
+	/* Permissions only exist for somebody the legalisation rules apply to, so neither does the tab. */
+	const tabs: TabDefinition<WorkerTab>[] = [
+		{ id: "overview", label: "Overview" },
+		{ id: "documents", label: "Documents", count: Number(worker.documentCount ?? 0) },
+		...(worker.requiresLegalisation
+			? [
+					{
+						id: "permissions" as const,
+						label: "Permissions",
+						count: worker.authorisations?.length ?? 0,
+					},
+				]
+			: []),
+		{
+			id: "assignments",
+			label: "Assignments",
+			count: Number(worker.assignmentCount ?? 0),
+		},
+	];
+
+	/* A tab that does not apply to this person falls back rather than showing an empty page. */
+	const active = tabs.some((candidate) => candidate.id === tab) ? tab : "overview";
 
 	return (
 		<>
@@ -65,48 +119,44 @@ const WorkerDetailsPage: React.FC = () => {
 						</>
 					}
 					extraAdd={
-						<>
-							{/* The tabbed variant of this page, kept alongside while the two are compared. */}
-							<Link
-								to="/app/workers/tabs/$id"
-								params={{ id }}
-								search={{ tab: undefined, search: undefined }}
-								className="data-details-website"
-							>
-								Tabbed layout
-							</Link>
-
-							<WorkerActions
-								id={worker.id ?? ""}
-								mode="details"
-								onChangeStatus={() => statusRef.current?.changeStatus(worker)}
-							/>
-						</>
+						<WorkerActions
+							id={id}
+							mode="details"
+							onChangeStatus={() => statusRef.current?.changeStatus(worker)}
+							onPlanAssignment={() => planAssignmentRef.current?.plan({ workerId: id })}
+						/>
 					}
 				/>
 
+				<Tabs value={active} tabs={tabs} onChange={onTabChange} label="Worker sections" />
+
 				<DataDetailsLayout
 					main={
-						<>
-							<section className="data-details-section">
-								<WorkerIdentitySection worker={worker} />
-							</section>
+						<TabPanel id={active}>
+							{active === "overview" ? (
+								<>
+									<section className="data-details-section mt-1">
+										<WorkerIdentitySection worker={worker} />
+									</section>
 
-							<section className="data-details-section">
-								<WorkerContactSection worker={worker} />
-							</section>
+									<section className="data-details-section mt-5">
+										<WorkerContactSection worker={worker} />
+									</section>
+								</>
+							) : null}
 
-							<section className="data-details-section">
-								<WorkerDocumentsSection
-									worker={worker}
-									onAttach={() => documentRef.current?.attach(worker.id ?? "")}
-									onRefresh={refresh}
-								/>
-							</section>
+							{active === "documents" ? (
+								<section className="data-details-section mt-1">
+									<WorkerDocumentsSection
+										worker={worker}
+										onAttach={() => documentRef.current?.attach(id)}
+										onRefresh={refresh}
+									/>
+								</section>
+							) : null}
 
-							{/* Only for somebody the legalisation rules apply to - see the section itself. */}
-							{worker.requiresLegalisation ? (
-								<section className="data-details-section">
+							{active === "permissions" ? (
+								<section className="data-details-section mt-1">
 									<WorkerAuthorisationsSection
 										worker={worker}
 										onRecord={() => authorisationRef.current?.record(worker)}
@@ -115,14 +165,21 @@ const WorkerDetailsPage: React.FC = () => {
 								</section>
 							) : null}
 
-							<section className="data-details-section">
-								<WorkerAssignmentsSection worker={worker} />
-							</section>
-						</>
+							{active === "assignments" ? (
+								<section className="data-details-section section mt-1">
+									<WorkerAssignmentsSection
+										worker={worker}
+										onPlanAssignment={() => planAssignmentRef.current?.plan({ workerId: id })}
+									/>
+								</section>
+							) : null}
+						</TabPanel>
 					}
 					sidebar={
 						<>
-							<section className="data-details-section">
+							{/* Outside the tabs on purpose: whose desk this person is on is the one thing
+							    worth seeing whichever section you opened. */}
+							<section className="data-details-section mt-1">
 								<WorkerPipelineSidebar worker={worker} />
 							</section>
 
@@ -141,6 +198,7 @@ const WorkerDetailsPage: React.FC = () => {
 			<ChangeWorkerStatusDrawer ref={statusRef} onSuccess={refresh} />
 			<RecordWorkAuthorisationDrawer ref={authorisationRef} onSuccess={refresh} />
 			<AttachWorkerDocumentDrawer ref={documentRef} onSuccess={refresh} />
+			<PlanAssignmentWizardDialog ref={planAssignmentRef} onSuccess={refresh} />
 		</>
 	);
 };

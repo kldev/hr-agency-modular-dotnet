@@ -71,7 +71,7 @@ export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 					navigate({
 						to: "/app/workers/$id",
 						params: { id: workerId },
-						search: { search: undefined },
+						search: { search: undefined, tab: undefined },
 					});
 				}}
 			/>

@@ -45,7 +45,7 @@ const menuGroups: MenuGroup[] = [
 		items: [
 			{ label: "Projects", icon: FolderKanban, link: "/app/projects" },
 			{ label: "Workers", icon: HardHat, link: "/app/workers" },
-			{ label: "Workers abroad", icon: Plane, link: "/app/workers/abroad" },
+			{ label: "Workers abroad", icon: Plane, link: "/app/workers-abroad" },
 			{ label: "Assignments", icon: ClipboardCheck, link: "/app/assignments" },
 		],
 	},

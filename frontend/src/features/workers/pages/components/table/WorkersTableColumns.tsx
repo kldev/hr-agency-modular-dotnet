@@ -5,7 +5,6 @@ import type { WorkerProjection } from "@/api/models";
 import { getCountryLabel } from "@/components/labels";
 import type { appTableFeaturesType } from "@/components/table";
 import { ItemMark, WorkerStatusBadge } from "@/components/ui";
-import { responsibleDepartments } from "../../../types";
 import { WorkerExpiryChip } from "../WorkerExpiryChip";
 import { WorkerActions } from "./WorkerActions";
 
@@ -44,7 +43,7 @@ export function getColumns(actions: workersActions) {
 								<Link
 									to="/app/workers/$id"
 									params={{ id: worker.id ?? "" }}
-									search={{ search: undefined }}
+									search={{ search: undefined, tab: undefined }}
 								>
 									{getValue()}
 								</Link>
@@ -80,12 +79,6 @@ export function getColumns(actions: workersActions) {
 			header: "Status",
 			meta: { width: "sm" },
 			cell: ({ getValue }) => <WorkerStatusBadge status={getValue() ?? "Recruitment"} />,
-		}),
-
-		columnHelper.accessor("department", {
-			header: "Desk",
-			meta: { width: "sm" },
-			cell: ({ getValue }) => responsibleDepartments[getValue() ?? "None"],
 		}),
 
 		columnHelper.accessor("currentWorkCountry", {

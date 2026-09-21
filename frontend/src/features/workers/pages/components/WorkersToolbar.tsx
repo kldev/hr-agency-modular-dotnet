@@ -1,32 +1,29 @@
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
-import type { ResponsibleDepartment, WorkerStatus } from "@/api/models";
+import type { WorkerStatus } from "@/api/models";
 import { Button, EnumFilter } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
-import { responsibleDepartments, workerStatuses } from "../../types";
-
-/** `None` is what a terminated person's department is; nobody filters a queue by "nobody's". */
-const departmentFilterOptions: Record<string, string> = Object.fromEntries(
-	Object.entries(responsibleDepartments).filter(([key]) => key !== "None"),
-);
+import { workerStatuses } from "../../types";
 
 interface WorkersToolbarProps {
 	search: string;
 	status: WorkerStatus | null;
-	department: ResponsibleDepartment | null;
 	onSearchChange: (value: string) => void;
 	onStatusChange: (value: WorkerStatus | null) => void;
-	onDepartmentChange: (value: ResponsibleDepartment | null) => void;
 	onClear: () => void;
 	onAdd: () => void;
 }
 
+/*
+ * One row of chips, and it is the pipeline. The desk was a second row next to it, and a second row
+ * is a second question - except it was the same question: the department is `OwnerOf(status)` on the
+ * backend, so "Legalisation" appeared twice on screen meaning the same set of people. Who looks
+ * after which stage is something everybody in the office knows without being told by a filter.
+ */
 export function WorkersToolbar({
 	search,
 	status,
-	department,
 	onSearchChange,
 	onStatusChange,
-	onDepartmentChange,
 	onClear,
 	onAdd,
 }: WorkersToolbarProps) {
@@ -75,13 +72,6 @@ export function WorkersToolbar({
 			</div>
 
 			<EnumFilter value={status} options={workerStatuses} onChange={onStatusChange} />
-
-			<EnumFilter
-				value={department}
-				options={departmentFilterOptions}
-				allLabel="Every desk"
-				onChange={(value) => onDepartmentChange((value as ResponsibleDepartment) ?? null)}
-			/>
 		</>
 	);
 }

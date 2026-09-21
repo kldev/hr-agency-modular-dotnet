@@ -3,7 +3,6 @@ import type React from "react";
 import type { WorkerProjection } from "#/api/models";
 import { DetailItem, WorkerStatusBadge } from "#/components/ui";
 import { getCountryLabel } from "@/components/labels";
-import { responsibleDepartments } from "../../../types";
 import { WorkerExpiryChip } from "../WorkerExpiryChip";
 import { WorkerActions } from "./WorkerActions";
 
@@ -34,7 +33,7 @@ export function WorkersCardList({
 								<Link
 									to="/app/workers/$id"
 									params={{ id: worker.id ?? "" }}
-									search={{ search: undefined }}
+									search={{ search: undefined, tab: undefined }}
 								>
 									{worker.fullName}
 								</Link>
@@ -57,10 +56,6 @@ export function WorkersCardList({
 
 						<DetailItem label="Status">
 							<WorkerStatusBadge status={worker.status ?? "Recruitment"} />
-						</DetailItem>
-
-						<DetailItem label="Desk">
-							{responsibleDepartments[worker.department ?? "None"]}
 						</DetailItem>
 
 						<DetailItem label="Works in">{worker.currentWorkCountry ?? "—"}</DetailItem>
