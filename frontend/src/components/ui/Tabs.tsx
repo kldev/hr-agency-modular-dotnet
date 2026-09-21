@@ -55,9 +55,13 @@ type TabPanelProps = {
 	children: React.ReactNode;
 };
 
+/**
+ * The panel takes over the spacing of the column it was dropped into: it sits between the layout
+ * and the sections, so without a gap of its own everything inside it collapses together.
+ */
 export function TabPanel({ id, children }: TabPanelProps) {
 	return (
-		<div role="tabpanel" id={`tabpanel-${id}`} aria-labelledby={`tab-${id}`}>
+		<div role="tabpanel" id={`tabpanel-${id}`} aria-labelledby={`tab-${id}`} className="tabs-panel">
 			{children}
 		</div>
 	);

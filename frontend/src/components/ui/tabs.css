@@ -2,7 +2,9 @@
 	display: flex;
 	gap: var(--space-1);
 
-	margin: 0;
+	/* The strip is a divider as much as a control: the panel under it needs room to read as its
+	   own thing, and the header above it needs room not to look welded to it. */
+	margin: var(--space-2) 0 var(--space-4);
 	padding: 0;
 
 	border: 0;
@@ -67,4 +69,10 @@
 .tabs-tab.is-selected .tabs-count {
 	background: var(--color-primary-soft);
 	color: var(--color-primary);
+}
+
+.tabs-panel {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-5);
 }
