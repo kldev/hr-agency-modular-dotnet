@@ -57,10 +57,20 @@ public sealed class WorkerTestClient(HttpClient client, ITestOutputHelper output
     public async Task<Guid> EmployedAsync(
         Guid organizationId,
         string citizenship = WorkerTestData.PolishCitizenship,
-        string? documentNumber = null
+        string? documentNumber = null,
+        string firstName = "Jan",
+        string lastName = "Kowalski"
     )
     {
-        var worker = await RegisterAsync(organizationId, citizenship, documentNumber);
+        // The name is a parameter because it decides the e-mail address, and that is reserved per
+        // organization - a test that wants two people has to say they are two people.
+        var worker = await RegisterAsync(
+            organizationId,
+            citizenship,
+            documentNumber,
+            firstName,
+            lastName
+        );
 
         await ChangeStatusAsync(organizationId, worker.WorkerId, WorkerStatus.ContractPreparation);
 

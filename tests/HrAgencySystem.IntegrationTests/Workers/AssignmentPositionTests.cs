@@ -107,6 +107,61 @@ public class AssignmentPositionTests(IntegrationEnvironment env, ITestOutputHelp
         });
     }
 
+    /// <summary>
+    /// A crew is planned onto one project several people at a time, and every one of them writes a
+    /// staffing event onto that project's stream. The first version of this appended without a
+    /// lock, so two of those transactions worked out the same next stream version, one died on the
+    /// primary key and the message went to the dead letter queue - leaving a role that quietly
+    /// claimed nobody was on it. The seeder found it; nothing else would have.
+    /// </summary>
+    [Fact]
+    public async Task Several_people_planned_onto_one_project_at_once_are_all_counted()
+    {
+        var organizationId = Guid.NewGuid();
+        var delivery = await ProjectClient.CreateWithPositionAsync(organizationId);
+
+        var roles = new List<Guid> { delivery.PositionId };
+        foreach (var name in new[] { "Bricklayer", "Foreman" })
+        {
+            var opened = await ProjectClient.OpenPositionAsync(
+                organizationId,
+                delivery.ProjectId,
+                name
+            );
+            roles.Add(opened.Position.PositionId);
+        }
+
+        var workers = new List<Guid>();
+        foreach (var name in new[] { "Anna", "Marek", "Ewa" })
+            workers.Add(
+                await WorkerClient.EmployedAsync(organizationId, firstName: name, lastName: "Nowak")
+            );
+
+        await Task.WhenAll(
+            roles.Select(
+                (positionId, index) =>
+                    WorkerClient.PlanAsync(
+                        organizationId,
+                        workers[index],
+                        delivery.ProjectId,
+                        positionId
+                    )
+            )
+        );
+
+        await Eventually.AssertAsync(async () =>
+        {
+            var positions = await ProjectClient.GetPositionsAsync(
+                organizationId,
+                delivery.ProjectId
+            );
+
+            Assert.NotNull(positions);
+            Assert.Equal(3, positions.Content.Count);
+            Assert.All(positions.Content, p => Assert.Equal(1, p.AssignedCount));
+        });
+    }
+
     private async Task<int?> AssignedCountAsync(
         Guid organizationId,
         ProjectTestClient.SeededDelivery delivery
