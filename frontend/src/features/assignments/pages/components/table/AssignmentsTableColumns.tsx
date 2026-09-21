@@ -45,15 +45,17 @@ export function getColumns() {
 
 			cell: ({ row, getValue }) => (
 				<div>
-					<Link
-						to="/app/assignments/$id"
-						params={{ id: row.original.id }}
-						search={{ search: undefined }}
-					>
-						{getValue()}
-					</Link>
+					<div className="flex flex-col">
+						<Link
+							to="/app/assignments/$id"
+							params={{ id: row.original.id }}
+							search={{ search: undefined }}
+						>
+							{getValue()}
+						</Link>
 
-					<div className="data-meta max-w-67.5 truncate">{row.original.clientCompanyName}</div>
+						<div className="data-meta max-w-67.5 truncate">{row.original.clientCompanyName}</div>
+					</div>
 				</div>
 			),
 		}),
