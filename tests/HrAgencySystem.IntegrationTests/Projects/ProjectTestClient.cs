@@ -4,7 +4,9 @@ using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;
+using HrAgencySystem.Projects.Application.Port;
 using HrAgencySystem.Projects.Projections;
+using HrAgencySystem.SharedKernel.Web;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Projects;
@@ -163,6 +165,71 @@ public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper outpu
             new MapChangeStatus.ChangeProjectStatusRequest(status, null)
         );
         response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<ProjectPositionOpened> OpenPositionAsync(
+        Guid organizationId,
+        Guid projectId,
+        string name = "Painter",
+        string? contractName = null,
+        int? plannedHeadcount = null
+    )
+    {
+        client.WithOrganizationId(organizationId);
+
+        var response = await client.PostAsJsonAsync(
+            $"/api/projects/{projectId}/positions",
+            ProjectTestData.PositionRequest(name, contractName, plannedHeadcount)
+        );
+        response.EnsureSuccessStatusCode();
+
+        var opened = await response.ReadWithJson<ProjectPositionOpened>(output);
+        Assert.NotNull(opened);
+
+        return opened;
+    }
+
+    public async Task<HttpResponseMessage> OpenPositionResponseAsync(
+        Guid organizationId,
+        Guid projectId,
+        string name
+    )
+    {
+        client.WithOrganizationId(organizationId);
+
+        return await client.PostAsJsonAsync(
+            $"/api/projects/{projectId}/positions",
+            ProjectTestData.PositionRequest(name)
+        );
+    }
+
+    public async Task ArchivePositionAsync(Guid organizationId, Guid projectId, Guid positionId)
+    {
+        client.WithOrganizationId(organizationId);
+
+        var response = await client.PostAsync(
+            $"/api/projects/{projectId}/positions/{positionId}/archive",
+            null
+        );
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<SliceResponse<PositionListItem>?> GetPositionsAsync(
+        Guid organizationId,
+        Guid? projectId = null,
+        bool includeArchived = false
+    )
+    {
+        client.WithOrganizationId(organizationId);
+
+        var query =
+            $"?includeArchived={includeArchived}"
+            + (projectId is null ? "" : $"&projectId={projectId}");
+
+        var response = await client.GetAsync($"/api/positions{query}");
+        response.EnsureSuccessStatusCode();
+
+        return await response.ReadWithJson<SliceResponse<PositionListItem>>();
     }
 
     public async Task<ProjectProjection?> GetAsync(Guid organizationId, Guid projectId)

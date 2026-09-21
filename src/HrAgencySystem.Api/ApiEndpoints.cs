@@ -254,6 +254,26 @@ internal static class ApiEndpoints
             $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}";
         public const string DownloadDocument =
             $"{ProjectsBase}/{{projectId:guid}}/documents/{{documentId:guid}}/content";
+
+        public const string OpenPosition = $"{ProjectsBase}/{{projectId:guid}}/positions";
+        public const string UpdatePosition =
+            $"{ProjectsBase}/{{projectId:guid}}/positions/{{positionId:guid}}";
+        public const string ArchivePosition =
+            $"{ProjectsBase}/{{projectId:guid}}/positions/{{positionId:guid}}/archive";
+        public const string RestorePosition =
+            $"{ProjectsBase}/{{projectId:guid}}/positions/{{positionId:guid}}/restore";
+    }
+
+    /// <summary>
+    /// The register of roles, read across projects. Writing one goes through its project - a
+    /// position lives on that stream - but reading is its own list with its own filters.
+    /// </summary>
+    internal static class Positions
+    {
+        private const string PositionsBase = $"{Base}/positions";
+
+        public const string Slice = PositionsBase;
+        public const string Get = $"{PositionsBase}/{{positionId:guid}}";
     }
 
     internal static class Workers
@@ -318,6 +338,8 @@ internal static class ApiEndpoints
         public const string Project = $"{SuggestionBase}/projects/{{projectId:guid}}";
         public const string Teams = $"{SuggestionBase}/teams";
         public const string Team = $"{SuggestionBase}/teams/{{teamId:guid}}";
+        public const string Positions = $"{SuggestionBase}/positions";
+        public const string Position = $"{SuggestionBase}/positions/{{positionId:guid}}";
         public const string Workers = $"{SuggestionBase}/workers";
         public const string Worker = $"{SuggestionBase}/workers/{{workerId:guid}}";
     }
