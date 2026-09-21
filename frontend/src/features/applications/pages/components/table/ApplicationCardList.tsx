@@ -31,7 +31,14 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 	const handleActions: Actions = {
 		onAction: (action, item) => {
 			if (action === "register-worker") {
-				workerRef.current?.register(item.id);
+				workerRef.current?.register({
+					applicationId: item.id,
+					candidateId: item.candidateId,
+					firstName: item.applicantFirstName,
+					lastName: item.applicantLastName,
+					email: item.applicantEmail,
+					phoneNumber: item.applicantPhone,
+				});
 				return;
 			}
 

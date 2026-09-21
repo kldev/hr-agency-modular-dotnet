@@ -27,7 +27,14 @@ export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 			 * wizard, with the application preselected so their name and contact details come along.
 			 */
 			if (action === "register-worker") {
-				workerRef.current?.register(item.id);
+				workerRef.current?.register({
+					applicationId: item.id,
+					candidateId: item.candidateId,
+					firstName: item.applicantFirstName,
+					lastName: item.applicantLastName,
+					email: item.applicantEmail,
+					phoneNumber: item.applicantPhone,
+				});
 				return;
 			}
 

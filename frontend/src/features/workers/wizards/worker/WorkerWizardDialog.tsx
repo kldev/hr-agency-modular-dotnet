@@ -4,9 +4,23 @@ import { ConfirmDialog, Dialog, useUnsavedChangesGuard } from "#/components/ui";
 import { emptyWorker, type WorkerFormValues } from "./schema";
 import { WorkerWizard } from "./WorkerWizard";
 
+/**
+ * What the register already knows about somebody who applied through us. Passed whole rather than
+ * as an id: the caller is holding the application row, and a second lookup to copy four fields we
+ * already have on screen would be a round trip for nothing.
+ */
+export interface WorkerSource {
+	applicationId: string;
+	candidateId: string;
+	firstName: string;
+	lastName: string;
+	email: string;
+	phoneNumber: string;
+}
+
 export interface WorkerWizardCommand {
-	/** Somebody new. `applicationId` preselects the application they applied through. */
-	register: (applicationId?: string) => void;
+	/** Somebody new. `source` fills in what the application they came through already holds. */
+	register: (source?: WorkerSource) => void;
 	edit: (worker: WorkerProjection) => void;
 }
 
@@ -59,11 +73,24 @@ const WorkerWizardDialog = forwardRef<WorkerWizardCommand, WorkerWizardDialogPro
 		useImperativeHandle(
 			ref,
 			() => ({
-				register: (applicationId?: string) => {
+				register: (source?: WorkerSource) => {
 					setDirty(false);
 					setTarget({
 						mode: "register",
-						values: { ...emptyWorker, sourceApplicationId: applicationId ?? "" },
+						/*
+						 * Prefilled rather than locked: what somebody typed into a job board form is not
+						 * always how their passport spells it, and the passport wins. Every one of these
+						 * stays editable on the steps that follow.
+						 */
+						values: {
+							...emptyWorker,
+							sourceApplicationId: source?.applicationId ?? "",
+							sourceCandidateId: source?.candidateId ?? "",
+							firstName: source?.firstName ?? "",
+							lastName: source?.lastName ?? "",
+							email: source?.email ?? "",
+							phoneNumber: source?.phoneNumber ?? "",
+						},
 					});
 				},
 				edit: (worker: WorkerProjection) => {
@@ -93,7 +120,7 @@ const WorkerWizardDialog = forwardRef<WorkerWizardCommand, WorkerWizardDialogPro
 					onClose={requestClose}
 				>
 					<WorkerWizard
-						key={target.workerId ?? "register"}
+						key={target.workerId ?? `register-${target.values.sourceApplicationId}`}
 						workerId={target.workerId}
 						initialValues={target.values}
 						onDirtyChange={setDirty}
