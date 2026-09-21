@@ -1,3 +1,4 @@
+using HrAgencySystem.Agency.Projections;
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Company.Projections;
 using HrAgencySystem.Identity.Documents;
@@ -90,6 +91,11 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<AssignmentProjection>("workers");
         await CleanTable<WorkerIdentityDocumentReservation>("workers");
         await CleanTable<WorkerEmailReservation>("workers");
+    }
+
+    public async Task CleanOrgStructure()
+    {
+        await CleanTable<OrgStructureProjection>("agency");
     }
 
     public async Task CleanTeams()

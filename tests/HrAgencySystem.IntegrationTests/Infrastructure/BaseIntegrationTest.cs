@@ -1,3 +1,4 @@
+using HrAgencySystem.IntegrationTests.Agency;
 using HrAgencySystem.IntegrationTests.Candidates;
 using HrAgencySystem.IntegrationTests.Companies;
 using HrAgencySystem.IntegrationTests.Company;
@@ -60,6 +61,10 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
             _environment.CreateClient().AsOrganizationRoles(),
             output
         );
+        OrgStructureClient = new OrgStructureTestClient(
+            _environment.CreateClient().AsOrganizationRoles(),
+            output
+        );
         TeamClient = new TeamTestClient(_environment.CreateClient().AsOrganizationRoles(), output);
         WorkerClient = new WorkerTestClient(
             _environment.CreateClient().AsOrganizationRoles(),
@@ -90,6 +95,8 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
     protected TeamTestClient TeamClient { get; }
 
     protected ProjectTestClient ProjectClient { get; }
+
+    protected OrgStructureTestClient OrgStructureClient { get; }
 
     public async Task InitializeAsync()
     {

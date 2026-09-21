@@ -22,7 +22,11 @@ namespace HrAgencySystem.Agency.Domain;
 /// </summary>
 public sealed class OrgStructure : IOrganizationDomain
 {
-    private List<OrgUnit> _units = [];
+    /*
+     * Read through the property, never directly: Marten rebuilds an aggregate without running field
+     * initialisers, so this starts life as null on a replay and the first Apply would throw.
+     */
+    private List<OrgUnit>? _units = [];
 
     private OrgStructure() { }
 
@@ -30,32 +34,32 @@ public sealed class OrgStructure : IOrganizationDomain
 
     public OrganizationId OrganizationId { get; private set; }
 
-    public IReadOnlyList<OrgUnit> Units => _units;
+    public IReadOnlyList<OrgUnit> Units => _units ?? [];
 
     /// <summary>Units that still take people; the archived ones stay readable but are not offered.</summary>
-    public IReadOnlyList<OrgUnit> ActiveUnits => [.. _units.Where(unit => !unit.IsArchived)];
+    public IReadOnlyList<OrgUnit> ActiveUnits => [.. Units.Where(unit => !unit.IsArchived)];
 
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset ModifiedAt { get; private set; }
     public Guid? ModifiedById { get; private set; }
 
-    public OrgUnit? UnitById(Guid unitId) => _units.FirstOrDefault(unit => unit.UnitId == unitId);
+    public OrgUnit? UnitById(Guid unitId) => Units.FirstOrDefault(unit => unit.UnitId == unitId);
 
-    public OrgUnit? Root => _units.FirstOrDefault(unit => unit.IsRoot);
+    public OrgUnit? Root => Units.FirstOrDefault(unit => unit.IsRoot);
 
     /// <summary>Which unit somebody sits in. One, or none - never two; see <see cref="UnitOfAnother"/>.</summary>
-    public OrgUnit? UnitOf(Guid userId) => _units.FirstOrDefault(unit => unit.HasMember(userId));
+    public OrgUnit? UnitOf(Guid userId) => Units.FirstOrDefault(unit => unit.HasMember(userId));
 
     /// <summary>The unit this person is already in, when it is not the one being written to.</summary>
     public OrgUnit? UnitOfAnother(Guid userId, Guid exceptUnitId) =>
-        _units.FirstOrDefault(unit => unit.UnitId != exceptUnitId && unit.HasMember(userId));
+        Units.FirstOrDefault(unit => unit.UnitId != exceptUnitId && unit.HasMember(userId));
 
     /// <summary>
     /// Whether a sibling already carries this name. Scoped to one parent on purpose: two companies
     /// can both have a "Payroll", and under one parent two of them cannot be told apart.
     /// </summary>
     public bool HasSiblingNamed(Guid? parentId, string name, Guid? exceptUnitId = null) =>
-        _units.Any(unit =>
+        Units.Any(unit =>
             unit.ParentId == parentId
             && unit.UnitId != exceptUnitId
             && !unit.IsArchived
@@ -63,7 +67,7 @@ public sealed class OrgStructure : IOrganizationDomain
         );
 
     public IReadOnlyList<OrgUnit> ChildrenOf(Guid unitId) =>
-        [.. _units.Where(unit => unit.ParentId == unitId && !unit.IsArchived)];
+        [.. Units.Where(unit => unit.ParentId == unitId && !unit.IsArchived)];
 
     public void Apply(OrgUnitCreated @event)
     {
@@ -71,7 +75,7 @@ public sealed class OrgStructure : IOrganizationDomain
 
         _units =
         [
-            .. _units,
+            .. Units,
             new OrgUnit(@event.UnitId, @event.ParentId, @event.Name, @event.Kind, null, [], false),
         ];
 
@@ -132,7 +136,7 @@ public sealed class OrgStructure : IOrganizationDomain
     }
 
     private void Replace(Guid unitId, Func<OrgUnit, OrgUnit> change) =>
-        _units = [.. _units.Select(unit => unit.UnitId == unitId ? change(unit) : unit)];
+        _units = [.. Units.Select(unit => unit.UnitId == unitId ? change(unit) : unit)];
 
     private void Touch(UserSnapshot by, DateTimeOffset at)
     {
