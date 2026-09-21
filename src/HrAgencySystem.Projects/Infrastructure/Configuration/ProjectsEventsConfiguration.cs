@@ -22,6 +22,10 @@ internal static class ProjectsEventsConfiguration
             options.Events.AddEventType<ProjectDocumentAttached>();
             options.Events.AddEventType<ProjectDocumentMetadataChanged>();
             options.Events.AddEventType<ProjectDocumentRemoved>();
+            options.Events.AddEventType<ProjectPositionOpened>();
+            options.Events.AddEventType<ProjectPositionUpdated>();
+            options.Events.AddEventType<ProjectPositionArchived>();
+            options.Events.AddEventType<ProjectPositionRestored>();
             options.Events.AddEventType<ComplianceItemRecorded>();
         }
     }
