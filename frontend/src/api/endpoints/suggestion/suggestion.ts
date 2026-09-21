@@ -809,6 +809,90 @@ export const useGetProjectSuggestions = <
 	return useMutation(getGetProjectSuggestionsMutationOptions(options), queryClient);
 };
 /**
+ * @summary Get a single project suggestion by id
+ */
+export const getProjectSuggestion = (
+	projectId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<ProjectSuggestion>(
+		{ url: `/api/suggestion/projects/${projectId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetProjectSuggestionMutationKey = () => ["getProjectSuggestion"] as const;
+
+export const getGetProjectSuggestionMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getProjectSuggestion>>,
+		TError,
+		GetProjectSuggestionMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getProjectSuggestion>>,
+	TError,
+	GetProjectSuggestionMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetProjectSuggestionMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getProjectSuggestion>>,
+		GetProjectSuggestionMutationVariables
+	> = (props) => {
+		const { projectId } = props ?? {};
+
+		return getProjectSuggestion(projectId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetProjectSuggestionMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getProjectSuggestion>>
+>;
+
+export type GetProjectSuggestionMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetProjectSuggestionMutationVariables = { projectId: string };
+
+/**
+ * @summary Get a single project suggestion by id
+ */
+export const useGetProjectSuggestion = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getProjectSuggestion>>,
+			TError,
+			GetProjectSuggestionMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getProjectSuggestion>>,
+	TError,
+	GetProjectSuggestionMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetProjectSuggestionMutationOptions(options), queryClient);
+};
+/**
  * @summary Get a single team suggestion
  */
 export const getTeamSuggestion = (
@@ -975,4 +1059,88 @@ export const useGetWorkerSuggestions = <
 	TContext
 > => {
 	return useMutation(getGetWorkerSuggestionsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get a single worker suggestion by id
+ */
+export const getWorkerSuggestion = (
+	workerId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<WorkerSuggestion>(
+		{ url: `/api/suggestion/workers/${workerId}`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetWorkerSuggestionMutationKey = () => ["getWorkerSuggestion"] as const;
+
+export const getGetWorkerSuggestionMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getWorkerSuggestion>>,
+		TError,
+		GetWorkerSuggestionMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getWorkerSuggestion>>,
+	TError,
+	GetWorkerSuggestionMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetWorkerSuggestionMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getWorkerSuggestion>>,
+		GetWorkerSuggestionMutationVariables
+	> = (props) => {
+		const { workerId } = props ?? {};
+
+		return getWorkerSuggestion(workerId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetWorkerSuggestionMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getWorkerSuggestion>>
+>;
+
+export type GetWorkerSuggestionMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetWorkerSuggestionMutationVariables = { workerId: string };
+
+/**
+ * @summary Get a single worker suggestion by id
+ */
+export const useGetWorkerSuggestion = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getWorkerSuggestion>>,
+			TError,
+			GetWorkerSuggestionMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getWorkerSuggestion>>,
+	TError,
+	GetWorkerSuggestionMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetWorkerSuggestionMutationOptions(options), queryClient);
 };
