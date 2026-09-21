@@ -20,11 +20,17 @@ export const projectStatuses: Record<ProjectStatus, string> = {
 export const engagementTypes: Record<EngagementType, string> = {
 	PostingOfWorkers: "Posting of workers",
 	TemporaryAgencyWork: "Temporary agency work",
+	Outsourcing: "Outsourcing",
+	LocalEmployment: "Local employment",
 };
 
 export const engagementTypeDescriptions: Record<EngagementType, string> = {
 	PostingOfWorkers: "Our people do our work at the client's site and stay under our direction.",
 	TemporaryAgencyWork: "We hire people out; the client directs their work. Far heavier duties.",
+	Outsourcing:
+		"We owe a result, not people. Still a posting, plus the duty to show the client is not directing the work.",
+	LocalEmployment:
+		"A real contract under the law of the country of work. Nobody is posted, so no A1 and no host-state notification.",
 };
 
 export const contactRoles: Record<ContactRole, string> = {
@@ -140,12 +146,17 @@ export const complianceRequirements: Record<ComplianceRequirement, string> = {
 	DeUeberlassungAgreement: "Überlassungsvertrag marked as hiring-out",
 	DeConstructionSectorRestriction: "Construction sector restriction (§ 1b AÜG)",
 	DeLongTermPostingNotification: "Posting beyond 12 months notified (§ 13b AEntG)",
+	DeServiceContractDelimitation: "Service contract genuine, not hiring out (§ 1 AÜG)",
+	BeProhibitedPlacement: "Not a prohibited placement (art. 31 of 24.07.1987)",
+	LocalEmploymentContract: "Local employment contract",
+	DeSocialSecurityRegistration: "German social security registration (§ 28a SGB IV)",
+	BeDimonaDeclaration: "Dimona declaration",
 };
 
 /** Shown in the recording drawer: what the reference number is, and what the dates mean here. */
 export const complianceRequirementHints: Record<ComplianceRequirement, string> = {
 	A1Certificates:
-		"One confirmation for the whole project: there is no worker register yet, so this says every posted person holds a valid A1.",
+		"Issued to one named person for one period, so it is recorded on their assignment rather than here.",
 	UserConditionsReceived:
 		"The client's written statement of the pay and conditions of a comparable worker. Attach the letter.",
 	BeLimosaDeclaration:
@@ -178,4 +189,14 @@ export const complianceRequirementHints: Record<ComplianceRequirement, string> =
 		"Not applicable unless the client is a construction business. Confirmed requires proof of at least three years under the same collective agreements.",
 	DeLongTermPostingNotification:
 		"Filed before the 12th month ends, it extends the posting to 18 months. After that, full German employment conditions apply.",
+	DeServiceContractDelimitation:
+		"An assessment, not a filing: that we direct the work and owe a result. Getting it wrong makes the whole engagement hiring out without a licence.",
+	BeProhibitedPlacement:
+		"That the work is not putting personnel at a user's disposal, which Belgium prohibits outside recognised agency work.",
+	LocalEmploymentContract:
+		"The contract under the law of the country of work. Recorded per person, because that is how it is signed.",
+	DeSocialSecurityRegistration:
+		"The DEÜV notification, filed before the work starts. Reference number is the registration number.",
+	BeDimonaDeclaration:
+		"Filed before the first day of work for anybody employed in Belgium. Reference number is the Dimona number.",
 };
