@@ -3,12 +3,11 @@ import { useRef } from "react";
 import { Route } from "#/routes/app/legal-entities";
 import { Page } from "@/components/layout";
 import { EmptyState, LoadMore } from "@/components/ui";
+import { type CloseLegalEntityCommand, CloseLegalEntityDrawer } from "../drawers";
 import {
-	type CloseLegalEntityCommand,
-	CloseLegalEntityDrawer,
 	type LegalEntityFormCommand,
-	LegalEntityFormDrawer,
-} from "../drawers";
+	LegalEntityWizardDialog,
+} from "../wizards/legal-entity/LegalEntityWizardDialog";
 import { LegalEntitiesTable, LegalEntitiesToolbar } from "./components";
 import { type LegalEntitiesFilters, useGetLegalEntitiesSlice } from "./hooks";
 import "./legal-entities.css";
@@ -75,7 +74,7 @@ export function LegalEntitiesPage() {
 				/>
 			</Page>
 
-			<LegalEntityFormDrawer ref={formRef} onSuccess={refresh} />
+			<LegalEntityWizardDialog ref={formRef} onSuccess={refresh} />
 			<CloseLegalEntityDrawer ref={closeRef} onSuccess={refresh} />
 		</>
 	);

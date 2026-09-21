@@ -14,13 +14,12 @@ import {
 	EmailItem,
 } from "@/components/ui/details/DataDetails";
 import { formatDate } from "@/utlis/dateUtils";
-import {
-	type CloseLegalEntityCommand,
-	CloseLegalEntityDrawer,
-	type LegalEntityFormCommand,
-	LegalEntityFormDrawer,
-} from "../drawers";
+import { type CloseLegalEntityCommand, CloseLegalEntityDrawer } from "../drawers";
 import { bankAccountPurposes, currencyCodes, isTrading } from "../types";
+import {
+	type LegalEntityFormCommand,
+	LegalEntityWizardDialog,
+} from "../wizards/legal-entity/LegalEntityWizardDialog";
 import { LegalEntityActions } from "./components";
 import { useGetLegalEntity } from "./hooks";
 
@@ -187,7 +186,7 @@ export function LegalEntityDetailsPage() {
 				/>
 			</DataDetails>
 
-			<LegalEntityFormDrawer ref={formRef} onSuccess={refresh} />
+			<LegalEntityWizardDialog ref={formRef} onSuccess={refresh} />
 			<CloseLegalEntityDrawer ref={closeRef} onSuccess={refresh} />
 		</>
 	);
