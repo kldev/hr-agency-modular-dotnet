@@ -3,6 +3,7 @@ using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Application.Port;
+using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
 using HrAgencySystem.Workers.Services;
@@ -24,7 +25,7 @@ public static class PlanAssignmentHandler
     public const string WorkerNotAvailableMessage =
         "This person has left, so they cannot be assigned to anything.";
 
-    public static async Task<AssignmentPlanned> Handle(
+    public static async Task<(AssignmentPlanned, AssignmentPositionStaffed)> Handle(
         PlanAssignment command,
         IWorkersService service,
         IAssignmentsQueryRepository assignments,
@@ -34,7 +35,8 @@ public static class PlanAssignmentHandler
     )
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
-        var position = ReadPosition(command);
+
+        ReadPeriod(command);
 
         await service.ValidateOrganization(command.OrganizationId, ct);
 
@@ -49,6 +51,16 @@ public static class PlanAssignmentHandler
 
         if (!project.Covers(command.StartsOn, command.EndsOn))
             throw new BusinessRuleException(OutsideProjectPeriodMessage);
+
+        // Resolved inside the project, not looked up on its own: a role from another delivery would
+        // freeze a name that has nothing to do with where this person actually works, and asking
+        // for it this way is what makes that impossible rather than merely checked.
+        var position = await service.GetPositionAsync(
+            organizationId,
+            command.ProjectId,
+            command.PositionId,
+            ct
+        );
 
         // Nobody works two positions at once. Read from the projection, with the race that implies -
         // see IAssignmentsQueryRepository.
@@ -83,7 +95,7 @@ public static class PlanAssignmentHandler
                 project.WorkCountry
             ),
             command.EngagementType,
-            position.Value,
+            AssignmentPosition.From(position),
             command.StartsOn,
             command.EndsOn,
             createdBy,
@@ -92,23 +104,27 @@ public static class PlanAssignmentHandler
 
         session.Events.StartStream<Domain.Assignment>(assignmentId.Value, @event);
 
-        return @event;
+        // The role is taken from the moment somebody is planned onto it, not from the day they fly
+        // out: a seat held for next month is not a seat anybody else can be offered. Cascaded, so
+        // the caller still gets the domain event back and the counting stays in the other module.
+        return (
+            @event,
+            new AssignmentPositionStaffed(
+                organizationId.Value,
+                project.Id,
+                position.Id,
+                assignmentId.Value
+            )
+        );
     }
 
-    private static PersonJobTitle ReadPosition(PlanAssignment command)
+    /// <summary>
+    /// The only thing left to validate on the way in. The role used to be free text validated here;
+    /// now it is an id resolved against the project, which is a rule rather than a format.
+    /// </summary>
+    private static void ReadPeriod(PlanAssignment command)
     {
-        var errors = new List<string>();
-
-        var (position, positionError) = PersonJobTitle.TryCreate(command.Position, true);
-        if (positionError is not null)
-            errors.Add(positionError);
-
         if (command.EndsOn is not null && command.EndsOn < command.StartsOn)
-            errors.Add(EndsBeforeStartMessage);
-
-        if (errors.Count > 0)
-            throw new ValidationException(errors);
-
-        return position!;
+            throw new ValidationException([EndsBeforeStartMessage]);
     }
 }

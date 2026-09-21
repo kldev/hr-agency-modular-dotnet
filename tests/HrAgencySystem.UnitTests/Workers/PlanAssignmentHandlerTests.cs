@@ -6,6 +6,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Application.PlanAssignment;
 using HrAgencySystem.Workers.Application.Port;
+using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
 using HrAgencySystem.Workers.Services;
@@ -24,7 +25,8 @@ public class PlanAssignmentHandlerTests : BaseTest
         Assert.NotEqual(Guid.Empty, result.AssignmentId);
         Assert.Equal(WorkerScenario.WorkerId, result.WorkerId);
         Assert.Equal(WorkerScenario.ProjectId, result.Project.ProjectId);
-        Assert.Equal("Backend developer", result.Position);
+        Assert.Equal(WorkerScenario.PositionId, result.Position.PositionId);
+        Assert.Equal(WorkerScenario.PositionName, result.Position.Name);
         Assert.Equal(EngagementType.PostingOfWorkers, result.EngagementType);
     }
 
@@ -63,12 +65,19 @@ public class PlanAssignmentHandlerTests : BaseTest
         Assert.Contains(PlanAssignmentHandler.EndsBeforeStartMessage, error.Errors);
     }
 
+    /// <summary>
+    /// A seat is taken the moment somebody is planned onto the role, not the day they fly out, and
+    /// the count lives in the module that owns the role - so this leaves as a cascaded message.
+    /// </summary>
     [Fact]
-    public async Task Handle_WithoutAPosition_ThrowsValidation()
+    public async Task Handle_ReportsTheRoleAsStaffed()
     {
-        await Assert.ThrowsAsync<ValidationException>(() =>
-            Handle(Command() with { Position = "" })
-        );
+        var (planned, staffed) = await HandleBoth(Command());
+
+        Assert.Equal(WorkerScenario.PositionId, staffed.PositionId);
+        Assert.Equal(WorkerScenario.ProjectId, staffed.ProjectId);
+        Assert.Equal(planned.AssignmentId, staffed.AssignmentId);
+        Assert.Equal(WorkerScenario.OrganizationId, staffed.OrganizationId);
     }
 
     /// <summary>Nobody works two positions at the same time.</summary>
@@ -125,15 +134,24 @@ public class PlanAssignmentHandlerTests : BaseTest
         Assert.Equal(PlanAssignmentHandler.WorkerNotAvailableMessage, error.Message);
     }
 
-    private static Task<AssignmentPlanned> Handle(
+    private static async Task<AssignmentPlanned> Handle(
         PlanAssignment command,
         Worker? worker = null,
         ProjectSnapshot? project = null,
-        IAssignmentsQueryRepository? assignments = null
+        IAssignmentsQueryRepository? assignments = null,
+        PositionSnapshot? position = null
+    ) => (await HandleBoth(command, worker, project, assignments, position)).Item1;
+
+    private static Task<(AssignmentPlanned, AssignmentPositionStaffed)> HandleBoth(
+        PlanAssignment command,
+        Worker? worker = null,
+        ProjectSnapshot? project = null,
+        IAssignmentsQueryRepository? assignments = null,
+        PositionSnapshot? position = null
     ) =>
         PlanAssignmentHandler.Handle(
             command,
-            WorkerScenario.Service(project, worker),
+            WorkerScenario.Service(project, worker, position),
             assignments ?? WorkerScenario.Assignments(),
             Substitute.For<IDocumentSession>(),
             new FixedClock(DateTimeOffset.UtcNow),
@@ -146,7 +164,7 @@ public class PlanAssignmentHandlerTests : BaseTest
             WorkerScenario.WorkerId,
             WorkerScenario.ProjectId,
             EngagementType.PostingOfWorkers,
-            "Backend developer",
+            WorkerScenario.PositionId,
             WorkerScenario.StartsOn,
             null,
             WorkerScenario.UserId

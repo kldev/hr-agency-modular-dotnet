@@ -30,6 +30,17 @@ public interface IAssignmentsQueryRepository
     /// in a system where planning is done by people who can see the list.
     /// </para>
     /// </summary>
+    /// <summary>
+    /// Every posting ever held against a role, finished ones included. Read when the role is
+    /// renamed, so the name frozen on each of them can be brought back into step. The person comes
+    /// back with it because their own row carries a copy of the same name.
+    /// </summary>
+    Task<IReadOnlyList<AssignmentOnPosition>> GetAssignmentsOnPosition(
+        OrganizationId organizationId,
+        Guid positionId,
+        CancellationToken ct
+    );
+
     Task<bool> HasOverlappingAssignment(
         OrganizationId organizationId,
         Guid workerId,
@@ -40,11 +51,15 @@ public interface IAssignmentsQueryRepository
     );
 }
 
+/// <summary>One posting held against a role, and whose it is.</summary>
+public sealed record AssignmentOnPosition(Guid AssignmentId, Guid WorkerId);
+
 public sealed record AssignmentQuery(
     string Search,
     IReadOnlyList<AssignmentStatus>? Statuses,
     Guid? WorkerId,
     Guid? ProjectId,
+    Guid? PositionId,
     string? WorkCountry,
     int Page,
     int PageSize

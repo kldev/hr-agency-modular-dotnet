@@ -11,6 +11,7 @@
     <Project Path="src/HrAgencySystem.JobDescription/HrAgencySystem.JobDescription.csproj" />
     <Project Path="src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj" />
     <Project Path="src/HrAgencySystem.Projects/HrAgencySystem.Projects.csproj" />
+    <Project Path="src/HrAgencySystem.Projects.Contracts/HrAgencySystem.Projects.Contracts.csproj" />
     <Project Path="src/HrAgencySystem.Recruitment.Contracts/HrAgencySystem.Recruitment.Contracts.csproj" />
     <Project Path="src/HrAgencySystem.Teams.Contracts/HrAgencySystem.Teams.Contracts.csproj" />
     <Project Path="src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj" />
@@ -19,6 +20,7 @@
     <Project Path="src/HrAgencySystem.LegalEntities/HrAgencySystem.LegalEntities.csproj" />
     <Project Path="src/HrAgencySystem.Teams/HrAgencySystem.Teams.csproj" />
     <Project Path="src/HrAgencySystem.Workers/HrAgencySystem.Workers.csproj" />
+    <Project Path="src/HrAgencySystem.Workers.Contracts/HrAgencySystem.Workers.Contracts.csproj" />
     <Project Path="src\HrAgencySystem.PlatformSeeder\HrAgencySystem.PlatformSeeder.csproj" />
   </Folder>
   <Folder Name="/src/EmailTemplates/">

@@ -13,6 +13,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HrAgencySystem.Compliance\HrAgencySystem.Compliance.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Projects.Contracts\HrAgencySystem.Projects.Contracts.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Workers.Contracts\HrAgencySystem.Workers.Contracts.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="HrAgencySystem.UnitTests" />
+    <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests" />
   </ItemGroup>
 </Project>

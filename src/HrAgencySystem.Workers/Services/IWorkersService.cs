@@ -16,6 +16,11 @@ public interface IWorkersService
     public const string ProjectClosedMessage =
         "That project is finished, so nobody can be assigned to it.";
 
+    public const string PositionArchivedMessage =
+        "That position is archived, so nobody new can be put on it.";
+
+    public const string PositionNotOnProjectMessage = "That project has no such position.";
+
     Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct);
 
     /// <summary>
@@ -36,6 +41,18 @@ public interface IWorkersService
     Task<ProjectSnapshot> GetProjectAsync(
         OrganizationId organizationId,
         Guid projectId,
+        CancellationToken ct
+    );
+
+    /// <summary>
+    /// Resolves a role on the delivery somebody is being put on, and refuses it when it is archived.
+    /// Business rules rather than 404s, as with a project: the answer never says whether an id
+    /// exists in some other delivery or some other agency.
+    /// </summary>
+    Task<PositionSnapshot> GetPositionAsync(
+        OrganizationId organizationId,
+        Guid projectId,
+        Guid positionId,
         CancellationToken ct
     );
 

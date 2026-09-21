@@ -15,8 +15,11 @@ internal static class ProjectsServiceCollectionExtensions
         {
             services.AddScoped<IProjectsQueryRepository, ProjectsQueryRepository>();
             services.AddScoped<IProjectSuggestionRepository, ProjectSuggestionRepository>();
+            services.AddScoped<IPositionsQueryRepository, PositionsQueryRepository>();
+            services.AddScoped<IPositionSuggestionRepository, PositionSuggestionRepository>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IProjectSnapshotRepository, ProjectSnapshotRepository>();
+            services.AddScoped<IPositionSnapshotRepository, PositionSnapshotRepository>();
         }
     }
 }

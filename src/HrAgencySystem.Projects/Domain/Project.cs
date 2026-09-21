@@ -53,11 +53,15 @@ public sealed class Project : IOrganizationDomain
     private List<ProjectContact>? _contacts;
     private List<ProjectEmailRecipient>? _emailRecipients;
     private List<ProjectDocument>? _documents;
+    private List<ProjectPosition>? _positions;
     private List<ComplianceItem>? _compliance;
 
     public IReadOnlyList<ProjectContact> Contacts => _contacts ?? [];
     public IReadOnlyList<ProjectEmailRecipient> EmailRecipients => _emailRecipients ?? [];
     public IReadOnlyList<ProjectDocument> Documents => _documents ?? [];
+
+    /// <summary>The roles this delivery is staffed with - see <see cref="ProjectPosition"/>.</summary>
+    public IReadOnlyList<ProjectPosition> Positions => _positions ?? [];
     public IReadOnlyList<ComplianceItem> Compliance => _compliance ?? [];
 
     public ProjectContract? Contract { get; private set; }
@@ -72,6 +76,20 @@ public sealed class Project : IOrganizationDomain
 
     public ProjectDocument? DocumentById(Guid documentId) =>
         Documents.FirstOrDefault(d => d.DocumentId == documentId);
+
+    public ProjectPosition? PositionById(Guid positionId) =>
+        Positions.FirstOrDefault(p => p.PositionId == positionId);
+
+    /// <summary>
+    /// Whether another live role already answers to this name. Compared without case, and
+    /// archived roles are ignored - reusing the name of a role that has run its course is normal.
+    /// </summary>
+    public bool HasPositionNamed(string name, Guid? exceptPositionId = null) =>
+        Positions.Any(p =>
+            !p.IsArchived
+            && p.PositionId != exceptPositionId
+            && string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase)
+        );
 
     public void Apply(ProjectCreated @event)
     {
@@ -178,6 +196,41 @@ public sealed class Project : IOrganizationDomain
         _documents = [.. Documents.Where(d => d.DocumentId != @event.DocumentId)];
         Touch(@event.ModifiedBy, @event.ModifiedAt);
     }
+
+    public void Apply(ProjectPositionOpened @event)
+    {
+        _positions = [.. Positions, @event.Position];
+        Touch(@event.OpenedBy, @event.OpenedAt);
+    }
+
+    public void Apply(ProjectPositionUpdated @event)
+    {
+        _positions =
+        [
+            .. Positions.Select(p =>
+                p.PositionId == @event.Position.PositionId ? @event.Position : p
+            ),
+        ];
+        Touch(@event.ModifiedBy, @event.ModifiedAt);
+    }
+
+    public void Apply(ProjectPositionArchived @event)
+    {
+        _positions = [.. Positions.Select(p => Archive(p, @event.PositionId, true))];
+        Touch(@event.ModifiedBy, @event.ModifiedAt);
+    }
+
+    public void Apply(ProjectPositionRestored @event)
+    {
+        _positions = [.. Positions.Select(p => Archive(p, @event.PositionId, false))];
+        Touch(@event.ModifiedBy, @event.ModifiedAt);
+    }
+
+    private static ProjectPosition Archive(
+        ProjectPosition position,
+        Guid positionId,
+        bool archived
+    ) => position.PositionId == positionId ? position with { IsArchived = archived } : position;
 
     public void Apply(ComplianceItemRecorded @event)
     {

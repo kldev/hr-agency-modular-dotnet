@@ -75,6 +75,7 @@ public sealed class DatabaseCleaner(string connectionString)
     public async Task CleanProjects()
     {
         await CleanTable<ProjectProjection>("projects");
+        await CleanTable<ProjectPositionProjection>("projects");
     }
 
     public async Task CleanLegalEntities()

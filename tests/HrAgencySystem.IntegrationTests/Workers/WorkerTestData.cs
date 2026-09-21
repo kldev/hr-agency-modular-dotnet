@@ -84,11 +84,11 @@ internal static class WorkerTestData
     public static AssignmentMaps.MapPlan.PlanAssignmentRequest PlanRequest(
         Guid workerId,
         Guid projectId,
+        Guid positionId,
         EngagementType engagementType = EngagementType.PostingOfWorkers,
-        string position = "Backend developer",
         DateOnly? startsOn = null,
         DateOnly? endsOn = null
-    ) => new(workerId, projectId, engagementType, position, startsOn ?? StartsOn, endsOn);
+    ) => new(workerId, projectId, engagementType, positionId, startsOn ?? StartsOn, endsOn);
 
     public static AssignmentMaps.MapChangeStatus.ChangeAssignmentStatusRequest AssignmentStatusRequest(
         AssignmentStatus status,

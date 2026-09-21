@@ -15,7 +15,7 @@
  */
 
 export interface UpdateAssignmentRequest {
-	position: string;
+	positionId: string;
 	startsOn: string;
 	/** @nullable */
 	endsOn?: string | null;

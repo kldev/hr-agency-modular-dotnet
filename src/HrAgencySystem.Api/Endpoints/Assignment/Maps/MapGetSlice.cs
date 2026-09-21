@@ -29,6 +29,7 @@ internal static class MapGetSlice
         [FromQuery] AssignmentStatus[]? status,
         [FromQuery] Guid? workerId,
         [FromQuery] Guid? projectId,
+        [FromQuery] Guid? positionId,
         [FromQuery] string? workCountry,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10,
@@ -42,6 +43,7 @@ internal static class MapGetSlice
                 status,
                 workerId,
                 projectId,
+                positionId,
                 workCountry,
                 page,
                 pageSize

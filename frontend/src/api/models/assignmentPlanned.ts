@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { AssignmentPosition } from "./assignmentPosition.ts";
 import type { EngagementType } from "./engagementType.ts";
 import type { ProjectPlacementSnapshot } from "./projectPlacementSnapshot.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
@@ -24,7 +25,7 @@ export interface AssignmentPlanned {
 	workerFullName: string;
 	project: ProjectPlacementSnapshot;
 	engagementType: EngagementType;
-	position: string;
+	position: AssignmentPosition;
 	startsOn: string;
 	/** @nullable */
 	endsOn: string | null;

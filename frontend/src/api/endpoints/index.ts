@@ -6,6 +6,7 @@ export * from "./job-description/job-description.ts";
 export * from "./legal-entities/legal-entities.ts";
 export * from "./organization/organization.ts";
 export * from "./owner/owner.ts";
+export * from "./positions/positions.ts";
 export * from "./projects/projects.ts";
 export * from "./recruitment-candidates/recruitment-candidates.ts";
 export * from "./recruitment-interviews/recruitment-interviews.ts";

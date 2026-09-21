@@ -38,6 +38,18 @@ public sealed class AssignmentsQueryRepository(IQuerySession session) : IAssignm
             .Where(a => a.Id == assignmentId)
             .FirstOrDefaultAsync(ct);
 
+    public async Task<IReadOnlyList<AssignmentOnPosition>> GetAssignmentsOnPosition(
+        OrganizationId organizationId,
+        Guid positionId,
+        CancellationToken ct
+    ) =>
+        await session
+            .Query<AssignmentProjection>()
+            .WithOrganizationId(organizationId)
+            .Where(a => a.PositionId == positionId)
+            .Select(a => new AssignmentOnPosition(a.Id, a.WorkerId))
+            .ToListAsync(ct);
+
     public async Task<bool> HasOverlappingAssignment(
         OrganizationId organizationId,
         Guid workerId,

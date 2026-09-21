@@ -19,7 +19,7 @@ public sealed record AssignmentPlanned(
     string WorkerFullName,
     ProjectPlacementSnapshot Project,
     EngagementType EngagementType,
-    string Position,
+    AssignmentPosition Position,
     DateOnly StartsOn,
     DateOnly? EndsOn,
     UserSnapshot CreatedBy,

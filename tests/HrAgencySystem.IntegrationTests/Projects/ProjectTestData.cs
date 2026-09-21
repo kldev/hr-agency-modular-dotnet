@@ -1,8 +1,10 @@
 using HrAgencySystem.Api.Endpoints.Project.Maps;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Domain;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.SharedKernel.Web.Common;
 using CompanyMaps = HrAgencySystem.Api.Endpoints.Company.Maps;
+using PositionMaps = HrAgencySystem.Api.Endpoints.Position.Maps;
 
 namespace HrAgencySystem.IntegrationTests.Projects;
 
@@ -81,4 +83,41 @@ internal static class ProjectTestData
         string number = "UM/2026/17",
         ContractStatus status = ContractStatus.Signed
     ) => new(number, status, status is ContractStatus.Signed ? SignedOn : null, StartsOn, null);
+
+    /// <summary>
+    /// A role with the fields a contract asks for, so a test that only cares about the name still
+    /// exercises the whole shape.
+    /// </summary>
+    public static PositionMaps.PositionRequest PositionRequest(
+        string name = "Painter",
+        string? contractName = null,
+        int? plannedHeadcount = null
+    ) =>
+        new(
+            name,
+            contractName,
+            "Painting facades on site.",
+            ["Prepare the surface", "Paint"],
+            ["Working at heights certificate"],
+            WorkerContractType.MandateContract,
+            32m,
+            "PLN",
+            RateUnit.Hourly,
+            RateBasis.Gross,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            40m,
+            new TimeOnly(7, 0),
+            "One shift, every other Saturday",
+            10,
+            "1 month",
+            "2 weeks",
+            ["Accommodation provided"],
+            plannedHeadcount,
+            EngagementType.TemporaryAgencyWork
+        );
 }

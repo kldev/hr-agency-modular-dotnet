@@ -1,9 +1,11 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
 using HrAgencySystem.Workers.Services;
+using Wolverine;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Workers.Application.ChangeAssignmentStatus;
@@ -20,7 +22,11 @@ public static class ChangeAssignmentStatusHandler
         "This person is not through the pipeline yet, so the assignment cannot start.";
 
     [AggregateHandler]
-    public static async Task<(AssignmentStatusChanged, Wolverine.Marten.Events)> Handle(
+    public static async Task<(
+        AssignmentStatusChanged,
+        Wolverine.Marten.Events,
+        OutgoingMessages
+    )> Handle(
         ChangeAssignmentStatus command,
         Domain.Assignment aggregate,
         IWorkersService service,
@@ -52,7 +58,22 @@ public static class ChangeAssignmentStatusHandler
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        var messages = new OutgoingMessages();
+
+        // Only an ending frees the seat. Going live does not: an active posting occupies the role
+        // exactly as much as a planned one, which is why this asks the policy rather than listing
+        // the statuses again.
+        if (AssignmentStatusChangePolicy.IsFinal(command.Status))
+            messages.Add(
+                new AssignmentPositionUnstaffed(
+                    aggregate.OrganizationId.Value,
+                    aggregate.Project.ProjectId,
+                    aggregate.Position.PositionId,
+                    aggregate.Id.Value
+                )
+            );
+
+        return (@event, [@event], messages);
     }
 
     /// <summary>

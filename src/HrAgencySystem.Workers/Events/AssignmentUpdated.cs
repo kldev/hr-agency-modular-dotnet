@@ -1,4 +1,5 @@
 using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.Workers.Domain;
 
 namespace HrAgencySystem.Workers.Events;
 
@@ -11,7 +12,7 @@ public sealed record AssignmentUpdated(
     Guid AssignmentId,
     Guid OrganizationId,
     Guid WorkerId,
-    string Position,
+    AssignmentPosition Position,
     DateOnly StartsOn,
     DateOnly? EndsOn,
     UserSnapshot ModifiedBy,

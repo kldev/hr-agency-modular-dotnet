@@ -27,7 +27,12 @@ public sealed record AssignmentProjection(
     string DeliveringEntityName,
     string WorkCountry,
     EngagementType EngagementType,
-    string Position,
+    Guid PositionId,
+    /// <summary>
+    /// The role's internal name, flattened out of the snapshot the way the project's is: a list
+    /// filters and sorts on it, and a name nested in an object costs more in Marten than a column.
+    /// </summary>
+    string PositionName,
     DateOnly StartsOn,
     DateOnly? EndsOn,
     AssignmentStatus Status,
@@ -59,7 +64,8 @@ public sealed record AssignmentProjection(
             @event.Project.DeliveringEntityName,
             @event.Project.WorkCountry,
             @event.EngagementType,
-            @event.Position,
+            @event.Position.PositionId,
+            @event.Position.Name,
             @event.StartsOn,
             @event.EndsOn,
             AssignmentStatus.Planned,
@@ -81,11 +87,22 @@ public sealed record AssignmentProjection(
         (
             this with
             {
-                Position = @event.Position,
+                PositionId = @event.Position.PositionId,
+                PositionName = @event.Position.Name,
                 StartsOn = @event.StartsOn,
                 EndsOn = @event.EndsOn,
             }
         ).Touched(@event.ModifiedBy, @event.ModifiedAt);
+
+    /// <summary>
+    /// The role kept its id and changed its name. No audit stamp: nobody here touched this record,
+    /// the project did, and claiming otherwise would put a stranger's name on somebody's posting.
+    /// </summary>
+    public AssignmentProjection Apply(AssignmentPositionRenamed @event) =>
+        this with
+        {
+            PositionName = @event.Name,
+        };
 
     public AssignmentProjection Apply(AssignmentStatusChanged @event) =>
         (this with { Status = @event.Status, EndsOn = @event.EndsOn }).Touched(
