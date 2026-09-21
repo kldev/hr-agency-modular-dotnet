@@ -1,3 +1,4 @@
+export * from "./ApplicationsPicker";
 export * from "./CompaniesPicker";
 export * from "./CompanyContactsPicker";
 export * from "./ProjectsPicker";

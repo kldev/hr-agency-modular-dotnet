@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { useRef } from "react";
 import type { JobApplicationProjection } from "#/api/models";
 import {
@@ -8,6 +9,10 @@ import {
 	EmailItem,
 	PhoneItem,
 } from "#/components/ui";
+import {
+	type WorkerWizardCommand,
+	WorkerWizardDialog,
+} from "#/features/workers/wizards/worker/WorkerWizardDialog";
 import { formatDateTimeIntl } from "#/utlis";
 import { ApplicationsActionDrawers, type JobApplicationsRef } from "../forms";
 import { ApplicationsActions } from "./ApplicationsActions";
@@ -20,9 +25,16 @@ interface ApplicationCardListProps {
 
 export function ApplicationCardList({ applications, onRefresh }: ApplicationCardListProps) {
 	const formRef = useRef<JobApplicationsRef>(null);
+	const workerRef = useRef<WorkerWizardCommand>(null);
+	const navigate = useNavigate();
 
 	const handleActions: Actions = {
 		onAction: (action, item) => {
+			if (action === "register-worker") {
+				workerRef.current?.register(item.id);
+				return;
+			}
+
 			formRef.current?.update(item.id, action, item.status, {
 				email: item.applicantEmail,
 				fullName: item.applicantFullName,
@@ -78,6 +90,17 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 				</div>
 			))}
 			<ApplicationsActionDrawers ref={formRef} onSuccess={onRefresh} />
+
+			<WorkerWizardDialog
+				ref={workerRef}
+				onSuccess={(workerId) => {
+					navigate({
+						to: "/app/workers/$id",
+						params: { id: workerId },
+						search: { search: undefined },
+					});
+				}}
+			/>
 		</div>
 	);
 }

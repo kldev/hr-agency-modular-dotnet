@@ -7,7 +7,8 @@ export type JobApplicationsActionsType =
 	| "edit"
 	| "create"
 	| "schedule"
-	| "tag";
+	| "tag"
+	| "register-worker";
 export interface AddJobApplicationNoteFormCommand {
 	addNote(jobApplicationId: string): void;
 }

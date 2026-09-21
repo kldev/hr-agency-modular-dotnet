@@ -1,9 +1,13 @@
 import { HardHat } from "lucide-react";
 import type React from "react";
+import { useRef } from "react";
+import type { WorkerProjection } from "@/api/models";
 import { Page } from "@/components/layout";
 import { EmptyState, LoadMore } from "@/components/ui";
+import { ChangeWorkerStatusDrawer, type ChangeWorkerStatusFormCommand } from "../drawers";
 import type { WorkersSearch } from "../searchParams";
 import { HOME_WORK_COUNTRY } from "../types";
+import { type WorkerWizardCommand, WorkerWizardDialog } from "../wizards/worker/WorkerWizardDialog";
 import { WorkersCardList, WorkersTable } from "./components/table";
 import { WorkersToolbar } from "./components/WorkersToolbar";
 import { useGetWorkersSlice } from "./hooks";
@@ -28,6 +32,8 @@ interface WorkersPageProps {
 }
 
 const WorkersPage: React.FC<WorkersPageProps> = ({ scope, search, onSearchChange, onClear }) => {
+	const wizardRef = useRef<WorkerWizardCommand>(null);
+	const statusRef = useRef<ChangeWorkerStatusFormCommand>(null);
 	const query = useGetWorkersSlice({
 		search: search.search,
 		status: search.status ? [search.status] : undefined,
@@ -40,49 +46,57 @@ const WorkersPage: React.FC<WorkersPageProps> = ({ scope, search, onSearchChange
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
 	const isEmpty = query.isFetched && items.length === 0;
 
+	const refresh = () => void query.refetch();
+
+	const onEdit = (worker: WorkerProjection) => wizardRef.current?.edit(worker);
+	const onChangeStatus = (worker: WorkerProjection) => statusRef.current?.changeStatus(worker);
+
 	return (
-		<Page
-			className="has-mobile-view"
-			title={scope === "abroad" ? "Workers abroad" : "Workers"}
-			description={
-				scope === "abroad"
-					? "People on a posting outside the home country, and everybody not yet placed."
-					: "The register of people: who they are, where they work and what still has to be in order."
-			}
-			onRefresh={() => query.refetch()}
-			loading={query.isPending}
-			isEmpty={isEmpty}
-			emptyState={
-				<EmptyState title="No people found">
-					<HardHat size={24} />
-				</EmptyState>
-			}
-		>
-			<WorkersToolbar
-				search={search.search ?? ""}
-				status={search.status ?? null}
-				department={search.department ?? null}
-				onSearchChange={(value) => onSearchChange({ search: value })}
-				onStatusChange={(value) => onSearchChange({ status: value ?? undefined })}
-				onDepartmentChange={(value) => onSearchChange({ department: value ?? undefined })}
-				onClear={onClear}
-				onAdd={() => {
-					// The registration wizard lands with the next step of the plan.
-				}}
-			/>
-
-			<WorkersTable workers={items} />
-
-			<WorkersCardList workers={items} />
-
-			<LoadMore
+		<>
+			<Page
+				className="has-mobile-view"
+				title={scope === "abroad" ? "Workers abroad" : "Workers"}
+				description={
+					scope === "abroad"
+						? "People on a posting outside the home country, and everybody not yet placed."
+						: "The register of people: who they are, where they work and what still has to be in order."
+				}
+				onRefresh={() => query.refetch()}
 				loading={query.isPending}
-				hasNext={hasMore[0]}
-				onClick={() => {
-					query.fetchNextPage();
-				}}
-			/>
-		</Page>
+				isEmpty={isEmpty}
+				emptyState={
+					<EmptyState title="No people found">
+						<HardHat size={24} />
+					</EmptyState>
+				}
+			>
+				<WorkersToolbar
+					search={search.search ?? ""}
+					status={search.status ?? null}
+					department={search.department ?? null}
+					onSearchChange={(value) => onSearchChange({ search: value })}
+					onStatusChange={(value) => onSearchChange({ status: value ?? undefined })}
+					onDepartmentChange={(value) => onSearchChange({ department: value ?? undefined })}
+					onClear={onClear}
+					onAdd={() => wizardRef.current?.register()}
+				/>
+
+				<WorkersTable workers={items} onEdit={onEdit} onChangeStatus={onChangeStatus} />
+
+				<WorkersCardList workers={items} onEdit={onEdit} onChangeStatus={onChangeStatus} />
+
+				<LoadMore
+					loading={query.isPending}
+					hasNext={hasMore[0]}
+					onClick={() => {
+						query.fetchNextPage();
+					}}
+				/>
+			</Page>
+
+			<WorkerWizardDialog ref={wizardRef} onSuccess={refresh} />
+			<ChangeWorkerStatusDrawer ref={statusRef} onSuccess={refresh} />
+		</>
 	);
 };
 
