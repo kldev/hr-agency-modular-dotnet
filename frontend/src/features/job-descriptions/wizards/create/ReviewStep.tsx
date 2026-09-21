@@ -1,8 +1,8 @@
 import { FormWizard } from "#/components/form-wizard/FormWizard";
-import { getErrorMessage } from "#/components/ui";
+import { ReviewErrors, SummaryItem } from "#/components/form-wizard/ReviewSummary";
 import { withForm } from "#/forms";
-import type { JobDescriptionField, JobDescriptionFormValues } from "./schema";
-import { findStepForField } from "./steps";
+import type { JobDescriptionFormValues } from "./schema";
+import { jobDescriptionSteps } from "./steps";
 
 export const ReviewStep = withForm({
 	defaultValues: {} as JobDescriptionFormValues,
@@ -18,7 +18,13 @@ export const ReviewStep = withForm({
 				<FormWizard.SectionHeader title="Review" description={description} />
 
 				<form.Subscribe selector={(state) => state.fieldMeta}>
-					{(fieldMeta) => <ReviewErrors fieldMeta={fieldMeta} />}
+					{(fieldMeta) => (
+						<ReviewErrors
+							fieldMeta={fieldMeta}
+							steps={jobDescriptionSteps}
+							action="creating the job description"
+						/>
+					)}
 				</form.Subscribe>
 
 				<div className="form-wizard__summary">
@@ -69,58 +75,6 @@ export const ReviewStep = withForm({
 		);
 	},
 });
-
-/** `responsibilities[0]` -> `responsibilities`, so the error can still be traced back to its step. */
-function baseFieldName(field: string) {
-	return field.split(/[[.]/)[0] as JobDescriptionField;
-}
-
-type ReviewErrorsProps = {
-	fieldMeta: Partial<Record<JobDescriptionField, { errors: Array<unknown> }>>;
-};
-
-function ReviewErrors({ fieldMeta }: ReviewErrorsProps) {
-	const problems = (
-		Object.entries(fieldMeta) as Array<[JobDescriptionField, { errors: unknown[] }]>
-	).flatMap(([field, meta]) =>
-		(meta?.errors ?? []).map((error) => ({
-			field,
-			step: findStepForField(baseFieldName(field))?.title,
-			message: getErrorMessage(error),
-		})),
-	);
-
-	if (problems.length === 0) {
-		return null;
-	}
-
-	return (
-		<div className="wizard-review-error">
-			<div className="form-error" role="alert">
-				<strong>Fix the following before creating the job description:</strong>
-
-				<ul className="form-wizard__summary-list">
-					{problems.map((problem) => (
-						<li key={`${problem.field}-${problem.message}`}>
-							{problem.step ? `${problem.step}: ` : ""}
-							{problem.message}
-						</li>
-					))}
-				</ul>
-			</div>
-		</div>
-	);
-}
-
-function SummaryItem({ label, value }: { label: string; value: string }) {
-	return (
-		<div className="form-wizard__summary-item">
-			<span className="form-wizard__summary-label">{label}</span>
-
-			<span className="form-wizard__summary-value">{value || "—"}</span>
-		</div>
-	);
-}
 
 function SummaryList({ items }: { items: readonly string[] }) {
 	return (

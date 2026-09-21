@@ -71,7 +71,3 @@ export type UngatedJobDescriptionField = Exclude<JobDescriptionField, GatedField
 export const allSchemaFieldsAreGated = true satisfies UngatedJobDescriptionField extends never
 	? true
 	: false;
-
-export function findStepForField(field: JobDescriptionField) {
-	return jobDescriptionSteps.find((step) => (step.fields as readonly string[]).includes(field));
-}

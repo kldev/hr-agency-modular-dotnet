@@ -1,15 +1,11 @@
 import type { EngagementType } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
-import { getErrorMessage } from "#/components/ui";
+import { ReviewErrors, SummaryItem } from "#/components/form-wizard/ReviewSummary";
 import { withForm } from "#/forms";
-import { previewComplianceRequirements } from "../../../compliancePreview";
+import { previewComplianceRequirements } from "@/features/compliance";
 import { complianceRequirements, engagementTypes } from "../../../types";
-import { emptyProject, type ProjectField } from "../schema";
+import { emptyProject } from "../schema";
 import { projectSteps } from "../steps";
-
-function findStepForField(field: ProjectField) {
-	return projectSteps.find((step) => (step.fields as readonly string[]).includes(field));
-}
 
 export const ReviewStep = withForm({
 	defaultValues: emptyProject,
@@ -20,9 +16,11 @@ export const ReviewStep = withForm({
 
 	render: function Render({ form, clientName }) {
 		const values = form.state.values;
+		/* The project's own half of the catalogue; the per person items belong to each assignment. */
 		const requirements = previewComplianceRequirements(
 			values.countryCode,
 			values.engagementType as EngagementType,
+			"project",
 		);
 
 		return (
@@ -33,7 +31,9 @@ export const ReviewStep = withForm({
 				/>
 
 				<form.Subscribe selector={(state) => state.fieldMeta}>
-					{(fieldMeta) => <ReviewErrors fieldMeta={fieldMeta} />}
+					{(fieldMeta) => (
+						<ReviewErrors fieldMeta={fieldMeta} steps={projectSteps} action="saving the project" />
+					)}
 				</form.Subscribe>
 
 				<div className="form-wizard__summary">
@@ -112,50 +112,3 @@ export const ReviewStep = withForm({
 		);
 	},
 });
-
-type ReviewErrorsProps = {
-	fieldMeta: Partial<Record<ProjectField, { errors: Array<unknown> }>>;
-};
-
-function ReviewErrors({ fieldMeta }: ReviewErrorsProps) {
-	const problems = (
-		Object.entries(fieldMeta) as Array<[ProjectField, { errors: unknown[] }]>
-	).flatMap(([field, meta]) =>
-		(meta?.errors ?? []).map((error) => ({
-			field,
-			step: findStepForField(field)?.title,
-			message: getErrorMessage(error),
-		})),
-	);
-
-	if (problems.length === 0) {
-		return null;
-	}
-
-	return (
-		<div className="wizard-review-error">
-			<div className="form-error" role="alert">
-				<strong>Fix the following before saving the project:</strong>
-
-				<ul className="form-wizard__summary-list">
-					{problems.map((problem) => (
-						<li key={`${problem.field}-${problem.message}`}>
-							{problem.step ? `${problem.step}: ` : ""}
-							{problem.message}
-						</li>
-					))}
-				</ul>
-			</div>
-		</div>
-	);
-}
-
-function SummaryItem({ label, value }: { label: string; value: string }) {
-	return (
-		<div className="form-wizard__summary-item">
-			<span className="form-wizard__summary-label">{label}</span>
-
-			<span className="form-wizard__summary-value">{value || "—"}</span>
-		</div>
-	);
-}

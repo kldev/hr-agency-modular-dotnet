@@ -70,7 +70,3 @@ export type UngatedJobPostField = Exclude<JobPostField, GatedField>;
 export const allSchemaFieldsAreGated = true satisfies UngatedJobPostField extends never
 	? true
 	: false;
-
-export function findStepForField(field: JobPostField) {
-	return jobPostSteps.find((step) => (step.fields as readonly string[]).includes(field));
-}
