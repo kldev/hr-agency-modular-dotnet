@@ -6,4 +6,8 @@ export const suggestionKeys = {
 	user: (id: string) => [...suggestionKeys.all, "user", id] as const,
 
 	team: (id: string) => [...suggestionKeys.all, "team", id] as const,
+
+	worker: (id: string) => [...suggestionKeys.all, "worker", id] as const,
+
+	project: (id: string) => [...suggestionKeys.all, "project", id] as const,
 };
