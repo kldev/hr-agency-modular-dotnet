@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HrAgencySystem.Agency\HrAgencySystem.Agency.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Company\HrAgencySystem.Company.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Compliance\HrAgencySystem.Compliance.csproj" />

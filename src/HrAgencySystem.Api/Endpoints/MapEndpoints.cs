@@ -24,6 +24,7 @@ public static class MapEndpoints
         LegalEntity.Endpoint.Map(app);
         Project.Endpoint.Map(app);
         Position.Endpoint.Map(app);
+        OrgStructure.Endpoint.Map(app);
         Worker.Endpoint.Map(app);
         Assignment.Endpoint.Map(app);
 

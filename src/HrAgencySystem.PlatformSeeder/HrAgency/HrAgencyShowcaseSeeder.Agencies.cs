@@ -49,6 +49,21 @@ public sealed partial class HrAgencyShowcaseSeeder
             organization.OrganizationId
         );
 
+        // The chart goes in right after the people, because every unit needs somebody to put in it
+        // - and because the supervisor rule is what the next two plans are waiting on.
+        var unitCount = await new OrgStructureScenario(bus).Create(
+            organization.OrganizationId,
+            organization.Slug,
+            userIds,
+            () => WaitForProjections()
+        );
+
+        logger.LogInformation(
+            "Created {UnitCount} org units for organization {OrganizationId}",
+            unitCount,
+            organization.OrganizationId
+        );
+
         var companyIds = await CreateCompanies(config, organization, userIds);
 
         logger.LogInformation(
@@ -128,6 +143,21 @@ public sealed partial class HrAgencyShowcaseSeeder
         var userIds = await CreateUsers(config, organization);
 
         await new TeamScenario(bus).Create(organization.OrganizationId, userIds, userIds[0]);
+
+        // The chart goes in right after the people, because every unit needs somebody to put in it
+        // - and because the supervisor rule is what the next two plans are waiting on.
+        var unitCount = await new OrgStructureScenario(bus).Create(
+            organization.OrganizationId,
+            organization.Slug,
+            userIds,
+            () => WaitForProjections()
+        );
+
+        logger.LogInformation(
+            "Created {UnitCount} org units for organization {OrganizationId}",
+            unitCount,
+            organization.OrganizationId
+        );
 
         var companyIds = await CreateCompanies(config, organization, userIds);
 

@@ -268,6 +268,24 @@ internal static class ApiEndpoints
     /// The register of roles, read across projects. Writing one goes through its project - a
     /// position lives on that stream - but reading is its own list with its own filters.
     /// </summary>
+    /// <summary>The agency's own shape: who sits where, and who therefore answers for whom.</summary>
+    internal static class OrgStructure
+    {
+        private const string OrgStructureBase = $"{Base}/org-structure";
+
+        public const string Get = OrgStructureBase;
+        public const string CreateUnit = $"{OrgStructureBase}/units";
+        public const string RenameUnit = $"{OrgStructureBase}/units/{{unitId:guid}}";
+        public const string MoveUnit = $"{OrgStructureBase}/units/{{unitId:guid}}/parent";
+        public const string ArchiveUnit = $"{OrgStructureBase}/units/{{unitId:guid}}/archive";
+        public const string Head = $"{OrgStructureBase}/units/{{unitId:guid}}/head";
+        public const string Members = $"{OrgStructureBase}/units/{{unitId:guid}}/members";
+        public const string Member =
+            $"{OrgStructureBase}/units/{{unitId:guid}}/members/{{userId:guid}}";
+        public const string Supervisor = $"{OrgStructureBase}/supervisor/{{userId:guid}}";
+        public const string Subordinates = $"{OrgStructureBase}/subordinates/{{userId:guid}}";
+    }
+
     internal static class Positions
     {
         private const string PositionsBase = $"{Base}/positions";

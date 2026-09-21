@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/HrAgencySystem.Agency/HrAgencySystem.Agency.csproj" />
     <Project Path="src/HrAgencySystem.Api/HrAgencySystem.Api.csproj" />
     <Project Path="src/HrAgencySystem.Audit/HrAgencySystem.Audit.csproj" />
     <Project Path="src/HrAgencySystem.Company/HrAgencySystem.Company.csproj" />

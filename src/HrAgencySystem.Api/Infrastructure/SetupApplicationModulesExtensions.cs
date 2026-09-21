@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using HrAgencySystem.Agency;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Api.Infrastructure.FileServiceClient;
 using HrAgencySystem.Company;
@@ -39,6 +40,7 @@ public static class SetupApplicationModulesExtensions
             services.AddFeedsModule(configuration);
             services.AddFilesModule(configuration);
             services.AddFileServiceClient(configuration);
+            services.AddAgencyModule();
             services.AddProjectsModule();
             services.AddWorkersModule();
             services.AddSalesModule();
