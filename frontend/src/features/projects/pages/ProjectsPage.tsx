@@ -2,18 +2,21 @@ import { FolderKanban } from "lucide-react";
 import type React from "react";
 import { useRef } from "react";
 import { Route } from "#/routes/app/projects";
+import type { ProjectProjection } from "@/api/models";
 import { Page } from "@/components/layout";
 import { EmptyState, LoadMore } from "@/components/ui";
+import { ChangeProjectStatusDrawer, type ChangeProjectStatusFormCommand } from "../drawers";
 import {
-	type CreateProjectWizardCommand,
-	CreateProjectWizardDialog,
-} from "../wizards/create/CreateProjectWizardDialog";
+	type ProjectWizardCommand,
+	ProjectWizardDialog,
+} from "../wizards/project/ProjectWizardDialog";
 import { ProjectsToolbar } from "./components/ProjectsToolbar";
 import { ProjectsCardList, ProjectsTable } from "./components/table";
 import { useGetProjectsSlice } from "./hooks";
 
 const ProjectsPage: React.FC = () => {
-	const wizardRef = useRef<CreateProjectWizardCommand>(null);
+	const wizardRef = useRef<ProjectWizardCommand>(null);
+	const statusRef = useRef<ChangeProjectStatusFormCommand>(null);
 
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
@@ -28,6 +31,13 @@ const ProjectsPage: React.FC = () => {
 	const items = query.data?.pages.flatMap((page) => page.content ?? []) ?? [];
 	const hasMore = query.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [false];
 	const isEmpty = query.isFetched && items.length === 0;
+
+	const refresh = () => void query.refetch();
+
+	/* Owned here rather than by each of the two lists, so one project cannot be open twice. */
+	const onEdit = (project: ProjectProjection) => wizardRef.current?.edit(project);
+
+	const onChangeStatus = (project: ProjectProjection) => statusRef.current?.changeStatus(project);
 
 	return (
 		<>
@@ -68,19 +78,9 @@ const ProjectsPage: React.FC = () => {
 					}}
 				/>
 
-				<ProjectsTable
-					projects={items}
-					onRefresh={() => {
-						query.refetch();
-					}}
-				/>
+				<ProjectsTable projects={items} onEdit={onEdit} onChangeStatus={onChangeStatus} />
 
-				<ProjectsCardList
-					projects={items}
-					onRefresh={() => {
-						query.refetch();
-					}}
-				/>
+				<ProjectsCardList projects={items} onEdit={onEdit} onChangeStatus={onChangeStatus} />
 
 				<LoadMore
 					loading={query.isPending}
@@ -91,13 +91,15 @@ const ProjectsPage: React.FC = () => {
 				/>
 			</Page>
 
-			<CreateProjectWizardDialog
+			<ChangeProjectStatusDrawer ref={statusRef} onSuccess={refresh} />
+
+			<ProjectWizardDialog
 				ref={wizardRef}
-				onSuccess={(projectId) => {
+				onSuccess={(projectId: string) => {
 					navigate({
 						to: "/app/projects/$id",
 						params: { id: projectId },
-						search: { search: undefined },
+						search: { search: undefined, tab: undefined },
 					});
 				}}
 			/>

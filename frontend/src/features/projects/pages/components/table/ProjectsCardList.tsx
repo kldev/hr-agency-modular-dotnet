@@ -1,27 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { useRef } from "react";
 import type { ProjectProjection } from "#/api/models";
 import { DetailItem, ProjectStatusBadge } from "#/components/ui";
 import { ComplianceChip } from "@/features/compliance";
-import {
-	ChangeProjectStatusDrawer,
-	type ChangeProjectStatusFormCommand,
-	EditProjectDrawer,
-	type EditProjectFormCommand,
-} from "../../../drawers";
 import { engagementTypes } from "../../../types";
 import { formatPeriod } from "../../../utils";
 import { ProjectActions } from "./ProjectActions";
 
 interface ProjectsCardListProps {
 	projects: ProjectProjection[];
-	onRefresh: () => void;
+	onEdit: (project: ProjectProjection) => void;
+	onChangeStatus: (project: ProjectProjection) => void;
 }
 
-export function ProjectsCardList({ projects, onRefresh }: ProjectsCardListProps) {
-	const editRef = useRef<EditProjectFormCommand>(null);
-	const statusRef = useRef<ChangeProjectStatusFormCommand>(null);
-
+export function ProjectsCardList({ projects, onEdit, onChangeStatus }: ProjectsCardListProps) {
 	return (
 		<div className="data-mobile-view">
 			{projects.map<React.ReactNode>((project) => (
@@ -36,7 +27,7 @@ export function ProjectsCardList({ projects, onRefresh }: ProjectsCardListProps)
 								<Link
 									to="/app/projects/$id"
 									params={{ id: project.id }}
-									search={{ search: undefined }}
+									search={{ search: undefined, tab: undefined }}
 								>
 									{project.name}
 								</Link>
@@ -45,12 +36,8 @@ export function ProjectsCardList({ projects, onRefresh }: ProjectsCardListProps)
 
 						<ProjectActions
 							id={project.id}
-							onEdit={() => {
-								editRef.current?.edit(project);
-							}}
-							onChangeStatus={() => {
-								statusRef.current?.changeStatus(project);
-							}}
+							onEdit={() => onEdit(project)}
+							onChangeStatus={() => onChangeStatus(project)}
 						/>
 					</div>
 
@@ -80,9 +67,6 @@ export function ProjectsCardList({ projects, onRefresh }: ProjectsCardListProps)
 					</dl>
 				</div>
 			))}
-
-			<EditProjectDrawer ref={editRef} onSuccess={onRefresh} />
-			<ChangeProjectStatusDrawer ref={statusRef} onSuccess={onRefresh} />
 		</div>
 	);
 }

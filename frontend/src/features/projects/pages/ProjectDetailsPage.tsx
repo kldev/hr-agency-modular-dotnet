@@ -7,6 +7,9 @@ import {
 	DetailsHeader,
 	DetailsLoading,
 	ProjectStatusBadge,
+	type TabDefinition,
+	TabPanel,
+	Tabs,
 } from "@/components/ui";
 import { DataDetails, DataDetailsLayout } from "@/components/ui/details/DataDetails";
 import {
@@ -20,8 +23,6 @@ import {
 	ChangeProjectLegalEntityDrawer,
 	ChangeProjectStatusDrawer,
 	type ChangeProjectStatusFormCommand,
-	EditProjectDrawer,
-	type EditProjectFormCommand,
 	RecordComplianceDrawer,
 	type RecordComplianceFormCommand,
 	RecordContractDrawer,
@@ -42,6 +43,10 @@ import {
 	CompleteCompanyProfileWizardDialog,
 } from "#/features/companies/wizards/complete-profile/CompleteCompanyProfileWizardDialog";
 import {
+	type ProjectWizardCommand,
+	ProjectWizardDialog,
+} from "../wizards/project/ProjectWizardDialog";
+import {
 	ProjectAssignmentsSection,
 	ProjectComplianceSection,
 	ProjectContactsSection,
@@ -54,10 +59,31 @@ import {
 import { ProjectActions } from "./components/table/ProjectActions";
 import { useGetProject, useRemoveProjectContact } from "./hooks";
 
-export function ProjectDetailsPage() {
+export type ProjectTab = "overview" | "contract" | "people" | "documents" | "compliance";
+
+export const projectTabs: readonly ProjectTab[] = [
+	"overview",
+	"contract",
+	"people",
+	"documents",
+	"compliance",
+];
+
+interface ProjectDetailsPageProps {
+	tab: ProjectTab;
+	onTabChange: (tab: ProjectTab) => void;
+}
+
+/**
+ * The same layout the worker register settled on: a live project carries a client profile, a
+ * contract, its people, its documents and a compliance list, and stacked they are one long scroll
+ * where the sections that need attention sit furthest down. The open section is in the URL, so a
+ * link can point at a project's compliance rather than at the project.
+ */
+export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps) {
 	const { id } = useParams({ from: "/app/projects/$id" });
 
-	const editRef = useRef<EditProjectFormCommand>(null);
+	const editRef = useRef<ProjectWizardCommand>(null);
 	const statusRef = useRef<ChangeProjectStatusFormCommand>(null);
 	const legalEntityRef = useRef<ChangeProjectLegalEntityCommand>(null);
 	const contactRef = useRef<AssignProjectContactFormCommand>(null);
@@ -89,6 +115,21 @@ export function ProjectDetailsPage() {
 		void query.refetch();
 	};
 
+	const tabs: TabDefinition<ProjectTab>[] = [
+		{ id: "overview", label: "Overview" },
+		{ id: "contract", label: "Contract & contacts", count: project.contacts.length },
+		{ id: "people", label: "People" },
+		{ id: "documents", label: "Documents", count: Number(project.documentCount ?? 0) },
+		{
+			id: "compliance",
+			label: "Compliance",
+			/* Outstanding rather than total: zero here means there is nothing left to chase. */
+			count: Number(project.complianceOutstandingCount ?? 0),
+		},
+	];
+
+	const active = tabs.some((candidate) => candidate.id === tab) ? tab : "overview";
+
 	return (
 		<>
 			<DataDetails>
@@ -114,71 +155,90 @@ export function ProjectDetailsPage() {
 					}
 				/>
 
+				<Tabs value={active} tabs={tabs} onChange={onTabChange} label="Project sections" />
+
 				<DataDetailsLayout
 					main={
-						<>
-							<section className="data-details-section">
-								<ProjectOverviewSection
-									project={project}
-									onAssignTeam={() => teamRef.current?.assignTeam(project)}
-								/>
-							</section>
+						<TabPanel id={active}>
+							{active === "overview" ? (
+								<>
+									<section className="data-details-section">
+										<ProjectOverviewSection
+											project={project}
+											onAssignTeam={() => teamRef.current?.assignTeam(project)}
+										/>
+									</section>
 
-							<section className="data-details-section">
-								<ProjectCustomerSection
-									project={project}
-									onCompleteProfile={(companyId) => profileRef.current?.complete(companyId)}
-									onChangeLegalEntity={() => legalEntityRef.current?.change(project)}
-								/>
-							</section>
+									<section className="data-details-section">
+										<ProjectCustomerSection
+											project={project}
+											onCompleteProfile={(companyId) => profileRef.current?.complete(companyId)}
+											onChangeLegalEntity={() => legalEntityRef.current?.change(project)}
+										/>
+									</section>
+								</>
+							) : null}
 
-							<section className="data-details-section">
-								<ProjectContactsSection
-									project={project}
-									onAssign={(role: ContactRole) => contactRef.current?.assign(project, role)}
-									onRemove={(role: ContactRole) => {
-										removeContact.mutate({ projectId: project.id, role });
-									}}
-								/>
-							</section>
+							{/* The contract and the people who signed it: both answer "who agreed to what". */}
+							{active === "contract" ? (
+								<>
+									<section className="data-details-section">
+										<ProjectContractSection
+											project={project}
+											onRecordContract={() => contractRef.current?.record(project)}
+											onEditEmails={(purpose: EmailPurpose) =>
+												emailsRef.current?.edit(project, purpose)
+											}
+										/>
+									</section>
 
-							<section className="data-details-section">
-								<ProjectContractSection
-									project={project}
-									onRecordContract={() => contractRef.current?.record(project)}
-									onEditEmails={(purpose: EmailPurpose) =>
-										emailsRef.current?.edit(project, purpose)
-									}
-								/>
-							</section>
+									<section className="data-details-section">
+										<ProjectContactsSection
+											project={project}
+											onAssign={(role: ContactRole) => contactRef.current?.assign(project, role)}
+											onRemove={(role: ContactRole) => {
+												removeContact.mutate({ projectId: project.id, role });
+											}}
+										/>
+									</section>
+								</>
+							) : null}
 
-							<section className="data-details-section">
-								<ProjectDocumentsSection
-									project={project}
-									onAttach={() => documentRef.current?.attach(project.id)}
-									onRefresh={refresh}
-								/>
-							</section>
+							{active === "people" ? (
+								<section className="data-details-section">
+									<ProjectAssignmentsSection
+										project={project}
+										onPlanAssignment={() =>
+											planAssignmentRef.current?.plan({ projectId: project.id })
+										}
+									/>
+								</section>
+							) : null}
 
-							<section className="data-details-section">
-								<ProjectAssignmentsSection
-									project={project}
-									onPlanAssignment={() =>
-										planAssignmentRef.current?.plan({ projectId: project.id })
-									}
-								/>
-							</section>
+							{active === "documents" ? (
+								<section className="data-details-section">
+									<ProjectDocumentsSection
+										project={project}
+										onAttach={() => documentRef.current?.attach(project.id)}
+										onRefresh={refresh}
+									/>
+								</section>
+							) : null}
 
-							<section className="data-details-section">
-								<ProjectComplianceSection
-									project={project}
-									onRecord={(view) => complianceRef.current?.record(project, view)}
-								/>
-							</section>
-						</>
+							{active === "compliance" ? (
+								<section className="data-details-section">
+									<ProjectComplianceSection
+										project={project}
+										onRecord={(view) => complianceRef.current?.record(project, view)}
+									/>
+								</section>
+							) : null}
+						</TabPanel>
 					}
 					sidebar={
 						<>
+							{/* Outside the tabs on purpose: whether the project can go live, and what is
+							    still missing for it, is worth seeing whichever section is open. */}
 							<section className="data-details-section">
 								<ProjectStatusSidebar project={project} />
 							</section>
@@ -194,7 +254,7 @@ export function ProjectDetailsPage() {
 				/>
 			</DataDetails>
 
-			<EditProjectDrawer ref={editRef} onSuccess={refresh} />
+			<ProjectWizardDialog ref={editRef} onSuccess={refresh} />
 			<ChangeProjectLegalEntityDrawer ref={legalEntityRef} onSuccess={refresh} />
 			<ChangeProjectStatusDrawer ref={statusRef} onSuccess={refresh} />
 			<AssignProjectContactDrawer ref={contactRef} onSuccess={refresh} />

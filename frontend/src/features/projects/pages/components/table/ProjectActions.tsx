@@ -30,7 +30,11 @@ export function ProjectActions({
 						label: "Open details",
 						icon: Settings2,
 						action: () => {
-							navigate({ to: "/app/projects/$id", params: { id }, search: { search: undefined } });
+							navigate({
+								to: "/app/projects/$id",
+								params: { id },
+								search: { search: undefined, tab: undefined },
+							});
 						},
 					},
 					{ label: "Edit", icon: Pencil, action: onEdit },

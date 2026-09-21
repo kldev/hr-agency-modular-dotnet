@@ -38,7 +38,7 @@ export function AssignmentOverviewSection({ assignment }: AssignmentOverviewSect
 					<Link
 						to="/app/projects/$id"
 						params={{ id: assignment.projectId }}
-						search={{ search: undefined }}
+						search={{ search: undefined, tab: undefined }}
 					>
 						{assignment.projectName}
 					</Link>

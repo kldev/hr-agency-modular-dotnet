@@ -41,7 +41,7 @@ export function getColumns(actions: projectsActions) {
 								<Link
 									to="/app/projects/$id"
 									params={{ id: project.id }}
-									search={{ search: undefined }}
+									search={{ search: undefined, tab: undefined }}
 								>
 									{getValue()}
 								</Link>

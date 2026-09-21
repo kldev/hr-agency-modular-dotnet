@@ -5,10 +5,6 @@ import type {
 	ProjectProjection,
 } from "@/api/models";
 
-export interface EditProjectFormCommand {
-	edit: (project: ProjectProjection) => void;
-}
-
 export interface AssignProjectTeamFormCommand {
 	assignTeam: (project: ProjectProjection) => void;
 }

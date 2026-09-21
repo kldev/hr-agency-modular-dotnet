@@ -6,73 +6,101 @@ import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValid
 import { ApiError } from "#/components/ui/ApiError";
 import { useAppForm } from "#/forms";
 import { useCompanySuggestion } from "#/hooks";
-import { useCreateProject } from "../../pages/hooks";
+import { useCreateProject, useUpdateProject } from "../../pages/hooks";
 import { toDateOnly } from "../../utils";
-import { emptyProject, projectSchema } from "./schema";
-import { projectSteps } from "./steps";
+import { type ProjectFormValues, projectSchema } from "./schema";
+import { projectStepsFor } from "./steps";
 import { AssignmentStep } from "./steps/AssignmentStep";
 import { BasicsStep } from "./steps/BasicsStep";
 import { ClientStep } from "./steps/ClientStep";
 import { ReviewStep } from "./steps/ReviewStep";
 import { TeamStep } from "./steps/TeamStep";
 
-interface CreateProjectWizardProps {
-	onCreated: (projectId: string) => void;
+interface ProjectWizardProps {
+	/** Absent when creating a new project. */
+	projectId?: string;
+	initialValues: ProjectFormValues;
+	onSaved: (projectId: string) => void;
 	onCancel: () => void;
 	onDirtyChange: (dirty: boolean) => void;
 }
 
-export function CreateProjectWizard({
-	onCreated,
+/**
+ * One wizard for creating and for editing, as with workers and legal entities: the fields are the
+ * same fields, and a second form over the same values is a second place to forget a rule. Editing
+ * simply asks fewer steps, because the update command takes less than the create one.
+ */
+export function ProjectWizard({
+	projectId,
+	initialValues,
+	onSaved,
 	onCancel,
 	onDirtyChange,
-}: CreateProjectWizardProps) {
+}: ProjectWizardProps) {
 	const [currentStep, setCurrentStep] = useState(0);
+	const editing = Boolean(projectId);
+	const steps = projectStepsFor(editing ? "edit" : "create");
 
-	const { mutation } = useCreateProject({
-		onSuccess: () => {
-			toast.success("Project created");
-		},
+	const create = useCreateProject({
+		onSuccess: () => toast.success("Project created"),
 	});
 
+	const update = useUpdateProject({
+		onSuccess: () => toast.success("Project updated"),
+	});
+
+	const mutation = editing ? update.mutation : create.mutation;
+
 	const form = useAppForm({
-		defaultValues: emptyProject,
+		defaultValues: initialValues,
 
 		validators: {
 			onChange: projectSchema,
 		},
 
 		onSubmit: async ({ value }) => {
-			let created: Awaited<ReturnType<typeof mutation.mutateAsync>>;
+			/* What both commands share; the create one then adds the parties and the team. */
+			const common = {
+				name: value.name.trim(),
+				description: value.description.trim(),
+				street: value.street.trim(),
+				buildingNumber: value.buildingNumber.trim(),
+				unitNumber: value.unitNumber.trim() || null,
+				postalCode: value.postalCode.trim(),
+				city: value.city.trim(),
+				countryCode: value.countryCode.toUpperCase(),
+				startsOn: toDateOnly(value.startsOn),
+				endsOn: value.endsOn ? toDateOnly(value.endsOn) : null,
+			};
 
 			try {
-				created = await mutation.mutateAsync({
+				if (projectId) {
+					await update.mutation.mutateAsync({ projectId, request: common });
+
+					onSaved(projectId);
+
+					return;
+				}
+
+				const created = await create.mutation.mutateAsync({
 					request: {
+						...common,
 						companyId: value.companyId,
 						legalEntityId: value.legalEntityId,
-						name: value.name.trim(),
-						description: value.description.trim(),
 						engagementType: value.engagementType as EngagementType,
-						street: value.street.trim(),
-						buildingNumber: value.buildingNumber.trim(),
-						unitNumber: value.unitNumber.trim() || null,
-						postalCode: value.postalCode.trim(),
-						city: value.city.trim(),
-						countryCode: value.countryCode.toUpperCase(),
-						startsOn: toDateOnly(value.startsOn),
-						endsOn: value.endsOn ? toDateOnly(value.endsOn) : null,
 						teamId: value.teamId || null,
 					},
 				});
+
+				onSaved(created.projectId);
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(details?.title ?? "Unable to create the project");
-
-				return;
+				toast.error(
+					details?.title ??
+						(editing ? "Unable to update the project" : "Unable to create the project"),
+				);
 			}
-
-			onCreated(created.projectId);
 		},
 	});
 
@@ -85,7 +113,7 @@ export function CreateProjectWizard({
 	const clientSuggestion = useCompanySuggestion(form.state.values.companyId);
 
 	const handleNext = async () => {
-		const fields = projectSteps[currentStep].fields;
+		const fields = steps[currentStep].fields;
 
 		for (const field of fields) {
 			await form.validateField(field, "submit");
@@ -97,7 +125,7 @@ export function CreateProjectWizard({
 			return;
 		}
 
-		setCurrentStep((step) => Math.min(step + 1, projectSteps.length - 1));
+		setCurrentStep((step) => Math.min(step + 1, steps.length - 1));
 	};
 
 	return (
@@ -106,19 +134,28 @@ export function CreateProjectWizard({
 				{(isDirty) => <DirtyReporter isDirty={isDirty} onDirtyChange={onDirtyChange} />}
 			</form.Subscribe>
 
-			<FormWizard.Header steps={projectSteps} currentStep={currentStep} />
+			<FormWizard.Header steps={steps} currentStep={currentStep} />
 
 			<FormWizard.Body>
+				{/* Keyed by step id rather than index, because editing asks two steps fewer. */}
 				<FormWizard.Content>
-					{currentStep === 0 && <ClientStep form={form} isSubmitting={isSubmitting} />}
+					{steps[currentStep].id === "client" && (
+						<ClientStep form={form} isSubmitting={isSubmitting} />
+					)}
 
-					{currentStep === 1 && <BasicsStep form={form} isSubmitting={isSubmitting} />}
+					{steps[currentStep].id === "basics" && (
+						<BasicsStep form={form} isSubmitting={isSubmitting} editing={editing} />
+					)}
 
-					{currentStep === 2 && <AssignmentStep form={form} isSubmitting={isSubmitting} />}
+					{steps[currentStep].id === "assignment" && (
+						<AssignmentStep form={form} isSubmitting={isSubmitting} />
+					)}
 
-					{currentStep === 3 && <TeamStep form={form} isSubmitting={isSubmitting} />}
+					{steps[currentStep].id === "team" && <TeamStep form={form} isSubmitting={isSubmitting} />}
 
-					{currentStep === 4 && <ReviewStep form={form} clientName={clientSuggestion.data?.name} />}
+					{steps[currentStep].id === "review" && (
+						<ReviewStep form={form} clientName={clientSuggestion.data?.name} />
+					)}
 				</FormWizard.Content>
 
 				<ApiError error={(mutation.error as unknown as BadRequestDetails) ?? null} />
@@ -127,7 +164,7 @@ export function CreateProjectWizard({
 					{(canSubmit) => (
 						<FormWizard.Footer
 							currentStep={currentStep}
-							stepCount={projectSteps.length}
+							stepCount={steps.length}
 							onBack={() => setCurrentStep((step) => Math.max(step - 1, 0))}
 							onNext={handleNext}
 							onSubmit={() => {
@@ -136,7 +173,7 @@ export function CreateProjectWizard({
 							onCancel={onCancel}
 							canSubmit={canSubmit}
 							isSubmitting={isSubmitting}
-							submitLabel="Create project"
+							submitLabel={editing ? "Save changes" : "Create project"}
 						/>
 					)}
 				</form.Subscribe>

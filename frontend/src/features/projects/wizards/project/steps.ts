@@ -59,6 +59,17 @@ export const projectSteps = [
 	reviewStepDef,
 ] as const satisfies readonly ProjectStep[];
 
+/**
+ * Editing drops Parties and Team. `UpdateProjectRequest` carries neither: the client and the
+ * delivering company are frozen once the project exists - a contract states who signed it - and the
+ * team is moved with its own command from the project page.
+ */
+export function projectStepsFor(mode: "create" | "edit"): readonly ProjectStep[] {
+	return mode === "create"
+		? projectSteps
+		: projectSteps.filter((step) => step.id !== "client" && step.id !== "team");
+}
+
 /** Every field of the schema belongs to a step, or the wizard would never validate it. */
 type GatedField = (typeof projectSteps)[number]["fields"][number];
 export type UngatedProjectField = Exclude<ProjectField, GatedField>;
