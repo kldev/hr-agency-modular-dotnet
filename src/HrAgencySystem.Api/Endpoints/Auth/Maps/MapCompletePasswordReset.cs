@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Sagas;
 using HrAgencySystem.SharedKernel.Exception;
@@ -37,7 +38,17 @@ internal static class MapCompletePasswordReset
         return TypedResults.NoContent();
     }
 
-    internal record CompletePasswordResetRequest(Guid Id, string Token, string NewPassword)
+    internal record CompletePasswordResetRequest(
+        [property: Description("The reset id from the link in the e-mail.")] Guid Id,
+        [property: Description(
+            "The one-time token from the same link. It expires with the reset window (15 minutes by default) and works once."
+        )]
+            string Token,
+        [property: Description(
+            "The password to set. From now on it is the only one that signs in."
+        )]
+            string NewPassword
+    )
     {
         public CompletePasswordReset ToCommand() => new(Id, Token, NewPassword);
     }

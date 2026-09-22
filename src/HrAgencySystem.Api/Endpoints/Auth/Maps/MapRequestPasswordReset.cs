@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Identity.Application.Users.RequestPasswordReset;
@@ -35,7 +36,16 @@ internal static class MapRequestPasswordReset
         return TypedResults.Accepted((string?)null);
     }
 
-    internal record RequestPasswordResetRequest(string Email, string Slug = "")
+    internal record RequestPasswordResetRequest(
+        [property: Description(
+            "The e-mail address of the account. The answer is the same whether or not an account exists, so this endpoint cannot be used to probe for addresses."
+        )]
+            string Email,
+        [property: Description(
+            "The agency's slug, when the caller knows it. Leave empty and the agency is worked out from the e-mail address."
+        )]
+            string Slug = ""
+    )
     {
         public RequestPasswordReset ToCommand(string portalUrl) => new(Email, Slug, portalUrl);
     }

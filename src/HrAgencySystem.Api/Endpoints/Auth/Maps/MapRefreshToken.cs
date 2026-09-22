@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.Login;
 using HrAgencySystem.Identity.Application.Users.Refresh;
@@ -26,7 +27,12 @@ internal static class MapRefreshToken
         return TypedResults.Ok(result);
     }
 
-    internal record RefreshTokenRequest(string RefreshToken)
+    internal record RefreshTokenRequest(
+        [property: Description(
+            "The refresh token received at sign-in or at the last refresh. It is spent by this call and replaced by a new one; presenting a spent token again revokes the whole session."
+        )]
+            string RefreshToken
+    )
     {
         public RefreshAccessToken ToCommand() => new(RefreshToken);
     }

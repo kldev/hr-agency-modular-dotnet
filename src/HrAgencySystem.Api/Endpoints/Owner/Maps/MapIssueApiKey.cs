@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.ApiKeys.Issue;
@@ -32,5 +33,10 @@ internal static class MapIssueApiKey
         return TypedResults.Created($"{ApiEndpoints.Owners.ApiKeys}/{issued.Id}", issued);
     }
 
-    internal sealed record IssueServiceApiKeyRequest(string Name);
+    internal sealed record IssueServiceApiKeyRequest(
+        [property: Description(
+            "What the key is for, e.g. \"public job board\" - so it can be told apart and revoked later. Up to 100 characters."
+        )]
+            string Name
+    );
 }

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.Logout;
 using Wolverine;
@@ -25,7 +26,12 @@ internal static class MapLogout
         return TypedResults.NoContent();
     }
 
-    internal record LogoutRequest(string RefreshToken)
+    internal record LogoutRequest(
+        [property: Description(
+            "The refresh token of the session to end. That session's token family is revoked; other sessions of the same user stay signed in."
+        )]
+            string RefreshToken
+    )
     {
         public LogoutUser ToCommand() => new(RefreshToken);
     }
