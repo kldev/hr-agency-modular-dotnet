@@ -25,7 +25,7 @@ public static class CommentOnTimeSheetHandler
         CancellationToken ct
     )
     {
-        ArgumentNullException.ThrowIfNull(aggregate);
+        TimeSheetRules.EnsureExists(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         var (content, error) = ShortNote.TryCreate(command.Content);

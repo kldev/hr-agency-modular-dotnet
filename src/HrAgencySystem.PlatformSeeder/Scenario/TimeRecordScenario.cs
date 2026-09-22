@@ -94,7 +94,9 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var previous = today.AddMonths(-1);
 
-        var filled = 0;
+        // Only the months that were actually written on can be walked through the flow - the rest
+        // have no sheet at all, and asking to send one is a 404 rather than a state to seed.
+        var withSheets = new List<Guid>();
 
         for (var i = 0; i < covered.Count; i++)
         {
@@ -106,7 +108,7 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
                 continue;
 
             await FillMonth(organizationId, userId, previous, workedDays: 18);
-            filled++;
+            withSheets.Add(userId);
 
             if (i % 3 != 2)
                 await FillMonth(organizationId, userId, today, workedDays: Math.Min(today.Day, 10));
@@ -114,9 +116,9 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
 
         await waitForProjections();
 
-        await CloseLastMonth(organizationId, units, covered, previous);
+        await CloseLastMonth(organizationId, units, withSheets, previous);
 
-        return filled;
+        return withSheets.Count;
     }
 
     private async Task FillMonth(Guid organizationId, Guid userId, DateOnly month, int workedDays)
@@ -162,13 +164,13 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
     private async Task CloseLastMonth(
         Guid organizationId,
         IReadOnlyList<HrAgencySystem.Agency.Domain.OrgUnit> units,
-        IReadOnlyList<Guid> covered,
+        IReadOnlyList<Guid> withSheets,
         DateOnly month
     )
     {
         var step = 0;
 
-        foreach (var userId in covered)
+        foreach (var userId in withSheets)
         {
             var supervisor = HrAgencySystem.Agency.Domain.SupervisorPolicy.SupervisorOf(
                 units,
@@ -249,6 +251,10 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
         {
             // A month nobody wrote anything on cannot be sent, and that is a state worth leaving in
             // the data rather than forcing.
+            return false;
+        }
+        catch (SharedKernel.Exception.NotFoundException)
+        {
             return false;
         }
     }

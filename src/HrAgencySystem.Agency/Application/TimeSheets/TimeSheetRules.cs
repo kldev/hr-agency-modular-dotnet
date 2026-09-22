@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using HrAgencySystem.Agency.Application.Port;
 using HrAgencySystem.Agency.Domain;
 using HrAgencySystem.Agency.Domain.TimeSheets;
@@ -53,6 +54,16 @@ public static class TimeSheetRules
 
         if (structure is null || !SupervisorPolicy.IsAbove(structure.AsUnits(), actorId, ownerId))
             throw new BusinessRuleException(NotTheSupervisorMessage);
+    }
+
+    /// <summary>
+    /// A month nobody has written on has no stream, so the aggregate handler is handed nothing.
+    /// That is a sheet that does not exist yet, not a broken call - it answers 404 and says so.
+    /// </summary>
+    public static void EnsureExists([NotNull] TimeSheet? sheet)
+    {
+        if (sheet is null)
+            throw new NotFoundException(UnknownTimeSheetMessage);
     }
 
     public static void EnsureEditable(TimeSheet sheet)

@@ -23,7 +23,7 @@ public static class SettleTimeSheetHandler
         CancellationToken ct
     )
     {
-        ArgumentNullException.ThrowIfNull(aggregate);
+        TimeSheetRules.EnsureExists(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         // The endpoint already refuses anybody else; checked again here so the rule survives a

@@ -26,7 +26,7 @@ public static class ApproveTimeSheetHandler
         CancellationToken ct
     )
     {
-        ArgumentNullException.ThrowIfNull(aggregate);
+        TimeSheetRules.EnsureExists(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         TimeSheetRules.EnsureCanChange(aggregate.Status, TimeSheetStatus.Approved);

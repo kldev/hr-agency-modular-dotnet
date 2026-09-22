@@ -50,6 +50,33 @@ public class TimeSheetHandlerTests : BaseTest
         return chart;
     }
 
+    /// <summary>
+    /// A month nobody has written on has no stream behind it, so the handler is handed nothing.
+    /// That is a sheet that does not exist, which is a 404 - not a 500 from a null argument.
+    /// </summary>
+    [Fact]
+    public async Task Submit_AMonthThatWasNeverWrittenOn_IsNotFound()
+    {
+        var error = await Assert.ThrowsAsync<NotFoundException>(
+            () =>
+                SubmitTimeSheetHandler.Handle(
+                    new SubmitTimeSheet(
+                        OrgScenario.OrganizationId,
+                        OrgScenario.PayrollSpecialist,
+                        TimeSheetScenario.Year,
+                        TimeSheetScenario.Month,
+                        OrgScenario.PayrollSpecialist
+                    ),
+                    null!,
+                    OrgScenario.Service(),
+                    TestClock,
+                    CancellationToken.None
+                )
+        );
+
+        Assert.Equal(TimeSheetRules.UnknownTimeSheetMessage, error.Message);
+    }
+
     [Fact]
     public async Task Submit_MovesTheSheetToSubmitted()
     {

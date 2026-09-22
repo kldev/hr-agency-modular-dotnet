@@ -21,7 +21,7 @@ public static class SubmitTimeSheetHandler
         CancellationToken ct
     )
     {
-        ArgumentNullException.ThrowIfNull(aggregate);
+        TimeSheetRules.EnsureExists(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         /*

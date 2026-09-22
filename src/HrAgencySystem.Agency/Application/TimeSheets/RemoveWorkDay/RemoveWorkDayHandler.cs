@@ -18,7 +18,7 @@ public static class RemoveWorkDayHandler
         CancellationToken ct
     )
     {
-        ArgumentNullException.ThrowIfNull(aggregate);
+        TimeSheetRules.EnsureExists(aggregate);
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         TimeSheetRules.EnsureEditable(aggregate);
