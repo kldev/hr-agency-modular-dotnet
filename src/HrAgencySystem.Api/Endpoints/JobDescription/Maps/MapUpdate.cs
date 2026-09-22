@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.JobDescription.Application.Update;
@@ -37,19 +38,29 @@ internal static class MapUpdate
 
 // ReSharper disable once ClassNeverInstantiated.Global
 internal sealed record UpdateJobDescriptionRequest(
-    string Title,
-    string? Summary,
-    string Description,
-    IReadOnlyList<string> Responsibilities,
-    IReadOnlyList<string> Requirements,
-    IReadOnlyList<string> Skills,
-    string Location,
-    string CountryCode,
-    EmploymentType EmploymentType,
-    WorkMode WorkMode,
-    CurrencyCode CurrencyCode,
-    decimal SalaryMin,
-    decimal SalaryMax
+    [property: Description("The position, e.g. \"Senior .NET Developer\".")] string Title,
+    [property: Description("Optional one-paragraph summary for lists.")] string? Summary,
+    [property: Description("The internal description of the role.")] string Description,
+    [property: Description("What the person will do, one item per entry.")]
+        IReadOnlyList<string> Responsibilities,
+    [property: Description("What the person must bring, one item per entry.")]
+        IReadOnlyList<string> Requirements,
+    [property: Description("Skills to match candidates on.")] IReadOnlyList<string> Skills,
+    [property: Description("Where the work is.")] string Location,
+    [property: Description("Country of the work, ISO 3166-1 alpha-2.")] string CountryCode,
+    [property: Description("FullTime, PartTime, Contract, Temporary or Internship.")]
+        EmploymentType EmploymentType,
+    [property: Description("OnSite, Hybrid or Remote.")] WorkMode WorkMode,
+    [property: Description("Currency of the salary range: PLN, EUR, USD or GBP.")]
+        CurrencyCode CurrencyCode,
+    [property: Description(
+        "Bottom of the salary range. Salary range: SalaryMin and SalaryMax, in CurrencyCode. Neither may be negative and the minimum cannot exceed the maximum."
+    )]
+        decimal SalaryMin,
+    [property: Description(
+        "Top of the salary range. Salary range: SalaryMin and SalaryMax, in CurrencyCode. Neither may be negative and the minimum cannot exceed the maximum."
+    )]
+        decimal SalaryMax
 )
 {
     public UpdateJobDescription ToCommand(
