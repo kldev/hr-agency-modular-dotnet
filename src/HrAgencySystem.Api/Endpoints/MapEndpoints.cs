@@ -14,7 +14,7 @@ public static class MapEndpoints
         SalesFollowUpAction.Endpoint.Map(app);
         Project.Endpoint.Map(app);
         JobDescription.Endpoint.Map(app);
-        
+
         JobPosting.Endpoint.Map(app);
         Candidate.Endpoint.Map(app);
         JobApplication.Endpoint.Map(app);

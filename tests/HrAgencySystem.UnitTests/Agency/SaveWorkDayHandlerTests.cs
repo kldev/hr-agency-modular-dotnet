@@ -94,8 +94,8 @@ public class SaveWorkDayHandlerTests : BaseTest
     [Fact]
     public async Task Save_WithATooLongNote_IsRefused()
     {
-        var error = await Assert.ThrowsAsync<ValidationException>(
-            () => Save(new string('x', ShortNote.MaxLength + 1))
+        var error = await Assert.ThrowsAsync<ValidationException>(() =>
+            Save(new string('x', ShortNote.MaxLength + 1))
         );
 
         Assert.Contains(ShortNote.MaxLengthMessage, error.Message);

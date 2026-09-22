@@ -57,21 +57,20 @@ public class TimeSheetHandlerTests : BaseTest
     [Fact]
     public async Task Submit_AMonthThatWasNeverWrittenOn_IsNotFound()
     {
-        var error = await Assert.ThrowsAsync<NotFoundException>(
-            () =>
-                SubmitTimeSheetHandler.Handle(
-                    new SubmitTimeSheet(
-                        OrgScenario.OrganizationId,
-                        OrgScenario.PayrollSpecialist,
-                        TimeSheetScenario.Year,
-                        TimeSheetScenario.Month,
-                        OrgScenario.PayrollSpecialist
-                    ),
-                    null!,
-                    OrgScenario.Service(),
-                    TestClock,
-                    CancellationToken.None
-                )
+        var error = await Assert.ThrowsAsync<NotFoundException>(() =>
+            SubmitTimeSheetHandler.Handle(
+                new SubmitTimeSheet(
+                    OrgScenario.OrganizationId,
+                    OrgScenario.PayrollSpecialist,
+                    TimeSheetScenario.Year,
+                    TimeSheetScenario.Month,
+                    OrgScenario.PayrollSpecialist
+                ),
+                null!,
+                OrgScenario.Service(),
+                TestClock,
+                CancellationToken.None
+            )
         );
 
         Assert.Equal(TimeSheetRules.UnknownTimeSheetMessage, error.Message);
