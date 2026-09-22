@@ -52,7 +52,8 @@ public static class SaveWorkDayHandler
 
         await EnsureCovered(employments, organizationId, command.UserId, period, ct);
 
-        var (note, noteError) = ShortNote.TryCreate(command.Note ?? "");
+        // A note on a day is optional - most days are just hours.
+        var (note, noteError) = ShortNote.TryCreate(command.Note ?? "", false);
 
         if (noteError is not null)
             throw new ValidationException(noteError);
