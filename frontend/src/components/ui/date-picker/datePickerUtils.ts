@@ -135,3 +135,60 @@ export function clampDate(date: Date, minDate?: Date, maxDate?: Date): Date {
 
 	return result;
 }
+
+/**
+ * A date as somebody types it: "22.09.2026", with a dot, a slash, a dash or a space between the
+ * parts, eight bare digits ("22092026"), or ISO ("2026-09-22") for whoever pastes one. A two digit
+ * year is refused rather than guessed - "26" is 1926 on a birth date and 2026 on a contract.
+ *
+ * `null` for an empty field, `undefined` for text that is not a real day (31.02 included).
+ */
+export function parseTypedDate(text: string): Date | null | undefined {
+	const value = text.trim();
+
+	if (!value) {
+		return null;
+	}
+
+	const dayFirst = /^(\d{1,2})[.\-/ ](\d{1,2})[.\-/ ](\d{4})$/.exec(value);
+	const bare = /^(\d{2})(\d{2})(\d{4})$/.exec(value);
+	const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(value);
+
+	const parts = dayFirst ?? bare;
+
+	const [day, month, year] = parts
+		? [Number(parts[1]), Number(parts[2]), Number(parts[3])]
+		: iso
+			? [Number(iso[3]), Number(iso[2]), Number(iso[1])]
+			: [0, 0, 0];
+
+	if (!year || month < 1 || month > 12 || day < 1) {
+		return undefined;
+	}
+
+	const date = new Date(year, month - 1, day);
+
+	// `new Date` rolls 31.02 over into March; a date that moved was not a date.
+	return date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day
+		? date
+		: undefined;
+}
+
+/**
+ * Puts the dots in while somebody types digits, so "22092026" reads as "22.09.2026" on the way.
+ * Only when the text grew - adding a dot on a backspace would make the dot impossible to delete.
+ */
+export function withDateSeparators(next: string, previous: string): string {
+	if (next.length <= previous.length) {
+		return next;
+	}
+
+	return /^\d{2}$/.test(next) || /^\d{1,2}\.\d{2}$/.test(next) ? `${next}.` : next;
+}
+
+/** The years a year select offers, newest last. */
+export function yearsBetween(from: number, to: number): number[] {
+	const [low, high] = from <= to ? [from, to] : [to, from];
+
+	return Array.from({ length: high - low + 1 }, (_, index) => low + index);
+}

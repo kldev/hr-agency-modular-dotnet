@@ -73,6 +73,7 @@ export const IdentityStep = withForm({
 					{(field) => (
 						<field.FormDatePicker
 							label="Trading since"
+							yearSelect
 							fieldName={field.name}
 							fieldValue={field.state.value}
 							errors={field.state.meta.errors}
@@ -86,6 +87,7 @@ export const IdentityStep = withForm({
 					{(field) => (
 						<field.FormDatePicker
 							label="Trading until"
+							yearSelect
 							fieldName={field.name}
 							fieldValue={field.state.value}
 							errors={field.state.meta.errors}

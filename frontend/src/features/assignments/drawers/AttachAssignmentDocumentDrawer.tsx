@@ -143,6 +143,7 @@ const FormContent: React.FC<{
 							{(field) => (
 								<field.FormDatePicker
 									label="Document date"
+									yearSelect
 									fieldValue={field.state.value}
 									errors={field.state.meta.errors}
 									fieldName={field.name}
@@ -156,6 +157,7 @@ const FormContent: React.FC<{
 							{(field) => (
 								<field.FormDatePicker
 									label="Valid until"
+									yearSelect
 									fieldValue={field.state.value}
 									errors={field.state.meta.errors}
 									fieldName={field.name}

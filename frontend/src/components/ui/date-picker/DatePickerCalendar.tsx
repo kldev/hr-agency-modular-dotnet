@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import type { Locale } from "date-fns";
-import { addMonths, subMonths } from "date-fns";
+import { addMonths, format, subMonths } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
 	createCalendarDays,
@@ -21,6 +21,12 @@ export interface DatePickerCalendarProps {
 	onMonthChange: (month: Date) => void;
 	onSelect: (date: Date) => void;
 	onToday: () => void;
+	/**
+	 * When given, the year in the header becomes a select over these. Without it the header is
+	 * text and the only way to another year is twelve clicks - fine for an interview next week,
+	 * hopeless for a date of birth.
+	 */
+	years?: number[];
 }
 
 export function DatePickerCalendar({
@@ -32,6 +38,7 @@ export function DatePickerCalendar({
 	onMonthChange,
 	onSelect,
 	onToday,
+	years,
 }: DatePickerCalendarProps) {
 	const today = new Date();
 
@@ -85,16 +92,45 @@ export function DatePickerCalendar({
 					<ChevronLeft size={17} />
 				</button>
 
-				<div
-					className="
+				{years ? (
+					<div className="flex items-center gap-1.5 text-sm font-semibold text-(--color-text)">
+						<span className="select-none">{capitalise(format(month, "LLLL", { locale }))}</span>
+
+						<select
+							aria-label="Year"
+							value={month.getFullYear()}
+							onChange={(event) =>
+								onMonthChange(new Date(Number(event.target.value), month.getMonth(), 1))
+							}
+							className={clsx(
+								"h-8 rounded-[3px] border border-(--color-border) bg-(--color-surface) px-1.5",
+								"text-sm font-semibold text-(--color-text)",
+								"hover:border-(--color-border-strong)",
+								"focus:outline-none focus:ring-2 focus:ring-(--color-primary-soft)",
+							)}
+						>
+							{/* The month in view may sit outside the range; it still has to be selectable. */}
+							{(years.includes(month.getFullYear()) ? years : [...years, month.getFullYear()])
+								.sort((a, b) => a - b)
+								.map((year) => (
+									<option key={year} value={year}>
+										{year}
+									</option>
+								))}
+						</select>
+					</div>
+				) : (
+					<div
+						className="
             select-none
             text-sm
             font-semibold
             text-(--color-text)
           "
-				>
-					{formatCalendarMonth(month, locale)}
-				</div>
+					>
+						{formatCalendarMonth(month, locale)}
+					</div>
+				)}
 
 				<button
 					type="button"
@@ -215,4 +251,8 @@ export function DatePickerCalendar({
 			</div>
 		</div>
 	);
+}
+
+function capitalise(value: string): string {
+	return value.charAt(0).toUpperCase() + value.slice(1);
 }

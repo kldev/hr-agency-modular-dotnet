@@ -2,10 +2,21 @@ import clsx from "clsx";
 import type { Locale } from "date-fns";
 import { pl } from "date-fns/locale";
 import { CalendarDays, ChevronDown, X } from "lucide-react";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { DatePickerCalendar } from "./DatePickerCalendar";
-import { clampDate, normalizeDate } from "./datePickerUtils";
+import {
+	clampDate,
+	isDateDisabled,
+	normalizeDate,
+	parseTypedDate,
+	withDateSeparators,
+	yearsBetween,
+} from "./datePickerUtils";
+
+/** How far back and ahead a year select reaches when neither a range nor a limit says otherwise. */
+const DEFAULT_YEARS_BACK = 100;
+const DEFAULT_YEARS_AHEAD = 20;
 
 /** Enough room to decide whether the calendar still fits below the field before it is measured. */
 const ESTIMATED_CALENDAR_HEIGHT = 340;
@@ -40,6 +51,19 @@ export interface DatePickerProps {
 	name?: string;
 
 	"aria-label"?: string;
+
+	/**
+	 * A year select in the calendar header. Off by default: most dates here are a few weeks either
+	 * side of today - an interview, a start date - and a select would only be noise. Turn it on
+	 * where the year is the hard part: a date of birth, a document issued years ago.
+	 */
+	yearSelect?: boolean;
+
+	/**
+	 * The years the select offers. Defaults to `minDate`..`maxDate`, and where either is missing,
+	 * 100 years back and 20 ahead of today.
+	 */
+	yearRange?: { from: number; to: number };
 }
 
 export function DatePicker({
@@ -57,9 +81,11 @@ export function DatePicker({
 	id,
 	name,
 	"aria-label": ariaLabel,
+	yearSelect = false,
+	yearRange,
 }: DatePickerProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
-	const buttonRef = useRef<HTMLButtonElement>(null);
+	const inputRef = useRef<HTMLInputElement>(null);
 	const popoverRef = useRef<HTMLDivElement>(null);
 
 	const [open, setOpen] = useState(false);
@@ -147,7 +173,7 @@ export function DatePicker({
 				setOpen(false);
 
 				requestAnimationFrame(() => {
-					buttonRef.current?.focus();
+					inputRef.current?.focus();
 				});
 			}
 		};
@@ -162,6 +188,74 @@ export function DatePicker({
 			document.removeEventListener("keydown", handleKeyDown);
 		};
 	}, [open]);
+
+	const formatted = useCallback(
+		(date: Date | null) =>
+			date
+				? new Intl.DateTimeFormat(locale.code, {
+						day: "2-digit",
+						month: "2-digit",
+						year: "numeric",
+					}).format(date)
+				: "",
+		[locale.code],
+	);
+
+	/*
+	 * What is in the field while somebody types. It follows the value whenever the value changes
+	 * from outside - a pick in the calendar, a form reset - and is only read back on commit, so a
+	 * half typed "22.0" never reaches the form as a date.
+	 */
+	const [text, setText] = useState(() => formatted(value));
+
+	useEffect(() => {
+		setText(formatted(value));
+	}, [value, formatted]);
+
+	const years = useMemo(() => {
+		if (!yearSelect) {
+			return undefined;
+		}
+
+		const now = new Date().getFullYear();
+
+		return yearsBetween(
+			yearRange?.from ?? minDate?.getFullYear() ?? now - DEFAULT_YEARS_BACK,
+			yearRange?.to ?? maxDate?.getFullYear() ?? now + DEFAULT_YEARS_AHEAD,
+		);
+	}, [yearSelect, yearRange?.from, yearRange?.to, minDate, maxDate]);
+
+	/**
+	 * Takes what was typed. Something that is not a day, or a day outside the limits, goes back to
+	 * the last good value rather than becoming an error to explain - the calendar is right there.
+	 */
+	const commitText = () => {
+		const parsed = parseTypedDate(text);
+
+		if (parsed === null) {
+			if (clearable) {
+				if (value) onChange?.(null);
+			} else {
+				setText(formatted(value));
+			}
+
+			return;
+		}
+
+		if (parsed === undefined || isDateDisabled(parsed, minDate, maxDate)) {
+			setText(formatted(value));
+			return;
+		}
+
+		const normalized = normalizeDate(parsed);
+
+		if (!value || normalized.getTime() !== normalizeDate(value).getTime()) {
+			onChange?.(normalized);
+		}
+
+		setText(formatted(normalized));
+		setVisibleMonth(normalized);
+	};
 
 	const handleOpen = () => {
 		if (disabled) {
@@ -183,7 +277,7 @@ export function DatePicker({
 		setOpen(false);
 
 		requestAnimationFrame(() => {
-			buttonRef.current?.focus();
+			inputRef.current?.focus();
 		});
 	};
 
@@ -192,7 +286,7 @@ export function DatePicker({
 		setOpen(false);
 
 		requestAnimationFrame(() => {
-			buttonRef.current?.focus();
+			inputRef.current?.focus();
 		});
 	};
 
@@ -204,21 +298,13 @@ export function DatePicker({
 		setOpen(false);
 
 		requestAnimationFrame(() => {
-			buttonRef.current?.focus();
+			inputRef.current?.focus();
 		});
 	};
 
 	const handleMonthChange = (month: Date) => {
 		setVisibleMonth(month);
 	};
-
-	const formattedValue = value
-		? new Intl.DateTimeFormat(locale.code, {
-				day: "2-digit",
-				month: "2-digit",
-				year: "numeric",
-			}).format(value)
-		: "";
 
 	return (
 		<div ref={rootRef} className={clsx("relative w-full", className)}>
@@ -251,37 +337,57 @@ export function DatePicker({
 				)}
 			>
 				<button
-					ref={buttonRef}
-					id={id}
 					type="button"
+					tabIndex={-1}
 					disabled={disabled}
-					aria-label={ariaLabel ?? placeholder}
+					aria-label="Open calendar"
 					aria-haspopup="dialog"
 					aria-expanded={open}
 					onClick={handleOpen}
-					className="flex min-w-0 flex-1 items-center gap-2 text-left outline-none"
+					className="inline-flex shrink-0 items-center outline-none"
 				>
-					<CalendarDays
-						size={16}
-						strokeWidth={1.8}
-						className="shrink-0 text-(--color-text-muted)"
-					/>
+					<CalendarDays size={16} strokeWidth={1.8} className="text-(--color-text-muted)" />
+				</button>
 
-					<span
-						className={clsx(
-							"min-w-0 flex-1 truncate text-sm",
-							value ? "text-(--color-text)" : "text-(--color-text-muted)",
-						)}
-					>
-						{formattedValue || placeholder}
-					</span>
+				<input
+					ref={inputRef}
+					id={id}
+					type="text"
+					inputMode="numeric"
+					autoComplete="off"
+					disabled={disabled}
+					aria-label={ariaLabel ?? placeholder}
+					// The shape to type in; what the field is for is the label and the aria-label.
+					placeholder="dd.mm.yyyy"
+					value={text}
+					onChange={(event) => setText(withDateSeparators(event.target.value, text))}
+					onBlur={commitText}
+					onKeyDown={(event) => {
+						if (event.key === "Enter") {
+							// Commit instead of submitting the form with a half typed date in it.
+							event.preventDefault();
+							commitText();
+						}
 
+						if (event.key === "ArrowDown" && !open) {
+							event.preventDefault();
+							handleOpen();
+						}
+					}}
+					className="min-w-0 flex-1 bg-transparent text-sm text-(--color-text) outline-none placeholder:text-(--color-text-muted)"
+				/>
+
+				<button
+					type="button"
+					tabIndex={-1}
+					disabled={disabled}
+					aria-label={open ? "Close calendar" : "Open calendar"}
+					onClick={handleOpen}
+					className="inline-flex shrink-0 items-center outline-none"
+				>
 					<ChevronDown
 						size={16}
-						className={clsx(
-							"shrink-0 text-(--color-text-muted) transition-transform",
-							open && "rotate-180",
-						)}
+						className={clsx("text-(--color-text-muted) transition-transform", open && "rotate-180")}
 					/>
 				</button>
 
@@ -336,6 +442,7 @@ export function DatePicker({
 							onMonthChange={handleMonthChange}
 							onSelect={handleSelect}
 							onToday={handleToday}
+							years={years}
 						/>
 					</div>,
 					document.body,

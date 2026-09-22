@@ -65,6 +65,7 @@ export const DocumentStep = withForm({
 					{(field) => (
 						<field.FormDatePicker
 							label="Valid until"
+							yearSelect
 							fieldName={field.name}
 							fieldValue={field.state.value}
 							errors={field.state.meta.errors}

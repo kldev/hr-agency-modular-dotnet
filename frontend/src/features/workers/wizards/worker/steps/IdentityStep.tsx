@@ -50,6 +50,9 @@ export const IdentityStep = withForm({
 					{(field) => (
 						<field.FormDatePicker
 							label="Date of birth"
+							yearSelect
+							// Nobody on the register is older than a century or born in the future.
+							yearRange={{ from: new Date().getFullYear() - 100, to: new Date().getFullYear() }}
 							fieldName={field.name}
 							fieldValue={field.state.value}
 							errors={field.state.meta.errors}
