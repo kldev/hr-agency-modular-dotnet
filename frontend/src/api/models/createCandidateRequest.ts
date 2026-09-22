@@ -16,10 +16,16 @@
 import type { CandidateSource } from "./candidateSource.ts";
 
 export interface CreateCandidateRequest {
+	/** The candidate's e-mail address - unique within the agency, one person is one candidate. */
 	email: string;
+	/** The candidate's phone number. */
 	phoneNumber: string;
+	/** First name. */
 	firstName: string;
+	/** Last name. */
 	lastName: string;
+	/** Where the candidate came from, e.g. Direct, Referral, Sourcing, JustJoinIt, Linkedin. */
 	source: CandidateSource;
+	/** Free notes about the candidate. May be empty. */
 	note: string;
 }

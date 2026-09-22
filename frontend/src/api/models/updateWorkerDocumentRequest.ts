@@ -16,10 +16,18 @@
 import type { WorkerDocumentCategory } from "./workerDocumentCategory.ts";
 
 export interface UpdateWorkerDocumentRequest {
+	/** Identity, EmploymentContract, MedicalCertificate, HealthAndSafety, Qualification, Legalisation or Other. */
 	category: WorkerDocumentCategory;
+	/** The date on the document. */
 	documentDate: string;
-	/** @nullable */
+	/**
+	 * Last day it is valid, when it expires - e.g. a medical certificate.
+	 * @nullable
+	 */
 	validUntil?: string | null;
-	/** @nullable */
+	/**
+	 * Optional note.
+	 * @nullable
+	 */
 	note?: string | null;
 }

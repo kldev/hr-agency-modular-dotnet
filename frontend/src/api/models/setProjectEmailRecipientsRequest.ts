@@ -15,5 +15,6 @@
  */
 
 export interface SetProjectEmailRecipientsRequest {
+	/** The addresses mail of this purpose (named in the route) goes to. Replaces the whole list; an empty list clears it. */
 	emails: string[];
 }

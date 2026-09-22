@@ -15,10 +15,18 @@
  */
 
 export interface UpdateOwnProfileRequest {
+	/** Your first name. */
 	firstName: string;
+	/** Your last name. */
 	lastName: string;
-	/** @nullable */
+	/**
+	 * Optional job title. Omitted or null clears it.
+	 * @nullable
+	 */
 	jobTitle?: string | null;
-	/** @nullable */
+	/**
+	 * Optional phone number. Omitted or null clears it.
+	 * @nullable
+	 */
 	phone?: string | null;
 }

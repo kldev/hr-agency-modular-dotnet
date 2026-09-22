@@ -17,16 +17,30 @@ import type { OrganizationRoleApi } from "./organizationRoleApi.ts";
 import type { TeamRole } from "./teamRole.ts";
 
 export interface CreateUserRequest {
+	/** Sign-in e-mail address. Unique within the agency. */
 	email: string;
+	/** First name. */
 	firstName: string;
+	/** Last name. */
 	lastName: string;
+	/** What the account may do in the agency, e.g. Admin, Recruiter, HumanResources, Finance. */
 	role: OrganizationRoleApi;
+	/** Initial password, at least 4 characters. The person can change it after signing in. */
 	password: string;
-	/** @nullable */
+	/**
+	 * Optional job title, e.g. "Senior recruiter".
+	 * @nullable
+	 */
 	jobTitle?: string | null;
-	/** @nullable */
+	/**
+	 * Optional phone number.
+	 * @nullable
+	 */
 	phone?: string | null;
-	/** @nullable */
+	/**
+	 * Optional recruitment team to put the person in straight away. Requires TeamRole.
+	 * @nullable
+	 */
 	teamId?: string | null;
 	teamRole?: null | TeamRole;
 }

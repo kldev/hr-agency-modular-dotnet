@@ -16,15 +16,31 @@
 import type { ComplianceStatus } from "./complianceStatus.ts";
 
 export interface RecordAssignmentComplianceItemRequest {
+	/** NotStarted, InProgress, Confirmed, NotApplicable or Expired. The requirement (e.g. A1) is in the route. */
 	status: ComplianceStatus;
-	/** @nullable */
+	/**
+	 * The certificate's or notification's number, as issued.
+	 * @nullable
+	 */
 	referenceNumber?: string | null;
-	/** @nullable */
+	/**
+	 * First day it applies.
+	 * @nullable
+	 */
 	validFrom?: string | null;
-	/** @nullable */
+	/**
+	 * Last day it applies; not before ValidFrom.
+	 * @nullable
+	 */
 	validTo?: string | null;
-	/** @nullable */
+	/**
+	 * Optional assignment document that proves it.
+	 * @nullable
+	 */
 	documentId?: string | null;
-	/** @nullable */
+	/**
+	 * Optional note.
+	 * @nullable
+	 */
 	note?: string | null;
 }

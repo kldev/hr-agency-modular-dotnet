@@ -16,15 +16,31 @@
 import type { ComplianceStatus } from "./complianceStatus.ts";
 
 export interface RecordComplianceItemRequest {
+	/** NotStarted, InProgress, Confirmed, NotApplicable or Expired. The requirement itself is in the route. */
 	status: ComplianceStatus;
-	/** @nullable */
+	/**
+	 * The number of the licence, notification or registration, as issued.
+	 * @nullable
+	 */
 	referenceNumber: string | null;
-	/** @nullable */
+	/**
+	 * First day the confirmation applies.
+	 * @nullable
+	 */
 	validFrom: string | null;
-	/** @nullable */
+	/**
+	 * Last day it applies; not before ValidFrom.
+	 * @nullable
+	 */
 	validTo: string | null;
-	/** @nullable */
+	/**
+	 * Optional project document that proves it. A document recorded as proof cannot be removed.
+	 * @nullable
+	 */
 	documentId: string | null;
-	/** @nullable */
+	/**
+	 * Optional note.
+	 * @nullable
+	 */
 	note: string | null;
 }

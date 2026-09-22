@@ -15,5 +15,6 @@
  */
 
 export interface RefreshTokenRequest {
+	/** The refresh token received at sign-in or at the last refresh. It is spent by this call and replaced by a new one; presenting a spent token again revokes the whole session. */
 	refreshToken: string;
 }

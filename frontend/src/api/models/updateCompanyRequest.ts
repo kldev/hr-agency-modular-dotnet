@@ -16,9 +16,14 @@
 import type { Industry } from "./industry.ts";
 
 export interface UpdateCompanyRequest {
+	/** The name the agency knows the client by. */
 	name: string;
+	/** Company register number (KRS or REGON in Poland). */
 	registrationNumber: string;
+	/** What the company does, e.g. Software, Manufacturing, Logistics. */
 	industry: Industry;
+	/** The company's website address. */
 	webSite: string;
+	/** Where the company is based, ISO 3166-1 alpha-2, e.g. "PL". */
 	countryCode: string;
 }

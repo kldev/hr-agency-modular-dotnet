@@ -17,13 +17,22 @@ import type { InterviewFormat } from "./interviewFormat.ts";
 import type { InterviewType } from "./interviewType.ts";
 
 export interface ScheduleInterviewRequest {
+	/** The application the interview is for. */
 	jobApplicationId: string;
+	/** The local date and time of the interview, without an offset - read in ScheduledTimezone and stored as an instant, so 10:00 in Europe/Warsaw stays 10:00 there across daylight saving. */
 	scheduledAt: string;
+	/** Online, OnSite or Phone. */
 	format: InterviewFormat;
+	/** Hr, Technical, Client or Final. */
 	interviewType: InterviewType;
+	/** Notes for the interviewer. May be empty. */
 	note: string;
+	/** The user who runs the interview. */
 	interviewerId: string;
+	/** IANA time zone ScheduledAt is in, e.g. "Europe/Warsaw" (the default). */
 	scheduledTimezone?: string;
+	/** Where to go, for an OnSite interview. */
 	location?: string;
+	/** The meeting link, for an Online interview. */
 	meetingUrl?: string;
 }

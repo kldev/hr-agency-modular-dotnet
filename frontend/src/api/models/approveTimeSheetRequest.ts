@@ -15,6 +15,9 @@
  */
 
 export interface ApproveTimeSheetRequest {
-	/** @nullable */
+	/**
+	 * Optional note to the person. Only their supervisor from the chart may approve.
+	 * @nullable
+	 */
 	comment: string | null;
 }

@@ -15,5 +15,6 @@
  */
 
 export interface TagRequestList {
+	/** The tags to attach or remove, in one call. */
 	tagIds: string[];
 }

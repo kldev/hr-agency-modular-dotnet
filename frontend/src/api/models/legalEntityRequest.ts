@@ -16,26 +16,53 @@
 import type { BankAccountData } from "./bankAccountData.ts";
 
 export interface LegalEntityRequest {
+	/** The short name the agency uses for the company, e.g. "HR Agency Poland". */
 	name: string;
+	/** The name as registered, up to 250 characters - the one on contracts and posting declarations. */
 	legalName: string;
+	/** Tax identification number (NIP in Poland), up to 50 characters. Unique within the agency. */
 	taxId: string;
+	/** Street of the registered address. */
 	street: string;
+	/** Building number of the registered address. */
 	buildingNumber: string;
+	/** Postal code of the registered address. */
 	postalCode: string;
+	/** City of the registered address. */
 	city: string;
+	/** Country of registration, ISO 3166-1 alpha-2. */
 	countryCode: string;
+	/** First name of the person heading the company (the board's president). */
 	presidentFirstName: string;
+	/** Last name of the person heading the company. */
 	presidentLastName: string;
+	/** First day the company trades. */
 	activeFrom: string;
+	/** The company's bank accounts: IBAN (15-34 characters, starting with a country code), BIC (8 or 11 characters), bank name, currency and purpose. One account per purpose and currency. */
 	bankAccounts: BankAccountData[];
-	/** @nullable */
+	/**
+	 * Optional EU VAT number: a two letter country code followed by 2-12 letters or digits, e.g. "PL1234567890".
+	 * @nullable
+	 */
 	vatNumber?: string | null;
-	/** @nullable */
+	/**
+	 * Optional unit number of the registered address.
+	 * @nullable
+	 */
 	unitNumber?: string | null;
-	/** @nullable */
+	/**
+	 * Optional note on what the company is used for.
+	 * @nullable
+	 */
 	description?: string | null;
-	/** @nullable */
+	/**
+	 * Optional e-mail address of the person heading the company.
+	 * @nullable
+	 */
 	presidentEmail?: string | null;
-	/** @nullable */
+	/**
+	 * Last day the company trades, if already known; not before ActiveFrom.
+	 * @nullable
+	 */
 	activeTo?: string | null;
 }

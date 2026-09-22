@@ -16,14 +16,26 @@
 import type { OrganizationRoleApi } from "./organizationRoleApi.ts";
 
 export interface CreateUserForOrganizationRequest {
+	/** Sign-in e-mail address. Unique within the agency. */
 	email: string;
+	/** First name. */
 	firstName: string;
+	/** Last name. */
 	lastName: string;
+	/** What the account may do in the agency, e.g. Admin, Recruiter, HumanResources, Finance. */
 	role: OrganizationRoleApi;
+	/** The agency the account is created in. The platform owner stands above every agency, so it is named here rather than read from a token. */
 	organizationId: string;
+	/** Initial password, at least 4 characters. The person can change it after signing in. */
 	password: string;
-	/** @nullable */
+	/**
+	 * Optional job title, e.g. "Senior recruiter".
+	 * @nullable
+	 */
 	jobTitle?: string | null;
-	/** @nullable */
+	/**
+	 * Optional phone number.
+	 * @nullable
+	 */
 	phone?: string | null;
 }

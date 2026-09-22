@@ -16,10 +16,18 @@
 import type { DocumentCategory } from "./documentCategory.ts";
 
 export interface UpdateProjectDocumentRequest {
+	/** Contract, Annex, Invoice, ClientDocument, Compliance, Insurance or Other. */
 	category: DocumentCategory;
+	/** The date on the document. */
 	documentDate: string;
-	/** @nullable */
+	/**
+	 * Last day the document is valid, when it expires.
+	 * @nullable
+	 */
 	validUntil: string | null;
-	/** @nullable */
+	/**
+	 * Optional note.
+	 * @nullable
+	 */
 	note: string | null;
 }

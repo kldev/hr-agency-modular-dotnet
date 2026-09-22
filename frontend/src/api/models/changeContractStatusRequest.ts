@@ -16,7 +16,11 @@
 import type { ContractStatus } from "./contractStatus.ts";
 
 export interface ChangeContractStatusRequest {
+	/** Draft, Signed, Terminated or Expired. */
 	status: ContractStatus;
-	/** @nullable */
+	/**
+	 * Signature date, needed when the status becomes Signed. Omit it to keep the date already on the contract.
+	 * @nullable
+	 */
 	signedOn: string | null;
 }

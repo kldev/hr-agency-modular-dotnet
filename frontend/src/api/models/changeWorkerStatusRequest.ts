@@ -16,7 +16,11 @@
 import type { WorkerStatus } from "./workerStatus.ts";
 
 export interface ChangeWorkerStatusRequest {
+	/** Recruitment, ContractPreparation, Legalisation, Onboarding, Employed, ProjectChange or Terminated. Legalisation only exists for somebody who needs it; Terminated is reachable from anywhere. */
 	status: WorkerStatus;
-	/** @nullable */
+	/**
+	 * Optional note on the move, up to 500 characters.
+	 * @nullable
+	 */
 	reason?: string | null;
 }

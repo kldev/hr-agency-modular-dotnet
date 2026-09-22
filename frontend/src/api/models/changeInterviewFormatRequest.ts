@@ -16,7 +16,11 @@
 import type { InterviewFormat } from "./interviewFormat.ts";
 
 export interface ChangeInterviewFormatRequest {
+	/** Online, OnSite or Phone. */
 	format: InterviewFormat;
-	/** @nullable */
+	/**
+	 * Optional note on the change.
+	 * @nullable
+	 */
 	note: string | null;
 }

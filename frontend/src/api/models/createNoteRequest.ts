@@ -15,5 +15,6 @@
  */
 
 export interface CreateNoteRequest {
+	/** The note's text. */
 	note: string;
 }

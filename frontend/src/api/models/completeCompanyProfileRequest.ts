@@ -16,25 +16,55 @@
 import type { ContactPerson } from "./contactPerson.ts";
 
 export interface CompleteCompanyProfileRequest {
-	/** @nullable */
+	/**
+	 * The name as registered, the one a contract is signed with. With a registered address and a tax id it makes the profile complete - which a project needs before it can go live.
+	 * @nullable
+	 */
 	legalName: string | null;
-	/** @nullable */
+	/**
+	 * Street of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused.
+	 * @nullable
+	 */
 	street: string | null;
-	/** @nullable */
+	/**
+	 * Building number of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused.
+	 * @nullable
+	 */
 	buildingNumber: string | null;
-	/** @nullable */
+	/**
+	 * Optional flat or unit number of the registered address.
+	 * @nullable
+	 */
 	unitNumber: string | null;
-	/** @nullable */
+	/**
+	 * Postal code of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused.
+	 * @nullable
+	 */
 	postalCode: string | null;
-	/** @nullable */
+	/**
+	 * City of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused.
+	 * @nullable
+	 */
 	city: string | null;
-	/** @nullable */
+	/**
+	 * Country of the registered address, ISO 3166-1 alpha-2. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused.
+	 * @nullable
+	 */
 	countryCode: string | null;
-	/** @nullable */
+	/**
+	 * EU VAT number, if the company has one, e.g. "PL1234567890".
+	 * @nullable
+	 */
 	vatNumber: string | null;
-	/** @nullable */
+	/**
+	 * Bank account for invoices, as an IBAN.
+	 * @nullable
+	 */
 	iban: string | null;
-	/** @nullable */
+	/**
+	 * The bank's BIC/SWIFT code.
+	 * @nullable
+	 */
 	bic: string | null;
 	legalRepresentative: null | ContactPerson;
 }

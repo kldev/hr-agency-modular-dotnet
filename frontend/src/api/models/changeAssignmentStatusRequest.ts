@@ -16,9 +16,16 @@
 import type { AssignmentStatus } from "./assignmentStatus.ts";
 
 export interface ChangeAssignmentStatusRequest {
+	/** Planned, Active, Completed, Interrupted or DidNotStart. Active needs the person through the pipeline; Completed and Interrupted end a posting that ran, DidNotStart one that never did. */
 	status: AssignmentStatus;
-	/** @nullable */
+	/**
+	 * The day it actually ended, for Completed or Interrupted; omit to keep the planned end. Ignored for other statuses.
+	 * @nullable
+	 */
 	endsOn?: string | null;
-	/** @nullable */
+	/**
+	 * Optional note on the change - worth giving for Interrupted and DidNotStart.
+	 * @nullable
+	 */
 	reason?: string | null;
 }

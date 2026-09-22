@@ -16,7 +16,11 @@
 import type { ContactPerson } from "./contactPerson.ts";
 
 export interface AssignProjectContactRequest {
+	/** The person in the role: e-mail, name, job title, phone. The role is in the route, and assigning it replaces whoever held it. */
 	person: ContactPerson;
-	/** @nullable */
+	/**
+	 * Optional link to the same person in the client's contacts, when they are one.
+	 * @nullable
+	 */
 	companyContactId: string | null;
 }

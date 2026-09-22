@@ -16,9 +16,16 @@
 import type { JobApplicationUpdateStatus } from "./jobApplicationUpdateStatus.ts";
 
 export interface ChangeJobApplicationStatusRequest {
+	/** Screening, Interview, Assessment, Offer, Hired, Rejected or Withdrawn. Which moves are allowed depends on the current status. */
 	status: JobApplicationUpdateStatus;
-	/** @nullable */
+	/**
+	 * Optional note on the decision.
+	 * @nullable
+	 */
 	note: string | null;
-	/** @nullable */
+	/**
+	 * The interview the application moves to - required when Status is Interview, ignored otherwise.
+	 * @nullable
+	 */
 	interviewId: string | null;
 }

@@ -15,5 +15,6 @@
  */
 
 export interface AssignRecruiterRequest {
+	/** The user to make responsible for recruiting. Must belong to the caller's agency. */
 	recruiterId: string;
 }

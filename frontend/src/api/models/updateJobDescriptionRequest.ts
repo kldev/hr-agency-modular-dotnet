@@ -18,20 +18,39 @@ import type { EmploymentType } from "./employmentType.ts";
 import type { WorkMode } from "./workMode.ts";
 
 export interface UpdateJobDescriptionRequest {
+	/** The position, e.g. "Senior .NET Developer". */
 	title: string;
-	/** @nullable */
+	/**
+	 * Optional one-paragraph summary for lists.
+	 * @nullable
+	 */
 	summary: string | null;
+	/** The internal description of the role. */
 	description: string;
+	/** What the person will do, one item per entry. */
 	responsibilities: string[];
+	/** What the person must bring, one item per entry. */
 	requirements: string[];
+	/** Skills to match candidates on. */
 	skills: string[];
+	/** Where the work is. */
 	location: string;
+	/** Country of the work, ISO 3166-1 alpha-2. */
 	countryCode: string;
+	/** FullTime, PartTime, Contract, Temporary or Internship. */
 	employmentType: EmploymentType;
+	/** OnSite, Hybrid or Remote. */
 	workMode: WorkMode;
+	/** Currency of the salary range: PLN, EUR, USD or GBP. */
 	currencyCode: CurrencyCode;
-	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	/**
+	 * Bottom of the salary range. Salary range: SalaryMin and SalaryMax, in CurrencyCode. Neither may be negative and the minimum cannot exceed the maximum.
+	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+	 */
 	salaryMin: number | string;
-	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	/**
+	 * Top of the salary range. Salary range: SalaryMin and SalaryMax, in CurrencyCode. Neither may be negative and the minimum cannot exceed the maximum.
+	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+	 */
 	salaryMax: number | string;
 }

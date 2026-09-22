@@ -15,6 +15,8 @@
  */
 
 export interface ChangePasswordRequest {
+	/** The password in use now - proof that the person at the keyboard owns the account. */
 	currentPassword: string;
+	/** The password to switch to: at least 4 characters and different from the current one. Every session of the account is signed out, this one included. */
 	newPassword: string;
 }

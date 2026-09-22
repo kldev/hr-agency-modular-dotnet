@@ -15,7 +15,10 @@
  */
 
 export interface CreateFollowUpActionRequest {
+	/** The opportunity the follow-up is for. */
 	opportunityId: string;
+	/** What is to be done, e.g. "Send the revised offer". */
 	content: string;
+	/** When it is due, as a date and time with an offset (ISO 8601). */
 	followDateTime: string;
 }

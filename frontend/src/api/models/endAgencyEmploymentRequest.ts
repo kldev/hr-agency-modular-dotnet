@@ -15,5 +15,6 @@
  */
 
 export interface EndAgencyEmploymentRequest {
+	/** Last day of the engagement; not before it began. An ended engagement cannot be changed any more. */
 	endsOn: string;
 }

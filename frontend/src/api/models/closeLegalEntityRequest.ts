@@ -15,5 +15,6 @@
  */
 
 export interface CloseLegalEntityRequest {
+	/** The last day of trading; not before the first one. A closed company cannot be closed again. */
 	activeTo: string;
 }

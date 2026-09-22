@@ -15,10 +15,19 @@
  */
 
 export interface SubmitTimeSheetRequest {
-	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	/**
+	 * Year of the month being sent.
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
 	year: number | string;
-	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	/**
+	 * Month being sent, 1 to 12. A month with no hours cannot be sent.
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
 	month: number | string;
-	/** @nullable */
+	/**
+	 * Optional note to the supervisor that travels with it.
+	 * @nullable
+	 */
 	comment?: string | null;
 }

@@ -15,5 +15,6 @@
  */
 
 export interface CommentOnTimeSheetRequest {
+	/** The comment's text, added to the thread about the month. */
 	content: string;
 }

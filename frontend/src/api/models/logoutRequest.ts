@@ -15,5 +15,6 @@
  */
 
 export interface LogoutRequest {
+	/** The refresh token of the session to end. That session's token family is revoked; other sessions of the same user stay signed in. */
 	refreshToken: string;
 }

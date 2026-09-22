@@ -18,23 +18,45 @@ import type { EmploymentType } from "./employmentType.ts";
 import type { WorkMode } from "./workMode.ts";
 
 export interface CreatePostRequest {
+	/** The job description - the position - this post advertises. */
 	jobDescriptionId: string;
+	/** The title candidates see - it may differ from the job description's. */
 	title: string;
-	/** @nullable */
+	/**
+	 * Optional one-paragraph teaser for lists and job boards.
+	 * @nullable
+	 */
 	summary: string | null;
+	/** The candidate-facing text. Deliberately its own wording, not a copy of the internal description. */
 	description: string;
+	/** What the person will do, one item per entry. */
 	responsibilities: string[];
+	/** What the person must bring, one item per entry. */
 	requirements: string[];
+	/** Skills listed on the post, e.g. ["C#", "Docker"]. */
 	skills: string[];
+	/** Where the work is, as candidates should read it, e.g. "Opole" or "Remote". */
 	location: string;
+	/** Country of the work, ISO 3166-1 alpha-2. */
 	countryCode: string;
+	/** The language the post is written in, two letters, e.g. "PL", "EN". Several posts of one job description usually differ by this. */
 	languageCode: string;
+	/** FullTime, PartTime, Contract, Temporary or Internship. */
 	employmentType: EmploymentType;
+	/** OnSite, Hybrid or Remote. */
 	workMode: WorkMode;
+	/** Currency of the salary range: PLN, EUR, USD or GBP. */
 	currencyCode: CurrencyCode;
-	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	/**
+	 * Bottom of the advertised salary range. Neither may be negative and the minimum cannot exceed the maximum; both in CurrencyCode.
+	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+	 */
 	salaryMin: number | string;
-	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	/**
+	 * Top of the advertised salary range. Neither may be negative and the minimum cannot exceed the maximum; both in CurrencyCode.
+	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+	 */
 	salaryMax: number | string;
+	/** The recruiter who owns the post. */
 	recruiterId: string;
 }

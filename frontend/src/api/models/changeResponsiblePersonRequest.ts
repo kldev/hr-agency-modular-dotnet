@@ -15,5 +15,6 @@
  */
 
 export interface ChangeResponsiblePersonRequest {
+	/** The user who takes over. Must belong to the caller's agency; handing it to somebody other than yourself sends them a mail. */
 	responsibleId: string;
 }

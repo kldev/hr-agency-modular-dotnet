@@ -16,7 +16,11 @@
 import type { OpportunityStage } from "./opportunityStage.ts";
 
 export interface ChangeOpportunityStageRequest {
+	/** The stage to move to: New, Viewed, Contacted, Qualified, Proposal, Won or Lost. */
 	stage: OpportunityStage;
-	/** @nullable */
+	/**
+	 * Why the deal was lost - required when Stage is Lost, up to 500 characters, ignored otherwise.
+	 * @nullable
+	 */
 	lostReason?: string | null;
 }

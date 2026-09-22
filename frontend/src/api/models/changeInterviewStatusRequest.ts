@@ -16,7 +16,11 @@
 import type { InterviewStatus } from "./interviewStatus.ts";
 
 export interface ChangeInterviewStatusRequest {
+	/** Planned, Confirmed, InProgress, Completed, Canceled, NoShow or Rescheduled. */
 	status: InterviewStatus;
-	/** @nullable */
+	/**
+	 * Optional note on the change.
+	 * @nullable
+	 */
 	note: string | null;
 }

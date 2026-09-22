@@ -15,12 +15,22 @@
  */
 
 export interface UpdateUserForOrganizationRequest {
+	/** The agency the account belongs to; an account of another agency is not found. */
 	organizationId: string;
+	/** Sign-in e-mail address. Unique within the agency. */
 	email: string;
+	/** First name. */
 	firstName: string;
+	/** Last name. */
 	lastName: string;
-	/** @nullable */
+	/**
+	 * Optional job title. Omitted or null clears it.
+	 * @nullable
+	 */
 	jobTitle?: string | null;
-	/** @nullable */
+	/**
+	 * Optional phone number. Omitted or null clears it.
+	 * @nullable
+	 */
 	phone?: string | null;
 }

@@ -16,6 +16,8 @@
 import type { TeamRole } from "./teamRole.ts";
 
 export interface AddTeamMemberRequest {
+	/** The person joining. */
 	userId: string;
+	/** Their seat in the team: Sales, Recruiter, Operations or Lead. */
 	role: TeamRole;
 }

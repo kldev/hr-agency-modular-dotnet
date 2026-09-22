@@ -16,21 +16,41 @@
 import type { EngagementType } from "./engagementType.ts";
 
 export interface CreateProjectRequest {
+	/** The client the project delivers for. Its profile has to be complete before the project can go live. */
 	companyId: string;
+	/** Which of the agency's own companies delivers the project and employs or posts the people. */
 	legalEntityId: string;
+	/** The project's name, e.g. "Shipyard Gdansk - welders". */
 	name: string;
+	/** What is being delivered. */
 	description: string;
+	/** How the agency serves the client: PostingOfWorkers, TemporaryAgencyWork, Outsourcing or LocalEmployment. Together with the work country it decides which compliance requirements apply. */
 	engagementType: EngagementType;
+	/** Street of the workplace. Workplace address: street, building number, postal code, city and country of where the people work. */
 	street: string;
+	/** Building number of the workplace. */
 	buildingNumber: string;
-	/** @nullable */
+	/**
+	 * Optional unit number of the workplace.
+	 * @nullable
+	 */
 	unitNumber: string | null;
+	/** Postal code of the workplace. */
 	postalCode: string;
+	/** City of the workplace. */
 	city: string;
+	/** Country where the work happens, ISO 3166-1 alpha-2. It drives the compliance catalogue; Poland has no entries. */
 	countryCode: string;
+	/** First day of the project. */
 	startsOn: string;
-	/** @nullable */
+	/**
+	 * Last day of the project. Optional for an open-ended one; not before StartsOn.
+	 * @nullable
+	 */
 	endsOn: string | null;
-	/** @nullable */
+	/**
+	 * Optional recruitment team that staffs the project.
+	 * @nullable
+	 */
 	teamId: string | null;
 }

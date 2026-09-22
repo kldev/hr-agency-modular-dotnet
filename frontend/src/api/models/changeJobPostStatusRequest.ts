@@ -16,5 +16,6 @@
 import type { JobPostStatusApi } from "./jobPostStatusApi.ts";
 
 export interface ChangeJobPostStatusRequest {
+	/** Published, Closed or Archived. Closed is final. An archived post can be published again. */
 	status: JobPostStatusApi;
 }
