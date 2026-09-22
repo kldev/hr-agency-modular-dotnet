@@ -3,16 +3,24 @@ import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
+import { useAuthStore } from "#/stores/authStore";
 import type { AgencyEmploymentProjection, WorkerContractType } from "@/api/models";
 import { useChangeAgencyEmploymentTerms } from "../pages/hooks";
-import { contractRequiresTimeRecord, maxWeeklyHours, workerContractTypes } from "../types";
+import { contractRequiresTimeRecord, isRates, maxWeeklyHours, workerContractTypes } from "../types";
 import type { ChangeEmploymentTermsFormCommand } from "./EmploymentFormCommand";
+import {
+	RateFields,
+	rateFieldNames,
+	rateFieldsOf,
+	rateFieldsSchema,
+	toRateInput,
+} from "./RateFields";
 
 interface Props {
 	onSuccess: () => void;
 }
 
-const schema = z.object({
+const schema = rateFieldsSchema.extend({
 	contractType: z.string().min(1, "Pick what they work on"),
 	effectiveFrom: z.string().min(1, "Say when the new terms start"),
 	weeklyHours: z
@@ -36,11 +44,14 @@ const FormContent: React.FC<{
 		},
 	});
 
+	const mayQuoteRate = isRates(useAuthStore((state) => state.user?.role));
+
 	const form = useAppForm({
 		defaultValues: {
 			contractType: employment.contractType as string,
 			effectiveFrom: "",
 			weeklyHours: employment.weeklyHours === null ? "" : String(employment.weeklyHours),
+			...rateFieldsOf(employment.rate),
 		},
 
 		validators: { onChange: schema },
@@ -52,6 +63,9 @@ const FormContent: React.FC<{
 					contractType: value.contractType as WorkerContractType,
 					effectiveFrom: value.effectiveFrom.slice(0, 10),
 					weeklyHours: value.weeklyHours === "" ? null : Number(value.weeklyHours),
+					// The terms are replaced whole, and clearing the amount removes the rate. Somebody
+					// not shown pay sends none, and the backend keeps the one in force.
+					rate: mayQuoteRate ? toRateInput(value) : null,
 				},
 			});
 		},
@@ -137,6 +151,10 @@ const FormContent: React.FC<{
 								/>
 							)}
 						</form.AppField>
+
+						{mayQuoteRate ? (
+							<RateFields form={form} fields={rateFieldNames} isSubmitting={mutation.isPending} />
+						) : null}
 
 						<ApiError
 							error={mutation.error as unknown as Parameters<typeof ApiError>[0]["error"]}

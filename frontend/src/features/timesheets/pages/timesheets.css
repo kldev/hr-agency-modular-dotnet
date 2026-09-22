@@ -407,3 +407,19 @@
 
 	font-size: var(--font-size-sm);
 }
+
+/* The export sits above the queue it is a picture of. */
+.settlement-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 12px;
+	flex-wrap: wrap;
+}
+
+.settlement-toolbar-hint {
+	color: var(--color-text-muted);
+	font-size: 13px;
+	flex: 1 1 280px;
+}

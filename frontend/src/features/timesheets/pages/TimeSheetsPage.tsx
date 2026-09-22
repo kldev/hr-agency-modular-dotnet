@@ -1,4 +1,4 @@
-import { CalendarClock } from "lucide-react";
+import { CalendarClock, FileSpreadsheet } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { Route } from "#/routes/app/timesheets";
@@ -6,6 +6,7 @@ import { useAuthStore } from "#/stores/authStore";
 import type { TimeSheetProjection } from "@/api/models";
 import { Page } from "@/components/layout";
 import { ConfirmDialog, EmptyState, type TabDefinition, TabPanel, Tabs } from "@/components/ui";
+import { isRates } from "@/features/agency-employment/types";
 import {
 	ApproveTimeSheetDrawer,
 	type ApproveTimeSheetFormCommand,
@@ -27,6 +28,7 @@ import {
 	useGetMyTimeSheet,
 	useGetTeamTimeSheets,
 	useGetTimeSheetsForSettlement,
+	useSettlementExport,
 	useSettleTimeSheet,
 } from "./hooks";
 import "./timesheets.css";
@@ -46,10 +48,12 @@ export function TimeSheetsPage() {
 	const month = monthFromSearch(search);
 
 	const payroll = isPayroll(user?.role);
+	const rates = isRates(user?.role);
 
 	const mine = useGetMyTimeSheet(month);
 	const team = useGetTeamTimeSheets(month);
 	const settlement = useGetTimeSheetsForSettlement(month, payroll);
+	const exported = useSettlementExport(month);
 
 	const { mutation: settle, waiting } = useSettleTimeSheet({
 		onSuccess: () => {
@@ -179,6 +183,27 @@ export function TimeSheetsPage() {
 
 				{active === "settlement" ? (
 					<TabPanel id="settlement">
+						{/*
+						 * Only once there is something agreed: an empty file is a download that looks
+						 * like it worked. The file carries rates, so it follows `RatesPolicy`, not the tab.
+						 */}
+						{rates && (settlement.data ?? []).length > 0 ? (
+							<div className="settlement-toolbar">
+								<span className="settlement-toolbar-hint">
+									Hours × hourly rate for every month on this list - a help for the transfers, not a
+									payslip. Downloading does not settle anything.
+								</span>
+								<a
+									className="button button-secondary"
+									href={exported.href}
+									download={exported.fileName}
+								>
+									<FileSpreadsheet size={14} />
+									Export to Excel
+								</a>
+							</div>
+						) : null}
+
 						<TwoPaneSheets
 							month={month}
 							canSettle

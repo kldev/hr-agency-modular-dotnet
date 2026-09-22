@@ -1,10 +1,11 @@
+import { useAuthStore } from "#/stores/authStore";
 import type { AgencyEmploymentProjection } from "@/api/models";
 import { ContractTypeBadge } from "@/components/ui";
 import { DetailItem, DetailOverviewHeader } from "@/components/ui/details/DataDetails";
 import { formatDate } from "@/utlis/dateUtils";
 import { EmploymentActions } from "../pages/components/table/EmploymentActions";
 import { useGetAgencyEmployment } from "../pages/hooks";
-import { contractRequiresTimeRecord, isEnded } from "../types";
+import { contractRequiresTimeRecord, formatRate, isEnded, isRates } from "../types";
 
 interface Props {
 	userId: string;
@@ -22,6 +23,8 @@ export function EmploymentCard({ userId, name, onStart, onChangeTerms, onEnd }: 
 	const query = useGetAgencyEmployment(userId);
 
 	const employment = query.data ?? null;
+
+	const showsRate = isRates(useAuthStore((state) => state.user?.role));
 
 	return (
 		<section className="data-details-section">
@@ -43,6 +46,13 @@ export function EmploymentCard({ userId, name, onStart, onChangeTerms, onEnd }: 
 							<DetailItem label="Weekly hours">
 								{employment.weeklyHours === null ? null : `${employment.weeklyHours} h`}
 							</DetailItem>
+
+							{/* Not a blank for everybody else: the row is not theirs to see at all. */}
+							{showsRate ? (
+								<DetailItem label="Rate">
+									{employment.rate ? formatRate(employment.rate) : "Not quoted"}
+								</DetailItem>
+							) : null}
 
 							<DetailItem label="Engaged">
 								{formatDate(employment.startsOn)}

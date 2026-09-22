@@ -3,16 +3,24 @@ import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
+import { useAuthStore } from "#/stores/authStore";
 import type { WorkerContractType } from "@/api/models";
 import { useStartAgencyEmployment } from "../pages/hooks";
-import { contractRequiresTimeRecord, maxWeeklyHours, workerContractTypes } from "../types";
+import { contractRequiresTimeRecord, isRates, maxWeeklyHours, workerContractTypes } from "../types";
 import type { StartEmploymentFormCommand } from "./EmploymentFormCommand";
+import {
+	emptyRateFields,
+	RateFields,
+	rateFieldNames,
+	rateFieldsSchema,
+	toRateInput,
+} from "./RateFields";
 
 interface Props {
 	onSuccess: () => void;
 }
 
-const schema = z.object({
+const schema = rateFieldsSchema.extend({
 	userId: z.string().min(1, "Pick the person"),
 	contractType: z.string().min(1, "Pick what they work on"),
 	startsOn: z.string().min(1, "Say when it begins"),
@@ -37,12 +45,15 @@ const FormContent: React.FC<{
 		},
 	});
 
+	const mayQuoteRate = isRates(useAuthStore((state) => state.user?.role));
+
 	const form = useAppForm({
 		defaultValues: {
 			userId,
 			contractType: "",
 			startsOn: "",
 			weeklyHours: "",
+			...emptyRateFields,
 		},
 
 		validators: { onChange: schema },
@@ -54,6 +65,7 @@ const FormContent: React.FC<{
 					contractType: value.contractType as WorkerContractType,
 					startsOn: value.startsOn.slice(0, 10),
 					weeklyHours: value.weeklyHours === "" ? null : Number(value.weeklyHours),
+					rate: mayQuoteRate ? toRateInput(value) : null,
 				},
 			});
 		},
@@ -148,6 +160,10 @@ const FormContent: React.FC<{
 								/>
 							)}
 						</form.AppField>
+
+						{mayQuoteRate ? (
+							<RateFields form={form} fields={rateFieldNames} isSubmitting={mutation.isPending} />
+						) : null}
 
 						<ApiError
 							error={mutation.error as unknown as Parameters<typeof ApiError>[0]["error"]}

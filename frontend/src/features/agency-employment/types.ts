@@ -1,4 +1,5 @@
-import type { AgencyEmploymentProjection } from "@/api/models";
+import type { AgencyEmploymentProjection, OrganizationRole, WorkRate } from "@/api/models";
+import { rateBases, rateUnitShort } from "@/features/positions/types";
 
 export { contractRequiresTimeRecord, workerContractTypes } from "#/features/contracts/types";
 
@@ -26,3 +27,18 @@ export const alreadyEmployedMessage =
  */
 export const registerPurpose =
 	"What each person works for us on. The contract decides who owes hours, so the time sheet monitoring reads this register.";
+
+/**
+ * Mirrors `Api/Auth/RatesPolicy.cs`: who is shown what somebody is paid. Wider than `isPayroll`,
+ * because finance handles money without closing anybody's month; a supervisor approving hours is
+ * deliberately not here. The backend answers `null` to everybody else, so this only decides whether
+ * to offer fields and a column that would stay empty.
+ */
+export function isRates(role: OrganizationRole | undefined | null): boolean {
+	return role === "HumanResources" || role === "Finance" || role === "Admin";
+}
+
+/** "45 PLN/h gross" - the unit and the basis are part of the number, not a footnote to it. */
+export function formatRate(rate: WorkRate): string {
+	return `${rate.amount} ${rate.currency}/${rateUnitShort[rate.unit]} ${rateBases[rate.basis]}`;
+}
