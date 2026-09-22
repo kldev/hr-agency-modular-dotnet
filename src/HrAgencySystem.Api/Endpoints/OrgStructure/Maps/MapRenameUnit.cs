@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.OrgUnits.Rename;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -34,7 +35,9 @@ internal static class MapRenameUnit
             )
         );
 
-    internal sealed record RenameOrgUnitRequest(string Name)
+    internal sealed record RenameOrgUnitRequest(
+        [property: Description("The unit's new name, unique among its siblings.")] string Name
+    )
     {
         public RenameOrgUnit ToCommand(
             Guid unitId,

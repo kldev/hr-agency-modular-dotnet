@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -37,7 +38,13 @@ internal static class MapCreate
         return TypedResults.Created($"/api/teams/{result.TeamId}", result);
     }
 
-    internal record CreateTeamRequest(string Name, IReadOnlyList<TeamMemberRequest> Members)
+    internal record CreateTeamRequest(
+        [property: Description("The team's name.")] string Name,
+        [property: Description(
+            "Its first members, each with a seat - at least one, and nobody twice."
+        )]
+            IReadOnlyList<TeamMemberRequest> Members
+    )
     {
         public CreateTeam ToCommand(OrganizationId organizationId, Guid createdBy)
         {
@@ -50,5 +57,9 @@ internal static class MapCreate
         }
     }
 
-    internal record TeamMemberRequest(Guid UserId, TeamRole Role);
+    internal record TeamMemberRequest(
+        [property: Description("The person joining.")] Guid UserId,
+        [property: Description("Their seat in the team: Sales, Recruiter, Operations or Lead.")]
+            TeamRole Role
+    );
 }

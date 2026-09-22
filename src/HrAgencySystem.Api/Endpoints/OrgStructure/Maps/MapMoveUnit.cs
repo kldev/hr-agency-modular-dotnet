@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.OrgUnits.Move;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -36,7 +37,12 @@ internal static class MapMoveUnit
             )
         );
 
-    internal sealed record MoveOrgUnitRequest(Guid ParentId)
+    internal sealed record MoveOrgUnitRequest(
+        [property: Description(
+            "The unit to hang this one under. Not the unit itself and not one of its own units; the top unit cannot move."
+        )]
+            Guid ParentId
+    )
     {
         public MoveOrgUnit ToCommand(Guid unitId, OrganizationId organizationId, Guid modifiedBy) =>
             new(organizationId.Value, unitId, ParentId, modifiedBy);

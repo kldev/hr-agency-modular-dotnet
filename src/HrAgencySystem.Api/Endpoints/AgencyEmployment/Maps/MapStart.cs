@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.Employment.Start;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -38,11 +39,18 @@ internal static class MapStart
         );
 
     internal sealed record StartAgencyEmploymentRequest(
-        Guid UserId,
-        WorkerContractType ContractType,
-        DateOnly StartsOn,
-        decimal? WeeklyHours,
-        RateInput? Rate = null
+        [property: Description("The agency's own person the record is for. One record per person.")]
+            Guid UserId,
+        [property: Description(
+            "EmploymentContract, TemporaryEmploymentContract, MandateContract, SelfEmployed or Other. Employment and mandate contracts owe a monthly time sheet; the others do not."
+        )]
+            WorkerContractType ContractType,
+        [property: Description("First day of the engagement.")] DateOnly StartsOn,
+        [property: Description("Hours a week, 0 to 168. Optional.")] decimal? WeeklyHours,
+        [property: Description(
+            "Optional rate: amount, currency, unit (Hourly, Daily, Monthly) and basis (Gross, Net). Only HumanResources, Finance and Admin may set it - anyone else sending one is refused."
+        )]
+            RateInput? Rate = null
     )
     {
         public StartAgencyEmployment ToCommand(

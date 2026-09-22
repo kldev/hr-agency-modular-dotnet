@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.TimeSheets.SaveWorkDay;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -42,11 +43,20 @@ internal static class MapSaveWorkDay
     /// eight and a half" - and it spares them the arithmetic before they can type.
     /// </summary>
     internal sealed record SaveWorkDayRequest(
-        DateOnly Date,
-        TimeOnly StartsAt,
-        int Hours,
-        int Minutes,
-        string? Note
+        [property: Description(
+            "The day, in a month that has already begun. The sheet is found from it; saving the same day again replaces it."
+        )]
+            DateOnly Date,
+        [property: Description(
+            "When work started, e.g. \"08:00\". A shift may run past midnight and still belongs to this day."
+        )]
+            TimeOnly StartsAt,
+        [property: Description("Whole hours worked, 0 to 24.")] int Hours,
+        [property: Description(
+            "Minutes on top of Hours, 0 to 55 in steps of five. The day as a whole cannot be empty or longer than 24 hours."
+        )]
+            int Minutes,
+        [property: Description("Optional short note about the day.")] string? Note
     )
     {
         public SaveWorkDay ToCommand(OrganizationId organizationId, Guid userId) =>

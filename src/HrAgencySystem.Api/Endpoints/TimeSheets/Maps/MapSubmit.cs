@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.TimeSheets.Submit;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -38,5 +39,11 @@ internal static class MapSubmit
             )
         );
 
-    internal sealed record SubmitTimeSheetRequest(int Year, int Month, string? Comment = null);
+    internal sealed record SubmitTimeSheetRequest(
+        [property: Description("Year of the month being sent.")] int Year,
+        [property: Description("Month being sent, 1 to 12. A month with no hours cannot be sent.")]
+            int Month,
+        [property: Description("Optional note to the supervisor that travels with it.")]
+            string? Comment = null
+    );
 }

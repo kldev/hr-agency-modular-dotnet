@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.TimeSheets.Comment;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -43,5 +44,8 @@ internal static class MapComment
             )
         );
 
-    internal sealed record CommentOnTimeSheetRequest(string Content);
+    internal sealed record CommentOnTimeSheetRequest(
+        [property: Description("The comment's text, added to the thread about the month.")]
+            string Content
+    );
 }

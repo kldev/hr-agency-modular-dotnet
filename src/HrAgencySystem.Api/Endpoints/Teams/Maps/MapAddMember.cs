@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -43,7 +44,11 @@ internal static class MapAddMember
         return TypedResults.Ok(result);
     }
 
-    internal record AddTeamMemberRequest(Guid UserId, TeamRole Role)
+    internal record AddTeamMemberRequest(
+        [property: Description("The person joining.")] Guid UserId,
+        [property: Description("Their seat in the team: Sales, Recruiter, Operations or Lead.")]
+            TeamRole Role
+    )
     {
         public AddTeamMember ToCommand(Guid teamId, OrganizationId organizationId, Guid modifiedBy)
         {

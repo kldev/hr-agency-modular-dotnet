@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.OrgUnits.AddMember;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -38,7 +39,14 @@ internal static class MapAddMember
     /// <paramref name="Title"/> is optional and rarely used: it exists for the person the chart
     /// cannot otherwise describe, such as the second owner sitting on the board.
     /// </summary>
-    internal sealed record AddOrgUnitMemberRequest(Guid UserId, string? Title)
+    internal sealed record AddOrgUnitMemberRequest(
+        [property: Description(
+            "The person to add. A person belongs to one unit at most - move them rather than add them twice."
+        )]
+            Guid UserId,
+        [property: Description("Optional title within the unit, e.g. \"Payroll specialist\".")]
+            string? Title
+    )
     {
         public AddOrgUnitMember ToCommand(
             Guid unitId,

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.OrgUnits.AssignHead;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -34,7 +35,12 @@ internal static class MapAssignHead
             )
         );
 
-    internal sealed record AssignOrgUnitHeadRequest(Guid HeadUserId)
+    internal sealed record AssignOrgUnitHeadRequest(
+        [property: Description(
+            "The person who heads the unit - already one of its members. They become the supervisor of its people and of units below without a head of their own."
+        )]
+            Guid HeadUserId
+    )
     {
         public AssignOrgUnitHead ToCommand(
             Guid unitId,

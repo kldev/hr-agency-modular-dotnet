@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.Employment.End;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -34,7 +35,12 @@ internal static class MapEnd
             )
         );
 
-    internal sealed record EndAgencyEmploymentRequest(DateOnly EndsOn)
+    internal sealed record EndAgencyEmploymentRequest(
+        [property: Description(
+            "Last day of the engagement; not before it began. An ended engagement cannot be changed any more."
+        )]
+            DateOnly EndsOn
+    )
     {
         public EndAgencyEmployment ToCommand(
             Guid userId,

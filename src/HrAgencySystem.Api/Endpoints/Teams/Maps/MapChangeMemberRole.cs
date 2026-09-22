@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -45,7 +46,10 @@ internal static class MapChangeMemberRole
         return TypedResults.Ok(result);
     }
 
-    internal record ChangeTeamMemberRoleRequest(TeamRole Role)
+    internal record ChangeTeamMemberRoleRequest(
+        [property: Description("The member's new seat: Sales, Recruiter, Operations or Lead.")]
+            TeamRole Role
+    )
     {
         public ChangeTeamMemberRole ToCommand(
             Guid teamId,

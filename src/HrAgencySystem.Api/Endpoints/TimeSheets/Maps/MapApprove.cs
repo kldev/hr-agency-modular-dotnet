@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.TimeSheets.Approve;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -45,5 +46,10 @@ internal static class MapApprove
         );
 
     /// <summary>A note is optional here; on a return it is not.</summary>
-    internal sealed record ApproveTimeSheetRequest(string? Comment);
+    internal sealed record ApproveTimeSheetRequest(
+        [property: Description(
+            "Optional note to the person. Only their supervisor from the chart may approve."
+        )]
+            string? Comment
+    );
 }

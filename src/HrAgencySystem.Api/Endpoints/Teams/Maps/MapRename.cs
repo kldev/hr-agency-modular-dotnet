@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -41,7 +42,7 @@ internal static class MapRename
         return TypedResults.Ok(result);
     }
 
-    internal record RenameTeamRequest(string Name)
+    internal record RenameTeamRequest([property: Description("The team's new name.")] string Name)
     {
         public RenameTeam ToCommand(Guid teamId, OrganizationId organizationId, Guid modifiedBy)
         {

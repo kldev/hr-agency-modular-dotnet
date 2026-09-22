@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.TimeSheets.Return;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
@@ -45,5 +46,10 @@ internal static class MapReturn
             )
         );
 
-    internal sealed record ReturnTimeSheetRequest(string Reason);
+    internal sealed record ReturnTimeSheetRequest(
+        [property: Description(
+            "Why the month goes back for correction - required, since the person has to know what to fix."
+        )]
+            string Reason
+    );
 }

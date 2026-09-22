@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Agency.Application.Employment.ChangeTerms;
 using HrAgencySystem.Agency.Application.Employment.Start;
 using HrAgencySystem.Agency.Events;
@@ -42,10 +43,17 @@ internal static class MapChangeTerms
         );
 
     internal sealed record ChangeAgencyEmploymentTermsRequest(
-        WorkerContractType ContractType,
-        DateOnly EffectiveFrom,
-        decimal? WeeklyHours,
-        RateInput? Rate = null
+        [property: Description(
+            "The contract type from now on. Moving between types that do and do not owe hours adds the person to, or takes them off, the time sheet monitoring."
+        )]
+            WorkerContractType ContractType,
+        [property: Description("When the new terms apply; not before the engagement began.")]
+            DateOnly EffectiveFrom,
+        [property: Description("Hours a week, 0 to 168. Optional.")] decimal? WeeklyHours,
+        [property: Description(
+            "Optional rate: amount, currency, unit (Hourly, Daily, Monthly) and basis (Gross, Net). Only HumanResources, Finance and Admin may set it - anyone else sending one is refused. The terms are replaced whole, so for those roles omitting it removes the rate; for anyone else the rate in force is kept."
+        )]
+            RateInput? Rate = null
     )
     {
         public ChangeAgencyEmploymentTerms ToCommand(
