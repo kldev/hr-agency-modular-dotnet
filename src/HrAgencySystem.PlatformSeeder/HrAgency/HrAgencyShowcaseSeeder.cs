@@ -26,6 +26,10 @@ public sealed partial class HrAgencyShowcaseSeeder(
 
         logger.LogInformation("Platform owner created: {PlatformOwnerId}", owner.PlatformOwnerId);
 
+        await new ServiceApiKeyScenario(session).Create(owner.PlatformOwnerId);
+
+        logger.LogInformation("Job board service key seeded");
+
         await SeedAgency(owner.PlatformOwnerId, new SeedConfig());
 
         await SeedAgency(
