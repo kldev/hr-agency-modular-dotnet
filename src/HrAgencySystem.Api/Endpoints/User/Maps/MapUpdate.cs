@@ -42,7 +42,8 @@ internal static class MapUpdate
             .WithSummary("Update user")
             .WithName("Update user")
             .Produces<UserUpdated>()
-            .ProducesStandardErrors();
+            .ProducesStandardErrors()
+            .RequireAuthorization(AdminPolicy.Name);
     }
 
     private static async Task<IResult> Handler(

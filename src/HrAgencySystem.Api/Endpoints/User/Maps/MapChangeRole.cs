@@ -25,7 +25,8 @@ internal static class MapChangeRole
             .WithSummary("Change user role")
             .WithName("Change user role")
             .Produces<RoleChanged>()
-            .ProducesStandardErrors();
+            .ProducesStandardErrors()
+            .RequireAuthorization(AdminPolicy.Name);
     }
 
     private static async Task<IResult> Handler(

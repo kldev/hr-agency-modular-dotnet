@@ -52,7 +52,8 @@ internal static class MapCreate
             .WithSummary("Create user")
             .WithName("Create user")
             .Produces<UserCreated>()
-            .ProducesStandardErrors();
+            .ProducesStandardErrors()
+            .RequireAuthorization(AdminPolicy.Name);
     }
 
     private static async Task<IResult> Handler(

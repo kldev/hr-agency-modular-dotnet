@@ -37,10 +37,12 @@ public static class AuthenticationExtensions
             });
         });
 
-        services
+        var authorization = services
             .AddAuthorizationBuilder()
-            .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())
-            .AddPayrollPolicy();
+            .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+
+        authorization.AddPayrollPolicy();
+        authorization.AddAdminPolicy();
 
         services.Configure<JwtConfig>(configuration.GetSection(JwtConfig.Section));
 
