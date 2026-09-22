@@ -1013,13 +1013,13 @@ export const impersonateUser = (
 	signal?: AbortSignal,
 ) => {
 	return customInstance<ImpersonationResult>(
-		{ url: `/api/auth/impersonate/${userId}`, method: "POST", signal },
+		{ url: `/api/user/impersonate/${userId}`, method: "POST", signal },
 		options,
 	);
 };
 
 export const getImpersonateUserQueryKey = (userId: string) => {
-	return ["POST", `/api/auth/impersonate/${userId}`] as const;
+	return ["POST", `/api/user/impersonate/${userId}`] as const;
 };
 
 export const getImpersonateUserQueryOptions = <
