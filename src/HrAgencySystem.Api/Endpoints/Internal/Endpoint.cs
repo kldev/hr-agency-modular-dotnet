@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 using HrAgencySystem.Api.Auth;
 
 namespace HrAgencySystem.Api.Endpoints.Internal;
@@ -19,7 +20,7 @@ internal static class Endpoint
     {
         var group = endpoints
             .MapGroup("")
-            .WithTags("Internal")
+            .WithTags(ApiTags.Internal)
             .RequireAuthorization(InternalApiPolicy.Name)
             .ExcludeFromDescription();
 

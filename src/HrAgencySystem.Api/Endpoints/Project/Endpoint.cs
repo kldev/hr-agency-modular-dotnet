@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 using HrAgencySystem.Compliance;
 
 namespace HrAgencySystem.Api.Endpoints.Project;
@@ -8,7 +9,7 @@ public static class Endpoint
     {
         // No role gate: running a project is open to any authenticated member of the organization.
         // The fallback-deny policy already keeps anonymous callers out.
-        var group = endpoints.MapGroup("").WithTags("Sales - Projects");
+        var group = endpoints.MapGroup("").WithTags(ApiTags.SalesProjects);
 
         Maps.MapCreate.Map(group);
         Maps.MapGetSlice.Map(group);

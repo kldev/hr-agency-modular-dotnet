@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 namespace HrAgencySystem.Api.Endpoints.LegalEntity;
 
 public static class Endpoint
@@ -7,7 +8,7 @@ public static class Endpoint
         var group = endpoints
             .MapGroup("")
             .WithSummary("Legal entities")
-            .WithTags("Agency - Legal entities");
+            .WithTags(ApiTags.AgencyLegalEntities);
 
         Maps.MapCreate.Map(group);
         Maps.MapUpdate.Map(group);

@@ -1,10 +1,11 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 namespace HrAgencySystem.Api.Endpoints.AgencyEmployment;
 
 public static class Endpoint
 {
     public static void Map(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("").WithTags("Agency - Employment");
+        var group = endpoints.MapGroup("").WithTags(ApiTags.AgencyEmployment);
 
         Maps.MapList.Map(group);
         Maps.MapGet.Map(group);

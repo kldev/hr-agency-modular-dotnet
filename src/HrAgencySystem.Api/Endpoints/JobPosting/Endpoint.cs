@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 namespace HrAgencySystem.Api.Endpoints.JobPosting;
 
 internal static class Endpoint
@@ -7,7 +8,7 @@ internal static class Endpoint
         var group = endpoints
             .MapGroup("")
             .RequireAuthorization()
-            .WithTags("Recruitment - Job Posting");
+            .WithTags(ApiTags.RecruitmentJobPosting);
         Maps.MapCreate.Map(group);
         Maps.MapGetSlice.Map(group);
         Maps.MapUpdate.Map(group);

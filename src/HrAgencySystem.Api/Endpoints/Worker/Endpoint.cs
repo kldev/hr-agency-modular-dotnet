@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 namespace HrAgencySystem.Api.Endpoints.Worker;
 
 public static class Endpoint
@@ -6,7 +7,7 @@ public static class Endpoint
     {
         // No role gate: the register is read and kept by recruitment, HR, legalisation and
         // operations in turn, and the fallback-deny policy already keeps anonymous callers out.
-        var group = endpoints.MapGroup("").WithTags("Employment - Workers");
+        var group = endpoints.MapGroup("").WithTags(ApiTags.EmploymentWorkers);
 
         Maps.MapRegister.Map(group);
         Maps.MapUpdate.Map(group);

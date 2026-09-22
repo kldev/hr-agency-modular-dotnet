@@ -1,3 +1,4 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 using Microsoft.OpenApi;
 
 namespace HrAgencySystem.Api.Infrastructure;
@@ -45,6 +46,8 @@ internal static class SetupOpenApi
                         return Task.CompletedTask;
                     }
                 );
+
+                options.AddTagDescriptions();
 
                 options.AddOperationTransformer(
                     (operation, context, _) =>

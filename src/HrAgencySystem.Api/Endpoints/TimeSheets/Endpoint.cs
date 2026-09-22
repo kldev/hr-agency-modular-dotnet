@@ -1,10 +1,11 @@
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 namespace HrAgencySystem.Api.Endpoints.TimeSheets;
 
 public static class Endpoint
 {
     public static void Map(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("").WithTags("Agency - Time sheets");
+        var group = endpoints.MapGroup("").WithTags(ApiTags.AgencyTimeSheets);
 
         Maps.MapGetMine.Map(group);
         Maps.MapGetTeam.Map(group);
