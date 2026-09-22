@@ -19,6 +19,20 @@ internal static class JobApplicationProjectionExtensions
             return query.Where(q => q.OrgId == organizationId);
         }
 
+        /// <summary>
+        /// True keeps only those a workers' file was opened from, false only those without one,
+        /// null leaves the list alone.
+        /// </summary>
+        internal IQueryable<JobApplicationProjection> WithRegisteredAsWorker(bool? registered)
+        {
+            return registered switch
+            {
+                true => query.Where(q => q.WorkerId != null),
+                false => query.Where(q => q.WorkerId == null),
+                null => query,
+            };
+        }
+
         internal IQueryable<JobApplicationProjection> WithJobPostId(Guid? jobPostId)
         {
             return jobPostId.IsInvalid() ? query : query.Where(q => q.JobPostId == jobPostId);

@@ -34,6 +34,14 @@ public sealed class JobApplication : IOrganizationDomain
 
     public Guid? LatestInterviewId { get; private set; }
 
+    /// <summary>The workers' file opened from this application, if one was.</summary>
+    public Guid? WorkerId { get; private set; }
+
+    public void Apply(JobApplicationRegisteredAsWorker @event)
+    {
+        WorkerId = @event.WorkerId;
+    }
+
     public void Apply(JobApplicationCreated @event)
     {
         Id = JobApplicationId.From(@event.JobApplicationId);

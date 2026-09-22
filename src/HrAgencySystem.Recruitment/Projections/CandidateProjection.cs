@@ -44,6 +44,15 @@ public sealed record CandidateProjection(
     string FullName
 ) : IAudit
 {
+    /// <summary>
+    /// The workers' file opened for this person. A property rather than a constructor argument so
+    /// that the documents stored before it existed read as "not registered" without a migration.
+    /// </summary>
+    public Guid? WorkerId { get; init; }
+
+    public CandidateProjection Apply(CandidateRegisteredAsWorker @event) =>
+        this with { WorkerId = @event.WorkerId };
+
     public static CandidateProjection Create(CandidateCreated @event)
     {
         return new CandidateProjection(

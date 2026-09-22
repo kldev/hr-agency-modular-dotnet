@@ -25,5 +25,6 @@ public sealed record CandidateQuery(
     CandidateStatus? Status,
     CandidateSource[] Sources,
     int Page,
-    int PageSize
+    int PageSize,
+    bool? RegisteredAsWorker = null
 ) : IPagedQuery;

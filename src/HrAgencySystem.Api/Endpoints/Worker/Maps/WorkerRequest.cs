@@ -28,7 +28,8 @@ internal sealed record WorkerRequest(
     string? City = null,
     string? AddressCountryCode = null,
     string? Note = null,
-    Guid? SourceCandidateId = null
+    Guid? SourceCandidateId = null,
+    Guid? SourceApplicationId = null
 )
 {
     public RegisterWorker ToRegisterCommand(OrganizationId organizationId, Guid createdBy) =>
@@ -52,6 +53,7 @@ internal sealed record WorkerRequest(
             AddressCountryCode,
             Note,
             SourceCandidateId,
+            SourceApplicationId,
             createdBy
         );
 

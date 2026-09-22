@@ -530,6 +530,7 @@ internal sealed class WorkersScenario(IMessageBus bus, Func<Task> waitForProject
                     "PL",
                     spec.Note,
                     null,
+                    null,
                     createdBy
                 )
             );

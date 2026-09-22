@@ -45,6 +45,7 @@ public sealed class WorkerProjector : MultiStreamProjection<WorkerProjection, Gu
             Status = WorkerStatus.Recruitment,
             Department = WorkerStatusChangePolicy.OwnerOf(WorkerStatus.Recruitment),
             SourceCandidateId = @event.SourceCandidateId,
+            SourceApplicationId = @event.SourceApplicationId,
             CreatedById = @event.CreatedBy.Id,
             CreatedBy = @event.CreatedBy,
             CreatedAt = @event.CreatedAt,

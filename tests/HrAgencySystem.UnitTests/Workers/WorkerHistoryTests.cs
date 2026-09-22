@@ -142,6 +142,7 @@ public class WorkerHistoryTests
             WorkerScenario.Home,
             "",
             null,
+            null,
             WorkerScenario.User,
             DateTimeOffset.UtcNow
         );

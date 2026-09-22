@@ -54,6 +54,7 @@ public sealed class WorkerProjection
     public ResponsibleDepartment Department { get; set; }
 
     public Guid? SourceCandidateId { get; set; }
+    public Guid? SourceApplicationId { get; set; }
 
     public IReadOnlyList<WorkerDocument> Documents { get; set; } = [];
     public int DocumentCount { get; set; }

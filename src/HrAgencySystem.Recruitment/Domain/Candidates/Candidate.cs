@@ -22,6 +22,9 @@ public sealed class Candidate
 
     public LongText Note { get; private set; } = null!;
 
+    /// <summary>The workers' file opened for this person, if one was. At most one - see the handler.</summary>
+    public Guid? WorkerId { get; private set; }
+
     public static Candidate Empty()
     {
         return new Candidate();
@@ -38,6 +41,11 @@ public sealed class Candidate
         FirstName = FirstName.Create(@event.FirstName, false);
         LastName = LastName.Create(@event.LastName, false);
         Note = LongText.Create(@event.Note, false);
+    }
+
+    public void Apply(CandidateRegisteredAsWorker @event)
+    {
+        WorkerId = @event.WorkerId;
     }
 
     public void Apply(CandidateUpdated @event)

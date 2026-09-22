@@ -2,6 +2,7 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Workers.Application.Port;
+using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
 using HrAgencySystem.Workers.Services;
@@ -14,7 +15,14 @@ public static class RegisterWorkerHandler
     public const string AlreadyOnFileMessage =
         "This person is already on file. Plan a new assignment for them instead of opening a second file.";
 
-    public static async Task<WorkerRegistered> Handle(
+    public const string ApplicationWithoutCandidateMessage =
+        "An application always belongs to a candidate. Say which candidate the file comes from as well.";
+
+    /// <summary>
+    /// The integration event is the second item on purpose: the first is what <c>InvokeAsync</c>
+    /// answers with, the rest cascade. It is null for somebody who did not come through recruitment.
+    /// </summary>
+    public static async Task<(WorkerRegistered, WorkerRegisteredFromRecruitment?)> Handle(
         RegisterWorker command,
         IWorkersService service,
         IWorkerIdentityDocumentReservationRepository documents,
@@ -27,6 +35,9 @@ public static class RegisterWorkerHandler
     {
         var organizationId = OrganizationId.From(command.OrganizationId);
         var today = DateOnly.FromDateTime(clock.UtcNow.UtcDateTime);
+        if (command.SourceApplicationId is not null && command.SourceCandidateId is null)
+            throw new ValidationException(ApplicationWithoutCandidateMessage);
+
         var data = WorkerDataFactory.Create(command, today);
 
         await service.ValidateOrganization(command.OrganizationId, ct);
@@ -88,6 +99,7 @@ public static class RegisterWorkerHandler
             data.Address,
             data.Note.Value,
             command.SourceCandidateId,
+            command.SourceApplicationId,
             createdBy,
             clock.UtcNow
         );
@@ -104,6 +116,15 @@ public static class RegisterWorkerHandler
         if (data.Email is not null)
             await emails.ReserveAsync(organizationId.Value, workerId.Value, data.Email.Value);
 
-        return @event;
+        var fromRecruitment = command.SourceCandidateId is { } candidateId
+            ? new WorkerRegisteredFromRecruitment(
+                organizationId.Value,
+                workerId.Value,
+                candidateId,
+                command.SourceApplicationId
+            )
+            : null;
+
+        return (@event, fromRecruitment);
     }
 }

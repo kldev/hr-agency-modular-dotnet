@@ -24,6 +24,7 @@ public sealed class JobApplicationQueryRepository(IQuerySession session)
             .WithTags(query.Tags)
             .WithSearch(query.Search)
             .WithJobPostId(query.JobPostId)
+            .WithRegisteredAsWorker(query.RegisteredAsWorker)
             .OrderByDescending(z => z.CreatedAt)
             .ToSlice(query, ct);
     }

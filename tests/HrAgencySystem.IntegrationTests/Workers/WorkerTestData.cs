@@ -31,7 +31,8 @@ internal static class WorkerTestData
         DateOnly? documentValidUntil = null,
         Guid? sourceCandidateId = null,
         string? email = null,
-        string phoneNumber = "+48 600 000 000"
+        string phoneNumber = "+48 600 000 000",
+        Guid? sourceApplicationId = null
     ) =>
         new(
             firstName,
@@ -51,7 +52,8 @@ internal static class WorkerTestData
             "Warszawa",
             "pl",
             null,
-            sourceCandidateId
+            sourceCandidateId,
+            sourceApplicationId
         );
 
     /// <summary>

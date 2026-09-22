@@ -25,6 +25,20 @@ internal static class CandidateProjectionExtensions
             return query.Where(q => q.CompanyIds.Contains(companyId.Value));
         }
 
+        /// <summary>
+        /// True keeps only those a workers' file was opened from, false only those without one,
+        /// null leaves the list alone.
+        /// </summary>
+        internal IQueryable<CandidateProjection> WithRegisteredAsWorker(bool? registered)
+        {
+            return registered switch
+            {
+                true => query.Where(q => q.WorkerId != null),
+                false => query.Where(q => q.WorkerId == null),
+                null => query,
+            };
+        }
+
         internal IQueryable<CandidateProjection> WithStatus(CandidateStatus? status)
         {
             return !status.HasValue ? query : query.Where(q => q.Status == status.Value);

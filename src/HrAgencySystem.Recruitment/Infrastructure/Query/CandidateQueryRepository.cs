@@ -21,6 +21,7 @@ public sealed class CandidateQueryRepository(IQuerySession session) : ICandidate
             .WithTags(query.Tags)
             .WithStatus(query.Status)
             .WithSources(query.Sources)
+            .WithRegisteredAsWorker(query.RegisteredAsWorker)
             .WithSearch(query.Search)
             .OrderByDescending(z => z.CreatedAt)
             .ToSlice(query, ct);

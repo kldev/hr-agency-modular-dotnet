@@ -23,5 +23,6 @@ public sealed record RegisterWorker(
     string? AddressCountryCode,
     string? Note,
     Guid? SourceCandidateId,
+    Guid? SourceApplicationId,
     Guid CreatedBy
 ) : ICreateCommand, IWorkerData;

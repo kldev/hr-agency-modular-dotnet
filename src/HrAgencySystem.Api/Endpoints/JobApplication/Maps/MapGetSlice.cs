@@ -30,6 +30,7 @@ internal static class MapGetSlice
         JobApplicationStatus[]? status,
         CandidateSource[]? source,
         Guid? jobPostId,
+        bool? registeredAsWorker,
         int page = 1,
         int pageSize = 100,
         CancellationToken ct = default
@@ -43,7 +44,8 @@ internal static class MapGetSlice
             source ?? [],
             jobPostId,
             page,
-            pageSize
+            pageSize,
+            registeredAsWorker
         );
         var result = await repository.GetJobApplications(user.OrganizationId, query, ct);
 

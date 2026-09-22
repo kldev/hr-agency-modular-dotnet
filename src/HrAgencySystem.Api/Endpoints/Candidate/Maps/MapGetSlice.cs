@@ -28,6 +28,7 @@ internal static class MapGetSlice
         Guid[]? tag,
         CandidateStatus? status,
         CandidateSource[]? source,
+        bool? registeredAsWorker,
         int page = 1,
         int pageSize = 100,
         CancellationToken ct = default
@@ -40,7 +41,8 @@ internal static class MapGetSlice
             status,
             source ?? [],
             page,
-            pageSize
+            pageSize,
+            registeredAsWorker
         );
         var result = await repository.GetCandidates(user.OrganizationId, query, ct);
 

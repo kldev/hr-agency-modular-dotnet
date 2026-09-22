@@ -3,6 +3,7 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Application.Port;
 using HrAgencySystem.Workers.Application.RegisterWorker;
+using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
 using Marten;
@@ -165,7 +166,63 @@ public class RegisterWorkerHandlerTests : BaseTest
         Assert.Equal(candidateId, result.SourceCandidateId);
     }
 
-    private Task<WorkerRegistered> Handle(
+    /// <summary>Recruitment is told, so the candidate and the application can say so too.</summary>
+    [Fact]
+    public async Task Handle_FromAnApplication_TellsRecruitment()
+    {
+        var candidateId = Guid.NewGuid();
+        var applicationId = Guid.NewGuid();
+
+        var (registered, message) = await HandleWithMessages(
+            Command() with { SourceCandidateId = candidateId, SourceApplicationId = applicationId }
+        );
+
+        Assert.Equal(applicationId, registered.SourceApplicationId);
+        Assert.NotNull(message);
+        Assert.Equal(registered.WorkerId, message.WorkerId);
+        Assert.Equal(WorkerScenario.OrganizationId, message.OrganizationId);
+        Assert.Equal(candidateId, message.CandidateId);
+        Assert.Equal(applicationId, message.ApplicationId);
+    }
+
+    [Fact]
+    public async Task Handle_FromACandidateAlone_TellsRecruitmentWithoutAnApplication()
+    {
+        var candidateId = Guid.NewGuid();
+
+        var (_, message) = await HandleWithMessages(Command() with { SourceCandidateId = candidateId });
+
+        Assert.NotNull(message);
+        Assert.Null(message.ApplicationId);
+    }
+
+    /// <summary>Somebody who did not come through recruitment is nobody's news there.</summary>
+    [Fact]
+    public async Task Handle_WithoutASource_TellsNobody()
+    {
+        var (_, message) = await HandleWithMessages(Command());
+
+        Assert.Null(message);
+    }
+
+    [Fact]
+    public async Task Handle_WithAnApplicationButNoCandidate_ThrowsValidation()
+    {
+        var error = await Assert.ThrowsAsync<ValidationException>(() =>
+            Handle(Command() with { SourceApplicationId = Guid.NewGuid() })
+        );
+
+        Assert.Contains(RegisterWorkerHandler.ApplicationWithoutCandidateMessage, error.Message);
+    }
+
+    private async Task<WorkerRegistered> Handle(
+        RegisterWorker command,
+        IWorkerIdentityDocumentReservationRepository? reservations = null,
+        IWorkerEmailReservationRepository? emails = null,
+        IWorkersQueryRepository? workers = null
+    ) => (await HandleWithMessages(command, reservations, emails, workers)).Item1;
+
+    private Task<(WorkerRegistered, WorkerRegisteredFromRecruitment?)> HandleWithMessages(
         RegisterWorker command,
         IWorkerIdentityDocumentReservationRepository? reservations = null,
         IWorkerEmailReservationRepository? emails = null,
@@ -259,6 +316,7 @@ public class RegisterWorkerHandlerTests : BaseTest
             "00-838",
             "Warszawa",
             "PL",
+            null,
             null,
             null,
             WorkerScenario.UserId

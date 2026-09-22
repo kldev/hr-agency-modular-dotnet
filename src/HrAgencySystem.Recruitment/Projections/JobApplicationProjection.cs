@@ -54,6 +54,15 @@ public sealed record JobApplicationProjection(
     UserSnapshot CreatedBy
 ) : IAudit
 {
+    /// <summary>
+    /// The workers' file opened from this application. A property rather than a constructor
+    /// argument so that documents stored before it existed read as "not registered".
+    /// </summary>
+    public Guid? WorkerId { get; init; }
+
+    public JobApplicationProjection Apply(JobApplicationRegisteredAsWorker @event) =>
+        this with { WorkerId = @event.WorkerId };
+
     public static JobApplicationProjection Create(JobApplicationCreated @event)
     {
         return new JobApplicationProjection(

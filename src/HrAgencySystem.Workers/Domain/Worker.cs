@@ -48,6 +48,9 @@ public sealed class Worker : IOrganizationDomain
     /// <summary>Where the file came from, when it came from a candidate. Never a foreign key.</summary>
     public Guid? SourceCandidateId { get; private set; }
 
+    /// <summary>The application the file was opened from, when there was one. Never a foreign key.</summary>
+    public Guid? SourceApplicationId { get; private set; }
+
     // Marten rehydrates an aggregate without running field initialisers, so these are nullable
     // behind non-null accessors. A file that has never seen a document event has no documents, and
     // no reader should have to know that means null.
@@ -79,6 +82,7 @@ public sealed class Worker : IOrganizationDomain
         OrganizationId = OrganizationId.From(@event.OrganizationId);
         Status = WorkerStatus.Recruitment;
         SourceCandidateId = @event.SourceCandidateId;
+        SourceApplicationId = @event.SourceApplicationId;
         CreatedBy = @event.CreatedBy;
         CreatedAt = @event.CreatedAt;
 

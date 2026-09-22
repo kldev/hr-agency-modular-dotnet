@@ -29,5 +29,6 @@ public sealed record JobApplicationQuery(
     CandidateSource[] Sources,
     Guid? JobPostId,
     int Page,
-    int PageSize
+    int PageSize,
+    bool? RegisteredAsWorker = null
 ) : IPagedQuery;

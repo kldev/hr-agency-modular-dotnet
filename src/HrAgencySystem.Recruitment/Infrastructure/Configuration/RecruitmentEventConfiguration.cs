@@ -24,6 +24,11 @@ internal static class RecruitmentEventConfiguration
             options.Events.AddEventType<JobApplicationCreated>();
             options.Events.AddEventType<CandidateCreated>();
             options.Events.AddEventType<CandidateApplicationUpdated>();
+
+            // The public board appends to candidates and applications that may already carry
+            // these, and its own snapshot of the candidate replays them.
+            options.Events.AddEventType<CandidateRegisteredAsWorker>();
+            options.Events.AddEventType<JobApplicationRegisteredAsWorker>();
         }
     }
 
@@ -50,6 +55,7 @@ internal static class RecruitmentEventConfiguration
         options.Events.AddEventType<JobApplicationStatusChanged>();
         options.Events.AddEventType<JobApplicationNoteDeleted>();
         options.Events.AddEventType<JobApplicationReactivated>();
+        options.Events.AddEventType<JobApplicationRegisteredAsWorker>();
     }
 
     private static void ConfigureJobPostEvents(StoreOptions options)
@@ -69,5 +75,6 @@ internal static class RecruitmentEventConfiguration
         options.Events.AddEventType<CandidateApplicationUpdated>();
         options.Events.AddEventType<CandidateTagged>();
         options.Events.AddEventType<CandidateTagRemoved>();
+        options.Events.AddEventType<CandidateRegisteredAsWorker>();
     }
 }
