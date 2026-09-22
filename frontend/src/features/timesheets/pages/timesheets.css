@@ -1,0 +1,324 @@
+/* The month navigator sits in the page header, so it has to read as part of the title row. */
+.month-navigator {
+	display: flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.month-navigator-label {
+	min-width: 10rem;
+
+	text-align: center;
+
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+}
+
+/* ---- my month ----------------------------------------------------------------------------- */
+
+.time-sheet-month {
+	overflow: hidden;
+
+	border: 1px solid var(--color-border);
+	border-radius: 3px;
+
+	background: var(--color-surface);
+}
+
+.time-sheet-month-weekdays,
+.time-sheet-month-grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.time-sheet-month-weekdays {
+	border-bottom: 1px solid var(--color-border);
+}
+
+.time-sheet-month-weekday {
+	min-height: 34px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+}
+
+.time-sheet-day {
+	min-height: 92px;
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-1);
+
+	padding: var(--space-2);
+
+	border-right: 1px solid var(--color-border-subtle);
+	border-bottom: 1px solid var(--color-border-subtle);
+
+	background: var(--color-surface);
+
+	text-align: left;
+
+	cursor: pointer;
+}
+
+.time-sheet-day:nth-child(7n) {
+	border-right: 0;
+}
+
+.time-sheet-day:hover:not(:disabled) {
+	background: var(--color-surface-hover);
+}
+
+.time-sheet-day:disabled {
+	cursor: default;
+}
+
+.time-sheet-day-weekend {
+	background: var(--color-surface-subtle);
+}
+
+.time-sheet-day-outside {
+	background: var(--color-surface-subtle);
+
+	color: var(--color-text-muted);
+
+	opacity: 0.5;
+}
+
+/* A day with hours on it has to be findable at a glance - that is the whole read of the screen. */
+.time-sheet-day-filled {
+	box-shadow: inset 3px 0 0 var(--color-primary);
+}
+
+.time-sheet-day-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.time-sheet-day-number {
+	display: grid;
+	place-items: center;
+
+	width: 24px;
+	height: 24px;
+
+	border-radius: 999px;
+
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-semibold);
+}
+
+.time-sheet-day-number.is-today {
+	background: var(--color-primary);
+
+	color: var(--color-on-primary, #fff);
+}
+
+.time-sheet-day-icon {
+	color: var(--color-text-muted);
+}
+
+.time-sheet-day-body {
+	display: flex;
+	flex-direction: column;
+}
+
+.time-sheet-day-hours {
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-semibold);
+}
+
+.time-sheet-day-from {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+
+	color: var(--color-text-muted);
+
+	font-size: var(--font-size-xs);
+}
+
+/* ---- the bar under the calendar ------------------------------------------------------------ */
+
+.time-sheet-summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: var(--space-3);
+
+	padding: var(--space-3);
+
+	border: 1px solid var(--color-border);
+	border-radius: 3px;
+
+	background: var(--color-surface);
+}
+
+.time-sheet-summary-figures {
+	display: flex;
+	align-items: center;
+	gap: var(--space-5);
+}
+
+.time-sheet-summary-figure {
+	display: flex;
+	flex-direction: column;
+}
+
+.time-sheet-summary-figure dt {
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+}
+
+.time-sheet-summary-figure dd {
+	font-size: var(--font-size-lg);
+	font-weight: var(--font-weight-semibold);
+	font-variant-numeric: tabular-nums;
+}
+
+.time-sheet-summary-actions {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+}
+
+/* ---- approvals: queue plus the sheet next to it --------------------------------------------- */
+
+.time-sheet-approvals {
+	display: grid;
+	grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+	gap: var(--space-4);
+	align-items: start;
+}
+
+@media (max-width: 960px) {
+	.time-sheet-approvals {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.time-sheet-queue {
+	display: flex;
+	flex-direction: column;
+
+	overflow: hidden;
+
+	border: 1px solid var(--color-border);
+	border-radius: 3px;
+
+	background: var(--color-surface);
+}
+
+.time-sheet-queue-item {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+
+	padding: var(--space-3);
+
+	border-bottom: 1px solid var(--color-border-subtle);
+
+	text-align: left;
+
+	cursor: pointer;
+}
+
+.time-sheet-queue-item:last-child {
+	border-bottom: 0;
+}
+
+.time-sheet-queue-item:hover {
+	background: var(--color-surface-hover);
+}
+
+.time-sheet-queue-item.is-selected {
+	background: var(--color-primary-soft);
+}
+
+.time-sheet-queue-name {
+	font-weight: var(--font-weight-semibold);
+}
+
+.time-sheet-queue-meta {
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+}
+
+/* ---- one sheet, read ------------------------------------------------------------------------ */
+
+.time-sheet-panel {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+
+	padding: var(--space-4);
+
+	border: 1px solid var(--color-border);
+	border-radius: 3px;
+
+	background: var(--color-surface);
+}
+
+.time-sheet-panel-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: var(--space-3);
+}
+
+.time-sheet-panel-actions {
+	display: flex;
+	gap: var(--space-2);
+}
+
+.time-sheet-comments {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+}
+
+.time-sheet-comment {
+	padding: var(--space-3);
+
+	border-left: 2px solid var(--color-border);
+
+	background: var(--color-surface-subtle);
+}
+
+.time-sheet-comment-meta {
+	display: flex;
+	gap: var(--space-2);
+
+	margin-bottom: 4px;
+
+	color: var(--color-text-secondary);
+
+	font-size: var(--font-size-xs);
+}
+
+/* The reason a month came back is the first thing its owner needs, so it sits above the calendar. */
+.time-sheet-callout {
+	display: flex;
+	gap: var(--space-2);
+
+	padding: var(--space-3);
+
+	border: 1px solid var(--color-border);
+	border-left: 3px solid var(--color-warning, var(--color-primary));
+	border-radius: 3px;
+
+	background: var(--color-surface);
+
+	font-size: var(--font-size-sm);
+}

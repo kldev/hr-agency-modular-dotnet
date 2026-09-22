@@ -1,5 +1,14 @@
 import { Link, useParams } from "@tanstack/react-router";
 import { useRef } from "react";
+import { EmploymentCard } from "#/features/agency-employment/components/EmploymentCard";
+import {
+	ChangeEmploymentTermsDrawer,
+	type ChangeEmploymentTermsFormCommand,
+	EndEmploymentDrawer,
+	type EndEmploymentFormCommand,
+	StartEmploymentDrawer,
+	type StartEmploymentFormCommand,
+} from "#/features/agency-employment/drawers";
 import {
 	useGetOrgStructure,
 	useGetSubordinates,
@@ -34,6 +43,11 @@ export function UserDetailsPage() {
 	const editRef = useRef<EditUserFormCommand>(null);
 	const roleRef = useRef<ChangeUserRoleFormCommand>(null);
 	const teamRef = useRef<ChangeUserTeamFormCommand>(null);
+
+	/* Employment is a fact about this person, so the drawers that change it are mounted here too. */
+	const startEmploymentRef = useRef<StartEmploymentFormCommand>(null);
+	const employmentTermsRef = useRef<ChangeEmploymentTermsFormCommand>(null);
+	const endEmploymentRef = useRef<EndEmploymentFormCommand>(null);
 
 	const query = useGetUser(id);
 
@@ -99,63 +113,73 @@ export function UserDetailsPage() {
 
 				<DataDetailsLayout
 					main={
-						<section className="data-details-section">
-							<div className="data-overview">
-								<DetailOverviewHeader
-									title="User details"
-									description="Contact data and what this person may do."
-								/>
+						<>
+							<section className="data-details-section">
+								<div className="data-overview">
+									<DetailOverviewHeader
+										title="User details"
+										description="Contact data and what this person may do."
+									/>
 
-								<dl className="data-details-list">
-									<EmailItem email={user.email} />
+									<dl className="data-details-list">
+										<EmailItem email={user.email} />
 
-									<PhoneItem phone={user.phone} />
+										<PhoneItem phone={user.phone} />
 
-									<DetailItem label="Job title">{user.jobTitle}</DetailItem>
+										<DetailItem label="Job title">{user.jobTitle}</DetailItem>
 
-									<DetailItem label="Organization role">
-										{organizationRoleLabel(user.role)}
-									</DetailItem>
-
-									<DetailItem label="Organization">{user.organization.name}</DetailItem>
-
-									<DetailItem label="Unit">
-										{unit ? (
-											<Link
-												to="/app/org-structure"
-												search={{ unit: unit.unitId, includeArchived: undefined }}
-											>
-												{unit.name}
-												{unit.headUserId === user.id ? " (heads it)" : ""}
-											</Link>
-										) : null}
-									</DetailItem>
-
-									{/* Computed from the chart on every read, which is why there is nothing to edit. */}
-									<DetailItem label="Supervisor">{supervisorLabel}</DetailItem>
-
-									{headsAUnit ? (
-										<DetailItem label="Responsible for">
-											{subordinateCount === null
-												? null
-												: `${subordinateCount} ${subordinateCount === 1 ? "person" : "people"}`}
+										<DetailItem label="Organization role">
+											{organizationRoleLabel(user.role)}
 										</DetailItem>
-									) : null}
 
-									<DetailItem label="Team">
-										{user.team ? (
-											<Link
-												to="/app/teams/$id"
-												params={{ id: user.team.id }}
-												search={{ search: "" }}
-											>
-												{user.team.name} ({teamRoles[user.team.role]})
-											</Link>
+										<DetailItem label="Organization">{user.organization.name}</DetailItem>
+
+										<DetailItem label="Unit">
+											{unit ? (
+												<Link
+													to="/app/org-structure"
+													search={{ unit: unit.unitId, includeArchived: undefined }}
+												>
+													{unit.name}
+													{unit.headUserId === user.id ? " (heads it)" : ""}
+												</Link>
+											) : null}
+										</DetailItem>
+
+										{/* Computed from the chart on every read, which is why there is nothing to edit. */}
+										<DetailItem label="Supervisor">{supervisorLabel}</DetailItem>
+
+										{headsAUnit ? (
+											<DetailItem label="Responsible for">
+												{subordinateCount === null
+													? null
+													: `${subordinateCount} ${subordinateCount === 1 ? "person" : "people"}`}
+											</DetailItem>
 										) : null}
-									</DetailItem>
-								</dl>
-							</div>
-						</section>
+
+										<DetailItem label="Team">
+											{user.team ? (
+												<Link
+													to="/app/teams/$id"
+													params={{ id: user.team.id }}
+													search={{ search: "" }}
+												>
+													{user.team.name} ({teamRoles[user.team.role]})
+												</Link>
+											) : null}
+										</DetailItem>
+									</dl>
+								</div>
+							</section>
+
+							<EmploymentCard
+								userId={user.id}
+								name={user.fullName ?? `${user.firstName} ${user.lastName}`}
+								onStart={(userId) => startEmploymentRef.current?.start(userId)}
+								onChangeTerms={(employment) => employmentTermsRef.current?.changeTerms(employment)}
+								onEnd={(employment) => endEmploymentRef.current?.end(employment)}
+							/>
+						</>
 					}
 					sidebar={
 						<AuditInformation
@@ -171,6 +195,10 @@ export function UserDetailsPage() {
 			<EditUserDrawer ref={editRef} onSuccess={refresh} />
 			<ChangeUserRoleDrawer ref={roleRef} onSuccess={refresh} />
 			<ChangeUserTeamDrawer ref={teamRef} onSuccess={refresh} />
+
+			<StartEmploymentDrawer ref={startEmploymentRef} onSuccess={refresh} />
+			<ChangeEmploymentTermsDrawer ref={employmentTermsRef} onSuccess={refresh} />
+			<EndEmploymentDrawer ref={endEmploymentRef} onSuccess={refresh} />
 		</>
 	);
 }

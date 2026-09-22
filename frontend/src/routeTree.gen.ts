@@ -21,7 +21,9 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as ApiHealthzRouteImport } from './routes/api/healthz'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppEmploymentRouteImport } from './routes/app/employment'
 import { Route as AppOrgStructureRouteImport } from './routes/app/org-structure'
+import { Route as AppTimesheetsRouteImport } from './routes/app/timesheets'
 import { Route as AppWorkersAbroadRouteImport } from './routes/app/workers-abroad'
 import { Route as OwnerIndexRouteImport } from './routes/owner/index'
 import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
@@ -123,9 +125,19 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppEmploymentRoute = AppEmploymentRouteImport.update({
+  id: '/employment',
+  path: '/employment',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppOrgStructureRoute = AppOrgStructureRouteImport.update({
   id: '/org-structure',
   path: '/org-structure',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppTimesheetsRoute = AppTimesheetsRouteImport.update({
+  id: '/timesheets',
+  path: '/timesheets',
   getParentRoute: () => AppRouteRoute,
 } as any)
 const AppWorkersAbroadRoute = AppWorkersAbroadRouteImport.update({
@@ -341,7 +353,9 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/employment': typeof AppEmploymentRoute
   '/app/org-structure': typeof AppOrgStructureRoute
+  '/app/timesheets': typeof AppTimesheetsRoute
   '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
@@ -394,7 +408,9 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/employment': typeof AppEmploymentRoute
   '/app/org-structure': typeof AppOrgStructureRoute
+  '/app/timesheets': typeof AppTimesheetsRoute
   '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
@@ -450,7 +466,9 @@ export interface FileRoutesById {
   '/admin/dashboard': typeof AdminDashboardRoute
   '/api/$': typeof ApiSplatRoute
   '/api/healthz': typeof ApiHealthzRoute
+  '/app/employment': typeof AppEmploymentRoute
   '/app/org-structure': typeof AppOrgStructureRoute
+  '/app/timesheets': typeof AppTimesheetsRoute
   '/app/workers-abroad': typeof AppWorkersAbroadRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
@@ -507,7 +525,9 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/employment'
     | '/app/org-structure'
+    | '/app/timesheets'
     | '/app/workers-abroad'
     | '/admin/'
     | '/app/'
@@ -560,7 +580,9 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/employment'
     | '/app/org-structure'
+    | '/app/timesheets'
     | '/app/workers-abroad'
     | '/admin'
     | '/app'
@@ -615,7 +637,9 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/api/$'
     | '/api/healthz'
+    | '/app/employment'
     | '/app/org-structure'
+    | '/app/timesheets'
     | '/app/workers-abroad'
     | '/admin/'
     | '/app/'
@@ -759,11 +783,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/employment': {
+      id: '/app/employment'
+      path: '/employment'
+      fullPath: '/app/employment'
+      preLoaderRoute: typeof AppEmploymentRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/org-structure': {
       id: '/app/org-structure'
       path: '/org-structure'
       fullPath: '/app/org-structure'
       preLoaderRoute: typeof AppOrgStructureRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/timesheets': {
+      id: '/app/timesheets'
+      path: '/timesheets'
+      fullPath: '/app/timesheets'
+      preLoaderRoute: typeof AppTimesheetsRouteImport
       parentRoute: typeof AppRouteRoute
     }
     '/app/workers-abroad': {
@@ -1072,7 +1110,9 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 )
 
 interface AppRouteRouteChildren {
+  AppEmploymentRoute: typeof AppEmploymentRoute
   AppOrgStructureRoute: typeof AppOrgStructureRoute
+  AppTimesheetsRoute: typeof AppTimesheetsRoute
   AppWorkersAbroadRoute: typeof AppWorkersAbroadRoute
   AppIndexRoute: typeof AppIndexRoute
   AppApplicationsIdRoute: typeof AppApplicationsIdRoute
@@ -1112,7 +1152,9 @@ interface AppRouteRouteChildren {
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppEmploymentRoute: AppEmploymentRoute,
   AppOrgStructureRoute: AppOrgStructureRoute,
+  AppTimesheetsRoute: AppTimesheetsRoute,
   AppWorkersAbroadRoute: AppWorkersAbroadRoute,
   AppIndexRoute: AppIndexRoute,
   AppApplicationsIdRoute: AppApplicationsIdRoute,
