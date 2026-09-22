@@ -16,6 +16,7 @@ echo ""
 # Parse arguments
 BUILD_ARG=""
 DETACH_ARG="-d"
+OBSERVABILITY=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -26,6 +27,14 @@ while [[ $# -gt 0 ]]; do
         --build)
             BUILD_ARG="--build"
             shift
+            ;;
+        --observability|-o)
+            OBSERVABILITY="$2"
+            if [[ "$OBSERVABILITY" != "aspire" && "$OBSERVABILITY" != "grafana" ]]; then
+                echo "--observability takes aspire or grafana"
+                exit 1
+            fi
+            shift 2
             ;;
         --foreground|-f)
             DETACH_ARG=""
@@ -69,6 +78,8 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  --build       Force rebuild of all images"
             echo "  --foreground  Run in foreground (see logs)"
+            echo "  --observability aspire|grafana"
+            echo "                Start a telemetry backend and make every service export to it"
             echo "  --logs        Follow webapi logs"
             echo "  --logs-worker Follow feeds worker logs"
             echo "  --clean       Remove all containers and volumes"
@@ -85,6 +96,12 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# One profile at a time: both backends listen on 4317/4318 and answer to the alias "otel".
+if [ -n "$OBSERVABILITY" ]; then
+    export COMPOSE_PROFILES="$OBSERVABILITY"
+    export OtelEndpoint="http://otel:4317"
+fi
 
 echo "Starting services..."
 echo ""
@@ -112,6 +129,9 @@ if [ -n "$DETACH_ARG" ]; then
     echo ""
     echo ""
     echo "  MailPit:    http://localhost:8025"
+    if [ "$OBSERVABILITY" = "aspire" ]; then
+        echo "  Telemetry:  http://localhost:18888  (Aspire dashboard)"
+    fi
     echo ""
     echo "  Health checks:"
     echo "    - API:    http://localhost:5000/healthz"

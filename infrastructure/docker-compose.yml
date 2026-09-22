@@ -105,6 +105,9 @@ services:
       replicas: ${ApiReplicaCount:-1}          
     environment:
       ASPNETCORE_ENVIRONMENT: docker
+      # Empty unless an observability profile is on (start.sh sets it), and empty means no exporter.
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OtelEndpoint:-}
+      Observability__ConsoleFormat: json
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=50"
       Jwt__Issuer: "hr-agency-api"
       Jwt__Audience: "hr-agency"
@@ -148,6 +151,9 @@ services:
       - inner-cluster-communication
     environment:
       ASPNETCORE_ENVIRONMENT: docker
+      # Empty unless an observability profile is on (start.sh sets it), and empty means no exporter.
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OtelEndpoint:-}
+      Observability__ConsoleFormat: json
       ASPNETCORE_HTTP_PORTS: 8080
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
       # Must match webapi - one shared key, and deliberately not the one user tokens are signed with.
@@ -176,6 +182,9 @@ services:
       - inner-cluster-communication
     environment:
       DOTNET_ENVIRONMENT: docker
+      # Empty unless an observability profile is on (start.sh sets it), and empty means no exporter.
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OtelEndpoint:-}
+      Observability__ConsoleFormat: json
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
       RustFs__Endpoint: "http://hr-agency-api-s3:9000"
       RustFs__AccessKey: ${RustFsAccessKey}
@@ -202,6 +211,9 @@ services:
       replicas: ${EmailsWorkerReplicaCount:-1}
     environment:
       DOTNET_ENVIRONMENT: docker
+      # Empty unless an observability profile is on (start.sh sets it), and empty means no exporter.
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OtelEndpoint:-}
+      Observability__ConsoleFormat: json
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
       # Must match webapi - producer and consumers share one topology description.
       RabbitMq__Host: "rabbitmq"
@@ -232,6 +244,9 @@ services:
       - inner-cluster-communication
     environment:
       ASPNETCORE_ENVIRONMENT: docker
+      # Empty unless an observability profile is on (start.sh sets it), and empty means no exporter.
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OtelEndpoint:-}
+      Observability__ConsoleFormat: json
       # No connection string on purpose: the public job board reaches the system only through
       # the API's internal routes, with a service key. The default is the key the seeder writes
       # (/api/development/seed), so a seeded stack works without touching .env; on anything
@@ -275,6 +290,32 @@ services:
     depends_on:      
       webapi:
         condition: service_healthy                       
+
+  # ===================
+  # Observability (opt-in: ./start.sh --observability aspire)
+  # ===================
+  # A plain OTLP receiver with a UI - it does not need the solution to be an Aspire project.
+  # Everything is kept in memory: restarting the container empties it, which is the point of a
+  # scratchpad. The OTLP listeners are moved to the standard 4317/4318 so that the apps point at
+  # the same port whichever backend is running.
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13.5
+    container_name: hr-agency-aspire-dashboard
+    profiles: ["aspire"]
+    restart: unless-stopped
+    environment:
+      ASPIRE_DASHBOARD_OTLP_ENDPOINT_URL: "http://0.0.0.0:4317"
+      ASPIRE_DASHBOARD_OTLP_HTTP_ENDPOINT_URL: "http://0.0.0.0:4318"
+      DASHBOARD__FRONTEND__AUTHMODE: Unsecured
+      DASHBOARD__OTLP__AUTHMODE: Unsecured
+    networks:
+      inner-cluster-communication:
+        # The name every service exports to, whichever backend answers behind it.
+        aliases: ["otel"]
+    ports:
+      - "18888:18888"
+      - "4317:4317"
+      - "4318:4318"
 
 networks:
   inner-cluster-communication:

@@ -29,6 +29,10 @@
     <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates/HrAgencySystem.EmailTemplates.csproj" />
     <Project Path="src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj" />
   </Folder>
+  <Folder Name="/src/Observability/">
+    <Project Path="src/Observability/HrAgencySystem.Observability.AspNetCore/HrAgencySystem.Observability.AspNetCore.csproj" />
+    <Project Path="src/Observability/HrAgencySystem.Observability/HrAgencySystem.Observability.csproj" />
+  </Folder>
   <Folder Name="/src/Svc/">
     <Project Path="src/services/HrAgencySystem.FileService/HrAgencySystem.FileService.csproj" />
     <Project Path="src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj" />

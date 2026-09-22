@@ -1,5 +1,8 @@
 using HrAgencySystem.Feeds;
 using HrAgencySystem.Files;
+using HrAgencySystem.Files.Service;
+using HrAgencySystem.Observability;
+using HrAgencySystem.Observability.Health;
 using HrAgencySystem.Organization;
 using HrAgencySystem.SharedKernel.Time;
 using JasperFx;
@@ -8,6 +11,8 @@ using Marten;
 
 var builder = Host.CreateApplicationBuilder(args);
 {
+    builder.AddObservability("hr-feeds-worker");
+
     var connectionString =
         builder.Configuration.GetConnectionString("Postgres")
         ?? throw new InvalidOperationException("ConnectionStrings:Postgres is required.");
@@ -19,6 +24,10 @@ var builder = Host.CreateApplicationBuilder(args);
     builder.Services.AddFeedsBackgroundWorkers();
     builder.Services.AddFilesModule(builder.Configuration);
     builder.Services.AddOrganizationModule(builder.Configuration);
+    builder
+        .Services.AddHealthChecks()
+        .AddNpgSql(name: "postgres", tags: HealthTags.ReadyOnly, timeout: TimeSpan.FromSeconds(5))
+        .AddObjectStorage(FeedBuckets.Jobs, HealthTags.ReadyOnly);
 
     /*
      * Marten is here for one reason: the scheduler asks the Organization module which organizations

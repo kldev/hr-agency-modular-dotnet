@@ -1,5 +1,11 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
+# The compose healthcheck curls /healthz; the aspnet image does not ship curl, and without it the
+# container reports unhealthy forever while the service itself is fine.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 EXPOSE 8080
@@ -13,6 +19,8 @@ COPY Directory.Packages.props .
 COPY src/HrAgencySystem.Files/HrAgencySystem.Files.csproj HrAgencySystem.Files/
 COPY src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj services/HrAgencySystem.FileService.Contracts/
 COPY src/services/HrAgencySystem.FileService/HrAgencySystem.FileService.csproj services/HrAgencySystem.FileService/
+COPY src/Observability/HrAgencySystem.Observability/HrAgencySystem.Observability.csproj Observability/HrAgencySystem.Observability/
+COPY src/Observability/HrAgencySystem.Observability.AspNetCore/HrAgencySystem.Observability.AspNetCore.csproj Observability/HrAgencySystem.Observability.AspNetCore/
 
 RUN dotnet restore services/HrAgencySystem.FileService/HrAgencySystem.FileService.csproj
 
