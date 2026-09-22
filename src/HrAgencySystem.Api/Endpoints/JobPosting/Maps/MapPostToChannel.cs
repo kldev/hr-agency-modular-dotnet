@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobPosting.PostToChannel;
@@ -38,7 +39,12 @@ internal static class MapPostToChannel
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record PostToChannelRequest(PostingChannelType Channel)
+internal sealed record PostToChannelRequest(
+    [property: Description(
+        "Where the post went: CareerPage, PracujPl, Olx, PracaPl, Rocketjobs, JustJoinIt, NoFluffJobs, Linkedin, Indeed or Other. It records the publication, it does not publish anything. A post not yet published becomes Published; a closed one is refused."
+    )]
+        PostingChannelType Channel
+)
 {
     internal PostToChannel ToCommand(Guid organizationId, Guid userId, Guid jobPostId) =>
         new PostToChannel(jobPostId, organizationId, Channel, userId);

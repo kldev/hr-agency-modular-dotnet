@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobPosting.ChangeStatus;
@@ -39,7 +40,12 @@ internal static class MapChangeStatus
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed record ChangeJobPostStatusRequest(JobPostStatusApi Status)
+public sealed record ChangeJobPostStatusRequest(
+    [property: Description(
+        "Published, Closed or Archived. Closed is final. An archived post can be published again."
+    )]
+        JobPostStatusApi Status
+)
 {
     public ChangeJobPostStatus ToCommand(Guid jobPostId, Guid organizationId, Guid userId) =>
         new(jobPostId, organizationId, Status, userId);

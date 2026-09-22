@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobApplications.Create;
@@ -35,11 +36,17 @@ internal static class MapApplyTo
 
 // ReSharper disable once ClassNeverInstantiated.Global
 internal sealed record ApplyToPostRequest(
-    string Email,
-    string PhoneNumber,
-    CandidateSource Source = CandidateSource.Direct,
-    string FirstName = "",
-    string LastName = ""
+    [property: Description(
+        "The candidate's e-mail address. An existing candidate with this address is reused, so one person stays one candidate."
+    )]
+        string Email,
+    [property: Description("The candidate's phone number.")] string PhoneNumber,
+    [property: Description(
+        "Where the candidate came from, e.g. Direct, Referral, JustJoinIt, Linkedin. Defaults to Direct."
+    )]
+        CandidateSource Source = CandidateSource.Direct,
+    [property: Description("The candidate's first name. Optional.")] string FirstName = "",
+    [property: Description("The candidate's last name. Optional.")] string LastName = ""
 )
 {
     public ApplyToJobApplication ToCommand(Guid jobPostId)
