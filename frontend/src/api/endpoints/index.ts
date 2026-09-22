@@ -1,3 +1,4 @@
+export * from "./agency-employment/agency-employment.ts";
 export * from "./assignments/assignments.ts";
 export * from "./auth/auth.ts";
 export * from "./company/company.ts";
@@ -16,5 +17,6 @@ export * from "./recruitment-job-posting/recruitment-job-posting.ts";
 export * from "./sales/sales.ts";
 export * from "./suggestion/suggestion.ts";
 export * from "./teams/teams.ts";
+export * from "./time-sheets/time-sheets.ts";
 export * from "./users/users.ts";
 export * from "./workers/workers.ts";
