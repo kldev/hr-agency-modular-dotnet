@@ -70,6 +70,6 @@ public class RemoveUserAvatarHandlerTests : BaseTest
 
     private static RemoveUserAvatar Command()
     {
-        return new RemoveUserAvatar(UserGuid, OrganizationId.From(OrganizationGuid));
+        return new RemoveUserAvatar(UserGuid, OrganizationId.From(OrganizationGuid), UserGuid);
     }
 }

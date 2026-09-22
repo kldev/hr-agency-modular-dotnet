@@ -57,7 +57,8 @@ internal static class MapUploadAvatar
                 stored.FileId,
                 stored.FileName,
                 stored.ContentType,
-                stored.Size
+                stored.Size,
+                user.UserId
             ),
             ct
         );

@@ -98,7 +98,8 @@ public class ChangeUserAvatarHandlerTests : BaseTest
             FileGuid,
             "face.png",
             "image/png",
-            2048
+            2048,
+            UserGuid
         );
     }
 }

@@ -28,7 +28,7 @@ internal static class MapRemoveAvatar
     )
     {
         var result = await bus.InvokeAsync<UserAvatarRemoved>(
-            new RemoveUserAvatar(user.UserId, user.GetOrganization),
+            new RemoveUserAvatar(user.UserId, user.GetOrganization, user.UserId),
             ct
         );
 
