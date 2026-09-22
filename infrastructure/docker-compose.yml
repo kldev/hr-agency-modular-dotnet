@@ -292,7 +292,7 @@ services:
         condition: service_healthy                       
 
   # ===================
-  # Observability (opt-in: ./start.sh --observability aspire)
+  # Observability (opt-in: ./start.sh --observability aspire|grafana)
   # ===================
   # A plain OTLP receiver with a UI - it does not need the solution to be an Aspire project.
   # Everything is kept in memory: restarting the container empties it, which is the point of a
@@ -317,6 +317,28 @@ services:
       - "4317:4317"
       - "4318:4318"
 
+  # Grafana with Loki (logs), Tempo (traces), Prometheus (metrics) and an OTLP collector in front,
+  # all in one image. Unlike the Aspire dashboard it keeps its data (volume) and has dashboards:
+  # the HR Agency folder is provisioned from infrastructure/grafana. Opt-in, and exclusive with
+  # the aspire profile - both take 4317/4318.
+  grafana:
+    image: grafana/otel-lgtm:0.33.1
+    container_name: hr-agency-grafana
+    profiles: ["grafana"]
+    restart: unless-stopped
+    networks:
+      inner-cluster-communication:
+        aliases: ["otel"]
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - grafana_data:/data
+      - ./grafana/prometheus.yaml:/otel-lgtm/prometheus.yaml:ro
+      - ./grafana/provisioning/hr-agency-dashboards.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/hr-agency-dashboards.yaml:ro
+      - ./grafana/dashboards:/otel-lgtm/hr-agency-dashboards:ro
+
 networks:
   inner-cluster-communication:
 
@@ -325,3 +347,4 @@ volumes:
   files_data:
   mailpit:
   rabbitmq_data:
+  grafana_data:

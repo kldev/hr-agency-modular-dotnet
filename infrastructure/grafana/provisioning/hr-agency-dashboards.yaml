@@ -1,0 +1,12 @@
+# Mounted next to the image's own providers in /otel-lgtm/grafana/conf/provisioning/dashboards.
+apiVersion: 1
+
+providers:
+  - name: "HR Agency"
+    folder: "HR Agency"
+    type: file
+    disableDeletion: false
+    allowUiUpdates: true
+    options:
+      path: /otel-lgtm/hr-agency-dashboards
+      foldersFromFilesStructure: false

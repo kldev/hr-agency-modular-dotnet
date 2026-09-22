@@ -131,6 +131,8 @@ if [ -n "$DETACH_ARG" ]; then
     echo "  MailPit:    http://localhost:8025"
     if [ "$OBSERVABILITY" = "aspire" ]; then
         echo "  Telemetry:  http://localhost:18888  (Aspire dashboard)"
+    elif [ "$OBSERVABILITY" = "grafana" ]; then
+        echo "  Telemetry:  http://localhost:3000   (Grafana, admin/admin - folder HR Agency)"
     fi
     echo ""
     echo "  Health checks:"
