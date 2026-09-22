@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Company.Application.Contacts.Create;
@@ -37,7 +38,14 @@ internal static class MapCreate
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record CompanyContactRequest(ContactPerson Contact, bool UpdatePrimary = false)
+internal sealed record CompanyContactRequest(
+    [property: Description("The person: e-mail, first and last name, job title and phone.")]
+        ContactPerson Contact,
+    [property: Description(
+        "Also make this person the company's primary contact. Applied when a contact is edited; creating a contact does not look at it today."
+    )]
+        bool UpdatePrimary = false
+)
 {
     public CreateCompanyContact ToCreateCommand(Guid organizationId, Guid companyId, Guid createdBy)
     {

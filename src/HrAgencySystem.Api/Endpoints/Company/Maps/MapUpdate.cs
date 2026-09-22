@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Company.Application.Update;
@@ -37,11 +38,14 @@ internal static class MapUpdate
 
 // ReSharper disable once ClassNeverInstantiated.Global
 internal record UpdateCompanyRequest(
-    string Name,
-    string RegistrationNumber,
-    Industry Industry,
-    string WebSite,
-    string CountryCode
+    [property: Description("The name the agency knows the client by.")] string Name,
+    [property: Description("Company register number (KRS or REGON in Poland).")]
+        string RegistrationNumber,
+    [property: Description("What the company does, e.g. Software, Manufacturing, Logistics.")]
+        Industry Industry,
+    [property: Description("The company's website address.")] string WebSite,
+    [property: Description("Where the company is based, ISO 3166-1 alpha-2, e.g. \"PL\".")]
+        string CountryCode
 )
 {
     public UpdateCompany ToCommand(Guid organizationId, Guid companyId, Guid modifiedBy) =>

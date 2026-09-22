@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Company.Application.Create;
@@ -38,13 +39,29 @@ internal static class MapCreate
     }
 
     internal record CreateCompanyRequest(
-        string Name,
-        string CountryCode,
-        string TaxId,
-        string RegistrationNumber,
-        string Website,
-        Industry Industry,
-        ContactPerson? Contact = null
+        [property: Description(
+            "The name the agency knows the client by, e.g. \"Cassin Inc\". The legal name belongs to the profile."
+        )]
+            string Name,
+        [property: Description("Where the company is based, ISO 3166-1 alpha-2, e.g. \"PL\".")]
+            string CountryCode,
+        [property: Description(
+            "Tax identification number (NIP in Poland). Unique within the agency - a second company with the same one is refused."
+        )]
+            string TaxId,
+        [property: Description(
+            "Company register number (KRS or REGON in Poland), as the client gives it."
+        )]
+            string RegistrationNumber,
+        [property: Description("The company's website address.")] string Website,
+        [property: Description(
+            "What the company does, e.g. Software, Manufacturing, Logistics. Used to filter and group clients."
+        )]
+            Industry Industry,
+        [property: Description(
+            "Optional first contact person, recorded as the company's primary contact."
+        )]
+            ContactPerson? Contact = null
     )
     {
         public CreateCompany ToCommand(OrganizationId organizationId, Guid createdBy)

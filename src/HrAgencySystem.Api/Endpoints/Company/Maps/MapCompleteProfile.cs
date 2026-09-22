@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Company.Application.CompleteProfile;
@@ -47,17 +48,38 @@ internal static class MapCompleteProfile
     /// place a company's paperwork is edited. Creating a lead never comes through here.
     /// </summary>
     internal sealed record CompleteCompanyProfileRequest(
-        string? LegalName,
-        string? Street,
-        string? BuildingNumber,
-        string? UnitNumber,
-        string? PostalCode,
-        string? City,
-        string? CountryCode,
-        string? VatNumber,
-        string? Iban,
-        string? Bic,
-        ContactPerson? LegalRepresentative
+        [property: Description(
+            "The name as registered, the one a contract is signed with. With a registered address and a tax id it makes the profile complete - which a project needs before it can go live."
+        )]
+            string? LegalName,
+        [property: Description(
+            "Street of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused."
+        )]
+            string? Street,
+        [property: Description(
+            "Building number of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused."
+        )]
+            string? BuildingNumber,
+        [property: Description("Optional flat or unit number of the registered address.")]
+            string? UnitNumber,
+        [property: Description(
+            "Postal code of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused."
+        )]
+            string? PostalCode,
+        [property: Description(
+            "City of the registered address. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused."
+        )]
+            string? City,
+        [property: Description(
+            "Country of the registered address, ISO 3166-1 alpha-2. Registered address: street, building number, postal code, city and country go together - all of them or none. Half an address is refused."
+        )]
+            string? CountryCode,
+        [property: Description("EU VAT number, if the company has one, e.g. \"PL1234567890\".")]
+            string? VatNumber,
+        [property: Description("Bank account for invoices, as an IBAN.")] string? Iban,
+        [property: Description("The bank's BIC/SWIFT code.")] string? Bic,
+        [property: Description("The person who may sign for the company, e.g. a board member.")]
+            ContactPerson? LegalRepresentative
     )
     {
         public CompleteCompanyProfile ToCommand(
