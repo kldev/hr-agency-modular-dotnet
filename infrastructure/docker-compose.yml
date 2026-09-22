@@ -112,7 +112,9 @@ services:
       RustFs__Endpoint: "http://hr-agency-api-s3:9000"
       RustFs__AccessKey: ${RustFsAccessKey}
       RustFs__SecretKey: ${RustFsSecretKey}
-      Application__FeedUrl: "http://localhost:8080"
+      # The public job board (web, :5050) - prepended to every apply url in the generated feeds.
+      # Not the agency panel on :8080, which has no page for a candidate.
+      Application__FeedUrl: "http://localhost:5050"
       # Base of the reset password link that goes out in a mail - must point at the front, not the api.
       Application__PortalUrl: "http://localhost:8080"
       RabbitMq__Host: "rabbitmq"
@@ -179,7 +181,7 @@ services:
       RustFs__AccessKey: ${RustFsAccessKey}
       RustFs__SecretKey: ${RustFsSecretKey}
       # Must match webapi - this value is prepended to every apply url in the generated feeds.
-      Application__FeedUrl: "http://localhost:8080"
+      Application__FeedUrl: "http://localhost:5050"
     restart: on-failure
     depends_on:
       postgres:
