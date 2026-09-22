@@ -48,6 +48,21 @@ internal static class IdentityDocumentConfiguration
                 .Index(x => x.FamilyId)
                 .Index(x => new { x.OrganizationId, x.UserId });
 
+            // A service key belongs to no organization, so this is the second lookup that cannot
+            // lead with OrganizationId: the request carries the key and nothing else. Unique for
+            // the same reason as the refresh token's - two rows with one hash would be two keys
+            // that cannot be told apart, or revoked apart.
+            options
+                .Schema.For<ServiceApiKey>()
+                .DatabaseSchemaName(SchemaName)
+                .Index(
+                    x => x.KeyHash,
+                    idx =>
+                    {
+                        idx.IsUnique = true;
+                    }
+                );
+
             // Keyed by the user's id, so there is no separate "which row is mine" lookup; the
             // organization leads the index for the same reason it leads every other one here.
             options

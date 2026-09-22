@@ -9,5 +9,8 @@ public static class Endpoint
         Maps.MapCreate.Map(group);
         Maps.MapGet.Map(group);
         Maps.MapGetAll.Map(group);
+        Maps.MapIssueApiKey.Map(group);
+        Maps.MapListApiKeys.Map(group);
+        Maps.MapRevokeApiKey.Map(group);
     }
 }

@@ -21,6 +21,7 @@ internal static class IdentityServiceCollectionExtensions
             services.AddTransient<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IServiceApiKeyRepository, ServiceApiKeyRepository>();
             services.AddOptions<JwtConfig>(JwtConfig.Section);
             services.AddScoped<IUserSuggestionRepository, UserSuggestionRepository>();
             services.AddScoped<IUserQueryRepository, UserQueryRepository>();

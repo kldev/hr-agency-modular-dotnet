@@ -55,6 +55,10 @@ internal static class ApiEndpoints
         public const string Create = OwnersBase;
         public const string GetAll = OwnersBase;
         public const string Get = $"{OwnersBase}/{{ownerId:guid}}";
+
+        /// <summary>Keys for programs, not people - see <c>ServiceApiKey</c>.</summary>
+        public const string ApiKeys = $"{OwnersBase}/api-keys";
+        public const string ApiKey = $"{OwnersBase}/api-keys/{{keyId:guid}}";
     }
 
     internal static class Organizations

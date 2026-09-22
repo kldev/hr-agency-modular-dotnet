@@ -44,6 +44,7 @@ public static class AuthenticationExtensions
         authorization.AddPayrollPolicy();
         authorization.AddRatesPolicy();
         authorization.AddAdminPolicy();
+        authorization.AddInternalApiPolicy();
 
         services.Configure<JwtConfig>(configuration.GetSection(JwtConfig.Section));
 
@@ -69,6 +70,8 @@ public static class AuthenticationExtensions
                         Encoding.UTF8.GetBytes(config.SecretKey)
                     ),
                 };
-            });
+            })
+            // Asked only by the internal policy; the bearer stays the default for everything else.
+            .AddServiceApiKeys();
     }
 }
