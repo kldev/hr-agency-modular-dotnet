@@ -33,9 +33,13 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
 	BadRequestDetails,
 	CreatePlatformOwner,
+	IssueServiceApiKeyRequest,
 	OwnerProjection,
 	PlatformOwnerCreated,
 	ProblemDetails,
+	ServiceApiKeyIssued,
+	ServiceApiKeyRevoked,
+	ServiceApiKeyRow,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
 import { customInstance } from "../../mutator.ts";
@@ -317,3 +321,333 @@ export const useGetApiOwnersOwnerId = <
 > => {
 	return useMutation(getGetApiOwnersOwnerIdMutationOptions(options), queryClient);
 };
+/**
+ * @summary Issue a key for a program, returning its value once
+ */
+export const issueServiceAPIKey = (
+	issueServiceApiKeyRequest: BodyType<IssueServiceApiKeyRequest>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<ServiceApiKeyIssued>(
+		{
+			url: `/api/owners/api-keys`,
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			data: issueServiceApiKeyRequest,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getIssueServiceAPIKeyQueryKey = (
+	issueServiceApiKeyRequest?: BodyType<IssueServiceApiKeyRequest>,
+) => {
+	return ["POST", `/api/owners/api-keys`, issueServiceApiKeyRequest] as const;
+};
+
+export const getIssueServiceAPIKeyQueryOptions = <
+	TData = Awaited<ReturnType<typeof issueServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	issueServiceApiKeyRequest: BodyType<IssueServiceApiKeyRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof issueServiceAPIKey>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getIssueServiceAPIKeyQueryKey(issueServiceApiKeyRequest);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof issueServiceAPIKey>>> = ({ signal }) =>
+		issueServiceAPIKey(issueServiceApiKeyRequest, requestOptions, signal);
+
+	return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+		Awaited<ReturnType<typeof issueServiceAPIKey>>,
+		TError,
+		TData
+	> & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type IssueServiceAPIKeyQueryResult = NonNullable<
+	Awaited<ReturnType<typeof issueServiceAPIKey>>
+>;
+export type IssueServiceAPIKeyQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useIssueServiceAPIKey<
+	TData = Awaited<ReturnType<typeof issueServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	issueServiceApiKeyRequest: BodyType<IssueServiceApiKeyRequest>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof issueServiceAPIKey>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof issueServiceAPIKey>>,
+					TError,
+					Awaited<ReturnType<typeof issueServiceAPIKey>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useIssueServiceAPIKey<
+	TData = Awaited<ReturnType<typeof issueServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	issueServiceApiKeyRequest: BodyType<IssueServiceApiKeyRequest>,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof issueServiceAPIKey>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof issueServiceAPIKey>>,
+					TError,
+					Awaited<ReturnType<typeof issueServiceAPIKey>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useIssueServiceAPIKey<
+	TData = Awaited<ReturnType<typeof issueServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	issueServiceApiKeyRequest: BodyType<IssueServiceApiKeyRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof issueServiceAPIKey>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Issue a key for a program, returning its value once
+ */
+
+export function useIssueServiceAPIKey<
+	TData = Awaited<ReturnType<typeof issueServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	issueServiceApiKeyRequest: BodyType<IssueServiceApiKeyRequest>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof issueServiceAPIKey>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getIssueServiceAPIKeyQueryOptions(issueServiceApiKeyRequest, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Every key ever issued, revoked ones included - never their values
+ */
+export const listServiceAPIKeys = (
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<ServiceApiKeyRow[]>(
+		{ url: `/api/owners/api-keys`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getListServiceAPIKeysMutationKey = () => ["listServiceAPIKeys"] as const;
+
+export const getListServiceAPIKeysMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof listServiceAPIKeys>>,
+		TError,
+		void,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof listServiceAPIKeys>>, TError, void, TContext> => {
+	const mutationKey = getListServiceAPIKeysMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<Awaited<ReturnType<typeof listServiceAPIKeys>>, void> = () => {
+		return listServiceAPIKeys(requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type ListServiceAPIKeysMutationResult = NonNullable<
+	Awaited<ReturnType<typeof listServiceAPIKeys>>
+>;
+
+export type ListServiceAPIKeysMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+/**
+ * @summary Every key ever issued, revoked ones included - never their values
+ */
+export const useListServiceAPIKeys = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof listServiceAPIKeys>>,
+			TError,
+			void,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof listServiceAPIKeys>>, TError, void, TContext> => {
+	return useMutation(getListServiceAPIKeysMutationOptions(options), queryClient);
+};
+/**
+ * @summary Revoke a key; the row stays so its history does
+ */
+export const revokeServiceAPIKey = (
+	keyId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<ServiceApiKeyRevoked>(
+		{ url: `/api/owners/api-keys/${keyId}`, method: "DELETE", signal },
+		options,
+	);
+};
+
+export const getRevokeServiceAPIKeyQueryKey = (keyId: string) => {
+	return ["DELETE", `/api/owners/api-keys/${keyId}`] as const;
+};
+
+export const getRevokeServiceAPIKeyQueryOptions = <
+	TData = Awaited<ReturnType<typeof revokeServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	keyId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof revokeServiceAPIKey>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getRevokeServiceAPIKeyQueryKey(keyId);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof revokeServiceAPIKey>>> = ({ signal }) =>
+		revokeServiceAPIKey(keyId, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: keyId !== null && keyId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof revokeServiceAPIKey>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type RevokeServiceAPIKeyQueryResult = NonNullable<
+	Awaited<ReturnType<typeof revokeServiceAPIKey>>
+>;
+export type RevokeServiceAPIKeyQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useRevokeServiceAPIKey<
+	TData = Awaited<ReturnType<typeof revokeServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	keyId: string,
+	options: {
+		query: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof revokeServiceAPIKey>>, TError, TData>
+		> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof revokeServiceAPIKey>>,
+					TError,
+					Awaited<ReturnType<typeof revokeServiceAPIKey>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRevokeServiceAPIKey<
+	TData = Awaited<ReturnType<typeof revokeServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	keyId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof revokeServiceAPIKey>>, TError, TData>
+		> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof revokeServiceAPIKey>>,
+					TError,
+					Awaited<ReturnType<typeof revokeServiceAPIKey>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRevokeServiceAPIKey<
+	TData = Awaited<ReturnType<typeof revokeServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	keyId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof revokeServiceAPIKey>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Revoke a key; the row stays so its history does
+ */
+
+export function useRevokeServiceAPIKey<
+	TData = Awaited<ReturnType<typeof revokeServiceAPIKey>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	keyId: string,
+	options?: {
+		query?: Partial<
+			UseQueryOptions<Awaited<ReturnType<typeof revokeServiceAPIKey>>, TError, TData>
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getRevokeServiceAPIKeyQueryOptions(keyId, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
