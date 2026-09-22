@@ -106,7 +106,14 @@ export function TimeSheetsPage() {
 				description="Hours recorded month by month: your own, your people's, and the months waiting on a decision."
 				loading={mine.isPending || team.isPending}
 				emptyState={null}
-				headerAddon={<MonthNavigator month={month} onChange={setMonth} />}
+				headerAddon={
+					<MonthNavigator
+						month={month}
+						onChange={setMonth}
+						onRefresh={refresh}
+						loading={mine.isFetching || team.isFetching}
+					/>
+				}
 			>
 				<Tabs value={active} tabs={tabs} onChange={setTab} label="Time sheet views" />
 
