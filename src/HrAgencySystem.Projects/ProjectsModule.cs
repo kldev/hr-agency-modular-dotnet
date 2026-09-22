@@ -14,7 +14,6 @@ public static class ProjectsModule
         }
     }
 
-    // No Minimal variant: the public job board has no idea projects exist, and no reason to.
     public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureEvents();

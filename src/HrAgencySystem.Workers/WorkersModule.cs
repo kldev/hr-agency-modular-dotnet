@@ -14,8 +14,6 @@ public static class WorkersModule
         }
     }
 
-    // No Minimal variant: the public job board shows offers to candidates, and a candidate has no
-    // business seeing who the agency already has on its books.
     public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureDocuments();

@@ -18,18 +18,6 @@ internal static class RecruitmentEventConfiguration
             ConfigureCandidateEvents(options);
             ConfigureInterviewsEvents(options);
         }
-
-        public void ConfigureRecruitmentEventsMinimal()
-        {
-            options.Events.AddEventType<JobApplicationCreated>();
-            options.Events.AddEventType<CandidateCreated>();
-            options.Events.AddEventType<CandidateApplicationUpdated>();
-
-            // The public board appends to candidates and applications that may already carry
-            // these, and its own snapshot of the candidate replays them.
-            options.Events.AddEventType<CandidateRegisteredAsWorker>();
-            options.Events.AddEventType<JobApplicationRegisteredAsWorker>();
-        }
     }
 
     private static void ConfigureInterviewsEvents(StoreOptions options)

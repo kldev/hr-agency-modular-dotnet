@@ -1,35 +1,32 @@
 using System.ComponentModel.DataAnnotations;
-using HrAgencySystem.Recruitment.Application.JobApplications.Create;
-using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
-using HrAgencySystem.Recruitment.Domain.Candidates;
-using HrAgencySystem.Recruitment.Events.Applications;
-using HrAgencySystem.Recruitment.Projections;
-using HrAgencySystem.SharedKernel.Services;
+using HrAgencySystem.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Wolverine;
 
 namespace HrAgencySystem.Web.Pages;
 
-public partial class Apply(
-    IMessageBus bus,
-    IQueryOrganizationRepository repository,
-    IJobPostQueryRepository jobPostQueryRepository,
-    ILogger<Apply> logger
-) : PageModel
+public partial class Apply(IJobBoardClient board, ILogger<Apply> logger) : PageModel
 {
     public JobView Job { get; private set; } = null!;
     public string Slug { get; set; } = "";
 
     public async Task<IActionResult> OnGetAsync(string slug, string postslug, CancellationToken ct)
     {
-        var job = await GetJobAsync(slug, postslug, ct);
+        BoardPost? post;
 
-        if (job is null)
+        try
+        {
+            post = await board.GetPostAsync(slug, postslug, ct);
+        }
+        catch (JobBoardUnavailableException)
+        {
+            return RedirectToPage("/Error");
+        }
+
+        if (post is null)
             return NotFound();
 
-        Job = JobView.FromProjection(job);
+        Job = JobView.From(post);
         Slug = slug;
 
         return Page();
@@ -58,53 +55,50 @@ public partial class Apply(
     public async Task<IActionResult> OnPostAsync(string slug, string postslug, CancellationToken ct)
     {
         LogApplyingJobSlugWithEmail(slug, Email);
-        var job = await GetJobAsync(slug, postslug, ct);
         Slug = slug;
-        if (job is null)
-            return NotFound();
-
-        Job = JobView.FromProjection(job);
-
-        if (!ModelState.IsValid)
-            return Page();
 
         try
         {
-            var request = new ApplyToJobApplication(
-                job.Id,
-                Email,
-                Phone ?? "",
-                CandidateSource.CareerPage,
-                FirstName,
-                LastName
+            var post = await board.GetPostAsync(slug, postslug, ct);
+
+            if (post is null)
+                return NotFound();
+
+            Job = JobView.From(post);
+
+            if (!ModelState.IsValid)
+                return Page();
+
+            var result = await board.ApplyAsync(
+                slug,
+                postslug,
+                new BoardApplication(FirstName, LastName, Email, Phone),
+                ct
             );
 
-            await bus.InvokeAsync<JobApplicationCreated>(request, ct);
-            return Redirect($"/{slug}/success.html");
+            switch (result)
+            {
+                case ApplyResult.Accepted:
+                    return Redirect($"/{slug}/success.html");
+
+                case ApplyResult.PostNotFound:
+                    return NotFound();
+
+                // Said on the form, next to what the candidate typed, rather than on an error page
+                // that throws the form away.
+                case ApplyResult.Rejected rejected:
+                    foreach (var reason in rejected.Reasons)
+                        ModelState.AddModelError(string.Empty, reason);
+
+                    return Page();
+            }
         }
-        catch (Exception ex)
+        catch (JobBoardUnavailableException exception)
         {
-            logger.LogError(ex, ex.Message);
-            return RedirectToPage("/Error");
+            logger.LogError(exception, "Applying to {Slug}/{PostSlug} failed", slug, postslug);
         }
-    }
 
-    private async Task<JobPostProjection?> GetJobAsync(
-        string slug,
-        string postslug,
-        CancellationToken ct
-    )
-    {
-        var organization = await repository.GetBySlugAsync(slug, ct);
-
-        if (organization is null)
-            return null;
-
-        return await jobPostQueryRepository.GetJobPost(
-            organization.Id,
-            $"{organization.Slug}/{postslug}",
-            ct
-        );
+        return RedirectToPage("/Error");
     }
 
     [LoggerMessage(LogLevel.Information, "Applying job {slug} with {email}")]

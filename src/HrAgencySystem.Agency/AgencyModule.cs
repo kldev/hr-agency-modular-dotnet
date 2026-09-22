@@ -26,8 +26,6 @@ public static class AgencyModule
         }
     }
 
-    // No Minimal variant: the public job board shows offers to candidates, and a candidate never
-    // sees who reports to whom.
     public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureEvents();

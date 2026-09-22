@@ -10,17 +10,9 @@ internal static class CompanyProjectionsConfiguration
 
     extension(StoreOptions options)
     {
-        public void ConfigureProjections(bool skipSnapshots = false)
+        public void ConfigureProjections()
         {
-            options.ConfigureCompanyProjections(skipSnapshots);
-        }
-
-        public void ConfigureCompanyProjections(bool skipSnapshots = false)
-        {
-            if (!skipSnapshots)
-            {
-                options.Projections.Snapshot<CompanyProjection>(SnapshotLifecycle.Async);
-            }
+            options.Projections.Snapshot<CompanyProjection>(SnapshotLifecycle.Async);
 
             options
                 .Schema.For<CompanyProjection>()

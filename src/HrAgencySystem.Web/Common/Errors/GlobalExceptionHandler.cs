@@ -1,4 +1,4 @@
-using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.Web.Services;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,58 +24,16 @@ public sealed class GlobalExceptionHandler(
         CancellationToken cancellationToken
     )
     {
+        // Domain exceptions stopped being possible here when the database went: the API raises
+        // them and answers with problem details, which the client turns into results.
         switch (exception)
         {
-            case AuthorizationException:
+            case JobBoardUnavailableException:
                 return await WriteErrorAsync(
                     httpContext,
-                    StatusCodes.Status401Unauthorized,
-                    "Authentication failed",
-                    exception.Message,
-                    exception
-                );
-            case ValidationException validationException:
-                httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                return await service.TryWriteAsync(
-                    new ProblemDetailsContext
-                    {
-                        HttpContext = httpContext,
-                        ProblemDetails = BadRequestDetails.CreateValidation(validationException),
-                    }
-                );
-
-            case InValidValueException:
-                return await WriteErrorAsync(
-                    httpContext,
-                    StatusCodes.Status400BadRequest,
-                    "Invalid value",
-                    exception.Message,
-                    exception
-                );
-
-            case ArgumentException:
-                return await WriteErrorAsync(
-                    httpContext,
-                    StatusCodes.Status400BadRequest,
-                    "Argument exception",
-                    exception.Message,
-                    exception
-                );
-
-            case BusinessRuleException:
-                return await WriteErrorAsync(
-                    httpContext,
-                    StatusCodes.Status400BadRequest,
-                    "Business rule",
-                    exception.Message,
-                    exception
-                );
-            case NotFoundException:
-                return await WriteErrorAsync(
-                    httpContext,
-                    StatusCodes.Status404NotFound,
-                    "Not found",
-                    exception.Message,
+                    StatusCodes.Status503ServiceUnavailable,
+                    "Service unavailable",
+                    "The job board cannot reach its data right now. Try again in a moment.",
                     exception
                 );
             case BadHttpRequestException:

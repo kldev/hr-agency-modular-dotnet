@@ -19,19 +19,10 @@ internal static class RecruitmentProjectionConfiguration
             ConfigureInterviewProjection(options);
             ConfigureJobPostFeedProjection(options);
         }
-
-        public void ConfigureRecruitmentProjectionsMinimal()
-        {
-            ConfigureJobPostProjection(options, true);
-            ConfigureCandidateProjection(options, true);
-        }
     }
 
     /*
-     * Feed read model.
-     *
-     * Not part of the minimal configuration: the public web app only serves feed files
-     * from object storage, it neither generates them nor runs the projection daemon.
+     * Feed read model: the relational table the feed worker serializes from.
      */
     private static void ConfigureJobPostFeedProjection(StoreOptions options)
     {
@@ -55,12 +46,9 @@ internal static class RecruitmentProjectionConfiguration
             .Index(x => new { x.OrgId, x.Source });
     }
 
-    private static void ConfigureJobPostProjection(StoreOptions options, bool skipSnapshots = false)
+    private static void ConfigureJobPostProjection(StoreOptions options)
     {
-        if (!skipSnapshots)
-        {
-            options.Projections.Snapshot<JobPostProjection>(SnapshotLifecycle.Async);
-        }
+        options.Projections.Snapshot<JobPostProjection>(SnapshotLifecycle.Async);
 
         options
             .Schema.For<JobPostProjection>()
@@ -81,15 +69,9 @@ internal static class RecruitmentProjectionConfiguration
             .Index(x => new { x.OrgId, x.SearchText });
     }
 
-    private static void ConfigureCandidateProjection(
-        StoreOptions options,
-        bool skipSnapshots = false
-    )
+    private static void ConfigureCandidateProjection(StoreOptions options)
     {
-        if (!skipSnapshots)
-        {
-            options.Projections.Snapshot<CandidateProjection>(SnapshotLifecycle.Async);
-        }
+        options.Projections.Snapshot<CandidateProjection>(SnapshotLifecycle.Async);
 
         options
             .Schema.For<CandidateProjection>()

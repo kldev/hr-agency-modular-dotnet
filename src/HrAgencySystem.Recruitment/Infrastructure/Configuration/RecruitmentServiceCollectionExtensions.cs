@@ -43,15 +43,5 @@ public static class RecruitmentServiceCollectionExtensions
             services.AddScoped<IRecruitmentService, RecruitmentService>();
             services.AddScoped<IJobPostSuggestionRepository, JobPostSuggestionRepository>();
         }
-
-        public void AddRecruitmentServicesMinimal()
-        {
-            services.AddScoped<ICandidateResolver, CandidateResolver>();
-            services.AddScoped<
-                ICandidateEmailReservationRepository,
-                CandidateEmailReservationRepository
-            >();
-            services.AddScoped<IJobPostQueryRepository, JobPostQueryRepository>();
-        }
     }
 }

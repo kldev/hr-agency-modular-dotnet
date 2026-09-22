@@ -5,20 +5,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <!--
+    No project references on purpose. This host reads and writes through the API's internal
+    routes, so it carries no database credentials and no module has to keep a "minimal" variant
+    alive for it.
+  -->
   <ItemGroup>
-    <PackageReference Include="Marten" />
-    <PackageReference Include="WolverineFx" />
-    <PackageReference Include="WolverineFx.Marten" />
-    <PackageReference Include="WolverineFx.RuntimeCompilation" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\HrAgencySystem.Company\HrAgencySystem.Company.csproj" />
-    <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
-    <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
-    <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj" />
-    <ProjectReference Include="..\HrAgencySystem.Recruitment\HrAgencySystem.Recruitment.csproj" />
-    <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,26 +1,34 @@
-using HrAgencySystem.SharedKernel.Services;
+using HrAgencySystem.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace HrAgencySystem.Web.Pages;
 
-public class Jobs(IQueryOrganizationRepository repository) : PageModel
+public class Jobs(IJobBoardClient board) : PageModel
 {
     public string OrganizationName { get; private set; } = "";
 
-    public String Slug { get; private set; } = "";
+    public string Slug { get; private set; } = "";
 
     public async Task<IActionResult> OnGetAsync(string slug, CancellationToken ct)
     {
         Slug = slug;
-        var organization = await repository.GetBySlugAsync(slug, ct);
 
-        if (organization == null)
+        BoardInfo? agency;
+
+        try
         {
-            return NotFound();
+            agency = await board.GetBoardAsync(slug, ct);
+        }
+        catch (JobBoardUnavailableException)
+        {
+            return RedirectToPage("/Error");
         }
 
-        OrganizationName = organization.Name;
+        if (agency is null)
+            return NotFound();
+
+        OrganizationName = agency.Name;
 
         return Page();
     }

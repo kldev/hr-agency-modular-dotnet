@@ -1,58 +1,55 @@
-using HrAgencySystem.Feeds;
-using HrAgencySystem.Files.Service;
-using HrAgencySystem.Organization.Application.Port;
-using HrAgencySystem.Organization.Domain.ValueObjects;
-using HrAgencySystem.Web.Common.Errors;
+using HrAgencySystem.Web.Services;
 
 namespace HrAgencySystem.Web.Endpoints.Public.Maps;
 
+/// <summary>
+/// The feed the list page loads with <c>fetch("/{slug}/jobs.json")</c>, passed through from the
+/// API. Served here rather than redirected: the page asks its own origin, and a redirect would turn
+/// that into a cross-origin request.
+/// </summary>
 internal static class MapFeed
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("{slug}/jobs.xml", HandlerXml).WithSummary("Get feed jobs.xml");
-        group.MapGet("{slug}/jobs.json", HandlerJson).WithSummary("Get feed jobs.json");
+        group.MapGet("{slug}/jobs.xml", (IJobBoardClient board, HttpContext http, string slug, CancellationToken ct) =>
+            Serve(board, http, slug, "xml", ct)).WithSummary("Get feed jobs.xml");
+
+        group.MapGet("{slug}/jobs.json", (IJobBoardClient board, HttpContext http, string slug, CancellationToken ct) =>
+            Serve(board, http, slug, "json", ct)).WithSummary("Get feed jobs.json");
     }
 
-    private static async Task<IResult> HandlerXml(
-        IOrganizationSlugReservationRepository repository,
-        IObjectStorage storage,
+    private static async Task<IResult> Serve(
+        IJobBoardClient board,
+        HttpContext http,
         string slug,
+        string format,
         CancellationToken ct
     )
     {
-        var organization = await repository.FindBySlug(OrganizationSlug.Create(slug), ct);
-        if (organization == null)
-            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));
+        HttpResponseMessage? feed;
 
-        var result = await storage.GetAsync(organization.Value + "/jobs.xml", FeedBuckets.Jobs, ct);
+        try
+        {
+            feed = await board.GetFeedAsync(slug, format, ct);
+        }
+        catch (JobBoardUnavailableException)
+        {
+            return TypedResults.Problem(
+                statusCode: StatusCodes.Status503ServiceUnavailable,
+                title: "The job feed is unavailable right now."
+            );
+        }
 
-        if (result.FileNotFound)
-            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));
+        if (feed is null)
+            return TypedResults.NotFound();
 
-        return Results.File(result.OutputStream!, "application/xml");
-    }
+        // The response owns the stream being copied out; it goes when the request does.
+        http.Response.RegisterForDispose(feed);
 
-    private static async Task<IResult> HandlerJson(
-        IOrganizationSlugReservationRepository repository,
-        string slug,
-        IObjectStorage storage,
-        CancellationToken ct
-    )
-    {
-        var organization = await repository.FindBySlug(OrganizationSlug.Create(slug), ct);
-        if (organization == null)
-            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));
-
-        var result = await storage.GetAsync(
-            organization.Value + "/jobs.json",
-            FeedBuckets.Jobs,
-            ct
+        return Results.Stream(
+            await feed.Content.ReadAsStreamAsync(ct),
+            feed.Content.Headers.ContentType?.ToString()
+                ?? (format == "xml" ? "application/xml" : "application/json")
         );
-
-        if (result.FileNotFound)
-            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));
-
-        return Results.File(result.OutputStream!, "application/json");
     }
 }

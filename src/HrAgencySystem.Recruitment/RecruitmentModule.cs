@@ -17,18 +17,6 @@ public static class RecruitmentModule
         services.AddRecruitmentServices(configuration);
     }
 
-    public static void AddRecruitmentModuleMinimal(this IServiceCollection services)
-    {
-        services.AddRecruitmentServicesMinimal();
-    }
-
-    public static void ConfigureMartenMinimal(StoreOptions options)
-    {
-        options.ConfigureRecruitmentDocumentsMinimal();
-        options.ConfigureRecruitmentEventsMinimal();
-        options.ConfigureRecruitmentProjectionsMinimal();
-    }
-
     public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureRecruitmentDocuments();

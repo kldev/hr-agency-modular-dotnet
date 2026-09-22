@@ -6,5 +6,6 @@ internal static class Endpoint
     {
         var group = endpoints.MapGroup("").AllowAnonymous().ExcludeFromDescription();
         Maps.MapFeed.Map(group);
+        Maps.MapHealth.Map(group);
     }
 }

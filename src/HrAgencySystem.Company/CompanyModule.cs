@@ -16,16 +16,6 @@ public static class CompanyModule
         }
     }
 
-    public static void AddCompanyMinimalModule(this IServiceCollection services)
-    {
-        services.AddScoped<ICompanySnapshotRepository, CompanySnapshotRepository>();
-    }
-
-    public static void ConfigureMartenMinimal(StoreOptions options)
-    {
-        options.ConfigureCompanyProjections();
-    }
-
     public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureDocuments();

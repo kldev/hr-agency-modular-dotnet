@@ -14,8 +14,6 @@ public static class LegalEntitiesModule
         }
     }
 
-    // No Minimal variant: the public job board shows offers to candidates, and a candidate never
-    // sees which of our companies runs the engagement behind an offer.
     public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureDocuments();

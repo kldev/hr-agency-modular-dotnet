@@ -26,8 +26,6 @@ public static class TeamsModule
         options.LocalQueueFor<AssignUserToTeam>().UseDurableInbox();
     }
 
-    // No Minimal variant: the public job board shows offers to candidates, and a candidate never
-    // sees a team.
     public static void ConfigureMarten(StoreOptions options)
     {
         options.ConfigureDocuments();

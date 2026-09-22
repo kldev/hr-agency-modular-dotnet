@@ -1,12 +1,13 @@
 using HrAgencySystem.Web.Endpoints;
 using HrAgencySystem.Web.Infrastructure;
+using HrAgencySystem.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddGlobalExceptionHandler();
-    builder.Services.SetupApplicationModules(builder.Configuration);
-    builder.Services.SetupMartenForApplication(builder.Configuration);
-    builder.Host.SetupWolverineForApplication();
+
+    // This host reads and writes through the API's internal routes only - no database, no bus.
+    builder.Services.AddJobBoardClient(builder.Configuration);
     builder.Services.AddRazorPages();
 }
 
