@@ -1,5 +1,5 @@
 import { ChevronDown, Menu } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import UserMenu from "./UserMenu";
 import "./topbar.css";
 import { avatarUrl, useGetOwnProfile } from "#/features/profile/pages/hooks";
@@ -11,6 +11,7 @@ interface TopBarProps {
 
 export function TopBar({ onMenuClick }: TopBarProps) {
 	const [open, setOpen] = useState(false);
+	const close = useCallback(() => setOpen(false), []);
 	const { user } = useAuthStore();
 
 	/*
@@ -58,7 +59,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
 						<ChevronDown size={15} />
 					</button>
 
-					{open && <UserMenu />}
+					{open && <UserMenu onClose={close} />}
 				</div>
 			</div>
 		</header>

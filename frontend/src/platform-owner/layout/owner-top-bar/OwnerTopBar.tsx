@@ -1,5 +1,5 @@
 import { ChevronDown, Menu } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import OwnerMenu from "./OwnerMenu";
 import "./topbar.css";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
@@ -10,6 +10,7 @@ interface TopBarProps {
 
 export function OwnerTopBar({ onMenuClick }: TopBarProps) {
 	const [open, setOpen] = useState(false);
+	const close = useCallback(() => setOpen(false), []);
 	const { owner } = useOwnerAuthStore();
 
 	return (
@@ -42,7 +43,7 @@ export function OwnerTopBar({ onMenuClick }: TopBarProps) {
 						<ChevronDown size={15} />
 					</button>
 
-					{open && <OwnerMenu />}
+					{open && <OwnerMenu onClose={close} />}
 				</div>
 			</div>
 		</header>

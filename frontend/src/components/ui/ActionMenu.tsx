@@ -1,5 +1,5 @@
 import { MoreVertical } from "lucide-react";
-import { type ComponentType, useState } from "react";
+import { type ComponentType, useCallback, useState } from "react";
 import { Dropdown, DropdownDivider, DropdownItem } from "@/components/ui";
 
 export interface ActionMenuItem {
@@ -25,6 +25,9 @@ export function ActionMenu({
 }: ActionMenuProps) {
 	const [open, setOpen] = useState(false);
 
+	// Stable, because the dropdown re-subscribes its document listeners whenever this changes.
+	const close = useCallback(() => setOpen(false), []);
+
 	return (
 		<div className="action-menu">
 			<button
@@ -41,7 +44,7 @@ export function ActionMenu({
 			</button>
 
 			{open ? (
-				<Dropdown placement="right">
+				<Dropdown placement="right" onClose={close}>
 					{actions.map((item, index) => {
 						const Icon = item.icon;
 

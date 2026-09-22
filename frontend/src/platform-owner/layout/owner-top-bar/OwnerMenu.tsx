@@ -8,13 +8,13 @@ import DropdownItem from "@/components/ui/dropdown/DropdownItem";
 import { useOwnerAuthStore } from "@/platform-owner/stores/authOwnerStore";
 import { useUiStore } from "@/stores/uiStore";
 
-const OwnerMenu: React.FC = () => {
+const OwnerMenu: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 	const ui = useUiStore();
 	const store = useOwnerAuthStore();
 
 	const navigation = useNavigate();
 	return (
-		<Dropdown>
+		<Dropdown onClose={onClose}>
 			<DropdownItem>
 				<User size={15} />
 				Profile

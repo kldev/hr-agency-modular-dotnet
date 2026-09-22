@@ -21,7 +21,11 @@ export const Dropdown: React.FC<Props> = ({ children, placement = "right", onClo
 				return;
 			}
 
-			if (dropdown.contains(event.target as Node)) {
+			// The wrapper holds the trigger as well. The trigger toggles on its own click, and
+			// closing here too would reopen the menu at once.
+			const scope = dropdown.parentElement ?? dropdown;
+
+			if (scope.contains(event.target as Node)) {
 				return;
 			}
 

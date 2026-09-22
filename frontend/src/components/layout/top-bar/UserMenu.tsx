@@ -8,13 +8,13 @@ import DropdownItem from "@/components/ui/dropdown/DropdownItem";
 import { useAuthStore } from "@/stores/authStore";
 import { useUiStore } from "@/stores/uiStore";
 
-const UserMenu: React.FC = () => {
+const UserMenu: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 	const ui = useUiStore();
 	const store = useAuthStore();
 
 	const navigation = useNavigate();
 	return (
-		<Dropdown>
+		<Dropdown onClose={onClose}>
 			<DropdownItem onClick={() => navigation({ to: "/app/profile" })}>
 				<User size={15} />
 				Profile
