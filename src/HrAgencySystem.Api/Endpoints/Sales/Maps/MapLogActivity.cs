@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Activities.Create;
@@ -39,7 +40,12 @@ internal static class MapLogActivity
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal record CreateSalesActivityRequest(Guid OpportunityId, SalesActivityType Type, string Note)
+internal record CreateSalesActivityRequest(
+    [property: Description("The opportunity the activity belongs to.")] Guid OpportunityId,
+    [property: Description("What happened: Call, Email, Meeting, Note, Presentation or Other.")]
+        SalesActivityType Type,
+    [property: Description("Optional note on how it went, up to 500 characters.")] string Note
+)
 {
     public CreateActivity ToCommand(Guid organizationId, Guid createdBy)
     {

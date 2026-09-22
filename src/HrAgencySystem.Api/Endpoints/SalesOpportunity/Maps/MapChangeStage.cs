@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Opportunities.ChangeStage;
@@ -43,4 +44,13 @@ internal static class MapChangeStage
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal record ChangeOpportunityStageRequest(OpportunityStage Stage, string? LostReason = null);
+internal record ChangeOpportunityStageRequest(
+    [property: Description(
+        "The stage to move to: New, Viewed, Contacted, Qualified, Proposal, Won or Lost."
+    )]
+        OpportunityStage Stage,
+    [property: Description(
+        "Why the deal was lost - required when Stage is Lost, up to 500 characters, ignored otherwise."
+    )]
+        string? LostReason = null
+);

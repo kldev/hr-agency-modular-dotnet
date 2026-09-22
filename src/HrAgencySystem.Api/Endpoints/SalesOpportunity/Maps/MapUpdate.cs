@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Request;
@@ -39,12 +40,17 @@ internal static class MapUpdate
     }
 
     internal sealed record UpdateOpportunityRequest(
-        string Title,
-        string Description,
-        decimal ExpectedValue,
-        bool IsHotLead,
-        CurrencyCode Currency,
-        DateOnly? ExpectedCloseDate
+        [property: Description("A short name for the deal.")] string Title,
+        [property: Description("What the client wants. Up to 5000 characters.")] string Description,
+        [property: Description("What the deal is expected to be worth, in Currency.")]
+            decimal ExpectedValue,
+        [property: Description(
+            "Flag an opportunity that needs attention first. It only sorts and highlights."
+        )]
+            bool IsHotLead,
+        [property: Description("Currency of ExpectedValue, e.g. PLN, EUR.")] CurrencyCode Currency,
+        [property: Description("When the deal is expected to be decided. Null clears it.")]
+            DateOnly? ExpectedCloseDate
     )
     {
         public UpdateOpportunity ToCommand(

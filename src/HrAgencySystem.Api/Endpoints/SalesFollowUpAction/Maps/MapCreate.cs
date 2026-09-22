@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.FollowUpActions.Create;
@@ -35,9 +36,11 @@ internal static class MapCreate
     }
 
     internal sealed record CreateFollowUpActionRequest(
-        Guid OpportunityId,
-        string Content,
-        DateTimeOffset FollowDateTime
+        [property: Description("The opportunity the follow-up is for.")] Guid OpportunityId,
+        [property: Description("What is to be done, e.g. \"Send the revised offer\".")]
+            string Content,
+        [property: Description("When it is due, as a date and time with an offset (ISO 8601).")]
+            DateTimeOffset FollowDateTime
     )
     {
         public CreateFollowUpAction ToCommand(Guid organizationId, Guid createdBy) =>

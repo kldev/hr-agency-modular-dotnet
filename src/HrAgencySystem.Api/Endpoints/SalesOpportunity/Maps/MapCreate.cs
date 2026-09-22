@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Opportunities.Create;
@@ -37,14 +38,31 @@ internal static class MapCreate
     }
 
     internal sealed record CreateOpportunityRequest(
-        Guid CompanyId,
-        string Title,
-        string Description,
-        decimal ExpectedValue,
-        bool IsHotLead,
-        CurrencyCode Currency,
-        DateOnly? ExpectedCloseDate,
-        Guid? ResponsibleId
+        [property: Description(
+            "The client company the opportunity is with. Must belong to the caller's agency."
+        )]
+            Guid CompanyId,
+        [property: Description(
+            "A short name for the deal, e.g. \"Five welders for the Gdansk shipyard\"."
+        )]
+            string Title,
+        [property: Description(
+            "What the client wants, in as much detail as is known. Up to 5000 characters."
+        )]
+            string Description,
+        [property: Description("What the deal is expected to be worth, in Currency.")]
+            decimal ExpectedValue,
+        [property: Description(
+            "Flag an opportunity that needs attention first. It only sorts and highlights; it changes no rule."
+        )]
+            bool IsHotLead,
+        [property: Description("Currency of ExpectedValue, e.g. PLN, EUR.")] CurrencyCode Currency,
+        [property: Description("When the deal is expected to be decided. Optional.")]
+            DateOnly? ExpectedCloseDate,
+        [property: Description(
+            "The user who owns the opportunity. Omit to take it yourself; naming somebody else mails them about it."
+        )]
+            Guid? ResponsibleId
     )
     {
         public CreateOpportunity ToCommand(Guid organizationId, Guid createdBy) =>

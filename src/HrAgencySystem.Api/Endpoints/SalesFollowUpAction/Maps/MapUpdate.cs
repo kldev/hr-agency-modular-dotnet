@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.FollowUpActions.Update;
@@ -36,8 +37,9 @@ internal static class MapUpdate
     }
 
     internal sealed record UpdateFollowUpActionRequest(
-        string Content,
-        DateTimeOffset FollowDateTime
+        [property: Description("What is to be done.")] string Content,
+        [property: Description("When it is due, as a date and time with an offset (ISO 8601).")]
+            DateTimeOffset FollowDateTime
     )
     {
         public UpdateFollowUpAction ToCommand(
