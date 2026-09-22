@@ -1,4 +1,5 @@
 using System.Net;
+using HrAgencySystem.EmailTemplates.Contracts.Agency;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
@@ -254,6 +255,112 @@ public class EmailMessageBodyTests(ITestOutputHelper output)
             "Test Recruiter",
             "test.recruiter@hr-agency.test",
             "https://portal.hr-agency.test/recruitment/job-applications/6f1c1b7a"
+        );
+
+    [Fact]
+    public async Task RenderMailTimeSheetApproved()
+    {
+        var approved = Approved();
+
+        var html = await _renderer.RenderSendTimeSheetApproved(approved);
+
+        await Save(nameof(RenderMailTimeSheetApproved), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(approved.RecipientFullname, text);
+        Assert.Contains(approved.ApprovedByFullname, text);
+        Assert.Contains(approved.Period, text);
+        Assert.Contains(approved.Comment, text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    /// <summary>
+    /// Approving without saying anything is the ordinary case, and the block that would have held
+    /// the note has to disappear rather than render as an empty box with a heading.
+    /// </summary>
+    [Fact]
+    public async Task RenderMailTimeSheetApprovedWithoutANote()
+    {
+        var html = await _renderer.RenderSendTimeSheetApproved(Approved() with { Comment = "" });
+
+        Assert.DoesNotContain("They added", html);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    [Fact]
+    public async Task RenderMailTimeSheetReturnedForCorrection()
+    {
+        var returned = new SendTimeSheetReturnedForCorrection(
+            Guid.NewGuid(),
+            "agency-service",
+            "ewa.nowicka@hr-agency.com",
+            "Ewa Nowicka",
+            2026,
+            9,
+            "September 2026",
+            "Monika Bak",
+            "Supervisor",
+            "The 14th and the 15th are missing - please add them."
+        );
+
+        var html = await _renderer.RenderSendTimeSheetReturnedForCorrection(returned);
+
+        await Save(nameof(RenderMailTimeSheetReturnedForCorrection), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(returned.RecipientFullname, text);
+        Assert.Contains(returned.ReturnedByFullname, text);
+        Assert.Contains(returned.ReturnedByRole, text);
+        Assert.Contains(returned.Period, text);
+
+        // The whole point of this mail: what to fix, not merely that something is wrong.
+        Assert.Contains(returned.Reason, text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    [Fact]
+    public async Task RenderMailTimeSheetSettled()
+    {
+        var settled = new SendTimeSheetSettled(
+            Guid.NewGuid(),
+            "agency-service",
+            "ewa.nowicka@hr-agency.com",
+            "Ewa Nowicka",
+            2026,
+            9,
+            "September 2026",
+            "Anna Kadrowa"
+        );
+
+        var html = await _renderer.RenderSendTimeSheetSettled(settled);
+
+        await Save(nameof(RenderMailTimeSheetSettled), html);
+
+        var text = WebUtility.HtmlDecode(html);
+
+        Assert.Contains(settled.RecipientFullname, text);
+        Assert.Contains(settled.SettledByFullname, text);
+        Assert.Contains(settled.Period, text);
+
+        AssertNoUnresolvedLiquid(html);
+    }
+
+    private static SendTimeSheetApproved Approved() =>
+        new(
+            Guid.NewGuid(),
+            "agency-service",
+            "ewa.nowicka@hr-agency.com",
+            "Ewa Nowicka",
+            2026,
+            9,
+            "September 2026",
+            "Monika Bak",
+            "Thanks, all clear."
         );
 
     private static void AssertNoUnresolvedLiquid(string html)

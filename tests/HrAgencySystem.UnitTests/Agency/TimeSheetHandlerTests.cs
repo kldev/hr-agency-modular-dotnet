@@ -20,37 +20,6 @@ namespace HrAgencySystem.UnitTests.Agency;
 /// </summary>
 public class TimeSheetHandlerTests : BaseTest
 {
-    private static IOrgStructureQueryRepository Chart()
-    {
-        var structure = OrgScenario.Company();
-
-        var projection = new OrgStructureProjection(
-            OrgStructureId.For(OrgScenario.OrganizationId),
-            OrgScenario.OrganizationId,
-            [
-                .. structure.Units.Select(unit => new OrgUnitRow(
-                    unit.UnitId,
-                    unit.ParentId,
-                    unit.Name,
-                    unit.Kind,
-                    unit.HeadUserId,
-                    unit.Members,
-                    unit.IsArchived
-                )),
-            ],
-            null,
-            null
-        );
-
-        var chart = Substitute.For<IOrgStructureQueryRepository>();
-
-        chart
-            .GetStructureAsync(Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
-            .Returns(projection);
-
-        return chart;
-    }
-
     /// <summary>
     /// A month nobody has written on has no stream behind it, so the handler is handed nothing.
     /// That is a sheet that does not exist, which is a 404 - not a 500 from a null argument.
@@ -206,11 +175,11 @@ public class TimeSheetHandlerTests : BaseTest
     {
         var sheet = TimeSheetScenario.Submitted();
 
-        var (@event, _) = await ApproveTimeSheetHandler.Handle(
+        var (@event, _, _) = await ApproveTimeSheetHandler.Handle(
             Approve(sheet.UserId, OrgScenario.HeadOfPayroll),
             sheet,
             OrgScenario.Service(),
-            Chart(),
+            OrgScenario.Chart(),
             TestClock,
             CancellationToken.None
         );
@@ -232,7 +201,7 @@ public class TimeSheetHandlerTests : BaseTest
                 Approve(sheet.UserId, OrgScenario.OperationsHead),
                 sheet,
                 OrgScenario.Service(),
-                Chart(),
+                OrgScenario.Chart(),
                 TestClock,
                 CancellationToken.None
             )
@@ -247,11 +216,11 @@ public class TimeSheetHandlerTests : BaseTest
     {
         var sheet = TimeSheetScenario.Submitted();
 
-        var (@event, _) = await ApproveTimeSheetHandler.Handle(
+        var (@event, _, _) = await ApproveTimeSheetHandler.Handle(
             Approve(sheet.UserId, OrgScenario.Ceo),
             sheet,
             OrgScenario.Service(),
-            Chart(),
+            OrgScenario.Chart(),
             TestClock,
             CancellationToken.None
         );
@@ -269,7 +238,7 @@ public class TimeSheetHandlerTests : BaseTest
                 Approve(sheet.UserId, sheet.UserId),
                 sheet,
                 OrgScenario.Service(),
-                Chart(),
+                OrgScenario.Chart(),
                 TestClock,
                 CancellationToken.None
             )
@@ -295,7 +264,7 @@ public class TimeSheetHandlerTests : BaseTest
                 ),
                 sheet,
                 OrgScenario.Service(),
-                Chart(),
+                OrgScenario.Chart(),
                 TestClock,
                 CancellationToken.None
             )
@@ -308,7 +277,7 @@ public class TimeSheetHandlerTests : BaseTest
     {
         var sheet = TimeSheetScenario.Submitted();
 
-        var (@event, _) = await ReturnTimeSheetForCorrectionHandler.Handle(
+        var (@event, _, _) = await ReturnTimeSheetForCorrectionHandler.Handle(
             new ReturnTimeSheetForCorrection(
                 OrgScenario.OrganizationId,
                 sheet.UserId,
@@ -320,7 +289,7 @@ public class TimeSheetHandlerTests : BaseTest
             ),
             sheet,
             OrgScenario.Service(),
-            Chart(),
+            OrgScenario.Chart(),
             TestClock,
             CancellationToken.None
         );
@@ -341,7 +310,7 @@ public class TimeSheetHandlerTests : BaseTest
     {
         var sheet = TimeSheetScenario.Approved();
 
-        var (@event, _) = await ReturnTimeSheetForCorrectionHandler.Handle(
+        var (@event, _, _) = await ReturnTimeSheetForCorrectionHandler.Handle(
             new ReturnTimeSheetForCorrection(
                 OrgScenario.OrganizationId,
                 sheet.UserId,
@@ -353,7 +322,7 @@ public class TimeSheetHandlerTests : BaseTest
             ),
             sheet,
             OrgScenario.Service(),
-            Chart(),
+            OrgScenario.Chart(),
             TestClock,
             CancellationToken.None
         );

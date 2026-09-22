@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentEmail.Liquid;
+using HrAgencySystem.EmailTemplates.Contracts.Agency;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
@@ -28,6 +29,13 @@ public sealed class EmailTemplateProvider : IEmailTemplateProvider
 
     private const string NotifyTeamMemberRoleChangedFile =
         "Mail/NotifyTeamMemberRoleChanged.liquid";
+
+    private const string NotifyTimeSheetApprovedFile = "Mail/NotifyTimeSheetApproved.liquid";
+
+    private const string NotifyTimeSheetReturnedForCorrectionFile =
+        "Mail/NotifyTimeSheetReturnedForCorrection.liquid";
+
+    private const string NotifyTimeSheetSettledFile = "Mail/NotifyTimeSheetSettled.liquid";
 
     private static readonly Assembly TemplateAssembly = typeof(IEmailTemplateProvider).Assembly;
 
@@ -110,5 +118,28 @@ public sealed class EmailTemplateProvider : IEmailTemplateProvider
         using var reader = new StreamReader(stream);
 
         return await reader.ReadToEndAsync();
+    }
+
+    public async Task<string> RenderSendTimeSheetApproved(SendTimeSheetApproved data)
+    {
+        var template = await ReadTemplate(NotifyTimeSheetApprovedFile);
+
+        return await _renderer.ParseAsync(template, data);
+    }
+
+    public async Task<string> RenderSendTimeSheetReturnedForCorrection(
+        SendTimeSheetReturnedForCorrection data
+    )
+    {
+        var template = await ReadTemplate(NotifyTimeSheetReturnedForCorrectionFile);
+
+        return await _renderer.ParseAsync(template, data);
+    }
+
+    public async Task<string> RenderSendTimeSheetSettled(SendTimeSheetSettled data)
+    {
+        var template = await ReadTemplate(NotifyTimeSheetSettledFile);
+
+        return await _renderer.ParseAsync(template, data);
     }
 }

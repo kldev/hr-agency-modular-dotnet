@@ -1,5 +1,7 @@
+using HrAgencySystem.Agency.Application.Port;
 using HrAgencySystem.Agency.Domain;
 using HrAgencySystem.Agency.Events;
+using HrAgencySystem.Agency.Projections;
 using HrAgencySystem.Agency.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -128,4 +130,39 @@ internal static class OrgScenario
 
     public static OrgUnitHeadAssigned HeadAssigned(Guid unitId, Guid userId) =>
         new(OrganizationId, unitId, userId, User, DateTimeOffset.UtcNow);
+
+    /// <summary>
+    /// The same chart, behind the port the handlers ask. Shared, because "who is above whom" is one
+    /// fixture and two copies of it would drift.
+    /// </summary>
+    public static IOrgStructureQueryRepository Chart()
+    {
+        var structure = Company();
+
+        var projection = new OrgStructureProjection(
+            OrgStructureId.For(OrganizationId),
+            OrganizationId,
+            [
+                .. structure.Units.Select(unit => new OrgUnitRow(
+                    unit.UnitId,
+                    unit.ParentId,
+                    unit.Name,
+                    unit.Kind,
+                    unit.HeadUserId,
+                    unit.Members,
+                    unit.IsArchived
+                )),
+            ],
+            null,
+            null
+        );
+
+        var chart = Substitute.For<IOrgStructureQueryRepository>();
+
+        chart
+            .GetStructureAsync(Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .Returns(projection);
+
+        return chart;
+    }
 }

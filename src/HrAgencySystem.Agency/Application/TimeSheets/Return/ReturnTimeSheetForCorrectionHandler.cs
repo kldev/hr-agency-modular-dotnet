@@ -2,9 +2,11 @@ using HrAgencySystem.Agency.Application.Port;
 using HrAgencySystem.Agency.Domain.TimeSheets;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Agency.Services;
+using HrAgencySystem.EmailTemplates.Contracts.Agency;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using Wolverine;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Agency.Application.TimeSheets.Return;
@@ -20,7 +22,11 @@ public static class ReturnTimeSheetForCorrectionHandler
         "Say what needs correcting. A sheet handed back without a reason comes straight back.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
-    public static async Task<(TimeSheetReturnedForCorrection, Wolverine.Marten.Events)> Handle(
+    public static async Task<(
+        TimeSheetReturnedForCorrection,
+        Wolverine.Marten.Events,
+        OutgoingMessages
+    )> Handle(
         ReturnTimeSheetForCorrection command,
         TimeSheet aggregate,
         IAgencyService service,
@@ -53,22 +59,42 @@ public static class ReturnTimeSheetForCorrectionHandler
             );
 
         var returnedBy = await service.GetUserAsync(command.ReturnedBy, ct);
+        var owner = await service.GetUserAsync(aggregate.UserId, ct);
+
+        var role = command.ActingAsPayroll ? TimeSheetRole.Payroll : TimeSheetRole.Supervisor;
 
         var @event = new TimeSheetReturnedForCorrection(
             aggregate.OrganizationId.Value,
             aggregate.UserId,
             aggregate.Year,
             aggregate.Month,
-            new TimeSheetComment(
-                returnedBy,
-                command.ActingAsPayroll ? TimeSheetRole.Payroll : TimeSheetRole.Supervisor,
-                reason!.Value,
-                clock.UtcNow
-            ),
+            new TimeSheetComment(returnedBy, role, reason!.Value, clock.UtcNow),
             returnedBy,
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        var messages = new OutgoingMessages();
+
+        // Payroll may hand back its own month, so this really does keep a mail from going out -
+        // telling somebody about their own click is not news.
+        if (returnedBy.Id != owner.Id)
+        {
+            messages.Add(
+                new SendTimeSheetReturnedForCorrection(
+                    Guid.NewGuid(),
+                    nameof(ReturnTimeSheetForCorrectionHandler),
+                    owner.Email,
+                    owner.Fullname,
+                    aggregate.Year,
+                    aggregate.Month,
+                    TimeSheetPeriodLabel.For(aggregate.Year, aggregate.Month),
+                    returnedBy.Fullname,
+                    role.ToString(),
+                    reason.Value
+                )
+            );
+        }
+
+        return (@event, [@event], messages);
     }
 }

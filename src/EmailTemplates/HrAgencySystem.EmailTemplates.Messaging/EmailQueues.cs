@@ -10,4 +10,7 @@ public static class EmailQueues
     public const string Identity = "q.emails.identity";
     public const string Sales = "q.emails.sales";
     public const string Teams = "q.emails.teams";
+
+    /// <summary>The agency as an employer: hours, and the decisions taken about them.</summary>
+    public const string Agency = "q.emails.agency";
 }

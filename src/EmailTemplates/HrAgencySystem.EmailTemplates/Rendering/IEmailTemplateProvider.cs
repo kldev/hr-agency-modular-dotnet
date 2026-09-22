@@ -1,3 +1,4 @@
+using HrAgencySystem.EmailTemplates.Contracts.Agency;
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Contracts.Recruitment;
 using HrAgencySystem.EmailTemplates.Contracts.Sales;
@@ -20,4 +21,10 @@ public interface IEmailTemplateProvider
     Task<string> RenderSendTeamMemberAdded(SendTeamMemberAdded data);
 
     Task<string> RenderSendTeamMemberRoleChanged(SendTeamMemberRoleChanged data);
+
+    Task<string> RenderSendTimeSheetApproved(SendTimeSheetApproved data);
+
+    Task<string> RenderSendTimeSheetReturnedForCorrection(SendTimeSheetReturnedForCorrection data);
+
+    Task<string> RenderSendTimeSheetSettled(SendTimeSheetSettled data);
 }

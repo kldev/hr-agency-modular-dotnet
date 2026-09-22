@@ -1,8 +1,11 @@
+using HrAgencySystem.Agency.Application.TimeSheets;
 using HrAgencySystem.Agency.Domain.TimeSheets;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Agency.Services;
+using HrAgencySystem.EmailTemplates.Contracts.Agency;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
+using Wolverine;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Agency.Application.TimeSheets.Settle;
@@ -15,7 +18,7 @@ namespace HrAgencySystem.Agency.Application.TimeSheets.Settle;
 public static class SettleTimeSheetHandler
 {
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
-    public static async Task<(TimeSheetSettled, Wolverine.Marten.Events)> Handle(
+    public static async Task<(TimeSheetSettled, Wolverine.Marten.Events, OutgoingMessages)> Handle(
         SettleTimeSheet command,
         TimeSheet aggregate,
         IAgencyService service,
@@ -34,6 +37,7 @@ public static class SettleTimeSheetHandler
         TimeSheetRules.EnsureCanChange(aggregate.Status, TimeSheetStatus.Settled);
 
         var settledBy = await service.GetUserAsync(command.SettledBy, ct);
+        var owner = await service.GetUserAsync(aggregate.UserId, ct);
 
         var @event = new TimeSheetSettled(
             aggregate.OrganizationId.Value,
@@ -44,6 +48,26 @@ public static class SettleTimeSheetHandler
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        var messages = new OutgoingMessages();
+
+        // Payroll settles everybody, itself included, so this is the second place the rule earns
+        // its keep rather than merely stating itself.
+        if (settledBy.Id != owner.Id)
+        {
+            messages.Add(
+                new SendTimeSheetSettled(
+                    Guid.NewGuid(),
+                    nameof(SettleTimeSheetHandler),
+                    owner.Email,
+                    owner.Fullname,
+                    aggregate.Year,
+                    aggregate.Month,
+                    TimeSheetPeriodLabel.For(aggregate.Year, aggregate.Month),
+                    settledBy.Fullname
+                )
+            );
+        }
+
+        return (@event, [@event], messages);
     }
 }
