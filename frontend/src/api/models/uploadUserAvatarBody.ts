@@ -13,14 +13,8 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationRole } from "./organizationRole.ts";
+import type { IFormFile } from "./iFormFile.ts";
 
-export interface AppUserAuthenticated {
-	userId: string;
-	email: string;
-	organizationId: string;
-	role: OrganizationRole;
-	fullName: string;
-	/** @nullable */
-	impersonatedBy?: string | null;
-}
+export type UploadUserAvatarBody = {
+	file: IFormFile;
+};

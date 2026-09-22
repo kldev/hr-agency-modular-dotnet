@@ -1,10 +1,12 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui";
 import { currentMonth, isFutureMonth, type MonthInView, monthLabel, shiftMonth } from "../../types";
 
 interface Props {
 	month: MonthInView;
 	onChange: (month: MonthInView) => void;
+	loading: boolean;
+	onRefresh: (page: number) => void;
 }
 
 /**
@@ -12,12 +14,21 @@ interface Props {
  * everybody back to today. Forward stops at the current month, because a month that has not
  * started cannot be filled in - mirrors `TimeSheetPeriod.HasStartedBy`.
  */
-export function MonthNavigator({ month, onChange }: Props) {
+export function MonthNavigator({ month, onChange, onRefresh, loading }: Props) {
 	const now = currentMonth();
 	const isNow = month.year === now.year && month.month === now.month;
 
 	return (
 		<div className="month-navigator">
+			<Button
+				className="shrink-0"
+				variant="secondary"
+				icon={<RefreshCcw size={15} />}
+				onClick={() => onRefresh(0)}
+				loading={loading}
+			>
+				Refresh
+			</Button>
 			<Button
 				variant="ghost"
 				aria-label="Previous month"

@@ -13,14 +13,10 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { OrganizationRole } from "./organizationRole.ts";
 
-export interface AppUserAuthenticated {
-	userId: string;
-	email: string;
-	organizationId: string;
-	role: OrganizationRole;
-	fullName: string;
-	/** @nullable */
-	impersonatedBy?: string | null;
+export interface ImpersonationResult {
+	token: string;
+	expiresAt: string;
+	impersonatedUserId: string;
+	impersonatedBy: string;
 }

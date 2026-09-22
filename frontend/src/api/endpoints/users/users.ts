@@ -43,7 +43,9 @@ import type {
 	UpdateOwnProfileRequest,
 	UpdateUserRequest,
 	UploadOwnAvatarBody,
+	UploadUserAvatarBody,
 	UserAvatarChanged,
+	UserAvatarRef,
 	UserAvatarRemoved,
 	UserCreated,
 	UserProjection,
@@ -1237,6 +1239,411 @@ export function useRemoveOwnAvatar<
 	queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 	const queryOptions = getRemoveOwnAvatarQueryOptions(options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Get the profile pictures in the organization
+ */
+export const getUserAvatars = (
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<UserAvatarRef[]>(
+		{ url: `/api/users/avatars`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getGetUserAvatarsMutationKey = () => ["getUserAvatars"] as const;
+
+export const getGetUserAvatarsMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<Awaited<ReturnType<typeof getUserAvatars>>, TError, void, TContext>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<Awaited<ReturnType<typeof getUserAvatars>>, TError, void, TContext> => {
+	const mutationKey = getGetUserAvatarsMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<Awaited<ReturnType<typeof getUserAvatars>>, void> = () => {
+		return getUserAvatars(requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetUserAvatarsMutationResult = NonNullable<Awaited<ReturnType<typeof getUserAvatars>>>;
+
+export type GetUserAvatarsMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+/**
+ * @summary Get the profile pictures in the organization
+ */
+export const useGetUserAvatars = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getUserAvatars>>,
+			TError,
+			void,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<Awaited<ReturnType<typeof getUserAvatars>>, TError, void, TContext> => {
+	return useMutation(getGetUserAvatarsMutationOptions(options), queryClient);
+};
+/**
+ * @summary Upload another member's profile picture
+ */
+export const uploadUserAvatar = (
+	userId: string,
+	uploadUserAvatarBody: BodyType<UploadUserAvatarBody>,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	const formData = new FormData();
+	formData.append(`file`, uploadUserAvatarBody.file);
+
+	return customInstance<UserAvatarChanged>(
+		{
+			url: `/api/users/${userId}/avatar`,
+			method: "POST",
+			headers: { "Content-Type": "multipart/form-data" },
+			data: formData,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getUploadUserAvatarQueryKey = (
+	userId: string,
+	uploadUserAvatarBody?: BodyType<UploadUserAvatarBody>,
+) => {
+	return ["POST", `/api/users/${userId}/avatar`, uploadUserAvatarBody] as const;
+};
+
+export const getUploadUserAvatarQueryOptions = <
+	TData = Awaited<ReturnType<typeof uploadUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	uploadUserAvatarBody: BodyType<UploadUserAvatarBody>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadUserAvatar>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey =
+		queryOptions?.queryKey ?? getUploadUserAvatarQueryKey(userId, uploadUserAvatarBody);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof uploadUserAvatar>>> = ({ signal }) =>
+		uploadUserAvatar(userId, uploadUserAvatarBody, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: userId !== null && userId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof uploadUserAvatar>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type UploadUserAvatarQueryResult = NonNullable<Awaited<ReturnType<typeof uploadUserAvatar>>>;
+export type UploadUserAvatarQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useUploadUserAvatar<
+	TData = Awaited<ReturnType<typeof uploadUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	uploadUserAvatarBody: BodyType<UploadUserAvatarBody>,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadUserAvatar>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof uploadUserAvatar>>,
+					TError,
+					Awaited<ReturnType<typeof uploadUserAvatar>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUploadUserAvatar<
+	TData = Awaited<ReturnType<typeof uploadUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	uploadUserAvatarBody: BodyType<UploadUserAvatarBody>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadUserAvatar>>, TError, TData>> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof uploadUserAvatar>>,
+					TError,
+					Awaited<ReturnType<typeof uploadUserAvatar>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useUploadUserAvatar<
+	TData = Awaited<ReturnType<typeof uploadUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	uploadUserAvatarBody: BodyType<UploadUserAvatarBody>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadUserAvatar>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Upload another member's profile picture
+ */
+
+export function useUploadUserAvatar<
+	TData = Awaited<ReturnType<typeof uploadUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	uploadUserAvatarBody: BodyType<UploadUserAvatarBody>,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof uploadUserAvatar>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getUploadUserAvatarQueryOptions(userId, uploadUserAvatarBody, options);
+
+	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+
+	return withQueryKey(query, queryOptions.queryKey);
+}
+
+/**
+ * @summary Download another member's profile picture
+ */
+export const downloadUserAvatar = (
+	userId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<unknown>(
+		{ url: `/api/users/${userId}/avatar`, method: "GET", signal },
+		options,
+	);
+};
+
+export const getDownloadUserAvatarMutationKey = () => ["downloadUserAvatar"] as const;
+
+export const getDownloadUserAvatarMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof downloadUserAvatar>>,
+		TError,
+		DownloadUserAvatarMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof downloadUserAvatar>>,
+	TError,
+	DownloadUserAvatarMutationVariables,
+	TContext
+> => {
+	const mutationKey = getDownloadUserAvatarMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof downloadUserAvatar>>,
+		DownloadUserAvatarMutationVariables
+	> = (props) => {
+		const { userId } = props ?? {};
+
+		return downloadUserAvatar(userId, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type DownloadUserAvatarMutationResult = NonNullable<
+	Awaited<ReturnType<typeof downloadUserAvatar>>
+>;
+
+export type DownloadUserAvatarMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type DownloadUserAvatarMutationVariables = { userId: string };
+
+/**
+ * @summary Download another member's profile picture
+ */
+export const useDownloadUserAvatar = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof downloadUserAvatar>>,
+			TError,
+			DownloadUserAvatarMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof downloadUserAvatar>>,
+	TError,
+	DownloadUserAvatarMutationVariables,
+	TContext
+> => {
+	return useMutation(getDownloadUserAvatarMutationOptions(options), queryClient);
+};
+/**
+ * @summary Remove another member's profile picture
+ */
+export const removeUserAvatar = (
+	userId: string,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<UserAvatarRemoved>(
+		{ url: `/api/users/${userId}/avatar`, method: "DELETE", signal },
+		options,
+	);
+};
+
+export const getRemoveUserAvatarQueryKey = (userId: string) => {
+	return ["DELETE", `/api/users/${userId}/avatar`] as const;
+};
+
+export const getRemoveUserAvatarQueryOptions = <
+	TData = Awaited<ReturnType<typeof removeUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof removeUserAvatar>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+) => {
+	const { query: queryOptions, request: requestOptions } = options ?? {};
+
+	const queryKey = queryOptions?.queryKey ?? getRemoveUserAvatarQueryKey(userId);
+
+	const queryFn: QueryFunction<Awaited<ReturnType<typeof removeUserAvatar>>> = ({ signal }) =>
+		removeUserAvatar(userId, requestOptions, signal);
+
+	return {
+		queryKey,
+		queryFn,
+		enabled: userId !== null && userId !== undefined,
+		...queryOptions,
+	} as UseQueryOptions<Awaited<ReturnType<typeof removeUserAvatar>>, TError, TData> & {
+		queryKey: DataTag<QueryKey, TData, TError>;
+	};
+};
+
+export type RemoveUserAvatarQueryResult = NonNullable<Awaited<ReturnType<typeof removeUserAvatar>>>;
+export type RemoveUserAvatarQueryError = ErrorType<BadRequestDetails | ProblemDetails>;
+
+export function useRemoveUserAvatar<
+	TData = Awaited<ReturnType<typeof removeUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	options: {
+		query: Partial<UseQueryOptions<Awaited<ReturnType<typeof removeUserAvatar>>, TError, TData>> &
+			Pick<
+				DefinedInitialDataOptions<
+					Awaited<ReturnType<typeof removeUserAvatar>>,
+					TError,
+					Awaited<ReturnType<typeof removeUserAvatar>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRemoveUserAvatar<
+	TData = Awaited<ReturnType<typeof removeUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof removeUserAvatar>>, TError, TData>> &
+			Pick<
+				UndefinedInitialDataOptions<
+					Awaited<ReturnType<typeof removeUserAvatar>>,
+					TError,
+					Awaited<ReturnType<typeof removeUserAvatar>>
+				>,
+				"initialData"
+			>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useRemoveUserAvatar<
+	TData = Awaited<ReturnType<typeof removeUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof removeUserAvatar>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary Remove another member's profile picture
+ */
+
+export function useRemoveUserAvatar<
+	TData = Awaited<ReturnType<typeof removeUserAvatar>>,
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+>(
+	userId: string,
+	options?: {
+		query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof removeUserAvatar>>, TError, TData>>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+	const queryOptions = getRemoveUserAvatarQueryOptions(userId, options);
 
 	const query = useQuery(queryOptions, queryClient) as UseQueryResult<TData, TError> & {
 		queryKey: DataTag<QueryKey, TData, TError>;

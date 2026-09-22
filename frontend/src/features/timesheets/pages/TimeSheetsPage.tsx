@@ -104,7 +104,6 @@ export function TimeSheetsPage() {
 			<Page
 				title="Time sheets"
 				description="Hours recorded month by month: your own, your people's, and the months waiting on a decision."
-				onRefresh={refresh}
 				loading={mine.isPending || team.isPending}
 				emptyState={null}
 				headerAddon={<MonthNavigator month={month} onChange={setMonth} />}
