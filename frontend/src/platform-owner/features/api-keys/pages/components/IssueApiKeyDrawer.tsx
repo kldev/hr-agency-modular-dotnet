@@ -108,7 +108,7 @@ export const IssueApiKeyDrawer = forwardRef<IssueApiKeyCommand>((_, ref) => {
 								onFocus={(event) => event.currentTarget.select()}
 							/>
 
-							<Button
+							<Button className="min-w-[100px]"
 								icon={copied ? <Check size={15} /> : <Copy size={15} />}
 								onClick={() => void copy()}
 							>
