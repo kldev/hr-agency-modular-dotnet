@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { moneyInputValue, parseMoney } from "#/components/ui/Input";
 import { withFieldGroup } from "#/forms";
 import type { CurrencyCode, RateBasis, RateInput, RateUnit, WorkRate } from "@/api/models";
 import { rateBases, rateUnits } from "@/features/positions/types";
@@ -14,7 +15,7 @@ import { currenciesOptions } from "@/features/sales/types";
 export const rateFieldsSchema = z.object({
 	rateAmount: z
 		.string()
-		.refine((value) => value === "" || Number(value) >= 0, "A rate cannot be negative."),
+		.refine((value) => value === "" || parseMoney(value) >= 0, "A rate cannot be negative."),
 	rateCurrency: z.string(),
 	rateUnit: z.string(),
 	rateBasis: z.string(),
@@ -40,7 +41,7 @@ export const rateFieldNames = {
 export function rateFieldsOf(rate: WorkRate | null | undefined): RateFieldsValues {
 	return rate
 		? {
-				rateAmount: String(rate.amount),
+				rateAmount: moneyInputValue(rate.amount),
 				rateCurrency: rate.currency,
 				rateUnit: rate.unit,
 				rateBasis: rate.basis,
@@ -52,7 +53,7 @@ export function toRateInput(values: RateFieldsValues): RateInput | null {
 	if (values.rateAmount === "") return null;
 
 	return {
-		amount: Number(values.rateAmount),
+		amount: parseMoney(values.rateAmount),
 		currency: values.rateCurrency,
 		unit: values.rateUnit as RateUnit,
 		basis: values.rateBasis as RateBasis,

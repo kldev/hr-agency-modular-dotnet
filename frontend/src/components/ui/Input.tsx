@@ -9,6 +9,22 @@ export function Input({ className, variant = "default", ...props }: InputProps) 
 	return <input {...props} className={clsx("input", `input-${variant}`, className)} />;
 }
 
+/**
+ * The money field types with a decimal comma, the way it is written here, and `Number` reads only
+ * a dot - so "42,40" parsed directly is `NaN`, which fails every range check with a misleading
+ * message. Everything that reads or fills a `MoneyInput` goes through these two.
+ */
+export function parseMoney(value: string): number {
+	return Number(value.replace(",", "."));
+}
+
+/** The reverse, for filling the field from the API: 42.4 becomes "42,4", which the field accepts. */
+export function moneyInputValue(amount: number | string | null | undefined): string {
+	return amount === null || amount === undefined || amount === ""
+		? ""
+		: String(amount).replace(".", ",");
+}
+
 export type MoneyInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type"> & {
 	variant?: "default" | "error";
 };

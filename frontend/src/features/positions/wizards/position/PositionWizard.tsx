@@ -11,6 +11,7 @@ import type {
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
 import { ApiError } from "#/components/ui/ApiError";
+import { parseMoney } from "#/components/ui/Input";
 import { useAppForm } from "#/forms";
 import { useProjectSuggestion } from "#/hooks";
 import { useOpenPosition, useUpdatePosition } from "../../pages/hooks";
@@ -85,7 +86,7 @@ export function PositionWizard({
 				duties: listOrNull(value.duties),
 				requiredQualifications: listOrNull(value.requiredQualifications),
 				contractType: value.contractType as WorkerContractType,
-				rateAmount: value.rateAmount ? Number(value.rateAmount) : null,
+				rateAmount: value.rateAmount ? parseMoney(value.rateAmount) : null,
 				rateCurrency: orNull(value.rateCurrency),
 				rateUnit: value.rateUnit as RateUnit,
 				rateBasis: value.rateBasis as RateBasis,

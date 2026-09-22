@@ -3,7 +3,7 @@ import type { AgencyEmploymentProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ContractTypeBadge, ItemMark } from "@/components/ui";
 import { formatDate } from "@/utlis/dateUtils";
-import { isEnded } from "../../../types";
+import { formatRate, isEnded } from "../../../types";
 import { EmploymentActions } from "./EmploymentActions";
 
 const columnHelper = createColumnHelper<appTableFeaturesType, AgencyEmploymentProjection>();
@@ -11,9 +11,11 @@ const columnHelper = createColumnHelper<appTableFeaturesType, AgencyEmploymentPr
 type ColumnHandlers = {
 	onChangeTerms: (employment: AgencyEmploymentProjection) => void;
 	onEnd: (employment: AgencyEmploymentProjection) => void;
+	/** `isRates` - for everybody else the API answers null, and a column of dashes says nothing. */
+	showsRate: boolean;
 };
 
-export function getColumns({ onChangeTerms, onEnd }: ColumnHandlers) {
+export function getColumns({ onChangeTerms, onEnd, showsRate }: ColumnHandlers) {
 	return columnHelper.columns([
 		columnHelper.display({
 			id: "actions",
@@ -65,6 +67,20 @@ export function getColumns({ onChangeTerms, onEnd }: ColumnHandlers) {
 				return <span className="table-figure">{hours === null ? "—" : `${hours} h`}</span>;
 			},
 		}),
+
+		...(showsRate
+			? [
+					columnHelper.accessor("rate", {
+						header: "Rate",
+						meta: { width: "md", align: "right" },
+						cell: ({ getValue }) => {
+							const rate = getValue();
+
+							return <span className="table-figure">{rate ? formatRate(rate) : "—"}</span>;
+						},
+					}),
+				]
+			: []),
 
 		columnHelper.accessor("startsOn", {
 			header: "Engaged",

@@ -1,6 +1,7 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import type { ProjectPositionProjection } from "#/api/models";
 import { ConfirmDialog, Dialog, useUnsavedChangesGuard } from "#/components/ui";
+import { moneyInputValue } from "#/components/ui/Input";
 import { useGetPosition } from "../../pages/hooks";
 import { PositionWizard } from "./PositionWizard";
 import { emptyPosition, type PositionFormValues } from "./schema";
@@ -31,7 +32,7 @@ function toFormValues(position: ProjectPositionProjection): PositionFormValues {
 		duties: position.duties,
 		requiredQualifications: position.requiredQualifications,
 		contractType: position.contractType,
-		rateAmount: position.proposedRate ? String(position.proposedRate.amount) : "",
+		rateAmount: moneyInputValue(position.proposedRate?.amount),
 		rateCurrency: position.proposedRate?.currency ?? "",
 		rateUnit: position.proposedRate?.unit ?? "Hourly",
 		rateBasis: position.proposedRate?.basis ?? "Gross",
