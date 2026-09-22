@@ -15,12 +15,23 @@
  */
 
 export interface SaveWorkDayRequest {
+	/** The day, in a month that has already begun. The sheet is found from it; saving the same day again replaces it. */
 	date: string;
+	/** When work started, e.g. "08:00". A shift may run past midnight and still belongs to this day. */
 	startsAt: string;
-	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	/**
+	 * Whole hours worked, 0 to 24.
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
 	hours: number | string;
-	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	/**
+	 * Minutes on top of Hours, 0 to 55 in steps of five. The day as a whole cannot be empty or longer than 24 hours.
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
 	minutes: number | string;
-	/** @nullable */
+	/**
+	 * Optional short note about the day.
+	 * @nullable
+	 */
 	note: string | null;
 }

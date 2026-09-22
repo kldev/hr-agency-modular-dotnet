@@ -19,58 +19,114 @@ import type { RateUnit } from "./rateUnit.ts";
 import type { WorkerContractType } from "./workerContractType.ts";
 
 export interface PositionRequest {
+	/** Internal name, unique within the project, e.g. "Painter PL contract" or "Painter Belgium" - it tells two roles apart. */
 	name: string;
-	/** @nullable */
+	/**
+	 * The job title that goes on the contract, without internal bookkeeping, e.g. "Painter".
+	 * @nullable
+	 */
 	contractName: string | null;
-	/** @nullable */
+	/**
+	 * What the work actually is.
+	 * @nullable
+	 */
 	workDescription: string | null;
-	/** @nullable */
+	/**
+	 * Duties of the role, one item per entry.
+	 * @nullable
+	 */
 	duties: string[] | null;
-	/** @nullable */
+	/**
+	 * Qualifications the person must hold, e.g. a welding certificate.
+	 * @nullable
+	 */
 	requiredQualifications: string[] | null;
+	/** What is signed with the person: EmploymentContract, TemporaryEmploymentContract, MandateContract, SelfEmployed or Other. One project can hold several. */
 	contractType: WorkerContractType;
 	/**
+	 * The role's proposed rate. What a given person actually gets belongs to their own contract. Omit for none.
 	 * @nullable
 	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
 	 */
 	rateAmount: number | string | null;
-	/** @nullable */
+	/**
+	 * Currency of RateAmount, e.g. "PLN", "EUR" - required whenever a rate is given.
+	 * @nullable
+	 */
 	rateCurrency: string | null;
+	/** What the rate is per: Hourly, Daily or Monthly. */
 	rateUnit: RateUnit;
+	/** Gross or Net - without it the number reads differently to different people. */
 	rateBasis: RateBasis;
-	/** @nullable */
+	/**
+	 * Street. Workplace address of this position - street, building number, postal code, city and country all together, or none of them to use the project's own workplace.
+	 * @nullable
+	 */
 	street: string | null;
-	/** @nullable */
+	/**
+	 * Building number. Workplace address of this position - street, building number, postal code, city and country all together, or none of them to use the project's own workplace.
+	 * @nullable
+	 */
 	buildingNumber: string | null;
-	/** @nullable */
+	/**
+	 * Optional unit number of the position's workplace.
+	 * @nullable
+	 */
 	unitNumber: string | null;
-	/** @nullable */
+	/**
+	 * Postal code. Workplace address of this position - street, building number, postal code, city and country all together, or none of them to use the project's own workplace.
+	 * @nullable
+	 */
 	postalCode: string | null;
-	/** @nullable */
+	/**
+	 * City. Workplace address of this position - street, building number, postal code, city and country all together, or none of them to use the project's own workplace.
+	 * @nullable
+	 */
 	city: string | null;
-	/** @nullable */
+	/**
+	 * Country, ISO 3166-1 alpha-2. Workplace address of this position - street, building number, postal code, city and country all together, or none of them to use the project's own workplace.
+	 * @nullable
+	 */
 	countryCode: string | null;
 	/**
+	 * Hours a week, greater than zero and at most 168.
 	 * @nullable
 	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
 	 */
 	weeklyHours: number | string | null;
-	/** @nullable */
+	/**
+	 * When a working day starts, as a time of day, e.g. "07:00".
+	 * @nullable
+	 */
 	workStartsAt: string | null;
-	/** @nullable */
+	/**
+	 * The schedule in words, e.g. "Mon-Fri, two shifts".
+	 * @nullable
+	 */
 	workSchedule: string | null;
 	/**
+	 * Day of the month wages are paid by, 1 to 31.
 	 * @nullable
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */
 	payoutDay: number | string | null;
-	/** @nullable */
+	/**
+	 * Probation, in words, e.g. "1 month".
+	 * @nullable
+	 */
 	probationPeriod: string | null;
-	/** @nullable */
+	/**
+	 * Notice period, in words, e.g. "2 weeks".
+	 * @nullable
+	 */
 	noticePeriod: string | null;
-	/** @nullable */
+	/**
+	 * What comes on top of the rate, named: accommodation, transport, per diem.
+	 * @nullable
+	 */
 	allowances: string[] | null;
 	/**
+	 * How many people the role is for, at least one. A target, not a forecast.
 	 * @nullable
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */

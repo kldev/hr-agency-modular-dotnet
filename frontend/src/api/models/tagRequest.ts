@@ -15,5 +15,6 @@
  */
 
 export interface TagRequest {
+	/** The tag to attach or remove - one of the agency's tags. */
 	tagId: string;
 }

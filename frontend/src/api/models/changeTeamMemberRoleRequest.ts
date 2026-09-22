@@ -16,5 +16,6 @@
 import type { TeamRole } from "./teamRole.ts";
 
 export interface ChangeTeamMemberRoleRequest {
+	/** The member's new seat: Sales, Recruiter, Operations or Lead. */
 	role: TeamRole;
 }

@@ -15,5 +15,6 @@
  */
 
 export interface ReturnTimeSheetRequest {
+	/** Why the month goes back for correction - required, since the person has to know what to fix. */
 	reason: string;
 }

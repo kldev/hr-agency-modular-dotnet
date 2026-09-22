@@ -15,8 +15,13 @@
  */
 
 export interface UpdateAssignmentRequest {
+	/** The role in the same project. Changing it moves the person's seat from one role to the other; the project itself never changes - moving somebody ends one assignment and plans another. */
 	positionId: string;
+	/** First day of the posting. */
 	startsOn: string;
-	/** @nullable */
+	/**
+	 * Last day of the posting, or null for open-ended.
+	 * @nullable
+	 */
 	endsOn?: string | null;
 }

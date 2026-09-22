@@ -17,9 +17,12 @@ import type { RateInput } from "./rateInput.ts";
 import type { WorkerContractType } from "./workerContractType.ts";
 
 export interface ChangeAgencyEmploymentTermsRequest {
+	/** The contract type from now on. Moving between types that do and do not owe hours adds the person to, or takes them off, the time sheet monitoring. */
 	contractType: WorkerContractType;
+	/** When the new terms apply; not before the engagement began. */
 	effectiveFrom: string;
 	/**
+	 * Hours a week, 0 to 168. Optional.
 	 * @nullable
 	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
 	 */

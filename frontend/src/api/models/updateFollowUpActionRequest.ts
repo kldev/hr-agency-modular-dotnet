@@ -15,6 +15,8 @@
  */
 
 export interface UpdateFollowUpActionRequest {
+	/** What is to be done. */
 	content: string;
+	/** When it is due, as a date and time with an offset (ISO 8601). */
 	followDateTime: string;
 }

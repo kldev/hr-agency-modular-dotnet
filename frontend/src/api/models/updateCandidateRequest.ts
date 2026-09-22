@@ -15,8 +15,12 @@
  */
 
 export interface UpdateCandidateRequest {
+	/** The candidate's phone number. */
 	phone: string;
+	/** First name. */
 	firstName: string;
+	/** Last name. */
 	lastName: string;
+	/** Free notes about the candidate. Replaces the previous ones; may be empty. */
 	note: string;
 }

@@ -15,6 +15,8 @@
  */
 
 export interface RequestPasswordResetRequest {
+	/** The e-mail address of the account. The answer is the same whether or not an account exists, so this endpoint cannot be used to probe for addresses. */
 	email: string;
+	/** The agency's slug, when the caller knows it. Leave empty and the agency is worked out from the e-mail address. */
 	slug?: string;
 }

@@ -16,11 +16,20 @@
 import type { ContractStatus } from "./contractStatus.ts";
 
 export interface RecordProjectContractRequest {
+	/** The contract's number as written on it. */
 	contractNumber: string;
+	/** Draft, Signed, Terminated or Expired. A project goes live only with a Signed one. */
 	status: ContractStatus;
-	/** @nullable */
+	/**
+	 * Signature date - required for a Signed contract, and not after ValidFrom.
+	 * @nullable
+	 */
 	signedOn: string | null;
+	/** First day the contract applies. */
 	validFrom: string;
-	/** @nullable */
+	/**
+	 * Last day it applies. Optional; not before ValidFrom.
+	 * @nullable
+	 */
 	validTo: string | null;
 }

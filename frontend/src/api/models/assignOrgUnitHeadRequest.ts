@@ -15,5 +15,6 @@
  */
 
 export interface AssignOrgUnitHeadRequest {
+	/** The person who heads the unit - already one of its members. They become the supervisor of its people and of units below without a head of their own. */
 	headUserId: string;
 }

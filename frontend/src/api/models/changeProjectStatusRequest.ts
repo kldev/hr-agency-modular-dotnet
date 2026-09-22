@@ -16,7 +16,11 @@
 import type { ProjectStatus } from "./projectStatus.ts";
 
 export interface ChangeProjectStatusRequest {
+	/** Draft, Active, Suspended, Completed or Cancelled. Going Active needs a signed contract, a responsible contact and a complete client profile; Completed and Cancelled are final. */
 	status: ProjectStatus;
-	/** @nullable */
+	/**
+	 * Optional note on why, up to 500 characters - worth giving for Suspended and Cancelled.
+	 * @nullable
+	 */
 	reason: string | null;
 }

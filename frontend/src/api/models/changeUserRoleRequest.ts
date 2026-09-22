@@ -16,5 +16,6 @@
 import type { OrganizationRoleApi } from "./organizationRoleApi.ts";
 
 export interface ChangeUserRoleRequest {
+	/** The account's new role in the agency, e.g. Admin, Recruiter, HumanResources, Finance. It takes effect at the person's next sign-in or token refresh. */
 	role: OrganizationRoleApi;
 }

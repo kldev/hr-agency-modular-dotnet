@@ -15,7 +15,11 @@
  */
 
 export interface ChangeInterviewerRequest {
+	/** The user who runs the interview from now on. */
 	interviewerId: string;
-	/** @nullable */
+	/**
+	 * Optional note on the change.
+	 * @nullable
+	 */
 	note: string | null;
 }

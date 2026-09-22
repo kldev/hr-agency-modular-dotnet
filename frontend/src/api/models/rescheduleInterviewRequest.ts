@@ -15,9 +15,14 @@
  */
 
 export interface RescheduleInterviewRequest {
+	/** The local date and time of the interview, without an offset - read in ScheduledTimezone and stored as an instant, so 10:00 in Europe/Warsaw stays 10:00 there across daylight saving. */
 	scheduledAt: string;
+	/** Why it moved, or anything the interviewer should know. May be empty. */
 	note: string;
+	/** IANA time zone ScheduledAt is in, e.g. "Europe/Warsaw" (the default). */
 	scheduledTimezone?: string;
+	/** Where to go, for an OnSite interview. */
 	location?: string;
+	/** The meeting link, for an Online interview. */
 	meetingUrl?: string;
 }

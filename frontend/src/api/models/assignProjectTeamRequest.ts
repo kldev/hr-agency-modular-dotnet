@@ -15,5 +15,6 @@
  */
 
 export interface AssignProjectTeamRequest {
+	/** The recruitment team that staffs the project. */
 	teamId: string;
 }

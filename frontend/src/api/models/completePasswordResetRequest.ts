@@ -15,7 +15,10 @@
  */
 
 export interface CompletePasswordResetRequest {
+	/** The reset id from the link in the e-mail. */
 	id: string;
+	/** The one-time token from the same link. It expires with the reset window (15 minutes by default) and works once. */
 	token: string;
+	/** The password to set. From now on it is the only one that signs in. */
 	newPassword: string;
 }

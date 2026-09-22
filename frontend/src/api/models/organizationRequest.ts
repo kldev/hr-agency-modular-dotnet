@@ -16,8 +16,11 @@
 import type { OrganizationInfoData } from "./organizationInfoData.ts";
 
 export interface OrganizationRequest {
+	/** The agency's display name, shown in the panel and on its public job board. */
 	name: string;
+	/** The agency's short address, e.g. "hr-agency": part of the job board and feed URLs. Unique across the platform, stored in lower case, up to 100 characters. */
 	slug: string;
+	/** The domains the agency's accounts use, e.g. ["hr-agency.com"]. Signing in finds the agency by the e-mail domain, so at least one non-empty domain is required. */
 	emailDomains: string[];
 	info: null | OrganizationInfoData;
 }

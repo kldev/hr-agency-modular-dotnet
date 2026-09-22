@@ -16,6 +16,8 @@
 import type { ContactPerson } from "./contactPerson.ts";
 
 export interface CompanyContactRequest {
+	/** The person: e-mail, first and last name, job title and phone. */
 	contact: ContactPerson;
+	/** Also make this person the company's primary contact. Applied when a contact is edited; creating a contact does not look at it today. */
 	updatePrimary?: boolean;
 }

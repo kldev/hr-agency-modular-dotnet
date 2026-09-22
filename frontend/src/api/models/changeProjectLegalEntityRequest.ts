@@ -15,5 +15,6 @@
  */
 
 export interface ChangeProjectLegalEntityRequest {
+	/** The agency's own company that takes over delivering the project. */
 	legalEntityId: string;
 }

@@ -16,9 +16,14 @@
 import type { CandidateSource } from "./candidateSource.ts";
 
 export interface ApplyToPostRequest {
+	/** The candidate's e-mail address. An existing candidate with this address is reused, so one person stays one candidate. */
 	email: string;
+	/** The candidate's phone number. */
 	phoneNumber: string;
+	/** Where the candidate came from, e.g. Direct, Referral, JustJoinIt, Linkedin. Defaults to Direct. */
 	source?: CandidateSource;
+	/** The candidate's first name. Optional. */
 	firstName?: string;
+	/** The candidate's last name. Optional. */
 	lastName?: string;
 }

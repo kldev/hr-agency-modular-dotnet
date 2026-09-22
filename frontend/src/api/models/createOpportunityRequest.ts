@@ -16,15 +16,29 @@
 import type { CurrencyCode } from "./currencyCode.ts";
 
 export interface CreateOpportunityRequest {
+	/** The client company the opportunity is with. Must belong to the caller's agency. */
 	companyId: string;
+	/** A short name for the deal, e.g. "Five welders for the Gdansk shipyard". */
 	title: string;
+	/** What the client wants, in as much detail as is known. Up to 5000 characters. */
 	description: string;
-	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	/**
+	 * What the deal is expected to be worth, in Currency.
+	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+	 */
 	expectedValue: number | string;
+	/** Flag an opportunity that needs attention first. It only sorts and highlights; it changes no rule. */
 	isHotLead: boolean;
+	/** Currency of ExpectedValue, e.g. PLN, EUR. */
 	currency: CurrencyCode;
-	/** @nullable */
+	/**
+	 * When the deal is expected to be decided. Optional.
+	 * @nullable
+	 */
 	expectedCloseDate: string | null;
-	/** @nullable */
+	/**
+	 * The user who owns the opportunity. Omit to take it yourself; naming somebody else mails them about it.
+	 * @nullable
+	 */
 	responsibleId: string | null;
 }

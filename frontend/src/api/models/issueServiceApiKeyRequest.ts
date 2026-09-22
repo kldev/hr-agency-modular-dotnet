@@ -15,5 +15,6 @@
  */
 
 export interface IssueServiceApiKeyRequest {
+	/** What the key is for, e.g. "public job board" - so it can be told apart and revoked later. Up to 100 characters. */
 	name: string;
 }

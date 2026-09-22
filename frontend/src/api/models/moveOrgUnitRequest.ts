@@ -15,5 +15,6 @@
  */
 
 export interface MoveOrgUnitRequest {
+	/** The unit to hang this one under. Not the unit itself and not one of its own units; the top unit cannot move. */
 	parentId: string;
 }

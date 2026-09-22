@@ -15,5 +15,6 @@
  */
 
 export interface RenameOrgUnitRequest {
+	/** The unit's new name, unique among its siblings. */
 	name: string;
 }

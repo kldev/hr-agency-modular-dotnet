@@ -15,7 +15,10 @@
  */
 
 export interface UpdateApplicantRequest {
+	/** The applicant's phone number on this application. */
 	phone: string;
+	/** First name, as on this application. Optional. */
 	firstName?: string;
+	/** Last name, as on this application. Optional. */
 	lastName?: string;
 }

@@ -16,15 +16,29 @@
 import type { WorkAuthorisationKind } from "./workAuthorisationKind.ts";
 
 export interface RecordWorkAuthorisationRequest {
+	/** WorkPermit, ResidencePermit, Visa, WorkStatement or Other. */
 	kind: WorkAuthorisationKind;
+	/** Country the permission is for, ISO 3166-1 alpha-2. */
 	country: string;
+	/** The permission's number, as issued. */
 	number: string;
+	/** First day it is valid. */
 	validFrom: string;
+	/** Last day it is valid. */
 	validUntil: string;
-	/** @nullable */
+	/**
+	 * Omit to add a permission; give the id of one on the file to replace it.
+	 * @nullable
+	 */
 	authorisationId?: string | null;
-	/** @nullable */
+	/**
+	 * Optional document on the person's file that proves it.
+	 * @nullable
+	 */
 	documentId?: string | null;
-	/** @nullable */
+	/**
+	 * Optional note.
+	 * @nullable
+	 */
 	note?: string | null;
 }

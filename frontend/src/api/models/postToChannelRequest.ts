@@ -16,5 +16,6 @@
 import type { PostingChannelType } from "./postingChannelType.ts";
 
 export interface PostToChannelRequest {
+	/** Where the post went: CareerPage, PracujPl, Olx, PracaPl, Rocketjobs, JustJoinIt, NoFluffJobs, Linkedin, Indeed or Other. It records the publication, it does not publish anything. A post not yet published becomes Published; a closed one is refused. */
 	channel: PostingChannelType;
 }

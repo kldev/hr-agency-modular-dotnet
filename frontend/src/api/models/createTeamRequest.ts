@@ -16,6 +16,8 @@
 import type { TeamMemberRequest } from "./teamMemberRequest.ts";
 
 export interface CreateTeamRequest {
+	/** The team's name. */
 	name: string;
+	/** Its first members, each with a seat - at least one, and nobody twice. */
 	members: TeamMemberRequest[];
 }

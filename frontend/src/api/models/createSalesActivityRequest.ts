@@ -16,7 +16,10 @@
 import type { SalesActivityType } from "./salesActivityType.ts";
 
 export interface CreateSalesActivityRequest {
+	/** The opportunity the activity belongs to. */
 	opportunityId: string;
+	/** What happened: Call, Email, Meeting, Note, Presentation or Other. */
 	type: SalesActivityType;
+	/** Optional note on how it went, up to 500 characters. */
 	note: string;
 }

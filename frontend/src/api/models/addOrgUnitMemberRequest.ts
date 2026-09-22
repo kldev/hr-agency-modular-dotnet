@@ -15,7 +15,11 @@
  */
 
 export interface AddOrgUnitMemberRequest {
+	/** The person to add. A person belongs to one unit at most - move them rather than add them twice. */
 	userId: string;
-	/** @nullable */
+	/**
+	 * Optional title within the unit, e.g. "Payroll specialist".
+	 * @nullable
+	 */
 	title: string | null;
 }

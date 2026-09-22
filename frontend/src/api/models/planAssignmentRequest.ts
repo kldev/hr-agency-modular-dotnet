@@ -16,11 +16,19 @@
 import type { EngagementType } from "./engagementType.ts";
 
 export interface PlanAssignmentRequest {
+	/** The person being posted. Somebody who has left cannot be assigned. */
 	workerId: string;
+	/** The project they go to. */
 	projectId: string;
+	/** How this person is engaged: PostingOfWorkers, TemporaryAgencyWork, Outsourcing or LocalEmployment. With the work country it decides their per-person compliance (A1, local contract). */
 	engagementType: EngagementType;
+	/** The role in that project they take up. */
 	positionId: string;
+	/** First day of the posting. The period must lie within the project's own and must not overlap another assignment of the same person. */
 	startsOn: string;
-	/** @nullable */
+	/**
+	 * Last day of the posting, or omit for open-ended. Not before StartsOn.
+	 * @nullable
+	 */
 	endsOn?: string | null;
 }

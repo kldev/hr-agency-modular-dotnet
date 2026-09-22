@@ -16,8 +16,13 @@
 import type { OrgUnitKind } from "./orgUnitKind.ts";
 
 export interface CreateOrgUnitRequest {
-	/** @nullable */
+	/**
+	 * The unit this one hangs under. Null only for the top unit, and an organization has exactly one.
+	 * @nullable
+	 */
 	parentId: string | null;
+	/** The unit's name, unique among its siblings. */
 	name: string;
+	/** Board, Department or Section. */
 	kind: OrgUnitKind;
 }

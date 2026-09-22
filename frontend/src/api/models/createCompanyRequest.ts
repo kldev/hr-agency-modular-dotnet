@@ -17,11 +17,17 @@ import type { ContactPerson } from "./contactPerson.ts";
 import type { Industry } from "./industry.ts";
 
 export interface CreateCompanyRequest {
+	/** The name the agency knows the client by, e.g. "Cassin Inc". The legal name belongs to the profile. */
 	name: string;
+	/** Where the company is based, ISO 3166-1 alpha-2, e.g. "PL". */
 	countryCode: string;
+	/** Tax identification number (NIP in Poland). Unique within the agency - a second company with the same one is refused. */
 	taxId: string;
+	/** Company register number (KRS or REGON in Poland), as the client gives it. */
 	registrationNumber: string;
+	/** The company's website address. */
 	website: string;
+	/** What the company does, e.g. Software, Manufacturing, Logistics. Used to filter and group clients. */
 	industry: Industry;
 	contact?: null | ContactPerson;
 }

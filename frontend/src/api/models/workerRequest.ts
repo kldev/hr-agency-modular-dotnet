@@ -16,35 +16,78 @@
 import type { IdentityDocumentKind } from "./identityDocumentKind.ts";
 
 export interface WorkerRequest {
+	/** First name, as in the identity document. */
 	firstName: string;
+	/** Last name, as in the identity document. */
 	lastName: string;
+	/** Date of birth; must be in the past. */
 	dateOfBirth: string;
+	/** Country of citizenship, ISO 3166-1 alpha-2. It decides whether legalisation applies: citizens of free movement countries need no work permit. */
 	citizenship: string;
+	/** IdentityCard, Passport, ResidenceCard or Other. */
 	identityDocumentKind: IdentityDocumentKind;
+	/** The document's number. With the issuing country it identifies the person: a second file with the same document is refused. */
 	identityDocumentNumber: string;
+	/** Country that issued the document, ISO 3166-1 alpha-2. */
 	identityDocumentIssuingCountry: string;
-	/** @nullable */
+	/**
+	 * Last day the document is valid. Optional.
+	 * @nullable
+	 */
 	identityDocumentValidUntil?: string | null;
-	/** @nullable */
+	/**
+	 * Optional e-mail address. Unique within the agency's register when given.
+	 * @nullable
+	 */
 	email?: string | null;
-	/** @nullable */
+	/**
+	 * Optional phone number. With the name it is how a person without an e-mail is recognised as already on file.
+	 * @nullable
+	 */
 	phoneNumber?: string | null;
-	/** @nullable */
+	/**
+	 * Street. Home address: street, building number, postal code, city and country together, or none of them.
+	 * @nullable
+	 */
 	street?: string | null;
-	/** @nullable */
+	/**
+	 * Building number. Home address: street, building number, postal code, city and country together, or none of them.
+	 * @nullable
+	 */
 	buildingNumber?: string | null;
-	/** @nullable */
+	/**
+	 * Optional flat or unit number.
+	 * @nullable
+	 */
 	unitNumber?: string | null;
-	/** @nullable */
+	/**
+	 * Postal code. Home address: street, building number, postal code, city and country together, or none of them.
+	 * @nullable
+	 */
 	postalCode?: string | null;
-	/** @nullable */
+	/**
+	 * City. Home address: street, building number, postal code, city and country together, or none of them.
+	 * @nullable
+	 */
 	city?: string | null;
-	/** @nullable */
+	/**
+	 * Country of the home address, ISO 3166-1 alpha-2. Home address: street, building number, postal code, city and country together, or none of them.
+	 * @nullable
+	 */
 	addressCountryCode?: string | null;
-	/** @nullable */
+	/**
+	 * Optional free note.
+	 * @nullable
+	 */
 	note?: string | null;
-	/** @nullable */
+	/**
+	 * When registering: the candidate the file comes from. Recruitment then marks that candidate as registered. Ignored on update - an origin does not change.
+	 * @nullable
+	 */
 	sourceCandidateId?: string | null;
-	/** @nullable */
+	/**
+	 * When registering: the job application the decision was made on; requires SourceCandidateId. Ignored on update.
+	 * @nullable
+	 */
 	sourceApplicationId?: string | null;
 }

@@ -15,16 +15,30 @@
  */
 
 export interface UpdateProjectRequest {
+	/** The project's name. */
 	name: string;
+	/** What is being delivered. */
 	description: string;
+	/** Street of the workplace. Workplace address: street, building number, postal code, city and country of where the people work. */
 	street: string;
+	/** Building number of the workplace. */
 	buildingNumber: string;
-	/** @nullable */
+	/**
+	 * Optional unit number of the workplace.
+	 * @nullable
+	 */
 	unitNumber: string | null;
+	/** Postal code of the workplace. */
 	postalCode: string;
+	/** City of the workplace. */
 	city: string;
+	/** Country where the work happens, ISO 3166-1 alpha-2. */
 	countryCode: string;
+	/** First day of the project. */
 	startsOn: string;
-	/** @nullable */
+	/**
+	 * Last day of the project, or null for open-ended.
+	 * @nullable
+	 */
 	endsOn: string | null;
 }

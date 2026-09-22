@@ -16,12 +16,22 @@
 import type { CurrencyCode } from "./currencyCode.ts";
 
 export interface UpdateOpportunityRequest {
+	/** A short name for the deal. */
 	title: string;
+	/** What the client wants. Up to 5000 characters. */
 	description: string;
-	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	/**
+	 * What the deal is expected to be worth, in Currency.
+	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
+	 */
 	expectedValue: number | string;
+	/** Flag an opportunity that needs attention first. It only sorts and highlights. */
 	isHotLead: boolean;
+	/** Currency of ExpectedValue, e.g. PLN, EUR. */
 	currency: CurrencyCode;
-	/** @nullable */
+	/**
+	 * When the deal is expected to be decided. Null clears it.
+	 * @nullable
+	 */
 	expectedCloseDate: string | null;
 }

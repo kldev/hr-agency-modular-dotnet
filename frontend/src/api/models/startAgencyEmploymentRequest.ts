@@ -17,10 +17,14 @@ import type { RateInput } from "./rateInput.ts";
 import type { WorkerContractType } from "./workerContractType.ts";
 
 export interface StartAgencyEmploymentRequest {
+	/** The agency's own person the record is for. One record per person. */
 	userId: string;
+	/** EmploymentContract, TemporaryEmploymentContract, MandateContract, SelfEmployed or Other. Employment and mandate contracts owe a monthly time sheet; the others do not. */
 	contractType: WorkerContractType;
+	/** First day of the engagement. */
 	startsOn: string;
 	/**
+	 * Hours a week, 0 to 168. Optional.
 	 * @nullable
 	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
 	 */

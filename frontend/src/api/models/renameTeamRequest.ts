@@ -15,5 +15,6 @@
  */
 
 export interface RenameTeamRequest {
+	/** The team's new name. */
 	name: string;
 }

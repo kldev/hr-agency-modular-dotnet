@@ -16,10 +16,18 @@
 import type { AssignmentDocumentCategory } from "./assignmentDocumentCategory.ts";
 
 export interface UpdateAssignmentDocumentRequest {
+	/** Contract, SocialSecurity, HostCountryNotification, Compliance or Other. */
 	category: AssignmentDocumentCategory;
+	/** The date on the document. */
 	documentDate: string;
-	/** @nullable */
+	/**
+	 * Last day it is valid, when it expires.
+	 * @nullable
+	 */
 	validUntil?: string | null;
-	/** @nullable */
+	/**
+	 * Optional note.
+	 * @nullable
+	 */
 	note?: string | null;
 }
