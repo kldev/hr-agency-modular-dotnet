@@ -133,7 +133,7 @@ public sealed partial class HrAgencyShowcaseSeeder
             organization.OrganizationId
         );
 
-        await new InterviewsScenario(bus, session).SeedAsync(organization.OrganizationId, 200);
+        await new InterviewsScenario(bus, session, logger).SeedAsync(organization.OrganizationId, 200);
 
         logger.LogInformation(
             "Agency seed completed: {Slug} ({OrganizationId})",
@@ -141,7 +141,7 @@ public sealed partial class HrAgencyShowcaseSeeder
             organization.OrganizationId
         );
 
-        await new TagsScenario(bus, session).Seed(organization.OrganizationId, userIds);
+        await new TagsScenario(bus, session, logger).Seed(organization.OrganizationId, userIds);
     }
 
     private async Task SeedMinimalAgency(Guid ownerId, SeedConfig config)
@@ -184,7 +184,7 @@ public sealed partial class HrAgencyShowcaseSeeder
 
         await GenerateApplicants(20, false);
 
-        await new TagsScenario(bus, session).Seed(organization.OrganizationId, userIds);
+        await new TagsScenario(bus, session, logger).Seed(organization.OrganizationId, userIds);
     }
 
     private async Task<IReadOnlyList<Guid>> CreateUsers(

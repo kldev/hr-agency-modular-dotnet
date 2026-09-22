@@ -28,7 +28,7 @@ public sealed class CandidateResolver(
         if (existing is null)
             return await CreateNew(command, ct);
 
-        logger.CandidateFoundInDatabase(command.Email);
+        logger.CandidateFoundInDatabase(existing.CandidateId);
         await bus.InvokeAsync<CandidateApplicationUpdated>(
             new UpdateCandidateApplication(
                 existing.CandidateId,
@@ -44,10 +44,10 @@ public sealed class CandidateResolver(
 
     private async Task<CandidateInfo> CreateNew(CreateCandidate command, CancellationToken ct)
     {
-        logger.CandidateNotInDatabase(command.Email);
+        logger.CandidateNotInDatabase(command.OrganizationId);
         var result = await bus.InvokeAsync<CandidateCreated>(command, ct);
 
-        logger.CandidateCreatedSuccessfully(result.Email);
+        logger.CandidateCreatedSuccessfully(result.CandidateId);
 
         return new CandidateInfo(
             result.CandidateId,
@@ -85,39 +85,40 @@ public sealed class CandidateResolver(
             .FirstOrDefaultAsync(ct);
 
         if (@event != null)
-            logger.CandidateFoundInEvents(@event.Email);
+            logger.CandidateFoundInEvents(@event.CandidateId);
 
         return @event;
     }
 }
 
+// Identifiers, not people: a candidate's e-mail is personal data and stays out of the log.
 internal static partial class CandidateLogs
 {
     [LoggerMessage(
         EventId = 1,
         Level = LogLevel.Information,
-        Message = "Candidate {email} created successfully"
+        Message = "Candidate {CandidateId} created successfully"
     )]
-    public static partial void CandidateCreatedSuccessfully(this ILogger logger, string email);
+    public static partial void CandidateCreatedSuccessfully(this ILogger logger, Guid candidateId);
 
     [LoggerMessage(
-        EventId = 1,
+        EventId = 2,
         Level = LogLevel.Information,
-        Message = "Candidate {email} not in database. Create new"
+        Message = "Candidate not in organization {OrganizationId}. Create new"
     )]
-    public static partial void CandidateNotInDatabase(this ILogger logger, string email);
+    public static partial void CandidateNotInDatabase(this ILogger logger, Guid organizationId);
 
     [LoggerMessage(
-        EventId = 1,
+        EventId = 3,
         Level = LogLevel.Information,
-        Message = "Candidate {email} found in database. "
+        Message = "Candidate {CandidateId} found in database"
     )]
-    public static partial void CandidateFoundInDatabase(this ILogger logger, string email);
+    public static partial void CandidateFoundInDatabase(this ILogger logger, Guid candidateId);
 
     [LoggerMessage(
-        EventId = 1,
+        EventId = 4,
         Level = LogLevel.Information,
-        Message = "Candidate {email} found in events. "
+        Message = "Candidate {CandidateId} found in events"
     )]
-    public static partial void CandidateFoundInEvents(this ILogger logger, string email);
+    public static partial void CandidateFoundInEvents(this ILogger logger, Guid candidateId);
 }

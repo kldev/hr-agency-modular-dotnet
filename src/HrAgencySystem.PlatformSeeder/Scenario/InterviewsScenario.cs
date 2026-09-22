@@ -6,11 +6,12 @@ using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Interviews;
 using Marten;
+using Microsoft.Extensions.Logging;
 using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder.Scenario;
 
-public sealed class InterviewsScenario(IMessageBus bus, IQuerySession session)
+public sealed class InterviewsScenario(IMessageBus bus, IQuerySession session, ILogger logger)
 {
     private const int DaysBefore = 31;
     private const int DaysAfter = 31;
@@ -90,7 +91,7 @@ public sealed class InterviewsScenario(IMessageBus bus, IQuerySession session)
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            logger.LogWarning(ex, "Seeding an interview failed");
         }
     }
 

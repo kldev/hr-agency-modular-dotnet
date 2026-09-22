@@ -2,11 +2,12 @@ using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Add;
 using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Events.Applications;
 using Marten;
+using Microsoft.Extensions.Logging;
 using Wolverine;
 
 namespace HrAgencySystem.PlatformSeeder.Scenario;
 
-internal sealed class TagsScenario(IMessageBus bus, IDocumentSession session)
+internal sealed class TagsScenario(IMessageBus bus, IDocumentSession session, ILogger logger)
 {
     private int TagAddCount { get; set; } = 0;
 
@@ -33,11 +34,10 @@ internal sealed class TagsScenario(IMessageBus bus, IDocumentSession session)
 
         foreach (var applicant in applicants)
         {
-            Console.WriteLine($"Add tags to {applicant.ApplicantEmail}");
             await TagApplicant(applicant.JobApplicationId, organizationId, tags, userIds);
         }
 
-        Console.WriteLine("Tag added: " + TagAddCount);
+        logger.LogInformation("Seeded {TagCount} application tags", TagAddCount);
     }
 
     private async Task TagApplicant(
@@ -55,7 +55,6 @@ internal sealed class TagsScenario(IMessageBus bus, IDocumentSession session)
             userIds[Random.Shared.Next(userIds.Count)]
         ));
 
-        Console.WriteLine($"Tag application {applicantId} with tag {selectedTags.Count} count");
         foreach (var command in commands)
         {
             await bus.InvokeAsync<JobApplicationTagged>(command);
