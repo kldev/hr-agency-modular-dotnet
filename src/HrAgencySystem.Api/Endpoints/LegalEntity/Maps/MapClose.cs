@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.LegalEntities.Application.Close;
@@ -8,7 +9,12 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.LegalEntity.Maps;
 
-internal sealed record CloseLegalEntityRequest(DateOnly ActiveTo)
+internal sealed record CloseLegalEntityRequest(
+    [property: Description(
+        "The last day of trading; not before the first one. A closed company cannot be closed again."
+    )]
+        DateOnly ActiveTo
+)
 {
     internal CloseLegalEntity ToCommand(
         OrganizationId organizationId,
