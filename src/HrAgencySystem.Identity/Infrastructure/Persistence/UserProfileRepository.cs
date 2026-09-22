@@ -20,6 +20,17 @@ public sealed class UserProfileRepository(IDocumentSession session) : IUserProfi
             .SingleOrDefaultAsync(ct);
     }
 
+    public async Task<IReadOnlyList<UserProfile>> GetManyAsync(
+        OrganizationId organizationId,
+        CancellationToken ct
+    )
+    {
+        return await session
+            .Query<UserProfile>()
+            .Where(z => z.OrganizationId == organizationId.Value)
+            .ToListAsync(ct);
+    }
+
     public async Task<Guid?> SetAvatarAsync(UserProfile profile, CancellationToken ct)
     {
         var current = await GetAsync(

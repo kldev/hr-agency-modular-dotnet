@@ -34,6 +34,11 @@ internal static class ApiEndpoints
         // route can share a segment - the same arrangement ChangePassword already relies on.
         public const string Me = $"{UsersBase}/me";
         public const string Avatar = $"{UsersBase}/me/avatar";
+
+        // Somebody else's picture. "avatars" never matches the :guid constraint either, so the
+        // catalogue and the per-user route share the segment the same way "me" already does.
+        public const string AvatarFor = $"{UsersBase}/{{userId:guid}}/avatar";
+        public const string Avatars = $"{UsersBase}/avatars";
     }
 
     internal static class Owners

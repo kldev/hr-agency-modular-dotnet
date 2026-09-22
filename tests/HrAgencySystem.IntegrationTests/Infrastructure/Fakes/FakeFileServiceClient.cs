@@ -17,6 +17,13 @@ namespace HrAgencySystem.IntegrationTests.Infrastructure.Fakes;
 public sealed class FakeFileServiceClient : IFileServiceClient
 {
     private readonly ConcurrentDictionary<Guid, StoredEntry> _files = new();
+    private int _uploads;
+
+    /// <summary>
+    /// How many uploads this double has been asked for. Registered as a singleton, so a test that
+    /// wants to prove a request never reached the file service snapshots it either side of the call.
+    /// </summary>
+    public int UploadCount => Volatile.Read(ref _uploads);
 
     public Task<FileDescriptor> UploadAsync(
         Guid organizationId,
@@ -30,6 +37,8 @@ public sealed class FakeFileServiceClient : IFileServiceClient
     {
         using var buffer = new MemoryStream();
         content.CopyTo(buffer);
+
+        Interlocked.Increment(ref _uploads);
 
         var bytes = buffer.ToArray();
         var fileId = Guid.NewGuid();

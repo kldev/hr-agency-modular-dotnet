@@ -14,6 +14,19 @@ public interface IUserProfileRepository
     Task<UserProfile?> GetAsync(OrganizationId organizationId, UserId userId, CancellationToken ct);
 
     /// <summary>
+    /// Every profile in the organization that has a picture. Answers "who has one" for a list of
+    /// people in one read, instead of a request per row that mostly comes back as a 404.
+    /// <para>
+    /// Not paged: an agency has tens of employees, and the rows are a handful of columns each. A
+    /// tenant with thousands of them would have to narrow this to the page being displayed.
+    /// </para>
+    /// </summary>
+    Task<IReadOnlyList<UserProfile>> GetManyAsync(
+        OrganizationId organizationId,
+        CancellationToken ct
+    );
+
+    /// <summary>
     /// Stores the new picture and answers with the file it replaced, if any. The caller needs that
     /// id to delete the bytes left behind - which is why this returns it rather than swallowing it.
     /// </summary>
