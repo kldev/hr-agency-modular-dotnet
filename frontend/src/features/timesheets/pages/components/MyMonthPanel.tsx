@@ -1,27 +1,25 @@
 import { Info, MessageSquare, Send } from "lucide-react";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
+import { useRef } from "react";
 import { useGetAgencyEmployment } from "#/features/agency-employment/pages/hooks";
 import { contractRequiresTimeRecord } from "#/features/agency-employment/types";
 import type { TimeSheetProjection, WorkDay } from "@/api/models";
-import { Button, ConfirmDialog, TimeSheetStatusBadge } from "@/components/ui";
+import { Button, TimeSheetStatusBadge } from "@/components/ui";
 import {
 	CommentOnTimeSheetDrawer,
 	type CommentOnTimeSheetFormCommand,
 	SaveWorkDayDrawer,
 	type SaveWorkDayFormCommand,
+	SubmitTimeSheetDrawer,
+	type SubmitTimeSheetFormCommand,
 } from "../../drawers";
 import {
 	formatMinutes,
 	isTimeSheetEditable,
 	type MonthInView,
-	monthLabel,
 	noEmploymentMessage,
 	notCoveredMessage,
-	submitWarning,
 	workingDaysInMonth,
 } from "../../types";
-import { useSubmitTimeSheet } from "../hooks";
 import { TimeSheetCalendar } from "./TimeSheetCalendar";
 import { TimeSheetComments } from "./TimeSheetComments";
 import { TimeSheetDayList } from "./TimeSheetDayList";
@@ -37,25 +35,13 @@ interface Props {
 export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props) {
 	const dayRef = useRef<SaveWorkDayFormCommand>(null);
 	const commentRef = useRef<CommentOnTimeSheetFormCommand>(null);
-	const [confirmSubmit, setConfirmSubmit] = useState(false);
+	const submitRef = useRef<SubmitTimeSheetFormCommand>(null);
 
 	/*
 	 * Asked so the page can explain itself rather than let the first click answer 400: somebody on
 	 * B2B owes no hours, and somebody with no record at all has no month to record them against.
 	 */
 	const employment = useGetAgencyEmployment(userId);
-
-	const { mutation: submit, waiting } = useSubmitTimeSheet({
-		onSuccess: () => {
-			setConfirmSubmit(false);
-			onChanged();
-		},
-
-		onError: () => {
-			setConfirmSubmit(false);
-			toast.error("The month could not be sent");
-		},
-	});
 
 	const days = sheet?.days ?? [];
 	const totalMinutes = Number(sheet?.totalMinutes ?? 0);
@@ -156,29 +142,26 @@ export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props
 						variant="primary"
 						icon={<Send size={15} />}
 						disabled={!editable || totalMinutes === 0 || loading}
-						onClick={() => setConfirmSubmit(true)}
+						onClick={() =>
+							submitRef.current?.submit({
+								year: month.year,
+								month: month.month,
+								totalMinutes,
+								days: days.length,
+							})
+						}
 					>
 						Submit for approval
 					</Button>
 				</div>
 			</div>
 
-			<ConfirmDialog
-				open={confirmSubmit}
-				danger={false}
-				title={`Send ${monthLabel(month)} for approval?`}
-				description={`${formatMinutes(totalMinutes)} over ${days.length} days. ${submitWarning}`}
-				confirmLabel="Send"
-				loading={submit.isPending || waiting}
-				onConfirm={() => submit.mutate({ year: month.year, month: month.month })}
-				onClose={() => setConfirmSubmit(false)}
-			/>
-
 			{/* Everything said about this month, by whoever said it - not only the last word. */}
 			{sheet ? <TimeSheetComments comments={sheet.comments} /> : null}
 
 			<SaveWorkDayDrawer ref={dayRef} onSuccess={onChanged} />
 			<CommentOnTimeSheetDrawer ref={commentRef} onSuccess={onChanged} />
+			<SubmitTimeSheetDrawer ref={submitRef} onSuccess={onChanged} />
 		</>
 	);
 }

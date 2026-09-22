@@ -45,9 +45,12 @@ const removeWorkDayServerFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }) => removeWorkDay(data, await getFnOptions()));
 
 const submitServerFn = createServerFn({ method: "POST" })
-	.validator((input: { year: number; month: number }) => input)
+	.validator((input: { year: number; month: number; comment: string | null }) => input)
 	.handler(async ({ data }) =>
-		submitTimeSheet({ year: data.year, month: data.month }, await getFnOptions()),
+		submitTimeSheet(
+			{ year: data.year, month: data.month, comment: data.comment },
+			await getFnOptions(),
+		),
 	);
 
 const approveServerFn = createServerFn({ method: "POST" })
@@ -140,7 +143,8 @@ export function useRemoveWorkDay(options: MutationOptions<WorkDayRemoved>) {
 
 export function useSubmitTimeSheet(options: MutationOptions<TimeSheetSubmitted>) {
 	return useTimeSheetMutation(
-		({ year, month }: { year: number; month: number }) => submitServerFn({ data: { year, month } }),
+		({ year, month, comment }: { year: number; month: number; comment: string | null }) =>
+			submitServerFn({ data: { year, month, comment } }),
 		options,
 	);
 }

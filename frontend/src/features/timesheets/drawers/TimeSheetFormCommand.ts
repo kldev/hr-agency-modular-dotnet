@@ -21,3 +21,8 @@ export interface ReturnTimeSheetFormCommand {
 export interface CommentOnTimeSheetFormCommand {
 	comment: (sheet: TimeSheetProjection) => void;
 }
+
+/** Takes the month rather than a sheet: this is the one action reachable before a sheet is read. */
+export interface SubmitTimeSheetFormCommand {
+	submit: (target: { year: number; month: number; totalMinutes: number; days: number }) => void;
+}

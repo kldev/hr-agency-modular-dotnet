@@ -19,4 +19,6 @@ export interface SubmitTimeSheetRequest {
 	year: number | string;
 	/** @pattern ^-?(?:0|[1-9]\d*)$ */
 	month: number | string;
+	/** @nullable */
+	comment?: string | null;
 }
