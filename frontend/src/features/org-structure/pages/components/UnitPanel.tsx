@@ -95,7 +95,7 @@ export function UnitPanel({
 						</p>
 					</div>
 
-					<div className="flex gap-2">
+					<div className="flex gap-2 shrink-0">
 						<Button variant="secondary" icon={<UserRoundCog size={15} />} onClick={onAssignHead}>
 							{unit.headUserId ? "Change" : "Assign"}
 						</Button>

@@ -58,7 +58,7 @@ const menuGroups: MenuGroup[] = [
 		items: [
 			{ label: "Users", icon: Users, link: "/app/users" },
 			{ label: "Teams", icon: UsersRound, link: "/app/teams" },
-			{ label: "Org structure", icon: Network, link: "/app/org-structure" },
+			{ label: "Structure", icon: Network, link: "/app/org-structure" },
 			{ label: "Employment", icon: FileBadge, link: "/app/employment" },
 			{ label: "Time sheets", icon: CalendarClock, link: "/app/timesheets" },
 			{ label: "Legal entities", icon: Landmark, link: "/app/legal-entities" },

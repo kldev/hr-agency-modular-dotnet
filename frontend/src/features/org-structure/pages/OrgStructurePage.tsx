@@ -135,7 +135,7 @@ const OrgStructurePage: React.FC = () => {
 	return (
 		<>
 			<Page
-				title="Org structure"
+				title="Structure"
 				description="The company's own chart: the departments, who heads them and who sits in them."
 				onRefresh={refresh}
 				loading={query.isPending}
