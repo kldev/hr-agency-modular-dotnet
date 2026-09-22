@@ -35,13 +35,17 @@ import {
 	useRemoveOrgUnitMember,
 } from "./hooks";
 import "./org-structure.css";
-import { useAllOrganizationUsers } from "#/features/users/pages/hooks";
+import { ImpersonateUserDialog } from "#/features/users/components";
+import type { ImpersonateUserFormCommand } from "#/features/users/components/form";
+import { useAllOrganizationUsers, useUserAvatars } from "#/features/users/pages/hooks";
 
 /**
  * The company's own chart: who sits where, and - through that - who answers for whom. The supervisor
  * is never edited here because it is never stored; it follows from the shape of this tree.
  */
 const OrgStructurePage: React.FC = () => {
+	const impersonateRef = useRef<ImpersonateUserFormCommand>(null);
+	const { avatarOf } = useUserAvatars();
 	const navigate = Route.useNavigate();
 	const search = Route.useSearch();
 
@@ -207,6 +211,8 @@ const OrgStructurePage: React.FC = () => {
 								onClearHead={() => clearHead.mutation.mutate({ unitId: selected.unitId })}
 								onAddMember={() => memberRef.current?.add(selected)}
 								onRemoveMember={(member) => setPendingRemoval({ unit: selected, member })}
+								onImpersonate={(user) => impersonateRef.current?.impersonate(user)}
+								avatarOf={avatarOf}
 							/>
 						) : null}
 					</div>
@@ -252,6 +258,7 @@ const OrgStructurePage: React.FC = () => {
 			<MoveOrgUnitDrawer ref={moveRef} onSuccess={refresh} />
 			<AssignOrgUnitHeadDrawer ref={headRef} onSuccess={refresh} />
 			<AddOrgUnitMemberDrawer ref={memberRef} onSuccess={refresh} />
+			<ImpersonateUserDialog ref={impersonateRef} />
 		</>
 	);
 };

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import type { OrgUnitRow, UserProjection } from "@/api/models";
 import MainTable from "@/components/table/MainTable";
 import { appTableFeatures } from "@/components/table/tableFeatures";
+import { useUserAvatars } from "../../pages/hooks";
 import {
 	ChangeUserRoleDrawer,
 	type ChangeUserRoleFormCommand,
@@ -11,7 +12,11 @@ import {
 	type ChangeUserTeamFormCommand,
 	EditUserDrawer,
 	type EditUserFormCommand,
+	type ImpersonateUserFormCommand,
+	SetUserAvatarDrawer,
+	type SetUserAvatarFormCommand,
 } from "../form";
+import ImpersonateUserDialog from "../ImpersonateUserDialog";
 import { getColumns } from "./UsersTableColumns";
 
 interface UseresTableProps {
@@ -25,6 +30,10 @@ export function UseresTable({ users, unitOf, onRefresh }: UseresTableProps) {
 	const editRef = useRef<EditUserFormCommand>(null);
 	const roleRef = useRef<ChangeUserRoleFormCommand>(null);
 	const teamRef = useRef<ChangeUserTeamFormCommand>(null);
+	const avatarRef = useRef<SetUserAvatarFormCommand>(null);
+	const impersonateRef = useRef<ImpersonateUserFormCommand>(null);
+
+	const { avatarOf } = useUserAvatars();
 
 	const table = useTable(
 		{
@@ -33,6 +42,9 @@ export function UseresTable({ users, unitOf, onRefresh }: UseresTableProps) {
 				onEdit: (user) => editRef.current?.edit(user),
 				onChangeRole: (user) => roleRef.current?.changeRole(user),
 				onChangeTeam: (user) => teamRef.current?.changeTeam(user),
+				onSetAvatar: (user) => avatarRef.current?.setAvatar(user),
+				onImpersonate: (user) => impersonateRef.current?.impersonate(user),
+				avatarOf,
 				unitOf,
 			}),
 			data: users,
@@ -56,6 +68,8 @@ export function UseresTable({ users, unitOf, onRefresh }: UseresTableProps) {
 			<EditUserDrawer ref={editRef} onSuccess={onRefresh} />
 			<ChangeUserRoleDrawer ref={roleRef} onSuccess={onRefresh} />
 			<ChangeUserTeamDrawer ref={teamRef} onSuccess={onRefresh} />
+			<SetUserAvatarDrawer ref={avatarRef} onSuccess={onRefresh} />
+			<ImpersonateUserDialog ref={impersonateRef} />
 		</>
 	);
 }

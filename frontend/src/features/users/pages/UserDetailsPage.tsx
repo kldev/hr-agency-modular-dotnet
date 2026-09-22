@@ -32,7 +32,11 @@ import {
 	type ChangeUserTeamFormCommand,
 	EditUserDrawer,
 	type EditUserFormCommand,
+	type ImpersonateUserFormCommand,
+	SetUserAvatarDrawer,
+	type SetUserAvatarFormCommand,
 } from "../components/form";
+import ImpersonateUserDialog from "../components/ImpersonateUserDialog";
 import { UserActions } from "../components/table/UserActions";
 import { organizationRoleLabel } from "../types";
 import { useGetUser } from "./hooks";
@@ -43,6 +47,8 @@ export function UserDetailsPage() {
 	const editRef = useRef<EditUserFormCommand>(null);
 	const roleRef = useRef<ChangeUserRoleFormCommand>(null);
 	const teamRef = useRef<ChangeUserTeamFormCommand>(null);
+	const avatarRef = useRef<SetUserAvatarFormCommand>(null);
+	const impersonateRef = useRef<ImpersonateUserFormCommand>(null);
 
 	/* Employment is a fact about this person, so the drawers that change it are mounted here too. */
 	const startEmploymentRef = useRef<StartEmploymentFormCommand>(null);
@@ -107,6 +113,8 @@ export function UserDetailsPage() {
 							onEdit={() => editRef.current?.edit(user)}
 							onChangeRole={() => roleRef.current?.changeRole(user)}
 							onChangeTeam={() => teamRef.current?.changeTeam(user)}
+							onSetAvatar={() => avatarRef.current?.setAvatar(user)}
+							onImpersonate={() => impersonateRef.current?.impersonate(user)}
 						/>
 					}
 				/>
@@ -195,6 +203,8 @@ export function UserDetailsPage() {
 			<EditUserDrawer ref={editRef} onSuccess={refresh} />
 			<ChangeUserRoleDrawer ref={roleRef} onSuccess={refresh} />
 			<ChangeUserTeamDrawer ref={teamRef} onSuccess={refresh} />
+			<SetUserAvatarDrawer ref={avatarRef} onSuccess={refresh} />
+			<ImpersonateUserDialog ref={impersonateRef} />
 
 			<StartEmploymentDrawer ref={startEmploymentRef} onSuccess={refresh} />
 			<ChangeEmploymentTermsDrawer ref={employmentTermsRef} onSuccess={refresh} />

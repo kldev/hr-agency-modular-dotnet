@@ -1,9 +1,10 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import type { OrgUnitRow, UserProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
-import { ItemMark } from "@/components/ui";
+import { Avatar } from "@/components/ui";
 import { teamRoles } from "@/features/teams/types";
 import { formatDateTime } from "@/utlis/dateUtils";
+import { userAvatarUrl } from "../../avatar";
 import { organizationRoleLabel } from "../../types";
 import { UserActions } from "./UserActions";
 
@@ -13,6 +14,10 @@ export type UserColumnHandlers = {
 	onEdit: (user: UserProjection) => void;
 	onChangeRole: (user: UserProjection) => void;
 	onChangeTeam: (user: UserProjection) => void;
+	onSetAvatar: (user: UserProjection) => void;
+	onImpersonate: (user: UserProjection) => void;
+	/** The file id of this person's picture, or null - see `useUserAvatars` for why it is separate. */
+	avatarOf: (userId: string) => string | null;
 	/*
 	 * The unit is not on `UserProjection` the way the team is - the chart is never mirrored onto the
 	 * person - so the page resolves it from the org structure and hands the lookup down.
@@ -20,7 +25,15 @@ export type UserColumnHandlers = {
 	unitOf: (userId: string) => OrgUnitRow | undefined;
 };
 
-export function getColumns({ onEdit, onChangeRole, onChangeTeam, unitOf }: UserColumnHandlers) {
+export function getColumns({
+	onEdit,
+	onChangeRole,
+	onChangeTeam,
+	onSetAvatar,
+	onImpersonate,
+	avatarOf,
+	unitOf,
+}: UserColumnHandlers) {
 	const columns = columnHelper.columns([
 		columnHelper.display({
 			id: "actions",
@@ -35,6 +48,8 @@ export function getColumns({ onEdit, onChangeRole, onChangeTeam, unitOf }: UserC
 					onEdit={() => onEdit(row.original)}
 					onChangeRole={() => onChangeRole(row.original)}
 					onChangeTeam={() => onChangeTeam(row.original)}
+					onSetAvatar={() => onSetAvatar(row.original)}
+					onImpersonate={() => onImpersonate(row.original)}
 				/>
 			),
 		}),
@@ -46,7 +61,11 @@ export function getColumns({ onEdit, onChangeRole, onChangeTeam, unitOf }: UserC
 
 			cell: ({ row, getValue }) => (
 				<div className="table-cell-content w-87.5">
-					<ItemMark name={row.original.fullName} />
+					<Avatar
+						className="data-avatar"
+						name={row.original.fullName}
+						src={userAvatarUrl(row.original.id, avatarOf(row.original.id))}
+					/>
 
 					<div>
 						<div className="data-name">{getValue()}</div>

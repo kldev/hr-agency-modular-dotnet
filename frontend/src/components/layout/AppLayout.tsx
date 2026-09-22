@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { AppUserAuthenticated } from "#/api/models";
 import { useAuthStore } from "#/stores/authStore";
 import { useUiStore } from "@/stores/uiStore";
+import { ImpersonationBanner } from "./ImpersonationBanner";
 import { Sidebar } from "./sidebar";
 import { TopBar } from "./top-bar";
 
@@ -53,6 +54,13 @@ export function AppLayout({ user }: AppLayoutProps) {
 			)}
 
 			<main className="app-main">
+				{/*
+				 * Read from the prop rather than from the store the effect above fills: the store is one
+				 * render behind, which would show the page without the banner for a tick. The route guard
+				 * has already resolved this user, so the prop is never the stale one.
+				 */}
+				{user.impersonatedBy ? <ImpersonationBanner fullName={user.fullName} /> : null}
+
 				<TopBar onMenuClick={() => setMobileOpen((value) => !value)} />
 				<Outlet />
 			</main>

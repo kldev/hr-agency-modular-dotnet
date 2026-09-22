@@ -1,7 +1,19 @@
-import { Archive, ArrowRightLeft, Pencil, Plus, UserMinus, UserRoundCog, X } from "lucide-react";
+import {
+	Archive,
+	ArrowRightLeft,
+	LogIn,
+	Pencil,
+	Plus,
+	UserMinus,
+	UserRoundCog,
+	X,
+} from "lucide-react";
 import type { OrgUnitMember, OrgUnitRow, UserProjection } from "@/api/models";
-import { Button, ItemMark } from "@/components/ui";
-import { ActionMenu } from "@/components/ui/ActionMenu";
+import { Avatar, Button } from "@/components/ui";
+import { ActionMenu, type ActionMenuItem } from "@/components/ui/ActionMenu";
+import { userAvatarUrl } from "@/features/users/avatar";
+import { isAdmin } from "@/features/users/types";
+import { useAuthStore } from "@/stores/authStore";
 import {
 	alreadyArchivedMessage,
 	archiveBlockedReason,
@@ -23,6 +35,9 @@ interface UnitPanelProps {
 	onAddMember: () => void;
 	onRemoveMember: (member: OrgUnitMember) => void;
 	onCreateChild: () => void;
+	onImpersonate: (user: { id: string; fullName?: string | null }) => void;
+	/** The file id of somebody's picture, or null - `useUserAvatars` explains why it is separate. */
+	avatarOf: (userId: string) => string | null;
 }
 
 export function UnitPanel({
@@ -37,9 +52,35 @@ export function UnitPanel({
 	onAddMember,
 	onRemoveMember,
 	onCreateChild,
+	onImpersonate,
+	avatarOf,
 }: UnitPanelProps) {
 	const isRoot = unit.parentId === null;
 	const head = unit.headUserId ? resolveUser(unit.headUserId) : undefined;
+
+	const currentUser = useAuthStore((state) => state.user);
+	const administrator = isAdmin(currentUser?.role);
+
+	/*
+	 * Signing in as somebody is offered here and not only in the user list because this is the screen
+	 * that says who answers for whom - and approving a month follows from that, not from a role. The
+	 * quickest way to check it is to stand where the supervisor stands.
+	 */
+	const impersonateAction = (userId: string, fullName: string): ActionMenuItem[] => {
+		if (!administrator) return [];
+
+		const isSelf = currentUser?.userId === userId;
+
+		return [
+			{
+				label: "Log in as",
+				icon: LogIn,
+				disabled: isSelf,
+				hint: isSelf ? "You are already signed in as yourself." : undefined,
+				action: () => onImpersonate({ id: userId, fullName }),
+			},
+		];
+	};
 
 	/*
 	 * Both of these are read off the chart we already hold, so the action can say why it is closed
@@ -110,12 +151,23 @@ export function UnitPanel({
 
 				{unit.headUserId ? (
 					<div className="org-unit-member">
-						<ItemMark name={nameOf(head, "")} />
+						<Avatar
+							className="data-avatar"
+							name={nameOf(head, "")}
+							src={userAvatarUrl(unit.headUserId, avatarOf(unit.headUserId))}
+						/>
 
 						<div className="min-w-0 flex-1">
 							<div className="org-unit-member-name">{nameOf(head, "Unknown person")}</div>
 							<div className="org-unit-member-meta">{head?.email}</div>
 						</div>
+
+						{administrator ? (
+							<ActionMenu
+								ariaLabel={`Actions for ${nameOf(head, unit.headUserId)}`}
+								actions={impersonateAction(unit.headUserId, nameOf(head, "this person"))}
+							/>
+						) : null}
 					</div>
 				) : (
 					<p className="org-unit-empty">No head of its own.</p>
@@ -150,7 +202,11 @@ export function UnitPanel({
 
 							return (
 								<li key={member.userId} className="org-unit-member">
-									<ItemMark name={nameOf(person, "")} />
+									<Avatar
+										className="data-avatar"
+										name={nameOf(person, "")}
+										src={userAvatarUrl(member.userId, avatarOf(member.userId))}
+									/>
 
 									<div className="min-w-0 flex-1">
 										<div className="org-unit-member-name">{nameOf(person, "Unknown person")}</div>
@@ -170,6 +226,7 @@ export function UnitPanel({
 												hint: headsIt ? memberHeadsUnitMessage : undefined,
 												action: () => onRemoveMember(member),
 											},
+											...impersonateAction(member.userId, nameOf(person, "this person")),
 										]}
 									/>
 								</li>
