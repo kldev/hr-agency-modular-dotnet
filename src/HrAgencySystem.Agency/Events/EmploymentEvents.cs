@@ -11,6 +11,7 @@ public sealed record AgencyEmploymentStarted(
     WorkerContractType ContractType,
     DateOnly StartsOn,
     decimal? WeeklyHours,
+    WorkRate? Rate,
     UserSnapshot StartedBy,
     DateTimeOffset StartedAt
 );
@@ -26,6 +27,7 @@ public sealed record AgencyEmploymentTermsChanged(
     WorkerContractType ContractType,
     DateOnly EffectiveFrom,
     decimal? WeeklyHours,
+    WorkRate? Rate,
     UserSnapshot ModifiedBy,
     DateTimeOffset ModifiedAt
 );

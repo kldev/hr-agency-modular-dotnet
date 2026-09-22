@@ -75,6 +75,8 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
                     contract,
                     DateOnly.FromDateTime(DateTime.UtcNow).AddYears(-1),
                     contract == WorkerContractType.EmploymentContract ? 40m : null,
+                    RateFor(contract, index),
+                    true,
                     userId
                 )
             );
@@ -258,4 +260,33 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
             return false;
         }
     }
+
+    /// <summary>
+    /// Enough variety to see the report do its job: hourly rates that multiply out, a monthly one
+    /// that deliberately cannot, and somebody with nothing quoted at all - the row payroll most
+    /// needs to notice.
+    /// </summary>
+    private static RateInput? RateFor(WorkerContractType contract, int index) =>
+        contract switch
+        {
+            WorkerContractType.MandateContract => new RateInput(
+                32m + (index % 5) * 4m,
+                "PLN",
+                RateUnit.Hourly,
+                RateBasis.Gross
+            ),
+            WorkerContractType.EmploymentContract when index % 4 != 0 => new RateInput(
+                45m + (index % 3) * 5m,
+                "PLN",
+                RateUnit.Hourly,
+                RateBasis.Gross
+            ),
+            WorkerContractType.EmploymentContract => new RateInput(
+                8500m,
+                "PLN",
+                RateUnit.Monthly,
+                RateBasis.Gross
+            ),
+            _ => null,
+        };
 }

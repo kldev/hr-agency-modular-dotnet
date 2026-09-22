@@ -17,6 +17,16 @@ public interface IAgencyEmploymentQueryRepository
     );
 
     /// <summary>
+    /// The records of the given people, in one query - the settlement file needs a rate for every
+    /// person on it. Somebody with no record is simply absent from the answer.
+    /// </summary>
+    Task<IReadOnlyList<AgencyEmploymentProjection>> GetForUsersAsync(
+        OrganizationId organizationId,
+        IReadOnlyCollection<Guid> userIds,
+        CancellationToken ct
+    );
+
+    /// <summary>
     /// Everybody whose contract carries the duty to record hours during the given month. The filter
     /// is on the contract type and on the engagement covering the month at all - somebody who left
     /// in March still owes March.

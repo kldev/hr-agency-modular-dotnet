@@ -28,7 +28,11 @@ internal static class MapStart
     ) =>
         TypedResults.Ok(
             await bus.InvokeAsync<AgencyEmploymentStarted>(
-                request.ToCommand(user.GetOrganization, user.UserId),
+                request.ToCommand(
+                    user.GetOrganization,
+                    RatesPolicy.IsRates(user.Role),
+                    user.UserId
+                ),
                 ct
             )
         );
@@ -37,10 +41,24 @@ internal static class MapStart
         Guid UserId,
         WorkerContractType ContractType,
         DateOnly StartsOn,
-        decimal? WeeklyHours
+        decimal? WeeklyHours,
+        RateInput? Rate = null
     )
     {
-        public StartAgencyEmployment ToCommand(OrganizationId organizationId, Guid startedBy) =>
-            new(organizationId.Value, UserId, ContractType, StartsOn, WeeklyHours, startedBy);
+        public StartAgencyEmployment ToCommand(
+            OrganizationId organizationId,
+            bool mayQuoteRate,
+            Guid startedBy
+        ) =>
+            new(
+                organizationId.Value,
+                UserId,
+                ContractType,
+                StartsOn,
+                WeeklyHours,
+                Rate,
+                mayQuoteRate,
+                startedBy
+            );
     }
 }

@@ -9,6 +9,7 @@ public static class Endpoint
         Maps.MapGetMine.Map(group);
         Maps.MapGetTeam.Map(group);
         Maps.MapGetSettlement.Map(group);
+        Maps.MapExportSettlement.Map(group);
         Maps.MapGetSheet.Map(group);
 
         Maps.MapSaveWorkDay.Map(group);

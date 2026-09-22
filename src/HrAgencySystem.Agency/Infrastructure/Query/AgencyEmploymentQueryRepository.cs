@@ -64,6 +64,7 @@ public sealed class AgencyEmploymentQueryRepository(
                 employment.StartsOn,
                 employment.EndsOn,
                 employment.WeeklyHours,
+                employment.Rate,
                 employment.CreatedAt,
                 null,
                 employment.ModifiedAt
@@ -78,6 +79,25 @@ public sealed class AgencyEmploymentQueryRepository(
             .Query<AgencyEmploymentProjection>()
             .Where(employment => employment.OrganizationId == organizationId.Value)
             .ToListAsync(ct);
+
+    public async Task<IReadOnlyList<AgencyEmploymentProjection>> GetForUsersAsync(
+        OrganizationId organizationId,
+        IReadOnlyCollection<Guid> userIds,
+        CancellationToken ct
+    )
+    {
+        if (userIds.Count == 0)
+            return [];
+
+        Guid[] ids = [.. userIds];
+
+        return await session
+            .Query<AgencyEmploymentProjection>()
+            .Where(employment =>
+                employment.OrganizationId == organizationId.Value && employment.UserId.IsOneOf(ids)
+            )
+            .ToListAsync(ct);
+    }
 
     public async Task<IReadOnlyList<AgencyEmploymentProjection>> GetCoveredAsync(
         OrganizationId organizationId,

@@ -30,6 +30,6 @@ internal static class MapGet
             await repository.GetAsync(user.GetOrganization, userId, ct)
             ?? throw new NotFoundException("AgencyEmployment", userId);
 
-        return TypedResults.Ok(employment);
+        return TypedResults.Ok(RatesPolicy.IsRates(user.Role) ? employment : employment.WithoutRate());
     }
 }

@@ -9,6 +9,8 @@ public sealed record ChangeAgencyEmploymentTerms(
     WorkerContractType ContractType,
     DateOnly EffectiveFrom,
     decimal? WeeklyHours,
+    Start.RateInput? Rate,
+    bool MayQuoteRate,
     Guid ModifiedBy
 )
 {

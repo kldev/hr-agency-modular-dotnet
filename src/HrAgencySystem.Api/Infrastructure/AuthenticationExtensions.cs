@@ -42,6 +42,7 @@ public static class AuthenticationExtensions
             .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 
         authorization.AddPayrollPolicy();
+        authorization.AddRatesPolicy();
         authorization.AddAdminPolicy();
 
         services.Configure<JwtConfig>(configuration.GetSection(JwtConfig.Section));

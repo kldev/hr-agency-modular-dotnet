@@ -19,6 +19,13 @@ public static class StartAgencyEmploymentHandler
 
     public const string WeeklyHoursRangeMessage = "Weekly hours must be between 0 and 168.";
 
+    /// <summary>
+    /// A rate is money, and money is shown to the roles that handle it. Refused rather than
+    /// ignored, so a caller who cannot quote one never believes they did.
+    /// </summary>
+    public const string RateNotYoursMessage =
+        "Only human resources, finance or an admin can set what somebody is paid.";
+
     public static async Task<AgencyEmploymentStarted> Handle(
         StartAgencyEmployment command,
         IAgencyService service,
@@ -31,6 +38,9 @@ public static class StartAgencyEmploymentHandler
 
         if (command.WeeklyHours is { } hours and (< 0 or > 168))
             throw new ValidationException(WeeklyHoursRangeMessage);
+
+        if (command.Rate is not null && !command.MayQuoteRate)
+            throw new BusinessRuleException(RateNotYoursMessage);
 
         var user = await service.GetOrganizationMemberAsync(
             OrganizationIdOf(command),
@@ -59,6 +69,7 @@ public static class StartAgencyEmploymentHandler
             command.ContractType,
             command.StartsOn,
             command.WeeklyHours,
+            RateInput.Validate(command.Rate),
             startedBy,
             clock.UtcNow
         );

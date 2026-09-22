@@ -36,6 +36,7 @@ public class SaveWorkDayHandlerTests : BaseTest
                     new DateOnly(2020, 1, 1),
                     null,
                     40m,
+                    null,
                     DateTimeOffset.UtcNow,
                     null,
                     null

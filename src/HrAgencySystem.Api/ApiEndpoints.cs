@@ -319,6 +319,7 @@ internal static class ApiEndpoints
         public const string Mine = $"{TimeSheetsBase}/my";
         public const string Team = $"{TimeSheetsBase}/team";
         public const string Settlement = $"{TimeSheetsBase}/settlement";
+        public const string SettlementExport = $"{TimeSheetsBase}/settlement/export";
 
         public const string MyDays = $"{TimeSheetsBase}/my/days";
         public const string MyDay = $"{TimeSheetsBase}/my/days/{{date}}";

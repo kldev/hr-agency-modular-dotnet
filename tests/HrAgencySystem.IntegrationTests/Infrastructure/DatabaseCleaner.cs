@@ -98,6 +98,12 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<OrgStructureProjection>("agency");
     }
 
+    public async Task CleanTimeRecords()
+    {
+        await CleanTable<AgencyEmploymentProjection>("agency");
+        await CleanTable<TimeSheetProjection>("agency");
+    }
+
     public async Task CleanTeams()
     {
         await CleanTable<TeamProjection>("teams");

@@ -101,6 +101,7 @@ public class TeamMonitoringTests : BaseTest
             new DateOnly(2026, 1, 1),
             null,
             null,
+            null,
             DateTimeOffset.UtcNow,
             null,
             null

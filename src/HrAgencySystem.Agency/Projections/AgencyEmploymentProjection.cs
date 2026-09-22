@@ -20,6 +20,7 @@ public sealed record AgencyEmploymentProjection(
     DateOnly StartsOn,
     DateOnly? EndsOn,
     decimal? WeeklyHours,
+    WorkRate? Rate,
     DateTimeOffset CreatedAt,
     UserSnapshot? ModifiedBy,
     DateTimeOffset? ModifiedAt
@@ -27,6 +28,12 @@ public sealed record AgencyEmploymentProjection(
 {
     /// <summary>Derived, never stored: it is the law about a contract type, not a fact we record.</summary>
     public bool RequiresTimeRecord => TimeRecordPolicy.RequiresTimeRecord(ContractType);
+
+    /// <summary>
+    /// The same record as somebody who is not shown pay sees it. Null reads as "not quoted", which
+    /// is also what they would see for a person with no rate - the absence itself tells them nothing.
+    /// </summary>
+    public AgencyEmploymentProjection WithoutRate() => this with { Rate = null };
 
     public static AgencyEmploymentProjection Create(AgencyEmploymentStarted @event) =>
         new(
@@ -38,6 +45,7 @@ public sealed record AgencyEmploymentProjection(
             @event.StartsOn,
             null,
             @event.WeeklyHours,
+            @event.Rate,
             @event.StartedAt,
             @event.StartedBy,
             @event.StartedAt
@@ -48,6 +56,7 @@ public sealed record AgencyEmploymentProjection(
         {
             ContractType = @event.ContractType,
             WeeklyHours = @event.WeeklyHours,
+            Rate = @event.Rate,
             ModifiedBy = @event.ModifiedBy,
             ModifiedAt = @event.ModifiedAt,
         };

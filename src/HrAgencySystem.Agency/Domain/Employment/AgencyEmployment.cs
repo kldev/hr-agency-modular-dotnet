@@ -32,6 +32,17 @@ public sealed class AgencyEmployment : IOrganizationDomain
     public DateOnly? EndsOn { get; private set; }
     public decimal? WeeklyHours { get; private set; }
 
+    /// <summary>
+    /// What the work pays. Null is an ordinary state, not a gap: B2B and a contract for specific
+    /// work owe no hours at all, and a rate is often agreed a day after somebody is taken on.
+    /// <para>
+    /// Only the terms in force are kept, the way the contract type and the hours are. Which rate
+    /// applied on a given day is a question for the stream, and the settlement report deliberately
+    /// does not ask it - see the plan behind it.
+    /// </para>
+    /// </summary>
+    public WorkRate? Rate { get; private set; }
+
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset ModifiedAt { get; private set; }
     public Guid? ModifiedById { get; private set; }
@@ -49,6 +60,7 @@ public sealed class AgencyEmployment : IOrganizationDomain
         StartsOn = @event.StartsOn;
         EndsOn = null;
         WeeklyHours = @event.WeeklyHours;
+        Rate = @event.Rate;
         CreatedAt = @event.StartedAt;
 
         Touch(@event.StartedBy, @event.StartedAt);
@@ -58,6 +70,7 @@ public sealed class AgencyEmployment : IOrganizationDomain
     {
         ContractType = @event.ContractType;
         WeeklyHours = @event.WeeklyHours;
+        Rate = @event.Rate;
 
         Touch(@event.ModifiedBy, @event.ModifiedAt);
     }

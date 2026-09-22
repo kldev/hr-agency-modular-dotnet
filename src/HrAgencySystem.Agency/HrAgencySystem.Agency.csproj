@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" />
     <PackageReference Include="Marten" />
     <PackageReference Include="WolverineFx" />
     <PackageReference Include="WolverineFx.Marten" />

@@ -28,8 +28,9 @@ internal static class MapList
         CancellationToken ct,
         [FromQuery] int? year,
         [FromQuery] int? month
-    ) =>
-        TypedResults.Ok(
+    )
+    {
+        var employments =
             year is null || month is null
                 ? await repository.GetAllAsync(user.GetOrganization, ct)
                 : await repository.GetCoveredAsync(
@@ -37,6 +38,12 @@ internal static class MapList
                     year.Value,
                     month.Value,
                     ct
-                )
+                );
+
+        return TypedResults.Ok(
+            RatesPolicy.IsRates(user.Role)
+                ? employments
+                : [.. employments.Select(employment => employment.WithoutRate())]
         );
+    }
 }

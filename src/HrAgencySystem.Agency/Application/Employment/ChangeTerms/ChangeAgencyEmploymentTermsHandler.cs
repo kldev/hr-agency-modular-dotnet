@@ -1,3 +1,4 @@
+using HrAgencySystem.Agency.Application.Employment.Start;
 using HrAgencySystem.Agency.Domain.Employment;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Agency.Services;
@@ -37,9 +38,10 @@ public static class ChangeAgencyEmploymentTermsHandler
             throw new BusinessRuleException(EffectiveBeforeStartMessage);
 
         if (command.WeeklyHours is { } hours and (< 0 or > 168))
-            throw new ValidationException(
-                Start.StartAgencyEmploymentHandler.WeeklyHoursRangeMessage
-            );
+            throw new ValidationException(StartAgencyEmploymentHandler.WeeklyHoursRangeMessage);
+
+        if (command.Rate is not null && !command.MayQuoteRate)
+            throw new BusinessRuleException(StartAgencyEmploymentHandler.RateNotYoursMessage);
 
         var modifiedBy = await service.GetUserAsync(command.ModifiedBy, ct);
 
@@ -49,10 +51,20 @@ public static class ChangeAgencyEmploymentTermsHandler
             command.ContractType,
             command.EffectiveFrom,
             command.WeeklyHours,
+            RateOf(command, aggregate),
             modifiedBy,
             clock.UtcNow
         );
 
         return (@event, [@event]);
     }
+
+    /// <summary>
+    /// The terms are replaced as a whole, and somebody who is not shown the rate cannot send it
+    /// back. Without this, changing the hours of a person you manage would quietly erase their pay.
+    /// </summary>
+    private static SharedKernel.ValueObjects.WorkRate? RateOf(
+        ChangeAgencyEmploymentTerms command,
+        AgencyEmployment aggregate
+    ) => command.MayQuoteRate ? RateInput.Validate(command.Rate) : aggregate.Rate;
 }

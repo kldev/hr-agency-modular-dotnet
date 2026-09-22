@@ -1,4 +1,5 @@
 using HrAgencySystem.Agency.Application.Employment.ChangeTerms;
+using HrAgencySystem.Agency.Application.Employment.Start;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
@@ -30,7 +31,12 @@ internal static class MapChangeTerms
     ) =>
         TypedResults.Ok(
             await bus.InvokeAsync<AgencyEmploymentTermsChanged>(
-                request.ToCommand(userId, user.GetOrganization, user.UserId),
+                request.ToCommand(
+                    userId,
+                    user.GetOrganization,
+                    RatesPolicy.IsRates(user.Role),
+                    user.UserId
+                ),
                 ct
             )
         );
@@ -38,14 +44,25 @@ internal static class MapChangeTerms
     internal sealed record ChangeAgencyEmploymentTermsRequest(
         WorkerContractType ContractType,
         DateOnly EffectiveFrom,
-        decimal? WeeklyHours
+        decimal? WeeklyHours,
+        RateInput? Rate = null
     )
     {
         public ChangeAgencyEmploymentTerms ToCommand(
             Guid userId,
             OrganizationId organizationId,
+            bool mayQuoteRate,
             Guid modifiedBy
         ) =>
-            new(organizationId.Value, userId, ContractType, EffectiveFrom, WeeklyHours, modifiedBy);
+            new(
+                organizationId.Value,
+                userId,
+                ContractType,
+                EffectiveFrom,
+                WeeklyHours,
+                Rate,
+                mayQuoteRate,
+                modifiedBy
+            );
     }
 }
