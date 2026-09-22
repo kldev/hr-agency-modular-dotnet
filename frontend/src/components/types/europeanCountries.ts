@@ -13,6 +13,8 @@ export const europeanCountries = {
 	EE: "Estonia",
 	FI: "Finland",
 	FR: "France",
+	// Not in the EU and only partly in Europe, but one of the countries a Polish agency recruits from most.
+	GE: "Georgia",
 	DE: "Germany",
 	GR: "Greece",
 	HU: "Hungary",

@@ -504,6 +504,8 @@ type FormCountrySelectProps = {
 	isSubmitting: boolean;
 	errors: Array<unknown>;
 	handleChange: (value: string) => void;
+	/** See `CountrySelect`: defaults to the agency's favourites, `[]` for a plain list. */
+	favorites?: readonly string[];
 };
 
 export function FormCountrySelect({
@@ -513,6 +515,7 @@ export function FormCountrySelect({
 	isSubmitting,
 	errors,
 	handleChange,
+	favorites,
 }: FormCountrySelectProps) {
 	return (
 		<div className="form-field">
@@ -525,6 +528,7 @@ export function FormCountrySelect({
 				value={fieldValue ?? ""}
 				onChange={(event) => handleChange(event.target.value)}
 				disabled={isSubmitting}
+				favorites={favorites}
 			/>
 
 			<FieldError errors={errors} />
