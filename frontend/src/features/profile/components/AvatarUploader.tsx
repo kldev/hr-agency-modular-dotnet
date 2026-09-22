@@ -3,7 +3,7 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import type { MyProfileResponse } from "#/api/models";
-import { Button } from "#/components/ui";
+import { Avatar, Button } from "#/components/ui";
 import { ApiError } from "#/components/ui/ApiError";
 import { FileDropzone } from "#/components/ui/FileDropzone";
 import { formatFileSize } from "#/utlis";
@@ -19,17 +19,6 @@ import {
 /** The storage being down is not a broken form, and it should not read like one. */
 function storageUnavailable(error: unknown) {
 	return axios.isAxiosError(error) && error.response?.status === 503;
-}
-
-function initials(name: string | null | undefined) {
-	if (!name) return "";
-
-	return name
-		.split(" ")
-		.slice(0, 2)
-		.map((part) => part[0])
-		.join("")
-		.toUpperCase();
 }
 
 interface AvatarUploaderProps {
@@ -84,13 +73,7 @@ export function AvatarUploader({ profile }: AvatarUploaderProps) {
 
 	return (
 		<div className="profile-avatar">
-			<div className="profile-avatar-preview">
-				{source ? (
-					<img src={source} alt="" className="profile-avatar-image" />
-				) : (
-					<span className="profile-avatar-initials">{initials(profile.user.fullName)}</span>
-				)}
-			</div>
+			<Avatar className="profile-avatar-preview" name={profile.user.fullName} src={source} />
 
 			<div className="profile-avatar-controls">
 				{/*

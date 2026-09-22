@@ -6,6 +6,7 @@ import {
 	clearSession,
 	currentAccessToken,
 	readRefreshToken,
+	storeImpersonatedSession,
 	storeOwnerSession,
 	storeSession,
 } from "#/server/session";
@@ -21,6 +22,13 @@ export const storeOwnerToken = createServerFn({ method: "POST" })
 	.validator((data: { token: string }) => data)
 	.handler(async ({ data }) => {
 		storeOwnerSession(data.token);
+		return { message: "OK" };
+	});
+
+export const storeImpersonatedToken = createServerFn({ method: "POST" })
+	.validator((data: { token: string }) => data)
+	.handler(async ({ data }) => {
+		storeImpersonatedSession(data.token);
 		return { message: "OK" };
 	});
 

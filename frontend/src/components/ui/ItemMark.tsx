@@ -1,17 +1,10 @@
+import { Avatar } from "./Avatar";
+
 interface ItemMarkProps {
 	name?: string | null;
 }
 
+/** Initials in a list row. The picture-carrying version is <see cref="Avatar" /> with a `src`. */
 export function ItemMark({ name }: ItemMarkProps) {
-	const initials =
-		!name || name.length === 0
-			? ""
-			: name
-					.split(" ")
-					.slice(0, 2)
-					.map((part) => part[0])
-					.join("")
-					.toUpperCase();
-
-	return <span className="data-avatar">{initials}</span>;
+	return <Avatar className="data-avatar" name={name} />;
 }

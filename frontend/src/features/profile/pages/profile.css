@@ -47,7 +47,7 @@
 	object-fit: cover;
 }
 
-.profile-avatar-initials {
+.profile-avatar-preview .avatar-initials {
 	font-size: var(--font-size-lg);
 	font-weight: 600;
 }

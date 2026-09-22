@@ -1,5 +1,6 @@
 export * from "./ArrayField";
 export * from "./AuditInformation";
+export * from "./Avatar";
 export * from "./Badge";
 export * from "./Button";
 export * from "./ChoiceGroup";

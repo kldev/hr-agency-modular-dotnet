@@ -24,3 +24,12 @@ export const organizationRoles: Record<OrganizationRoleApi, string> = {
 export function organizationRoleLabel(role: OrganizationRole): string {
 	return (organizationRoles as Record<string, string | undefined>)[role] ?? role;
 }
+
+/**
+ * Mirrors `Api/Auth/AdminPolicy.cs`. Managing people - creating them, handing out roles, setting
+ * somebody's picture, signing in as them - is the administrator's job and the backend enforces it;
+ * asking here only saves somebody a menu item that would answer 403.
+ */
+export function isAdmin(role: OrganizationRole | undefined | null): boolean {
+	return role === "Admin";
+}

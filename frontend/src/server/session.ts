@@ -26,12 +26,11 @@ export function storeSession(session: LoginUserResult) {
 }
 
 /**
- * The platform owner has no refresh token - that panel signs in again when its access token runs
- * out - so only the bearer is stored. Clearing the other two matters: both sign-ins share the
- * access cookie, so a leftover user refresh token would otherwise renew an owner session into a
- * user one.
+ * A session that is one token and nothing else. Clearing the other two cookies is the load-bearing
+ * part: all sign-ins share the access cookie, so a refresh token left over from a previous one
+ * would quietly renew this session into that one.
  */
-export function storeOwnerSession(token: string) {
+function storeAccessTokenOnlySession(token: string) {
 	deleteCookie(REFRESH_COOKIE);
 	deleteCookie(EXPIRES_COOKIE);
 
@@ -41,6 +40,28 @@ export function storeOwnerSession(token: string) {
 		secure: process.env.NODE_ENV === "production",
 		path: "/",
 	});
+}
+
+/**
+ * The platform owner has no refresh token - that panel signs in again when its access token runs
+ * out - so only the bearer is stored.
+ */
+export function storeOwnerSession(token: string) {
+	storeAccessTokenOnlySession(token);
+}
+
+/**
+ * Signing in as somebody else. The same plumbing as an owner session and deliberately a different
+ * name: these are two unrelated things that happen to need one token and no way to renew it, and a
+ * call site reading `storeOwnerSession` should never mean "act as this user".
+ *
+ * Nothing else has to change for the session to work. `currentAccessToken` finds no expiry cookie,
+ * falls into `refreshSession`, which finds no refresh token and returns without a request, so the
+ * token is used as issued until the API itself refuses it - and then the ordinary 401 handling
+ * sends the browser back to the login page.
+ */
+export function storeImpersonatedSession(token: string) {
+	storeAccessTokenOnlySession(token);
 }
 
 export function clearSession() {
