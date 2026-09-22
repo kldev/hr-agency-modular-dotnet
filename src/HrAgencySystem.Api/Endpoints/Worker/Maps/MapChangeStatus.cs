@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -43,7 +44,14 @@ internal static class MapChangeStatus
         return TypedResults.Ok(result);
     }
 
-    internal sealed record ChangeWorkerStatusRequest(WorkerStatus Status, string? Reason = null)
+    internal sealed record ChangeWorkerStatusRequest(
+        [property: Description(
+            "Recruitment, ContractPreparation, Legalisation, Onboarding, Employed, ProjectChange or Terminated. Legalisation only exists for somebody who needs it; Terminated is reachable from anywhere."
+        )]
+            WorkerStatus Status,
+        [property: Description("Optional note on the move, up to 500 characters.")]
+            string? Reason = null
+    )
     {
         public ChangeWorkerStatus ToCommand(
             Guid workerId,

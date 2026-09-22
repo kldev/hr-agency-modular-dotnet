@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -46,10 +47,16 @@ internal static class MapUpdateDocument
     }
 
     internal sealed record UpdateWorkerDocumentRequest(
-        WorkerDocumentCategory Category,
-        DateOnly DocumentDate,
-        DateOnly? ValidUntil = null,
-        string? Note = null
+        [property: Description(
+            "Identity, EmploymentContract, MedicalCertificate, HealthAndSafety, Qualification, Legalisation or Other."
+        )]
+            WorkerDocumentCategory Category,
+        [property: Description("The date on the document.")] DateOnly DocumentDate,
+        [property: Description(
+            "Last day it is valid, when it expires - e.g. a medical certificate."
+        )]
+            DateOnly? ValidUntil = null,
+        [property: Description("Optional note.")] string? Note = null
     )
     {
         public UpdateWorkerDocumentMetadata ToCommand(

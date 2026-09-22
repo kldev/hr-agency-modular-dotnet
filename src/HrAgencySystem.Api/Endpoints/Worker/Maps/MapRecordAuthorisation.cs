@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -44,14 +45,20 @@ internal static class MapRecordAuthorisation
     }
 
     internal sealed record RecordWorkAuthorisationRequest(
-        WorkAuthorisationKind Kind,
-        string Country,
-        string Number,
-        DateOnly ValidFrom,
-        DateOnly ValidUntil,
-        Guid? AuthorisationId = null,
-        Guid? DocumentId = null,
-        string? Note = null
+        [property: Description("WorkPermit, ResidencePermit, Visa, WorkStatement or Other.")]
+            WorkAuthorisationKind Kind,
+        [property: Description("Country the permission is for, ISO 3166-1 alpha-2.")]
+            string Country,
+        [property: Description("The permission's number, as issued.")] string Number,
+        [property: Description("First day it is valid.")] DateOnly ValidFrom,
+        [property: Description("Last day it is valid.")] DateOnly ValidUntil,
+        [property: Description(
+            "Omit to add a permission; give the id of one on the file to replace it."
+        )]
+            Guid? AuthorisationId = null,
+        [property: Description("Optional document on the person's file that proves it.")]
+            Guid? DocumentId = null,
+        [property: Description("Optional note.")] string? Note = null
     )
     {
         public RecordWorkAuthorisation ToCommand(
