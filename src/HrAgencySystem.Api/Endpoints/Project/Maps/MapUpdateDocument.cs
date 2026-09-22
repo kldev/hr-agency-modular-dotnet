@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.Documents.UpdateMetadata;
@@ -49,10 +50,14 @@ internal static class MapUpdateDocument
     /// March keeps its answer.
     /// </summary>
     internal sealed record UpdateProjectDocumentRequest(
-        DocumentCategory Category,
-        DateOnly DocumentDate,
-        DateOnly? ValidUntil,
-        string? Note
+        [property: Description(
+            "Contract, Annex, Invoice, ClientDocument, Compliance, Insurance or Other."
+        )]
+            DocumentCategory Category,
+        [property: Description("The date on the document.")] DateOnly DocumentDate,
+        [property: Description("Last day the document is valid, when it expires.")]
+            DateOnly? ValidUntil,
+        [property: Description("Optional note.")] string? Note
     )
     {
         public UpdateProjectDocumentMetadata ToCommand(

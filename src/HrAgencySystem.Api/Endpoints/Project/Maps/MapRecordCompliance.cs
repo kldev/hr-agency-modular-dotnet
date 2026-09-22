@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Compliance;
@@ -45,12 +46,21 @@ internal static class MapRecordCompliance
     }
 
     internal sealed record RecordComplianceItemRequest(
-        ComplianceStatus Status,
-        string? ReferenceNumber,
-        DateOnly? ValidFrom,
-        DateOnly? ValidTo,
-        Guid? DocumentId,
-        string? Note
+        [property: Description(
+            "NotStarted, InProgress, Confirmed, NotApplicable or Expired. The requirement itself is in the route."
+        )]
+            ComplianceStatus Status,
+        [property: Description(
+            "The number of the licence, notification or registration, as issued."
+        )]
+            string? ReferenceNumber,
+        [property: Description("First day the confirmation applies.")] DateOnly? ValidFrom,
+        [property: Description("Last day it applies; not before ValidFrom.")] DateOnly? ValidTo,
+        [property: Description(
+            "Optional project document that proves it. A document recorded as proof cannot be removed."
+        )]
+            Guid? DocumentId,
+        [property: Description("Optional note.")] string? Note
     )
     {
         public RecordComplianceItem ToCommand(

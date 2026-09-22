@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.Contacts.Assign;
@@ -46,7 +47,16 @@ internal static class MapAssignContact
         return TypedResults.Ok(result);
     }
 
-    internal sealed record AssignProjectContactRequest(ContactPerson Person, Guid? CompanyContactId)
+    internal sealed record AssignProjectContactRequest(
+        [property: Description(
+            "The person in the role: e-mail, name, job title, phone. The role is in the route, and assigning it replaces whoever held it."
+        )]
+            ContactPerson Person,
+        [property: Description(
+            "Optional link to the same person in the client's contacts, when they are one."
+        )]
+            Guid? CompanyContactId
+    )
     {
         public AssignProjectContact ToCommand(
             Guid projectId,

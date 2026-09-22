@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.Contract.ChangeStatus;
@@ -42,7 +43,13 @@ internal static class MapChangeContractStatus
         return TypedResults.Ok(result);
     }
 
-    internal sealed record ChangeContractStatusRequest(ContractStatus Status, DateOnly? SignedOn)
+    internal sealed record ChangeContractStatusRequest(
+        [property: Description("Draft, Signed, Terminated or Expired.")] ContractStatus Status,
+        [property: Description(
+            "Signature date, needed when the status becomes Signed. Omit it to keep the date already on the contract."
+        )]
+            DateOnly? SignedOn
+    )
     {
         public ChangeContractStatus ToCommand(
             Guid projectId,

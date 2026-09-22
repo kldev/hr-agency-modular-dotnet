@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.ChangeStatus;
@@ -42,7 +43,16 @@ internal static class MapChangeStatus
         return TypedResults.Ok(result);
     }
 
-    internal sealed record ChangeProjectStatusRequest(ProjectStatus Status, string? Reason)
+    internal sealed record ChangeProjectStatusRequest(
+        [property: Description(
+            "Draft, Active, Suspended, Completed or Cancelled. Going Active needs a signed contract, a responsible contact and a complete client profile; Completed and Cancelled are final."
+        )]
+            ProjectStatus Status,
+        [property: Description(
+            "Optional note on why, up to 500 characters - worth giving for Suspended and Cancelled."
+        )]
+            string? Reason
+    )
     {
         public ChangeProjectStatus ToCommand(
             Guid projectId,

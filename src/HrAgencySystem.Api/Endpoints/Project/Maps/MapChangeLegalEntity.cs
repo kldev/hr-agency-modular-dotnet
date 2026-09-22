@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.LegalEntity.Change;
@@ -8,7 +9,10 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.Project.Maps;
 
-internal sealed record ChangeProjectLegalEntityRequest(Guid LegalEntityId)
+internal sealed record ChangeProjectLegalEntityRequest(
+    [property: Description("The agency's own company that takes over delivering the project.")]
+        Guid LegalEntityId
+)
 {
     internal ChangeProjectLegalEntity ToCommand(
         Guid projectId,

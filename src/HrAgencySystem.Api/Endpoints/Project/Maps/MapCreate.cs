@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Compliance;
@@ -38,20 +39,39 @@ internal static class MapCreate
     }
 
     internal sealed record CreateProjectRequest(
-        Guid CompanyId,
-        Guid LegalEntityId,
-        string Name,
-        string Description,
-        EngagementType EngagementType,
-        string Street,
-        string BuildingNumber,
-        string? UnitNumber,
-        string PostalCode,
-        string City,
-        string CountryCode,
-        DateOnly StartsOn,
-        DateOnly? EndsOn,
-        Guid? TeamId
+        [property: Description(
+            "The client the project delivers for. Its profile has to be complete before the project can go live."
+        )]
+            Guid CompanyId,
+        [property: Description(
+            "Which of the agency's own companies delivers the project and employs or posts the people."
+        )]
+            Guid LegalEntityId,
+        [property: Description("The project's name, e.g. \"Shipyard Gdansk - welders\".")]
+            string Name,
+        [property: Description("What is being delivered.")] string Description,
+        [property: Description(
+            "How the agency serves the client: PostingOfWorkers, TemporaryAgencyWork, Outsourcing or LocalEmployment. Together with the work country it decides which compliance requirements apply."
+        )]
+            EngagementType EngagementType,
+        [property: Description(
+            "Street of the workplace. Workplace address: street, building number, postal code, city and country of where the people work."
+        )]
+            string Street,
+        [property: Description("Building number of the workplace.")] string BuildingNumber,
+        [property: Description("Optional unit number of the workplace.")] string? UnitNumber,
+        [property: Description("Postal code of the workplace.")] string PostalCode,
+        [property: Description("City of the workplace.")] string City,
+        [property: Description(
+            "Country where the work happens, ISO 3166-1 alpha-2. It drives the compliance catalogue; Poland has no entries."
+        )]
+            string CountryCode,
+        [property: Description("First day of the project.")] DateOnly StartsOn,
+        [property: Description(
+            "Last day of the project. Optional for an open-ended one; not before StartsOn."
+        )]
+            DateOnly? EndsOn,
+        [property: Description("Optional recruitment team that staffs the project.")] Guid? TeamId
     )
     {
         public CreateProject ToCommand(OrganizationId organizationId, Guid createdBy) =>

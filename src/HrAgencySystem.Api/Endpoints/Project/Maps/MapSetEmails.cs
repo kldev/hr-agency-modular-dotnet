@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.Emails.Set;
@@ -44,7 +45,12 @@ internal static class MapSetEmails
         return TypedResults.Ok(result);
     }
 
-    internal sealed record SetProjectEmailRecipientsRequest(IReadOnlyList<string> Emails)
+    internal sealed record SetProjectEmailRecipientsRequest(
+        [property: Description(
+            "The addresses mail of this purpose (named in the route) goes to. Replaces the whole list; an empty list clears it."
+        )]
+            IReadOnlyList<string> Emails
+    )
     {
         public SetProjectEmailRecipients ToCommand(
             Guid projectId,

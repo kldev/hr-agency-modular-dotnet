@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.Update;
@@ -47,16 +48,20 @@ internal static class MapUpdate
     /// every declaration filed for it.
     /// </summary>
     internal sealed record UpdateProjectRequest(
-        string Name,
-        string Description,
-        string Street,
-        string BuildingNumber,
-        string? UnitNumber,
-        string PostalCode,
-        string City,
-        string CountryCode,
-        DateOnly StartsOn,
-        DateOnly? EndsOn
+        [property: Description("The project's name.")] string Name,
+        [property: Description("What is being delivered.")] string Description,
+        [property: Description(
+            "Street of the workplace. Workplace address: street, building number, postal code, city and country of where the people work."
+        )]
+            string Street,
+        [property: Description("Building number of the workplace.")] string BuildingNumber,
+        [property: Description("Optional unit number of the workplace.")] string? UnitNumber,
+        [property: Description("Postal code of the workplace.")] string PostalCode,
+        [property: Description("City of the workplace.")] string City,
+        [property: Description("Country where the work happens, ISO 3166-1 alpha-2.")]
+            string CountryCode,
+        [property: Description("First day of the project.")] DateOnly StartsOn,
+        [property: Description("Last day of the project, or null for open-ended.")] DateOnly? EndsOn
     )
     {
         public UpdateProject ToCommand(

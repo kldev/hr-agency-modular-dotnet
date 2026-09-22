@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.AssignTeam;
@@ -41,7 +42,9 @@ internal static class MapAssignTeam
         return TypedResults.Ok(result);
     }
 
-    internal sealed record AssignProjectTeamRequest(Guid TeamId)
+    internal sealed record AssignProjectTeamRequest(
+        [property: Description("The recruitment team that staffs the project.")] Guid TeamId
+    )
     {
         public AssignProjectTeam ToCommand(
             Guid projectId,

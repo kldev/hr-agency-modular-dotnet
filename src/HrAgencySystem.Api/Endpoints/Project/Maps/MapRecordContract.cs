@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Projects.Application.Contract.Record;
@@ -47,11 +48,18 @@ internal static class MapRecordContract
     /// is recorded, never typed in, so that the two can never disagree.
     /// </summary>
     internal sealed record RecordProjectContractRequest(
-        string ContractNumber,
-        ContractStatus Status,
-        DateOnly? SignedOn,
-        DateOnly ValidFrom,
-        DateOnly? ValidTo
+        [property: Description("The contract's number as written on it.")] string ContractNumber,
+        [property: Description(
+            "Draft, Signed, Terminated or Expired. A project goes live only with a Signed one."
+        )]
+            ContractStatus Status,
+        [property: Description(
+            "Signature date - required for a Signed contract, and not after ValidFrom."
+        )]
+            DateOnly? SignedOn,
+        [property: Description("First day the contract applies.")] DateOnly ValidFrom,
+        [property: Description("Last day it applies. Optional; not before ValidFrom.")]
+            DateOnly? ValidTo
     )
     {
         public RecordProjectContract ToCommand(
