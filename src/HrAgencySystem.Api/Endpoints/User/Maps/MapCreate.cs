@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.Create;
@@ -12,15 +13,28 @@ using Wolverine;
 namespace HrAgencySystem.Api.Endpoints.User.Maps;
 
 internal sealed record CreateUserRequest(
-    string Email,
-    string FirstName,
-    string LastName,
-    OrganizationRoleApi Role,
-    string Password,
-    string? JobTitle = null,
-    string? Phone = null,
-    Guid? TeamId = null,
-    TeamRole? TeamRole = null
+    [property: Description("Sign-in e-mail address. Unique within the agency.")] string Email,
+    [property: Description("First name.")] string FirstName,
+    [property: Description("Last name.")] string LastName,
+    [property: Description(
+        "What the account may do in the agency, e.g. Admin, Recruiter, HumanResources, Finance."
+    )]
+        OrganizationRoleApi Role,
+    [property: Description(
+        "Initial password, at least 4 characters. The person can change it after signing in."
+    )]
+        string Password,
+    [property: Description("Optional job title, e.g. \"Senior recruiter\".")]
+        string? JobTitle = null,
+    [property: Description("Optional phone number.")] string? Phone = null,
+    [property: Description(
+        "Optional recruitment team to put the person in straight away. Requires TeamRole."
+    )]
+        Guid? TeamId = null,
+    [property: Description(
+        "The person's seat in that team - Sales, Recruiter, Operations or Lead. Only with TeamId."
+    )]
+        TeamRole? TeamRole = null
 )
 {
     internal CreateUser ToCommand(OrganizationId organizationId, Guid createdBy)

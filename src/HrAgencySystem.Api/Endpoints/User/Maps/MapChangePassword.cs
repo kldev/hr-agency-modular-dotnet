@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.ChangePassword;
@@ -7,7 +8,16 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.User.Maps;
 
-internal sealed record ChangePasswordRequest(string CurrentPassword, string NewPassword)
+internal sealed record ChangePasswordRequest(
+    [property: Description(
+        "The password in use now - proof that the person at the keyboard owns the account."
+    )]
+        string CurrentPassword,
+    [property: Description(
+        "The password to switch to: at least 4 characters and different from the current one. Every session of the account is signed out, this one included."
+    )]
+        string NewPassword
+)
 {
     internal ChangeUserPassword ToCommand(OrganizationId organizationId, Guid userId)
     {

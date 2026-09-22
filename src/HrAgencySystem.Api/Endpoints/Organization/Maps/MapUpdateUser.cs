@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.Update;
@@ -9,12 +10,17 @@ using Wolverine;
 namespace HrAgencySystem.Api.Endpoints.Organization.Maps;
 
 internal sealed record UpdateUserForOrganizationRequest(
-    Guid OrganizationId,
-    string Email,
-    string FirstName,
-    string LastName,
-    string? JobTitle = null,
-    string? Phone = null
+    [property: Description(
+        "The agency the account belongs to; an account of another agency is not found."
+    )]
+        Guid OrganizationId,
+    [property: Description("Sign-in e-mail address. Unique within the agency.")] string Email,
+    [property: Description("First name.")] string FirstName,
+    [property: Description("Last name.")] string LastName,
+    [property: Description("Optional job title. Omitted or null clears it.")]
+        string? JobTitle = null,
+    [property: Description("Optional phone number. Omitted or null clears it.")]
+        string? Phone = null
 )
 {
     internal UpdateUser ToCommand(Guid userId)

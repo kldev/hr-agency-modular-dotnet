@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.ChangeRole;
@@ -8,7 +9,12 @@ using Wolverine;
 
 namespace HrAgencySystem.Api.Endpoints.User.Maps;
 
-internal sealed record ChangeUserRoleRequest(OrganizationRoleApi Role)
+internal sealed record ChangeUserRoleRequest(
+    [property: Description(
+        "The account's new role in the agency, e.g. Admin, Recruiter, HumanResources, Finance. It takes effect at the person's next sign-in or token refresh."
+    )]
+        OrganizationRoleApi Role
+)
 {
     internal ChangeRole ToCommand(OrganizationId organizationId, Guid userId, Guid modifiedBy)
     {

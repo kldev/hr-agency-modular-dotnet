@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.UpdateOwnProfile;
@@ -12,10 +13,12 @@ namespace HrAgencySystem.Api.Endpoints.User.Maps;
 /// change it. The command it builds has no room for one either, so there is nothing to smuggle.
 /// </summary>
 internal sealed record UpdateOwnProfileRequest(
-    string FirstName,
-    string LastName,
-    string? JobTitle = null,
-    string? Phone = null
+    [property: Description("Your first name.")] string FirstName,
+    [property: Description("Your last name.")] string LastName,
+    [property: Description("Optional job title. Omitted or null clears it.")]
+        string? JobTitle = null,
+    [property: Description("Optional phone number. Omitted or null clears it.")]
+        string? Phone = null
 )
 {
     internal UpdateOwnProfile ToCommand(OrganizationId organizationId, Guid userId)
