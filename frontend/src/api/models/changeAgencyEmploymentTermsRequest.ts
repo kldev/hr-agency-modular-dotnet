@@ -13,6 +13,7 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { RateInput } from "./rateInput.ts";
 import type { WorkerContractType } from "./workerContractType.ts";
 
 export interface ChangeAgencyEmploymentTermsRequest {
@@ -23,4 +24,5 @@ export interface ChangeAgencyEmploymentTermsRequest {
 	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
 	 */
 	weeklyHours: number | string | null;
+	rate?: null | RateInput;
 }

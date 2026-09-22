@@ -34,6 +34,7 @@ import type {
 	ApproveTimeSheetRequest,
 	BadRequestDetails,
 	CommentOnTimeSheetRequest,
+	ExportTimeSheetsForSettlementParams,
 	GetMyTimeSheetParams,
 	GetTeamTimeSheetsParams,
 	GetTimeSheetsForSettlementParams,
@@ -323,6 +324,95 @@ export const useGetTimeSheetsForSettlement = <
 	TContext
 > => {
 	return useMutation(getGetTimeSheetsForSettlementMutationOptions(options), queryClient);
+};
+/**
+ * @summary The settlement month as a spreadsheet, with amounts
+ */
+export const exportTimeSheetsForSettlement = (
+	params: ExportTimeSheetsForSettlementParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<void>(
+		{ url: `/api/timesheets/settlement/export`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getExportTimeSheetsForSettlementMutationKey = () =>
+	["exportTimeSheetsForSettlement"] as const;
+
+export const getExportTimeSheetsForSettlementMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof exportTimeSheetsForSettlement>>,
+		TError,
+		ExportTimeSheetsForSettlementMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof exportTimeSheetsForSettlement>>,
+	TError,
+	ExportTimeSheetsForSettlementMutationVariables,
+	TContext
+> => {
+	const mutationKey = getExportTimeSheetsForSettlementMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof exportTimeSheetsForSettlement>>,
+		ExportTimeSheetsForSettlementMutationVariables
+	> = (props) => {
+		const { params } = props ?? {};
+
+		return exportTimeSheetsForSettlement(params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type ExportTimeSheetsForSettlementMutationResult = NonNullable<
+	Awaited<ReturnType<typeof exportTimeSheetsForSettlement>>
+>;
+
+export type ExportTimeSheetsForSettlementMutationError = ErrorType<
+	BadRequestDetails | ProblemDetails
+>;
+export type ExportTimeSheetsForSettlementMutationVariables = {
+	params: ExportTimeSheetsForSettlementParams;
+};
+
+/**
+ * @summary The settlement month as a spreadsheet, with amounts
+ */
+export const useExportTimeSheetsForSettlement = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof exportTimeSheetsForSettlement>>,
+			TError,
+			ExportTimeSheetsForSettlementMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof exportTimeSheetsForSettlement>>,
+	TError,
+	ExportTimeSheetsForSettlementMutationVariables,
+	TContext
+> => {
+	return useMutation(getExportTimeSheetsForSettlementMutationOptions(options), queryClient);
 };
 /**
  * @summary Get somebody's sheet for a month

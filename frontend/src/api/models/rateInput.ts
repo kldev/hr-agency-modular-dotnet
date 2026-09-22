@@ -13,17 +13,13 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { RateInput } from "./rateInput.ts";
-import type { WorkerContractType } from "./workerContractType.ts";
+import type { RateBasis } from "./rateBasis.ts";
+import type { RateUnit } from "./rateUnit.ts";
 
-export interface StartAgencyEmploymentRequest {
-	userId: string;
-	contractType: WorkerContractType;
-	startsOn: string;
-	/**
-	 * @nullable
-	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
-	 */
-	weeklyHours: number | string | null;
-	rate?: null | RateInput;
+export interface RateInput {
+	/** @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$ */
+	amount: number | string;
+	currency: string;
+	unit: RateUnit;
+	basis: RateBasis;
 }

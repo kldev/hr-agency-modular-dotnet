@@ -15,6 +15,7 @@
  */
 import type { UserSnapshot } from "./userSnapshot.ts";
 import type { WorkerContractType } from "./workerContractType.ts";
+import type { WorkRate } from "./workRate.ts";
 
 export interface AgencyEmploymentProjection {
 	id: string;
@@ -30,6 +31,7 @@ export interface AgencyEmploymentProjection {
 	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
 	 */
 	weeklyHours: number | string | null;
+	rate: null | WorkRate;
 	createdAt: string;
 	modifiedBy: null | UserSnapshot;
 	/** @nullable */
