@@ -5,6 +5,7 @@ export * from "./TeamMonitoringCardList";
 export * from "./TeamMonitoringCardList";
 export * from "./TeamMonitoringTable";
 export * from "./TimeSheetCalendar";
+export * from "./TimeSheetComments";
 export * from "./TimeSheetDayList";
 export * from "./TimeSheetPanel";
 export * from "./TwoPaneSheets";

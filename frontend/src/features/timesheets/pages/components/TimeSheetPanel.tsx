@@ -1,7 +1,7 @@
 import { Check, MessageSquare, Undo2, Wallet } from "lucide-react";
 import type { TimeSheetProjection } from "@/api/models";
 import { Button, TimeSheetStatusBadge } from "@/components/ui";
-import { formatDate, formatDateTime } from "@/utlis/dateUtils";
+import { formatDate } from "@/utlis/dateUtils";
 import {
 	allowedTimeSheetTransitions,
 	formatMinutes,
@@ -9,6 +9,7 @@ import {
 	monthLabel,
 	toTimeOfDay,
 } from "../../types";
+import { TimeSheetComments } from "./TimeSheetComments";
 
 interface Props {
 	sheet: TimeSheetProjection;
@@ -105,26 +106,7 @@ export function TimeSheetPanel({
 				</table>
 			</div>
 
-			{sheet.comments.length === 0 ? null : (
-				<div className="time-sheet-comments">
-					{sheet.comments.map((comment) => (
-						<div key={`${comment.at}-${comment.author.id}`} className="time-sheet-comment">
-							<div className="time-sheet-comment-meta">
-								<strong>
-									{comment.author.firstName} {comment.author.lastName}
-								</strong>
-
-								{/* The role is frozen on the comment: who they were when they wrote it. */}
-								<span>{comment.authorRole}</span>
-
-								<span>{formatDateTime(comment.at)}</span>
-							</div>
-
-							<div>{comment.content}</div>
-						</div>
-					))}
-				</div>
-			)}
+			<TimeSheetComments comments={sheet.comments} />
 		</div>
 	);
 }

@@ -1,11 +1,16 @@
-import { Info, Send } from "lucide-react";
+import { Info, MessageSquare, Send } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { useGetAgencyEmployment } from "#/features/agency-employment/pages/hooks";
 import { contractRequiresTimeRecord } from "#/features/agency-employment/types";
 import type { TimeSheetProjection, WorkDay } from "@/api/models";
 import { Button, ConfirmDialog, TimeSheetStatusBadge } from "@/components/ui";
-import { SaveWorkDayDrawer, type SaveWorkDayFormCommand } from "../../drawers";
+import {
+	CommentOnTimeSheetDrawer,
+	type CommentOnTimeSheetFormCommand,
+	SaveWorkDayDrawer,
+	type SaveWorkDayFormCommand,
+} from "../../drawers";
 import {
 	formatMinutes,
 	isTimeSheetEditable,
@@ -18,6 +23,7 @@ import {
 } from "../../types";
 import { useSubmitTimeSheet } from "../hooks";
 import { TimeSheetCalendar } from "./TimeSheetCalendar";
+import { TimeSheetComments } from "./TimeSheetComments";
 import { TimeSheetDayList } from "./TimeSheetDayList";
 
 interface Props {
@@ -30,6 +36,7 @@ interface Props {
 
 export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props) {
 	const dayRef = useRef<SaveWorkDayFormCommand>(null);
+	const commentRef = useRef<CommentOnTimeSheetFormCommand>(null);
 	const [confirmSubmit, setConfirmSubmit] = useState(false);
 
 	/*
@@ -129,6 +136,21 @@ export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props
 				</dl>
 
 				<div className="time-sheet-summary-actions">
+					{/*
+					 * The owner's side of the conversation. Worth having on every status, not only on a
+					 * month that came back: answering "why is the 14th empty" before anybody has to ask is
+					 * the cheapest version of this exchange.
+					 */}
+					{sheet ? (
+						<Button
+							variant="ghost"
+							icon={<MessageSquare size={15} />}
+							onClick={() => commentRef.current?.comment(sheet)}
+						>
+							Comment
+						</Button>
+					) : null}
+
 					{/* Mirrors `EmptySheetMessage`: a month with nothing on it cannot be sent. */}
 					<Button
 						variant="primary"
@@ -152,7 +174,11 @@ export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props
 				onClose={() => setConfirmSubmit(false)}
 			/>
 
+			{/* Everything said about this month, by whoever said it - not only the last word. */}
+			{sheet ? <TimeSheetComments comments={sheet.comments} /> : null}
+
 			<SaveWorkDayDrawer ref={dayRef} onSuccess={onChanged} />
+			<CommentOnTimeSheetDrawer ref={commentRef} onSuccess={onChanged} />
 		</>
 	);
 }
