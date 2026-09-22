@@ -177,10 +177,20 @@ export function parseTypedDate(text: string): Date | null | undefined {
 /**
  * Puts the dots in while somebody types digits, so "22092026" reads as "22.09.2026" on the way.
  * Only when the text grew - adding a dot on a backspace would make the dot impossible to delete.
+ *
+ * Somebody who types the dots themselves presses "." right after the one put in for them, and
+ * that second one is swallowed; otherwise "22.09.2026" typed by hand arrives as "22..09..2026",
+ * which is not a date and used to empty the field on blur.
  */
 export function withDateSeparators(next: string, previous: string): string {
 	if (next.length <= previous.length) {
 		return next;
+	}
+
+	const collapsed = next.replace(/([.\-/ ])[.\-/ ]+/g, "$1");
+
+	if (collapsed !== next) {
+		return collapsed;
 	}
 
 	return /^\d{2}$/.test(next) || /^\d{1,2}\.\d{2}$/.test(next) ? `${next}.` : next;

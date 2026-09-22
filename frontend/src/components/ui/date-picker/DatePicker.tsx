@@ -208,8 +208,15 @@ export function DatePicker({
 	 */
 	const [text, setText] = useState(() => formatted(value));
 
+	/*
+	 * Why the typed text was not taken. The text stays in the field next to it - wiping what
+	 * somebody typed because of one wrong digit makes them type it all again.
+	 */
+	const [typedError, setTypedError] = useState<string | null>(null);
+
 	useEffect(() => {
 		setText(formatted(value));
+		setTypedError(null);
 	}, [value, formatted]);
 
 	const years = useMemo(() => {
@@ -226,13 +233,15 @@ export function DatePicker({
 	}, [yearSelect, yearRange?.from, yearRange?.to, minDate, maxDate]);
 
 	/**
-	 * Takes what was typed. Something that is not a day, or a day outside the limits, goes back to
-	 * the last good value rather than becoming an error to explain - the calendar is right there.
+	 * Takes what was typed. Text that is not a day, or a day outside the limits, stays in the field
+	 * with a reason under it, and the form keeps its last good value until it is fixed.
 	 */
 	const commitText = () => {
 		const parsed = parseTypedDate(text);
 
 		if (parsed === null) {
+			setTypedError(null);
+
 			if (clearable) {
 				if (value) onChange?.(null);
 			} else {
@@ -242,10 +251,17 @@ export function DatePicker({
 			return;
 		}
 
-		if (parsed === undefined || isDateDisabled(parsed, minDate, maxDate)) {
-			setText(formatted(value));
+		if (parsed === undefined) {
+			setTypedError("Not a date - type it as dd.mm.yyyy.");
 			return;
 		}
+
+		if (isDateDisabled(parsed, minDate, maxDate)) {
+			setTypedError("That date is outside the allowed range.");
+			return;
+		}
+
+		setTypedError(null);
 
 		const normalized = normalizeDate(parsed);
 
@@ -273,6 +289,9 @@ export function DatePicker({
 		const normalized = normalizeDate(date);
 
 		onChange?.(normalized);
+		// Set here too: picking the day already held changes no value, so the effect would not run.
+		setText(formatted(normalized));
+		setTypedError(null);
 		setVisibleMonth(normalized);
 		setOpen(false);
 
@@ -283,6 +302,8 @@ export function DatePicker({
 
 	const handleClear = () => {
 		onChange?.(null);
+		setText("");
+		setTypedError(null);
 		setOpen(false);
 
 		requestAnimationFrame(() => {
@@ -294,6 +315,8 @@ export function DatePicker({
 		const today = clampDate(new Date(), minDate, maxDate);
 
 		onChange?.(today);
+		setText(formatted(today));
+		setTypedError(null);
 		setVisibleMonth(today);
 		setOpen(false);
 
@@ -330,8 +353,8 @@ export function DatePicker({
 					"bg-(--color-surface)",
 					"px-3",
 					"transition-colors",
-					error ? "border-(--color-danger)" : "border-(--color-border)",
-					!disabled && !error && "hover:border-(--color-border-strong)",
+					error || typedError ? "border-(--color-danger)" : "border-(--color-border)",
+					!disabled && !error && !typedError && "hover:border-(--color-border-strong)",
 					!disabled && "focus-within:ring-2 focus-within:ring-(--color-primary-soft)",
 					disabled && "cursor-not-allowed bg-(--color-surface-subtle) opacity-60",
 				)}
@@ -391,7 +414,7 @@ export function DatePicker({
 					/>
 				</button>
 
-				{value && clearable && !disabled && (
+				{(value || text) && clearable && !disabled && (
 					<button
 						type="button"
 						aria-label="Clear date"
@@ -415,7 +438,9 @@ export function DatePicker({
 				)}
 			</div>
 
-			{error && <div className="mt-1 text-xs text-(--color-danger)">{error}</div>}
+			{(typedError ?? error) && (
+				<div className="mt-1 text-xs text-(--color-danger)">{typedError ?? error}</div>
+			)}
 
 			{open &&
 				typeof document !== "undefined" &&
