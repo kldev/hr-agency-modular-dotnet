@@ -6,6 +6,7 @@ using HrAgencySystem.Agency.Application.TimeSheets.Settle;
 using HrAgencySystem.Agency.Application.TimeSheets.Submit;
 using HrAgencySystem.Agency.Domain;
 using HrAgencySystem.Agency.Domain.TimeSheets;
+using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Agency.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -96,6 +97,59 @@ public class TimeSheetHandlerTests : BaseTest
         );
 
         Assert.Equal(8 * 60, @event.TotalMinutes);
+    }
+
+    /// <summary>
+    /// A note handed over with the month becomes a comment in the owner's own voice, so the
+    /// supervisor reads "three days off sick" next to the hours rather than having to ask.
+    /// </summary>
+    [Fact]
+    public async Task Submit_WithANote_RecordsItAsTheOwnersComment()
+    {
+        var sheet = TimeSheetScenario.WithOneDay();
+
+        var (_, events) = await SubmitTimeSheetHandler.Handle(
+            new SubmitTimeSheet(
+                OrgScenario.OrganizationId,
+                sheet.UserId,
+                TimeSheetScenario.Year,
+                TimeSheetScenario.Month,
+                sheet.UserId,
+                "Three days off sick, the rest is as usual."
+            ),
+            sheet,
+            OrgScenario.Service(),
+            TestClock,
+            CancellationToken.None
+        );
+
+        var commented = Assert.Single(events.OfType<TimeSheetCommented>());
+
+        Assert.Equal("Three days off sick, the rest is as usual.", commented.Comment.Content);
+        Assert.Equal(TimeSheetRole.Owner, commented.Comment.AuthorRole);
+    }
+
+    /// <summary>Saying nothing is the ordinary case and must not leave an empty comment behind.</summary>
+    [Fact]
+    public async Task Submit_WithoutANote_RecordsNothingElse()
+    {
+        var sheet = TimeSheetScenario.WithOneDay();
+
+        var (_, events) = await SubmitTimeSheetHandler.Handle(
+            new SubmitTimeSheet(
+                OrgScenario.OrganizationId,
+                sheet.UserId,
+                TimeSheetScenario.Year,
+                TimeSheetScenario.Month,
+                sheet.UserId
+            ),
+            sheet,
+            OrgScenario.Service(),
+            TestClock,
+            CancellationToken.None
+        );
+
+        Assert.Empty(events.OfType<TimeSheetCommented>());
     }
 
     /// <summary>Nobody sends somebody else's month - that is a separate decision, not a shortcut.</summary>

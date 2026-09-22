@@ -3,6 +3,7 @@ using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Agency.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Agency.Application.TimeSheets.Submit;
@@ -39,7 +40,7 @@ public static class SubmitTimeSheetHandler
 
         var submittedBy = await service.GetUserAsync(command.SubmittedBy, ct);
 
-        var @event = new TimeSheetSubmitted(
+        var submitted = new TimeSheetSubmitted(
             aggregate.OrganizationId.Value,
             aggregate.UserId,
             aggregate.Year,
@@ -49,6 +50,24 @@ public static class SubmitTimeSheetHandler
             clock.UtcNow
         );
 
-        return (@event, [@event]);
+        // Same shape as approving with a note: one fact, and a second one only if there was
+        // something to say. The role is Owner because only the owner reaches this handler at all.
+        if (string.IsNullOrWhiteSpace(command.Comment))
+            return (submitted, [submitted]);
+
+        var (note, error) = ShortNote.TryCreate(command.Comment);
+
+        if (error is not null)
+            throw new ValidationException(error);
+
+        var commented = new TimeSheetCommented(
+            aggregate.OrganizationId.Value,
+            aggregate.UserId,
+            aggregate.Year,
+            aggregate.Month,
+            new TimeSheetComment(submittedBy, TimeSheetRole.Owner, note!.Value, clock.UtcNow)
+        );
+
+        return (submitted, [submitted, commented]);
     }
 }

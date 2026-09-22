@@ -31,11 +31,12 @@ internal static class MapSubmit
                     user.UserId,
                     request.Year,
                     request.Month,
-                    user.UserId
+                    user.UserId,
+                    request.Comment
                 ),
                 ct
             )
         );
 
-    internal sealed record SubmitTimeSheetRequest(int Year, int Month);
+    internal sealed record SubmitTimeSheetRequest(int Year, int Month, string? Comment = null);
 }
