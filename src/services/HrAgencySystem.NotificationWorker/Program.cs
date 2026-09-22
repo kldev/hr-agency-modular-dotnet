@@ -1,6 +1,7 @@
 using HrAgencySystem.EmailTemplates;
 using HrAgencySystem.EmailTemplates.Messaging;
 using HrAgencySystem.NotificationWorker.Infrastructure;
+using HrAgencySystem.NotificationWorker.Infrastructure.Telemetry;
 using HrAgencySystem.Observability;
 using HrAgencySystem.Observability.Health;
 using Wolverine;
@@ -16,6 +17,7 @@ var builder = Host.CreateApplicationBuilder(args);
     );
     builder.Services.AddSingleton<ProcessedEventMigration>();
     builder.Services.AddScoped<IProcessedEventStore, ProcessedEventStore>();
+    builder.Services.AddSingleton<NotificationMetrics>();
 
     var config = RabbitMqConfig.FromSection(
         builder.Configuration.GetSection(RabbitMqConfig.SectionName)

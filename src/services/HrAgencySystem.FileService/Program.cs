@@ -3,6 +3,7 @@ using HrAgencySystem.FileService.Application;
 using HrAgencySystem.FileService.Config;
 using HrAgencySystem.FileService.Endpoints;
 using HrAgencySystem.FileService.Infrastructure;
+using HrAgencySystem.FileService.Infrastructure.Telemetry;
 using HrAgencySystem.FileService.Domain;
 using HrAgencySystem.Files.Service;
 using HrAgencySystem.Observability.AspNetCore;
@@ -34,6 +35,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.SetupServiceAuthorization(builder.Configuration);
     builder.Services.AddScoped<IUploadInspector, UploadInspector>();
     builder.Services.AddScoped<IFileStore, FileStore>();
+    builder.Services.AddSingleton<FileMetrics>();
     builder.Services.AddExceptionHandler<ServiceExceptionHandler>();
     builder.Services.AddProblemDetails();
     builder

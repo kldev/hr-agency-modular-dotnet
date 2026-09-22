@@ -2,6 +2,7 @@ using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.EmailTemplates.Rendering;
 using HrAgencySystem.EmailTemplates.Sending;
 using HrAgencySystem.NotificationWorker.Infrastructure;
+using HrAgencySystem.NotificationWorker.Infrastructure.Telemetry;
 
 namespace HrAgencySystem.NotificationWorker.Application;
 
@@ -12,12 +13,14 @@ public static class SendPasswordResetHandler
         IEmailTemplateProvider templates,
         ISendEmail sender,
         IProcessedEventStore processedEvents,
+        NotificationMetrics metrics,
         ILogger<SendPasswordReset> logger,
         CancellationToken ct
     ) =>
         processedEvents.SendOnceAsync(
             message,
             logger,
+            metrics,
             async () =>
             {
                 var html = await templates.RenderSendPasswordReset(message);

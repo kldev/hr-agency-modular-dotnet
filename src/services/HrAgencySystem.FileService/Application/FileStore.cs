@@ -3,6 +3,7 @@ using HrAgencySystem.Files.Model;
 using HrAgencySystem.Files.Service;
 using HrAgencySystem.FileService.Contracts;
 using HrAgencySystem.FileService.Domain;
+using HrAgencySystem.FileService.Infrastructure.Telemetry;
 using Marten;
 
 namespace HrAgencySystem.FileService.Application;
@@ -12,6 +13,7 @@ public sealed class FileStore(
     IObjectStorage storage,
     IUploadInspector inspector,
     TimeProvider clock,
+    FileMetrics metrics,
     ILogger<FileStore> logger
 ) : IFileStore
 {
@@ -30,7 +32,10 @@ public sealed class FileStore(
 
         var rejection = inspector.Inspect(contentType, name, size);
         if (rejection is not null)
+        {
+            metrics.RecordRejected(rejection);
             return StoreResult.Rejected(rejection);
+        }
 
         var fileId = Guid.NewGuid();
         var key = StorageKey.Create(
@@ -76,6 +81,7 @@ public sealed class FileStore(
             ct
         );
         await session.SaveChangesAsync(ct);
+        metrics.RecordStored(contentType, stored.Size);
 
         return StoreResult.Stored(Describe(stored));
     }
