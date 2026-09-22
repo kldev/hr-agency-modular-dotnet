@@ -26,6 +26,7 @@ import { Route as AppOrgStructureRouteImport } from './routes/app/org-structure'
 import { Route as AppTimesheetsRouteImport } from './routes/app/timesheets'
 import { Route as AppWorkersAbroadRouteImport } from './routes/app/workers-abroad'
 import { Route as OwnerIndexRouteImport } from './routes/owner/index'
+import { Route as AdminApiKeysIndexRouteImport } from './routes/admin/api-keys/index'
 import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
 import { Route as AdminOrganizationsIdRouteImport } from './routes/admin/organizations/$id'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
@@ -149,6 +150,11 @@ const OwnerIndexRoute = OwnerIndexRouteImport.update({
   id: '/owner/',
   path: '/owner/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminApiKeysIndexRoute = AdminApiKeysIndexRouteImport.update({
+  id: '/api-keys/',
+  path: '/api-keys/',
+  getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminOrganizationsIndexRoute = AdminOrganizationsIndexRouteImport.update({
   id: '/organizations/',
@@ -376,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/app/workers/$id': typeof AppWorkersIdRoute
+  '/admin/api-keys/': typeof AdminApiKeysIndexRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
@@ -431,6 +438,7 @@ export interface FileRoutesByTo {
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/app/workers/$id': typeof AppWorkersIdRoute
+  '/admin/api-keys': typeof AdminApiKeysIndexRoute
   '/admin/organizations': typeof AdminOrganizationsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/app/applications': typeof AppApplicationsIndexRoute
@@ -489,6 +497,7 @@ export interface FileRoutesById {
   '/app/teams/$id': typeof AppTeamsIdRoute
   '/app/users/$id': typeof AppUsersIdRoute
   '/app/workers/$id': typeof AppWorkersIdRoute
+  '/admin/api-keys/': typeof AdminApiKeysIndexRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
@@ -548,6 +557,7 @@ export interface FileRouteTypes {
     | '/app/teams/$id'
     | '/app/users/$id'
     | '/app/workers/$id'
+    | '/admin/api-keys/'
     | '/admin/organizations/'
     | '/admin/users/'
     | '/app/applications/'
@@ -603,6 +613,7 @@ export interface FileRouteTypes {
     | '/app/teams/$id'
     | '/app/users/$id'
     | '/app/workers/$id'
+    | '/admin/api-keys'
     | '/admin/organizations'
     | '/admin/users'
     | '/app/applications'
@@ -660,6 +671,7 @@ export interface FileRouteTypes {
     | '/app/teams/$id'
     | '/app/users/$id'
     | '/app/workers/$id'
+    | '/admin/api-keys/'
     | '/admin/organizations/'
     | '/admin/users/'
     | '/app/applications/'
@@ -817,6 +829,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/owner/'
       preLoaderRoute: typeof OwnerIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/api-keys/': {
+      id: '/admin/api-keys/'
+      path: '/api-keys'
+      fullPath: '/admin/api-keys/'
+      preLoaderRoute: typeof AdminApiKeysIndexRouteImport
+      parentRoute: typeof AdminRouteRoute
     }
     '/admin/organizations/': {
       id: '/admin/organizations/'
@@ -1092,6 +1111,7 @@ interface AdminRouteRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminOrganizationsIdRoute: typeof AdminOrganizationsIdRoute
   AdminUsersIdRoute: typeof AdminUsersIdRoute
+  AdminApiKeysIndexRoute: typeof AdminApiKeysIndexRoute
   AdminOrganizationsIndexRoute: typeof AdminOrganizationsIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
@@ -1101,6 +1121,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminOrganizationsIdRoute: AdminOrganizationsIdRoute,
   AdminUsersIdRoute: AdminUsersIdRoute,
+  AdminApiKeysIndexRoute: AdminApiKeysIndexRoute,
   AdminOrganizationsIndexRoute: AdminOrganizationsIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }

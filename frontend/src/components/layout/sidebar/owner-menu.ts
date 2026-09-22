@@ -1,4 +1,4 @@
-import { BarChart3, Globe2, LayoutDashboard, Settings, Users } from "lucide-react";
+import { BarChart3, Globe2, KeyRound, LayoutDashboard, Settings, Users } from "lucide-react";
 
 import type { MenuGroup } from "./types/sidebar";
 
@@ -12,6 +12,7 @@ const ownerMenu: MenuGroup[] = [
 		items: [
 			{ label: "Organizations", icon: Globe2, link: "/admin/organizations" },
 			{ label: "Users", icon: Users, link: "/admin/users" },
+			{ label: "API keys", icon: KeyRound, link: "/admin/api-keys" },
 			{ label: "Reports", icon: BarChart3, link: "/404" },
 			{ label: "Settings", icon: Settings, link: "/404" },
 		],

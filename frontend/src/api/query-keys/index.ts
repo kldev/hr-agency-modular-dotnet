@@ -13,6 +13,7 @@ export * from "./positionsKeys";
 export * from "./profileKeys";
 export * from "./projectsKeys";
 export * from "./salesKeys";
+export * from "./serviceApiKeysKeys";
 export * from "./suggestionKeys";
 export * from "./teamsKeys";
 export * from "./timeSheetsKeys";
