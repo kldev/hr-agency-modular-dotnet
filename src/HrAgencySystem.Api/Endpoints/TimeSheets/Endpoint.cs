@@ -4,7 +4,7 @@ public static class Endpoint
 {
     public static void Map(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("").WithTags("Time sheets");
+        var group = endpoints.MapGroup("").WithTags("Agency - Time sheets");
 
         Maps.MapGetMine.Map(group);
         Maps.MapGetTeam.Map(group);

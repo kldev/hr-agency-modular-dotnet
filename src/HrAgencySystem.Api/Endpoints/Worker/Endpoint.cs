@@ -6,7 +6,7 @@ public static class Endpoint
     {
         // No role gate: the register is read and kept by recruitment, HR, legalisation and
         // operations in turn, and the fallback-deny policy already keeps anonymous callers out.
-        var group = endpoints.MapGroup("").WithTags("Workers");
+        var group = endpoints.MapGroup("").WithTags("Employment - Workers");
 
         Maps.MapRegister.Map(group);
         Maps.MapUpdate.Map(group);

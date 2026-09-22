@@ -4,7 +4,7 @@ public static class Endpoint
 {
     public static void Map(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("").WithTags("Org structure");
+        var group = endpoints.MapGroup("").WithTags("Agency - Structure");
 
         Maps.MapGet.Map(group);
         Maps.MapCreateUnit.Map(group);

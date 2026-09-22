@@ -6,7 +6,7 @@ public static class Endpoint
     {
         // No role gate on purpose: managing teams is open to any authenticated member of the
         // organization. The fallback-deny policy already keeps anonymous callers out.
-        var group = endpoints.MapGroup("").WithTags("Teams");
+        var group = endpoints.MapGroup("").WithTags("Agency - Teams");
 
         Maps.MapCreate.Map(group);
         Maps.MapGetSlice.Map(group);

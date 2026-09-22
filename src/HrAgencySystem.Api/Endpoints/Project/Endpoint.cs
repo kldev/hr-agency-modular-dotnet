@@ -8,7 +8,7 @@ public static class Endpoint
     {
         // No role gate: running a project is open to any authenticated member of the organization.
         // The fallback-deny policy already keeps anonymous callers out.
-        var group = endpoints.MapGroup("").WithTags("Projects");
+        var group = endpoints.MapGroup("").WithTags("Sales - Projects");
 
         Maps.MapCreate.Map(group);
         Maps.MapGetSlice.Map(group);
