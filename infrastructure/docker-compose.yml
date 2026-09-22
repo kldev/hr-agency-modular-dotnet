@@ -221,6 +221,35 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
+  web:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.web
+    container_name: hr-agency-web
+    networks:
+      - inner-cluster-communication
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+      # No connection string on purpose: the public job board reaches the system only through
+      # the API's internal routes, with a key the platform owner issues in the panel
+      # (Admin -> API keys). In a real deployment the key would come from a secret store
+      # (Vault, Key Vault) rather than .env.
+      InternalApi__BaseUrl: "http://hr-agency-api:8080"
+      InternalApi__ApiKey: ${WebApiKey:-}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: "10s"
+    # Bounded: without WebApiKey the board refuses to start, and an endless restart loop would
+    # only bury that message. Issue a key, put it in .env, then `docker compose up -d web`.
+    restart: "on-failure:3"
+    ports:
+    - "5050:8080"
+    depends_on:
+      webapi:
+        condition: service_healthy
   front:
     build:
       context: ../frontend

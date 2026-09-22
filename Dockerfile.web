@@ -1,0 +1,41 @@
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+WORKDIR /src
+
+COPY Directory.Packages.props .
+
+# The public job board references no other project - it talks to the API over HTTP - so this is
+# the whole restore list. Adding a project reference to it means adding its COPY line here too.
+COPY src/HrAgencySystem.Web/HrAgencySystem.Web.csproj HrAgencySystem.Web/
+
+RUN dotnet restore HrAgencySystem.Web/HrAgencySystem.Web.csproj
+
+COPY src/HrAgencySystem.Web HrAgencySystem.Web/
+
+RUN dotnet publish HrAgencySystem.Web/HrAgencySystem.Web.csproj \
+    --configuration Release \
+    --no-restore \
+    --output /app/publish \
+    /p:UseAppHost=false
+
+FROM runtime AS final
+
+WORKDIR /app
+
+COPY --from=build --chown=app:app /app/publish .
+
+USER app
+
+ENV ASPNETCORE_HTTP_PORTS=8080
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "HrAgencySystem.Web.dll"]
