@@ -41,4 +41,6 @@ export interface CandidateProjection {
 	modifiedAt: string | null;
 	note: string;
 	fullName: string;
+	/** @nullable */
+	workerId?: string | null;
 }

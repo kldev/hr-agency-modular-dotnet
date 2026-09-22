@@ -23,6 +23,7 @@ export type GetJobApplicationsSliceParams = {
 	status?: JobApplicationStatus[];
 	source?: CandidateSource[];
 	jobPostId?: string;
+	registeredAsWorker?: boolean;
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */

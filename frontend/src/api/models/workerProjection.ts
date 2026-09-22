@@ -46,6 +46,8 @@ export interface WorkerProjection {
 	department?: ResponsibleDepartment;
 	/** @nullable */
 	sourceCandidateId?: string | null;
+	/** @nullable */
+	sourceApplicationId?: string | null;
 	documents?: WorkerDocument[];
 	/** @pattern ^-?(?:0|[1-9]\d*)$ */
 	documentCount?: number | string;

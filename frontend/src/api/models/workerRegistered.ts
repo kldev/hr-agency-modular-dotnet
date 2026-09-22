@@ -32,6 +32,8 @@ export interface WorkerRegistered {
 	note: string;
 	/** @nullable */
 	sourceCandidateId: string | null;
+	/** @nullable */
+	sourceApplicationId: string | null;
 	createdBy: UserSnapshot;
 	createdAt: string;
 }

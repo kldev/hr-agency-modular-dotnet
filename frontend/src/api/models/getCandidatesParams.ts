@@ -22,6 +22,7 @@ export type GetCandidatesParams = {
 	tag?: string[];
 	status?: CandidateStatus;
 	source?: CandidateSource[];
+	registeredAsWorker?: boolean;
 	/**
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */

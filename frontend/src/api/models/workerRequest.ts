@@ -45,4 +45,6 @@ export interface WorkerRequest {
 	note?: string | null;
 	/** @nullable */
 	sourceCandidateId?: string | null;
+	/** @nullable */
+	sourceApplicationId?: string | null;
 }

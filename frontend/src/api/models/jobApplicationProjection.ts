@@ -47,4 +47,6 @@ export interface JobApplicationProjection {
 	applicantLastName: string;
 	jobPostId: string;
 	createdBy: UserSnapshot;
+	/** @nullable */
+	workerId?: string | null;
 }
