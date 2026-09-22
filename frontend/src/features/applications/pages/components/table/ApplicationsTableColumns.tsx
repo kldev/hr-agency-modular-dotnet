@@ -3,6 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { JobApplicationProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { ApplicationBadge, CandidateSourceBadge } from "@/components/ui/Badge";
+import { WorkerFileLink } from "@/features/workers/components/WorkerFileLink";
 import { formatDateTime } from "@/utlis/dateUtils";
 import type { JobApplicationsActionsType } from "../forms";
 import { ApplicationsActions } from "./ApplicationsActions";
@@ -26,7 +27,11 @@ export function getColumns(actions: Actions) {
 
 				return (
 					<div className="table-cell-content w-87.5">
-						<ApplicationsActions id={item.id} onAction={(a) => actions.onAction(a, item)} />
+						<ApplicationsActions
+							id={item.id}
+							workerId={item.workerId}
+							onAction={(a) => actions.onAction(a, item)}
+						/>
 					</div>
 				);
 			},
@@ -66,6 +71,14 @@ export function getColumns(actions: Actions) {
 			meta: {
 				width: "md",
 			},
+		}),
+
+		columnHelper.accessor("workerId", {
+			header: "Worker",
+			meta: {
+				width: "sm",
+			},
+			cell: ({ getValue }) => <WorkerFileLink workerId={getValue()} />,
 		}),
 
 		columnHelper.accessor("jobPostTitle", {

@@ -3,7 +3,7 @@ import { Route } from "#/routes/app/applications";
 import type { CandidateSource, JobApplicationStatus } from "@/api/models";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { applicationStatuses } from "../types";
+import { applicationStatuses, type WorkerFileFilter } from "../types";
 import { ApplicationCardList, ApplicationsTable, ApplicationsToolbar } from "./components";
 import { useGetApplicationsSlice } from "./hooks";
 
@@ -11,6 +11,7 @@ export interface ApplicationFilters {
 	status?: JobApplicationStatus;
 	source?: CandidateSource;
 	search?: string;
+	worker?: WorkerFileFilter;
 }
 
 const AplicationsPage: React.FC = () => {
@@ -45,6 +46,10 @@ const AplicationsPage: React.FC = () => {
 				onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
 				source={search.source ?? null}
 				onSourceChange={(s) => navigate({ search: (previous) => ({ ...previous, source: s }) })}
+				worker={search.worker ?? null}
+				onWorkerChange={(worker) =>
+					navigate({ search: (previous) => ({ ...previous, worker: worker ?? undefined }) })
+				}
 			/>
 
 			<div className="flex-col">

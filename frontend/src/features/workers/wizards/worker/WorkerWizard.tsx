@@ -79,7 +79,13 @@ export function WorkerWizard({
 				addressCountryCode: value.addressCountryCode.toUpperCase() || null,
 				note: value.note.trim() || null,
 				// Register only - the API ignores it on an update, because an origin does not change.
-				...(workerId ? {} : { sourceCandidateId: value.sourceCandidateId || null }),
+				...(workerId
+					? {}
+					: {
+							sourceCandidateId: value.sourceCandidateId || null,
+							// Which application it came out of, so that application can say so.
+							sourceApplicationId: value.sourceApplicationId || null,
+						}),
 			};
 
 			try {

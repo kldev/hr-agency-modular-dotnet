@@ -14,6 +14,7 @@ import {
 	WorkerWizardDialog,
 } from "#/features/workers/wizards/worker/WorkerWizardDialog";
 import { formatDateTimeIntl } from "#/utlis";
+import { WorkerFileLink } from "@/features/workers/components/WorkerFileLink";
 import { ApplicationsActionDrawers, type JobApplicationsRef } from "../forms";
 import { ApplicationsActions } from "./ApplicationsActions";
 import type { Actions } from "./ApplicationsTableColumns";
@@ -62,6 +63,7 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 						</div>
 						<ApplicationsActions
 							id={application.id}
+							workerId={application.workerId}
 							onAction={(action) => handleActions.onAction(action, application)}
 						></ApplicationsActions>
 					</div>
@@ -79,7 +81,9 @@ export function ApplicationCardList({ applications, onRefresh }: ApplicationCard
 						<DetailItem label="Job post">{application.jobPostTitle}</DetailItem>
 						<DetailItem label="Company">{application.company.name}</DetailItem>
 						<DetailItem label="Created at">{formatDateTimeIntl(application.createdAt)}</DetailItem>
-						<DetailItem label="">-</DetailItem>
+						<DetailItem label="Worker">
+							<WorkerFileLink workerId={application.workerId} />
+						</DetailItem>
 					</dl>
 					<div className="data-content-lists data-details-section-bg-none">
 						<DetailsListSection

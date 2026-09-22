@@ -6,6 +6,7 @@ import {
 	AddTagsDrawer,
 } from "#/features/applications/pages/components/forms/add-tag";
 import { formatDateTimeIntl } from "#/utlis";
+import { WorkerFileLink } from "@/features/workers/components/WorkerFileLink";
 import { EditCandidateDrawer, type EditCandidateFormCommand } from "../form";
 import { CandidateActions } from "./CandidateActions";
 import type { CanidateActions } from "./CandidatesTableColumns";
@@ -53,6 +54,10 @@ export function CandidatesCardList({ items, onRefresh }: CandidatesCardListProps
 
 						<DetailItem label="Source">
 							<CandidateSourceBadge source={item.source} />
+						</DetailItem>
+
+						<DetailItem label="Worker">
+							<WorkerFileLink workerId={item.workerId} />
 						</DetailItem>
 
 						<DetailItem label="Created at">{formatDateTimeIntl(item.createdAt)}</DetailItem>

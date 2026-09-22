@@ -2,6 +2,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import type { CandidateProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
 import { CandidateSourceBadge, ItemMark } from "@/components/ui";
+import { WorkerFileLink } from "@/features/workers/components/WorkerFileLink";
 import { formatDateTime } from "@/utlis/dateUtils";
 import { CandidateActions } from "./CandidateActions";
 
@@ -71,6 +72,14 @@ export function getColumns(actions: CanidateActions) {
 				width: "md",
 			},
 			cell: ({ getValue }) => <CandidateSourceBadge source={getValue()} />,
+		}),
+
+		columnHelper.accessor("workerId", {
+			header: "Worker",
+			meta: {
+				width: "sm",
+			},
+			cell: ({ getValue }) => <WorkerFileLink workerId={getValue()} />,
 		}),
 
 		columnHelper.accessor("createdAt", {

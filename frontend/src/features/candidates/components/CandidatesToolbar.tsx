@@ -2,7 +2,11 @@ import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import type { CandidateSource } from "@/api/models";
 import { Button, EnumSelectFilter } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
-import { applicationSources } from "@/features/applications/types";
+import {
+	applicationSources,
+	type WorkerFileFilter,
+	workerFileFilters,
+} from "@/features/applications/types";
 
 interface CandidatesToolbarProps {
 	search: string;
@@ -10,6 +14,8 @@ interface CandidatesToolbarProps {
 
 	onSearchChange: (value: string) => void;
 	onSourceChange: (value: CandidateSource | null) => void;
+	worker: WorkerFileFilter | null;
+	onWorkerChange: (value: WorkerFileFilter | null) => void;
 	companyId?: string;
 	onCompanyChange?: (value: string) => void;
 	onClear: () => void;
@@ -21,6 +27,8 @@ export function CandidatesToolbar({
 	source,
 	onSearchChange,
 	onSourceChange,
+	worker,
+	onWorkerChange,
 	onAdd,
 	onClear,
 }: CandidatesToolbarProps) {
@@ -51,6 +59,13 @@ export function CandidatesToolbar({
 					options={applicationSources}
 					value={source}
 					onChange={(value) => onSourceChange(value ?? null)}
+				/>
+
+				<EnumSelectFilter
+					options={workerFileFilters}
+					value={worker}
+					allLabel="Any worker file"
+					onChange={(value) => onWorkerChange(value ?? null)}
 				/>
 
 				<Button

@@ -4,12 +4,14 @@ import { candidatesKeys } from "#/api";
 import { getCandidate, getCandidates } from "#/api/endpoints";
 import type { CandidateSource } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
+import { registeredAsWorker, type WorkerFileFilter } from "@/features/applications/types";
 
 const PAGE_SIZE = 15;
 
 export interface CandidatesPageFillter {
 	search?: string;
 	source?: CandidateSource;
+	worker?: WorkerFileFilter;
 	page?: number;
 	pageSize?: number;
 }
@@ -33,6 +35,7 @@ const getSliceServerFn = createServerFn({
 				pageSize: data.pageSize,
 				search: data.search,
 				...(data.source ? { source: [data.source] } : {}),
+				registeredAsWorker: registeredAsWorker(data.worker),
 			},
 			await getFnOptions(),
 		);
@@ -57,6 +60,7 @@ export function useGetCandidatesSlice(search: CandidatesPageFillter) {
 				data: {
 					search: search.search,
 					source: search.source,
+					worker: search.worker,
 					page: pageParam,
 					pageSize: PAGE_SIZE,
 				},

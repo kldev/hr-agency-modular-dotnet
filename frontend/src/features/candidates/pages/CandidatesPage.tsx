@@ -54,6 +54,10 @@ const CandidatesPage: React.FC = () => {
 				onSourceChange={(s) => {
 					navigate({ search: (previous) => ({ ...previous, source: s }) });
 				}}
+				worker={search.worker ?? null}
+				onWorkerChange={(worker) => {
+					navigate({ search: (previous) => ({ ...previous, worker: worker ?? undefined }) });
+				}}
 				onAdd={() => {
 					formRef.current?.create();
 				}}

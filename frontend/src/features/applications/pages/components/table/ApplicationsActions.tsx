@@ -13,10 +13,12 @@ import type { JobApplicationsActionsType } from "../forms";
 
 interface AplicationsProps {
 	id: string;
+	/** Set once a workers' file was opened from this application; a second one would be refused. */
+	workerId?: string | null;
 	onAction: (action: JobApplicationsActionsType) => void;
 }
 
-export function ApplicationsActions({ onAction, id }: AplicationsProps) {
+export function ApplicationsActions({ onAction, id, workerId }: AplicationsProps) {
 	const navigate = useNavigate();
 
 	return (
@@ -45,11 +47,22 @@ export function ApplicationsActions({ onAction, id }: AplicationsProps) {
 						action: () => onAction("schedule"),
 						dividerAfter: true,
 					},
-					{
-						label: "Register as worker",
-						icon: HardHat,
-						action: () => onAction("register-worker"),
-					},
+					workerId
+						? {
+								label: "Open worker file",
+								icon: HardHat,
+								action: () =>
+									navigate({
+										to: "/app/workers/$id",
+										params: { id: workerId },
+										search: { search: undefined, tab: undefined },
+									}),
+							}
+						: {
+								label: "Register as worker",
+								icon: HardHat,
+								action: () => onAction("register-worker"),
+							},
 				]}
 			/>
 		</div>

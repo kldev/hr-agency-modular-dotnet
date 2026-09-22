@@ -4,6 +4,7 @@ import type { CandidateSource, JobApplicationStatus } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
 import { getJobApplication, getJobApplicationsSlice } from "@/api/endpoints";
 import { applicationKeys } from "@/api/query-keys";
+import { registeredAsWorker, type WorkerFileFilter } from "../../types";
 import type { ApplicationFilters } from "../AplicationsPage";
 
 const PAGE_SIZE = 15;
@@ -16,6 +17,7 @@ const getApplicationsSliceServerFn = createServerFn({
 			search?: string;
 			source?: CandidateSource;
 			status?: JobApplicationStatus;
+			worker?: WorkerFileFilter;
 			page?: number;
 			pageSize?: number;
 		}) => input,
@@ -26,6 +28,7 @@ const getApplicationsSliceServerFn = createServerFn({
 				search: data.search ?? "",
 				...(data.source ? { source: [data.source] } : {}),
 				...(data.status ? { status: [data.status] } : {}),
+				registeredAsWorker: registeredAsWorker(data.worker),
 				page: data.page,
 				pageSize: data.pageSize,
 			},
@@ -53,6 +56,7 @@ export function useGetApplicationsSlice(fillter: ApplicationFilters) {
 					search: fillter.search,
 					source: fillter.source,
 					status: fillter.status,
+					worker: fillter.worker,
 					page: pageParam,
 					pageSize: PAGE_SIZE,
 				},
