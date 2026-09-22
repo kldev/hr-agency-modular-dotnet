@@ -362,6 +362,9 @@
 .time-sheet-panel-actions {
 	display: flex;
 	gap: var(--space-2);
+
+	/* Up to four decisions live here; on a narrow screen they belong on two rows, not off the edge. */
+	flex-wrap: wrap;
 }
 
 .time-sheet-comments {

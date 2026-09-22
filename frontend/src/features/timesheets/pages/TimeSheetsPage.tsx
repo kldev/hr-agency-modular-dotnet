@@ -16,7 +16,13 @@ import {
 } from "../drawers";
 import { monthFromSearch, type TimeSheetTab } from "../searchParams";
 import { formatMinutes, isPayroll, type MonthInView, monthLabel } from "../types";
-import { MonthNavigator, MyMonthPanel, TeamMonitoringTable, TwoPaneSheets } from "./components";
+import {
+	MonthNavigator,
+	MyMonthPanel,
+	TeamMonitoringCardList,
+	TeamMonitoringTable,
+	TwoPaneSheets,
+} from "./components";
 import {
 	useGetMyTimeSheet,
 	useGetTeamTimeSheets,
@@ -101,6 +107,8 @@ export function TimeSheetsPage() {
 	return (
 		<>
 			<Page
+				// Below the breakpoint the monitoring table is hidden and the cards take over.
+				className="has-mobile-view"
 				title="Time sheets"
 				description="Hours recorded month by month: your own, your people's, and the months waiting on a decision."
 				loading={mine.isPending || team.isPending}
@@ -138,7 +146,10 @@ export function TimeSheetsPage() {
 								<CalendarClock size={24} />
 							</EmptyState>
 						) : (
-							<TeamMonitoringTable rows={teamRows} month={month} />
+							<>
+								<TeamMonitoringTable rows={teamRows} month={month} />
+								<TeamMonitoringCardList rows={teamRows} month={month} />
+							</>
 						)}
 					</TabPanel>
 				) : null}

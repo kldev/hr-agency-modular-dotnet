@@ -80,27 +80,30 @@ export function TimeSheetPanel({
 				</div>
 			</div>
 
-			<table className="table">
-				<thead>
-					<tr>
-						<th className="table-header-md">Day</th>
-						<th className="table-header-ssm">From</th>
-						<th className="table-header-ssm">Worked</th>
-						<th>Note</th>
-					</tr>
-				</thead>
-
-				<tbody>
-					{sheet.days.map((day) => (
-						<tr key={day.date}>
-							<td className="table-figure">{formatDate(day.date)}</td>
-							<td className="table-figure">{toTimeOfDay(day.startsAt)}</td>
-							<td className="table-figure">{formatMinutes(Number(day.minutes))}</td>
-							<td>{day.note}</td>
+			{/* In a container so the four columns scroll on a narrow screen instead of spilling out. */}
+			<div className="table-container">
+				<table className="table">
+					<thead>
+						<tr>
+							<th className="table-header-md">Day</th>
+							<th className="table-header-ssm">From</th>
+							<th className="table-header-ssm">Worked</th>
+							<th>Note</th>
 						</tr>
-					))}
-				</tbody>
-			</table>
+					</thead>
+
+					<tbody>
+						{sheet.days.map((day) => (
+							<tr key={day.date}>
+								<td className="table-figure">{formatDate(day.date)}</td>
+								<td className="table-figure">{toTimeOfDay(day.startsAt)}</td>
+								<td className="table-figure">{formatMinutes(Number(day.minutes))}</td>
+								<td>{day.note}</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 
 			{sheet.comments.length === 0 ? null : (
 				<div className="time-sheet-comments">
