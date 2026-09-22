@@ -27,6 +27,8 @@ public static class MapEndpoints
         OrgStructure.Endpoint.Map(app);
         Worker.Endpoint.Map(app);
         Assignment.Endpoint.Map(app);
+        AgencyEmployment.Endpoint.Map(app);
+        TimeSheets.Endpoint.Map(app);
 
         MapPlatformSeeder(app);
     }

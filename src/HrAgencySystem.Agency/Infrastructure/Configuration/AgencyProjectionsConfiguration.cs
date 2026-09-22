@@ -20,6 +20,34 @@ internal static class AgencyProjectionsConfiguration
                 .Schema.For<OrgStructureProjection>()
                 .DatabaseSchemaName(SchemaName)
                 .Index(x => new { x.OrganizationId });
+
+            // One document per person and per sheet; both streams are derived from what they are
+            // about, so a snapshot keyed by the stream id is already keyed by the right thing.
+            options.Projections.Snapshot<AgencyEmploymentProjection>(SnapshotLifecycle.Async);
+
+            options
+                .Schema.For<AgencyEmploymentProjection>()
+                .DatabaseSchemaName(SchemaName)
+                .Index(x => new { x.OrganizationId, x.UserId });
+
+            options.Projections.Snapshot<TimeSheetProjection>(SnapshotLifecycle.Async);
+
+            options
+                .Schema.For<TimeSheetProjection>()
+                .DatabaseSchemaName(SchemaName)
+                .Index(x => new
+                {
+                    x.OrganizationId,
+                    x.Year,
+                    x.Month,
+                })
+                .Index(x => new
+                {
+                    x.OrganizationId,
+                    x.UserId,
+                    x.Year,
+                    x.Month,
+                });
         }
     }
 }

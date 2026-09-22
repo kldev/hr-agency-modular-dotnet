@@ -286,6 +286,39 @@ internal static class ApiEndpoints
         public const string Subordinates = $"{OrgStructureBase}/subordinates/{{userId:guid}}";
     }
 
+    /// <summary>What somebody is to this agency: the contract they work for us on.</summary>
+    internal static class AgencyEmployments
+    {
+        private const string EmploymentsBase = $"{Base}/agency-employments";
+
+        public const string List = EmploymentsBase;
+        public const string Start = EmploymentsBase;
+        public const string Get = $"{EmploymentsBase}/{{userId:guid}}";
+        public const string Terms = $"{EmploymentsBase}/{{userId:guid}}/terms";
+        public const string End = $"{EmploymentsBase}/{{userId:guid}}/end";
+    }
+
+    /// <summary>The hours register: one sheet per person per month.</summary>
+    internal static class TimeSheets
+    {
+        private const string TimeSheetsBase = $"{Base}/timesheets";
+        private const string Sheet = $"{TimeSheetsBase}/{{userId:guid}}/{{year:int}}/{{month:int}}";
+
+        public const string Mine = $"{TimeSheetsBase}/my";
+        public const string Team = $"{TimeSheetsBase}/team";
+        public const string Settlement = $"{TimeSheetsBase}/settlement";
+
+        public const string MyDays = $"{TimeSheetsBase}/my/days";
+        public const string MyDay = $"{TimeSheetsBase}/my/days/{{date}}";
+        public const string MySubmit = $"{TimeSheetsBase}/my/submit";
+
+        public const string Get = Sheet;
+        public const string Approve = $"{Sheet}/approve";
+        public const string Return = $"{Sheet}/return";
+        public const string Settle = $"{Sheet}/settle";
+        public const string Comments = $"{Sheet}/comments";
+    }
+
     internal static class Positions
     {
         private const string PositionsBase = $"{Base}/positions";

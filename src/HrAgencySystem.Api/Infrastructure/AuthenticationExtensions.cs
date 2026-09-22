@@ -1,4 +1,5 @@
 using System.Text;
+using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Identity.Infrastructure.IAM;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -38,7 +39,8 @@ public static class AuthenticationExtensions
 
         services
             .AddAuthorizationBuilder()
-            .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+            .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())
+            .AddPayrollPolicy();
 
         services.Configure<JwtConfig>(configuration.GetSection(JwtConfig.Section));
 

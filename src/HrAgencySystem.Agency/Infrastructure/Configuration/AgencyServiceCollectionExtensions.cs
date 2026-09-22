@@ -13,6 +13,8 @@ internal static class AgencyServiceCollectionExtensions
         {
             services.AddScoped<IAgencyService, AgencyService>();
             services.AddScoped<IOrgStructureQueryRepository, OrgStructureQueryRepository>();
+            services.AddScoped<IAgencyEmploymentQueryRepository, AgencyEmploymentQueryRepository>();
+            services.AddScoped<ITimeSheetQueryRepository, TimeSheetQueryRepository>();
         }
     }
 }

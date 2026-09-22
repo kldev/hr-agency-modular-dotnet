@@ -64,6 +64,18 @@ public sealed partial class HrAgencyShowcaseSeeder
             organization.OrganizationId
         );
 
+        // After the chart, because a month is approved by whoever is above the person in it.
+        var filledSheets = await new TimeRecordScenario(bus, session).Seed(
+            organization.OrganizationId,
+            () => WaitForProjections()
+        );
+
+        logger.LogInformation(
+            "Filled {SheetCount} time sheets for organization {OrganizationId}",
+            filledSheets,
+            organization.OrganizationId
+        );
+
         var companyIds = await CreateCompanies(config, organization, userIds);
 
         logger.LogInformation(
@@ -157,6 +169,11 @@ public sealed partial class HrAgencyShowcaseSeeder
             "Created {UnitCount} org units for organization {OrganizationId}",
             unitCount,
             organization.OrganizationId
+        );
+
+        await new TimeRecordScenario(bus, session).Seed(
+            organization.OrganizationId,
+            () => WaitForProjections()
         );
 
         var companyIds = await CreateCompanies(config, organization, userIds);

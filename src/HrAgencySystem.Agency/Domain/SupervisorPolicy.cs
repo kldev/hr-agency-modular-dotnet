@@ -131,6 +131,47 @@ public static class SupervisorPolicy
         return path;
     }
 
+    /// <summary>
+    /// Whether one person stands above another anywhere in the chart - their direct supervisor, or
+    /// anybody further up the same line.
+    /// <para>
+    /// Asked at the moment of the action rather than frozen onto the sheet, and that is deliberate:
+    /// a month is closed once and whoever is the supervisor <em>now</em> is the one who should be
+    /// closing it. A leave request is the opposite case and freezes its approver, because a request
+    /// waiting for an answer must not change hands underneath the person deciding.
+    /// </para>
+    /// </summary>
+    public static bool IsAbove(IReadOnlyList<OrgUnit> units, Guid supervisorId, Guid userId)
+    {
+        if (supervisorId == userId)
+            return false;
+
+        var unit = units.FirstOrDefault(candidate => candidate.HasMember(userId));
+
+        if (unit is null)
+            return false;
+
+        var current = unit;
+
+        while (true)
+        {
+            // Their own unit's head counts only when it is somebody else - otherwise the walk would
+            // stop at the person asking and never reach whoever is actually above them.
+            if (current.HeadUserId is { } head && head != userId && head == supervisorId)
+                return true;
+
+            if (current.ParentId is not { } parentId)
+                return false;
+
+            var parent = units.FirstOrDefault(candidate => candidate.UnitId == parentId);
+
+            if (parent is null)
+                return false;
+
+            current = parent;
+        }
+    }
+
     private static Guid? WalkUp(IReadOnlyList<OrgUnit> units, OrgUnit unit, Guid userId)
     {
         var current = unit;
