@@ -19,6 +19,7 @@ public static class MapEndpoints
         Candidate.Endpoint.Map(app);
         JobApplication.Endpoint.Map(app);
         Public.Endpoint.Map(app);
+        Internal.Endpoint.Map(app);
         Interviews.Endpoint.Map(app);
         Suggestion.Endpoint.Map(app);
         Organization.Endpoint.Map(app);

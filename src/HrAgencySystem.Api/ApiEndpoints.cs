@@ -413,6 +413,21 @@ internal static class ApiEndpoints
     }
 
     // Anonymous, excluded from OpenAPI: the feed files served next to the public job board.
+    /// <summary>
+    /// For programs holding a service key - the public job board. Keyed by the agency's slug, never
+    /// its id: the board has no business knowing tenant ids, and the slug is in its URL anyway.
+    /// </summary>
+    internal static class Internal
+    {
+        private const string BoardBase = $"{Base}/internal/boards/{{slug}}";
+
+        public const string Board = BoardBase;
+        public const string FeedJson = $"{BoardBase}/feed.json";
+        public const string FeedXml = $"{BoardBase}/feed.xml";
+        public const string Post = $"{BoardBase}/posts/{{postSlug}}";
+        public const string Applications = $"{BoardBase}/posts/{{postSlug}}/applications";
+    }
+
     internal static class Public
     {
         public const string Group = "p";

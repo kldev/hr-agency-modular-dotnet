@@ -62,6 +62,12 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<OrganizationSlugReservation>("organization");
     }
 
+    public async Task CleanOrganizations()
+    {
+        await CleanTable<OrganizationSlugReservation>("organization");
+        await CleanTable<HrAgencySystem.Organization.Projections.OrganizationProjection>("organization");
+    }
+
     public async Task CleanCompanyTaxIds()
     {
         await CleanTable<CompanyTaxIdReservation>("company");
@@ -119,6 +125,11 @@ public sealed class DatabaseCleaner(string connectionString)
     {
         await CleanTable<CandidateEmailReservation>("recruitment");
         await CleanTable<CandidateProjection>("recruitment");
+    }
+
+    public async Task CleanApiKeys()
+    {
+        await CleanTable<ServiceApiKey>("identity");
     }
 
     public async Task CleanJobApplications()
