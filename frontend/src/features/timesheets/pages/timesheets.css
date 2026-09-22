@@ -204,6 +204,88 @@
 	.time-sheet-approvals {
 		grid-template-columns: minmax(0, 1fr);
 	}
+
+	/*
+	 * The same breakpoint every list in the application uses to become cards, and the same trick:
+	 * the day list carries `data-mobile-view`, which turns itself on here, so the calendar only has
+	 * to turn itself off. Seven columns below this width leave a cell too small to read or to hit.
+	 */
+	.time-sheet-month {
+		display: none;
+	}
+}
+
+.time-sheet-day-list {
+	border: 1px solid var(--color-border);
+	border-radius: 3px;
+
+	background: var(--color-surface);
+
+	overflow: hidden;
+}
+
+.time-sheet-day-row {
+	display: flex;
+	align-items: center;
+	gap: var(--space-3);
+
+	width: 100%;
+
+	/* Comfortably past the 44px a finger needs, since this exists for touch in the first place. */
+	min-height: 52px;
+	padding: var(--space-2) var(--space-3);
+
+	border: 0;
+	border-bottom: 1px solid var(--color-border-subtle);
+
+	background: transparent;
+
+	text-align: left;
+}
+
+.time-sheet-day-list li:last-child .time-sheet-day-row {
+	border-bottom: 0;
+}
+
+.time-sheet-day-row-weekend {
+	background: var(--color-surface-subtle);
+}
+
+.time-sheet-day-row-readonly {
+	cursor: default;
+}
+
+.time-sheet-day-row-date {
+	display: flex;
+	align-items: baseline;
+	gap: var(--space-2);
+
+	flex: 0 0 4.5rem;
+}
+
+.time-sheet-day-row-weekday {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+}
+
+.time-sheet-day-row-body {
+	display: flex;
+	align-items: baseline;
+	gap: var(--space-2);
+
+	flex-wrap: wrap;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.time-sheet-day-row-empty {
+	color: var(--color-text-muted);
+	font-size: var(--font-size-sm);
+}
+
+.time-sheet-day-row-chevron {
+	flex: 0 0 auto;
+	color: var(--color-text-muted);
 }
 
 .time-sheet-queue {

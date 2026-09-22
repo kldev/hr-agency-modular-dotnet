@@ -18,6 +18,7 @@ import {
 } from "../../types";
 import { useSubmitTimeSheet } from "../hooks";
 import { TimeSheetCalendar } from "./TimeSheetCalendar";
+import { TimeSheetDayList } from "./TimeSheetDayList";
 
 interface Props {
 	month: MonthInView;
@@ -89,7 +90,19 @@ export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props
 				</div>
 			) : null}
 
+			{/*
+			 * Two shapes of the same month, one of them hidden by CSS. The calendar is worth keeping
+			 * wherever it fits - a month is a grid in everybody's head - and the list is what a phone
+			 * can actually show, so neither is a compromise for the other.
+			 */}
 			<TimeSheetCalendar
+				month={month}
+				days={days}
+				readOnly={!editable}
+				onSelectDay={(date, day: WorkDay | null) => dayRef.current?.saveDay({ date, day })}
+			/>
+
+			<TimeSheetDayList
 				month={month}
 				days={days}
 				readOnly={!editable}
