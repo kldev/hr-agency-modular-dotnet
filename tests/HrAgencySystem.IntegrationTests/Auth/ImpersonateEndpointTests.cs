@@ -148,7 +148,7 @@ public sealed class ImpersonateEndpointTests(
         client.WithOrganizationId(organizationId);
         client.WithUserId(recruiter);
 
-        var response = await client.PostAsync($"/api/auth/impersonate/{target}", null);
+        var response = await client.PostAsync($"/api/user/impersonate/{target}", null);
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
@@ -175,7 +175,7 @@ public sealed class ImpersonateEndpointTests(
         Client.WithOrganizationId(organizationId);
         Client.WithUserId(adminId);
 
-        return await Client.PostAsync($"/api/auth/impersonate/{targetId}", null);
+        return await Client.PostAsync($"/api/user/impersonate/{targetId}", null);
     }
 
     private static Dictionary<string, string> Claims(string token) =>

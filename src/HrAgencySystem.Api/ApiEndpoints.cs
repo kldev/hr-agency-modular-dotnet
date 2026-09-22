@@ -17,7 +17,13 @@ internal static class ApiEndpoints
         public const string Current = $"{Base}/user/me";
         public const string OwnerLogin = $"{Base}/owner/login";
         public const string CurrentOwner = $"{Base}/owner/me";
-        public const string Impersonate = $"{Base}/auth/impersonate/{{userId:guid}}";
+
+        // Not under /api/auth, although it belongs to this area and mints a token: everything on
+        // that prefix is anonymous, and the front end's proxy relies on it - it deliberately sends
+        // nothing under /api/auth, because signing in and refreshing carry their own credential and
+        // renewing one on their behalf would loop. This call is an administrator's authenticated
+        // request, so it sits beside the other authenticated endpoint here, /api/user/me.
+        public const string Impersonate = $"{Base}/user/impersonate/{{userId:guid}}";
     }
 
     internal static class Users

@@ -9,7 +9,7 @@ internal static class MapImpersonate
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        // POST /api/auth/impersonate/{userId}
+        // POST /api/user/impersonate/{userId}
         group
             .MapPost(ApiEndpoints.Auth.Impersonate, Handler)
             .WithSummary("Sign in as another member of the organization, without their password")
