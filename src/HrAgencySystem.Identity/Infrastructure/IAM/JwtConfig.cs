@@ -14,4 +14,9 @@ public class JwtConfig
     /// How long a refresh token stays valid, counted from the login. Rotation inherits the date, so
     /// this is the whole session length - after it the user signs in again.
     public int RefreshTokenExpiresInDays { get; set; } = 30;
+
+    /// How long a token issued by signing in as somebody else lasts. Much shorter than a login, and
+    /// there is no refresh token to go with it, so the session ends on its own rather than because
+    /// anybody remembered to end it.
+    public int ImpersonationExpiresInMinutes { get; set; } = 30;
 }

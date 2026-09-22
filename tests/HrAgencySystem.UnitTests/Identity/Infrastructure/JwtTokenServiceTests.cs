@@ -43,7 +43,58 @@ public sealed class JwtTokenServiceTests
         Assert.Equal(user.OrganizationId.ToString(), claims[AppClaims.OrganizationId]);
     }
 
-    private static JwtTokenService Service(int expiresInHours = 6) =>
+    [Theory]
+    [InlineData(5)]
+    [InlineData(30)]
+    [InlineData(120)]
+    public void GenerateImpersonationToken_ExpiresAfterTheConfiguredNumberOfMinutes(int minutes)
+    {
+        var token = Service(impersonationExpiresInMinutes: minutes)
+            .GenerateImpersonationToken(User(), Guid.NewGuid());
+
+        var written = new JwtSecurityTokenHandler().ReadJwtToken(token.Value);
+
+        Assert.Equal(Now.AddMinutes(minutes), token.ExpiresAt);
+        Assert.Equal(Now.AddMinutes(minutes).UtcDateTime, written.ValidTo);
+    }
+
+    /// <summary>
+    /// The point of the whole feature: authorization downstream sees the target and nothing else, so
+    /// an administrator standing in for somebody gets exactly what that person gets - no more, and
+    /// no read-only half measure either. The extra claim only says who is standing in.
+    /// </summary>
+    [Fact]
+    public void GenerateImpersonationToken_IsTheTargetsTokenPlusTheAdministratorsName()
+    {
+        var user = User();
+        var admin = Guid.NewGuid();
+
+        var token = Service().GenerateImpersonationToken(user, admin);
+
+        var claims = new JwtSecurityTokenHandler()
+            .ReadJwtToken(token.Value)
+            .Claims.ToDictionary(x => x.Type, x => x.Value);
+
+        Assert.Equal(user.Id.ToString(), claims[AppClaims.UserId]);
+        Assert.Equal(user.OrganizationId.ToString(), claims[AppClaims.OrganizationId]);
+        Assert.Equal(user.Role.ToString(), claims[AppClaims.Role]);
+        Assert.Equal(admin.ToString(), claims[AppClaims.ImpersonatedBy]);
+    }
+
+    [Fact]
+    public void GenerateUserToken_SaysNobodyIsStandingInForTheUser()
+    {
+        var token = Service().GenerateUserToken(User());
+
+        var claims = new JwtSecurityTokenHandler().ReadJwtToken(token.Value).Claims;
+
+        Assert.DoesNotContain(claims, claim => claim.Type == AppClaims.ImpersonatedBy);
+    }
+
+    private static JwtTokenService Service(
+        int expiresInHours = 6,
+        int impersonationExpiresInMinutes = 30
+    ) =>
         new(
             Options.Create(
                 new JwtConfig
@@ -52,6 +103,7 @@ public sealed class JwtTokenServiceTests
                     Audience = "hr-agency",
                     SecretKey = "SuperSecretKeyForDemoPurposesOnly-AtLeast32Bytes!",
                     ExpiresInHours = expiresInHours,
+                    ImpersonationExpiresInMinutes = impersonationExpiresInMinutes,
                 }
             ),
             new FixedClock(Now)

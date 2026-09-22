@@ -17,6 +17,7 @@ internal static class ApiEndpoints
         public const string Current = $"{Base}/user/me";
         public const string OwnerLogin = $"{Base}/owner/login";
         public const string CurrentOwner = $"{Base}/owner/me";
+        public const string Impersonate = $"{Base}/auth/impersonate/{{userId:guid}}";
     }
 
     internal static class Users

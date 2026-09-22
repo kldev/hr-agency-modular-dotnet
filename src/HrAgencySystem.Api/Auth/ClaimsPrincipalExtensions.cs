@@ -29,7 +29,8 @@ public static class ClaimsPrincipalExtensions
             email,
             orgId,
             principal.GetOrganizationRole(),
-            fullName ?? ""
+            fullName ?? "",
+            principal.GetImpersonatedBy()
         );
     }
 
@@ -47,6 +48,14 @@ public static class ClaimsPrincipalExtensions
             throw new InvalidOperationException("Authenticated user email claim is missing.");
 
         return new OwnerAuthenticated(userId, email, principal.GetPlatformRole());
+    }
+
+    /// <summary>Optional by design: an ordinary token simply does not carry this claim.</summary>
+    private static Guid? GetImpersonatedBy(this ClaimsPrincipal principal)
+    {
+        var value = principal.FindFirst(AppClaims.ImpersonatedBy)?.Value;
+
+        return Guid.TryParse(value, out var impersonatedBy) ? impersonatedBy : null;
     }
 
     private static OrganizationRole GetOrganizationRole(this ClaimsPrincipal principal)

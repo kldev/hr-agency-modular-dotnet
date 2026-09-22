@@ -4,12 +4,18 @@ using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Api.Auth;
 
+/// <param name="ImpersonatedBy">
+/// The administrator signed in as this person, or null on an ordinary session. It is read straight
+/// off the token like every other field here - whether a session is delegated, and by whom, is a
+/// fact about the session, the same shelf as the role and the organization.
+/// </param>
 public record AppUserAuthenticated(
     Guid UserId,
     string Email,
     Guid OrganizationId,
     OrganizationRole Role,
-    string FullName
+    string FullName,
+    Guid? ImpersonatedBy = null
 )
 {
     public static ValueTask<AppUserAuthenticated?> BindAsync(HttpContext context)
