@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobApplications.Notes.Create;
@@ -40,4 +41,4 @@ internal static class MapCreateNote
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-internal sealed record CreateNoteRequest(string Note);
+internal sealed record CreateNoteRequest([property: Description("The note's text.")] string Note);

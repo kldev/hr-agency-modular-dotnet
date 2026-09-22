@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Interviews.ChangeInterviewer;
@@ -35,7 +36,10 @@ internal static class MapChangeInterviewer
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed record ChangeInterviewerRequest(Guid InterviewerId, string? Note)
+public sealed record ChangeInterviewerRequest(
+    [property: Description("The user who runs the interview from now on.")] Guid InterviewerId,
+    [property: Description("Optional note on the change.")] string? Note
+)
 {
     public ChangeInterviewer ToCommand(Guid interviewId, Guid organizationId, Guid userId) =>
         new(interviewId, organizationId, InterviewerId, Note ?? "", userId);

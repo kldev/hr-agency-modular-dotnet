@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.JobApplications.ChangeStatus;
@@ -37,9 +38,15 @@ internal static class MapChangeStatus
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed record ChangeJobApplicationStatusRequest(
-    JobApplicationUpdateStatus Status,
-    string? Note,
-    Guid? InterviewId
+    [property: Description(
+        "Screening, Interview, Assessment, Offer, Hired, Rejected or Withdrawn. Which moves are allowed depends on the current status."
+    )]
+        JobApplicationUpdateStatus Status,
+    [property: Description("Optional note on the decision.")] string? Note,
+    [property: Description(
+        "The interview the application moves to - required when Status is Interview, ignored otherwise."
+    )]
+        Guid? InterviewId
 )
 {
     public ChangeJobApplicationStatus ToCommand(

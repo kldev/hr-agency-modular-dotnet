@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Interviews.Schedule;
@@ -37,15 +38,21 @@ internal static class MapSchedule
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed record ScheduleInterviewRequest(
-    Guid JobApplicationId,
-    DateTime ScheduledAt,
-    InterviewFormat Format,
-    InterviewType InterviewType,
-    string Note,
-    Guid InterviewerId,
-    string ScheduledTimezone = "Europe/Warsaw",
-    string Location = "",
-    string MeetingUrl = ""
+    [property: Description("The application the interview is for.")] Guid JobApplicationId,
+    [property: Description(
+        "The local date and time of the interview, without an offset - read in ScheduledTimezone and stored as an instant, so 10:00 in Europe/Warsaw stays 10:00 there across daylight saving."
+    )]
+        DateTime ScheduledAt,
+    [property: Description("Online, OnSite or Phone.")] InterviewFormat Format,
+    [property: Description("Hr, Technical, Client or Final.")] InterviewType InterviewType,
+    [property: Description("Notes for the interviewer. May be empty.")] string Note,
+    [property: Description("The user who runs the interview.")] Guid InterviewerId,
+    [property: Description(
+        "IANA time zone ScheduledAt is in, e.g. \"Europe/Warsaw\" (the default)."
+    )]
+        string ScheduledTimezone = "Europe/Warsaw",
+    [property: Description("Where to go, for an OnSite interview.")] string Location = "",
+    [property: Description("The meeting link, for an Online interview.")] string MeetingUrl = ""
 )
 {
     public ScheduleInterview ToCommand(Guid organizationId, Guid createdBy)

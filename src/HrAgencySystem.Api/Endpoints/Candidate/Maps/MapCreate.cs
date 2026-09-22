@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Candidates.Create;
@@ -37,12 +38,18 @@ internal static class MapCreate
 
 // ReSharper disable once ClassNeverInstantiated.Global
 internal sealed record CreateCandidateRequest(
-    string Email,
-    string PhoneNumber,
-    string FirstName,
-    string LastName,
-    CandidateSource Source,
-    string Note
+    [property: Description(
+        "The candidate's e-mail address - unique within the agency, one person is one candidate."
+    )]
+        string Email,
+    [property: Description("The candidate's phone number.")] string PhoneNumber,
+    [property: Description("First name.")] string FirstName,
+    [property: Description("Last name.")] string LastName,
+    [property: Description(
+        "Where the candidate came from, e.g. Direct, Referral, Sourcing, JustJoinIt, Linkedin."
+    )]
+        CandidateSource Source,
+    [property: Description("Free notes about the candidate. May be empty.")] string Note
 )
 {
     public CreateCandidate ToCommand(Guid organizationId, Guid createdBy) =>

@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Interviews.Reschedule;
@@ -35,11 +36,20 @@ internal static class MapReschedule
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed record RescheduleInterviewRequest(
-        DateTime ScheduledAt,
-        string Note,
-        string ScheduledTimezone = "Europe/Warsaw",
-        string Location = "",
-        string MeetingUrl = ""
+        [property: Description(
+            "The local date and time of the interview, without an offset - read in ScheduledTimezone and stored as an instant, so 10:00 in Europe/Warsaw stays 10:00 there across daylight saving."
+        )]
+            DateTime ScheduledAt,
+        [property: Description(
+            "Why it moved, or anything the interviewer should know. May be empty."
+        )]
+            string Note,
+        [property: Description(
+            "IANA time zone ScheduledAt is in, e.g. \"Europe/Warsaw\" (the default)."
+        )]
+            string ScheduledTimezone = "Europe/Warsaw",
+        [property: Description("Where to go, for an OnSite interview.")] string Location = "",
+        [property: Description("The meeting link, for an Online interview.")] string MeetingUrl = ""
     )
     {
         public RescheduleInterview ToCommand(

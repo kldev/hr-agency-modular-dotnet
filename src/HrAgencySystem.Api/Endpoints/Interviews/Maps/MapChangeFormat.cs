@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Interviews.ChangeFormat;
@@ -36,7 +37,10 @@ internal static class MapChangeFormat
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed record ChangeInterviewFormatRequest(InterviewFormat Format, string? Note)
+public sealed record ChangeInterviewFormatRequest(
+    [property: Description("Online, OnSite or Phone.")] InterviewFormat Format,
+    [property: Description("Optional note on the change.")] string? Note
+)
 {
     public ChangeInterviewFormat ToCommand(Guid interviewId, Guid organizationId, Guid userId) =>
         new(interviewId, organizationId, Note ?? "", Format, userId);

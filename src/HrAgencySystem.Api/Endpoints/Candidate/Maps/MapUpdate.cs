@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Candidates.Update;
@@ -35,10 +36,13 @@ internal static class MapUpdate
 
     // ReSharper disable once ClassNeverInstantiated.Global
     internal sealed record UpdateCandidateRequest(
-        string Phone,
-        string FirstName,
-        string LastName,
-        string Note
+        [property: Description("The candidate's phone number.")] string Phone,
+        [property: Description("First name.")] string FirstName,
+        [property: Description("Last name.")] string LastName,
+        [property: Description(
+            "Free notes about the candidate. Replaces the previous ones; may be empty."
+        )]
+            string Note
     )
     {
         public UpdateCandidate ToCommand(Guid organizationId, Guid candidateId, Guid modifiedBy) =>

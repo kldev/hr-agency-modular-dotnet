@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Recruitment.Application.Interviews.ChangeStatus;
@@ -36,7 +37,13 @@ internal static class MapChangeStatus
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed record ChangeInterviewStatusRequest(InterviewStatus Status, string? Note)
+public sealed record ChangeInterviewStatusRequest(
+    [property: Description(
+        "Planned, Confirmed, InProgress, Completed, Canceled, NoShow or Rescheduled."
+    )]
+        InterviewStatus Status,
+    [property: Description("Optional note on the change.")] string? Note
+)
 {
     public ChangeInterviewStatus ToCommand(Guid interviewId, Guid organizationId, Guid userId) =>
         new(interviewId, organizationId, Note ?? "", Status, userId);
