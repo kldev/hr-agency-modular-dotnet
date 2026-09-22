@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Trash2 } from "lucide-react";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import type { UserProjection } from "#/api/models";
 import { Avatar, Button } from "#/components/ui";
 import { ApiError } from "#/components/ui/ApiError";
@@ -37,7 +36,6 @@ const DrawerContent: React.FC<{
 	const { mutation: upload, progress } = useUploadUserAvatar({
 		onSuccess: () => {
 			upload.reset();
-			toast.success("Picture updated");
 			onSuccess();
 		},
 	});
@@ -45,7 +43,6 @@ const DrawerContent: React.FC<{
 	const remove = useRemoveUserAvatar({
 		onSuccess: () => {
 			remove.reset();
-			toast.success("Picture removed");
 			onSuccess();
 		},
 	});

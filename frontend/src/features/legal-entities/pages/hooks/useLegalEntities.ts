@@ -22,7 +22,8 @@ export type LegalEntitiesFilters = {
 };
 
 type MutationOptions = {
-	onSuccess: () => void;
+	/** Optional: most callers have nothing to add once the screen has already changed. */
+	onSuccess?: () => void;
 };
 
 const getLegalEntitiesSliceServerFn = createServerFn({ method: "GET" })
@@ -124,7 +125,7 @@ function useLegalEntityMutation<TVariables, TResult>(
 			await queryClient.invalidateQueries({ queryKey: projectsKeys.all });
 			await queryClient.invalidateQueries({ queryKey: suggestionKeys.all });
 
-			onSuccess();
+			onSuccess?.();
 		},
 	});
 

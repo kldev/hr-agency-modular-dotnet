@@ -1,6 +1,5 @@
 import axios from "axios";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type { DocumentCategory } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -45,7 +44,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting, progress } = useAttachProjectDocument({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Document attached");
 			onSuccess();
 			handleClose();
 		},

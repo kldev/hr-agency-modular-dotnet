@@ -40,7 +40,6 @@ export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props
 
 	const { mutation: submit, waiting } = useSubmitTimeSheet({
 		onSuccess: () => {
-			toast.success("Month sent for approval");
 			setConfirmSubmit(false);
 			onChanged();
 		},

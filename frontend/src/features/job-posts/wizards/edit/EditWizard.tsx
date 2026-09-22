@@ -46,11 +46,7 @@ function EditWizardForm({ jobPost }: { jobPost: JobPostProjection }) {
 
 	const [currentStep, setCurrentStep] = useState(0);
 
-	const { mutation } = useUpdateJobPost({
-		onSuccess: () => {
-			toast.success("Changes saved");
-		},
-	});
+	const { mutation } = useUpdateJobPost();
 
 	/* The projection carries only the id of the description, and step 0 shows it by name. */
 	const jobDescriptionQuery = useGetJobDescription(jobPost.jobDescriptionId);

@@ -42,13 +42,9 @@ export function LegalEntityWizard({
 
 	const editing = Boolean(entityId);
 
-	const create = useCreateLegalEntity({
-		onSuccess: () => toast.success("Legal entity created"),
-	});
+	const create = useCreateLegalEntity({});
 
-	const update = useUpdateLegalEntity({
-		onSuccess: () => toast.success("Legal entity updated"),
-	});
+	const update = useUpdateLegalEntity({});
 
 	const mutation = editing ? update.mutation : create.mutation;
 

@@ -1,6 +1,5 @@
 import { Check, X } from "lucide-react";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type { ProjectProjection, ProjectStatus } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -56,7 +55,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useChangeProjectStatus({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Status changed");
 			onSuccess();
 			handleClose();
 		},

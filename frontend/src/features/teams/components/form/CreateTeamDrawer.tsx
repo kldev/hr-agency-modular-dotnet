@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
 import type { CreateTeamRequest } from "@/api/models";
@@ -18,7 +17,6 @@ const FormContent: React.FC<{ onSuccess: () => void; handleClose: () => void }> 
 	const { mutation, waiting } = useCreateTeam({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Team created");
 			onSuccess();
 			handleClose();
 		},

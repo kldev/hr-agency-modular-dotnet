@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type { OrgUnitRow } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -25,7 +24,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useAddOrgUnitMember({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Person added to the unit");
 			onSuccess();
 			handleClose();
 		},

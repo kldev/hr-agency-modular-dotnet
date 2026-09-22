@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type { ProjectProjection } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -24,7 +23,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useChangeProjectLegalEntity({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Delivering company changed");
 			onSuccess();
 			handleClose();
 		},

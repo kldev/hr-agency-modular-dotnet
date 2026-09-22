@@ -44,13 +44,9 @@ export function WorkerWizard({
 
 	const steps = workerStepsFor({ mode: editing ? "edit" : "register", knownSource });
 
-	const register = useRegisterWorker({
-		onSuccess: () => toast.success("Worker registered"),
-	});
+	const register = useRegisterWorker({});
 
-	const update = useUpdateWorker({
-		onSuccess: () => toast.success("Worker updated"),
-	});
+	const update = useUpdateWorker({});
 
 	const mutation = editing ? update.mutation : register.mutation;
 

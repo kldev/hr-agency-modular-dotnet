@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { MyProfileResponse } from "#/api/models";
 import { Avatar, Button } from "#/components/ui";
 import { ApiError } from "#/components/ui/ApiError";
@@ -31,14 +30,12 @@ export function AvatarUploader({ profile }: AvatarUploaderProps) {
 	const { mutation: upload, progress } = useUploadOwnAvatar({
 		onSuccess: () => {
 			upload.reset();
-			toast.success("Picture updated");
 		},
 	});
 
 	const remove = useRemoveOwnAvatar({
 		onSuccess: () => {
 			remove.reset();
-			toast.success("Picture removed");
 		},
 	});
 

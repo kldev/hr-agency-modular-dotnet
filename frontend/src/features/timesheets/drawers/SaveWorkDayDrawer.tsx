@@ -39,7 +39,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useSaveWorkDay({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Day saved");
 			onSuccess();
 			handleClose();
 		},
@@ -47,7 +46,6 @@ const FormContent: React.FC<{
 
 	const removal = useRemoveWorkDay({
 		onSuccess: () => {
-			toast.success("Day removed");
 			onSuccess();
 			handleClose();
 		},

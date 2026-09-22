@@ -19,7 +19,8 @@ import { assignmentsKeys, workersKeys } from "@/api/query-keys";
 import { useProjectionWait } from "@/hooks";
 
 type MutationOptions = {
-	onSuccess: () => void;
+	/** Optional: most callers have nothing to add once the screen has already changed. */
+	onSuccess?: () => void;
 };
 
 const planAssignmentServerFn = createServerFn({ method: "POST" })
@@ -84,7 +85,7 @@ export function useAssignmentMutation<TVariables, TResult>(
 			await queryClient.invalidateQueries({ queryKey: assignmentsKeys.all });
 			await queryClient.invalidateQueries({ queryKey: workersKeys.all });
 
-			onSuccess();
+			onSuccess?.();
 		},
 	});
 

@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type { ContractStatus, ProjectProjection } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -50,7 +49,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useRecordProjectContract({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Contract recorded");
 			onSuccess();
 			handleClose();
 		},

@@ -26,11 +26,7 @@ export function CreateJobDescriptionWizard() {
 
 	const [currentStep, setCurrentStep] = useState(0);
 
-	const { mutation } = useCreateJobDescription({
-		onSuccess: () => {
-			toast.success("Job description created");
-		},
-	});
+	const { mutation } = useCreateJobDescription();
 
 	const empty: JobDescriptionFormValues = {
 		companyId: companyId ?? "",

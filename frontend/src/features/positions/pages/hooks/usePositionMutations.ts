@@ -7,7 +7,8 @@ import { positionsKeys, projectsKeys, suggestionKeys } from "@/api/query-keys";
 import { useProjectionWait } from "@/hooks";
 
 type MutationOptions = {
-	onSuccess: () => void;
+	/** Optional: most callers have nothing to add once the screen has already changed. */
+	onSuccess?: () => void;
 };
 
 const openPositionServerFn = createServerFn({ method: "POST" })
@@ -57,7 +58,7 @@ function usePositionMutation<TVariables, TResult>(
 			await queryClient.invalidateQueries({ queryKey: projectsKeys.all });
 			await queryClient.invalidateQueries({ queryKey: suggestionKeys.all });
 
-			onSuccess();
+			onSuccess?.();
 		},
 	});
 

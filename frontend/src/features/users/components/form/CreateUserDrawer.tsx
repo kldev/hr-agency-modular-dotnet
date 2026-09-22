@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
 import type { CreateUserRequest } from "@/api/models";
@@ -18,7 +17,6 @@ const FormContent: React.FC<{ onSuccess: () => void; handleClose: () => void }> 
 	const { mutation, waiting } = useCreateUser({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("User created");
 			onSuccess();
 			handleClose();
 		},

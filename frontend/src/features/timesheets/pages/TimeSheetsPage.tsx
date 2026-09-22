@@ -47,7 +47,6 @@ export function TimeSheetsPage() {
 
 	const { mutation: settle, waiting } = useSettleTimeSheet({
 		onSuccess: () => {
-			toast.success("Month settled");
 			setToSettle(null);
 		},
 

@@ -34,7 +34,8 @@ import { useProjectionWait } from "@/hooks";
  * selects the unit that was just created, and `mutation.data` is not settled yet at this point.
  */
 type MutationOptions<TResult = unknown> = {
-	onSuccess: (result: TResult) => void;
+	/** Optional: a caller whose screen already changed has nothing to add. */
+	onSuccess?: (result: TResult) => void;
 
 	/*
 	 * Only for the writes driven from a confirmation dialog or a bare button. A drawer renders the
@@ -103,7 +104,7 @@ function useOrgStructureMutation<TVariables, TResult>(
 
 			await queryClient.invalidateQueries({ queryKey: orgStructureKeys.all });
 
-			onSuccess(result);
+			onSuccess?.(result);
 		},
 
 		onError,

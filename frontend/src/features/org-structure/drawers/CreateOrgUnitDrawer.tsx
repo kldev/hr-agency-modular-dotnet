@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import { OrgUnitKind, type OrgUnitRow } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -44,7 +43,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useCreateOrgUnit({
 		onSuccess: (created) => {
 			mutation.reset();
-			toast.success("Unit created");
 			onSuccess(created.unitId);
 			handleClose();
 		},

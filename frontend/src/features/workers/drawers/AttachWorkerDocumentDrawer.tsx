@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type { WorkerDocumentCategory } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -40,7 +39,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting, progress } = useAttachWorkerDocument({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Document attached");
 			onSuccess();
 			handleClose();
 		},

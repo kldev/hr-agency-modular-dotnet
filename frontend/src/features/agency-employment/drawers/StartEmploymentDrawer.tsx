@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
@@ -33,7 +32,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useStartAgencyEmployment({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Employment recorded");
 			onSuccess();
 			handleClose();
 		},

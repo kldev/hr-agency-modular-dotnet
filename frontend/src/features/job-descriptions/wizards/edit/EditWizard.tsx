@@ -42,11 +42,7 @@ function EditWizardForm({ jobDescription }: { jobDescription: JobDescriptionProj
 
 	const [currentStep, setCurrentStep] = useState(0);
 
-	const { mutation } = useUpdateJobDescription({
-		onSuccess: () => {
-			toast.success("Changes saved");
-		},
-	});
+	const { mutation } = useUpdateJobDescription();
 
 	const form = useAppForm({
 		defaultValues: toFormValues(jobDescription),

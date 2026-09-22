@@ -1,6 +1,5 @@
 import { Pencil, UserMinus } from "lucide-react";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
 import type { TeamMemberSnapshot, TeamProjection } from "@/api/models";
 import { Button, ConfirmDialog, DetailOverviewHeader, ItemMark } from "@/components/ui";
 import { ActionMenu } from "@/components/ui/ActionMenu";
@@ -23,7 +22,6 @@ export function TeamMembersSection({ team, onRefresh }: TeamMembersSectionProps)
 	const { mutation: removeMutation } = useRemoveTeamMember({
 		onSuccess: () => {
 			removeMutation.reset();
-			toast.success("Member removed");
 			setPendingRemoval(null);
 			onRefresh();
 		},

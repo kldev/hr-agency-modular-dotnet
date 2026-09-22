@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type { EmailPurpose, ProjectProjection } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -34,7 +33,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useSetProjectEmailRecipients({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("E-mail addresses saved");
 			onSuccess();
 			handleClose();
 		},

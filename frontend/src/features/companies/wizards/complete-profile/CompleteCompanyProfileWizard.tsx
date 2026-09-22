@@ -27,7 +27,6 @@ export function CompleteCompanyProfileWizard({
 
 	const { mutation } = useCompleteCompanyProfile({
 		onSuccess: () => {
-			toast.success("Client data saved");
 			onSaved();
 		},
 	});

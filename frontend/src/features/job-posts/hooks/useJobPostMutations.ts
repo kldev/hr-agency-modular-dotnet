@@ -3,13 +3,20 @@ import { createJobPost, updateJobPost } from "#/api/endpoints";
 import type { CreatePostRequest, UpdateJobPostRequest } from "#/api/models";
 import { jobPostsKeys } from "#/api/query-keys";
 import { useProjectionWait } from "#/hooks";
-import type { OnSucess } from "#/types";
 
 type CreateJobPostVariables = {
 	request: CreatePostRequest;
 };
 
-export function useCreateJobPost({ onSuccess }: OnSucess) {
+/**
+ * What to do once the write went through. Optional: a wizard closes its own dialog, so most callers
+ * have nothing left to say.
+ */
+type MutationOptions = {
+	onSuccess?: () => void;
+};
+
+export function useCreateJobPost({ onSuccess }: MutationOptions = {}) {
 	const queryClient = useQueryClient();
 
 	const { wait, waiting } = useProjectionWait();
@@ -22,7 +29,7 @@ export function useCreateJobPost({ onSuccess }: OnSucess) {
 
 			await queryClient.invalidateQueries({ queryKey: jobPostsKeys.all });
 
-			onSuccess();
+			onSuccess?.();
 		},
 	});
 
@@ -37,7 +44,7 @@ type UpdateJobPostVariables = {
 	request: UpdateJobPostRequest;
 };
 
-export function useUpdateJobPost({ onSuccess }: OnSucess) {
+export function useUpdateJobPost({ onSuccess }: MutationOptions = {}) {
 	const queryClient = useQueryClient();
 
 	const { wait, waiting } = useProjectionWait();
@@ -55,7 +62,7 @@ export function useUpdateJobPost({ onSuccess }: OnSucess) {
 			 */
 			await queryClient.invalidateQueries({ queryKey: jobPostsKeys.all });
 
-			onSuccess();
+			onSuccess?.();
 		},
 	});
 

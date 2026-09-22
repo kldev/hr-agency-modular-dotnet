@@ -113,22 +113,17 @@ const OrgStructurePage: React.FC = () => {
 
 	const archive = useArchiveOrgUnit({
 		onSuccess: () => {
-			toast.success("Unit archived");
 			setPendingArchive(null);
 		},
 		onError: reportRefusal,
 	});
 
 	const clearHead = useClearOrgUnitHead({
-		onSuccess: () => {
-			toast.success("Head cleared");
-		},
 		onError: reportRefusal,
 	});
 
 	const removeMember = useRemoveOrgUnitMember({
 		onSuccess: () => {
-			toast.success("Taken out of the unit");
 			setPendingRemoval(null);
 		},
 		onError: reportRefusal,

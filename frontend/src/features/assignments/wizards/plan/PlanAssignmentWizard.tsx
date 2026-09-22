@@ -40,9 +40,7 @@ export function PlanAssignmentWizard({
 	const [currentStep, setCurrentStep] = useState(0);
 	const steps = planAssignmentStepsFor({ knownWorker, knownProject });
 
-	const { mutation } = usePlanAssignment({
-		onSuccess: () => toast.success("Assignment planned"),
-	});
+	const { mutation } = usePlanAssignment({});
 
 	const form = useAppForm({
 		defaultValues: initialValues,

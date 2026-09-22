@@ -1,6 +1,5 @@
 import { Download, Paperclip, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { ProjectDocument, ProjectProjection } from "@/api/models";
 import { Button, ConfirmDialog, DetailOverviewHeader } from "@/components/ui";
 import { formatDate } from "@/utlis/dateUtils";
@@ -22,7 +21,6 @@ export function ProjectDocumentsSection({
 
 	const { mutation } = useRemoveProjectDocument({
 		onSuccess: () => {
-			toast.success("Document removed");
 			setRemoving(null);
 			onRefresh();
 		},

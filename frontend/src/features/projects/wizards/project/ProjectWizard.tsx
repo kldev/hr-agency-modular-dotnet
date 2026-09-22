@@ -41,13 +41,9 @@ export function ProjectWizard({
 	const editing = Boolean(projectId);
 	const steps = projectStepsFor(editing ? "edit" : "create");
 
-	const create = useCreateProject({
-		onSuccess: () => toast.success("Project created"),
-	});
+	const create = useCreateProject({});
 
-	const update = useUpdateProject({
-		onSuccess: () => toast.success("Project updated"),
-	});
+	const update = useUpdateProject({});
 
 	const mutation = editing ? update.mutation : create.mutation;
 

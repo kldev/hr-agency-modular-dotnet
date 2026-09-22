@@ -32,7 +32,8 @@ import { projectsKeys } from "@/api/query-keys";
 import { useProjectionWait } from "@/hooks";
 
 type MutationOptions = {
-	onSuccess: () => void;
+	/** Optional: most callers have nothing to add once the screen has already changed. */
+	onSuccess?: () => void;
 };
 
 const createProjectServerFn = createServerFn({
@@ -150,7 +151,7 @@ function useProjectMutation<TVariables, TResult>(
 
 			await queryClient.invalidateQueries({ queryKey: projectsKeys.all });
 
-			onSuccess();
+			onSuccess?.();
 		},
 	});
 

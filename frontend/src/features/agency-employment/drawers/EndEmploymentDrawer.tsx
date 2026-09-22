@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
@@ -24,7 +23,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useEndAgencyEmployment({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Engagement ended");
 			onSuccess();
 			handleClose();
 		},

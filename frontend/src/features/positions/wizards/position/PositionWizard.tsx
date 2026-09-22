@@ -63,8 +63,8 @@ export function PositionWizard({
 	const editing = Boolean(positionId);
 	const steps = positionStepsFor({ knownProject: Boolean(knownProjectId) });
 
-	const open = useOpenPosition({ onSuccess: () => toast.success("Position opened") });
-	const update = useUpdatePosition({ onSuccess: () => toast.success("Position updated") });
+	const open = useOpenPosition({});
+	const update = useUpdatePosition({});
 
 	const mutation = editing ? update.mutation : open.mutation;
 

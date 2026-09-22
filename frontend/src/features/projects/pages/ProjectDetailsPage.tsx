@@ -1,6 +1,5 @@
 import { useParams } from "@tanstack/react-router";
 import { useRef } from "react";
-import { toast } from "sonner";
 import type { ContactRole, EmailPurpose } from "@/api/models";
 import {
 	AuditInformation,
@@ -110,11 +109,7 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 
 	const query = useGetProject(id);
 
-	const { mutation: removeContact } = useRemoveProjectContact({
-		onSuccess: () => {
-			toast.success("Contact removed");
-		},
-	});
+	const { mutation: removeContact } = useRemoveProjectContact({});
 
 	if (!id || query.isLoading || query.isError || !query.data) {
 		return (

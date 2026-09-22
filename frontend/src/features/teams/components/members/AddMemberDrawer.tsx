@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import { TeamRole } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -34,7 +33,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useAddTeamMember({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Member added");
 			onSuccess();
 			handleClose();
 		},

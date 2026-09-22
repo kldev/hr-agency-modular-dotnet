@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import type {
 	AssignmentProjection,
@@ -73,7 +72,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useRecordAssignmentComplianceItem({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Compliance item recorded");
 			onSuccess();
 			handleClose();
 		},

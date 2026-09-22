@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { createOrganizationUser } from "@/api/endpoints";
 import type { CreateUserForOrganizationRequest } from "@/api/models";
 import { DetailOverviewHeader } from "@/components/ui";
@@ -37,7 +36,6 @@ const FormContent: React.FC<{
 			await wait();
 
 			mutation.reset();
-			toast.success("User created");
 			onSuccess();
 			handleClose();
 		},

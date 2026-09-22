@@ -164,11 +164,7 @@ function CreateWizardForm({
 
 	const [currentStep, setCurrentStep] = useState(0);
 
-	const { mutation } = useCreateJobPost({
-		onSuccess: () => {
-			toast.success("Job post created");
-		},
-	});
+	const { mutation } = useCreateJobPost();
 
 	const form = useAppForm({
 		defaultValues: seed,

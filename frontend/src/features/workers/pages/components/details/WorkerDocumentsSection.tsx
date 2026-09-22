@@ -1,6 +1,5 @@
 import { FileText, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { WorkerDocument, WorkerProjection } from "@/api/models";
 import { Button, ConfirmDialog, DetailOverviewHeader, EmptyState } from "@/components/ui";
 import { formatFileSize } from "@/utlis";
@@ -24,7 +23,6 @@ export function WorkerDocumentsSection({
 
 	const { mutation } = useRemoveWorkerDocument({
 		onSuccess: () => {
-			toast.success("Document removed");
 			setRemoving(null);
 			onRefresh?.();
 		},

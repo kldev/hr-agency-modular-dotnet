@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import { OrganizationRoleApi, type UserProjection } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
@@ -36,7 +35,6 @@ const FormContent: React.FC<{
 	const { mutation, waiting } = useChangeUserRole({
 		onSuccess: () => {
 			mutation.reset();
-			toast.success("Role changed");
 			onSuccess();
 			handleClose();
 		},

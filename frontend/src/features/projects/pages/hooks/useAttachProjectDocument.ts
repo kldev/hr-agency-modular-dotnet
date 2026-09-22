@@ -50,7 +50,7 @@ export function useAttachProjectDocument({ onSuccess }: { onSuccess: () => void 
 			await queryClient.invalidateQueries({ queryKey: projectsKeys.all });
 
 			setProgress(0);
-			onSuccess();
+			onSuccess?.();
 		},
 
 		onError: () => {

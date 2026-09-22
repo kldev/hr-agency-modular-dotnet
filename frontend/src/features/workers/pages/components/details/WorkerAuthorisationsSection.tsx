@@ -1,6 +1,5 @@
 import { ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { WorkAuthorisation, WorkerProjection } from "@/api/models";
 import { getCountryLabel } from "@/components/labels";
 import { Button, ConfirmDialog, DetailOverviewHeader, EmptyState } from "@/components/ui";
@@ -29,7 +28,6 @@ export function WorkerAuthorisationsSection({
 
 	const { mutation } = useRemoveWorkAuthorisation({
 		onSuccess: () => {
-			toast.success("Permission removed");
 			setRemoving(null);
 			onRefresh?.();
 		},
