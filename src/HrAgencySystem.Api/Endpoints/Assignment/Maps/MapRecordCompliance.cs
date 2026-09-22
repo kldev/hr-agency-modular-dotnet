@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Compliance;
@@ -46,12 +47,18 @@ internal static class MapRecordCompliance
     }
 
     internal sealed record RecordAssignmentComplianceItemRequest(
-        ComplianceStatus Status,
-        string? ReferenceNumber = null,
-        DateOnly? ValidFrom = null,
-        DateOnly? ValidTo = null,
-        Guid? DocumentId = null,
-        string? Note = null
+        [property: Description(
+            "NotStarted, InProgress, Confirmed, NotApplicable or Expired. The requirement (e.g. A1) is in the route."
+        )]
+            ComplianceStatus Status,
+        [property: Description("The certificate's or notification's number, as issued.")]
+            string? ReferenceNumber = null,
+        [property: Description("First day it applies.")] DateOnly? ValidFrom = null,
+        [property: Description("Last day it applies; not before ValidFrom.")]
+            DateOnly? ValidTo = null,
+        [property: Description("Optional assignment document that proves it.")]
+            Guid? DocumentId = null,
+        [property: Description("Optional note.")] string? Note = null
     )
     {
         public RecordAssignmentComplianceItem ToCommand(

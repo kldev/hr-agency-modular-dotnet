@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -45,10 +46,14 @@ internal static class MapUpdateDocument
     }
 
     internal sealed record UpdateAssignmentDocumentRequest(
-        AssignmentDocumentCategory Category,
-        DateOnly DocumentDate,
-        DateOnly? ValidUntil = null,
-        string? Note = null
+        [property: Description(
+            "Contract, SocialSecurity, HostCountryNotification, Compliance or Other."
+        )]
+            AssignmentDocumentCategory Category,
+        [property: Description("The date on the document.")] DateOnly DocumentDate,
+        [property: Description("Last day it is valid, when it expires.")]
+            DateOnly? ValidUntil = null,
+        [property: Description("Optional note.")] string? Note = null
     )
     {
         public UpdateAssignmentDocumentMetadata ToCommand(

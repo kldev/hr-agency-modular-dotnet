@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
@@ -44,9 +45,18 @@ internal static class MapChangeStatus
     }
 
     internal sealed record ChangeAssignmentStatusRequest(
-        AssignmentStatus Status,
-        DateOnly? EndsOn = null,
-        string? Reason = null
+        [property: Description(
+            "Planned, Active, Completed, Interrupted or DidNotStart. Active needs the person through the pipeline; Completed and Interrupted end a posting that ran, DidNotStart one that never did."
+        )]
+            AssignmentStatus Status,
+        [property: Description(
+            "The day it actually ended, for Completed or Interrupted; omit to keep the planned end. Ignored for other statuses."
+        )]
+            DateOnly? EndsOn = null,
+        [property: Description(
+            "Optional note on the change - worth giving for Interrupted and DidNotStart."
+        )]
+            string? Reason = null
     )
     {
         public ChangeAssignmentStatus ToCommand(
