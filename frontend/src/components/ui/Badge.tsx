@@ -2,10 +2,12 @@ import clsx from "clsx";
 import { applicationSources, applicationStatuses } from "#/features/applications/types";
 import { assignmentStatusClass, assignmentStatuses } from "#/features/assignments/types";
 import { complianceStatusClass, complianceStatuses } from "#/features/compliance/types";
+import { contractRequiresTimeRecord, workerContractTypes } from "#/features/contracts/types";
 import { interviewFormats, interviewStatuses, interviewTypes } from "#/features/interviews/type";
 import { jobDescriptionStatuses } from "#/features/job-descriptions/type";
 import { jobPostsStatuses } from "#/features/job-posts/type";
 import { contractStatusClass, contractStatuses, projectStatuses } from "#/features/projects/types";
+import { timeSheetStatusClass, timeSheetStatuses } from "#/features/timesheets/types";
 import { workerStatusClass, workerStatuses } from "#/features/workers/types";
 import type {
 	AssignmentStatus,
@@ -20,6 +22,8 @@ import type {
 	JobPostStatus,
 	OpportunityStage,
 	ProjectStatus,
+	TimeSheetStatus,
+	WorkerContractType,
 	WorkerStatus,
 } from "@/api/models";
 
@@ -170,6 +174,41 @@ export function AssignmentStatusBadge({ status }: { status: AssignmentStatus }) 
 	return (
 		<span className={clsx("badge", assignmentStatusClass[status])}>
 			{assignmentStatuses[status]}
+		</span>
+	);
+}
+
+export function TimeSheetStatusBadge({ status }: { status: TimeSheetStatus }) {
+	return (
+		<span className={clsx("badge", timeSheetStatusClass[status])}>{timeSheetStatuses[status]}</span>
+	);
+}
+
+/**
+ * A month nobody has opened is not a zero month, and the monitoring screen exists for exactly this
+ * row - so it says so in words rather than showing an empty status cell.
+ */
+export function TimeSheetStatusOrNotStartedBadge({ status }: { status: TimeSheetStatus | null }) {
+	if (!status) return <span className="badge badge-inactive">Not started</span>;
+
+	return <TimeSheetStatusBadge status={status} />;
+}
+
+/** Whether this contract carries the duty to record hours - derived, exactly as the backend has it. */
+export function ContractTypeBadge({ contractType }: { contractType: WorkerContractType }) {
+	return (
+		<span
+			className={clsx(
+				"badge",
+				contractRequiresTimeRecord[contractType] ? "badge-active" : "badge-inactive",
+			)}
+			title={
+				contractRequiresTimeRecord[contractType]
+					? "Covered by the duty to record hours"
+					: "No duty to record hours"
+			}
+		>
+			{workerContractTypes[contractType]}
 		</span>
 	);
 }

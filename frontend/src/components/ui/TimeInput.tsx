@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { Check, ChevronDown, Clock } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface TimeInputProps {
 	value?: string;
@@ -10,26 +10,32 @@ interface TimeInputProps {
 	error?: string;
 	id?: string;
 	name?: string;
+
+	/**
+	 * The window the options are drawn from, in minutes since midnight. The default is an office
+	 * day, which is what every caller but one wants; a shift that starts at eleven at night is a
+	 * legal work day (it simply ends on the next one), so the register has to be able to say so.
+	 */
+	fromMinutes?: number;
+	toMinutes?: number;
 }
 
 const START_MINUTES = 8 * 60;
 const END_MINUTES = 22 * 60;
 const STEP = 5;
 
-function createTimeOptions(): string[] {
+function createTimeOptions(from: number, to: number): string[] {
 	const options: string[] = [];
 
-	for (let minutes = START_MINUTES; minutes <= END_MINUTES; minutes += STEP) {
+	for (let minutes = from; minutes <= to; minutes += STEP) {
 		const hours = Math.floor(minutes / 60);
 		const mins = minutes % 60;
 
-		options.push(`${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")} `);
+		options.push(`${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`);
 	}
 
 	return options;
 }
-
-const TIME_OPTIONS = createTimeOptions();
 
 export function TimeInput({
 	value = "",
@@ -39,9 +45,16 @@ export function TimeInput({
 	error,
 	id,
 	name,
+	fromMinutes = START_MINUTES,
+	toMinutes = END_MINUTES,
 }: TimeInputProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const [open, setOpen] = useState(false);
+
+	const options = useMemo(
+		() => createTimeOptions(fromMinutes, toMinutes),
+		[fromMinutes, toMinutes],
+	);
 
 	useEffect(() => {
 		if (!open) {
@@ -144,7 +157,7 @@ export function TimeInput({
 					"
 				>
 					<div role="listbox" aria-label="Select time" className="max-h-60 overflow-y-auto py-1">
-						{TIME_OPTIONS.map((time) => {
+						{options.map((time) => {
 							const selected = time === value;
 
 							return (

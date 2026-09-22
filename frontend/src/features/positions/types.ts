@@ -1,17 +1,15 @@
-import type { RateBasis, RateUnit, WorkerContractType } from "@/api/models";
+import type { RateBasis, RateUnit } from "@/api/models";
 
-/**
+/*
  * What we sign with the person, which is not the same question as how we engage them for the
  * client. `EngagementType` keys their compliance; this decides which contract template applies and
  * what has to be in it — one role can have people on an employment contract and on a mandate.
+ *
+ * The labels themselves moved to `features/contracts` once the agency register started asking the
+ * same question about our own people; re-exported here so this stays the address for anybody
+ * already reading positions.
  */
-export const workerContractTypes: Record<WorkerContractType, string> = {
-	EmploymentContract: "Employment contract",
-	TemporaryEmploymentContract: "Temporary employment contract",
-	MandateContract: "Mandate contract",
-	SelfEmployed: "Self-employed (B2B)",
-	Other: "Other",
-};
+export { workerContractTypes } from "#/features/contracts/types";
 
 export const rateUnits: Record<RateUnit, string> = {
 	Hourly: "per hour",

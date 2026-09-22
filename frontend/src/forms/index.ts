@@ -20,6 +20,7 @@ import {
 	FormSelectEnum,
 	FormTeamPicker,
 	FormTextAreaInput,
+	FormTimeInput,
 	FormToggle,
 	FormUserPicker,
 } from "./wrapper";
@@ -41,6 +42,7 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 		FormCountrySelect,
 		FormLanguageSelect,
 		FormArrayField,
+		FormTimeInput,
 	},
 	formComponents: { FormSaveChangesButton },
 	fieldContext,

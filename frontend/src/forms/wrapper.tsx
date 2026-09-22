@@ -455,6 +455,48 @@ export function FormDateTime({
 	);
 }
 
+type FormTimeInputProps = {
+	/** Widened where a night shift has to be enterable - see `TimeInput`. */
+	fromMinutes?: number;
+	toMinutes?: number;
+} & AppInputProps<string>;
+
+/**
+ * `TimeInput` on its own has been in the tree since the interview forms, but only ever inside
+ * `FormDateTime`, where a time is half of a moment. A work day is entered as a start and a length,
+ * so the time stands alone here.
+ */
+export function FormTimeInput({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	handleChange,
+	errors,
+	fromMinutes,
+	toMinutes,
+}: FormTimeInputProps) {
+	return (
+		<div className="form-field">
+			<label className="form-label" htmlFor={fieldName}>
+				{label}
+			</label>
+
+			<TimeInput
+				id={fieldName}
+				name={fieldName}
+				value={fieldValue ?? ""}
+				disabled={isSubmitting}
+				fromMinutes={fromMinutes}
+				toMinutes={toMinutes}
+				onChange={(value) => handleChange(value)}
+			/>
+
+			<FieldError errors={errors} />
+		</div>
+	);
+}
+
 type FormCountrySelectProps = {
 	label: string;
 	fieldName: string;
