@@ -20,6 +20,7 @@
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Teams\HrAgencySystem.Teams.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Workers\HrAgencySystem.Workers.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Forms\HrAgencySystem.Forms.csproj" />
   </ItemGroup>
 
   <ItemGroup>
