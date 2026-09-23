@@ -294,6 +294,7 @@ dotnet run --project src/HrAgencySystem.Api        # API           → http://lo
 dotnet run --project src/HrAgencySystem.Web        # job board     → http://localhost:5050
 dotnet run --project src/HrAgencySystem.FeedsWorker              # feed generation, no HTTP
 dotnet run --project src/services/HrAgencySystem.NotificationWorker  # email delivery, no HTTP
+dotnet run --project src/services/HrAgencySystem.ReportsService      # reports → http://localhost:5200
 ```
 
 Start `NotificationWorker` **before** triggering the first email: it declares the queues and bindings, and a topic exchange silently drops a message that matches no binding.
