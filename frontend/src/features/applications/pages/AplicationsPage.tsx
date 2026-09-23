@@ -61,7 +61,7 @@ const AplicationsPage: React.FC = () => {
 			<ApplicationsToolbar
 				search={search.search ?? ""}
 				onClear={() => {
-					navigate({ search: (previous) => ({ ...previous, search: "" }) });
+					navigate({ search: (previous) => ({ view: previous.view }) });
 				}}
 				onSearchChange={(s) => navigate({ search: (previous) => ({ ...previous, search: s }) })}
 				source={search.source ?? null}
