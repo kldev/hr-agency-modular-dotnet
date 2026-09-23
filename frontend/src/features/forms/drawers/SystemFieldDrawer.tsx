@@ -138,6 +138,7 @@ function FormContent({
 						) : (
 							<EnumSelectFilter
 								id="system-field-type"
+								aria-label="Type"
 								hideAll={true}
 								value={draft.type}
 								options={fieldTypes}
@@ -176,6 +177,7 @@ function FormContent({
 						<span className="form-label">Pre-filled from</span>
 						<EnumSelectFilter
 							id="system-field-source"
+							aria-label="Pre-filled from"
 							hideAll={true}
 							value={draft.source}
 							options={sources}

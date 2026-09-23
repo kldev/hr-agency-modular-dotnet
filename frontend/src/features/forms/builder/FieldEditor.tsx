@@ -156,6 +156,7 @@ export function FieldEditor({
 						<span className="form-label">Type</span>
 						<EnumSelectFilter
 							id={`${id}-type`}
+							aria-label="Type"
 							hideAll={true}
 							value={field.type}
 							options={fieldTypes}

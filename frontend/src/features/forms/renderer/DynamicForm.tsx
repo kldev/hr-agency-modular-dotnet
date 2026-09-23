@@ -214,6 +214,10 @@ export function DynamicForm({
 										</div>
 									) : null}
 
+									<FormWizard.SectionHeader
+										title="Review"
+										description="Everything as it will be submitted."
+									/>
 									<DynamicReview pages={pages} answers={toAnswers(pages, values)} />
 									{reviewAddon}
 								</>
