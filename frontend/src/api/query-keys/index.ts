@@ -3,6 +3,7 @@ export * from "./applicationKeys";
 export * from "./assignmentsKeys";
 export * from "./candidatesKeys";
 export * from "./companiesKeys";
+export * from "./formsKeys";
 export * from "./interviewKeys";
 export * from "./jobDescriptionKeys";
 export * from "./jobPostsKeys";

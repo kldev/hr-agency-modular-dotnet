@@ -643,3 +643,91 @@ export function FormChoiceGroup<T extends string>({
 		</div>
 	);
 }
+
+type FormCheckboxProps = AppInputProps<boolean> & {
+	/** The sentence the box is ticked against - a consent reads as one, not as a label above a switch. */
+	statement?: string;
+};
+
+/**
+ * A box somebody ticks to agree. Not `FormToggle`: a switch reads as a setting, and a consent or a
+ * declaration has to read as something the person states.
+ */
+export function FormCheckbox({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	handleChange,
+	errors,
+	statement,
+}: FormCheckboxProps) {
+	return (
+		<div className="form-field">
+			<label
+				htmlFor={fieldName}
+				className="flex cursor-pointer items-start gap-3 text-sm text-(--color-text)"
+			>
+				<input
+					id={fieldName}
+					name={fieldName}
+					type="checkbox"
+					className="mt-0.5 size-4 accent-(--color-primary)"
+					checked={fieldValue === true}
+					disabled={isSubmitting}
+					onChange={(event) => handleChange(event.target.checked)}
+				/>
+
+				<span>{statement ?? label}</span>
+			</label>
+
+			<FieldError errors={errors} />
+		</div>
+	);
+}
+
+type FormMultiChoiceProps = AppInputProps<string[]> & {
+	options: ReadonlyArray<{ value: string; label: string }>;
+};
+
+/** Several answers out of a list, each a box of its own; the order ticked is kept as given. */
+export function FormMultiChoice({
+	label,
+	fieldName,
+	isSubmitting,
+	fieldValue,
+	handleChange,
+	errors,
+	options,
+}: FormMultiChoiceProps) {
+	const selected = fieldValue ?? [];
+
+	const toggle = (value: string, checked: boolean) =>
+		handleChange(checked ? [...selected, value] : selected.filter((other) => other !== value));
+
+	return (
+		<fieldset className="form-field" disabled={isSubmitting}>
+			<legend className="form-label">{label}</legend>
+
+			<div className="flex flex-col gap-2">
+				{options.map((option) => (
+					<label
+						key={option.value}
+						className="flex cursor-pointer items-center gap-3 text-sm text-(--color-text)"
+					>
+						<input
+							type="checkbox"
+							name={fieldName}
+							className="size-4 accent-(--color-primary)"
+							checked={selected.includes(option.value)}
+							onChange={(event) => toggle(option.value, event.target.checked)}
+						/>
+						{option.label}
+					</label>
+				))}
+			</div>
+
+			<FieldError errors={errors} />
+		</fieldset>
+	);
+}

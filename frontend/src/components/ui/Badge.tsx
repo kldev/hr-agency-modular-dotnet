@@ -3,6 +3,12 @@ import { applicationSources, applicationStatuses } from "#/features/applications
 import { assignmentStatusClass, assignmentStatuses } from "#/features/assignments/types";
 import { complianceStatusClass, complianceStatuses } from "#/features/compliance/types";
 import { contractRequiresTimeRecord, workerContractTypes } from "#/features/contracts/types";
+import {
+	formStatusClass,
+	formStatuses,
+	responseStatusClass,
+	responseStatuses,
+} from "#/features/forms/types";
 import { interviewFormats, interviewStatuses, interviewTypes } from "#/features/interviews/type";
 import { jobDescriptionStatuses } from "#/features/job-descriptions/type";
 import { jobPostsStatuses } from "#/features/job-posts/type";
@@ -14,6 +20,8 @@ import type {
 	CandidateSource,
 	ComplianceStatus,
 	ContractStatus,
+	FormResponseStatus,
+	FormStatus,
 	InterviewFormat,
 	InterviewStatus,
 	InterviewType,
@@ -210,5 +218,15 @@ export function ContractTypeBadge({ contractType }: { contractType: WorkerContra
 		>
 			{workerContractTypes[contractType]}
 		</span>
+	);
+}
+
+export function FormStatusBadge({ status }: { status: FormStatus }) {
+	return <span className={clsx("badge", formStatusClass[status])}>{formStatuses[status]}</span>;
+}
+
+export function FormResponseStatusBadge({ status }: { status: FormResponseStatus }) {
+	return (
+		<span className={clsx("badge", responseStatusClass[status])}>{responseStatuses[status]}</span>
 	);
 }
