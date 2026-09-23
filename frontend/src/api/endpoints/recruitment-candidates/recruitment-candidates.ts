@@ -39,10 +39,12 @@ import type {
 	CandidateUpdated,
 	CreateCandidateRequest,
 	GetCandidatesParams,
+	GetCandidateTimelineParams,
 	ProblemDetails,
 	SliceResponseOfCandidateProjection,
 	TagRequest,
 	TagRequestList,
+	TimelineSlice,
 	UpdateCandidateRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
@@ -1059,3 +1061,92 @@ export function useRemoveCandidateTagList<
 
 	return withQueryKey(query, queryOptions.queryKey);
 }
+
+/**
+ * @summary Get candidate timeline
+ */
+export const getCandidateTimeline = (
+	candidateId: string,
+	params?: GetCandidateTimelineParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<TimelineSlice>(
+		{ url: `/api/recruitment/candidates/${candidateId}/timeline`, method: "GET", params, signal },
+		options,
+	);
+};
+
+export const getGetCandidateTimelineMutationKey = () => ["getCandidateTimeline"] as const;
+
+export const getGetCandidateTimelineMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getCandidateTimeline>>,
+		TError,
+		GetCandidateTimelineMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getCandidateTimeline>>,
+	TError,
+	GetCandidateTimelineMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetCandidateTimelineMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getCandidateTimeline>>,
+		GetCandidateTimelineMutationVariables
+	> = (props) => {
+		const { candidateId, params } = props ?? {};
+
+		return getCandidateTimeline(candidateId, params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetCandidateTimelineMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getCandidateTimeline>>
+>;
+
+export type GetCandidateTimelineMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetCandidateTimelineMutationVariables = {
+	candidateId: string;
+	params?: GetCandidateTimelineParams;
+};
+
+/**
+ * @summary Get candidate timeline
+ */
+export const useGetCandidateTimeline = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getCandidateTimeline>>,
+			TError,
+			GetCandidateTimelineMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getCandidateTimeline>>,
+	TError,
+	GetCandidateTimelineMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetCandidateTimelineMutationOptions(options), queryClient);
+};

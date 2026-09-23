@@ -36,6 +36,7 @@ import type {
 	ChangeJobApplicationStatusRequest,
 	CreateNoteRequest,
 	GetJobApplicationsSliceParams,
+	GetJobApplicationTimelineParams,
 	JobApplicationNoteAdded,
 	JobApplicationNoteDeleted,
 	JobApplicationProjection,
@@ -47,6 +48,7 @@ import type {
 	SliceResponseOfJobApplicationProjection,
 	TagRequest,
 	TagRequestList,
+	TimelineSlice,
 	UpdateApplicantRequest,
 } from "../../models";
 import type { BodyType, ErrorType } from "../../mutator.ts";
@@ -923,6 +925,99 @@ export const useGetJobApplicationNotes = <
 	TContext
 > => {
 	return useMutation(getGetJobApplicationNotesMutationOptions(options), queryClient);
+};
+/**
+ * @summary Get job application timeline
+ */
+export const getJobApplicationTimeline = (
+	jobApplicationId: string,
+	params?: GetJobApplicationTimelineParams,
+	options?: SecondParameter<typeof customInstance>,
+	signal?: AbortSignal,
+) => {
+	return customInstance<TimelineSlice>(
+		{
+			url: `/api/recruitment/job-applications/${jobApplicationId}/timeline`,
+			method: "GET",
+			params,
+			signal,
+		},
+		options,
+	);
+};
+
+export const getGetJobApplicationTimelineMutationKey = () => ["getJobApplicationTimeline"] as const;
+
+export const getGetJobApplicationTimelineMutationOptions = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(options?: {
+	mutation?: UseMutationOptions<
+		Awaited<ReturnType<typeof getJobApplicationTimeline>>,
+		TError,
+		GetJobApplicationTimelineMutationVariables,
+		TContext
+	>;
+	request?: SecondParameter<typeof customInstance>;
+}): UseMutationOptions<
+	Awaited<ReturnType<typeof getJobApplicationTimeline>>,
+	TError,
+	GetJobApplicationTimelineMutationVariables,
+	TContext
+> => {
+	const mutationKey = getGetJobApplicationTimelineMutationKey();
+	const { mutation: mutationOptions, request: requestOptions } = options
+		? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
+			? options
+			: { ...options, mutation: { ...options.mutation, mutationKey } }
+		: { mutation: { mutationKey }, request: undefined };
+
+	const mutationFn: MutationFunction<
+		Awaited<ReturnType<typeof getJobApplicationTimeline>>,
+		GetJobApplicationTimelineMutationVariables
+	> = (props) => {
+		const { jobApplicationId, params } = props ?? {};
+
+		return getJobApplicationTimeline(jobApplicationId, params, requestOptions);
+	};
+
+	return { mutationFn, ...mutationOptions };
+};
+
+export type GetJobApplicationTimelineMutationResult = NonNullable<
+	Awaited<ReturnType<typeof getJobApplicationTimeline>>
+>;
+
+export type GetJobApplicationTimelineMutationError = ErrorType<BadRequestDetails | ProblemDetails>;
+export type GetJobApplicationTimelineMutationVariables = {
+	jobApplicationId: string;
+	params?: GetJobApplicationTimelineParams;
+};
+
+/**
+ * @summary Get job application timeline
+ */
+export const useGetJobApplicationTimeline = <
+	TError = ErrorType<BadRequestDetails | ProblemDetails>,
+	TContext = unknown,
+>(
+	options?: {
+		mutation?: UseMutationOptions<
+			Awaited<ReturnType<typeof getJobApplicationTimeline>>,
+			TError,
+			GetJobApplicationTimelineMutationVariables,
+			TContext
+		>;
+		request?: SecondParameter<typeof customInstance>;
+	},
+	queryClient?: QueryClient,
+): UseMutationResult<
+	Awaited<ReturnType<typeof getJobApplicationTimeline>>,
+	TError,
+	GetJobApplicationTimelineMutationVariables,
+	TContext
+> => {
+	return useMutation(getGetJobApplicationTimelineMutationOptions(options), queryClient);
 };
 /**
  * @summary Delete note
