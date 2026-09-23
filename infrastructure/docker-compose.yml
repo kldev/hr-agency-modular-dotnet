@@ -124,6 +124,8 @@ services:
       RabbitMq__MailExchange: "x.emails"      
       FileService__BaseUrl: "http://hr-agency-file-service:8080"
       FileService__Secret: ${FileServiceSecret}
+      HR_AGENCY_EMAIL: ${HrAgencyEmail:-admin@hr-agency.com}
+      HR_AGENCY_PASSWORD: ${HrAgencyPassword}
       Cors: ${Cors}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
