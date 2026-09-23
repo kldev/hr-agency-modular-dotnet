@@ -5,6 +5,7 @@ import {
 	getForm,
 	getFormResponse,
 	getForms,
+	getFormVersion,
 	getSubjectAvailableForms,
 	getSubjectFormResponses,
 	getSystemFields,
@@ -38,6 +39,10 @@ const getFormsServerFn = createServerFn({ method: "GET" })
 const getFormServerFn = createServerFn({ method: "GET" })
 	.validator((input: string) => input)
 	.handler(async ({ data }) => getForm(data, await getFnOptions()));
+
+const getFormVersionServerFn = createServerFn({ method: "GET" })
+	.validator((input: { formId: string; version: number }) => input)
+	.handler(async ({ data }) => getFormVersion(data.formId, data.version, await getFnOptions()));
 
 const getSystemFieldsServerFn = createServerFn({ method: "GET" })
 	.validator((input: boolean) => input)
@@ -104,5 +109,14 @@ export function useGetFormResponse(responseId: string | null) {
 		queryKey: formResponsesKeys.details(responseId ?? ""),
 		queryFn: () => getFormResponseServerFn({ data: responseId ?? "" }),
 		enabled: Boolean(responseId),
+	});
+}
+
+/** A published version, frozen - what people were given to fill in. */
+export function useGetFormVersion(formId: string, version: number | null) {
+	return useQuery({
+		queryKey: formsKeys.version(formId, version ?? 0),
+		queryFn: () => getFormVersionServerFn({ data: { formId, version: version ?? 0 } }),
+		enabled: Boolean(formId) && version !== null,
 	});
 }
