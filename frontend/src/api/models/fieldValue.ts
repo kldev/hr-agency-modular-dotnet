@@ -13,23 +13,20 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { BadRequestDetailsFieldErrors } from "./badRequestDetailsFieldErrors.ts";
 
-export interface BadRequestDetails {
+export interface FieldValue {
 	/** @nullable */
-	type?: string | null;
-	/** @nullable */
-	title?: string | null;
+	text?: string | null;
 	/**
 	 * @nullable
-	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 * @pattern ^-?(?:0|[1-9]\d*)(?:\.\d+)?$
 	 */
-	status?: number | string | null;
+	number?: number | string | null;
 	/** @nullable */
-	detail?: string | null;
+	date?: string | null;
 	/** @nullable */
-	instance?: string | null;
-	validationErrors: string[];
+	boolean?: boolean | null;
 	/** @nullable */
-	fieldErrors?: BadRequestDetailsFieldErrors;
+	values?: string[] | null;
+	isEmpty?: boolean;
 }

@@ -13,23 +13,19 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { BadRequestDetailsFieldErrors } from "./badRequestDetailsFieldErrors.ts";
+import type { FormKind } from "./formKind.ts";
+import type { FormStatus } from "./formStatus.ts";
 
-export interface BadRequestDetails {
-	/** @nullable */
-	type?: string | null;
-	/** @nullable */
-	title?: string | null;
+export type GetFormsParams = {
+	search?: string;
+	status?: FormStatus[];
+	kind?: FormKind[];
 	/**
-	 * @nullable
 	 * @pattern ^-?(?:0|[1-9]\d*)$
 	 */
-	status?: number | string | null;
-	/** @nullable */
-	detail?: string | null;
-	/** @nullable */
-	instance?: string | null;
-	validationErrors: string[];
-	/** @nullable */
-	fieldErrors?: BadRequestDetailsFieldErrors;
-}
+	page?: number | string;
+	/**
+	 * @pattern ^-?(?:0|[1-9]\d*)$
+	 */
+	pageSize?: number | string;
+};

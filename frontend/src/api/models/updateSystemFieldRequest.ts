@@ -13,23 +13,16 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { BadRequestDetailsFieldErrors } from "./badRequestDetailsFieldErrors.ts";
+import type { ChoiceOption } from "./choiceOption.ts";
+import type { FieldRules } from "./fieldRules.ts";
+import type { SystemFieldSource } from "./systemFieldSource.ts";
 
-export interface BadRequestDetails {
+export interface UpdateSystemFieldRequest {
+	label: string;
 	/** @nullable */
-	type?: string | null;
+	description: string | null;
+	rules: null | FieldRules;
 	/** @nullable */
-	title?: string | null;
-	/**
-	 * @nullable
-	 * @pattern ^-?(?:0|[1-9]\d*)$
-	 */
-	status?: number | string | null;
-	/** @nullable */
-	detail?: string | null;
-	/** @nullable */
-	instance?: string | null;
-	validationErrors: string[];
-	/** @nullable */
-	fieldErrors?: BadRequestDetailsFieldErrors;
+	options: ChoiceOption[] | null;
+	source: SystemFieldSource;
 }
