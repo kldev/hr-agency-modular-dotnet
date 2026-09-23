@@ -1,5 +1,5 @@
 import { Archive, Save, Send } from "lucide-react";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { BadRequestDetails, FormDefinitionView } from "#/api/models";
 import { Page } from "#/components/layout";
@@ -53,9 +53,21 @@ function Builder({
 	const [layout, dispatch] = useReducer(layoutReducer, form.pages as Layout);
 	const [archiving, setArchiving] = useState(false);
 
-	/* The saved draft comes back with system fields filled in; take it as the new starting point. */
+	/*
+	 * The saved draft comes back with system fields filled in, and is taken as the new starting point
+	 * - but only when nothing was edited while the save was on its way. Otherwise the refetch would
+	 * overwrite those edits with the older layout that was sent.
+	 */
+	const current = useRef(layout);
+	current.current = layout;
+	const sent = useRef<Layout | null>(null);
+
 	useEffect(() => {
-		dispatch({ type: "reset", layout: form.pages as Layout });
+		if (sent.current === null || sent.current === current.current) {
+			dispatch({ type: "reset", layout: form.pages as Layout });
+		}
+
+		sent.current = null;
 	}, [form.pages]);
 
 	const dirty = JSON.stringify(layout) !== JSON.stringify(form.pages);
@@ -70,7 +82,11 @@ function Builder({
 		},
 	});
 
-	const saveDraft = () => save.mutation.mutateAsync({ formId: form.id, req: { pages: layout } });
+	const saveDraft = () => {
+		sent.current = layout;
+
+		return save.mutation.mutateAsync({ formId: form.id, req: { pages: layout } });
+	};
 
 	const onPublish = async () => {
 		if (dirty) {
