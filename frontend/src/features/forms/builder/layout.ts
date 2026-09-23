@@ -104,7 +104,8 @@ export function layoutReducer(layout: Layout, action: LayoutAction): Layout {
 	}
 }
 
-const noRules: FormField["rules"] = {
+/** A field with no rule set - also what a type change resets to, since rules are per type. */
+export const noRules: FormField["rules"] = {
 	required: false,
 	minLength: null,
 	maxLength: null,

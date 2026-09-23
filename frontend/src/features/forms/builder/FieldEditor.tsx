@@ -7,7 +7,7 @@ import { Textarea } from "#/components/ui/Textarea";
 import { OptionsEditor } from "../components/OptionsEditor";
 import { RulesEditor } from "../components/RulesEditor";
 import { fieldTypes, hasOptions, takesTypedText } from "../types";
-import { suggestCode } from "./layout";
+import { noRules, suggestCode } from "./layout";
 
 type FieldEditorProps = {
 	field: FormField;
@@ -50,7 +50,7 @@ export function FieldEditor({
 		set({
 			type,
 			// Rules of the old type would be refused for the new one; only "required" carries over.
-			rules: { ...emptyRules, required: field.rules.required, message: field.rules.message },
+			rules: { ...noRules, required: field.rules.required, message: field.rules.message },
 			options: hasOptions(type)
 				? field.options.length
 					? field.options
@@ -206,18 +206,3 @@ export function FieldEditor({
 		</aside>
 	);
 }
-
-const emptyRules: FormField["rules"] = {
-	required: false,
-	minLength: null,
-	maxLength: null,
-	pattern: null,
-	min: null,
-	max: null,
-	decimals: null,
-	minDate: null,
-	maxDate: null,
-	minSelected: null,
-	maxSelected: null,
-	message: null,
-};

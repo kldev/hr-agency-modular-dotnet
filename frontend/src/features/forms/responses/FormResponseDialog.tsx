@@ -22,6 +22,7 @@ import {
 } from "../hooks";
 import { DynamicForm } from "../renderer/DynamicForm";
 import { DynamicReview } from "../renderer/DynamicReview";
+import { fieldErrorsOf } from "../schema/fieldErrors";
 import { isFormsDesigner } from "../types";
 
 export interface FormResponseDialogCommand {
@@ -40,10 +41,6 @@ const historyLabels = {
 	Submitted: "Submitted",
 	Corrected: "Corrected",
 } as const;
-
-function fieldErrorsOf(error: unknown): Record<string, string[]> | null {
-	return ((error as BadRequestDetails | null)?.fieldErrors as Record<string, string[]>) ?? null;
-}
 
 /**
  * One response, in the one dialog that fills it in, shows it once submitted and corrects it. A

@@ -23,6 +23,7 @@ import {
 	usePublishForm,
 	useSaveFormDraft,
 } from "../hooks";
+import { fieldErrorsOf } from "../schema/fieldErrors";
 import { cardinalities, formKinds } from "../types";
 
 export type BuilderTab = "build" | "preview" | "versions";
@@ -34,10 +35,6 @@ type FormBuilderPageProps = {
 	tab: BuilderTab;
 	onTabChange: (tab: BuilderTab) => void;
 };
-
-function fieldErrorsOf(error: unknown): Record<string, string[]> {
-	return ((error as BadRequestDetails | null)?.fieldErrors as Record<string, string[]>) ?? {};
-}
 
 /**
  * The form builder, on a route of its own rather than in a dialog (plan 028): it is a workspace with
@@ -83,7 +80,7 @@ function Builder({
 		publish.mutation.mutate(form.id);
 	};
 
-	const errors = fieldErrorsOf(publish.mutation.error ?? save.mutation.error);
+	const errors = fieldErrorsOf(publish.mutation.error ?? save.mutation.error) ?? {};
 	const refusal = (publish.mutation.error ?? save.mutation.error) as BadRequestDetails | null;
 
 	const tabs: TabDefinition<BuilderTab>[] = [
