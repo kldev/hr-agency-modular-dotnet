@@ -1,6 +1,8 @@
 using HrAgencySystem.Agency.Projections;
 using HrAgencySystem.Company.Infrastructure.Persistence;
 using HrAgencySystem.Company.Projections;
+using HrAgencySystem.Forms.Documents;
+using HrAgencySystem.Forms.Projections;
 using HrAgencySystem.Identity.Documents;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Projections;
@@ -100,6 +102,15 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<AssignmentProjection>("workers");
         await CleanTable<WorkerIdentityDocumentReservation>("workers");
         await CleanTable<WorkerEmailReservation>("workers");
+    }
+
+    public async Task CleanForms()
+    {
+        await CleanTable<FormDefinitionProjection>("forms");
+        await CleanTable<FormResponseProjection>("forms");
+        await CleanTable<FormVersion>("forms");
+        await CleanTable<SubjectProfile>("forms");
+        await CleanTable<FormCodeReservation>("forms");
     }
 
     public async Task CleanOrgStructure()
