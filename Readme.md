@@ -56,9 +56,9 @@ are, with data a real run creates. Every person and company in them is made up.
 Computed by the separate reports service from its own read model: the agency's recruitment funnel
 and monthly activity, and the platform owner's view of every organization - both exportable to Excel.
 
-| Recruitment dashboard | Platform report (owner) |
-| --- | --- |
-| ![Recruitment dashboard](docs/screenshots/dashboard.png) | ![Platform report](docs/screenshots/platform-reports.png) |
+| Recruitment dashboard | Platform report (owner) | Organizations (owner) |
+| --- | --- | --- |
+| ![Recruitment dashboard](docs/screenshots/dashboard.png) | ![Platform report](docs/screenshots/platform-reports.png) | ![Owner organizations](docs/screenshots/owner-organizations.png) |
 
 ### Recruitment
 

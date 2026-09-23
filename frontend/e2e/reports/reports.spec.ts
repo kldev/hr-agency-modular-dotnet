@@ -34,7 +34,7 @@ test.describe("platform owner", () => {
 	// The owner signs in on a page of their own, so this test starts signed out.
 	test.use({ storageState: { cookies: [], origins: [] } });
 
-	test("shows every organization side by side", async ({ page }) => {
+	test("shows every organization side by side and in the register", async ({ page }) => {
 		await open(page, "/owner");
 		await page.getByLabel("Email address").fill(demoOwner.email);
 		await page.getByPlaceholder("Enter your password").fill(demoOwner.password);
@@ -51,5 +51,15 @@ test.describe("platform owner", () => {
 		}
 
 		await docShot(page, "platform-reports");
+
+		// The tenants themselves, from the owner's organization register.
+		await open(page, "/admin/organizations");
+
+		const organizations = page.getByRole("table");
+		for (const slug of ["hr-agency", "flex-jobs", "tech-jobs"]) {
+			await expect(organizations.getByText(slug, { exact: true })).toBeVisible();
+		}
+
+		await docShot(page, "owner-organizations");
 	});
 });
