@@ -25,8 +25,15 @@ internal static class FormsProjectionsConfiguration
             options
                 .Schema.For<FormResponseProjection>()
                 .DatabaseSchemaName(FormsDocumentConfiguration.SchemaName)
-                .Index(x => new { x.OrganizationId, x.SubjectKind, x.SubjectId })
-                .Index(x => new { x.OrganizationId, x.FormId, x.Status })
+                // Named by hand: the generated names run past Postgres' 63 characters.
+                .Index(
+                    x => new { x.OrganizationId, x.SubjectKind, x.SubjectId },
+                    index => index.Name = "mt_doc_formresponse_idx_org_subject"
+                )
+                .Index(
+                    x => new { x.OrganizationId, x.FormId, x.Status },
+                    index => index.Name = "mt_doc_formresponse_idx_org_form_status"
+                )
                 .GinIndexJsonData();
         }
     }

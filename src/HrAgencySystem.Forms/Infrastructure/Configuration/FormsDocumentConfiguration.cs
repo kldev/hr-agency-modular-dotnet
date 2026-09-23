@@ -11,16 +11,14 @@ internal static class FormsDocumentConfiguration
     {
         public void ConfigureDocuments()
         {
+            // Both ids are derived from what the document is about - (form, version) and
+            // (organization, subject) - so the primary key already makes a second one impossible.
             options
                 .Schema.For<FormVersion>()
                 .DatabaseSchemaName(SchemaName)
-                .Index(x => new { x.OrganizationId, x.FormId })
-                .UniqueIndex(x => x.FormId, x => x.Version);
+                .Index(x => new { x.OrganizationId, x.FormId });
 
-            options
-                .Schema.For<SubjectProfile>()
-                .DatabaseSchemaName(SchemaName)
-                .UniqueIndex(x => x.OrganizationId, x => x.SubjectKind, x => x.SubjectId);
+            options.Schema.For<SubjectProfile>().DatabaseSchemaName(SchemaName);
 
             // The unique index is what stops two concurrent creates taking the same code.
             options
