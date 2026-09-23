@@ -7,3 +7,9 @@ export const demoUser = {
 	email: process.env.E2E_EMAIL ?? "j.smith@hr-agency.com",
 	password: process.env.E2E_PASSWORD ?? "agent999!",
 };
+
+/** The seeded platform owner (`PlatformSeeder/Config`), signing in at /owner. */
+export const demoOwner = {
+	email: process.env.E2E_OWNER_EMAIL ?? "admin@hr-agency.com",
+	password: process.env.E2E_OWNER_PASSWORD ?? demoUser.password,
+};

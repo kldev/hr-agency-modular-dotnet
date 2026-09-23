@@ -182,3 +182,62 @@ export async function createDemoOpportunity(page: Page, companyId: string, title
 
 	return opportunityId;
 }
+
+type ApplicationRow = { id: string; status: string };
+
+async function applicationsIn(page: Page, status: string, count: number) {
+	const response = await page.request.get("/api/recruitment/job-applications", {
+		params: { status, pageSize: count },
+	});
+	expect(response.ok(), `GET applications: ${response.status()}`).toBeTruthy();
+
+	return ((await response.json()) as { content: ApplicationRow[] }).content;
+}
+
+async function changeStatus(page: Page, applicationId: string, status: string) {
+	const response = await page.request.put(
+		`/api/recruitment/job-applications/${applicationId}/status`,
+		{ data: { status, note: null, interviewId: null } },
+	);
+	expect(
+		response.ok(),
+		`status ${status}: ${response.status()} ${await response.text()}`,
+	).toBeTruthy();
+}
+
+/**
+ * The seed leaves every application at "Applied" or "Interview", so a funnel of it has nothing
+ * past the interview. This walks a handful further the way a recruiter would - offers, hires, an
+ * assessment, a few rejections - so the dashboard has a whole funnel to draw.
+ */
+export async function moveApplicationsThroughFunnel(page: Page) {
+	const interviewed = await applicationsIn(page, "Interview", 10);
+	const applied = await applicationsIn(page, "Applied", 3);
+
+	for (const [index, application] of interviewed.entries()) {
+		if (index < 6) {
+			await changeStatus(page, application.id, "Offer");
+
+			if (index < 4) {
+				await changeStatus(page, application.id, "Hired");
+			}
+		} else if (index < 8) {
+			await changeStatus(page, application.id, "Assessment");
+		}
+	}
+
+	for (const application of applied) {
+		await changeStatus(page, application.id, "Rejected");
+	}
+}
+
+/** Waits until the reports service sees the hires - its tables are filled by async projections. */
+export async function waitForReportedHires(page: Page, atLeast: number) {
+	await expect(async () => {
+		const response = await page.request.get("/api/reports/recruitment");
+		expect(response.ok()).toBeTruthy();
+
+		const report = (await response.json()) as { totals: { hires: number } };
+		expect(report.totals.hires).toBeGreaterThanOrEqual(atLeast);
+	}).toPass({ timeout: 30_000, intervals: [500, 1_000, 2_000] });
+}

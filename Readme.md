@@ -51,6 +51,15 @@ are, with data a real run creates. Every person and company in them is made up.
 
 ![Login page](docs/screenshots/login.png)
 
+### Reports
+
+Computed by the separate reports service from its own read model: the agency's recruitment funnel
+and monthly activity, and the platform owner's view of every organization - both exportable to Excel.
+
+| Recruitment dashboard | Platform report (owner) |
+| --- | --- |
+| ![Recruitment dashboard](docs/screenshots/dashboard.png) | ![Platform report](docs/screenshots/platform-reports.png) |
+
 ### Recruitment
 
 | Job postings | Candidates | Applications |
@@ -340,8 +349,9 @@ dotnet test tests/HrAgencySystem.UnitTests --filter "FullyQualifiedName~CreateCo
 `frontend/e2e/` drives the real panel in Chromium against the real API - a handful of
 representative flows, not coverage: sign-in, the job description wizard, a project taken live with a
 worker posted onto it, registering an applicant as a worker, documents uploaded to the file service
-on both, a reorganisation of the org chart, a new team, and read-only passes over the main lists and
-the sales pipeline. The uploaded PDFs are generated in memory (`e2e/support/documents.ts`) and
+on both, a reorganisation of the org chart, a new team, the two reports (after moving a few seeded
+applications on to offers and hires, so the funnel has an end), and read-only passes over the main
+lists and the sales pipeline. The uploaded PDFs are generated in memory (`e2e/support/documents.ts`) and
 marked as specimens - no binary fixture lives in the repository.
 
 They need the stack up and **freshly seeded**, sales included. The seed is not repeatable and the
