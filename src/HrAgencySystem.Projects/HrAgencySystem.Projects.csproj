@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Marten" />
+    <PackageReference Include="Marten.EntityFrameworkCore" />
     <PackageReference Include="WolverineFx" />
     <PackageReference Include="WolverineFx.Marten" />
   </ItemGroup>
@@ -15,6 +16,7 @@
     <ProjectReference Include="..\HrAgencySystem.Compliance\HrAgencySystem.Compliance.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Projects.Contracts\HrAgencySystem.Projects.Contracts.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Workers.Contracts\HrAgencySystem.Workers.Contracts.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Reports.ReadModel\HrAgencySystem.Reports.ReadModel.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
   </ItemGroup>
 

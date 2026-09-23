@@ -150,6 +150,14 @@ public sealed class DatabaseCleaner(string connectionString)
         await TruncateTable("truncate table feeds.job_posts");
     }
 
+    public async Task CleanReports()
+    {
+        await TruncateTable(
+            "truncate table reports.organizations, reports.job_posts, reports.applications, "
+                + "reports.interviews, reports.projects"
+        );
+    }
+
     public async Task CleanSales()
     {
         await CleanTable<ActivityProjection>("sales");

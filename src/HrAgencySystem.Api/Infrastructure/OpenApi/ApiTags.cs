@@ -39,6 +39,8 @@ internal static class ApiTags
     public const string AgencyTeams = "Agency - Teams";
     public const string AgencyLegalEntities = "Agency - Legal entities";
 
+    public const string Reports = "Reports";
+
     public const string Internal = "Internal";
 
     /// <summary>In the order Scalar lists them: the way a sale turns into people at work.</summary>
@@ -68,10 +70,7 @@ internal static class ApiTags
             Company,
             "The agency's clients: companies it sells to and recruits for, with the profile a contract needs before a project can go live."
         ),
-        (
-            CompanyContacts,
-            "The people at a client company the agency talks to."
-        ),
+        (CompanyContacts, "The people at a client company the agency talks to."),
         (
             SalesOpportunity,
             "The sales pipeline: opportunities from first contact to won or lost, and the activities and follow-up actions that move them along."
@@ -124,10 +123,7 @@ internal static class ApiTags
             AgencyTimeSheets,
             "Monthly time sheets of the agency's own people: filling days in, sending for approval, approval by the supervisor from the chart, settlement by payroll and its export."
         ),
-        (
-            AgencyTeams,
-            "Recruitment teams and who belongs to them."
-        ),
+        (AgencyTeams, "Recruitment teams and who belongs to them."),
         (
             AgencyLegalEntities,
             "The companies the agency trades and posts people through, with their registrations and bank accounts."

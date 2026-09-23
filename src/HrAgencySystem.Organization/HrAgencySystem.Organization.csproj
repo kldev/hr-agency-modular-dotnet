@@ -7,11 +7,13 @@
 
   <ItemGroup>
     <PackageReference Include="Marten" />
+    <PackageReference Include="Marten.EntityFrameworkCore" />
     <PackageReference Include="WolverineFx" />
     <PackageReference Include="WolverineFx.Marten" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HrAgencySystem.Reports.ReadModel\HrAgencySystem.Reports.ReadModel.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
   </ItemGroup>
 </Project>

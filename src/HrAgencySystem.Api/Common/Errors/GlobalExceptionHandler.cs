@@ -1,4 +1,5 @@
 using HrAgencySystem.FileService.Contracts;
+using HrAgencySystem.ReportsService.Contracts;
 using HrAgencySystem.SharedKernel.Exception;
 using JasperFx;
 using Microsoft.AspNetCore.Diagnostics;
@@ -110,6 +111,21 @@ public sealed class GlobalExceptionHandler(
                     httpContext,
                     StatusCodes.Status503ServiceUnavailable,
                     "Document storage unavailable",
+                    exception.Message,
+                    exception
+                );
+            case ReportsServiceException:
+                // 503 for the same reason as the file service: the report exists as soon as the
+                // service is back, and saying so beats a 500 that reads as a bug in the question.
+                logger.LogError(
+                    exception,
+                    "Reports service failure. TraceId: {TraceId}",
+                    httpContext.TraceIdentifier
+                );
+                return await WriteErrorAsync(
+                    httpContext,
+                    StatusCodes.Status503ServiceUnavailable,
+                    "Reports unavailable",
                     exception.Message,
                     exception
                 );

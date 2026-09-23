@@ -27,6 +27,7 @@ COPY src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj HrAgency
 COPY src/HrAgencySystem.PlatformSeeder/HrAgencySystem.PlatformSeeder.csproj HrAgencySystem.PlatformSeeder/
 COPY src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj HrAgencySystem.Recruitment/
 COPY src/HrAgencySystem.Recruitment.Contracts/HrAgencySystem.Recruitment.Contracts.csproj HrAgencySystem.Recruitment.Contracts/
+COPY src/HrAgencySystem.Reports.ReadModel/HrAgencySystem.Reports.ReadModel.csproj HrAgencySystem.Reports.ReadModel/
 COPY src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj HrAgencySystem.Sales/
 COPY src/HrAgencySystem.LegalEntities/HrAgencySystem.LegalEntities.csproj HrAgencySystem.LegalEntities/
 COPY src/HrAgencySystem.Teams/HrAgencySystem.Teams.csproj HrAgencySystem.Teams/
@@ -36,6 +37,7 @@ COPY src/HrAgencySystem.Projects.Contracts/HrAgencySystem.Projects.Contracts.csp
 COPY src/HrAgencySystem.Workers/HrAgencySystem.Workers.csproj HrAgencySystem.Workers/
 COPY src/HrAgencySystem.Workers.Contracts/HrAgencySystem.Workers.Contracts.csproj HrAgencySystem.Workers.Contracts/
 COPY src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj services/HrAgencySystem.FileService.Contracts/
+COPY src/services/HrAgencySystem.ReportsService.Contracts/HrAgencySystem.ReportsService.Contracts.csproj services/HrAgencySystem.ReportsService.Contracts/
 COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
 
 RUN dotnet restore HrAgencySystem.Api/HrAgencySystem.Api.csproj

@@ -2,6 +2,7 @@ using HrAgencySystem.Api;
 using HrAgencySystem.Api.Endpoints;
 using HrAgencySystem.Api.Infrastructure;
 using HrAgencySystem.Api.Infrastructure.FileServiceClient;
+using HrAgencySystem.Api.Infrastructure.ReportsClient;
 using HrAgencySystem.PlatformSeeder;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,8 +34,17 @@ var app = builder.Build();
     app.MapGet(ApiEndpoints.Root, () => "HR Agency API").ExcludeFromDescription().AllowAnonymous();
     app.MapGet(
             ApiEndpoints.Health,
-            async (FileServiceHealthProbe files, CancellationToken ct) =>
-                new { status = "UP", fileService = await files.CheckAsync(ct) }
+            async (
+                FileServiceHealthProbe files,
+                ReportsHealthProbe reports,
+                CancellationToken ct
+            ) =>
+                new
+                {
+                    status = "UP",
+                    fileService = await files.CheckAsync(ct),
+                    reports = await reports.CheckAsync(ct),
+                }
         )
         .ExcludeFromDescription()
         .AllowAnonymous();

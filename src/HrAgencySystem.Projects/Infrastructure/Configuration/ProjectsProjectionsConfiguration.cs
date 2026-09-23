@@ -1,6 +1,7 @@
 using HrAgencySystem.Projects.Projections;
 using JasperFx.Events.Projections;
 using Marten;
+using Marten.EntityFrameworkCore;
 
 namespace HrAgencySystem.Projects.Infrastructure.Configuration;
 
@@ -17,6 +18,9 @@ internal static class ProjectsProjectionsConfiguration
             // Positions are folded out of the project's stream into one document each, so they can
             // be listed and searched across projects.
             options.Projections.Add<ProjectPositionProjector>(ProjectionLifecycle.Async);
+
+            // The reports service's row per project - see ReportsSchema.
+            options.Add(new ProjectReportProjection(), ProjectionLifecycle.Async);
 
             // OrganizationId leads every index: it is the first filter of every query here, and the
             // rule the rest of the codebase follows.

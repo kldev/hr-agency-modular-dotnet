@@ -61,6 +61,21 @@ internal static class ApiEndpoints
         public const string ApiKey = $"{OwnersBase}/api-keys/{{keyId:guid}}";
     }
 
+    /// <summary>
+    /// Reports are computed by the reports service; these routes only sign the question and pass
+    /// the answer on.
+    /// </summary>
+    internal static class Reports
+    {
+        private const string ReportsBase = $"{Base}/reports";
+
+        public const string Recruitment = $"{ReportsBase}/recruitment";
+        public const string RecruitmentExport = $"{ReportsBase}/recruitment/export";
+
+        public const string Platform = $"{Base}/owners/reports/platform";
+        public const string PlatformExport = $"{Base}/owners/reports/platform/export";
+    }
+
     internal static class Organizations
     {
         private const string OrganizationBase = $"{Base}/organization";

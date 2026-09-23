@@ -12,6 +12,7 @@ COPY src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj HrAgencySystem.Feeds/
 COPY src/HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj HrAgencySystem.FeedsWorker/
 COPY src/HrAgencySystem.Files/HrAgencySystem.Files.csproj HrAgencySystem.Files/
 COPY src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj HrAgencySystem.Organization/
+COPY src/HrAgencySystem.Reports.ReadModel/HrAgencySystem.Reports.ReadModel.csproj HrAgencySystem.Reports.ReadModel/
 COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
 
 RUN dotnet restore HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj

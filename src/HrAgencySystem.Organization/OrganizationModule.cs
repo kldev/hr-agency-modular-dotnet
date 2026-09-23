@@ -7,6 +7,7 @@ using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Services;
 using JasperFx.Events.Projections;
 using Marten;
+using Marten.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,6 +39,9 @@ public static class OrganizationModule
     private static void ConfigureProjections(StoreOptions options)
     {
         options.Projections.Snapshot<OrganizationProjection>(SnapshotLifecycle.Inline);
+
+        // The reports service's copy of the tenant list - see ReportsSchema.
+        options.Add(new OrganizationReportProjection(), ProjectionLifecycle.Async);
     }
 
     private static void ConfigureTable(StoreOptions options)

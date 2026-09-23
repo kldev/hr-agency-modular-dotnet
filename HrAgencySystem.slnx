@@ -6,6 +6,7 @@
     <Project Path="src/HrAgencySystem.Company/HrAgencySystem.Company.csproj" />
     <Project Path="src/HrAgencySystem.Compliance/HrAgencySystem.Compliance.csproj" />
     <Project Path="src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj" />
+    <Project Path="src/HrAgencySystem.Reports.ReadModel/HrAgencySystem.Reports.ReadModel.csproj" />
     <Project Path="src/HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj" />
     <Project Path="src/HrAgencySystem.Files/HrAgencySystem.Files.csproj" />
     <Project Path="src/HrAgencySystem.Identity/HrAgencySystem.Identity.csproj" />
@@ -32,6 +33,8 @@
   <Folder Name="/src/Svc/">
     <Project Path="src/services/HrAgencySystem.FileService/HrAgencySystem.FileService.csproj" />
     <Project Path="src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj" />
+    <Project Path="src/services/HrAgencySystem.ReportsService/HrAgencySystem.ReportsService.csproj" />
+    <Project Path="src/services/HrAgencySystem.ReportsService.Contracts/HrAgencySystem.ReportsService.Contracts.csproj" />
     <Project Path="src/services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj" />
   </Folder>
   <Folder Name="/src/Web/">
@@ -40,6 +43,8 @@
   <Folder Name="/tests/">
     <Project Path="tests/HrAgencySystem.EmailTemplates.UnitTests/HrAgencySystem.EmailTemplates.UnitTests.csproj" />
     <Project Path="tests/HrAgencySystem.FileService.UnitTests/HrAgencySystem.FileService.UnitTests.csproj" />
+    <Project Path="tests/HrAgencySystem.ReportsService.UnitTests/HrAgencySystem.ReportsService.UnitTests.csproj" />
+    <Project Path="tests/HrAgencySystem.ReportsService.IntegrationTests/HrAgencySystem.ReportsService.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.UnitTests/HrAgencySystem.UnitTests.csproj" />
   </Folder>

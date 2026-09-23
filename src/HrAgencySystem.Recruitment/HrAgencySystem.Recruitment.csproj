@@ -19,6 +19,7 @@
     <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Recruitment.Contracts\HrAgencySystem.Recruitment.Contracts.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Reports.ReadModel\HrAgencySystem.Reports.ReadModel.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Workers.Contracts\HrAgencySystem.Workers.Contracts.csproj" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.Recruitment.Projections.Reports;
 using HrAgencySystem.Recruitment.Projections.Timeline;
 using JasperFx.Events.Projections;
 using Marten;
@@ -19,6 +20,7 @@ internal static class RecruitmentProjectionConfiguration
             ConfigureCandidateProjection(options);
             ConfigureInterviewProjection(options);
             ConfigureJobPostFeedProjection(options);
+            ConfigureReportProjections(options);
             ConfigureTimelineProjection(options);
         }
     }
@@ -68,6 +70,16 @@ internal static class RecruitmentProjectionConfiguration
     private static void ConfigureJobPostFeedProjection(StoreOptions options)
     {
         options.Add(new JobPostFeedProjection(), ProjectionLifecycle.Async);
+    }
+
+    /*
+     * Reporting read model: the rows the reports service aggregates, one table per stream type.
+     */
+    private static void ConfigureReportProjections(StoreOptions options)
+    {
+        options.Add(new JobPostReportProjection(), ProjectionLifecycle.Async);
+        options.Add(new ApplicationReportProjection(), ProjectionLifecycle.Async);
+        options.Add(new InterviewReportProjection(), ProjectionLifecycle.Async);
     }
 
     private static void ConfigureJobApplicationProjection(StoreOptions options)

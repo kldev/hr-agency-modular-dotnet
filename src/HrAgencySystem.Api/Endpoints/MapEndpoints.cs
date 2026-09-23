@@ -32,6 +32,7 @@ public static class MapEndpoints
         Teams.Endpoint.Map(app);
         TimeSheets.Endpoint.Map(app);
         LegalEntity.Endpoint.Map(app);
+        Reports.Endpoint.Map(app);
 
         MapPlatformSeeder(app);
     }

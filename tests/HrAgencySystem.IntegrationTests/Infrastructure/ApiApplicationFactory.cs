@@ -7,6 +7,7 @@ using HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Services;
+using HrAgencySystem.ReportsService.Contracts;
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -42,6 +43,8 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
             services.Replace(
                 ServiceDescriptor.Singleton<IFileServiceClient, FakeFileServiceClient>()
             );
+            // Singleton so a test can read back what the endpoint asked the reports service for.
+            services.Replace(ServiceDescriptor.Singleton<IReportsClient, FakeReportsClient>());
             services.Replace(ServiceDescriptor.Scoped<IUserSnapshotRepository, FakeUserSnapshot>());
             services.Replace(
                 ServiceDescriptor.Scoped<ICompanySnapshotRepository, FakeCompanySnapshot>()

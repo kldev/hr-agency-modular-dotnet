@@ -1,0 +1,35 @@
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
+WORKDIR /app
+
+EXPOSE 8080
+
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+WORKDIR /src
+
+COPY Directory.Packages.props .
+
+COPY src/HrAgencySystem.Reports.ReadModel/HrAgencySystem.Reports.ReadModel.csproj HrAgencySystem.Reports.ReadModel/
+COPY src/services/HrAgencySystem.ReportsService.Contracts/HrAgencySystem.ReportsService.Contracts.csproj services/HrAgencySystem.ReportsService.Contracts/
+COPY src/services/HrAgencySystem.ReportsService/HrAgencySystem.ReportsService.csproj services/HrAgencySystem.ReportsService/
+
+RUN dotnet restore services/HrAgencySystem.ReportsService/HrAgencySystem.ReportsService.csproj
+
+COPY src .
+
+RUN dotnet publish services/HrAgencySystem.ReportsService/HrAgencySystem.ReportsService.csproj \
+    --configuration Release \
+    --no-restore \
+    --output /app/publish \
+    /p:UseAppHost=false
+
+FROM runtime AS final
+
+WORKDIR /app
+
+COPY --from=build --chown=app:app /app/publish .
+
+USER app
+
+ENTRYPOINT ["dotnet", "HrAgencySystem.ReportsService.dll"]
