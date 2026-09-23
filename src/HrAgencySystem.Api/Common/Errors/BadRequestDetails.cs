@@ -16,11 +16,22 @@ public sealed class BadRequestDetails : ProblemDetails
 
     public IReadOnlyCollection<string> ValidationErrors { get; }
 
+    /// <summary>
+    /// The same messages, keyed by the field they belong to - only for screens that name their
+    /// fields (a generated form, the form builder). Absent everywhere else, so no existing client
+    /// sees a change.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IReadOnlyDictionary<string, IReadOnlyList<string>>? FieldErrors { get; init; }
+
     public static BadRequestDetails CreateValidation(ValidationException exception)
     {
         return new BadRequestDetails(exception.Errors)
         {
             Detail = "Request contains invalid fields",
+            FieldErrors = exception is FieldValidationException { FieldErrors.Count: > 0 } fields
+                ? fields.FieldErrors
+                : null,
         };
     }
 
@@ -39,6 +50,9 @@ public sealed class BadRequestDetails : ProblemDetails
 
         if (details.ValidationErrors is { Count: > 0 })
             extensions["validationErrors"] = details.ValidationErrors;
+
+        if (details.FieldErrors is { Count: > 0 })
+            extensions["fieldErrors"] = details.FieldErrors;
 
         return extensions;
     }
