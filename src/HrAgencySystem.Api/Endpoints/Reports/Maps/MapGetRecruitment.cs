@@ -16,7 +16,7 @@ internal static class MapGetRecruitment
             .WithName("Get recruitment report")
             .Produces<RecruitmentReport>()
             .ProducesStandardErrors()
-            .Produces(StatusCodes.Status503ServiceUnavailable);
+            .Produces<ProblemDetails>(StatusCodes.Status503ServiceUnavailable);
     }
 
     private static async Task<IResult> Handler(

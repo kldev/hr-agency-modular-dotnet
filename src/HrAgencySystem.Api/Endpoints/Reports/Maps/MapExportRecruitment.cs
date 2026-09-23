@@ -16,7 +16,7 @@ internal static class MapExportRecruitment
             .WithName("Export recruitment report")
             .ProducesStandardErrors()
             .Produces(StatusCodes.Status200OK, contentType: ReportFile.SpreadsheetContentType)
-            .Produces(StatusCodes.Status503ServiceUnavailable);
+            .Produces<ProblemDetails>(StatusCodes.Status503ServiceUnavailable);
     }
 
     private static async Task<IResult> Handler(
