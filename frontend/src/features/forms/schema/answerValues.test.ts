@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { FormField, FormPage } from "#/api/models";
 import { defaultValues, fromControl, parseNumber, toAnswers, toControl } from "./answerValues";
-import { buildAnswerSchema, pageKeys } from "./buildAnswerSchema";
+import { answerProblems, buildAnswerSchema, pageKeys } from "./buildAnswerSchema";
 import { keyOf } from "./fieldKeys";
 
 const field = (code: string, type: FormField["type"], required = false): FormField => ({
@@ -114,6 +114,24 @@ describe("a whole form", () => {
 		expect(submitted.error?.issues.map((issue) => issue.path[0])).toEqual([
 			keyOf(office),
 			keyOf(consent),
+		]);
+	});
+
+	it("holds only the pages asked for to the full rules", () => {
+		const values = defaultValues(pages);
+		const strict = buildAnswerSchema(pages, (page) => (page.pageId === "p1" ? "submit" : "draft"));
+
+		expect(strict.safeParse(values).error?.issues.map((issue) => issue.path[0])).toEqual([
+			keyOf(office),
+		]);
+	});
+
+	it("names every problem by page, whatever is on screen", () => {
+		const problems = answerProblems(pages, defaultValues(pages), "submit");
+
+		expect(problems.map((problem) => [problem.page.title, problem.message])).toEqual([
+			["Tax", "This field is required."],
+			["Consents", "This box has to be ticked."],
 		]);
 	});
 
