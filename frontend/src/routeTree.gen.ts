@@ -42,6 +42,9 @@ import { Route as AppCandidatesIdRouteImport } from './routes/app/candidates/$id
 import { Route as AppCompaniesIndexRouteImport } from './routes/app/companies/index'
 import { Route as AppCompaniesIdRouteImport } from './routes/app/companies/$id'
 import { Route as AppDashboardIndexRouteImport } from './routes/app/dashboard/index'
+import { Route as AppFormsIndexRouteImport } from './routes/app/forms/index'
+import { Route as AppFormsFormIdRouteImport } from './routes/app/forms/$formId'
+import { Route as AppFormsSystemFieldsRouteImport } from './routes/app/forms/system-fields'
 import { Route as AppInterviewsIndexRouteImport } from './routes/app/interviews/index'
 import { Route as AppInterviewsIdRouteImport } from './routes/app/interviews/$id'
 import { Route as AppJobDescriptionsIndexRouteImport } from './routes/app/job-descriptions/index'
@@ -232,6 +235,21 @@ const AppDashboardIndexRoute = AppDashboardIndexRouteImport.update({
   path: '/dashboard/',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppFormsIndexRoute = AppFormsIndexRouteImport.update({
+  id: '/forms/',
+  path: '/forms/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppFormsFormIdRoute = AppFormsFormIdRouteImport.update({
+  id: '/forms/$formId',
+  path: '/forms/$formId',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppFormsSystemFieldsRoute = AppFormsSystemFieldsRouteImport.update({
+  id: '/forms/system-fields',
+  path: '/forms/system-fields',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppInterviewsIndexRoute = AppInterviewsIndexRouteImport.update({
   id: '/interviews/',
   path: '/interviews/',
@@ -378,6 +396,8 @@ export interface FileRoutesByFullPath {
   '/app/assignments/$id': typeof AppAssignmentsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
+  '/app/forms/$formId': typeof AppFormsFormIdRoute
+  '/app/forms/system-fields': typeof AppFormsSystemFieldsRoute
   '/app/interviews/$id': typeof AppInterviewsIdRoute
   '/app/job-descriptions/$id': typeof AppJobDescriptionsIdRoute
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
@@ -398,6 +418,7 @@ export interface FileRoutesByFullPath {
   '/app/candidates/': typeof AppCandidatesIndexRoute
   '/app/companies/': typeof AppCompaniesIndexRoute
   '/app/dashboard/': typeof AppDashboardIndexRoute
+  '/app/forms/': typeof AppFormsIndexRoute
   '/app/interviews/': typeof AppInterviewsIndexRoute
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
@@ -435,6 +456,8 @@ export interface FileRoutesByTo {
   '/app/assignments/$id': typeof AppAssignmentsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
+  '/app/forms/$formId': typeof AppFormsFormIdRoute
+  '/app/forms/system-fields': typeof AppFormsSystemFieldsRoute
   '/app/interviews/$id': typeof AppInterviewsIdRoute
   '/app/job-descriptions/$id': typeof AppJobDescriptionsIdRoute
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
@@ -455,6 +478,7 @@ export interface FileRoutesByTo {
   '/app/candidates': typeof AppCandidatesIndexRoute
   '/app/companies': typeof AppCompaniesIndexRoute
   '/app/dashboard': typeof AppDashboardIndexRoute
+  '/app/forms': typeof AppFormsIndexRoute
   '/app/interviews': typeof AppInterviewsIndexRoute
   '/app/job-descriptions': typeof AppJobDescriptionsIndexRoute
   '/app/jobs': typeof AppJobsIndexRoute
@@ -495,6 +519,8 @@ export interface FileRoutesById {
   '/app/assignments/$id': typeof AppAssignmentsIdRoute
   '/app/candidates/$id': typeof AppCandidatesIdRoute
   '/app/companies/$id': typeof AppCompaniesIdRoute
+  '/app/forms/$formId': typeof AppFormsFormIdRoute
+  '/app/forms/system-fields': typeof AppFormsSystemFieldsRoute
   '/app/interviews/$id': typeof AppInterviewsIdRoute
   '/app/job-descriptions/$id': typeof AppJobDescriptionsIdRoute
   '/app/job-descriptions/add': typeof AppJobDescriptionsAddRoute
@@ -515,6 +541,7 @@ export interface FileRoutesById {
   '/app/candidates/': typeof AppCandidatesIndexRoute
   '/app/companies/': typeof AppCompaniesIndexRoute
   '/app/dashboard/': typeof AppDashboardIndexRoute
+  '/app/forms/': typeof AppFormsIndexRoute
   '/app/interviews/': typeof AppInterviewsIndexRoute
   '/app/job-descriptions/': typeof AppJobDescriptionsIndexRoute
   '/app/jobs/': typeof AppJobsIndexRoute
@@ -556,6 +583,8 @@ export interface FileRouteTypes {
     | '/app/assignments/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
+    | '/app/forms/$formId'
+    | '/app/forms/system-fields'
     | '/app/interviews/$id'
     | '/app/job-descriptions/$id'
     | '/app/job-descriptions/add'
@@ -576,6 +605,7 @@ export interface FileRouteTypes {
     | '/app/candidates/'
     | '/app/companies/'
     | '/app/dashboard/'
+    | '/app/forms/'
     | '/app/interviews/'
     | '/app/job-descriptions/'
     | '/app/jobs/'
@@ -613,6 +643,8 @@ export interface FileRouteTypes {
     | '/app/assignments/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
+    | '/app/forms/$formId'
+    | '/app/forms/system-fields'
     | '/app/interviews/$id'
     | '/app/job-descriptions/$id'
     | '/app/job-descriptions/add'
@@ -633,6 +665,7 @@ export interface FileRouteTypes {
     | '/app/candidates'
     | '/app/companies'
     | '/app/dashboard'
+    | '/app/forms'
     | '/app/interviews'
     | '/app/job-descriptions'
     | '/app/jobs'
@@ -672,6 +705,8 @@ export interface FileRouteTypes {
     | '/app/assignments/$id'
     | '/app/candidates/$id'
     | '/app/companies/$id'
+    | '/app/forms/$formId'
+    | '/app/forms/system-fields'
     | '/app/interviews/$id'
     | '/app/job-descriptions/$id'
     | '/app/job-descriptions/add'
@@ -692,6 +727,7 @@ export interface FileRouteTypes {
     | '/app/candidates/'
     | '/app/companies/'
     | '/app/dashboard/'
+    | '/app/forms/'
     | '/app/interviews/'
     | '/app/job-descriptions/'
     | '/app/jobs/'
@@ -954,6 +990,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardIndexRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/forms/': {
+      id: '/app/forms/'
+      path: '/forms'
+      fullPath: '/app/forms/'
+      preLoaderRoute: typeof AppFormsIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/forms/$formId': {
+      id: '/app/forms/$formId'
+      path: '/forms/$formId'
+      fullPath: '/app/forms/$formId'
+      preLoaderRoute: typeof AppFormsFormIdRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/app/forms/system-fields': {
+      id: '/app/forms/system-fields'
+      path: '/forms/system-fields'
+      fullPath: '/app/forms/system-fields'
+      preLoaderRoute: typeof AppFormsSystemFieldsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/interviews/': {
       id: '/app/interviews/'
       path: '/interviews'
@@ -1161,6 +1218,8 @@ interface AppRouteRouteChildren {
   AppAssignmentsIdRoute: typeof AppAssignmentsIdRoute
   AppCandidatesIdRoute: typeof AppCandidatesIdRoute
   AppCompaniesIdRoute: typeof AppCompaniesIdRoute
+  AppFormsFormIdRoute: typeof AppFormsFormIdRoute
+  AppFormsSystemFieldsRoute: typeof AppFormsSystemFieldsRoute
   AppInterviewsIdRoute: typeof AppInterviewsIdRoute
   AppJobDescriptionsIdRoute: typeof AppJobDescriptionsIdRoute
   AppJobDescriptionsAddRoute: typeof AppJobDescriptionsAddRoute
@@ -1177,6 +1236,7 @@ interface AppRouteRouteChildren {
   AppCandidatesIndexRoute: typeof AppCandidatesIndexRoute
   AppCompaniesIndexRoute: typeof AppCompaniesIndexRoute
   AppDashboardIndexRoute: typeof AppDashboardIndexRoute
+  AppFormsIndexRoute: typeof AppFormsIndexRoute
   AppInterviewsIndexRoute: typeof AppInterviewsIndexRoute
   AppJobDescriptionsIndexRoute: typeof AppJobDescriptionsIndexRoute
   AppJobsIndexRoute: typeof AppJobsIndexRoute
@@ -1203,6 +1263,8 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppAssignmentsIdRoute: AppAssignmentsIdRoute,
   AppCandidatesIdRoute: AppCandidatesIdRoute,
   AppCompaniesIdRoute: AppCompaniesIdRoute,
+  AppFormsFormIdRoute: AppFormsFormIdRoute,
+  AppFormsSystemFieldsRoute: AppFormsSystemFieldsRoute,
   AppInterviewsIdRoute: AppInterviewsIdRoute,
   AppJobDescriptionsIdRoute: AppJobDescriptionsIdRoute,
   AppJobDescriptionsAddRoute: AppJobDescriptionsAddRoute,
@@ -1219,6 +1281,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppCandidatesIndexRoute: AppCandidatesIndexRoute,
   AppCompaniesIndexRoute: AppCompaniesIndexRoute,
   AppDashboardIndexRoute: AppDashboardIndexRoute,
+  AppFormsIndexRoute: AppFormsIndexRoute,
   AppInterviewsIndexRoute: AppInterviewsIndexRoute,
   AppJobDescriptionsIndexRoute: AppJobDescriptionsIndexRoute,
   AppJobsIndexRoute: AppJobsIndexRoute,
