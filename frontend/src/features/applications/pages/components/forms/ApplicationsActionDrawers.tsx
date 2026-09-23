@@ -48,6 +48,8 @@ const ApplicationsActionDrawers = forwardRef<JobApplicationsRef, ApplicationsAct
 							tagRef.current?.addTag(id, "", "application");
 					}
 				},
+				changeStatus: (id, current, target) =>
+					changeStatusRef.current?.changeStatus(id, current, target),
 			}),
 			[],
 		);

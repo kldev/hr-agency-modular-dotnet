@@ -54,6 +54,7 @@ const SalesPage: React.FC = () => {
 	return (
 		<Page
 			className="has-mobile-view"
+			wide={!isTable}
 			title="Sales"
 			description="Manage your leads and sales opportunities THROUGH the pipeline."
 			onRefresh={onRefresh}

@@ -13,6 +13,8 @@ interface Props {
 	isEmpty?: boolean;
 	headerAddon?: React.ReactNode;
 	className?: string;
+	/** Drops the content width cap - for a board, which has more columns than a 2K screen fits. */
+	wide?: boolean;
 }
 
 const Page: React.FC<Props> = ({
@@ -25,10 +27,11 @@ const Page: React.FC<Props> = ({
 	emptyState,
 	headerAddon,
 	className,
+	wide,
 }) => {
 	return (
 		<main className={["min-w-0 flex-1 overflow-auto", className].join(" ")}>
-			<div className="page">
+			<div className={wide ? "page page-wide" : "page"}>
 				<Breadcrumbs />
 				<header className="page-header">
 					<div>

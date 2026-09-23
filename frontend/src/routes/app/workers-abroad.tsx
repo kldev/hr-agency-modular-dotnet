@@ -24,7 +24,9 @@ function RouteComponent() {
 			scope="abroad"
 			search={search}
 			onSearchChange={(next) => navigate({ search: (previous) => ({ ...previous, ...next }) })}
-			onClear={() => navigate({ search: () => emptyWorkersSearch })}
+			onClear={() =>
+				navigate({ search: (previous) => ({ ...emptyWorkersSearch, view: previous.view }) })
+			}
 		/>
 	);
 }

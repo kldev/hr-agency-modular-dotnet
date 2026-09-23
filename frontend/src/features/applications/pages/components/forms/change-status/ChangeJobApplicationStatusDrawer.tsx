@@ -63,10 +63,14 @@ const ChangeJobApplicationStatusDrawer = forwardRef<
 	useImperativeHandle(
 		ref,
 		() => ({
-			changeStatus: (id: string, status: JobApplicationStatus) => {
+			changeStatus: (
+				id: string,
+				status: JobApplicationStatus,
+				target?: JobApplicationUpdateStatus,
+			) => {
 				mutation.reset();
 				setJobApplicationId(id);
-				setValue({ ...emptyChangeJobApplicationStatus, status: getNextStatus(status) });
+				setValue({ ...emptyChangeJobApplicationStatus, status: target ?? getNextStatus(status) });
 				setIsOpen(true);
 			},
 		}),

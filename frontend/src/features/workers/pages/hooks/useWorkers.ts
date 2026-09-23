@@ -45,9 +45,18 @@ const getWorkerServerFn = createServerFn({
 		return getWorker(data, await getFnOptions());
 	});
 
-export function useGetWorkersSlice(filter: WorkersFilters) {
+type SliceOptions = {
+	/** The kanban asks for fewer per column than the table does per page. */
+	pageSize?: number;
+	enabled?: boolean;
+};
+
+export function useGetWorkersSlice(filter: WorkersFilters, options: SliceOptions = {}) {
+	const pageSize = options.pageSize ?? PAGE_SIZE;
+
 	return useInfiniteQuery({
-		queryKey: workersKeys.list(filter),
+		queryKey: workersKeys.list({ ...filter, pageSize }),
+		enabled: options.enabled ?? true,
 
 		initialPageParam: 1,
 
@@ -56,7 +65,7 @@ export function useGetWorkersSlice(filter: WorkersFilters) {
 				data: {
 					...filter,
 					page: pageParam,
-					pageSize: PAGE_SIZE,
+					pageSize,
 				},
 			}),
 

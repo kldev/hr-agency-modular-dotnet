@@ -1,37 +1,57 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { ClipboardList } from "lucide-react";
 import { Route } from "#/routes/app/applications";
-import type { CandidateSource, JobApplicationStatus } from "@/api/models";
+import { applicationKeys } from "@/api/query-keys";
 import { Page } from "@/components/layout";
 import { EmptyState, EnumFilter, LoadMore } from "@/components/ui";
-import { applicationStatuses, type WorkerFileFilter } from "../types";
-import { ApplicationCardList, ApplicationsTable, ApplicationsToolbar } from "./components";
+import { applicationStatuses } from "../types";
+import {
+	ApplicationCardList,
+	ApplicationsKanban,
+	ApplicationsTable,
+	ApplicationsToolbar,
+} from "./components";
 import { useGetApplicationsSlice } from "./hooks";
-
-export interface ApplicationFilters {
-	status?: JobApplicationStatus;
-	source?: CandidateSource;
-	search?: string;
-	worker?: WorkerFileFilter;
-}
 
 const AplicationsPage: React.FC = () => {
 	const navigate = Route.useNavigate();
-	const search = Route.useSearch() as ApplicationFilters;
-	const applicationsQuery = useGetApplicationsSlice(search);
+	const search = Route.useSearch();
+	const client = useQueryClient();
+
+	const view = search.view ?? "table";
+	const isTable = view === "table";
+
+	const filters = { search: search.search, source: search.source, worker: search.worker };
+
+	const applicationsQuery = useGetApplicationsSlice(
+		{ ...filters, status: search.status },
+		{ enabled: isTable },
+	);
 
 	const items = applicationsQuery.data?.pages.flatMap((page) => page.content ?? []) ?? [];
 	const hasMore = applicationsQuery.data?.pages.flatMap((page) => page.hasMore ?? [false]) ?? [
 		false,
 	];
 
+	// on the board a change moves a card between two columns, so every column is refetched
+	const refresh = () => {
+		if (isTable) {
+			void applicationsQuery.refetch();
+			return;
+		}
+
+		void client.invalidateQueries({ queryKey: applicationKeys.lists() });
+	};
+
 	return (
 		<Page
 			className="has-mobile-view"
+			wide={!isTable}
 			title="Applications"
 			description="Track candidates through the recruitment process."
-			onRefresh={() => applicationsQuery.refetch()}
-			loading={applicationsQuery.isPending}
-			isEmpty={applicationsQuery.isFetched && items.length === 0}
+			onRefresh={refresh}
+			loading={isTable && applicationsQuery.isPending}
+			isEmpty={isTable && applicationsQuery.isFetched && items.length === 0}
 			emptyState={
 				<EmptyState title="No applications found">
 					<ClipboardList size={24} />
@@ -43,35 +63,49 @@ const AplicationsPage: React.FC = () => {
 				onClear={() => {
 					navigate({ search: (previous) => ({ ...previous, search: "" }) });
 				}}
-				onSearchChange={(s) => navigate({ search: { ...search, search: s } })}
+				onSearchChange={(s) => navigate({ search: (previous) => ({ ...previous, search: s }) })}
 				source={search.source ?? null}
-				onSourceChange={(s) => navigate({ search: (previous) => ({ ...previous, source: s }) })}
+				onSourceChange={(s) =>
+					navigate({ search: (previous) => ({ ...previous, source: s ?? undefined }) })
+				}
 				worker={search.worker ?? null}
 				onWorkerChange={(worker) =>
 					navigate({ search: (previous) => ({ ...previous, worker: worker ?? undefined }) })
 				}
+				view={view}
+				onViewChange={(next) =>
+					navigate({
+						search: (previous) => ({ ...previous, view: next === "table" ? undefined : next }),
+					})
+				}
 			/>
 
-			<div className="flex-col">
-				<EnumFilter
-					value={search.status ?? null}
-					options={applicationStatuses}
-					onChange={(s) => {
-						navigate({ search: (previous) => ({ ...previous, status: s }) });
-					}}
-				/>
-			</div>
+			{isTable ? (
+				<>
+					<div className="flex-col">
+						<EnumFilter
+							value={search.status ?? null}
+							options={applicationStatuses}
+							onChange={(s) => {
+								navigate({ search: (previous) => ({ ...previous, status: s ?? undefined }) });
+							}}
+						/>
+					</div>
 
-			<ApplicationsTable items={items} onRefresh={() => applicationsQuery.refetch()} />
-			<ApplicationCardList applications={items} onRefresh={() => applicationsQuery.refetch()} />
+					<ApplicationsTable items={items} onRefresh={refresh} />
+					<ApplicationCardList applications={items} onRefresh={refresh} />
 
-			<LoadMore
-				loading={applicationsQuery.isPending}
-				hasNext={hasMore[0]}
-				onClick={() => {
-					applicationsQuery.fetchNextPage();
-				}}
-			/>
+					<LoadMore
+						loading={applicationsQuery.isPending}
+						hasNext={hasMore[0]}
+						onClick={() => {
+							applicationsQuery.fetchNextPage();
+						}}
+					/>
+				</>
+			) : (
+				<ApplicationsKanban filters={filters} onSuccess={refresh} />
+			)}
 		</Page>
 	);
 };

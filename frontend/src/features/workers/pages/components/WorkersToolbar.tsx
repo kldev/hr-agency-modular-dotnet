@@ -1,6 +1,6 @@
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import type { WorkerStatus } from "@/api/models";
-import { Button, EnumFilter } from "@/components/ui";
+import { Button, EnumFilter, type ViewMode, ViewSwitch } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
 import { workerStatuses } from "../../types";
 
@@ -11,6 +11,8 @@ interface WorkersToolbarProps {
 	onStatusChange: (value: WorkerStatus | null) => void;
 	onClear: () => void;
 	onAdd: () => void;
+	view: ViewMode;
+	onViewChange: (view: ViewMode) => void;
 }
 
 /*
@@ -26,6 +28,8 @@ export function WorkersToolbar({
 	onStatusChange,
 	onClear,
 	onAdd,
+	view,
+	onViewChange,
 }: WorkersToolbarProps) {
 	return (
 		<>
@@ -65,13 +69,18 @@ export function WorkersToolbar({
 				</div>
 
 				<div className="toolbar-right">
+					<ViewSwitch view={view} onChange={onViewChange} />
+
 					<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
 						Register worker
 					</Button>
 				</div>
 			</div>
 
-			<EnumFilter value={status} options={workerStatuses} onChange={onStatusChange} />
+			{/* on the board every status is a column already */}
+			{view === "table" ? (
+				<EnumFilter value={status} options={workerStatuses} onChange={onStatusChange} />
+			) : null}
 		</>
 	);
 }

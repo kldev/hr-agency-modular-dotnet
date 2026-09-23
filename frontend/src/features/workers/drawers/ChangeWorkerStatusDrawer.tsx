@@ -28,9 +28,10 @@ function documentExpired(worker: WorkerProjection): boolean {
 
 const FormContent: React.FC<{
 	worker: WorkerProjection;
+	target?: WorkerStatus;
 	onSuccess: () => void;
 	handleClose: () => void;
-}> = ({ worker, onSuccess, handleClose }) => {
+}> = ({ worker, target, onSuccess, handleClose }) => {
 	const { mutation, waiting } = useChangeWorkerStatus({
 		onSuccess: () => {
 			mutation.reset();
@@ -46,7 +47,7 @@ const FormContent: React.FC<{
 
 	const form = useAppForm({
 		defaultValues: {
-			status: "" as string,
+			status: target && targets.includes(target) ? (target as string) : "",
 			reason: "",
 		},
 
@@ -159,13 +160,26 @@ const ChangeWorkerStatusDrawer = forwardRef<
 	ChangeWorkerStatusFormCommand,
 	ChangeWorkerStatusDrawerProps
 >(({ onSuccess }, ref) => {
-	const [worker, setWorker] = useState<WorkerProjection | null>(null);
+	const [change, setChange] = useState<{ worker: WorkerProjection; target?: WorkerStatus } | null>(
+		null,
+	);
 
-	useImperativeHandle(ref, () => ({ changeStatus: setWorker }), []);
+	useImperativeHandle(
+		ref,
+		() => ({ changeStatus: (worker, target) => setChange({ worker, target }) }),
+		[],
+	);
 
-	if (!worker) return null;
+	if (!change) return null;
 
-	return <FormContent worker={worker} onSuccess={onSuccess} handleClose={() => setWorker(null)} />;
+	return (
+		<FormContent
+			worker={change.worker}
+			target={change.target}
+			onSuccess={onSuccess}
+			handleClose={() => setChange(null)}
+		/>
+	);
 });
 
 ChangeWorkerStatusDrawer.displayName = "ChangeWorkerStatusDrawer";

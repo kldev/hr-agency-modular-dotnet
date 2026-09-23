@@ -30,5 +30,6 @@ export * from "./Textarea";
 export * from "./TimeInput";
 export * from "./Toggle";
 export * from "./useUnsavedChangesGuard";
+export * from "./ViewSwitch";
 export * from "./WebsiteInput";
 export * from "./WorkInProgress";

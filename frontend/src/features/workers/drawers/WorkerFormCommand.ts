@@ -1,7 +1,8 @@
-import type { WorkerDocument, WorkerProjection } from "@/api/models";
+import type { WorkerDocument, WorkerProjection, WorkerStatus } from "@/api/models";
 
 export interface ChangeWorkerStatusFormCommand {
-	changeStatus: (worker: WorkerProjection) => void;
+	/** `target` preselects the new status - the column a card was dropped on. */
+	changeStatus: (worker: WorkerProjection, target?: WorkerStatus) => void;
 }
 
 export interface RecordWorkAuthorisationFormCommand {

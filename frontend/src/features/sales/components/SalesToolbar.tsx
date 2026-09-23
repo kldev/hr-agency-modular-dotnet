@@ -1,7 +1,6 @@
-import clsx from "clsx";
-import { Columns3, List, Plus, Search, SlidersHorizontal } from "lucide-react";
+import { Plus, Search, SlidersHorizontal } from "lucide-react";
 
-import { Button, OnlyMine } from "@/components/ui";
+import { Button, OnlyMine, ViewSwitch } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
 import type { SalesView } from "../types";
 
@@ -63,31 +62,7 @@ export function SalesToolbar({
 			</div>
 
 			<div className="toolbar-right">
-				<div className="sales-view-switch shrink-0">
-					<Button
-						className={clsx(view === "kanban" && "sales-view-active")}
-						variant={view === "kanban" ? "secondary" : "ghost"}
-						icon={<Columns3 size={15} />}
-						aria-pressed={view === "kanban"}
-						aria-label="Kanban view"
-						title="Kanban view"
-						onClick={() => onViewChange("kanban")}
-					>
-						Kanban
-					</Button>
-
-					<Button
-						className={clsx(view === "table" && "sales-view-active")}
-						variant={view === "table" ? "secondary" : "ghost"}
-						icon={<List size={15} />}
-						aria-pressed={view === "table"}
-						aria-label="Table view"
-						title="Table view"
-						onClick={() => onViewChange("table")}
-					>
-						Table
-					</Button>
-				</div>
+				<ViewSwitch view={view} onChange={onViewChange} />
 
 				<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
 					Add opportunity

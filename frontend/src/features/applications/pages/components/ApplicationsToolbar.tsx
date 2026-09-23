@@ -1,6 +1,6 @@
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { CandidateSource } from "@/api/models";
-import { Button, EnumSelectFilter } from "@/components/ui";
+import { Button, EnumSelectFilter, type ViewMode, ViewSwitch } from "@/components/ui";
 import { Input } from "@/components/ui/Input";
 import { applicationSources, type WorkerFileFilter, workerFileFilters } from "../../types";
 
@@ -15,6 +15,8 @@ interface ApplicationsToolbarProps {
 	companyId?: string;
 	onCompanyChange?: (value: string) => void;
 	onClear: () => void;
+	view: ViewMode;
+	onViewChange: (view: ViewMode) => void;
 }
 
 export function ApplicationsToolbar({
@@ -25,6 +27,8 @@ export function ApplicationsToolbar({
 	worker,
 	onWorkerChange,
 	onClear,
+	view,
+	onViewChange,
 }: ApplicationsToolbarProps) {
 	return (
 		<div className="toolbar">
@@ -72,6 +76,10 @@ export function ApplicationsToolbar({
 				>
 					Clear
 				</Button>
+			</div>
+
+			<div className="toolbar-right">
+				<ViewSwitch view={view} onChange={onViewChange} />
 			</div>
 		</div>
 	);

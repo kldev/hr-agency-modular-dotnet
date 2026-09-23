@@ -4,8 +4,8 @@ import type { CandidateSource, JobApplicationStatus } from "#/api/models";
 import { getFnOptions } from "#/server/axios";
 import { getJobApplication, getJobApplicationsSlice } from "@/api/endpoints";
 import { applicationKeys } from "@/api/query-keys";
+import type { ApplicationFilters } from "../../searchParams";
 import { registeredAsWorker, type WorkerFileFilter } from "../../types";
-import type { ApplicationFilters } from "../AplicationsPage";
 
 const PAGE_SIZE = 15;
 
@@ -44,9 +44,18 @@ const getApplicationDetailsServerFn = createServerFn({
 		return getJobApplication(data.id, await getFnOptions());
 	});
 
-export function useGetApplicationsSlice(fillter: ApplicationFilters) {
+type SliceOptions = {
+	/** The kanban asks for fewer per column than the table does per page. */
+	pageSize?: number;
+	enabled?: boolean;
+};
+
+export function useGetApplicationsSlice(fillter: ApplicationFilters, options: SliceOptions = {}) {
+	const pageSize = options.pageSize ?? PAGE_SIZE;
+
 	return useInfiniteQuery({
-		queryKey: applicationKeys.list(fillter),
+		queryKey: applicationKeys.list({ ...fillter, pageSize }),
+		enabled: options.enabled ?? true,
 
 		initialPageParam: 1,
 
@@ -58,7 +67,7 @@ export function useGetApplicationsSlice(fillter: ApplicationFilters) {
 					status: fillter.status,
 					worker: fillter.worker,
 					page: pageParam,
-					pageSize: PAGE_SIZE,
+					pageSize,
 				},
 			}),
 
