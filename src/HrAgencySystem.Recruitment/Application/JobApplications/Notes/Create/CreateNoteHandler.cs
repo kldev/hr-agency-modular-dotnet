@@ -4,6 +4,7 @@ using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using Marten;
 
 namespace HrAgencySystem.Recruitment.Application.JobApplications.Notes.Create;
 
@@ -15,6 +16,7 @@ public static class CreateNoteHandler
         IRecruitmentService service,
         IClock clock,
         INoteRepository noteRepository,
+        IDocumentSession session,
         CancellationToken ct
     )
     {
@@ -45,6 +47,10 @@ public static class CreateNoteHandler
         );
 
         await noteRepository.CreateNoteAsync(createNote, user);
+
+        // Returning the event only answers InvokeAsync; the application's history needs it on
+        // the stream, as the other three ways of adding a note already do.
+        session.Events.Append(application.JobApplicationId, @event);
 
         return @event;
     }
