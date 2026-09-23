@@ -1,3 +1,4 @@
+using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.Workers.Application.Port;
 using HrAgencySystem.Workers.Application.Suggestion;
 using HrAgencySystem.Workers.Infrastructure.Persistence;
@@ -17,6 +18,7 @@ internal static class WorkersServiceCollectionExtensions
             services.AddScoped<IAssignmentsQueryRepository, AssignmentsQueryRepository>();
             services.AddScoped<IWorkerSuggestionRepository, WorkerSuggestionRepository>();
             services.AddScoped<IWorkerRepository, WorkerRepository>();
+            services.AddScoped<IWorkerSnapshotRepository, WorkerSnapshotRepository>();
             services.AddScoped<IWorkersService, WorkersService>();
             services.AddScoped<
                 IWorkerIdentityDocumentReservationRepository,
