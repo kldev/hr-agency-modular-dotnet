@@ -49,7 +49,7 @@ export function ApplicationsTable({ items, onRefresh }: AplicationsTableProps) {
 	const handleRowClick = (value: JobApplicationProjection) => {
 		navigate({
 			to: "/app/applications/$id",
-			search: { status: undefined, search: undefined, source: undefined },
+			search: { status: undefined, search: undefined, source: undefined, tab: undefined },
 			params: { id: value.id },
 		});
 	};

@@ -30,7 +30,7 @@ export function CandidatesTable({ items, onRefresh }: CandidatesTableProps) {
 	const handleRowClick = (value: CandidateProjection) => {
 		navigate({
 			to: "/app/candidates/$id",
-			search: { search: undefined, source: undefined },
+			search: { search: undefined, source: undefined, tab: undefined },
 			params: { id: value.id },
 		});
 	};

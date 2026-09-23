@@ -24,7 +24,7 @@ export function CandidateActions({ onEdit, id, onTag }: CandidateActionsProps) {
 							navigate({
 								to: "/app/candidates/$id",
 								params: { id },
-								search: { search: undefined, source: undefined },
+								search: { search: undefined, source: undefined, tab: undefined },
 							});
 						},
 					},

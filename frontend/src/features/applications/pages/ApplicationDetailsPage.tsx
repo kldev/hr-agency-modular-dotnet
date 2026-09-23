@@ -1,4 +1,7 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
+import { ApplicationTimeline } from "#/features/timeline";
+import { applicationKeys } from "@/api/query-keys";
 
 import {
 	ApplicationBadge,
@@ -7,6 +10,9 @@ import {
 	DetailsHeader,
 	DetailsListSection,
 	DetailsLoading,
+	type TabDefinition,
+	TabPanel,
+	Tabs,
 } from "@/components/ui";
 import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
 import { applicationSources } from "../types";
@@ -14,8 +20,28 @@ import { ApplicationsActionDrawers, DetailsActions, type JobApplicationsRef } fr
 import { NotesList } from "./components/details";
 import { useGetApplicationDetails } from "./hooks";
 
-const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
+export type ApplicationTab = "details" | "timeline";
+
+export const applicationTabs: readonly ApplicationTab[] = ["details", "timeline"];
+
+const tabs: TabDefinition<ApplicationTab>[] = [
+	{ id: "details", label: "Details" },
+	{ id: "timeline", label: "Timeline" },
+];
+
+interface ApplicationDetailsPageProps {
+	id: string;
+	tab: ApplicationTab;
+	onTabChange: (tab: ApplicationTab) => void;
+}
+
+const ApplicationDetailsPage: React.FC<ApplicationDetailsPageProps> = ({
+	id,
+	tab,
+	onTabChange,
+}) => {
 	const formRef = useRef<JobApplicationsRef>(null);
+	const queryClient = useQueryClient();
 
 	const applicationQuery = useGetApplicationDetails(id);
 
@@ -29,8 +55,10 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 		);
 	}
 
+	/* Every action on this page - status, note, tag - is also a line in the timeline. */
 	const refetch = () => {
 		applicationQuery.refetch();
+		void queryClient.invalidateQueries({ queryKey: applicationKeys.timeline(id) });
 	};
 
 	const application = applicationQuery.data;
@@ -62,61 +90,71 @@ const ApplicationDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 				}
 			/>
 
+			<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Application sections" />
+
 			<DataDetailsLayout
 				main={
-					<>
-						<section className="data-details-section">
-							<div className="data-details-section-header">
-								<div>
-									<h2>Applicant</h2>
-									<p>Candidate contact information</p>
-								</div>
-							</div>
+					<TabPanel id={tab}>
+						{tab === "details" ? (
+							<>
+								<section className="data-details-section">
+									<div className="data-details-section-header">
+										<div>
+											<h2>Applicant</h2>
+											<p>Candidate contact information</p>
+										</div>
+									</div>
 
-							<dl className="data-details-list">
-								<DetailItem label="First name">{application.applicantFirstName}</DetailItem>
+									<dl className="data-details-list">
+										<DetailItem label="First name">{application.applicantFirstName}</DetailItem>
 
-								<DetailItem label="Last name">{application.applicantLastName}</DetailItem>
+										<DetailItem label="Last name">{application.applicantLastName}</DetailItem>
 
-								<DetailItem label="Email">
-									<a href={`mailto:${application.applicantEmail}`}>{application.applicantEmail}</a>
-								</DetailItem>
+										<DetailItem label="Email">
+											<a href={`mailto:${application.applicantEmail}`}>
+												{application.applicantEmail}
+											</a>
+										</DetailItem>
 
-								<DetailItem label="Phone">
-									<a href={`tel:${application.applicantPhone}`}>{application.applicantPhone}</a>
-								</DetailItem>
+										<DetailItem label="Phone">
+											<a href={`tel:${application.applicantPhone}`}>{application.applicantPhone}</a>
+										</DetailItem>
 
-								<DetailItem label="Candidate ID">{application.candidateId}</DetailItem>
+										<DetailItem label="Candidate ID">{application.candidateId}</DetailItem>
 
-								<DetailItem label="Source">{applicationSources[application.source]}</DetailItem>
-							</dl>
-						</section>
-						<section className="data-details-section">
-							<div className="data-details-section-header">
-								<div>
-									<h2>Application</h2>
-									<p>Application and recruitment details</p>
-								</div>
-							</div>
+										<DetailItem label="Source">{applicationSources[application.source]}</DetailItem>
+									</dl>
+								</section>
+								<section className="data-details-section">
+									<div className="data-details-section-header">
+										<div>
+											<h2>Application</h2>
+											<p>Application and recruitment details</p>
+										</div>
+									</div>
 
-							<dl className="data-details-list">
-								<DetailItem label="Job post">{application.jobPostTitle}</DetailItem>
+									<dl className="data-details-list">
+										<DetailItem label="Job post">{application.jobPostTitle}</DetailItem>
 
-								<DetailItem label="Company">{application.company.name}</DetailItem>
+										<DetailItem label="Company">{application.company.name}</DetailItem>
 
-								<DetailItem label="Status">
-									<ApplicationBadge status={application.status} />
-								</DetailItem>
-							</dl>
-						</section>
+										<DetailItem label="Status">
+											<ApplicationBadge status={application.status} />
+										</DetailItem>
+									</dl>
+								</section>
 
-						<NotesList
-							id={application.id}
-							add={() => {
-								formRef?.current?.update(application.id, "add-note");
-							}}
-						/>
-					</>
+								<NotesList
+									id={application.id}
+									add={() => {
+										formRef?.current?.update(application.id, "add-note");
+									}}
+								/>
+							</>
+						) : null}
+
+						{tab === "timeline" ? <ApplicationTimeline jobApplicationId={application.id} /> : null}
+					</TabPanel>
 				}
 				sidebar={
 					<>

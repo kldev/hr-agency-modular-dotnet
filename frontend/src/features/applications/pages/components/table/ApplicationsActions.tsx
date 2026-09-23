@@ -33,7 +33,7 @@ export function ApplicationsActions({ onAction, id, workerId }: AplicationsProps
 							navigate({
 								to: "/app/applications/$id",
 								params: { id },
-								search: { status: undefined, search: undefined, source: undefined },
+								search: { status: undefined, search: undefined, source: undefined, tab: undefined },
 							});
 						},
 						dividerAfter: true,

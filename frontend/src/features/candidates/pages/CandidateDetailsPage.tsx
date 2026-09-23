@@ -1,21 +1,43 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef } from "react";
 import { MessagePreview } from "#/components/ui/MessagePreview";
 import { type AddTagCommand, AddTagsDrawer } from "#/features/applications/pages/components";
 import { applicationSources } from "#/features/applications/types";
+import { CandidateTimeline } from "#/features/timeline";
+import { candidatesKeys } from "@/api/query-keys";
 import {
 	AuditInformation,
 	DataDetails,
 	DetailsHeader,
 	DetailsListSection,
 	DetailsLoading,
+	type TabDefinition,
+	TabPanel,
+	Tabs,
 } from "@/components/ui";
 import { DataDetailsLayout, DetailItem } from "@/components/ui/details/DataDetails";
 import { EditCandidateDrawer, type EditCandidateFormCommand } from "../components";
 import { useGetCandidate } from "../hooks";
 
-const CandidateDetailsPage: React.FC<{ id: string }> = ({ id }) => {
+export type CandidateTab = "profile" | "timeline";
+
+export const candidateTabs: readonly CandidateTab[] = ["profile", "timeline"];
+
+const tabs: TabDefinition<CandidateTab>[] = [
+	{ id: "profile", label: "Profile" },
+	{ id: "timeline", label: "Timeline" },
+];
+
+interface CandidateDetailsPageProps {
+	id: string;
+	tab: CandidateTab;
+	onTabChange: (tab: CandidateTab) => void;
+}
+
+const CandidateDetailsPage: React.FC<CandidateDetailsPageProps> = ({ id, tab, onTabChange }) => {
 	const formRef = useRef<EditCandidateFormCommand>(null);
 	const tagRef = useRef<AddTagCommand>(null);
+	const queryClient = useQueryClient();
 
 	const query = useGetCandidate(id);
 
@@ -25,8 +47,10 @@ const CandidateDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 		);
 	}
 
+	/* An edit or a tag is also a line in the timeline. */
 	const refetch = () => {
 		query.refetch();
+		void queryClient.invalidateQueries({ queryKey: candidatesKeys.timeline(id) });
 	};
 
 	const candidate = query.data;
@@ -47,36 +71,44 @@ const CandidateDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 				}}
 			/>
 
+			<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Candidate sections" />
+
 			<DataDetailsLayout
 				main={
-					<section className="data-details-section">
-						<div className="data-details-section-header">
-							<div>
-								<h2>Applicant</h2>
-								<p>Candidate contact information</p>
-							</div>
-						</div>
+					<TabPanel id={tab}>
+						{tab === "profile" ? (
+							<section className="data-details-section">
+								<div className="data-details-section-header">
+									<div>
+										<h2>Applicant</h2>
+										<p>Candidate contact information</p>
+									</div>
+								</div>
 
-						<dl className="data-details-list">
-							<DetailItem label="First name">{candidate.firstName || "-"}</DetailItem>
+								<dl className="data-details-list">
+									<DetailItem label="First name">{candidate.firstName || "-"}</DetailItem>
 
-							<DetailItem label="Last name">{candidate.lastName || "-"}</DetailItem>
+									<DetailItem label="Last name">{candidate.lastName || "-"}</DetailItem>
 
-							<DetailItem label="Email">
-								<a href={`mailto:${candidate.email}`}>{candidate.email}</a>
-							</DetailItem>
+									<DetailItem label="Email">
+										<a href={`mailto:${candidate.email}`}>{candidate.email}</a>
+									</DetailItem>
 
-							<DetailItem label="Phone">
-								<a href={`tel:${candidate.phoneNumber}`}>{candidate.phoneNumber || "-"}</a>
-							</DetailItem>
+									<DetailItem label="Phone">
+										<a href={`tel:${candidate.phoneNumber}`}>{candidate.phoneNumber || "-"}</a>
+									</DetailItem>
 
-							<DetailItem label="Source">{applicationSources[candidate.source]}</DetailItem>
-							<DetailItem label=""> </DetailItem>
-						</dl>
-						<DetailItem label="Note">
-							<MessagePreview message={candidate.note} />
-						</DetailItem>
-					</section>
+									<DetailItem label="Source">{applicationSources[candidate.source]}</DetailItem>
+									<DetailItem label=""> </DetailItem>
+								</dl>
+								<DetailItem label="Note">
+									<MessagePreview message={candidate.note} />
+								</DetailItem>
+							</section>
+						) : null}
+
+						{tab === "timeline" ? <CandidateTimeline candidateId={candidate.id} /> : null}
+					</TabPanel>
 				}
 				sidebar={
 					<>

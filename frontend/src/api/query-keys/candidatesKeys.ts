@@ -8,4 +8,6 @@ export const candidatesKeys = {
 	detail: (id: string) => [...candidatesKeys.all, "details", id] as const,
 
 	notes: (id: string) => [...candidatesKeys.all, "notes", id] as const,
+
+	timeline: (id: string) => [...candidatesKeys.all, "timeline", id] as const,
 };

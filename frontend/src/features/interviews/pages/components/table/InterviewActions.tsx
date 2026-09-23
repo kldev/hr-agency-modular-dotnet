@@ -38,7 +38,7 @@ export function InterviewActions({ onAction, applicationId }: InterviewActionsPr
 						action: () => {
 							naviage({
 								to: "/app/applications/$id",
-								search: { search: undefined, source: undefined, status: undefined },
+								search: { search: undefined, source: undefined, status: undefined, tab: undefined },
 								params: { id: applicationId },
 							});
 						},
