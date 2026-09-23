@@ -7,6 +7,7 @@ using HrAgencySystem.Company;
 using HrAgencySystem.Company.Infrastructure;
 using HrAgencySystem.Feeds;
 using HrAgencySystem.Files;
+using HrAgencySystem.Forms;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.LegalEntities;
@@ -45,6 +46,7 @@ public static class SetupApplicationModulesExtensions
             services.AddAgencyModule();
             services.AddProjectsModule();
             services.AddWorkersModule();
+            services.AddFormsModule();
             services.AddSalesModule();
             services.AddTeamsModule();
             services.AddLegalEntitiesModule();

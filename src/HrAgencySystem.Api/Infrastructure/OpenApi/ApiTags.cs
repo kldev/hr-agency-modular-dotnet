@@ -39,6 +39,10 @@ internal static class ApiTags
     public const string AgencyTeams = "Agency - Teams";
     public const string AgencyLegalEntities = "Agency - Legal entities";
 
+    public const string FormsDefinitions = "Forms - Definitions";
+    public const string FormsSystemFields = "Forms - System fields";
+    public const string FormsResponses = "Forms - Responses";
+
     public const string Reports = "Reports";
 
     public const string Internal = "Internal";
@@ -124,6 +128,18 @@ internal static class ApiTags
             "Monthly time sheets of the agency's own people: filling days in, sending for approval, approval by the supervisor from the chart, settlement by payroll and its export."
         ),
         (AgencyTeams, "Recruitment teams and who belongs to them."),
+        (
+            FormsDefinitions,
+            "Forms, documents and surveys the agency defines without a developer: pages of fields, a working draft and the published versions people fill in."
+        ),
+        (
+            FormsSystemFields,
+            "The organization's catalogue of fields describing a person - PESEL, phone, citizenship - defined once and shown by any form that asks for them."
+        ),
+        (
+            FormsResponses,
+            "Forms filled in for a worker: drafts, submission, corrections with a reason, and the version each response was given to."
+        ),
         (
             AgencyLegalEntities,
             "The companies the agency trades and posts people through, with their registrations and bank accounts."
