@@ -34,6 +34,8 @@ test("a worker dropped on the next stage opens the status drawer with it presele
 	const card = recruitment.locator("article.kanban-card").first();
 	await expect(card).toBeVisible();
 
+	await docShot(page, "workers-kanban");
+
 	await drag(page, card, column(page, "Contract preparation"));
 
 	const drawer = page.getByRole("dialog", { name: "Change status" });
@@ -44,11 +46,22 @@ test("a worker dropped on the next stage opens the status drawer with it presele
 	await docShot(page, "workers-kanban-drop");
 });
 
+test("the abroad desk is the same board over the other half of the register", async ({ page }) => {
+	await open(page, "/app/workers-abroad?view=kanban");
+
+	await expect(page.getByRole("heading", { name: "Workers abroad", level: 1 })).toBeVisible();
+	await expect(column(page, "Employed").locator("article.kanban-card").first()).toBeVisible();
+
+	await docShot(page, "workers-abroad-kanban");
+});
+
 test("an application dropped on a stage it cannot reach opens nothing", async ({ page }) => {
 	await open(page, "/app/applications?view=kanban");
 
 	const card = column(page, "Applied").locator("article.kanban-card").first();
 	await expect(card).toBeVisible();
+
+	await docShot(page, "applications-kanban");
 
 	await drag(page, card, column(page, "Offer"));
 	await expect(page.getByRole("dialog")).toHaveCount(0);

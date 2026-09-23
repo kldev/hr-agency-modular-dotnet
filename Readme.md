@@ -66,6 +66,13 @@ and monthly activity, and the platform owner's view of every organization - both
 | --- | --- | --- |
 | ![Job postings](docs/screenshots/job-postings.png) | ![Candidates](docs/screenshots/candidates.png) | ![Applications](docs/screenshots/applications.png) |
 
+Applications as a board - a card dragged onto another stage opens the status drawer with that stage
+chosen, so the note still goes with the change; stages it cannot reach are dimmed:
+
+| Applications board | Dropped on a stage |
+| --- | --- |
+| ![Applications kanban](docs/screenshots/applications-kanban.png) | ![Application dropped on a stage](docs/screenshots/applications-kanban-drop.png) |
+
 The job description wizard - one position, written once, before any post goes out:
 
 | Position | Review | Created |
@@ -120,6 +127,13 @@ come along, the passport data is added on the way.
 | ![Register worker wizard](docs/screenshots/worker-wizard.png) | ![Register worker review](docs/screenshots/worker-wizard-review.png) | ![Worker details](docs/screenshots/worker-created.png) |
 
 ![Workers register](docs/screenshots/workers.png)
+
+The same register as a board of the pipeline, for both desks; a drop opens the status drawer, and
+only the stages the person may go to accept it:
+
+| Workers board | Workers abroad | Dropped on the next stage |
+| --- | --- | --- |
+| ![Workers kanban](docs/screenshots/workers-kanban.png) | ![Workers abroad kanban](docs/screenshots/workers-abroad-kanban.png) | ![Worker dropped on a stage](docs/screenshots/workers-kanban-drop.png) |
 
 ### The agency's own structure and teams
 
