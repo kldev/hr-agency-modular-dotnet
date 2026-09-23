@@ -126,6 +126,8 @@ services:
       FileService__Secret: ${FileServiceSecret}
       HR_AGENCY_EMAIL: ${HrAgencyEmail:-admin@hr-agency.com}
       HR_AGENCY_PASSWORD: ${HrAgencyPassword}
+      Reports__BaseUrl: "http://hr-agency-reports-service:8080"
+      Reports__Secret: ${ReportsSecret}
       Cors: ${Cors}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
@@ -168,6 +170,32 @@ services:
       postgres:
         condition: service_healthy
       rustfs:
+        condition: service_healthy
+  reports-service:
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.reports-service
+    container_name: hr-agency-reports-service
+    networks:
+      - inner-cluster-communication
+    environment:
+      ASPNETCORE_ENVIRONMENT: docker
+      ASPNETCORE_HTTP_PORTS: 8080
+      # Reads the `reports` schema only; the API's projections create and fill it.
+      ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
+      # Must match webapi - its own key, neither the user token key nor the file service's.
+      Reports__Secret: ${ReportsSecret}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/healthz || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: "10s"
+    restart: on-failure
+    ports:
+    - "5200:8080"
+    depends_on:
+      postgres:
         condition: service_healthy
   feeds-worker:
     build:

@@ -5,6 +5,7 @@ import {
 	findPublishedJobPost,
 	reloadUntilVisible,
 } from "../support/api";
+import { attachDocument } from "../support/documents";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
 import { continueTo, expectStep, fillDate, summaryItem } from "../support/ui";
@@ -81,4 +82,37 @@ test("registers an applicant as a worker", async ({ page }) => {
 	await expect(page.getByRole("heading", { name: "Olena Marchenko" })).toBeVisible();
 
 	await docShot(page, "worker-created");
+
+	// The person's own papers, uploaded to the file service like a recruiter would.
+	await page.getByRole("tab", { name: /^Documents/ }).click();
+	const documents = page.getByRole("tabpanel");
+
+	await attachDocument(page, documents, {
+		fileName: "passport-olena-marchenko.pdf",
+		title: "Passport - Olena Marchenko",
+		lines: ["Document number: FX482913", "Issued by: Ukraine", "Valid until: 30.06.2031"],
+		category: "Identity",
+		documentDate: "01.07.2021",
+		validUntil: "30.06.2031",
+	});
+	await attachDocument(page, documents, {
+		fileName: "medical-certificate.pdf",
+		title: "Occupational medical certificate",
+		lines: ["Fit for work: office, VDT", "Examined in Opole"],
+		category: "Medical certificate",
+		documentDate: "15.09.2026",
+		validUntil: "15.09.2028",
+	});
+	await attachDocument(page, documents, {
+		fileName: "health-and-safety-training.pdf",
+		title: "Health and safety induction",
+		lines: ["General induction training", "Duration: 3 hours"],
+		category: "Health and safety",
+		documentDate: "16.09.2026",
+		validUntil: "16.09.2027",
+	});
+
+	await expect(page.getByRole("tab", { name: /^Documents\s*3/ })).toBeVisible();
+
+	await docShot(page, "worker-documents");
 });

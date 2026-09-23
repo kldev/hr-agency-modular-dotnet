@@ -1,5 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 import { demoClient, ensureDemoClient } from "../support/api";
+import { attachDocument } from "../support/documents";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
 import { continueTo, expectStep, fillDate, pickSuggestion, summaryItem } from "../support/ui";
@@ -131,6 +132,34 @@ test("creates a project, takes it live and posts a worker onto it", async ({ pag
 	await expect(page.getByRole("tabpanel").getByText("Senior C# Developer")).toBeVisible();
 
 	await docShot(page, "project-positions");
+
+	// The paperwork behind the engagement, kept in the file service.
+	await openTab(page, "Documents");
+	await attachDocument(page, page.getByRole("tabpanel"), {
+		fileName: "acme-framework-agreement.pdf",
+		title: "Framework agreement ACME/2026/014",
+		lines: ["Client: ACME Automotive Sp. z o.o.", "Outsourced team, 12 months"],
+		category: "Contract",
+		documentDate: "15.09.2026",
+		validUntil: "30.09.2027",
+	});
+	await attachDocument(page, page.getByRole("tabpanel"), {
+		fileName: "acme-order-001.pdf",
+		title: "Order 001 - Senior Developers Recruitment",
+		lines: ["Five roles, start 01.10.2026"],
+		category: "Annex",
+		documentDate: "20.09.2026",
+	});
+	await attachDocument(page, page.getByRole("tabpanel"), {
+		fileName: "liability-insurance-2026.pdf",
+		title: "Professional liability insurance",
+		lines: ["Policy covering the delivery team"],
+		category: "Insurance",
+		documentDate: "01.09.2026",
+		validUntil: "31.08.2027",
+	});
+
+	await docShot(page, "project-documents");
 
 	// Somebody from the workers' register onto that role. Opened from the project, so the wizard
 	// already knows which one and skips the step that would ask.

@@ -85,6 +85,12 @@ follows.
 | --- | --- | --- |
 | ![Project contract](docs/screenshots/project-contract.png) | ![Project positions](docs/screenshots/project-positions.png) | ![Project people](docs/screenshots/project-people.png) |
 
+Documents are uploaded to the separate file service - a domain only ever holds a file id:
+
+| Project documents | Worker documents |
+| --- | --- |
+| ![Project documents](docs/screenshots/project-documents.png) | ![Worker documents](docs/screenshots/worker-documents.png) |
+
 | New project wizard | Compliance of a hired-out project in Germany |
 | --- | --- |
 | ![Project wizard](docs/screenshots/project-wizard.png) | ![Project compliance](docs/screenshots/project-compliance.png) |
@@ -285,7 +291,7 @@ There is also a full stack including the containerized API:
 ./infrastructure/start.sh --logs      # tail webapi logs;  --stop, --clean
 ```
 
-`infrastructure/docker-compose.yml` requires the environment variables `SecretKey`, `RustFsAccessKey`, `RustFsSecretKey`, `Cors`, `RabbitMqUser` and `RabbitMqPassword`.
+`infrastructure/docker-compose.yml` requires the environment variables `SecretKey`, `RustFsAccessKey`, `RustFsSecretKey`, `FileServiceSecret`, `ReportsSecret`, `WebApiKey`, `Cors`, `RabbitMqUser` and `RabbitMqPassword` (see `infrastructure/.env-sample`).
 
 ### 3. Run the hosts
 
@@ -333,8 +339,10 @@ dotnet test tests/HrAgencySystem.UnitTests --filter "FullyQualifiedName~CreateCo
 
 `frontend/e2e/` drives the real panel in Chromium against the real API - a handful of
 representative flows, not coverage: sign-in, the job description wizard, a project taken live with a
-worker posted onto it, registering an applicant as a worker, a reorganisation of the org chart, a new
-team, and read-only passes over the main lists and the sales pipeline.
+worker posted onto it, registering an applicant as a worker, documents uploaded to the file service
+on both, a reorganisation of the org chart, a new team, and read-only passes over the main lists and
+the sales pipeline. The uploaded PDFs are generated in memory (`e2e/support/documents.ts`) and
+marked as specimens - no binary fixture lives in the repository.
 
 They need the stack up and **freshly seeded**, sales included. The seed is not repeatable and the
 tests create records with fixed names (a person belongs to one team, a sibling unit name is unique),
