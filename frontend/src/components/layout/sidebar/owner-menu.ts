@@ -13,7 +13,7 @@ const ownerMenu: MenuGroup[] = [
 			{ label: "Organizations", icon: Globe2, link: "/admin/organizations" },
 			{ label: "Users", icon: Users, link: "/admin/users" },
 			{ label: "API keys", icon: KeyRound, link: "/admin/api-keys" },
-			{ label: "Reports", icon: BarChart3, link: "/404" },
+			{ label: "Reports", icon: BarChart3, link: "/admin/reports" },
 			{ label: "Settings", icon: Settings, link: "/404" },
 		],
 	},

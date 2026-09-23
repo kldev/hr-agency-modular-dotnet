@@ -12,6 +12,7 @@ export * from "./orgStructureKeys";
 export * from "./positionsKeys";
 export * from "./profileKeys";
 export * from "./projectsKeys";
+export * from "./reportsKeys";
 export * from "./salesKeys";
 export * from "./serviceApiKeysKeys";
 export * from "./suggestionKeys";

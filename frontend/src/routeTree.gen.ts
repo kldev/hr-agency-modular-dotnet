@@ -29,6 +29,7 @@ import { Route as OwnerIndexRouteImport } from './routes/owner/index'
 import { Route as AdminApiKeysIndexRouteImport } from './routes/admin/api-keys/index'
 import { Route as AdminOrganizationsIndexRouteImport } from './routes/admin/organizations/index'
 import { Route as AdminOrganizationsIdRouteImport } from './routes/admin/organizations/$id'
+import { Route as AdminReportsIndexRouteImport } from './routes/admin/reports/index'
 import { Route as AdminUsersIndexRouteImport } from './routes/admin/users/index'
 import { Route as AdminUsersIdRouteImport } from './routes/admin/users/$id'
 import { Route as AppApplicationsIndexRouteImport } from './routes/app/applications/index'
@@ -164,6 +165,11 @@ const AdminOrganizationsIndexRoute = AdminOrganizationsIndexRouteImport.update({
 const AdminOrganizationsIdRoute = AdminOrganizationsIdRouteImport.update({
   id: '/organizations/$id',
   path: '/organizations/$id',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminReportsIndexRoute = AdminReportsIndexRouteImport.update({
+  id: '/reports/',
+  path: '/reports/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminUsersIndexRoute = AdminUsersIndexRouteImport.update({
@@ -384,6 +390,7 @@ export interface FileRoutesByFullPath {
   '/app/workers/$id': typeof AppWorkersIdRoute
   '/admin/api-keys/': typeof AdminApiKeysIndexRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
+  '/admin/reports/': typeof AdminReportsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
   '/app/assignments/': typeof AppAssignmentsIndexRoute
@@ -440,6 +447,7 @@ export interface FileRoutesByTo {
   '/app/workers/$id': typeof AppWorkersIdRoute
   '/admin/api-keys': typeof AdminApiKeysIndexRoute
   '/admin/organizations': typeof AdminOrganizationsIndexRoute
+  '/admin/reports': typeof AdminReportsIndexRoute
   '/admin/users': typeof AdminUsersIndexRoute
   '/app/applications': typeof AppApplicationsIndexRoute
   '/app/assignments': typeof AppAssignmentsIndexRoute
@@ -499,6 +507,7 @@ export interface FileRoutesById {
   '/app/workers/$id': typeof AppWorkersIdRoute
   '/admin/api-keys/': typeof AdminApiKeysIndexRoute
   '/admin/organizations/': typeof AdminOrganizationsIndexRoute
+  '/admin/reports/': typeof AdminReportsIndexRoute
   '/admin/users/': typeof AdminUsersIndexRoute
   '/app/applications/': typeof AppApplicationsIndexRoute
   '/app/assignments/': typeof AppAssignmentsIndexRoute
@@ -559,6 +568,7 @@ export interface FileRouteTypes {
     | '/app/workers/$id'
     | '/admin/api-keys/'
     | '/admin/organizations/'
+    | '/admin/reports/'
     | '/admin/users/'
     | '/app/applications/'
     | '/app/assignments/'
@@ -615,6 +625,7 @@ export interface FileRouteTypes {
     | '/app/workers/$id'
     | '/admin/api-keys'
     | '/admin/organizations'
+    | '/admin/reports'
     | '/admin/users'
     | '/app/applications'
     | '/app/assignments'
@@ -673,6 +684,7 @@ export interface FileRouteTypes {
     | '/app/workers/$id'
     | '/admin/api-keys/'
     | '/admin/organizations/'
+    | '/admin/reports/'
     | '/admin/users/'
     | '/app/applications/'
     | '/app/assignments/'
@@ -849,6 +861,13 @@ declare module '@tanstack/react-router' {
       path: '/organizations/$id'
       fullPath: '/admin/organizations/$id'
       preLoaderRoute: typeof AdminOrganizationsIdRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/admin/reports/': {
+      id: '/admin/reports/'
+      path: '/reports'
+      fullPath: '/admin/reports/'
+      preLoaderRoute: typeof AdminReportsIndexRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/admin/users/': {
@@ -1113,6 +1132,7 @@ interface AdminRouteRouteChildren {
   AdminUsersIdRoute: typeof AdminUsersIdRoute
   AdminApiKeysIndexRoute: typeof AdminApiKeysIndexRoute
   AdminOrganizationsIndexRoute: typeof AdminOrganizationsIndexRoute
+  AdminReportsIndexRoute: typeof AdminReportsIndexRoute
   AdminUsersIndexRoute: typeof AdminUsersIndexRoute
 }
 
@@ -1123,6 +1143,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminUsersIdRoute: AdminUsersIdRoute,
   AdminApiKeysIndexRoute: AdminApiKeysIndexRoute,
   AdminOrganizationsIndexRoute: AdminOrganizationsIndexRoute,
+  AdminReportsIndexRoute: AdminReportsIndexRoute,
   AdminUsersIndexRoute: AdminUsersIndexRoute,
 }
 

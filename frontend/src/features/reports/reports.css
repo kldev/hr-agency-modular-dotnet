@@ -1,0 +1,28 @@
+/* A report is a stack of sections; charts sit two to a row on a wide screen. */
+.report-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+	gap: var(--space-5);
+	margin-top: var(--space-5);
+}
+
+.report-grid .data-details-section {
+	margin: 0;
+}
+
+.report-section-body {
+	padding: var(--space-4) var(--space-5) var(--space-5);
+}
+
+.report-hint {
+	font-size: 12px;
+	color: var(--color-text-muted);
+	margin-top: var(--space-2);
+}
+
+.report-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--space-3);
+}

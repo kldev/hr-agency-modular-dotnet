@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import DashboardPage from "#/features/dashboard/pages/DashboardPage";
 import { defaultReportRange, parseReportRange, type ReportRange } from "#/features/reports/period";
+import { PlatformReportPage } from "#/platform-owner/features/reports/pages/PlatformReportPage";
 
-export const Route = createFileRoute("/app/dashboard/")({
-	// Optional, so every existing link to the dashboard stays valid without a search object.
+export const Route = createFileRoute("/admin/reports/")({
 	validateSearch: (search): { range?: ReportRange } => ({
 		range: parseReportRange(search.range),
 	}),
@@ -15,7 +14,7 @@ function RouteComponent() {
 	const navigate = Route.useNavigate();
 
 	return (
-		<DashboardPage
+		<PlatformReportPage
 			range={range ?? defaultReportRange}
 			onRangeChange={(next) =>
 				navigate({ search: { range: next === defaultReportRange ? undefined : next } })

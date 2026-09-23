@@ -15,6 +15,7 @@ export * from "./recruitment-candidates/recruitment-candidates.ts";
 export * from "./recruitment-interviews/recruitment-interviews.ts";
 export * from "./recruitment-job-applications/recruitment-job-applications.ts";
 export * from "./recruitment-job-posting/recruitment-job-posting.ts";
+export * from "./reports/reports.ts";
 export * from "./sales-job-description/sales-job-description.ts";
 export * from "./sales-opportunity/sales-opportunity.ts";
 export * from "./sales-projects/sales-projects.ts";

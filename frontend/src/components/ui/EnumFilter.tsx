@@ -5,6 +5,8 @@ type EnumFilterProps<T extends string> = {
 	onChange: (value: T | null) => void;
 	options: Record<T, string>;
 	allLabel?: string;
+	/** For a choice that always has an answer, like a period: no "All" button. */
+	hideAll?: boolean;
 	className?: string;
 };
 
@@ -13,20 +15,23 @@ export function EnumFilter<T extends string>({
 	onChange,
 	options,
 	allLabel = "All",
+	hideAll = false,
 	className,
 }: EnumFilterProps<T>) {
 	return (
 		<fieldset className={clsx("enum-filter", className)}>
-			<button
-				type="button"
-				className={clsx("enum-filter-button", {
-					"is-selected": value === null,
-				})}
-				aria-pressed={value === null}
-				onClick={() => onChange(null)}
-			>
-				{allLabel}
-			</button>
+			{hideAll ? null : (
+				<button
+					type="button"
+					className={clsx("enum-filter-button", {
+						"is-selected": value === null,
+					})}
+					aria-pressed={value === null}
+					onClick={() => onChange(null)}
+				>
+					{allLabel}
+				</button>
+			)}
 
 			{(Object.keys(options) as T[]).map((option) => (
 				<button
