@@ -28,7 +28,8 @@ function RoleRow({
 	const assigned = project.contacts.find((contact) => contact.role === role);
 
 	return (
-		<div className="project-role-row">
+		// biome-ignore lint/a11y/useSemanticElements: one role and its holder, read-only - not a form group.
+		<div className="project-role-row" role="group" aria-label={contactRoles[role]}>
 			<div>
 				<div className="project-role-label">{contactRoles[role]}</div>
 

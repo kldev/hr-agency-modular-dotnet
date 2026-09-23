@@ -188,18 +188,25 @@ function WizardField({
 	label,
 	hint,
 	required,
+	htmlFor,
 	children,
 }: {
 	label: string;
 	hint?: string;
 	required?: boolean;
+	/** The id of the control inside - a form field's `fieldName` - so the label names it. */
+	htmlFor?: string;
 	children: React.ReactNode;
 }) {
 	return (
 		<div className="space-y-2 mb-5">
-			<label className="block text-sm font-medium text-(--color-text-secondary)">
+			<label htmlFor={htmlFor} className="block text-sm font-medium text-(--color-text-secondary)">
 				{label}
-				{required && <span className="ml-1 text-(--color-danger)">*</span>}
+				{required && (
+					<span aria-hidden="true" className="ml-1 text-(--color-danger)">
+						*
+					</span>
+				)}
 			</label>
 			{children}
 			{hint && <p className="text-xs text-(--color-text-muted)">{hint}</p>}

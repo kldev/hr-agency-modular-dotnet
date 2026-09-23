@@ -193,6 +193,7 @@ export function FormUserPicker({
 				{label}
 			</label>
 			<UsersPicker
+				id={fieldName}
 				placeholder={placeholder}
 				disabled={isSubmitting}
 				value={fieldValue?.id ?? ""}
@@ -230,6 +231,7 @@ export function FormCompanyPicker({
 				{label}
 			</label>
 			<CompaniesPicker
+				id={fieldName}
 				disabled={isSubmitting}
 				value={fieldValue?.id ?? ""}
 				inputValue={input}
@@ -266,6 +268,7 @@ export function FormTeamPicker({
 				{label}
 			</label>
 			<TeamsPicker
+				id={fieldName}
 				placeholder={placeholder}
 				disabled={isSubmitting}
 				value={fieldValue?.id ?? ""}
@@ -300,6 +303,7 @@ export function FormSelectEnum<T extends string>({
 				{label}
 			</label>
 			<EnumSelectFilter
+				id={fieldName}
 				hideAll={true}
 				value={fieldValue ? (fieldValue as T) : null}
 				options={options}
@@ -364,6 +368,7 @@ export function FormDatePicker({
 
 			<DatePicker
 				{...props}
+				id={fieldName}
 				value={initialDate.date}
 				onChange={(val) => handleChange(val ? formatLocalDateTime(val, "12:00") : "")}
 				disabled={isSubmitting}
@@ -595,6 +600,7 @@ export function FormArrayField({
 				{...props}
 				values={fieldValue ?? []}
 				label={undefined}
+				itemLabel={label}
 				disabled={isSubmitting}
 				onChange={(values) => handleChange(values)}
 			/>

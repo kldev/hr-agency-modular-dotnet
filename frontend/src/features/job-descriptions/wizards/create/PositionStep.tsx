@@ -30,6 +30,7 @@ export const PositionStep = withForm({
 				/>
 				<FormWizard.Field
 					label="Company"
+					htmlFor="companyId"
 					required
 					hint={
 						assignment ? "The company cannot be changed after the record is created." : undefined
@@ -54,6 +55,7 @@ export const PositionStep = withForm({
 
 				<FormWizard.Field
 					label="Recruiter"
+					htmlFor="recruiterId"
 					required
 					hint={assignment ? 'Use the "Change recruiter" action to reassign the role.' : undefined}
 				>
@@ -74,7 +76,12 @@ export const PositionStep = withForm({
 					)}
 				</FormWizard.Field>
 
-				<FormWizard.Field label="Job title" required hint="Use a clear, market-facing title.">
+				<FormWizard.Field
+					label="Job title"
+					htmlFor="title"
+					required
+					hint="Use a clear, market-facing title."
+				>
 					<form.AppField name="title">
 						{(field) => (
 							<field.FormInput
@@ -90,6 +97,7 @@ export const PositionStep = withForm({
 
 				<FormWizard.Field
 					label="Short summary"
+					htmlFor="summary"
 					hint="Optional. Keep it concise and focused on the value of the role."
 				>
 					<form.AppField name="summary">

@@ -59,6 +59,7 @@ export const TermsStep = withForm({
 							</label>
 
 							<PositionsPicker
+								id="positionId"
 								projectId={projectId}
 								disabled={isSubmitting}
 								value={positionId}

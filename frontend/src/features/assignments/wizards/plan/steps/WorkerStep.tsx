@@ -57,6 +57,7 @@ export const WorkerStep = withForm({
 							</label>
 
 							<WorkersPicker
+								id="workerId"
 								disabled={isSubmitting}
 								value={workerId}
 								inputValue={input}

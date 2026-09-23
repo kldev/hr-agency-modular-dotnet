@@ -379,7 +379,8 @@ export function DatePicker({
 					inputMode="numeric"
 					autoComplete="off"
 					disabled={disabled}
-					aria-label={ariaLabel ?? placeholder}
+					// With an id an outside `<label htmlFor>` names the field; the placeholder is the fallback.
+					aria-label={ariaLabel ?? (id ? undefined : placeholder)}
 					// The shape to type in; what the field is for is the label and the aria-label.
 					placeholder="dd.mm.yyyy"
 					value={text}

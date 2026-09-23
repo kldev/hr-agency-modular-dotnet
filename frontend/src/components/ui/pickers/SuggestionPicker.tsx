@@ -12,6 +12,8 @@ import "./suggestions.css";
 import { createPortal } from "react-dom";
 
 export type SuggestionPickerProps<T> = {
+	/** Lets an outside `<label htmlFor>` name the input; generated when not given. */
+	id?: string;
 	label?: string;
 	description?: string;
 	placeholder?: string;
@@ -92,6 +94,7 @@ const MENU_MAX_HEIGHT = 320;
 const VIEWPORT_PADDING = 8;
 
 export function SuggestionPicker<T>({
+	id,
 	label,
 	description,
 	placeholder = "Search...",
@@ -122,7 +125,7 @@ export function SuggestionPicker<T>({
 }: SuggestionPickerProps<T>) {
 	const generatedId = useId();
 
-	const inputId = `suggestion-picker-${generatedId}`;
+	const inputId = id ?? `suggestion-picker-${generatedId}`;
 	const listboxId = `${inputId}-listbox`;
 
 	const rootRef = useRef<HTMLDivElement>(null);

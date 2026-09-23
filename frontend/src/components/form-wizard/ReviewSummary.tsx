@@ -65,7 +65,9 @@ export function ReviewErrors<TField extends string>({
 /** One line of a review summary; an empty value reads as a dash rather than as a gap. */
 export function SummaryItem({ label, value }: { label: string; value: string }) {
 	return (
-		<div className="form-wizard__summary-item">
+		// A named group, so the value can be found (and read out) by the label it answers.
+		// biome-ignore lint/a11y/useSemanticElements: a read-only pair, not form controls - a fieldset would announce a form group.
+		<div className="form-wizard__summary-item" role="group" aria-label={label}>
 			<span className="form-wizard__summary-label">{label}</span>
 
 			<span className="form-wizard__summary-value">{value || "—"}</span>

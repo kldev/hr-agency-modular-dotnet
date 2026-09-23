@@ -12,7 +12,11 @@
 			"**/.vscode/**/*",
 			"**/index.html",
 			"**/vite.config.ts",
+			"**/e2e/**/*",
+			"**/playwright.config.ts",
 			"!**/src/routeTree.gen.ts",
+			"!**/playwright-report",
+			"!**/test-results",
 			"!**/src/styles.css"
 		]
 	},

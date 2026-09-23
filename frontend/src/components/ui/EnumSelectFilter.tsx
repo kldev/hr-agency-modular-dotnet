@@ -2,6 +2,9 @@ import clsx from "clsx";
 import { Select } from "./Select";
 
 type EnumSelectFilterProps<T extends string> = {
+	id?: string;
+	/** For a select with no visible label of its own, like one per row of a repeatable field. */
+	"aria-label"?: string;
 	value: T | null;
 	onChange: (value: T | null | undefined) => void;
 	options: Record<T, string>;
@@ -13,6 +16,8 @@ type EnumSelectFilterProps<T extends string> = {
 };
 
 export function EnumSelectFilter<T extends string>({
+	id,
+	"aria-label": ariaLabel,
 	value,
 	onChange,
 	options,
@@ -34,6 +39,8 @@ export function EnumSelectFilter<T extends string>({
 
 	return (
 		<Select
+			id={id}
+			aria-label={ariaLabel}
 			value={value ?? ""}
 			className={clsx("enum-select-filter", className)}
 			onChange={(event) => {

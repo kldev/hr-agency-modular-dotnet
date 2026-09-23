@@ -52,7 +52,13 @@ export function DetailOverviewHeader({
 			</div>
 			{onAdd ? (
 				<div className="toolbar-right">
-					<Button variant="ghost" icon={<Plus size={15} />} onClick={onAdd}></Button>
+					<Button
+						variant="ghost"
+						icon={<Plus size={15} />}
+						aria-label="Add"
+						title="Add"
+						onClick={onAdd}
+					></Button>
 				</div>
 			) : null}
 		</div>

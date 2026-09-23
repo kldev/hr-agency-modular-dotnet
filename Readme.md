@@ -43,6 +43,77 @@ A team outlives the people on it: "the Tiggers team handles this" survives recru
 
 ---
 
+## A look at the panel
+
+Screenshots of the agency panel, taken by the Playwright suite on a freshly seeded platform
+(`yarn e2e:screenshots`, see [End-to-end tests](#end-to-end-tests)) - so they show the screens as they
+are, with data a real run creates. Every person and company in them is made up.
+
+![Login page](docs/screenshots/login.png)
+
+### Recruitment
+
+| Job postings | Candidates | Applications |
+| --- | --- | --- |
+| ![Job postings](docs/screenshots/job-postings.png) | ![Candidates](docs/screenshots/candidates.png) | ![Applications](docs/screenshots/applications.png) |
+
+The job description wizard - one position, written once, before any post goes out:
+
+| Position | Review | Created |
+| --- | --- | --- |
+| ![Job description wizard](docs/screenshots/job-description-wizard.png) | ![Job description review](docs/screenshots/job-description-review.png) | ![Job description details](docs/screenshots/job-description-created.png) |
+
+### Sales
+
+| Pipeline board | Opportunity |
+| --- | --- |
+| ![Sales kanban](docs/screenshots/sales-kanban.png) | ![Sales opportunity](docs/screenshots/sales-opportunity.png) |
+
+| Opportunities | Companies |
+| --- | --- |
+| ![Sales table](docs/screenshots/sales.png) | ![Companies](docs/screenshots/companies.png) |
+
+### Delivery - from a client to people at work
+
+A project for a client, with a signed contract, a responsible contact on the client side, its first
+position and the first person posted onto it - everything a project needs to go live, and what
+follows.
+
+![Project details](docs/screenshots/project.png)
+
+| Contract & contacts | Positions | People |
+| --- | --- | --- |
+| ![Project contract](docs/screenshots/project-contract.png) | ![Project positions](docs/screenshots/project-positions.png) | ![Project people](docs/screenshots/project-people.png) |
+
+| New project wizard | Compliance of a hired-out project in Germany |
+| --- | --- |
+| ![Project wizard](docs/screenshots/project-wizard.png) | ![Project compliance](docs/screenshots/project-compliance.png) |
+
+| Projects | Planning an assignment | Assignment |
+| --- | --- | --- |
+| ![Projects](docs/screenshots/projects.png) | ![Assignment wizard review](docs/screenshots/assignment-wizard-review.png) | ![Assignment](docs/screenshots/assignment.png) |
+
+![Assignments register](docs/screenshots/assignments.png)
+
+### From an application to the workers' register
+
+An applicant is taken onto the register straight from their application; name and contact details
+come along, the passport data is added on the way.
+
+| Identity | Review | Worker file |
+| --- | --- | --- |
+| ![Register worker wizard](docs/screenshots/worker-wizard.png) | ![Register worker review](docs/screenshots/worker-wizard-review.png) | ![Worker details](docs/screenshots/worker-created.png) |
+
+![Workers register](docs/screenshots/workers.png)
+
+### The agency's own structure and teams
+
+| Org chart | Team |
+| --- | --- |
+| ![Organization structure](docs/screenshots/organization-structure.png) | ![Team details](docs/screenshots/teams.png) |
+
+---
+
 ## Architecture
 
 One deployable API composed of business modules, plus three satellite hosts. Modules never reference each other's projects.
@@ -171,6 +242,8 @@ tests/
 ├── HrAgencySystem.UnitTests/               static handlers + NSubstitute + FixedClock
 ├── HrAgencySystem.IntegrationTests/        real HTTP against a PostgreSQL Testcontainer
 └── HrAgencySystem.EmailTemplates.UnitTests/ renders every liquid template
+
+frontend/e2e/                               Playwright: the panel's main flows against the real stack
 ```
 
 Integration tests spin up their **own** PostgreSQL 17 Testcontainer, so Docker must be running but the local compose stack is not required. External Wolverine transports are stubbed, so no broker is needed either. Because projections run in an async daemon, read-model assertions are wrapped in `Eventually.AssertAsync(...)`.
@@ -254,6 +327,43 @@ dotnet test tests/HrAgencySystem.UnitTests
 dotnet test tests/HrAgencySystem.IntegrationTests
 dotnet test tests/HrAgencySystem.UnitTests --filter "FullyQualifiedName~CreateCompanyHandlerTests"
 ```
+
+### End-to-end tests
+
+`frontend/e2e/` drives the real panel in Chromium against the real API - a handful of
+representative flows, not coverage: sign-in, the job description wizard, a project taken live with a
+worker posted onto it, registering an applicant as a worker, a reorganisation of the org chart, a new
+team, and read-only passes over the main lists and the sales pipeline.
+
+They need the stack up and **freshly seeded**, sales included. The seed is not repeatable and the
+tests create records with fixed names (a person belongs to one team, a sibling unit name is unique),
+so every run starts from a clean database:
+
+```bash
+./infrastructure/start.sh --clean && ./infrastructure/start.sh   # or: docker compose down -v / up -d + dotnet run
+curl http://localhost:5000/api/development/seed                   # ~3 minutes
+curl "http://localhost:5000/api/development/seed-sales?count=40&slug=hr-agency"   # the sales board
+
+cd frontend
+npx playwright install chromium   # once
+yarn e2e                          # headless; starts `yarn dev` on :4300 unless it is already running
+yarn e2e:screenshots              # the same run, also rewriting docs/screenshots/*.png
+yarn e2e:ui                       # Playwright UI mode
+yarn e2e:check                    # type-check the suite (it has its own tsconfig)
+```
+
+- Sign-in happens once (`e2e/auth/auth.setup.ts`) as the seeded `j.smith@hr-agency.com`; the session
+  cookies are kept in `frontend/playwright/.auth/`, which git ignores. `E2E_EMAIL`, `E2E_PASSWORD`,
+  `E2E_BASE_URL` and `E2E_THEME` (`dark` by default, the panel's own default) override the defaults.
+- Selectors are roles, labels and visible text - never CSS classes. Where a control had no
+  accessible name the component was fixed rather than given a test id.
+- Records a flow does not create itself (the demo client, an application to promote, a sales
+  opportunity with a history) are set up through the panel's own `/api/*` proxy in
+  `e2e/support/api.ts`.
+- `seed-sales` is random, so the sales board and table differ between seeds; everything the tests
+  create themselves has fixed names and looks the same on every run.
+- Screenshots are 2560×1440 and only written with `SCREENSHOTS=1`; a plain run never touches
+  `docs/`. Audit timestamps ("created at") come from the server and differ between runs.
 
 ---
 

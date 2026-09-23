@@ -100,6 +100,7 @@ function TeamMemberRow({ row, index, isSubmitting, onChange }: TeamMemberRowProp
 			<div className="sm:w-44">
 				<EnumSelectFilter
 					hideAll
+					aria-label={`Team role ${index + 1}`}
 					value={row.role}
 					options={teamRoles}
 					onChange={(value) => {

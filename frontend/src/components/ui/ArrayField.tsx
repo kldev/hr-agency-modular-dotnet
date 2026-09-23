@@ -3,6 +3,11 @@ import { Button } from "./Button";
 
 export type ArrayFieldProps = {
 	label?: string;
+	/**
+	 * Names the rows and the group for assistive tech ("Skills 2") when the visible heading comes
+	 * from elsewhere - a form wrapper that renders its own label. Defaults to `label`, then "Item".
+	 */
+	itemLabel?: string;
 	description?: string;
 	values: string[];
 	placeholder?: string;
@@ -14,6 +19,7 @@ export type ArrayFieldProps = {
 
 export function ArrayField({
 	label,
+	itemLabel = label || "Item",
 	description,
 	values,
 	placeholder,
@@ -50,7 +56,7 @@ export function ArrayField({
 	const canAdd = items.length === 0 || lastItem.trim().length > 0;
 
 	return (
-		<div>
+		<fieldset aria-label={itemLabel} className="min-w-0">
 			<div className="mb-3">
 				{label ? <h3 className="text-sm font-semibold">{label}</h3> : null}
 				{description && <p className="mt-1 text-xs text-(--color-text-muted)">{description}</p>}
@@ -66,7 +72,7 @@ export function ArrayField({
 							<div className="flex items-center gap-2">
 								<input
 									value={item}
-									aria-label={`${label} ${index + 1}`}
+									aria-label={`${itemLabel} ${index + 1}`}
 									aria-invalid={tooShort}
 									placeholder={placeholder}
 									disabled={disabled}
@@ -81,7 +87,7 @@ export function ArrayField({
 								/>
 								<button
 									type="button"
-									aria-label={`Remove ${label?.toLowerCase()} ${index + 1}`}
+									aria-label={`Remove ${itemLabel?.toLowerCase()} ${index + 1}`}
 									disabled={disabled}
 									onClick={() => remove(index)}
 									className={[
@@ -113,6 +119,6 @@ export function ArrayField({
 					Add item
 				</Button>
 			</div>
-		</div>
+		</fieldset>
 	);
 }

@@ -88,7 +88,7 @@ export const EmploymentStep = withForm({
 					</div>
 
 					<div className="grid gap-4 md:grid-cols-3">
-						<FormWizard.Field label="Minimum" required>
+						<FormWizard.Field label="Minimum" htmlFor="salaryMin" required>
 							<form.AppField name="salaryMin">
 								{(field) => (
 									<field.FormMoneyInput
@@ -102,7 +102,7 @@ export const EmploymentStep = withForm({
 								)}
 							</form.AppField>
 						</FormWizard.Field>
-						<FormWizard.Field label="Maximum" required>
+						<FormWizard.Field label="Maximum" htmlFor="salaryMax" required>
 							<form.AppField name="salaryMax">
 								{(field) => (
 									<field.FormMoneyInput
@@ -116,7 +116,7 @@ export const EmploymentStep = withForm({
 								)}
 							</form.AppField>
 						</FormWizard.Field>
-						<FormWizard.Field label="Currency" required>
+						<FormWizard.Field label="Currency" htmlFor="currencyCode" required>
 							<form.AppField name="currencyCode">
 								{(field) => (
 									<field.FormSelectEnum

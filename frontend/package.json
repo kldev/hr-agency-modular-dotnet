@@ -14,7 +14,11 @@
     "lint": "biome lint",
     "check": "biome check",
     "api:gen": "orval && yarn format",
-    "start": "node .output/server/index.mjs"
+    "start": "node .output/server/index.mjs",
+    "e2e": "playwright test",
+    "e2e:screenshots": "SCREENSHOTS=1 playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:check": "tsc -p e2e"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -44,6 +48,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.13",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/devtools-vite": "latest",
     "@tanstack/router-cli": "^1.132.0",

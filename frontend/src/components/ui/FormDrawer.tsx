@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { X } from "lucide-react";
 import type { FormHTMLAttributes, ReactNode } from "react";
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 
 type FormDrawerProps = Omit<FormHTMLAttributes<HTMLFormElement>, "children"> & {
 	open: boolean;
@@ -21,6 +21,8 @@ type FormDrawerFooterProps = {
 };
 
 function FormDrawer({ open, title, children, onClose, className, ...formProps }: FormDrawerProps) {
+	const titleId = useId();
+
 	useEffect(() => {
 		if (!open) {
 			return;
@@ -49,9 +51,17 @@ function FormDrawer({ open, title, children, onClose, className, ...formProps }:
 		<>
 			<div className="drawer-overlay" />
 
-			<form {...formProps} className={clsx("drawer", className)}>
+			<form
+				{...formProps}
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby={titleId}
+				className={clsx("drawer", className)}
+			>
 				<header className="drawer-header">
-					<h2 className="drawer-title">{title}</h2>
+					<h2 id={titleId} className="drawer-title">
+						{title}
+					</h2>
 
 					<button
 						type="button"

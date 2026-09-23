@@ -99,9 +99,12 @@ const FormContent: React.FC<{
 						 */}
 						{!isAgencySide ? (
 							<div className="form-field">
-								<span className="form-label">Copy from the client's contacts</span>
+								<label className="form-label" htmlFor="companyContactId">
+									Copy from the client's contacts
+								</label>
 
 								<CompanyContactsPicker
+									id="companyContactId"
 									companyId={target.project.companyId}
 									value={form.state.values.companyContactId || null}
 									inputValue={pickerQuery}
