@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Infrastructure.OpenApi;
+
 namespace HrAgencySystem.Api.Endpoints.Candidate;
 
 internal static class Endpoint
@@ -18,5 +19,6 @@ internal static class Endpoint
         Maps.MapUpdate.Map(group);
         Maps.MapTagList.Map(group);
         Maps.MapRemoveTagList.Map(group);
+        Maps.MapGetTimeline.Map(group);
     }
 }

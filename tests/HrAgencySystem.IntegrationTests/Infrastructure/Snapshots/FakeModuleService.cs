@@ -12,11 +12,10 @@ using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
-public class FakeModuleService(ITeamSnapshotRepository teams)
-    : IRecruitmentService,
-        ICompanyService,
-        IJobDescriptionService,
-        IIdentityService
+public class FakeModuleService(
+    ITeamSnapshotRepository teams,
+    IJobApplicationInfoQueryRepository applications
+) : IRecruitmentService, ICompanyService, IJobDescriptionService, IIdentityService
 {
     public Task<UserSnapshot> GetUserAsync(Guid userId, CancellationToken ct)
     {
@@ -47,28 +46,27 @@ public class FakeModuleService(ITeamSnapshotRepository teams)
         return Task.FromResult(info);
     }
 
-    public Task<JobApplicationInfo> GetApplicationAsync(
+    /// <summary>
+    /// Real when the application was created over HTTP, made up otherwise - see
+    /// <see cref="FakeJobApplicationInfoQueryRepository"/>.
+    /// </summary>
+    public async Task<JobApplicationInfo> GetApplicationAsync(
         Guid jobApplicationId,
         Guid organizationId,
         CancellationToken ct
     )
     {
-        var candidateInfo = new CandidateInfo(Guid.NewGuid(), "test@fake.com", "", "", "");
-        var result = new JobApplicationInfo(
+        var application = await applications.GetAsync(
             jobApplicationId,
-            organizationId,
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            candidateInfo,
-            "Job Post Title",
-            Guid.NewGuid()
+            OrganizationId.From(organizationId),
+            ct
         );
 
-        return Task.FromResult(result);
+        return application!;
     }
 
     /// <summary>
-    /// The only member here backed by the real thing. The other fakes stand in for data these tests
+    /// Backed by the real thing. The other fakes stand in for data these tests
     /// never create; a team, by contrast, is created over HTTP by the test itself, so faking the
     /// lookup would hide both the happy path and the "no such team" rule.
     /// </summary>

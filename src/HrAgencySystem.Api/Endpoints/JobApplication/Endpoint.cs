@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Infrastructure.OpenApi;
+
 namespace HrAgencySystem.Api.Endpoints.JobApplication;
 
 internal static class Endpoint
@@ -16,6 +17,7 @@ internal static class Endpoint
         Maps.MapRemoveTag.Map(group);
         Maps.MapChangeStatus.Map(group);
         Maps.MapGetNotes.Map(group);
+        Maps.MapGetTimeline.Map(group);
         Maps.MapDeleteNote.Map(group);
         Maps.MapCreateNote.Map(group);
         Maps.MapUpdate.Map(group);

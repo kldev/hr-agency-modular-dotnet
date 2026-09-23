@@ -5,6 +5,7 @@ using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Queries;
 using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Application.Suggestion;
+using HrAgencySystem.Recruitment.Application.Timeline.Queries;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Query;
 using HrAgencySystem.Recruitment.Services;
@@ -36,6 +37,7 @@ public static class RecruitmentServiceCollectionExtensions
             services.AddScoped<INoteRepository, NoteRepository>();
             services.AddScoped<INoteQueryRepository, NoteQueryRepository>();
             services.AddScoped<IInterviewsQueryRepository, InterviewsQueryRepository>();
+            services.AddScoped<ITimelineQueryRepository, TimelineQueryRepository>();
             services.AddScoped<
                 IJobApplicationInfoQueryRepository,
                 JobApplicationInfoQueryRepository

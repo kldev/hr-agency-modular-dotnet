@@ -26,6 +26,7 @@ internal static class RecruitmentEventConfiguration
         options.Events.AddEventType<InterviewerChanged>();
         options.Events.AddEventType<InterviewStatusChanged>();
         options.Events.AddEventType<InterviewFormatChanged>();
+        options.Events.AddEventType<InterviewRescheduled>();
     }
 
     private static void ConfigureJobApplicationEvents(StoreOptions options)
@@ -41,7 +42,9 @@ internal static class RecruitmentEventConfiguration
         options.Events.AddEventType<JobApplicationTagged>();
         options.Events.AddEventType<JobApplicationTagRemoved>();
         options.Events.AddEventType<JobApplicationStatusChanged>();
+        options.Events.AddEventType<JobApplicationNoteAdded>();
         options.Events.AddEventType<JobApplicationNoteDeleted>();
+        options.Events.AddEventType<JobApplicationUpdated>();
         options.Events.AddEventType<JobApplicationReactivated>();
         options.Events.AddEventType<JobApplicationRegisteredAsWorker>();
     }
@@ -60,6 +63,7 @@ internal static class RecruitmentEventConfiguration
     private static void ConfigureCandidateEvents(StoreOptions options)
     {
         options.Events.AddEventType<CandidateCreated>();
+        options.Events.AddEventType<CandidateUpdated>();
         options.Events.AddEventType<CandidateApplicationUpdated>();
         options.Events.AddEventType<CandidateTagged>();
         options.Events.AddEventType<CandidateTagRemoved>();

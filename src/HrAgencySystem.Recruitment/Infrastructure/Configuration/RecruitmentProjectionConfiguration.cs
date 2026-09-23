@@ -1,4 +1,5 @@
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.Recruitment.Projections.Timeline;
 using JasperFx.Events.Projections;
 using Marten;
 using Marten.EntityFrameworkCore;
@@ -18,7 +19,47 @@ internal static class RecruitmentProjectionConfiguration
             ConfigureCandidateProjection(options);
             ConfigureInterviewProjection(options);
             ConfigureJobPostFeedProjection(options);
+            ConfigureTimelineProjection(options);
         }
+    }
+
+    /*
+     * One row per event of the candidate, application and interview streams. Both indexes end
+     * in (OccurredAt, Sequence), the keyset the timeline pages by.
+     */
+    private static void ConfigureTimelineProjection(StoreOptions options)
+    {
+        options.Projections.Add(new TimelineProjection(), ProjectionLifecycle.Async);
+
+        options
+            .Schema.For<TimelineEntry>()
+            .DatabaseSchemaName(SchemaName)
+            .Index(
+                x => new
+                {
+                    x.OrgId,
+                    x.CandidateId,
+                    x.OccurredAt,
+                    x.Sequence,
+                },
+                idx =>
+                {
+                    idx.Name = "idx_timeline_candidate";
+                }
+            )
+            .Index(
+                x => new
+                {
+                    x.OrgId,
+                    x.JobApplicationId,
+                    x.OccurredAt,
+                    x.Sequence,
+                },
+                idx =>
+                {
+                    idx.Name = "idx_timeline_application";
+                }
+            );
     }
 
     /*

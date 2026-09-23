@@ -175,6 +175,7 @@ internal static class ApiEndpoints
             public const string Slice = CandidateBase;
             public const string Get = $"{CandidateBase}/{{candidateId:guid}}";
             public const string Update = $"{CandidateBase}/{{candidateId:guid}}";
+            public const string Timeline = $"{CandidateBase}/{{candidateId:guid}}/timeline";
             public const string Tag = $"{CandidateBase}/{{candidateId:guid}}/tag";
             public const string TagList = $"{CandidateBase}/{{candidateId:guid}}/tag-list";
             public const string RemoveTagList = $"{CandidateBase}/{{candidateId:guid}}/tag/remove";
@@ -191,6 +192,8 @@ internal static class ApiEndpoints
             public const string Update = $"{JobApplicationBase}/{{jobApplicationId:guid}}";
             public const string ChangeStatus = $"{JobApplicationBase}/{{jobApplicationId}}/status";
             public const string Notes = $"{JobApplicationBase}/{{jobApplicationId:guid}}/notes";
+            public const string Timeline =
+                $"{JobApplicationBase}/{{jobApplicationId:guid}}/timeline";
             public const string CreateNote = $"{JobApplicationBase}/{{applicationId:guid}}/note";
             public const string DeleteNote =
                 $"{JobApplicationBase}/{{applicationId:guid}}/note/{{noteId:guid}}";

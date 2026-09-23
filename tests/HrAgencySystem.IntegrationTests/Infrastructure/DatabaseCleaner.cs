@@ -11,6 +11,7 @@ using HrAgencySystem.Organization.Infrastructure.Persistence;
 using HrAgencySystem.Projects.Projections;
 using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Projections;
+using HrAgencySystem.Recruitment.Projections.Timeline;
 using HrAgencySystem.Sales.Documents;
 using HrAgencySystem.Sales.Projections;
 using HrAgencySystem.Teams.Infrastructure.Persistence;
@@ -65,7 +66,9 @@ public sealed class DatabaseCleaner(string connectionString)
     public async Task CleanOrganizations()
     {
         await CleanTable<OrganizationSlugReservation>("organization");
-        await CleanTable<HrAgencySystem.Organization.Projections.OrganizationProjection>("organization");
+        await CleanTable<HrAgencySystem.Organization.Projections.OrganizationProjection>(
+            "organization"
+        );
     }
 
     public async Task CleanCompanyTaxIds()
@@ -135,6 +138,11 @@ public sealed class DatabaseCleaner(string connectionString)
     public async Task CleanJobApplications()
     {
         await CleanTable<JobApplicationProjection>("recruitment");
+    }
+
+    public async Task CleanTimeline()
+    {
+        await CleanTable<TimelineEntry>("recruitment");
     }
 
     public async Task CleanJobPostFeedRows()
