@@ -1,18 +1,20 @@
 using HrAgencySystem.Identity.Application.Owners.Create;
+using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.SharedKernel.Port;
+using HrAgencySystem.SharedKernel.Time;
 using Marten;
 using Microsoft.Extensions.Logging;
-using Wolverine;
+
 
 namespace HrAgencySystem.Identity.Services;
 
-public class SeedStartupAccount(IMessageBus bus, IQuerySession session, ILogger<SeedStartupAccount> logger) : ISeeder
+public class SeedStartupAccount(IDocumentSession session, IClock clock, IPasswordHasher hasher, IOwnerEmailReservationRepository repository, ILogger<SeedStartupAccount> logger) : ISeeder
 {
     public async Task SeedAsync(CancellationToken ct)
     {
         var ownerEmail = Environment.GetEnvironmentVariable("HR_AGENCY_EMAIL") ?? "";
-        var ownerPassword = Environment.GetEnvironmentVariable("HR_AGENCY_PASSWORD")??"";
+        var ownerPassword = Environment.GetEnvironmentVariable("HR_AGENCY_PASSWORD") ?? "";
 
         if (!string.IsNullOrEmpty(ownerEmail) && !string.IsNullOrEmpty(ownerPassword))
         {
@@ -21,9 +23,10 @@ public class SeedStartupAccount(IMessageBus bus, IQuerySession session, ILogger<
 
             logger.LogInformation($"Creating PlatformOwner: {ownerEmail}");
             var createPlatformOwner = new CreatePlatformOwner(ownerEmail, ownerPassword);
-            var result = await bus.InvokeAsync<PlatformOwnerCreated>(createPlatformOwner, ct);
-            logger.LogInformation($"Created PlatformOwner: {result.PlatformOwnerId}");
+            await CreatePlatformOwnerHandler.Handle(createPlatformOwner, session, clock, hasher, repository, ct);
+
+            await session.SaveChangesAsync(ct);
+            logger.LogInformation($"PlatformOwner created");
         }
-        
     }
 }
