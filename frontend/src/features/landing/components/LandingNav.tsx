@@ -22,6 +22,15 @@ export function LandingNav() {
 		return () => window.removeEventListener("scroll", onScroll);
 	}, []);
 
+	// Every link in the menu jumps to a section, so arriving at one closes it - the anchors stay
+	// plain navigation instead of each carrying its own click handler.
+	useEffect(() => {
+		if (!open) return;
+		const onHashChange = () => setOpen(false);
+		window.addEventListener("hashchange", onHashChange);
+		return () => window.removeEventListener("hashchange", onHashChange);
+	}, [open]);
+
 	useEffect(() => {
 		if (!open) return;
 		const onKey = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
@@ -48,7 +57,7 @@ export function LandingNav() {
 					aria-label="Page sections"
 				>
 					{navLinks.map((link) => (
-						<a key={link.href} href={link.href} onClick={() => setOpen(false)}>
+						<a key={link.href} href={link.href}>
 							{link.label}
 						</a>
 					))}
@@ -73,11 +82,7 @@ export function LandingNav() {
 						Sign in
 					</Link>
 
-					<a
-						href="#contact"
-						className="landing-cta landing-cta-small"
-						onClick={() => setOpen(false)}
-					>
+					<a href="#contact" className="landing-cta landing-cta-small">
 						Book a demo
 					</a>
 
