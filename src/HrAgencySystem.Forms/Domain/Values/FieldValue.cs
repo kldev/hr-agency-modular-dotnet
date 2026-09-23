@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using HrAgencySystem.Forms.Domain.Layout;
 
 namespace HrAgencySystem.Forms.Domain.Values;
@@ -24,6 +25,8 @@ public sealed record FieldValue(
 
     public static FieldValue OfDate(DateOnly date) => new(Date: date);
 
+    /// <summary>Worked out, never stored - it would otherwise land in every event and in the API contract.</summary>
+    [JsonIgnore]
     public bool IsEmpty =>
         string.IsNullOrWhiteSpace(Text)
         && Number is null
