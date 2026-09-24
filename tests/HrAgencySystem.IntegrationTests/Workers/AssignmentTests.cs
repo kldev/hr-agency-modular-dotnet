@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.IntegrationTests.Projects;
 using HrAgencySystem.Workers.Application.PlanAssignment;

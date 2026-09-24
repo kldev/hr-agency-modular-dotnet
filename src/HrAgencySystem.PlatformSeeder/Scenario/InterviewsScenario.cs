@@ -80,8 +80,7 @@ public sealed class InterviewsScenario(IMessageBus bus, IQuerySession session)
             RandomEnum<InterviewType>(),
             RandomNote(),
             user.UserId,
-            user.UserId,
-            "Europe/Warsaw"
+            user.UserId
         );
 
         try

@@ -75,7 +75,7 @@ internal class JobFeedTaskRepository(NpgsqlDataSource ds) : IJobFeedTaskReposito
         var cmb = new CommandBuilder(cmd);
         return await conn.FetchListAsync<JobFeedTask>(
             cmb,
-            (r, tok) =>
+            (r, _) =>
             {
                 var result = new JobFeedTask(
                     r.GetGuid(0),

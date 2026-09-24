@@ -49,7 +49,7 @@ internal static class MapPlan
             "How this person is engaged: PostingOfWorkers, TemporaryAgencyWork, Outsourcing or LocalEmployment. With the work country it decides their per-person compliance (A1, local contract)."
         )]
             EngagementType EngagementType,
-        /// <summary>A role opened in that project - the name is the position's, not this request's.</summary>
+        // A role opened in that project - the name is the position's, not this request's.
         [property: Description("The role in that project they take up.")] Guid PositionId,
         [property: Description(
             "First day of the posting. The period must lie within the project's own and must not overlap another assignment of the same person."

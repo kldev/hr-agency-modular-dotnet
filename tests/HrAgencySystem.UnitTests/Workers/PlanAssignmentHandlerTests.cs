@@ -1,15 +1,12 @@
 using HrAgencySystem.Compliance;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
-using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Application.PlanAssignment;
 using HrAgencySystem.Workers.Application.Port;
 using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
-using HrAgencySystem.Workers.Services;
 using Marten;
 using NSubstitute;
 

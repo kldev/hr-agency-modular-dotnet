@@ -1,5 +1,3 @@
-using HrAgencySystem.JobDescription.Domain;
-using HrAgencySystem.JobDescription.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.ValueObjects;
 

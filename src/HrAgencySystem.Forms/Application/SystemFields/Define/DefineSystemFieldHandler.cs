@@ -27,7 +27,10 @@ public static class DefineSystemFieldHandler
         await service.ValidateOrganization(command.OrganizationId, ct);
 
         var streamId = FormsStreamId.ForCatalogue(command.OrganizationId);
-        var catalogue = await session.Events.AggregateStreamAsync<SystemFieldCatalogue>(streamId, token: ct);
+        var catalogue = await session.Events.AggregateStreamAsync<SystemFieldCatalogue>(
+            streamId,
+            token: ct
+        );
 
         var field = Prepare(command, catalogue);
         var createdBy = await service.GetUserAsync(command.CreatedBy, ct);
@@ -55,11 +58,18 @@ public static class DefineSystemFieldHandler
         else if (catalogue?.HasCode(code.Value) == true)
             errors.Add(SystemFieldRules.CodeTakenMessage);
 
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var label = (command.Label ?? "").Trim();
         var description = SystemFieldRules.Blank(command.Description);
-        var (rules, options) = FieldRulesPolicy.Normalize(command.Type, command.Rules, command.Options);
+        var (rules, options) = FieldRulesPolicy.Normalize(
+            command.Type,
+            command.Rules,
+            command.Options
+        );
 
-        errors.AddRange(SystemFieldRules.Check(command.Type, label, description, rules, options, command.Source));
+        errors.AddRange(
+            SystemFieldRules.Check(command.Type, label, description, rules, options, command.Source)
+        );
 
         if (errors.Count > 0)
             throw new ValidationException(errors);

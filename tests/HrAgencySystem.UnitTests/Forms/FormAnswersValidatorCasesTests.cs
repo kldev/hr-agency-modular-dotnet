@@ -20,10 +20,10 @@ public class FormAnswersValidatorCasesTests
         Converters = { new JsonStringEnumConverter() },
     };
 
-    public static TheoryData<string> Cases() => [.. Load().Select(c => c.Name)];
+    public static TheoryData<string> CaseNames() => [.. Load().Select(c => c.Name)];
 
     [Theory]
-    [MemberData(nameof(Cases))]
+    [MemberData(nameof(CaseNames))]
     public void Case_GivesTheExpectedError(string name)
     {
         var @case = Load().Single(c => c.Name == name);
@@ -45,7 +45,9 @@ public class FormAnswersValidatorCasesTests
         );
 
         var pages = new[] { new FormPage(Guid.NewGuid(), "Page", null, [field]) };
-        FieldAnswer[] answers = @case.Value is null ? [] : [new FieldAnswer(FieldCode, @case.Value)];
+        FieldAnswer[] answers = @case.Value is null
+            ? []
+            : [new FieldAnswer(FieldCode, @case.Value)];
 
         var errors = FormAnswersValidator.Validate(
             pages,
@@ -76,5 +78,9 @@ public class FormAnswersValidatorCasesTests
         string? Expected
     );
 
-    private sealed record CaseField(FieldType Type, FieldRules Rules, IReadOnlyList<ChoiceOption> Options);
+    private sealed record CaseField(
+        FieldType Type,
+        FieldRules Rules,
+        IReadOnlyList<ChoiceOption> Options
+    );
 }

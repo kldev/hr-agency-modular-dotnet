@@ -271,7 +271,7 @@ public static class ReportWorkbook
 
         public static Stylesheet Stylesheet() =>
             new(
-                new Fonts(new Font(), new Font(new DocumentFormat.OpenXml.Spreadsheet.Bold())),
+                new Fonts(new Font(), new Font(new Bold())),
                 new Fills(
                     new Fill(new PatternFill { PatternType = PatternValues.None }),
                     new Fill(new PatternFill { PatternType = PatternValues.Gray125 })

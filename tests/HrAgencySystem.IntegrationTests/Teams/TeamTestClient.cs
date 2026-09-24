@@ -3,7 +3,6 @@ using HrAgencySystem.Api.Endpoints.Teams.Maps;
 using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.SharedKernel.Web;
 using HrAgencySystem.Teams.Contracts;
-using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Projections;
 using Xunit.Abstractions;
 using TeamCreated = HrAgencySystem.Teams.Events.TeamCreated;

@@ -13,7 +13,7 @@ namespace HrAgencySystem.Workers.Events;
 public sealed record AssignmentPositionRenamed(
     Guid AssignmentId,
     Guid OrganizationId,
-    /// The person's own row carries a copy of this name too, so the event has to reach them.
+    // The person's own row carries a copy of this name too, so the event has to reach them.
     Guid WorkerId,
     Guid PositionId,
     string Name,

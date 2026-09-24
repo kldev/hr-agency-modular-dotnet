@@ -45,7 +45,9 @@ public static class UpdateJobApplicationHandler
         CandidatePhoneNumber phoneNumber
     ) GetValueObjects(UpdateJobApplication command)
     {
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var (firstName, firstNameError) = FirstName.TryCreate(command.FirstName ?? "", false);
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var (lastName, lastNameError) = LastName.TryCreate(command.LastName ?? "", false);
         var (phoneNumber, phoneNumberError) = CandidatePhoneNumber.TryCreate(command.Phone);
 

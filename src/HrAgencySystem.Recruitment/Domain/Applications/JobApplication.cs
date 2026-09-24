@@ -16,10 +16,10 @@ public sealed class JobApplication : IOrganizationDomain
         return new JobApplication();
     }
 
-    public JobApplicationId Id { get; private set; } = default!;
+    public JobApplicationId Id { get; private set; }
     public OrganizationId OrganizationId { get; private set; }
-    public JobPostId JobPostId { get; private set; } = default!;
-    public CandidateId CandidateId { get; private set; } = default!;
+    public JobPostId JobPostId { get; private set; }
+    public CandidateId CandidateId { get; private set; }
 
     public JobApplicationStatus Status { get; private set; }
     public CandidateSource Source { get; private set; }

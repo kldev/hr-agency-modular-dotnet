@@ -1,4 +1,3 @@
-using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Domain.FollowUp;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.FollowUp;

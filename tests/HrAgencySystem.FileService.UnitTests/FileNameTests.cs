@@ -1,6 +1,6 @@
 namespace HrAgencySystem.FileService.UnitTests;
 
-using FileName = HrAgencySystem.FileService.Domain.FileName;
+using FileName = Domain.FileName;
 
 public sealed class FileNameTests
 {

@@ -33,7 +33,9 @@ internal static class MapCorrect
                 new CorrectFormResponse(
                     responseId,
                     user.OrganizationId,
-                    request.Answers ?? [],
+                    // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+                    request.Answers
+                        ?? [],
                     request.Reason,
                     user.UserId
                 ),
@@ -41,5 +43,8 @@ internal static class MapCorrect
             )
         );
 
-    internal sealed record CorrectFormResponseRequest(IReadOnlyList<FieldAnswer> Answers, string Reason);
+    internal sealed record CorrectFormResponseRequest(
+        IReadOnlyList<FieldAnswer> Answers,
+        string Reason
+    );
 }

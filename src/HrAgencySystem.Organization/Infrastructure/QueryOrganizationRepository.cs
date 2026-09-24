@@ -1,5 +1,4 @@
 using HrAgencySystem.Organization.Domain.ValueObjects;
-using HrAgencySystem.Organization.Events;
 using HrAgencySystem.Organization.Projections;
 using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Tenant;

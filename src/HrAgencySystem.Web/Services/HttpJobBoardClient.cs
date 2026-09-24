@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -23,10 +22,7 @@ public sealed class HttpJobBoardClient(HttpClient http, ILogger<HttpJobBoardClie
         GetAsync<BoardInfo>($"api/internal/boards/{Escape(slug)}", ct);
 
     public Task<BoardPost?> GetPostAsync(string slug, string postSlug, CancellationToken ct) =>
-        GetAsync<BoardPost>(
-            $"api/internal/boards/{Escape(slug)}/posts/{Escape(postSlug)}",
-            ct
-        );
+        GetAsync<BoardPost>($"api/internal/boards/{Escape(slug)}/posts/{Escape(postSlug)}", ct);
 
     public async Task<ApplyResult> ApplyAsync(
         string slug,
@@ -35,14 +31,13 @@ public sealed class HttpJobBoardClient(HttpClient http, ILogger<HttpJobBoardClie
         CancellationToken ct
     )
     {
-        using var response = await SendAsync(
-            () =>
-                http.PostAsJsonAsync(
-                    $"api/internal/boards/{Escape(slug)}/posts/{Escape(postSlug)}/applications",
-                    application,
-                    Json,
-                    ct
-                )
+        using var response = await SendAsync(() =>
+            http.PostAsJsonAsync(
+                $"api/internal/boards/{Escape(slug)}/posts/{Escape(postSlug)}/applications",
+                application,
+                Json,
+                ct
+            )
         );
 
         if (response.IsSuccessStatusCode)
@@ -63,13 +58,12 @@ public sealed class HttpJobBoardClient(HttpClient http, ILogger<HttpJobBoardClie
         CancellationToken ct
     )
     {
-        var response = await SendAsync(
-            () =>
-                http.GetAsync(
-                    $"api/internal/boards/{Escape(slug)}/feed.{format}",
-                    HttpCompletionOption.ResponseHeadersRead,
-                    ct
-                )
+        var response = await SendAsync(() =>
+            http.GetAsync(
+                $"api/internal/boards/{Escape(slug)}/feed.{format}",
+                HttpCompletionOption.ResponseHeadersRead,
+                ct
+            )
         );
 
         if (response.IsSuccessStatusCode)

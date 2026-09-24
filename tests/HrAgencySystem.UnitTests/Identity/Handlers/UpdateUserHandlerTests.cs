@@ -14,7 +14,6 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.SharedKernel.Web.Common;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 
 namespace HrAgencySystem.UnitTests.Identity.Handlers;
 

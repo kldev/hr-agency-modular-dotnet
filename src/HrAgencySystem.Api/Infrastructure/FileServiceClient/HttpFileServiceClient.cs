@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using HrAgencySystem.FileService.Contracts;
 
 namespace HrAgencySystem.Api.Infrastructure.FileServiceClient;
@@ -29,11 +28,9 @@ public sealed class HttpFileServiceClient(
         form.Add(new StringContent(owner.Kind), "ownerKind");
         form.Add(new StringContent(owner.Id.ToString()), "ownerId");
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, "/files")
-        {
-            Content = form,
-            Headers = { Authorization = Bearer(organizationId, uploadedBy) },
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/files");
+        request.Content = form;
+        request.Headers.Authorization = Bearer(organizationId, uploadedBy);
 
         using var response = await Send(request, ct);
 
@@ -57,10 +54,8 @@ public sealed class HttpFileServiceClient(
         CancellationToken ct
     )
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get, $"/files/{fileId}/content")
-        {
-            Headers = { Authorization = Bearer(organizationId, Guid.Empty) },
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/files/{fileId}/content");
+        request.Headers.Authorization = Bearer(organizationId, Guid.Empty);
 
         // Not disposed here on purpose: the content stream outlives the response and is handed to
         // the caller, which streams it to the browser and disposes it then.
@@ -92,10 +87,8 @@ public sealed class HttpFileServiceClient(
         CancellationToken ct
     )
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get, $"/files/{fileId}")
-        {
-            Headers = { Authorization = Bearer(organizationId, Guid.Empty) },
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"/files/{fileId}");
+        request.Headers.Authorization = Bearer(organizationId, Guid.Empty);
 
         using var response = await Send(request, ct);
 
@@ -114,10 +107,8 @@ public sealed class HttpFileServiceClient(
         CancellationToken ct
     )
     {
-        using var request = new HttpRequestMessage(HttpMethod.Delete, $"/files/{fileId}")
-        {
-            Headers = { Authorization = Bearer(organizationId, deletedBy) },
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Delete, $"/files/{fileId}");
+        request.Headers.Authorization = Bearer(organizationId, deletedBy);
 
         using var response = await Send(request, ct);
 

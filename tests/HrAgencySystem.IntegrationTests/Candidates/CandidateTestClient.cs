@@ -1,4 +1,3 @@
-using System.Net;
 using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.Candidate.Maps;
 using HrAgencySystem.IntegrationTests.Infrastructure;

@@ -69,6 +69,7 @@ internal static class ApiEndpoints
     {
         private const string ReportsBase = $"{Base}/reports";
 
+        // ReSharper disable once MemberHidesStaticFromOuterClass
         public const string Recruitment = $"{ReportsBase}/recruitment";
         public const string RecruitmentExport = $"{ReportsBase}/recruitment/export";
 
@@ -87,6 +88,7 @@ internal static class ApiEndpoints
         public const string UpdateSlug = $"{OrganizationBase}/{{organizationId}}/slug";
         public const string GetBySlug = $"{OrganizationBase}/{{slug}}";
 
+        // ReSharper disable once MemberHidesStaticFromOuterClass
         public const string Users = $"{OrganizationBase}/users";
         public const string CreateUser = $"{OrganizationBase}/users";
         public const string UpdateUser = $"{OrganizationBase}/users/{{userId:guid}}";
@@ -472,6 +474,9 @@ internal static class ApiEndpoints
             $"{AssignmentsBase}/{{assignmentId:guid}}/documents/{{documentId:guid}}/content";
     }
 
+    // Each suggestion route is named after the area it suggests from, which is also the name of
+    // that area's own route class above.
+    // ReSharper disable MemberHidesStaticFromOuterClass
     internal static class Suggestions
     {
         private const string SuggestionBase = $"{Base}/suggestion";
@@ -492,6 +497,8 @@ internal static class ApiEndpoints
         public const string Workers = $"{SuggestionBase}/workers";
         public const string Worker = $"{SuggestionBase}/workers/{{workerId:guid}}";
     }
+
+    // ReSharper restore MemberHidesStaticFromOuterClass
 
     // Anonymous, excluded from OpenAPI: the feed files served next to the public job board.
     /// <summary>

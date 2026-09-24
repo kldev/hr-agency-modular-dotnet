@@ -344,7 +344,7 @@ public class AvatarTests(IntegrationEnvironment env, ITestOutputHelper outputHel
     /// </summary>
     private async Task<Guid> CreateUser(Guid organizationId, string email = "me@test.com")
     {
-        var user = await UserClient.CreateAsync(organizationId, email, "John", "Doe");
+        var user = await UserClient.CreateAsync(organizationId, email);
 
         await Eventually.AssertAsync(async () =>
         {

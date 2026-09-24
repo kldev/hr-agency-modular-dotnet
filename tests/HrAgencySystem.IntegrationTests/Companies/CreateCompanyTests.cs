@@ -13,7 +13,7 @@ using JasperFx;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.Company;
+namespace HrAgencySystem.IntegrationTests.Companies;
 
 [Collection(IntegrationCollection.Name)]
 public class CreateCompanyTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)

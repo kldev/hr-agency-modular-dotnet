@@ -5,7 +5,6 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Create;
 using HrAgencySystem.Teams.Application.Port;
 using HrAgencySystem.Teams.Contracts;
-using HrAgencySystem.Teams.Contracts.IntegrationEvents;
 using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using Marten;
@@ -154,7 +153,7 @@ public sealed class CreateTeamHandlerTests
                 Arg.Any<IReadOnlyList<Guid>>(),
                 Arg.Any<CancellationToken>()
             )
-            .Returns<IReadOnlyList<Guid>>([TeamsTestData.SalesUser.Id]);
+            .Returns([TeamsTestData.SalesUser.Id]);
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             Handle(new CreateTeamMember(TeamsTestData.SalesUser.Id, TeamRole.Sales))
@@ -171,7 +170,7 @@ public sealed class CreateTeamHandlerTests
                 Arg.Any<IReadOnlyList<Guid>>(),
                 Arg.Any<CancellationToken>()
             )
-            .Returns<IReadOnlyList<Guid>>([]);
+            .Returns([]);
     }
 
     private void KnowMember(UserSnapshot user)

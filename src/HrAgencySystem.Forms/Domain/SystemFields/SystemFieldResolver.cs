@@ -20,30 +20,62 @@ public static class SystemFieldResolver
         List<LayoutError> errors
     )
     {
-        var labelOverride = string.IsNullOrWhiteSpace(field.LabelOverride) ? null : field.LabelOverride.Trim();
-        var placeholder = string.IsNullOrWhiteSpace(field.Placeholder) ? null : field.Placeholder.Trim();
+        var labelOverride = string.IsNullOrWhiteSpace(field.LabelOverride)
+            ? null
+            : field.LabelOverride.Trim();
+        var placeholder = string.IsNullOrWhiteSpace(field.Placeholder)
+            ? null
+            : field.Placeholder.Trim();
 
         if (field.SystemFieldId is null)
         {
-            errors.Add(new LayoutError(field.FieldId, field.Label ?? "", FormLayoutPolicy.SystemFieldRequiredMessage));
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+            errors.Add(
+                new LayoutError(
+                    field.FieldId,
+                    field.Label ?? "",
+                    FormLayoutPolicy.SystemFieldRequiredMessage
+                )
+            );
 
             return field;
         }
 
-        var definition = catalogue.FirstOrDefault(candidate => candidate.SystemFieldId == field.SystemFieldId);
+        var definition = catalogue.FirstOrDefault(candidate =>
+            candidate.SystemFieldId == field.SystemFieldId
+        );
 
         if (definition is null)
         {
-            errors.Add(new LayoutError(field.FieldId, field.Label ?? "", FormLayoutPolicy.UnknownSystemFieldMessage));
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+            errors.Add(
+                new LayoutError(
+                    field.FieldId,
+                    field.Label ?? "",
+                    FormLayoutPolicy.UnknownSystemFieldMessage
+                )
+            );
 
             return field;
         }
 
         if (definition.IsArchived)
-            errors.Add(new LayoutError(field.FieldId, definition.Label, FormLayoutPolicy.ArchivedSystemFieldMessage));
+            errors.Add(
+                new LayoutError(
+                    field.FieldId,
+                    definition.Label,
+                    FormLayoutPolicy.ArchivedSystemFieldMessage
+                )
+            );
 
         if (labelOverride is { Length: > FormLayoutPolicy.MaxLabelLength })
-            errors.Add(new LayoutError(field.FieldId, definition.Label, FormLayoutPolicy.LabelTooLongMessage));
+            errors.Add(
+                new LayoutError(
+                    field.FieldId,
+                    definition.Label,
+                    FormLayoutPolicy.LabelTooLongMessage
+                )
+            );
 
         return field with
         {

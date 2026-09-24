@@ -23,6 +23,7 @@ public static class RescheduleInterviewHandler
         service.ValidateAggregateUpdate(aggregate, command.OrganizationId);
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var (shortNote, error) = ShortNote.TryCreate(command.Note ?? "", false);
         if (error != null)
             throw new ValidationException(error);

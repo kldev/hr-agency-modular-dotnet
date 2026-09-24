@@ -3,7 +3,6 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Users.Update;
 using HrAgencySystem.Identity.Events;
-using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Web.Common;
 using Wolverine;
 

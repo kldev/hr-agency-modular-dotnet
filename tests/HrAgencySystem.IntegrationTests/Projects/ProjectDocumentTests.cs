@@ -4,7 +4,6 @@ using System.Text;
 using HrAgencySystem.Api.Endpoints.Project.Maps;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.Projects.Application.Documents;
 using HrAgencySystem.Projects.Application.Documents.Remove;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;

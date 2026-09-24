@@ -1,6 +1,4 @@
 using HrAgencySystem.Company.Infrastructure.Configuration;
-using HrAgencySystem.Company.Infrastructure.Query;
-using HrAgencySystem.SharedKernel.Snapshots;
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -24,6 +24,6 @@ public class FileResponse
 
     public Stream? OutputStream { get; set; }
     public string ContentType { get; set; } = string.Empty;
-    public bool FileNotFound { get; set; } = false;
+    public bool FileNotFound { get; set; }
     public string FileNotFoundMessage { get; set; } = string.Empty;
 }

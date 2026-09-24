@@ -20,31 +20,31 @@ namespace HrAgencySystem.Projects.Domain;
 /// </summary>
 public sealed record ProjectPosition(
     Guid PositionId,
-    /// Internal name, unique within the project: "Painter PL contract", "Painter Belgium".
+    // Internal name, unique within the project: "Painter PL contract", "Painter Belgium".
     string Name,
-    /// The name that goes on the document, without our own bookkeeping: "Painter".
+    // The name that goes on the document, without our own bookkeeping: "Painter".
     string ContractName,
     string WorkDescription,
     IReadOnlyList<string> Duties,
     IReadOnlyList<string> RequiredQualifications,
     WorkerContractType ContractType,
     WorkRate? ProposedRate,
-    /// Null means the project's own workplace: one delivery often runs on several sites.
+    // Null means the project's own workplace: one delivery often runs on several sites.
     PostalAddress? WorkplaceAddress,
     decimal? WeeklyHours,
     TimeOnly? WorkStartsAt,
     string WorkSchedule,
-    /// Day of the month wages are paid by; on every contract, and the first thing people ask.
+    // Day of the month wages are paid by; on every contract, and the first thing people ask.
     int? PayoutDay,
     string ProbationPeriod,
     string NoticePeriod,
-    /// Accommodation, transport, per diem - named, because on a posting these are half the offer.
+    // Accommodation, transport, per diem - named, because on a posting these are half the offer.
     IReadOnlyList<string> Allowances,
-    /// The target headcount for this role. Deliberately not a forecast: what a client says they
-    /// will need in two months is a sales matter and a different entity entirely.
+    // The target headcount for this role. Deliberately not a forecast: what a client says they
+    // will need in two months is a sales matter and a different entity entirely.
     int? PlannedHeadcount,
-    /// A hint for the assignment wizard. The engagement type is still stated per person, because
-    /// it is what keys their compliance.
+    // A hint for the assignment wizard. The engagement type is still stated per person, because
+    // it is what keys their compliance.
     EngagementType? DefaultEngagementType,
     bool IsArchived,
     UserSnapshot OpenedBy,

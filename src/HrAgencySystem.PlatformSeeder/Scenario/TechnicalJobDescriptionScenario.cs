@@ -1,5 +1,4 @@
 using HrAgencySystem.JobDescription.Application.Create;
-using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
@@ -17,14 +16,14 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
         if (companyIds.Count == 0 || userIds.Count == 0)
             return Guid.Empty;
 
-        var companyIndex = 0;
-        var userIndex = 0;
+        var companyIndex = 1;
+        var userIndex = 1;
 
         var firstJobDescriptionId = await Create(
-            userIds[userIndex++ % userIds.Count],
+            userIds[0],
             new CreateJobDescription(
                 organizationId,
-                companyIds[companyIndex++ % companyIds.Count],
+                companyIds[0],
                 "Java Backend Developer",
                 null,
                 "We are looking for an experienced Java Backend Developer to join our engineering team.",
@@ -243,10 +242,10 @@ internal sealed class TechnicalJobDescriptionScenario(IMessageBus bus)
         );
 
         await Create(
-            userIds[userIndex++ % userIds.Count],
+            userIds[userIndex % userIds.Count],
             new CreateJobDescription(
                 organizationId,
-                companyIds[companyIndex++ % companyIds.Count],
+                companyIds[companyIndex % companyIds.Count],
                 "Data Engineer",
                 null,
                 "Build and maintain data pipelines supporting analytics and business intelligence.",

@@ -36,7 +36,7 @@ public static class StartAgencyEmploymentHandler
     {
         await service.ValidateOrganization(command.OrganizationId, ct);
 
-        if (command.WeeklyHours is { } hours and (< 0 or > 168))
+        if (command.WeeklyHours is < 0 or > 168)
             throw new ValidationException(WeeklyHoursRangeMessage);
 
         if (command.Rate is not null && !command.MayQuoteRate)

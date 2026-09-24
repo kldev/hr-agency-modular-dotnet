@@ -53,7 +53,7 @@ internal static class WorkerDataFactory
 
         var address = ReadAddress(data, errors);
 
-        var (note, noteError) = LongText.TryCreate(data.Note ?? "", false);
+        var (note, noteError) = LongText.TryCreate(data.Note ?? "");
         if (noteError is not null)
             errors.Add(noteError);
 

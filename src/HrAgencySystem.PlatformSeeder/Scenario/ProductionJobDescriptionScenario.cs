@@ -1,5 +1,4 @@
 using HrAgencySystem.JobDescription.Application.Create;
-using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
 
@@ -238,7 +237,7 @@ internal sealed class ProductionJobDescriptionScenario(IMessageBus bus)
             userIds[userIndex++ % userIds.Count],
             new CreateJobDescription(
                 organizationId,
-                companyIds[companyIndex++ % companyIds.Count],
+                companyIds[companyIndex % companyIds.Count],
                 "Kontroler Jakości",
                 null,
                 "Stanowisko w dziale kontroli jakości odpowiedzialnym za kontrolę wyrobów produkcyjnych.",

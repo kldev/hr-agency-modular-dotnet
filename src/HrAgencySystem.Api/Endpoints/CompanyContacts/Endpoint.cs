@@ -1,5 +1,4 @@
 using HrAgencySystem.Api.Infrastructure.OpenApi;
-using HrAgencySystem.Api.Endpoints.Company.Maps;
 
 namespace HrAgencySystem.Api.Endpoints.CompanyContacts;
 

@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
-using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Application.Users.RequestPasswordReset;
 using HrAgencySystem.Identity.Domain;

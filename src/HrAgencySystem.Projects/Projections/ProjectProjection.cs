@@ -40,11 +40,9 @@ public sealed record ProjectProjection(
     IReadOnlyList<ProjectEmailRecipient> EmailRecipients,
     ProjectContract? Contract,
     IReadOnlyList<ProjectDocument> Documents,
-    /// <summary>
-    /// The roles opened in this delivery, for the project's own page. The register that lists them
-    /// across projects reads <c>ProjectPositionProjection</c> instead - filtering an array is what
-    /// Marten does worst, and that list filters on every field.
-    /// </summary>
+    // The roles opened in this delivery, for the project's own page. The register that lists them
+    // across projects reads ProjectPositionProjection instead - filtering an array is what
+    // Marten does worst, and that list filters on every field.
     IReadOnlyList<ProjectPosition> Positions,
     IReadOnlyList<ComplianceItem> Compliance,
     int DocumentCount,
@@ -59,10 +57,8 @@ public sealed record ProjectProjection(
     UserSnapshot? ModifiedBy,
     DateTimeOffset? ModifiedAt,
     ProjectOpportunity? Opportunity = null,
-    /// <summary>
-    /// The assignments that took a seat on one of the project's roles. A set of ids rather than a
-    /// counter: staffing messages arrive at least once, and a repeat must not count twice.
-    /// </summary>
+    // The assignments that took a seat on one of the project's roles. A set of ids rather than a
+    // counter: staffing messages arrive at least once, and a repeat must not count twice.
     IReadOnlyList<Guid>? StaffedAssignmentIds = null
 )
 {
@@ -230,12 +226,18 @@ public sealed record ProjectProjection(
     public ProjectProjection Apply(ProjectPositionStaffed @event) =>
         (StaffedAssignmentIds ?? []).Contains(@event.AssignmentId)
             ? this
-            : this with { StaffedAssignmentIds = [.. StaffedAssignmentIds ?? [], @event.AssignmentId] };
+            : this with
+            {
+                StaffedAssignmentIds = [.. StaffedAssignmentIds ?? [], @event.AssignmentId],
+            };
 
     public ProjectProjection Apply(ProjectPositionUnstaffed @event) =>
         this with
         {
-            StaffedAssignmentIds = [.. (StaffedAssignmentIds ?? []).Where(id => id != @event.AssignmentId)],
+            StaffedAssignmentIds =
+            [
+                .. (StaffedAssignmentIds ?? []).Where(id => id != @event.AssignmentId),
+            ],
         };
 
     public ProjectProjection Apply(ProjectPositionOpened @event) =>

@@ -165,7 +165,7 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
     /// </summary>
     private async Task CloseLastMonth(
         Guid organizationId,
-        IReadOnlyList<HrAgencySystem.Agency.Domain.OrgUnit> units,
+        IReadOnlyList<OrgUnit> units,
         IReadOnlyList<Guid> withSheets,
         DateOnly month
     )
@@ -174,10 +174,7 @@ internal sealed class TimeRecordScenario(IMessageBus bus, IDocumentSession sessi
 
         foreach (var userId in withSheets)
         {
-            var supervisor = HrAgencySystem.Agency.Domain.SupervisorPolicy.SupervisorOf(
-                units,
-                userId
-            );
+            var supervisor = SupervisorPolicy.SupervisorOf(units, userId);
 
             if (supervisor is null)
                 continue;

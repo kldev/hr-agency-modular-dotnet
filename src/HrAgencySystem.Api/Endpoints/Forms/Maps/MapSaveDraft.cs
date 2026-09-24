@@ -46,7 +46,12 @@ internal static class MapSaveDraft
             IReadOnlyList<FormPage> Pages
     )
     {
-        public SaveFormDraft ToCommand(Guid formId, OrganizationId organizationId, Guid modifiedBy) =>
+        public SaveFormDraft ToCommand(
+            Guid formId,
+            OrganizationId organizationId,
+            Guid modifiedBy
+        ) =>
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             new(formId, organizationId.Value, Pages ?? [], modifiedBy);
     }
 }

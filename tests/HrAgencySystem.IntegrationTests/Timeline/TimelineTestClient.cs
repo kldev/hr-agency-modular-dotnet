@@ -113,8 +113,7 @@ public sealed class TimelineTestClient(HttpClient client)
                 InterviewFormat.Online,
                 InterviewType.Technical,
                 "",
-                Guid.NewGuid(),
-                "Europe/Warsaw"
+                Guid.NewGuid()
             )
         );
         response.EnsureSuccessStatusCode();

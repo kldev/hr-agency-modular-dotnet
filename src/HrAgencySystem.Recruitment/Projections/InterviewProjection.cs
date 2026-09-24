@@ -1,4 +1,3 @@
-using Amazon.Util.Internal.PlatformServices;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Recruitment.Events.Interviews;

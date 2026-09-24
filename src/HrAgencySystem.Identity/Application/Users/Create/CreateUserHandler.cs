@@ -65,7 +65,7 @@ public static class CreateUserHandler
             command.Role,
             passwordHash,
             organizationInfo,
-            user!,
+            user,
             contact.ToContact(),
             clock.UtcNow,
             team

@@ -19,7 +19,7 @@ internal class TestAuthHandler(
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var claims = BuildDefaultClaims(Options);
+        var claims = BuildDefaultClaims();
 
         UseUserId(claims);
         UseTestOrganizationId(claims);
@@ -59,7 +59,7 @@ internal class TestAuthHandler(
         claims.AddRange(testRoles.Select(role => new Claim(AppClaims.Role, role)));
     }
 
-    private List<Claim> BuildDefaultClaims(TestAuthHandlerOptions options)
+    private List<Claim> BuildDefaultClaims()
     {
         List<Claim> claims =
         [

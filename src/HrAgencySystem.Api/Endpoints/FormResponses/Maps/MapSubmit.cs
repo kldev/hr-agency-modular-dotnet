@@ -28,7 +28,13 @@ internal static class MapSubmit
     ) =>
         TypedResults.Ok(
             await bus.InvokeAsync<FormResponseSubmitted>(
-                new SubmitFormResponse(responseId, user.OrganizationId, request.Answers ?? [], user.UserId),
+                // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+                new SubmitFormResponse(
+                    responseId,
+                    user.OrganizationId,
+                    request.Answers ?? [],
+                    user.UserId
+                ),
                 ct
             )
         );

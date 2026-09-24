@@ -1,11 +1,9 @@
-using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Workers.Application.UpdateAssignment;
 using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
 using HrAgencySystem.Workers.Events;
-using HrAgencySystem.Workers.Services;
 using Wolverine;
 
 namespace HrAgencySystem.UnitTests.Workers;

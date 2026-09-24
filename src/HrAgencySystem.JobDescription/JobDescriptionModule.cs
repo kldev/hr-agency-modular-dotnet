@@ -63,6 +63,6 @@ public static class JobDescriptionModule
             .Schema.For<JdStatusChangeHistory>()
             .DatabaseSchemaName(SchemaName)
             .Index(z => new { OrganizationId = z.OrgId })
-            .Index(z => new { OrganizationId = z.OrgId, JobDescriptionId = z.JobDescriptionId });
+            .Index(z => new { OrganizationId = z.OrgId, z.JobDescriptionId });
     }
 }

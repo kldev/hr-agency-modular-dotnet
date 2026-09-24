@@ -32,6 +32,7 @@ public class WorkAuthorisationTests : BaseTest
         // Not a harmless extra row: it would claim this person's right to work depends on a piece
         // of paper, and the next reader would act on it.
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            // ReSharper disable once RedundantArgumentDefaultValue
             Handle(WorkerScenario.Registered(WorkerScenario.PolishCitizenship))
         );
 

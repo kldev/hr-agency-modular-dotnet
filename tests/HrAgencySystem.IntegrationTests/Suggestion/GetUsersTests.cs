@@ -49,7 +49,7 @@ public sealed class GetUsersTests(IntegrationEnvironment environment, ITestOutpu
         var url = "/api/suggestion/users?search=" + search;
         if (roles?.Count > 0)
         {
-            url += "&roles=" + string.Join("&roles=", roles ?? []);
+            url += "&roles=" + string.Join("&roles=", roles);
         }
 
         OutputHelper.WriteLine("url: " + url);

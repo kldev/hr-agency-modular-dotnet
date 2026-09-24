@@ -31,7 +31,7 @@ public static class CreateCompanyContactHandler
             command.OrganizationId,
             command.CompanyId,
             data,
-            company!.Name,
+            company.Name,
             clock.UtcNow
         );
 

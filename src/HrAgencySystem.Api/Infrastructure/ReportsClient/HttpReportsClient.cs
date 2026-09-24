@@ -1,5 +1,4 @@
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using HrAgencySystem.ReportsService.Contracts;
 
 namespace HrAgencySystem.Api.Infrastructure.ReportsClient;
@@ -102,10 +101,8 @@ public sealed class HttpReportsClient(
             $"{route}?{ReportsServiceRoutes.FromQuery}={period.FromText}"
             + $"&{ReportsServiceRoutes.ToQuery}={period.ToText}";
 
-        using var request = new HttpRequestMessage(HttpMethod.Get, uri)
-        {
-            Headers = { Authorization = new AuthenticationHeaderValue("Bearer", token) },
-        };
+        using var request = new HttpRequestMessage(HttpMethod.Get, uri);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         HttpResponseMessage response;
 

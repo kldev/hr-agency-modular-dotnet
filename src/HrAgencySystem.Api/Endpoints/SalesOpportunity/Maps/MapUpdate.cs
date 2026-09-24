@@ -1,10 +1,8 @@
 using System.ComponentModel;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
-using HrAgencySystem.Api.Common.Request;
 using HrAgencySystem.Sales.Application.Opportunities.Update;
 using HrAgencySystem.Sales.Events.Opportunity;
-using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
 

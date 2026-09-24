@@ -1,6 +1,5 @@
 using HrAgencySystem.Teams.Application.Create;
 using HrAgencySystem.Teams.Contracts;
-using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Events;
 using Wolverine;
 

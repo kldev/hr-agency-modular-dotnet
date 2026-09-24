@@ -19,7 +19,8 @@ public static class CorrectFormResponseHandler
 {
     public const int MaxReasonLength = 1000;
 
-    public const string NotSubmittedMessage = "Only a submitted response is corrected. A draft is simply saved.";
+    public const string NotSubmittedMessage =
+        "Only a submitted response is corrected. A draft is simply saved.";
     public const string ReasonRequiredMessage = "Say why the response is being corrected.";
     public const string ReasonTooLongMessage = "The reason cannot exceed 1000 characters.";
 
@@ -33,11 +34,17 @@ public static class CorrectFormResponseHandler
         CancellationToken ct
     )
     {
-        service.ValidateAggregateUpdate(aggregate, command.OrganizationId, "Form response", command.ResponseId);
+        service.ValidateAggregateUpdate(
+            aggregate,
+            command.OrganizationId,
+            "Form response",
+            command.ResponseId
+        );
 
         if (aggregate.Status != FormResponseStatus.Submitted)
             throw new BusinessRuleException(NotSubmittedMessage);
 
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var reason = (command.Reason ?? "").Trim();
 
         if (reason.Length == 0)
@@ -54,8 +61,11 @@ public static class CorrectFormResponseHandler
         // Only what the correction actually changes becomes the person's latest value. Fixing a typo
         // in last year's statement must not bring back the phone number they had last year.
         var changed = answers
-            .Where(answer => aggregate.Answers.All(before =>
-                before.FieldCode != answer.FieldCode || !before.Value.SameAs(answer.Value)))
+            .Where(answer =>
+                aggregate.Answers.All(before =>
+                    before.FieldCode != answer.FieldCode || !before.Value.SameAs(answer.Value)
+                )
+            )
             .ToList();
 
         await ResponseAnswering.UpdateProfile(aggregate, version, changed, now, repository, ct);

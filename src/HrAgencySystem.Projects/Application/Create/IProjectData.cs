@@ -1,5 +1,3 @@
-using HrAgencySystem.Projects.Domain;
-
 namespace HrAgencySystem.Projects.Application.Create;
 
 /// <summary>

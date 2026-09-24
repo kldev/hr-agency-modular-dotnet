@@ -1,5 +1,4 @@
 using HrAgencySystem.Api.Infrastructure.OpenApi;
-using HrAgencySystem.Compliance;
 
 namespace HrAgencySystem.Api.Endpoints.Project;
 

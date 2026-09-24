@@ -140,7 +140,7 @@ public static class ComplianceCatalogue
     ) =>
         [
             .. Requirements
-                .GetValueOrDefault(((country ?? "").Trim().ToUpperInvariant(), engagement), [])
+                .GetValueOrDefault((country.Trim().ToUpperInvariant(), engagement), [])
                 .Where(requirement => ScopeOf(requirement) == scope),
         ];
 

@@ -102,6 +102,7 @@ public class SettlementExportTests(IntegrationEnvironment env, ITestOutputHelper
     [Fact]
     public async Task Another_organization_does_not_see_these_people_in_its_file()
     {
+        // ReSharper disable once RedundantArgumentDefaultValue
         await ApprovedMonthAsync(Guid.NewGuid(), 45m);
         var theirs = await ApprovedMonthAsync(Guid.NewGuid(), 50m);
 
@@ -220,10 +221,10 @@ public class SettlementExportTests(IntegrationEnvironment env, ITestOutputHelper
 
         var workbook = document.WorkbookPart!;
         var sheet = workbook
-            .Workbook.Sheets!.Elements<Sheet>()
+            .Workbook!.Sheets!.Elements<Sheet>()
             .Single(s => s.Name == SettlementWorkbook.SummarySheet);
         var rows = ((WorksheetPart)workbook.GetPartById(sheet.Id!))
-            .Worksheet.GetFirstChild<SheetData>()!
+            .Worksheet!.GetFirstChild<SheetData>()!
             .Elements<Row>()
             .Select(row =>
                 row.Elements<Cell>()

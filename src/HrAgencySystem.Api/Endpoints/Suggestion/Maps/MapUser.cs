@@ -2,7 +2,6 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Api.Endpoints.Suggestion.Maps;
 

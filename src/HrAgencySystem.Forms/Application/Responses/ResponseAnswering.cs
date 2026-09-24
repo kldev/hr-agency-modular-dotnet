@@ -4,7 +4,6 @@ using HrAgencySystem.Forms.Domain.Layout;
 using HrAgencySystem.Forms.Domain.Responses;
 using HrAgencySystem.Forms.Domain.Validation;
 using HrAgencySystem.Forms.Domain.Values;
-using HrAgencySystem.Forms.Services;
 using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.Forms.Application.Responses;
@@ -12,7 +11,8 @@ namespace HrAgencySystem.Forms.Application.Responses;
 /// <summary>What saving, submitting and correcting a response share: the version, and the answers checked against it.</summary>
 internal static class ResponseAnswering
 {
-    public const string VersionMissingMessage = "The form version this response was started on cannot be found.";
+    public const string VersionMissingMessage =
+        "The form version this response was started on cannot be found.";
 
     public static async Task<FormVersion> VersionOf(
         FormResponse response,
@@ -54,12 +54,14 @@ internal static class ResponseAnswering
         CancellationToken ct
     )
     {
-        var systemCodes = version.Pages.AllFields
-            .Where(field => field.Source == FieldSource.System)
+        var systemCodes = version
+            .Pages.AllFields.Where(field => field.Source == FieldSource.System)
             .Select(field => field.Code)
             .ToHashSet();
 
-        var systemAnswers = answers.Where(answer => systemCodes.Contains(answer.FieldCode)).ToList();
+        var systemAnswers = answers
+            .Where(answer => systemCodes.Contains(answer.FieldCode))
+            .ToList();
 
         if (systemAnswers.Count == 0)
             return;

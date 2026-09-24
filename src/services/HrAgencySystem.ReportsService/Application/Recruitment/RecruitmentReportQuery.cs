@@ -11,9 +11,11 @@ namespace HrAgencySystem.ReportsService.Application.Recruitment;
 /// </summary>
 public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
 {
-    private const string JobPosts = $"{ReportsSchema.Name}.{ReportsSchema.Tables.JobPosts}";
-    private const string Applications = $"{ReportsSchema.Name}.{ReportsSchema.Tables.Applications}";
-    private const string Interviews = $"{ReportsSchema.Name}.{ReportsSchema.Tables.Interviews}";
+    private const string JobPostsTable = $"{ReportsSchema.Name}.{ReportsSchema.Tables.JobPosts}";
+    private const string ApplicationsTable =
+        $"{ReportsSchema.Name}.{ReportsSchema.Tables.Applications}";
+    private const string InterviewsTable =
+        $"{ReportsSchema.Name}.{ReportsSchema.Tables.Interviews}";
 
     /*
      * The funnel counts "reached at least": an application moved straight from screening to an
@@ -22,22 +24,22 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
      */
     private const string Sql = $"""
         select
-            (select count(*) from {JobPosts}
+            (select count(*) from {JobPostsTable}
               where organization_id = @org and first_published_at >= @from and first_published_at < @to)
                 as "JobPostsPublished",
-            (select count(*) from {Applications}
+            (select count(*) from {ApplicationsTable}
               where organization_id = @org and created_at >= @from and created_at < @to)
                 as "Applications",
-            (select count(*) from {Interviews}
+            (select count(*) from {InterviewsTable}
               where organization_id = @org and created_at >= @from and created_at < @to)
                 as "InterviewsScheduled",
-            (select count(*) from {Interviews}
+            (select count(*) from {InterviewsTable}
               where organization_id = @org and completed_at >= @from and completed_at < @to)
                 as "InterviewsHeld",
-            (select count(*) from {Applications}
+            (select count(*) from {ApplicationsTable}
               where organization_id = @org and offer_at >= @from and offer_at < @to)
                 as "Offers",
-            (select count(*) from {Applications}
+            (select count(*) from {ApplicationsTable}
               where organization_id = @org and hired_at >= @from and hired_at < @to)
                 as "Hires";
 
@@ -50,31 +52,31 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
             count(hired_at) as "Hired",
             count(rejected_at) as "Rejected",
             count(withdrawn_at) as "Withdrawn"
-        from {Applications}
+        from {ApplicationsTable}
         where organization_id = @org and created_at >= @from and created_at < @to;
 
         select date_trunc('month', created_at at time zone 'UTC') as "Month", 'applications' as "Metric", count(*) as "Count"
-          from {Applications}
+          from {ApplicationsTable}
          where organization_id = @org and created_at >= @from and created_at < @to
          group by 1
         union all
         select date_trunc('month', created_at at time zone 'UTC'), 'interviews', count(*)
-          from {Interviews}
+          from {InterviewsTable}
          where organization_id = @org and created_at >= @from and created_at < @to
          group by 1
         union all
         select date_trunc('month', offer_at at time zone 'UTC'), 'offers', count(*)
-          from {Applications}
+          from {ApplicationsTable}
          where organization_id = @org and offer_at >= @from and offer_at < @to
          group by 1
         union all
         select date_trunc('month', hired_at at time zone 'UTC'), 'hires', count(*)
-          from {Applications}
+          from {ApplicationsTable}
          where organization_id = @org and hired_at >= @from and hired_at < @to
          group by 1;
 
         select source, count(*) as "Applications"
-          from {Applications}
+          from {ApplicationsTable}
          where organization_id = @org and created_at >= @from and created_at < @to
          group by source
          order by count(*) desc, source;
@@ -153,6 +155,8 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
         }
     }
 
+    // Rows materialized by Dapper, which sets the init accessors through reflection.
+    // ReSharper disable UnusedAutoPropertyAccessor.Local
     private sealed class TotalsRow
     {
         public long JobPostsPublished { get; init; }
@@ -187,4 +191,5 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
         public string Source { get; init; } = "";
         public long Applications { get; init; }
     }
+    // ReSharper restore UnusedAutoPropertyAccessor.Local
 }

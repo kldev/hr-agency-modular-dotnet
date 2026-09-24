@@ -4,6 +4,7 @@ using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Domain.ValueObjects;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Marten;
@@ -139,7 +140,7 @@ public class CreateProjectHandlerTests : BaseTest
         var service = ProjectScenario.Service();
         service
             .GetCompanyAsync(
-                Arg.Any<HrAgencySystem.SharedKernel.Tenant.OrganizationId>(),
+                Arg.Any<OrganizationId>(),
                 Arg.Any<Guid>(),
                 Arg.Any<CancellationToken>()
             )

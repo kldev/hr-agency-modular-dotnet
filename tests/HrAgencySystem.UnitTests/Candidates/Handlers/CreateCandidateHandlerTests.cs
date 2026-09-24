@@ -302,23 +302,23 @@ public class CreateCandidateHandlerTests : BaseTest
 
         var result = await Handle(command);
 
-        Received.InOrder(async () =>
+        Received.InOrder(() =>
         {
-            await _service.ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
+            _ = _service.ValidateOrganization(OrganizationId, Arg.Any<CancellationToken>());
 
-            await _emailReservationRepository.ExistsAsync(
+            _ = _emailReservationRepository.ExistsAsync(
                 Arg.Any<OrganizationId>(),
                 Arg.Any<Email>(),
                 Arg.Any<CancellationToken>()
             );
 
-            await _emailReservationRepository.ReserveAsync(
+            _ = _emailReservationRepository.ReserveAsync(
                 Arg.Any<OrganizationId>(),
                 Arg.Any<Email>(),
                 new CandidateId(result.CandidateId)
             );
 
-            await _service.GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
+            _ = _service.GetUserAsync(CreatedById, Arg.Any<CancellationToken>());
         });
     }
 

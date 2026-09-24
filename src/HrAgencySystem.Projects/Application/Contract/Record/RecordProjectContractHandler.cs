@@ -86,6 +86,7 @@ public static class RecordProjectContractHandler
     {
         var errors = new List<string>();
 
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var number = (command.ContractNumber ?? "").Trim();
         if (number.Length == 0)
             errors.Add(ContractNumberRequiredMessage);

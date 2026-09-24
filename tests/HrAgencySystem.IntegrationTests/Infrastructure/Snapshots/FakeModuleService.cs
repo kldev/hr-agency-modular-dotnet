@@ -2,7 +2,6 @@ using HrAgencySystem.Company.Services;
 using HrAgencySystem.Identity.Services;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;

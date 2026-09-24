@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using HrAgencySystem.Api.Endpoints.Project.Maps;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.Projects.Domain;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Projects;

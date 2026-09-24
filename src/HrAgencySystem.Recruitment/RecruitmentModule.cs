@@ -7,8 +7,6 @@ namespace HrAgencySystem.Recruitment;
 
 public static class RecruitmentModule
 {
-    private const string SchemaName = "recruitment";
-
     public static void AddRecruitmentModule(
         this IServiceCollection services,
         IConfiguration configuration

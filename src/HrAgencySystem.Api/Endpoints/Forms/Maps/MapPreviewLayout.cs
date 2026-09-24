@@ -30,10 +30,14 @@ internal static class MapPreviewLayout
     )
     {
         // The form itself is checked so the route cannot be used on another organization's id.
-        _ = await repository.GetForm(user.GetOrganization, formId, ct)
+        _ =
+            await repository.GetForm(user.GetOrganization, formId, ct)
             ?? throw new SharedKernel.Exception.NotFoundException("Form", formId);
 
-        return TypedResults.Ok(await repository.PreviewLayout(user.GetOrganization, request.Pages ?? [], ct));
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        return TypedResults.Ok(
+            await repository.PreviewLayout(user.GetOrganization, request.Pages ?? [], ct)
+        );
     }
 
     internal sealed record PreviewLayoutRequest(IReadOnlyList<FormPage> Pages);

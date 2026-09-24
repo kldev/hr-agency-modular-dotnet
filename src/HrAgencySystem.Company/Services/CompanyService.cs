@@ -1,7 +1,6 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
-using HrAgencySystem.SharedKernel.Tenant;
 
 namespace HrAgencySystem.Company.Services;
 

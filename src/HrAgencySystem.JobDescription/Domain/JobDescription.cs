@@ -47,7 +47,7 @@ public sealed class JobDescription
 
     public Guid CreatedBy { get; set; }
 
-    public Guid? ModifiedBy { get; set; } = null;
+    public Guid? ModifiedBy { get; set; }
 
     public static JobDescription Empty()
     {

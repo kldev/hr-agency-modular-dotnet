@@ -111,15 +111,15 @@ public sealed class ReportWorkbookTests
         SpreadsheetDocument.Open(new MemoryStream(bytes), false);
 
     private static List<string> SheetNames(SpreadsheetDocument document) =>
-        [.. document.WorkbookPart!.Workbook.Sheets!.Elements<Sheet>().Select(s => s.Name!.Value!)];
+        [.. document.WorkbookPart!.Workbook!.Sheets!.Elements<Sheet>().Select(s => s.Name!.Value!)];
 
     private static List<Row> Rows(SpreadsheetDocument document, string sheet)
     {
         var workbook = document.WorkbookPart!;
-        var id = workbook.Workbook.Sheets!.Elements<Sheet>().Single(s => s.Name == sheet).Id!;
+        var id = workbook.Workbook!.Sheets!.Elements<Sheet>().Single(s => s.Name == sheet).Id!;
         var part = (WorksheetPart)workbook.GetPartById(id!);
 
-        return [.. part.Worksheet.GetFirstChild<SheetData>()!.Elements<Row>()];
+        return [.. part.Worksheet!.GetFirstChild<SheetData>()!.Elements<Row>()];
     }
 
     private static List<string> Texts(Row row) =>

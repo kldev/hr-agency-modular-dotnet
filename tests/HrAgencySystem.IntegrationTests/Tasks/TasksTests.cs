@@ -5,7 +5,6 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Sales.Domain.Activity;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.Tasks.Application;
-using HrAgencySystem.Tasks.Application.Port;
 using HrAgencySystem.Tasks.Domain;
 using HrAgencySystem.Tasks.Domain.ValueObjects;
 using HrAgencySystem.Tasks.Services;
@@ -24,7 +23,10 @@ namespace HrAgencySystem.IntegrationTests.Tasks;
 public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)
     : BaseIntegrationTest(env, outputHelper)
 {
-    private readonly TasksTestClient _tasks = new(env.CreateClient().AsOrganizationRoles(), outputHelper);
+    private readonly TasksTestClient _tasks = new(
+        env.CreateClient().AsOrganizationRoles(),
+        outputHelper
+    );
 
     private readonly Guid _organizationId = Guid.NewGuid();
     private readonly Guid _userId = Guid.NewGuid();
@@ -80,7 +82,10 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
 
         var week = await _tasks.BoardAsync(_organizationId, _userId, TaskRangeKind.Week);
         Assert.True(week.Active.Single(t => t.Title == "overdue").IsOverdue);
-        Assert.Equal(week.Active.OrderBy(t => t.DueAt).Select(t => t.Id), week.Active.Select(t => t.Id));
+        Assert.Equal(
+            week.Active.OrderBy(t => t.DueAt).Select(t => t.Id),
+            week.Active.Select(t => t.Id)
+        );
     }
 
     [Fact]
@@ -171,7 +176,10 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
                 Assert.Equal("Recruitment Q4", logged.OpportunityTitle);
                 Assert.Contains("Send recruitment proposal", logged.Note);
 
-                var row = await OpportunityTestClient.Get(_organizationId, opportunity.OpportunityId);
+                var row = await OpportunityTestClient.Get(
+                    _organizationId,
+                    opportunity.OpportunityId
+                );
                 Assert.Equal(SalesActivityType.Task, row.LastActivityType);
                 Assert.Equal(logged.CreatedAt, row.LastActivityAt);
             },
@@ -187,9 +195,21 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
         var colleague = Guid.NewGuid();
         var now = DateTimeOffset.UtcNow;
 
-        var mine = await _tasks.CreateAsync(_organizationId, _userId, TasksTestClient.Request(acme, now));
-        var mineElsewhere = await _tasks.CreateAsync(_organizationId, _userId, TasksTestClient.Request(other, now));
-        var theirs = await _tasks.CreateAsync(_organizationId, colleague, TasksTestClient.Request(acme, now));
+        var mine = await _tasks.CreateAsync(
+            _organizationId,
+            _userId,
+            TasksTestClient.Request(acme, now)
+        );
+        var mineElsewhere = await _tasks.CreateAsync(
+            _organizationId,
+            _userId,
+            TasksTestClient.Request(other, now)
+        );
+        var theirs = await _tasks.CreateAsync(
+            _organizationId,
+            colleague,
+            TasksTestClient.Request(acme, now)
+        );
         var handedToMe = await _tasks.CreateAsync(
             _organizationId,
             colleague,
@@ -204,7 +224,12 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
                 all.Active.Select(t => t.Id).ToHashSet()
             );
 
-            var acmeOnly = await _tasks.BoardAsync(_organizationId, _userId, TaskRangeKind.Week, acme);
+            var acmeOnly = await _tasks.BoardAsync(
+                _organizationId,
+                _userId,
+                TaskRangeKind.Week,
+                acme
+            );
             Assert.Equal(
                 new HashSet<Guid> { mine.TaskId, handedToMe.TaskId },
                 acmeOnly.Active.Select(t => t.Id).ToHashSet()
@@ -212,7 +237,12 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
             Assert.All(acmeOnly.Active, t => Assert.Equal(acme, t.Company.Id));
         });
 
-        Assert.DoesNotContain(theirs.TaskId, (await _tasks.BoardAsync(_organizationId, _userId, TaskRangeKind.Week)).Active.Select(t => t.Id));
+        Assert.DoesNotContain(
+            theirs.TaskId,
+            (await _tasks.BoardAsync(_organizationId, _userId, TaskRangeKind.Week)).Active.Select(
+                t => t.Id
+            )
+        );
     }
 
     [Fact]
@@ -268,7 +298,11 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
         var response = await _tasks.CreateResponseAsync(
             _organizationId,
             _userId,
-            TasksTestClient.Request(companyId, DateTimeOffset.UtcNow, opportunityId: foreignDeal.OpportunityId)
+            TasksTestClient.Request(
+                companyId,
+                DateTimeOffset.UtcNow,
+                opportunityId: foreignDeal.OpportunityId
+            )
         );
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -286,7 +320,11 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
         var response = await _tasks.CreateResponseAsync(
             _organizationId,
             _userId,
-            TasksTestClient.Request(companyId, DateTimeOffset.UtcNow, opportunityId: deal.OpportunityId)
+            TasksTestClient.Request(
+                companyId,
+                DateTimeOffset.UtcNow,
+                opportunityId: deal.OpportunityId
+            )
         );
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -347,7 +385,11 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
             Assert.Equal(colleague, row.AssigneeId);
         });
 
-        Assert.Empty((await _tasks.BoardAsync(_organizationId, _userId, TaskRangeKind.Month)).Active);
-        Assert.Single((await _tasks.BoardAsync(_organizationId, colleague, TaskRangeKind.Month)).Active);
+        Assert.Empty(
+            (await _tasks.BoardAsync(_organizationId, _userId, TaskRangeKind.Month)).Active
+        );
+        Assert.Single(
+            (await _tasks.BoardAsync(_organizationId, colleague, TaskRangeKind.Month)).Active
+        );
     }
 }

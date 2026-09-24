@@ -26,7 +26,7 @@ public sealed class FileStore(
         CancellationToken ct
     )
     {
-        var name = Domain.FileName.Sanitize(fileName);
+        var name = FileName.Sanitize(fileName);
 
         var rejection = inspector.Inspect(contentType, name, size);
         if (rejection is not null)

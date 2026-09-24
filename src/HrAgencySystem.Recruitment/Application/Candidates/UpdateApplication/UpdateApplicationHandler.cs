@@ -1,7 +1,5 @@
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Services;
-using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Microsoft.Extensions.Logging;
 using Wolverine.Marten;

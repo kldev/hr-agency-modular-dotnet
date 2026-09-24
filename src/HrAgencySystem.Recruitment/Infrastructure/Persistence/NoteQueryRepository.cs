@@ -26,7 +26,7 @@ public sealed class NoteQueryRepository(IQuerySession session) : INoteQueryRepos
                 z.JobApplicationId,
                 z.CreatedAt
             ))
-            .ToListAsync<ApplicationNoteItem>(ct);
+            .ToListAsync(ct);
 
         return result;
     }

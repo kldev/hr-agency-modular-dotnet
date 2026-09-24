@@ -268,7 +268,7 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
     /// Creates the named head, puts them in the unit and then names them - in that order, because
     /// the head of a unit is one of its own people and the command refuses anything else.
     /// </summary>
-    private async Task<Guid> SeatHead(
+    private async Task SeatHead(
         Guid organizationId,
         string slug,
         Guid unitId,
@@ -277,7 +277,7 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
     )
     {
         if (!spec.WantsHead)
-            return Guid.Empty;
+            return;
 
         var headId = await CreateUser(
             organizationId,
@@ -290,8 +290,6 @@ internal sealed class OrgStructureScenario(IMessageBus bus)
 
         await AddMember(organizationId, unitId, headId, modifiedBy, spec.HeadTitle);
         await AssignHead(organizationId, unitId, headId, modifiedBy);
-
-        return headId;
     }
 
     private async Task AssignHead(

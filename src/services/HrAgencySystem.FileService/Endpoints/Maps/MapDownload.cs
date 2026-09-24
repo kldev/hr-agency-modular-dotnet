@@ -13,7 +13,7 @@ internal static class MapDownload
             .MapGet(ServiceEndpoints.Content, Handler)
             .WithSummary("Download file")
             .WithName("Download file")
-            .Produces<IResult>(StatusCodes.Status200OK)
+            .Produces<IResult>()
             .Produces(StatusCodes.Status404NotFound);
     }
 

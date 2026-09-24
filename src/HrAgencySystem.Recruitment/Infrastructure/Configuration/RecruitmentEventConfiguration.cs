@@ -1,4 +1,3 @@
-using HrAgencySystem.Recruitment.Contracts.IntegrationEvents;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Events.Interviews;

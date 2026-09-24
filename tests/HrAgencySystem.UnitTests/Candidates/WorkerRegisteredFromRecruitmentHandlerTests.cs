@@ -141,7 +141,7 @@ public class WorkerRegisteredFromRecruitmentHandlerTests : BaseTest
     private void Given(Candidate? candidate, JobApplication? application)
     {
         _events
-            .AggregateStreamAsync<Candidate>(
+            .AggregateStreamAsync(
                 CandidateId,
                 Arg.Any<long>(),
                 Arg.Any<DateTimeOffset?>(),
@@ -152,7 +152,7 @@ public class WorkerRegisteredFromRecruitmentHandlerTests : BaseTest
             .Returns(candidate);
 
         _events
-            .AggregateStreamAsync<JobApplication>(
+            .AggregateStreamAsync(
                 ApplicationId,
                 Arg.Any<long>(),
                 Arg.Any<DateTimeOffset?>(),
@@ -213,7 +213,9 @@ public class WorkerRegisteredFromRecruitmentHandlerTests : BaseTest
         );
 
         if (workerId is { } id)
-            candidate.Apply(new CandidateRegisteredAsWorker(CandidateId, id, DateTimeOffset.UtcNow));
+            candidate.Apply(
+                new CandidateRegisteredAsWorker(CandidateId, id, DateTimeOffset.UtcNow)
+            );
 
         return candidate;
     }

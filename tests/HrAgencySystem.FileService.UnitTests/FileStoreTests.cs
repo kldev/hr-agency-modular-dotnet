@@ -34,7 +34,7 @@ public sealed class FileStoreTests
 
         await _storage.DidNotReceiveWithAnyArgs().StoreAsync(default!, default!, default!, default);
         _session.DidNotReceiveWithAnyArgs().Insert(Arg.Any<StoredFile>());
-        await _session.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
+        await _session.DidNotReceiveWithAnyArgs().SaveChangesAsync();
     }
 
     [Fact]

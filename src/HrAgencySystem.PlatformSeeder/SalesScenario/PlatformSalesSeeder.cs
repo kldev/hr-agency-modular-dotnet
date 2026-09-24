@@ -13,7 +13,6 @@ using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using JasperFx.Events;
 using Marten;
 using Microsoft.Extensions.Logging;
 
@@ -28,8 +27,8 @@ public sealed class PlatformSalesSeeder(
 {
     private static readonly Faker Faker = new();
     private CancellationToken Ct { get; set; }
-    private int Total { get; set; } = 0;
-    private int AggregateLoadTotal { get; set; } = 0;
+    private int Total { get; set; }
+    private int AggregateLoadTotal { get; set; }
 
     public async Task Seed(
         int opportunityCount = 500,
@@ -219,7 +218,7 @@ public sealed class PlatformSalesSeeder(
                 "Opportunity {OpportunityId} has {EventCount} events. Last event: {LastEvent}",
                 command.OpportunityId,
                 allEvents.Count,
-                allEvents.LastOrDefault()?.Data?.GetType().Name
+                allEvents.LastOrDefault()?.Data.GetType().Name
             );
 
             var opportunityAggregate = SalesOpportunity.Empty();

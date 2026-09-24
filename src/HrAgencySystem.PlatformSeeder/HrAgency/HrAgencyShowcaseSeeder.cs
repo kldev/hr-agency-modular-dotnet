@@ -12,7 +12,7 @@ public sealed partial class HrAgencyShowcaseSeeder(
     IMessageBus bus,
     IDocumentSession session,
     ISalesService sales,
-    ILogger<HrAgency.HrAgencyShowcaseSeeder> logger
+    ILogger<HrAgencyShowcaseSeeder> logger
 ) : IPlatformSeeder
 {
     /// <summary>The one agency that gets projects, workers and assignments.</summary>

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using HrAgencySystem.Recruitment.Documents;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Candidates;
@@ -51,7 +50,10 @@ public sealed record CandidateProjection(
     public Guid? WorkerId { get; init; }
 
     public CandidateProjection Apply(CandidateRegisteredAsWorker @event) =>
-        this with { WorkerId = @event.WorkerId };
+        this with
+        {
+            WorkerId = @event.WorkerId,
+        };
 
     public static CandidateProjection Create(CandidateCreated @event)
     {

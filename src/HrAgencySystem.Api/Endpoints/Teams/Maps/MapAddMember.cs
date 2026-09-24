@@ -4,7 +4,6 @@ using HrAgencySystem.Api.Common;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.Teams.Application.Members.Add;
 using HrAgencySystem.Teams.Contracts;
-using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Events;
 using Microsoft.AspNetCore.Mvc;
 using Wolverine;

@@ -2,7 +2,6 @@ using HrAgencySystem.JobDescription.Application.Create;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.JobDescription.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 

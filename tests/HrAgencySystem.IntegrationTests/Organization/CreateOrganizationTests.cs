@@ -8,7 +8,6 @@ using HrAgencySystem.Organization.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using JasperFx;
 using Microsoft.AspNetCore.Mvc;
-using Npgsql;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Organization;
@@ -51,7 +50,7 @@ public sealed class CreateOrganizationTests : BaseIntegrationTest
     [Fact]
     public async Task Post_organization_without_name_returns_bad_request()
     {
-        var request = CreateOrganizationRequest(" ", "hr-agency");
+        var request = CreateOrganizationRequest(" ");
 
         var response = await Client.PostAsJsonAsync("/api/organization", request);
 

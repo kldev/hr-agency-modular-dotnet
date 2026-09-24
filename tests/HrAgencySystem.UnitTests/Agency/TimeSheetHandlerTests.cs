@@ -1,16 +1,11 @@
-using HrAgencySystem.Agency.Application.Port;
 using HrAgencySystem.Agency.Application.TimeSheets;
 using HrAgencySystem.Agency.Application.TimeSheets.Approve;
 using HrAgencySystem.Agency.Application.TimeSheets.Return;
 using HrAgencySystem.Agency.Application.TimeSheets.Settle;
 using HrAgencySystem.Agency.Application.TimeSheets.Submit;
-using HrAgencySystem.Agency.Domain;
 using HrAgencySystem.Agency.Domain.TimeSheets;
 using HrAgencySystem.Agency.Events;
-using HrAgencySystem.Agency.Projections;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Tenant;
-using NSubstitute;
 
 namespace HrAgencySystem.UnitTests.Agency;
 

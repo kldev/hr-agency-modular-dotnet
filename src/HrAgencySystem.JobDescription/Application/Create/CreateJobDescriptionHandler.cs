@@ -1,10 +1,6 @@
 using HrAgencySystem.JobDescription.Domain;
 using HrAgencySystem.JobDescription.Events;
 using HrAgencySystem.JobDescription.Services;
-using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
-using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;
 
@@ -58,7 +54,7 @@ public static class CreateJobDescriptionHandler
             salaryRange.Currency,
             salaryRange.Min,
             salaryRange.Max,
-            recruiter!,
+            recruiter,
             createdBy,
             company,
             clock.UtcNow

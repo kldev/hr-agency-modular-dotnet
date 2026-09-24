@@ -1,7 +1,6 @@
 using HrAgencySystem.Agency.Application.Port;
 using HrAgencySystem.Agency.Application.TimeSheets.SaveWorkDay;
 using HrAgencySystem.Agency.Domain;
-using HrAgencySystem.Agency.Domain.TimeSheets;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.Agency.Projections;
 using HrAgencySystem.SharedKernel.Exception;

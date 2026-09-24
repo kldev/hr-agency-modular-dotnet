@@ -1,7 +1,6 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Application.Users.Impersonate;
 using HrAgencySystem.Identity.Domain;
-using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Services;
@@ -122,8 +121,8 @@ public class ImpersonateUserHandlerTests : BaseTest
                 LogLevel.Warning,
                 Arg.Any<EventId>(),
                 Arg.Any<object>(),
-                Arg.Any<System.Exception?>(),
-                Arg.Any<Func<object, System.Exception?, string>>()
+                Arg.Any<Exception?>(),
+                Arg.Any<Func<object, Exception?, string>>()
             );
     }
 

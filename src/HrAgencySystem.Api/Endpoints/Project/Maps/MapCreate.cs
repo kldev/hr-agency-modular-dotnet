@@ -3,7 +3,6 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.Projects.Application.Create;
-using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.SharedKernel.Tenant;
 using Wolverine;

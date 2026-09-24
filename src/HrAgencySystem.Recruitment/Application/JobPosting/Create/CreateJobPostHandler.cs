@@ -3,7 +3,6 @@ using HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;

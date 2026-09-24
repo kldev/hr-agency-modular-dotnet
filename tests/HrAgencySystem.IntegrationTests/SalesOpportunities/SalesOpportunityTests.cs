@@ -7,7 +7,6 @@ using HrAgencySystem.Sales.Application.Opportunities.ChangeResponsible;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Domain.Opportunity.ValueObjects;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;

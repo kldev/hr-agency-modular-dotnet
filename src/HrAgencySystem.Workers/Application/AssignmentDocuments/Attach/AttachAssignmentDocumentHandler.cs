@@ -12,7 +12,7 @@ public static class AttachAssignmentDocumentHandler
     [AggregateHandler]
     public static async Task<(AssignmentDocumentAttached, Wolverine.Marten.Events)> Handle(
         AttachAssignmentDocument command,
-        Domain.Assignment aggregate,
+        Assignment aggregate,
         IWorkersService service,
         IClock clock,
         CancellationToken ct

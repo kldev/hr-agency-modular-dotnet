@@ -46,16 +46,12 @@ internal sealed class ProjectScenario(IMessageBus bus, Func<Task> waitForProject
         string CountryCode,
         int StartOffsetMonths,
         int? EndOffsetMonths,
-        /// <summary>
-        /// Whether to carry this one all the way to Active. Going live needs a signed contract, a
-        /// responsible contact and a complete client profile, so two are left in Draft on purpose -
-        /// that is the state the go-live checklist exists to explain.
-        /// </summary>
+        // Whether to carry this one all the way to Active. Going live needs a signed contract, a
+        // responsible contact and a complete client profile, so two are left in Draft on purpose -
+        // that is the state the go-live checklist exists to explain.
         bool GoLive,
-        /// <summary>
-        /// The roles this delivery is staffed with. Assignments point at one of these, so the seeded
-        /// register shows what it is meant to show: several roles in one project for one client.
-        /// </summary>
+        // The roles this delivery is staffed with. Assignments point at one of these, so the seeded
+        // register shows what it is meant to show: several roles in one project for one client.
         string[] Positions
     );
 

@@ -5,7 +5,6 @@ using HrAgencySystem.Forms.Domain.Responses;
 using HrAgencySystem.Forms.Domain.Values;
 using HrAgencySystem.Forms.Events;
 using HrAgencySystem.Forms.Projections;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Web;
 using Marten;
@@ -30,9 +29,11 @@ public sealed class FormResponsesQueryRepository(
 
         return await session
             .Query<FormResponseProjection>()
-            .Where(r => r.OrganizationId == organization
-                        && r.SubjectKind == subject.Kind
-                        && r.SubjectId == subject.Id)
+            .Where(r =>
+                r.OrganizationId == organization
+                && r.SubjectKind == subject.Kind
+                && r.SubjectId == subject.Id
+            )
             .OrderByDescending(r => r.StartedAt)
             .ToListAsync(ct);
     }
@@ -43,7 +44,10 @@ public sealed class FormResponsesQueryRepository(
         CancellationToken ct
     )
     {
-        var response = await session.Events.AggregateStreamAsync<FormResponse>(responseId, token: ct);
+        var response = await session.Events.AggregateStreamAsync<FormResponse>(
+            responseId,
+            token: ct
+        );
 
         if (response is null || response.OrganizationId != organizationId)
             return null;
@@ -129,13 +133,39 @@ public sealed class FormResponsesQueryRepository(
     private static FormResponseHistoryEntry? HistoryOf(object data) =>
         data switch
         {
-            FormResponseStarted e => new(FormResponseHistoryKind.Started, 0, e.StartedBy, e.StartedAt, null),
-            FormResponseDraftSaved e => new(FormResponseHistoryKind.DraftSaved, 0, e.ModifiedBy, e.ModifiedAt, null),
-            FormResponseSubmitted e => new(FormResponseHistoryKind.Submitted, 0, e.SubmittedBy, e.SubmittedAt, null),
-            FormResponseCorrected e => new(FormResponseHistoryKind.Corrected, e.Revision, e.CorrectedBy, e.CorrectedAt, e.Reason),
+            FormResponseStarted e => new(
+                FormResponseHistoryKind.Started,
+                0,
+                e.StartedBy,
+                e.StartedAt,
+                null
+            ),
+            FormResponseDraftSaved e => new(
+                FormResponseHistoryKind.DraftSaved,
+                0,
+                e.ModifiedBy,
+                e.ModifiedAt,
+                null
+            ),
+            FormResponseSubmitted e => new(
+                FormResponseHistoryKind.Submitted,
+                0,
+                e.SubmittedBy,
+                e.SubmittedAt,
+                null
+            ),
+            FormResponseCorrected e => new(
+                FormResponseHistoryKind.Corrected,
+                e.Revision,
+                e.CorrectedBy,
+                e.CorrectedAt,
+                e.Reason
+            ),
             _ => null,
         };
 
     /// <summary>Only the shape of <see cref="FormResponseProjection.Answers"/>, for the containment probe.</summary>
+    // Read by the serializer, never by code.
+    // ReSharper disable once NotAccessedPositionalProperty.Local
     private sealed record AnswersProbe(Dictionary<string, FieldValue> Answers);
 }

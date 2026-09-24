@@ -3,6 +3,8 @@ using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Events;
 using HrAgencySystem.Projects.Services;
 using HrAgencySystem.SharedKernel.Exception;
+using HrAgencySystem.SharedKernel.Tenant;
+using HrAgencySystem.SharedKernel.Time;
 using NSubstitute;
 
 namespace HrAgencySystem.UnitTests.Projects;
@@ -76,7 +78,7 @@ public class ChangeProjectStatusHandlerTests : BaseTest
         await service
             .Received(1)
             .GetCompanyAsync(
-                Arg.Any<HrAgencySystem.SharedKernel.Tenant.OrganizationId>(),
+                Arg.Any<OrganizationId>(),
                 ProjectScenario.CompanyId,
                 Arg.Any<CancellationToken>()
             );
@@ -182,7 +184,7 @@ public class ChangeProjectStatusHandlerTests : BaseTest
             ),
             project,
             service ?? ProjectScenario.Service(),
-            new HrAgencySystem.SharedKernel.Time.FixedClock(DateTimeOffset.UtcNow),
+            new FixedClock(DateTimeOffset.UtcNow),
             CancellationToken.None
         );
 }

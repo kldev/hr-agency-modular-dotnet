@@ -11,9 +11,12 @@ internal static class CandidateDataFactory
     )
     {
         var (phone, phoneError) = CandidatePhoneNumber.TryCreate(data.Phone);
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var (firstName, _) = FirstName.TryCreate(data.FirstName ?? "", false);
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var (lastName, _) = LastName.TryCreate(data.LastName ?? "", false);
-        var (note, _) = LongText.TryCreate(data.Note ?? "", false);
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        var (note, _) = LongText.TryCreate(data.Note ?? "");
 
         var errors = new List<string>();
         if (phoneError != null)

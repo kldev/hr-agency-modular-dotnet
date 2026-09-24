@@ -27,7 +27,7 @@ internal static class CompanyProjectionExtensions
     {
         return string.IsNullOrWhiteSpace(taxId)
             ? query
-            : query.Where(q => q.TaxId.Contains(taxId ?? "", StringComparison.OrdinalIgnoreCase));
+            : query.Where(q => q.TaxId.Contains(taxId, StringComparison.OrdinalIgnoreCase));
     }
 
     internal static IQueryable<CompanyProjection> WithSearch(

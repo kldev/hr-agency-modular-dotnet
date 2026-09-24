@@ -5,7 +5,9 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Projects.Domain.ValueObjects;
 using HrAgencySystem.Projects.Events;
+using HrAgencySystem.Projects.Projections;
 using HrAgencySystem.Projects.Services;
+using HrAgencySystem.SharedKernel.Web;
 using Microsoft.AspNetCore.Mvc;
 using Xunit.Abstractions;
 
@@ -201,8 +203,7 @@ public class CreateProjectTests(IntegrationEnvironment env, ITestOutputHelper ou
             var response = await Client.GetAsync("/api/projects");
             response.EnsureSuccessStatusCode();
 
-            var slice =
-                await response.ReadWithJson<HrAgencySystem.SharedKernel.Web.SliceResponse<HrAgencySystem.Projects.Projections.ProjectProjection>>();
+            var slice = await response.ReadWithJson<SliceResponse<ProjectProjection>>();
 
             Assert.NotNull(slice);
             Assert.Single(slice.Content);

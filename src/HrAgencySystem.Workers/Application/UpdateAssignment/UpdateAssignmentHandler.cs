@@ -1,7 +1,6 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Application.PlanAssignment;
 using HrAgencySystem.Workers.Application.Port;
 using HrAgencySystem.Workers.Contracts.IntegrationEvents;
@@ -27,7 +26,7 @@ public static class UpdateAssignmentHandler
     [AggregateHandler]
     public static async Task<(AssignmentUpdated, Wolverine.Marten.Events, OutgoingMessages)> Handle(
         UpdateAssignment command,
-        Domain.Assignment aggregate,
+        Assignment aggregate,
         IWorkersService service,
         IAssignmentsQueryRepository assignments,
         IClock clock,

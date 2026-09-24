@@ -140,7 +140,7 @@ public static class SettlementWorkbook
                 Text(day.EndsAt.ToString("HH:mm", CultureInfo.InvariantCulture)),
                 // Marked, because an end earlier than the start otherwise reads as a typo.
                 Text(day.CrossesMidnight ? "Yes" : ""),
-                Number(day.Minutes / 60),
+                Number(Math.DivRem(day.Minutes, 60).Quotient),
                 Number(day.Minutes % 60),
                 Number(SettlementCalculator.DecimalHours(day.Minutes), Styles.Decimal),
                 Text(day.Note)
@@ -229,7 +229,7 @@ public static class SettlementWorkbook
 
         public static Stylesheet Stylesheet() =>
             new(
-                new Fonts(new Font(), new Font(new DocumentFormat.OpenXml.Spreadsheet.Bold())),
+                new Fonts(new Font(), new Font(new Bold())),
                 new Fills(
                     new Fill(new PatternFill { PatternType = PatternValues.None }),
                     new Fill(new PatternFill { PatternType = PatternValues.Gray125 })

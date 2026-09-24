@@ -3,7 +3,6 @@ using HrAgencySystem.IntegrationTests.Infrastructure;
 using HrAgencySystem.Teams.Application.Members.Add;
 using HrAgencySystem.Teams.Application.Members.Remove;
 using HrAgencySystem.Teams.Contracts;
-using HrAgencySystem.Teams.Domain;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Teams;

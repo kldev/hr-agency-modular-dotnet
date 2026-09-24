@@ -38,7 +38,7 @@ public sealed class WorkersQueryRepository(IQuerySession session) : IWorkersQuer
     )
     {
         var address = string.IsNullOrWhiteSpace(email) ? null : email.Trim().ToLowerInvariant();
-        var digits = new string([.. (phoneNumber ?? "").Where(char.IsDigit)]);
+        var digits = new string([.. phoneNumber.Where(char.IsDigit)]);
         var fullName = $"{firstName} {lastName}".Trim();
 
         var candidates = session

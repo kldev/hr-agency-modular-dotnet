@@ -7,7 +7,6 @@ using HrAgencySystem.Teams.Application.Members.Add;
 using HrAgencySystem.Teams.Application.Port;
 using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Contracts.IntegrationEvents;
-using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using NSubstitute;
 using Wolverine;
@@ -138,7 +137,7 @@ public sealed class AddTeamMemberHandlerTests
                 Arg.Any<IReadOnlyList<Guid>>(),
                 Arg.Any<CancellationToken>()
             )
-            .Returns<IReadOnlyList<Guid>>(_alreadyOnATeam ? [command.UserId] : []);
+            .Returns(_alreadyOnATeam ? [command.UserId] : []);
 
         return await AddTeamMemberHandler.Handle(
             command,

@@ -61,7 +61,10 @@ public sealed record JobApplicationProjection(
     public Guid? WorkerId { get; init; }
 
     public JobApplicationProjection Apply(JobApplicationRegisteredAsWorker @event) =>
-        this with { WorkerId = @event.WorkerId };
+        this with
+        {
+            WorkerId = @event.WorkerId,
+        };
 
     public static JobApplicationProjection Create(JobApplicationCreated @event)
     {
@@ -69,8 +72,12 @@ public sealed record JobApplicationProjection(
             @event.JobApplicationId,
             @event.OrganizationId,
             @event.JobPostTitle,
-            @event.ApplicantEmail ?? @event.CandidateInfo.Email,
-            @event.ApplicantPhone ?? "",
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+            @event.ApplicantEmail
+                ?? @event.CandidateInfo.Email,
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+            @event.ApplicantPhone
+                ?? "",
             @event.FullName,
             @event.CandidateInfo.CandidateId,
             @event.CandidateInfo,

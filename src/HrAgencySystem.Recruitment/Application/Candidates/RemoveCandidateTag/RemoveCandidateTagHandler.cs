@@ -1,10 +1,8 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Tags.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Events.Candidates;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine.Marten;
 

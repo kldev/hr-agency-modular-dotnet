@@ -13,6 +13,7 @@ public static class IssueServiceApiKeyHandler
         IClock clock
     )
     {
+        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         var name = command.Name?.Trim() ?? "";
 
         if (name.Length == 0)

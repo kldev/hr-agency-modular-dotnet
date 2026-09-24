@@ -182,7 +182,7 @@ public sealed partial class HrAgencyShowcaseSeeder
 
         await PostToChannel(userIds);
 
-        await GenerateApplicants(20, false);
+        await GenerateApplicants(20);
 
         await new TagsScenario(bus, session).Seed(organization.OrganizationId, userIds);
     }

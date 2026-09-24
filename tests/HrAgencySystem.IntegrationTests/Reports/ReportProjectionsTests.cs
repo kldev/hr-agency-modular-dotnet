@@ -206,7 +206,7 @@ public sealed class ReportProjectionsTests(IntegrationEnvironment env, ITestOutp
     }
 
     // Column-shaped on purpose: this is what the reports service will read, not the EF row type.
-    // ReSharper disable InconsistentNaming, UnusedAutoPropertyAccessor.Local
+    // ReSharper disable InconsistentNaming, UnusedAutoPropertyAccessor.Local, UnusedMember.Local
     private sealed class ApplicationRow
     {
         public Guid organization_id { get; init; }
@@ -245,5 +245,5 @@ public sealed class ReportProjectionsTests(IntegrationEnvironment env, ITestOutp
         public string slug { get; init; } = "";
     }
 
-    // ReSharper restore InconsistentNaming, UnusedAutoPropertyAccessor.Local
+    // ReSharper restore InconsistentNaming, UnusedAutoPropertyAccessor.Local, UnusedMember.Local
 }

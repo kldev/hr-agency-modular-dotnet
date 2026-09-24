@@ -5,7 +5,6 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Members.Remove;
 using HrAgencySystem.Teams.Application.Port;
 using HrAgencySystem.Teams.Contracts;
-using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using NSubstitute;
 using TeamMemberRemoved = HrAgencySystem.Teams.Events.TeamMemberRemoved;

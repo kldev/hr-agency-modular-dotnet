@@ -62,7 +62,7 @@ public class CandidateTests(IntegrationEnvironment environment, ITestOutputHelpe
         Assert.Equal(_updatedNote, updateResult.Note);
         Assert.Equal("+49 909 123 321", updateResult.Phone);
 
-        Assert.Equal(modifiedBy, updateResult.ModifiedBy!.Id);
+        Assert.Equal(modifiedBy, updateResult.ModifiedBy.Id);
 
         await Eventually.AssertAsync(async () =>
         {
@@ -94,7 +94,7 @@ public class CandidateTests(IntegrationEnvironment environment, ITestOutputHelpe
             Assert.Equal(_note, projection.Note);
             Assert.Equal("+49 909 123 123", projection.PhoneNumber);
             Assert.Equal(CandidateSource.Indeed, projection.Source);
-            Assert.Equal(_authorId, projection.CreatedBy!.Id);
+            Assert.Equal(_authorId, projection.CreatedBy.Id);
             Assert.Equal("james@newtest.com", projection.Email);
         });
     }
@@ -202,7 +202,7 @@ public class CandidateTests(IntegrationEnvironment environment, ITestOutputHelpe
             Assert.Equal(_note, candidate.Note);
             Assert.Equal("+49 909 123 123", candidate.PhoneNumber);
             Assert.Equal(CandidateSource.Indeed, candidate.Source);
-            Assert.Equal(_authorId, candidate.CreatedBy!.Id);
+            Assert.Equal(_authorId, candidate.CreatedBy.Id);
         });
     }
 

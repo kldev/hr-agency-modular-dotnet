@@ -4,7 +4,6 @@ using HrAgencySystem.Sales.Services;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using Microsoft.Extensions.Logging;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Sales.Application.Opportunities.ChangeStage;

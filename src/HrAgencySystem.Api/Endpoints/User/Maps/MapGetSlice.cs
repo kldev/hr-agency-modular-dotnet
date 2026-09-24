@@ -33,7 +33,7 @@ internal static class MapGetSlice
         var result = await repository.GetUsers(
             user.GetOrganization,
             search ?? "",
-            roles ?? [],
+            roles,
             page,
             pageSize,
             ct

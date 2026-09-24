@@ -1,4 +1,3 @@
-using HrAgencySystem.Company.Application.Contacts.Create;
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.Company.Documents;
 using HrAgencySystem.Company.Events;

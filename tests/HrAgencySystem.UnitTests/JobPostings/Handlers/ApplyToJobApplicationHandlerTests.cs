@@ -33,7 +33,6 @@ public class ApplyToJobApplicationHandlerTests : BaseTest
     private static readonly Guid JobPostId = Guid.NewGuid();
     private static readonly Guid OrganizationId = Guid.NewGuid();
     private static readonly Guid CompanyId = Guid.NewGuid();
-    private static readonly Guid EventId = Guid.NewGuid();
 
     private static readonly DateTimeOffset Now = new(2026, 8, 30, 10, 0, 0, TimeSpan.Zero);
 

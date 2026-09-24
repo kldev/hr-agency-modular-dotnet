@@ -1,7 +1,6 @@
 using HrAgencySystem.IntegrationTests.Agency;
 using HrAgencySystem.IntegrationTests.Candidates;
 using HrAgencySystem.IntegrationTests.Companies;
-using HrAgencySystem.IntegrationTests.Company;
 using HrAgencySystem.IntegrationTests.Interviews;
 using HrAgencySystem.IntegrationTests.JobDescriptions;
 using HrAgencySystem.IntegrationTests.JobPosts;

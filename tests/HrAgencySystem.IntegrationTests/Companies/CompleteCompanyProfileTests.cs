@@ -9,7 +9,7 @@ using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.SharedKernel.Web.Common;
 using Xunit.Abstractions;
 
-namespace HrAgencySystem.IntegrationTests.Company;
+namespace HrAgencySystem.IntegrationTests.Companies;
 
 [Collection(IntegrationCollection.Name)]
 public class CompleteCompanyProfileTests(IntegrationEnvironment env, ITestOutputHelper outputHelper)

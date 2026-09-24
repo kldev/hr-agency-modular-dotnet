@@ -1,5 +1,4 @@
 using HrAgencySystem.Organization.Application.Port;
-using HrAgencySystem.Organization.Domain.ValueObjects;
 using HrAgencySystem.Organization.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;

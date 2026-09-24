@@ -8,7 +8,7 @@ namespace HrAgencySystem.PlatformSeeder.Scenario;
 
 internal sealed class TagsScenario(IMessageBus bus, IDocumentSession session)
 {
-    private int TagAddCount { get; set; } = 0;
+    private int TagAddCount { get; set; }
 
     internal async Task Seed(Guid organizationId, IReadOnlyList<Guid> userIds)
     {

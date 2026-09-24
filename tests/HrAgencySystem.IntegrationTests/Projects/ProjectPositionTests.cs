@@ -25,6 +25,8 @@ public class ProjectPositionTests(IntegrationEnvironment env, ITestOutputHelper 
         var company = await ProjectClient.CreateCompanyAsync(organizationId);
         var project = await ProjectClient.CreateAsync(organizationId, company);
 
+        // The name is what this test is about, so it is spelled out.
+        // ReSharper disable once RedundantArgumentDefaultValue
         await ProjectClient.OpenPositionAsync(organizationId, project.ProjectId, "Painter");
         await ProjectClient.OpenPositionAsync(organizationId, project.ProjectId, "Bricklayer");
 
@@ -53,7 +55,7 @@ public class ProjectPositionTests(IntegrationEnvironment env, ITestOutputHelper 
         var company = await ProjectClient.CreateCompanyAsync(organizationId);
         var project = await ProjectClient.CreateAsync(organizationId, company);
 
-        await ProjectClient.OpenPositionAsync(organizationId, project.ProjectId, "Painter");
+        await ProjectClient.OpenPositionAsync(organizationId, project.ProjectId);
 
         await Eventually.AssertAsync(async () =>
         {
@@ -75,6 +77,8 @@ public class ProjectPositionTests(IntegrationEnvironment env, ITestOutputHelper 
         var company = await ProjectClient.CreateCompanyAsync(organizationId);
         var project = await ProjectClient.CreateAsync(organizationId, company);
 
+        // The name is what this test is about, so it is spelled out.
+        // ReSharper disable once RedundantArgumentDefaultValue
         await ProjectClient.OpenPositionAsync(organizationId, project.ProjectId, "Painter");
 
         var response = await ProjectClient.OpenPositionResponseAsync(
@@ -95,6 +99,8 @@ public class ProjectPositionTests(IntegrationEnvironment env, ITestOutputHelper 
         var first = await ProjectClient.CreateAsync(organizationId, company);
         var second = await ProjectClient.CreateAsync(organizationId, company);
 
+        // The name is what this test is about, so it is spelled out.
+        // ReSharper disable once RedundantArgumentDefaultValue
         await ProjectClient.OpenPositionAsync(organizationId, first.ProjectId, "Painter");
 
         var response = await ProjectClient.OpenPositionResponseAsync(
@@ -113,11 +119,7 @@ public class ProjectPositionTests(IntegrationEnvironment env, ITestOutputHelper 
         var company = await ProjectClient.CreateCompanyAsync(organizationId);
         var project = await ProjectClient.CreateAsync(organizationId, company);
 
-        var opened = await ProjectClient.OpenPositionAsync(
-            organizationId,
-            project.ProjectId,
-            "Painter"
-        );
+        var opened = await ProjectClient.OpenPositionAsync(organizationId, project.ProjectId);
 
         await ProjectClient.ArchivePositionAsync(
             organizationId,
@@ -156,7 +158,6 @@ public class ProjectPositionTests(IntegrationEnvironment env, ITestOutputHelper 
         await ProjectClient.OpenPositionAsync(
             organizationId,
             project.ProjectId,
-            "Painter",
             plannedHeadcount: 4
         );
 
@@ -183,11 +184,7 @@ public class ProjectPositionTests(IntegrationEnvironment env, ITestOutputHelper 
         var company = await ProjectClient.CreateCompanyAsync(organizationId);
         var project = await ProjectClient.CreateAsync(organizationId, company);
 
-        var opened = await ProjectClient.OpenPositionAsync(
-            organizationId,
-            project.ProjectId,
-            "Painter"
-        );
+        var opened = await ProjectClient.OpenPositionAsync(organizationId, project.ProjectId);
 
         Client.WithOrganizationId(Guid.NewGuid());
 

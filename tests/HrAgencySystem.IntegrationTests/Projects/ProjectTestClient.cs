@@ -45,15 +45,13 @@ public sealed class ProjectTestClient(HttpClient client, ITestOutputHelper outpu
             "TX" + Guid.NewGuid().ToString()[..12],
             "REG" + Guid.NewGuid().ToString()[..8],
             "",
-            HrAgencySystem.Company.Domain.Industry.Accounting
+            Company.Domain.Industry.Accounting
         );
 
         var response = await client.PostAsJsonAsync("/api/companies", request);
         response.EnsureSuccessStatusCode();
 
-        var created = await response.ReadWithJson<HrAgencySystem.Company.Events.CompanyCreated>(
-            output
-        );
+        var created = await response.ReadWithJson<Company.Events.CompanyCreated>(output);
 
         Assert.NotNull(created);
 

@@ -141,11 +141,11 @@ public class InternalBoardApiTests(IntegrationEnvironment env, ITestOutputHelper
     /// <c>FakeModuleService.GetOrganizationSlug</c>, which always answers "Slug", and the board
     /// finds a post by that slug (case-insensitively).
     /// </summary>
-    private const string Slug = "slug";
+    private const string BoardSlug = "slug";
 
     private async Task<Board> BoardAsync()
     {
-        const string slug = Slug;
+        const string slug = BoardSlug;
         var organizations = new OrganizationTestClient(Env.CreateClient().AsOwner(), OutputHelper);
         var organization = await organizations.CreateAsync("Board Agency", slug);
 
@@ -209,6 +209,11 @@ public class InternalBoardApiTests(IntegrationEnvironment env, ITestOutputHelper
     private static Task<HttpResponseMessage> Apply(HttpClient client, Board board) =>
         client.PostAsJsonAsync(
             $"/api/internal/boards/{board.Slug}/posts/{board.PostSlug}/applications",
-            new MapApply.BoardApplicationRequest("Anna", "Kowalska", "candidate@board.test", "+48 600 000 000")
+            new MapApply.BoardApplicationRequest(
+                "Anna",
+                "Kowalska",
+                "candidate@board.test",
+                "+48 600 000 000"
+            )
         );
 }

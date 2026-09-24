@@ -1,7 +1,6 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Application.Users.Avatar.Change;
 using HrAgencySystem.Identity.Documents;
-using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
 using NSubstitute;

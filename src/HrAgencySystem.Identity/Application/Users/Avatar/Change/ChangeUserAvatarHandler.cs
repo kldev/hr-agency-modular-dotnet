@@ -1,6 +1,5 @@
 using HrAgencySystem.Identity.Application.Port;
 using HrAgencySystem.Identity.Documents;
-using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.SharedKernel.Time;
 
 namespace HrAgencySystem.Identity.Application.Users.Avatar.Change;

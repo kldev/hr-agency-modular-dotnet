@@ -33,7 +33,7 @@ public class CreatePlatformOwnerHandler
         var ownerId = PlatformOwnerId.New();
 
         var passwordHash = hasher.Hash(command.Password);
-        await repository.ReserveAsync(email!, passwordHash, ownerId);
+        await repository.ReserveAsync(email, passwordHash, ownerId);
 
         var @event = new PlatformOwnerCreated(
             ownerId.Value,

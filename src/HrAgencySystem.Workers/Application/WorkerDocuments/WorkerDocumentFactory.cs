@@ -25,6 +25,7 @@ internal static class WorkerDocumentFactory
     {
         var errors = new List<string>();
 
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var name = (fileName ?? "").Trim();
 
         if (string.IsNullOrWhiteSpace(name))

@@ -1,0 +1,36 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Formatting is owned by CSharpier (.csharpierrc.json); these only keep the IDE in line with it.
+[*.cs]
+indent_style = space
+indent_size = 4
+max_line_length = 100
+
+# Events, commands, requests and responses are public records read by Marten, Wolverine,
+# System.Text.Json and the OpenAPI generator - code never reads most of their properties,
+# a serializer does. The local variants (private types) stay on.
+resharper_not_accessed_positional_property_global_highlighting = none
+resharper_unused_auto_property_accessor_global_highlighting = none
+
+[*.{csproj,props,targets,xml,slnx}]
+indent_style = space
+indent_size = 2
+
+[*.{json,yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Test names are sentences: Handle_WithValidCommand_ReturnsCompanyCreated,
+# A_third_country_national_is_flagged_for_legalisation. Underscores are the separator, not a mistake.
+[tests/**.cs]
+resharper_inconsistent_naming_highlighting = none
+dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.CA1707.severity = none
+# An Assert inside a lambda is the point of the lambda, not a precondition check.
+resharper_parameter_only_used_for_precondition_check_local_highlighting = none

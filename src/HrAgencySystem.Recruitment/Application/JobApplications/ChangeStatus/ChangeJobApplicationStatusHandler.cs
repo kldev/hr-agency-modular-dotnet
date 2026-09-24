@@ -1,10 +1,8 @@
-using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;

@@ -65,7 +65,7 @@ internal sealed class WorkersScenario(IMessageBus bus, Func<Task> waitForProject
         IdentityDocumentKind DocumentKind,
         string DocumentNumber,
         string DocumentIssuingCountry,
-        /// <summary>Months from today. Negative means the document has already run out.</summary>
+        // Months from today. Negative means the document has already run out.
         int? DocumentValidUntilOffsetMonths,
         string? Email,
         string? PhoneNumber,

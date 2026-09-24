@@ -4,7 +4,6 @@ using HrAgencySystem.Api.Common.Config;
 using HrAgencySystem.Api.Infrastructure.FileServiceClient;
 using HrAgencySystem.Api.Infrastructure.ReportsClient;
 using HrAgencySystem.Company;
-using HrAgencySystem.Company.Infrastructure;
 using HrAgencySystem.Feeds;
 using HrAgencySystem.Files;
 using HrAgencySystem.Forms;
@@ -15,8 +14,8 @@ using HrAgencySystem.Organization;
 using HrAgencySystem.Projects;
 using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
-using HrAgencySystem.Tasks;
 using HrAgencySystem.SharedKernel.Time;
+using HrAgencySystem.Tasks;
 using HrAgencySystem.Teams;
 using HrAgencySystem.Workers;
 

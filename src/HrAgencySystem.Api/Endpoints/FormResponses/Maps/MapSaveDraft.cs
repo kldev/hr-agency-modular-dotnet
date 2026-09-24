@@ -28,7 +28,13 @@ internal static class MapSaveDraft
     ) =>
         TypedResults.Ok(
             await bus.InvokeAsync<FormResponseDraftSaved>(
-                new SaveFormResponseDraft(responseId, user.OrganizationId, request.Answers ?? [], user.UserId),
+                // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+                new SaveFormResponseDraft(
+                    responseId,
+                    user.OrganizationId,
+                    request.Answers ?? [],
+                    user.UserId
+                ),
                 ct
             )
         );

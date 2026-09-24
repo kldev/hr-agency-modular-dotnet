@@ -51,7 +51,7 @@ public class CandidateGetSliceTests(IntegrationEnvironment environment, ITestOut
             Assert.Equal(_note, candidate.Note);
             Assert.Equal("+49 909 123 123", candidate.PhoneNumber);
             Assert.Equal(CandidateSource.Indeed, candidate.Source);
-            Assert.Equal(_authorId, candidate.CreatedBy!.Id);
+            Assert.Equal(_authorId, candidate.CreatedBy.Id);
 
             Assert.False(result.HasMore);
         });
@@ -110,9 +110,9 @@ public class CandidateGetSliceTests(IntegrationEnvironment environment, ITestOut
     {
         var first = await CreateCandidate();
 
-        var second = await CreateCandidate(email: "second@test.com");
+        await CreateCandidate(email: "second@test.com");
 
-        var third = await CreateCandidate(email: "third@test.com");
+        await CreateCandidate(email: "third@test.com");
 
         await Eventually.AssertAsync(async () =>
         {

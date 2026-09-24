@@ -408,8 +408,7 @@ public sealed class JobApplicationTests
             "+1 112 123 124",
             "Test",
             "Last",
-            createdAt ?? DateTimeOffset.UtcNow,
-            null
+            createdAt ?? DateTimeOffset.UtcNow
         );
     }
 

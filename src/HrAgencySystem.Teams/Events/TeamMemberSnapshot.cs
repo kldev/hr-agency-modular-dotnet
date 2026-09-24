@@ -1,6 +1,5 @@
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.Teams.Contracts;
-using HrAgencySystem.Teams.Domain;
 
 namespace HrAgencySystem.Teams.Events;
 

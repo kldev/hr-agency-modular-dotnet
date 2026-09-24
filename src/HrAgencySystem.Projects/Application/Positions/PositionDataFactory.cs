@@ -60,8 +60,7 @@ internal static class PositionDataFactory
             errors.Add(contractNameError);
 
         var (workDescription, workDescriptionError) = LongText.TryCreate(
-            data.WorkDescription ?? "",
-            false
+            data.WorkDescription ?? ""
         );
         if (workDescriptionError is not null)
             errors.Add(workDescriptionError);

@@ -1,6 +1,5 @@
 using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Domain.Applications;
-using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 

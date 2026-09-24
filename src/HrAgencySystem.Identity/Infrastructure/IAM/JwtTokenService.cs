@@ -56,6 +56,7 @@ public sealed class JwtTokenService(IOptions<JwtConfig> configuration, IClock cl
         );
     }
 
+    /// <param name="claims">The claims the token carries.</param>
     /// <param name="lifetime">
     /// Overrides the configured access token window. Only impersonation passes one - it needs a
     /// shorter leash than a login, and nothing is going to refresh it.

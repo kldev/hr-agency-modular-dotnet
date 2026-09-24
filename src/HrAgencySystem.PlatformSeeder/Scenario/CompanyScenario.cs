@@ -13,24 +13,24 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
 {
     private static readonly CountryDefinition[] Countries =
     [
-        new("PL", "PL", "NIP"),
-        new("BE", "BE", "VAT"),
-        new("DE", "DE", "VAT"),
-        new("NL", "NL", "VAT"),
-        new("FR", "FR", "VAT"),
-        new("AT", "AT", "VAT"),
-        new("CZ", "CZ", "VAT"),
-        new("SK", "SK", "VAT"),
-        new("DK", "DK", "VAT"),
-        new("SE", "SE", "VAT"),
-        new("NO", "NO", "VAT"),
-        new("FI", "FI", "VAT"),
-        new("IT", "IT", "VAT"),
-        new("ES", "ES", "VAT"),
-        new("PT", "PT", "VAT"),
-        new("IE", "IE", "VAT"),
-        new("RO", "RO", "VAT"),
-        new("HU", "HU", "VAT"),
+        new("PL"),
+        new("BE"),
+        new("DE"),
+        new("NL"),
+        new("FR"),
+        new("AT"),
+        new("CZ"),
+        new("SK"),
+        new("DK"),
+        new("SE"),
+        new("NO"),
+        new("FI"),
+        new("IT"),
+        new("ES"),
+        new("PT"),
+        new("IE"),
+        new("RO"),
+        new("HU"),
     ];
 
     internal async Task<IReadOnlyList<Guid>> Create(
@@ -229,5 +229,5 @@ internal sealed class CompanyScenario(IMessageBus bus, IDocumentSession session)
         };
     }
 
-    private sealed record CountryDefinition(string Code, string TaxPrefix, string TaxType);
+    private sealed record CountryDefinition(string Code);
 }

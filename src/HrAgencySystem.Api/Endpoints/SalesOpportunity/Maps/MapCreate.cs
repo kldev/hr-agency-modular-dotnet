@@ -3,7 +3,6 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Sales.Application.Opportunities.Create;
 using HrAgencySystem.Sales.Events.Opportunity;
-using HrAgencySystem.SharedKernel.Extensions;
 using HrAgencySystem.SharedKernel.ValueObjects;
 using Wolverine;
 

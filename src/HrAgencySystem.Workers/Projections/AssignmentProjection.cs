@@ -28,10 +28,8 @@ public sealed record AssignmentProjection(
     string WorkCountry,
     EngagementType EngagementType,
     Guid PositionId,
-    /// <summary>
-    /// The role's internal name, flattened out of the snapshot the way the project's is: a list
-    /// filters and sorts on it, and a name nested in an object costs more in Marten than a column.
-    /// </summary>
+    // The role's internal name, flattened out of the snapshot the way the project's is: a list
+    // filters and sorts on it, and a name nested in an object costs more in Marten than a column.
     string PositionName,
     DateOnly StartsOn,
     DateOnly? EndsOn,

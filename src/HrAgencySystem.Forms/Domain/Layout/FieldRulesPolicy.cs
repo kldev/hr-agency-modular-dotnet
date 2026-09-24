@@ -18,17 +18,22 @@ public static class FieldRulesPolicy
     public const int MaxMessageLength = 300;
     public const int MaxDecimals = 6;
 
-    public const string LengthNotForTypeMessage = "Length and pattern rules apply to typed text only.";
-    public const string RangeNotForTypeMessage = "Minimum, maximum and decimals apply to numbers only.";
+    public const string LengthNotForTypeMessage =
+        "Length and pattern rules apply to typed text only.";
+    public const string RangeNotForTypeMessage =
+        "Minimum, maximum and decimals apply to numbers only.";
     public const string DatesNotForTypeMessage = "Date limits apply to dates only.";
-    public const string SelectionNotForTypeMessage = "Selection limits apply to multiple choice only.";
+    public const string SelectionNotForTypeMessage =
+        "Selection limits apply to multiple choice only.";
     public const string NegativeLengthMessage = "Lengths cannot be negative.";
     public const string LengthRangeMessage = "The minimum length is greater than the maximum.";
     public const string NumberRangeMessage = "The minimum is greater than the maximum.";
     public const string DateRangeMessage = "The earliest date is after the latest.";
-    public const string SelectionRangeMessage = "The minimum selection is greater than the maximum.";
+    public const string SelectionRangeMessage =
+        "The minimum selection is greater than the maximum.";
     public const string NegativeSelectionMessage = "Selection limits cannot be negative.";
-    public const string SelectionAboveOptionsMessage = "More selections are required than there are options.";
+    public const string SelectionAboveOptionsMessage =
+        "More selections are required than there are options.";
     public const string InvalidPatternMessage = "The pattern is not a valid regular expression.";
     public const string PatternTooLongMessage = "The pattern cannot exceed 500 characters.";
     public const string MessageTooLongMessage = "The error message cannot exceed 300 characters.";
@@ -81,10 +86,15 @@ public static class FieldRulesPolicy
         };
 
         IReadOnlyList<ChoiceOption> normalizedOptions = type.HasOptions
-            ? [.. (options ?? []).Select(option => new ChoiceOption(
-                (option.Value ?? "").Trim(),
-                (option.Label ?? "").Trim()
-            ))]
+            ?
+            [
+                .. (options ?? []).Select(option => new ChoiceOption(
+                    // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+                    (option.Value ?? "").Trim(),
+                    // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+                    (option.Label ?? "").Trim()
+                )),
+            ]
             : [];
 
         return (normalizedRules, normalizedOptions);
@@ -92,16 +102,29 @@ public static class FieldRulesPolicy
 
     private static void CheckApplicability(FieldType type, FieldRules rules, List<string> errors)
     {
-        if (!type.TakesTypedText && (rules.MinLength is not null || rules.MaxLength is not null || rules.Pattern is not null))
+        if (
+            !type.TakesTypedText
+            && (
+                rules.MinLength is not null
+                || rules.MaxLength is not null
+                || rules.Pattern is not null
+            )
+        )
             errors.Add(LengthNotForTypeMessage);
 
-        if (type != FieldType.Number && (rules.Min is not null || rules.Max is not null || rules.Decimals is not null))
+        if (
+            type != FieldType.Number
+            && (rules.Min is not null || rules.Max is not null || rules.Decimals is not null)
+        )
             errors.Add(RangeNotForTypeMessage);
 
         if (type != FieldType.Date && (rules.MinDate is not null || rules.MaxDate is not null))
             errors.Add(DatesNotForTypeMessage);
 
-        if (type != FieldType.MultiChoice && (rules.MinSelected is not null || rules.MaxSelected is not null))
+        if (
+            type != FieldType.MultiChoice
+            && (rules.MinSelected is not null || rules.MaxSelected is not null)
+        )
             errors.Add(SelectionNotForTypeMessage);
     }
 
@@ -143,7 +166,11 @@ public static class FieldRulesPolicy
         if (options.Any(option => option.Value.Length == 0 || option.Label.Length == 0))
             errors.Add(EmptyOptionMessage);
 
-        if (options.Any(option => option.Value.Length > MaxOptionLength || option.Label.Length > MaxOptionLength))
+        if (
+            options.Any(option =>
+                option.Value.Length > MaxOptionLength || option.Label.Length > MaxOptionLength
+            )
+        )
             errors.Add(OptionTooLongMessage);
 
         if (options.GroupBy(option => option.Value).Any(group => group.Count() > 1))

@@ -12,12 +12,14 @@ namespace HrAgencySystem.ReportsService.Application.Platform;
 /// </summary>
 public sealed class PlatformReportQuery(NpgsqlDataSource dataSource)
 {
-    private const string Organizations =
+    private const string OrganizationsTable =
         $"{ReportsSchema.Name}.{ReportsSchema.Tables.Organizations}";
-    private const string JobPosts = $"{ReportsSchema.Name}.{ReportsSchema.Tables.JobPosts}";
-    private const string Applications = $"{ReportsSchema.Name}.{ReportsSchema.Tables.Applications}";
-    private const string Interviews = $"{ReportsSchema.Name}.{ReportsSchema.Tables.Interviews}";
-    private const string Projects = $"{ReportsSchema.Name}.{ReportsSchema.Tables.Projects}";
+    private const string JobPostsTable = $"{ReportsSchema.Name}.{ReportsSchema.Tables.JobPosts}";
+    private const string ApplicationsTable =
+        $"{ReportsSchema.Name}.{ReportsSchema.Tables.Applications}";
+    private const string InterviewsTable =
+        $"{ReportsSchema.Name}.{ReportsSchema.Tables.Interviews}";
+    private const string ProjectsTable = $"{ReportsSchema.Name}.{ReportsSchema.Tables.Projects}";
 
     // greatest() skips nulls in PostgreSQL, so a tenant without projects still gets its last activity.
     private const string Sql = $"""
@@ -26,35 +28,35 @@ public sealed class PlatformReportQuery(NpgsqlDataSource dataSource)
             o.name,
             o.slug,
             o.created_at as "CreatedAt",
-            (select count(*) from {JobPosts} x
+            (select count(*) from {JobPostsTable} x
               where x.organization_id = o.id and x.first_published_at >= @from and x.first_published_at < @to)
                 as "JobPostsPublished",
-            (select count(*) from {Applications} x
+            (select count(*) from {ApplicationsTable} x
               where x.organization_id = o.id and x.created_at >= @from and x.created_at < @to)
                 as "Applications",
-            (select count(*) from {Interviews} x
+            (select count(*) from {InterviewsTable} x
               where x.organization_id = o.id and x.created_at >= @from and x.created_at < @to)
                 as "InterviewsScheduled",
-            (select count(*) from {Applications} x
+            (select count(*) from {ApplicationsTable} x
               where x.organization_id = o.id and x.offer_at >= @from and x.offer_at < @to)
                 as "Offers",
-            (select count(*) from {Applications} x
+            (select count(*) from {ApplicationsTable} x
               where x.organization_id = o.id and x.hired_at >= @from and x.hired_at < @to)
                 as "Hires",
-            (select count(*) from {Projects} x
+            (select count(*) from {ProjectsTable} x
               where x.organization_id = o.id and x.went_live_at >= @from and x.went_live_at < @to)
                 as "ProjectsWentLive",
-            (select count(*) from {Projects} x
+            (select count(*) from {ProjectsTable} x
               where x.organization_id = o.id and x.status = 'Active')
                 as "ProjectsActive",
             greatest(
                 o.updated_at,
-                (select max(updated_at) from {JobPosts} x where x.organization_id = o.id),
-                (select max(updated_at) from {Applications} x where x.organization_id = o.id),
-                (select max(updated_at) from {Interviews} x where x.organization_id = o.id),
-                (select max(updated_at) from {Projects} x where x.organization_id = o.id)
+                (select max(updated_at) from {JobPostsTable} x where x.organization_id = o.id),
+                (select max(updated_at) from {ApplicationsTable} x where x.organization_id = o.id),
+                (select max(updated_at) from {InterviewsTable} x where x.organization_id = o.id),
+                (select max(updated_at) from {ProjectsTable} x where x.organization_id = o.id)
             ) as "LastActivityAt"
-        from {Organizations} o
+        from {OrganizationsTable} o
         order by "LastActivityAt" desc nulls last, o.name
         """;
 

@@ -43,7 +43,7 @@ public static class CreateNoteHandler
             application.JobApplicationId,
             application.OrganizationId,
             application.CandidateId,
-            shortNote!
+            shortNote
         );
 
         await noteRepository.CreateNoteAsync(createNote, user);

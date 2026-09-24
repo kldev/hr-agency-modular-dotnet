@@ -1,7 +1,5 @@
-using HrAgencySystem.Recruitment.Application.JobApplications.Queries;
 using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Documents;
-using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Marten;

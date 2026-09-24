@@ -24,7 +24,9 @@ public class SettlementWorkbookTests
     {
         using var document = Open([Anna, Marek]);
 
-        var names = document.WorkbookPart!.Workbook.Sheets!.Elements<Sheet>().Select(s => s.Name!.Value);
+        var names = document
+            .WorkbookPart!.Workbook!.Sheets!.Elements<Sheet>()
+            .Select(s => s.Name!.Value);
 
         Assert.Equal([SettlementWorkbook.SummarySheet, SettlementWorkbook.DetailsSheet], names);
     }
@@ -104,9 +106,18 @@ public class SettlementWorkbookTests
     public void FileName_PadsTheMonth() =>
         Assert.Equal("settlement-2026-09.xlsx", SettlementWorkbook.FileName(2026, 9));
 
-    private static readonly int HoursColumn = Array.IndexOf(SettlementWorkbook.SummaryHeaders, "Hours");
-    private static readonly int RateColumn = Array.IndexOf(SettlementWorkbook.SummaryHeaders, "Rate");
-    private static readonly int AmountColumn = Array.IndexOf(SettlementWorkbook.SummaryHeaders, "Amount");
+    private static readonly int HoursColumn = Array.IndexOf(
+        SettlementWorkbook.SummaryHeaders,
+        "Hours"
+    );
+    private static readonly int RateColumn = Array.IndexOf(
+        SettlementWorkbook.SummaryHeaders,
+        "Rate"
+    );
+    private static readonly int AmountColumn = Array.IndexOf(
+        SettlementWorkbook.SummaryHeaders,
+        "Amount"
+    );
 
     private static SpreadsheetDocument Open(IReadOnlyList<SettlementRow> rows) =>
         SpreadsheetDocument.Open(new MemoryStream(SettlementWorkbook.Build(2026, 9, rows)), false);
@@ -114,14 +125,17 @@ public class SettlementWorkbookTests
     private static List<Row> Rows(SpreadsheetDocument document, string sheetName)
     {
         var workbook = document.WorkbookPart!;
-        var sheet = workbook.Workbook.Sheets!.Elements<Sheet>().Single(s => s.Name == sheetName);
+        var sheet = workbook.Workbook!.Sheets!.Elements<Sheet>().Single(s => s.Name == sheetName);
         var part = (WorksheetPart)workbook.GetPartById(sheet.Id!);
 
-        return [.. part.Worksheet.GetFirstChild<SheetData>()!.Elements<Row>()];
+        return [.. part.Worksheet!.GetFirstChild<SheetData>()!.Elements<Row>()];
     }
 
     private static string[] Values(Row row) =>
-        [.. row.Elements<Cell>().Select(cell => cell.InlineString?.InnerText ?? cell.CellValue?.Text ?? "")];
+        [
+            .. row.Elements<Cell>()
+                .Select(cell => cell.InlineString?.InnerText ?? cell.CellValue?.Text ?? ""),
+        ];
 
     private static UserSnapshot Person(string firstName, string lastName) =>
         new(Guid.NewGuid(), firstName, lastName, $"{lastName.ToLowerInvariant()}@hr-agency.com");

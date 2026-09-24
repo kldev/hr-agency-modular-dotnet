@@ -1,6 +1,5 @@
 using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Projections;
-using HrAgencySystem.SharedKernel.Snapshots;
 using Marten;
 
 namespace HrAgencySystem.Sales.Infrastructure.Persistence;

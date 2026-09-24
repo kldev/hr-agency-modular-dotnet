@@ -28,7 +28,7 @@ public static class ChangeAssignmentStatusHandler
         OutgoingMessages
     )> Handle(
         ChangeAssignmentStatus command,
-        Domain.Assignment aggregate,
+        Assignment aggregate,
         IWorkersService service,
         IClock clock,
         CancellationToken ct
@@ -82,7 +82,7 @@ public static class ChangeAssignmentStatusHandler
     /// cannot see.
     /// </summary>
     private static async Task EnsureWorkerMayStart(
-        Domain.Assignment assignment,
+        Assignment assignment,
         IWorkersService service,
         CancellationToken ct
     )
@@ -101,10 +101,7 @@ public static class ChangeAssignmentStatusHandler
     /// Ending an assignment writes the date it ended; anything else keeps what was planned. An end
     /// date is not asked for when a posting merely goes live.
     /// </summary>
-    private static DateOnly? ReadEndsOn(
-        ChangeAssignmentStatus command,
-        Domain.Assignment assignment
-    )
+    private static DateOnly? ReadEndsOn(ChangeAssignmentStatus command, Assignment assignment)
     {
         if (!AssignmentStatusChangePolicy.IsFinal(command.Status))
             return assignment.EndsOn;

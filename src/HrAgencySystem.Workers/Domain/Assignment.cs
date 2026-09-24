@@ -1,7 +1,6 @@
 using HrAgencySystem.Compliance;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Events;
 
 namespace HrAgencySystem.Workers.Domain;

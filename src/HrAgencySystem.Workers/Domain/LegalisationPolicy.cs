@@ -54,6 +54,7 @@ public static class LegalisationPolicy
     ];
 
     public static bool RequiresLegalisation(string citizenship) =>
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         !FreeMovement.Contains((citizenship ?? "").Trim().ToUpperInvariant());
 
     public static bool RequiresLegalisation(CountryCode citizenship) =>

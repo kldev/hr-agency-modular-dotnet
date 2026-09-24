@@ -36,7 +36,7 @@ internal static class MapGetUsersSlice
         var result = await repository.GetUsersOwner(
             OrganizationId.From(organizationId),
             search ?? "",
-            roles ?? [],
+            roles,
             page,
             pageSize,
             ct

@@ -23,7 +23,12 @@ public static class UpdateSystemFieldHandler
         CancellationToken ct
     )
     {
-        service.ValidateAggregateUpdate(aggregate, command.OrganizationId, "System field", command.SystemFieldId);
+        service.ValidateAggregateUpdate(
+            aggregate,
+            command.OrganizationId,
+            "System field",
+            command.SystemFieldId
+        );
 
         var field =
             aggregate.FieldById(command.SystemFieldId)
@@ -32,11 +37,23 @@ public static class UpdateSystemFieldHandler
         if (field.IsArchived)
             throw new BusinessRuleException(SystemFieldRules.ArchivedMessage);
 
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var label = (command.Label ?? "").Trim();
         var description = SystemFieldRules.Blank(command.Description);
-        var (rules, options) = FieldRulesPolicy.Normalize(field.Type, command.Rules, command.Options);
+        var (rules, options) = FieldRulesPolicy.Normalize(
+            field.Type,
+            command.Rules,
+            command.Options
+        );
 
-        var errors = SystemFieldRules.Check(field.Type, label, description, rules, options, command.Source);
+        var errors = SystemFieldRules.Check(
+            field.Type,
+            label,
+            description,
+            rules,
+            options,
+            command.Source
+        );
 
         if (errors.Count > 0)
             throw new ValidationException(errors);

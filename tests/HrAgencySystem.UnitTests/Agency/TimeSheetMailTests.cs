@@ -1,13 +1,10 @@
-using HrAgencySystem.Agency.Application.Port;
 using HrAgencySystem.Agency.Application.TimeSheets.Approve;
 using HrAgencySystem.Agency.Application.TimeSheets.Return;
 using HrAgencySystem.Agency.Application.TimeSheets.Settle;
 using HrAgencySystem.Agency.Domain.TimeSheets;
-using HrAgencySystem.Agency.Projections;
 using HrAgencySystem.Agency.Services;
 using HrAgencySystem.EmailTemplates.Contracts.Agency;
 using HrAgencySystem.SharedKernel.Snapshots;
-using HrAgencySystem.SharedKernel.Tenant;
 using NSubstitute;
 
 namespace HrAgencySystem.UnitTests.Agency;

@@ -6,7 +6,6 @@ using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams.Application.Members.ChangeRole;
 using HrAgencySystem.Teams.Contracts;
 using HrAgencySystem.Teams.Contracts.IntegrationEvents;
-using HrAgencySystem.Teams.Domain;
 using HrAgencySystem.Teams.Services;
 using NSubstitute;
 using Wolverine;

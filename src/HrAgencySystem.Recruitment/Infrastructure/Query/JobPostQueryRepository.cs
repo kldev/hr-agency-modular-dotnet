@@ -1,5 +1,4 @@
 using HrAgencySystem.Recruitment.Application.JobPosting.Queries;
-using HrAgencySystem.Recruitment.Application.Port;
 using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Web;

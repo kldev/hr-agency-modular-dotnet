@@ -185,6 +185,7 @@ public sealed class JobPostTests
         );
     }
 
+    // An assertion helper: every argument is only there to be asserted on.
     private static void AssertCreatedState(
         JobPost post,
         Guid jobPostingId,
@@ -243,6 +244,7 @@ public sealed class JobPostTests
 
         Assert.Empty(post.Posts);
     }
+
 
     private static void ApplyUpdated(JobPost post, DateTimeOffset occurredAt, Guid modifierId)
     {

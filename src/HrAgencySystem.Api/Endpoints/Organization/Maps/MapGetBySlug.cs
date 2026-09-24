@@ -1,6 +1,5 @@
 using HrAgencySystem.Api.Common;
 using HrAgencySystem.Api.Common.Response;
-using HrAgencySystem.Organization.Events;
 using HrAgencySystem.Organization.Projections;
 using Marten;
 

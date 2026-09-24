@@ -1,5 +1,4 @@
 using HrAgencySystem.Compliance;
-using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.SharedKernel.Commands;
 
 namespace HrAgencySystem.Projects.Application.Create;

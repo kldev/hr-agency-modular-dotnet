@@ -38,11 +38,9 @@ public sealed record ProjectPositionProjection(
     int? PlannedHeadcount,
     EngagementType? DefaultEngagementType,
     bool IsArchived,
-    /// <summary>
-    /// The assignments currently held against this role, kept as ids rather than a number: the
-    /// integration events that maintain it are delivered at least once, and a set survives a
-    /// repeat where an increment would not.
-    /// </summary>
+    // The assignments currently held against this role, kept as ids rather than a number: the
+    // integration events that maintain it are delivered at least once, and a set survives a
+    // repeat where an increment would not.
     IReadOnlyList<Guid> AssignedAssignmentIds,
     UserSnapshot OpenedBy,
     DateTimeOffset OpenedAt,

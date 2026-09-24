@@ -22,6 +22,9 @@ public enum Industry
     Metalworking,
     Welding,
     Machining,
+
+    // Serialized by name - the front end matches "CNC".
+    // ReSharper disable once InconsistentNaming
     CNC,
     IndustrialProduction,
     MechanicalEngineering,

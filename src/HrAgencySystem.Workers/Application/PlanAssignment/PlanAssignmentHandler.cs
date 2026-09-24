@@ -1,7 +1,6 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using HrAgencySystem.SharedKernel.ValueObjects;
 using HrAgencySystem.Workers.Application.Port;
 using HrAgencySystem.Workers.Contracts.IntegrationEvents;
 using HrAgencySystem.Workers.Domain;
@@ -102,7 +101,7 @@ public static class PlanAssignmentHandler
             clock.UtcNow
         );
 
-        session.Events.StartStream<Domain.Assignment>(assignmentId.Value, @event);
+        session.Events.StartStream<Assignment>(assignmentId.Value, @event);
 
         // The role is taken from the moment somebody is planned onto it, not from the day they fly
         // out: a seat held for next month is not a seat anybody else can be offered. Cascaded, so

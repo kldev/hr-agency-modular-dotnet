@@ -1,8 +1,7 @@
-using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.ValueObjects;
 
-namespace HrAgencySystem.Projects.Application.Documents;
+namespace HrAgencySystem.Projects.Application.Documents.Attach;
 
 internal static class ProjectDocumentFactory
 {

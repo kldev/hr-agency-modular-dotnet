@@ -3,7 +3,6 @@ using HrAgencySystem.Recruitment.Domain.JobPostings;
 using HrAgencySystem.Recruitment.Events.JobPostings;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Exception;
-using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using Wolverine;
 using Wolverine.Marten;

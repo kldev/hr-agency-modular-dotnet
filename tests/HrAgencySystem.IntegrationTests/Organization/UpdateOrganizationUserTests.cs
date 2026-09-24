@@ -4,7 +4,6 @@ using HrAgencySystem.Api.Endpoints.Organization.Maps;
 using HrAgencySystem.Identity.Events;
 using HrAgencySystem.Identity.Projections;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.IntegrationTests.Users;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Organization;

@@ -22,7 +22,7 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
         Client.AsOwner();
     }
 
-    private static MapUpdateSlug.UpdateSlug UpdateSlugRequest(string slug = "new-slug")
+    private static MapUpdateSlug.UpdateSlug UpdateSlugRequest(string slug)
     {
         return new MapUpdateSlug.UpdateSlug(slug);
     }
@@ -115,7 +115,7 @@ public sealed class UpdateOrganizationSlugTests : BaseIntegrationTest
     [Fact]
     public async Task Put_duplicate_slug_returns_bad_request()
     {
-        var firstOrganization = await _testClient.CreateAsync(slug: "existing-slug");
+        await _testClient.CreateAsync(slug: "existing-slug");
 
         var secondOrganization = await _testClient.CreateAsync(
             name: "Second Agency",

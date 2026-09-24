@@ -20,7 +20,7 @@ public class MyProfileTests(IntegrationEnvironment env, ITestOutputHelper output
     public async Task The_profile_answers_with_the_signed_in_person()
     {
         var organizationId = Guid.NewGuid();
-        var user = await UserClient.CreateAsync(organizationId, "me@test.com", "John", "Doe");
+        var user = await UserClient.CreateAsync(organizationId, "me@test.com");
 
         await Eventually.AssertAsync(async () =>
         {
@@ -36,7 +36,7 @@ public class MyProfileTests(IntegrationEnvironment env, ITestOutputHelper output
     public async Task Editing_the_profile_changes_the_contact_data()
     {
         var organizationId = Guid.NewGuid();
-        var user = await UserClient.CreateAsync(organizationId, "me@test.com", "John", "Doe");
+        var user = await UserClient.CreateAsync(organizationId, "me@test.com");
 
         var updated = await Update(
             organizationId,
@@ -65,7 +65,7 @@ public class MyProfileTests(IntegrationEnvironment env, ITestOutputHelper output
     public async Task Editing_the_profile_keeps_the_phone_it_was_given()
     {
         var organizationId = Guid.NewGuid();
-        var user = await UserClient.CreateAsync(organizationId, "me@test.com", "John", "Doe");
+        var user = await UserClient.CreateAsync(organizationId, "me@test.com");
 
         await Update(
             organizationId,
@@ -89,7 +89,7 @@ public class MyProfileTests(IntegrationEnvironment env, ITestOutputHelper output
     public async Task Editing_the_profile_leaves_the_address_alone()
     {
         var organizationId = Guid.NewGuid();
-        var user = await UserClient.CreateAsync(organizationId, "me@test.com", "John", "Doe");
+        var user = await UserClient.CreateAsync(organizationId, "me@test.com");
 
         var updated = await Update(
             organizationId,
@@ -111,7 +111,7 @@ public class MyProfileTests(IntegrationEnvironment env, ITestOutputHelper output
     public async Task A_profile_without_a_name_is_refused()
     {
         var organizationId = Guid.NewGuid();
-        var user = await UserClient.CreateAsync(organizationId, "me@test.com", "John", "Doe");
+        var user = await UserClient.CreateAsync(organizationId, "me@test.com");
 
         Client.WithOrganizationId(organizationId);
         Client.WithUserId(user.Id);

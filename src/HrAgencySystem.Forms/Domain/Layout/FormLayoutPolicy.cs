@@ -50,12 +50,17 @@ public static class FormLayoutPolicy
     public const string PlaceholderTooLongMessage = "A placeholder cannot exceed 200 characters.";
     public const string DuplicateCodeMessage = "Another field on this form already uses this code.";
     public const string SystemFieldRequiredMessage = "Pick the system field this one shows.";
-    public const string UnknownSystemFieldMessage = "There is no such system field in the catalogue.";
-    public const string ArchivedSystemFieldMessage = "This system field is archived. Remove it from the form.";
+    public const string UnknownSystemFieldMessage =
+        "There is no such system field in the catalogue.";
+    public const string ArchivedSystemFieldMessage =
+        "This system field is archived. Remove it from the form.";
     public const string VisibilityNotSupportedMessage = "Conditional fields are not supported yet.";
-    public const string NoPagesMessage = "A form needs at least one page before it can be published.";
-    public const string EmptyPageMessage = "Every page needs at least one field before the form can be published.";
-    public const string NoOptionsMessage = "A choice field needs at least one option before the form can be published.";
+    public const string NoPagesMessage =
+        "A form needs at least one page before it can be published.";
+    public const string EmptyPageMessage =
+        "Every page needs at least one field before the form can be published.";
+    public const string NoOptionsMessage =
+        "A choice field needs at least one option before the form can be published.";
 
     /// <summary>
     /// Cleans the layout the builder sent, fills every system field from the catalogue and says what
@@ -72,16 +77,20 @@ public static class FormLayoutPolicy
 
         foreach (var page in input ?? [])
         {
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             var fields = (page.Fields ?? [])
                 .Select(field => Prepare(field, catalogue, errors))
                 .ToList();
 
-            pages.Add(page with
-            {
-                Title = (page.Title ?? "").Trim(),
-                Description = Blank(page.Description),
-                Fields = fields,
-            });
+            pages.Add(
+                page with
+                {
+                    // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+                    Title = (page.Title ?? "").Trim(),
+                    Description = Blank(page.Description),
+                    Fields = fields,
+                }
+            );
         }
 
         CheckShape(pages, errors);
@@ -99,17 +108,26 @@ public static class FormLayoutPolicy
         foreach (var page in pages.Where(page => page.Fields.Count == 0))
             errors.Add(new LayoutError(page.PageId, page.Title, EmptyPageMessage));
 
-        foreach (var field in pages.AllFields.Where(field => field.Type.HasOptions && field.Options.Count == 0))
+        foreach (
+            var field in pages.AllFields.Where(field =>
+                field.Type.HasOptions && field.Options.Count == 0
+            )
+        )
             errors.Add(new LayoutError(field.FieldId, field.Label, NoOptionsMessage));
 
         return errors;
     }
 
-    private static FormField Prepare(FormField field, IReadOnlyList<SystemField> catalogue, List<LayoutError> errors)
+    private static FormField Prepare(
+        FormField field,
+        IReadOnlyList<SystemField> catalogue,
+        List<LayoutError> errors
+    )
     {
-        var prepared = field.Source == FieldSource.System
-            ? SystemFieldResolver.Resolve(field, catalogue, errors)
-            : PrepareOwn(field, errors);
+        var prepared =
+            field.Source == FieldSource.System
+                ? SystemFieldResolver.Resolve(field, catalogue, errors)
+                : PrepareOwn(field, errors);
 
         var label = prepared.Label;
 
@@ -127,12 +145,14 @@ public static class FormLayoutPolicy
 
     private static FormField PrepareOwn(FormField field, List<LayoutError> errors)
     {
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
         var label = (field.Label ?? "").Trim();
         var (rules, options) = FieldRulesPolicy.Normalize(field.Type, field.Rules, field.Options);
 
         var prepared = field with
         {
             SystemFieldId = null,
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             Code = (field.Code ?? "").Trim(),
             Label = label,
             LabelOverride = null,
@@ -160,8 +180,15 @@ public static class FormLayoutPolicy
         if (prepared.DefaultValue is { IsEmpty: true })
             prepared = prepared with { DefaultValue = null };
 
-        if (prepared.DefaultValue is not null
-            && FormAnswersValidator.ValidateValue(prepared, prepared.DefaultValue, ValidationMode.Draft) is { } invalid)
+        if (
+            prepared.DefaultValue is not null
+            && FormAnswersValidator.ValidateValue(
+                prepared,
+                prepared.DefaultValue,
+                ValidationMode.Draft
+            )
+                is { } invalid
+        )
             errors.Add(new LayoutError(field.FieldId, label, $"Default value: {invalid.Message}"));
 
         return prepared;
@@ -193,12 +220,16 @@ public static class FormLayoutPolicy
 
         // Every holder of a repeated code is marked, not just the second one - the builder cannot
         // know which of the two the author meant to rename.
-        foreach (var field in fields.Where(field => field.Code.Length > 0)
-                     .GroupBy(field => field.Code)
-                     .Where(group => group.Count() > 1)
-                     .SelectMany(group => group))
+        foreach (
+            var field in fields
+                .Where(field => field.Code.Length > 0)
+                .GroupBy(field => field.Code)
+                .Where(group => group.Count() > 1)
+                .SelectMany(group => group)
+        )
             errors.Add(new LayoutError(field.FieldId, field.Label, DuplicateCodeMessage));
     }
 
-    private static string? Blank(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    private static string? Blank(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

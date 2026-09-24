@@ -97,7 +97,7 @@ public static class CreateCompanyHandler
             command.OrganizationId,
             id.Value,
             data,
-            command!.Name,
+            command.Name,
             clock.UtcNow
         );
 
