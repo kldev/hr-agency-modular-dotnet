@@ -16,6 +16,7 @@ using HrAgencySystem.Recruitment.Projections;
 using HrAgencySystem.Recruitment.Projections.Timeline;
 using HrAgencySystem.Sales.Documents;
 using HrAgencySystem.Sales.Projections;
+using HrAgencySystem.Tasks.Projections;
 using HrAgencySystem.Teams.Infrastructure.Persistence;
 using HrAgencySystem.Teams.Projections;
 using HrAgencySystem.Workers.Infrastructure.Persistence;
@@ -174,6 +175,11 @@ public sealed class DatabaseCleaner(string connectionString)
         await CleanTable<ActivityProjection>("sales");
         await CleanTable<OpportunityProjection>("sales");
         await CleanTable<FollowUpAction>("sales");
+    }
+
+    public async Task CleanTasks()
+    {
+        await CleanTable<TaskItemProjection>("tasks");
     }
 
     private async Task TruncateTable(string sql)

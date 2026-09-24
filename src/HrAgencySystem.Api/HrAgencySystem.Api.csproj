@@ -30,6 +30,7 @@
     <ProjectReference Include="..\HrAgencySystem.Workers\HrAgencySystem.Workers.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Forms\HrAgencySystem.Forms.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Tasks\HrAgencySystem.Tasks.csproj" />
     <ProjectReference Include="..\HrAgencySystem.LegalEntities\HrAgencySystem.LegalEntities.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Teams\HrAgencySystem.Teams.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Audit\HrAgencySystem.Audit.csproj" />

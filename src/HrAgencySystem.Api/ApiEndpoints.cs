@@ -354,6 +354,20 @@ internal static class ApiEndpoints
         public const string Comments = $"{Sheet}/comments";
     }
 
+    /// <summary>A person's own tasks for client companies (plan 029).</summary>
+    internal static class Tasks
+    {
+        private const string TasksBase = $"{Base}/tasks";
+        private const string Task = $"{TasksBase}/{{taskId:guid}}";
+
+        public const string Board = TasksBase;
+        public const string Create = TasksBase;
+        public const string Get = Task;
+        public const string Update = Task;
+        public const string Complete = $"{Task}/complete";
+        public const string Reopen = $"{Task}/reopen";
+    }
+
     /// <summary>Forms, documents and surveys the agency defines itself, and their published versions.</summary>
     internal static class Forms
     {
