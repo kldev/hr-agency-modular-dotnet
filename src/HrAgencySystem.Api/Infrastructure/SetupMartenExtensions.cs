@@ -9,6 +9,7 @@ using HrAgencySystem.Organization;
 using HrAgencySystem.Projects;
 using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
+using HrAgencySystem.Tasks;
 using HrAgencySystem.Teams;
 using HrAgencySystem.Workers;
 using JasperFx;
@@ -59,6 +60,7 @@ public static class SetupMartenExtensions
         WorkersModule.ConfigureMarten(options);
         FormsModule.ConfigureMarten(options);
         SalesModule.ConfigureMarten(options);
+        TasksModule.ConfigureMarten(options);
         TeamsModule.ConfigureMarten(options);
         LegalEntitiesModule.ConfigureMarten(options);
     }
@@ -78,6 +80,7 @@ public static class SetupMartenExtensions
                 ConfigureDiscover(options);
                 IdentityModule.ConfigureWolverine(options);
                 TeamsModule.ConfigureWolverine(options);
+                SalesModule.ConfigureWolverine(options);
 
                 options.Policies.AutoApplyTransactions();
             })
@@ -96,6 +99,7 @@ public static class SetupMartenExtensions
         options.Discovery.IncludeAssembly(typeof(WorkersModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(FormsModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(TasksModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(TeamsModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(LegalEntitiesModule).Assembly);
     }

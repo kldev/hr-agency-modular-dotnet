@@ -1,27 +1,40 @@
-using HrAgencySystem.Sales.Application.Queries;
 using HrAgencySystem.Sales.Events.Opportunity;
+using HrAgencySystem.SharedKernel.Snapshots;
+using HrAgencySystem.SharedKernel.Tenant;
 using Marten;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure.Snapshots;
 
 public sealed class FakeSalesOpportunitySnapshot(IQuerySession session)
-    : ISalesOpportunitySnapshotRepository
+    : IOpportunitySnapshotRepository
 {
-    public async Task<OpportunitySnapshot?> GetSnapshot(
+    public async Task<OpportunitySnapshot?> GetOpportunityAsync(
         Guid opportunityId,
-        Guid organizationId,
+        OrganizationId organizationId,
         CancellationToken ct
     )
     {
-        // fixtures that really created an opportunity get its company, the rest of the
-        // fixtures only need any snapshot for an id they made up
         var created = await session
             .Query<OpportunityCreated>()
-            .Where(z => z.OrganizationId == organizationId)
             .Where(z => z.OpportunityId == opportunityId)
-            .Select(z => new OpportunitySnapshot(z.OpportunityId, z.OrganizationId, z.Company.Id))
+            .Select(z => new OpportunitySnapshot(
+                z.OpportunityId,
+                z.OrganizationId,
+                z.Company.Id,
+                z.Title
+            ))
             .FirstOrDefaultAsync(ct);
 
-        return created ?? new OpportunitySnapshot(opportunityId, organizationId, Guid.NewGuid());
+        // Fixtures that really created an opportunity get it - but only in its own organization,
+        // so the tenant wall is testable. The rest only need any snapshot for an id they made up.
+        if (created is not null)
+            return created.OrganizationId == organizationId.Value ? created : null;
+
+        return new OpportunitySnapshot(
+            opportunityId,
+            organizationId.Value,
+            Guid.NewGuid(),
+            "Opportunity " + opportunityId.ToString()[..8]
+        );
     }
 }

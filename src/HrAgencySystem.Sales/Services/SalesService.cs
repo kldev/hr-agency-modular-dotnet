@@ -16,7 +16,7 @@ namespace HrAgencySystem.Sales.Services;
 public sealed class SalesService(
     IUserSnapshotRepository userSnapshotRepository,
     ICompanySnapshotRepository companySnapshotRepository,
-    ISalesOpportunitySnapshotRepository salesOpportunitySnapshotRepository,
+    IOpportunitySnapshotRepository salesOpportunitySnapshotRepository,
     IQueryFollowUpAction followUpActionQuery,
     IDocumentSession session,
     IClock clock,
@@ -48,9 +48,9 @@ public sealed class SalesService(
         CancellationToken ct
     )
     {
-        var opportunity = await salesOpportunitySnapshotRepository.GetSnapshot(
+        var opportunity = await salesOpportunitySnapshotRepository.GetOpportunityAsync(
             opportunityId,
-            organizationId,
+            OrganizationId.From(organizationId),
             ct
         );
 

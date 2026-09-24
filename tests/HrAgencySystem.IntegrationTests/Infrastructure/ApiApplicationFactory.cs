@@ -64,7 +64,7 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
 
             services.Replace(
                 ServiceDescriptor.Scoped<
-                    ISalesOpportunitySnapshotRepository,
+                    IOpportunitySnapshotRepository,
                     FakeSalesOpportunitySnapshot
                 >()
             );
