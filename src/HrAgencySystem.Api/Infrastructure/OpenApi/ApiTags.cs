@@ -23,6 +23,7 @@ internal static class ApiTags
     public const string SalesOpportunity = "Sales - Opportunity";
     public const string SalesJobDescription = "Sales - Job Description";
     public const string SalesProjects = "Sales - Projects";
+    public const string SalesTasks = "Sales - Tasks";
 
     public const string RecruitmentJobPosting = "Recruitment - Job Posting";
     public const string RecruitmentCandidates = "Recruitment - Candidates";
@@ -78,6 +79,10 @@ internal static class ApiTags
         (
             SalesOpportunity,
             "The sales pipeline: opportunities from first contact to won or lost, and the activities and follow-up actions that move them along."
+        ),
+        (
+            SalesTasks,
+            "A person's own to-do list: tasks for a client company, optionally within one of its deals, done with one click and undone the same way."
         ),
         (
             SalesJobDescription,

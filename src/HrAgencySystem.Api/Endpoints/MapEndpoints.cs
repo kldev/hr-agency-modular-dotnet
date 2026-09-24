@@ -35,6 +35,7 @@ public static class MapEndpoints
         Forms.Endpoint.Map(app);
         SystemFields.Endpoint.Map(app);
         FormResponses.Endpoint.Map(app);
+        Tasks.Endpoint.Map(app);
         Reports.Endpoint.Map(app);
 
         MapPlatformSeeder(app);

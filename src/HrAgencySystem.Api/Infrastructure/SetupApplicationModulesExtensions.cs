@@ -15,6 +15,7 @@ using HrAgencySystem.Organization;
 using HrAgencySystem.Projects;
 using HrAgencySystem.Recruitment;
 using HrAgencySystem.Sales;
+using HrAgencySystem.Tasks;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.Teams;
 using HrAgencySystem.Workers;
@@ -48,6 +49,7 @@ public static class SetupApplicationModulesExtensions
             services.AddWorkersModule();
             services.AddFormsModule();
             services.AddSalesModule();
+            services.AddTasksModule();
             services.AddTeamsModule();
             services.AddLegalEntitiesModule();
         }

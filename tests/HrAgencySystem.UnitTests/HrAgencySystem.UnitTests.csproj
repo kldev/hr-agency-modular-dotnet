@@ -42,6 +42,7 @@
     <ProjectReference Include="..\..\src\HrAgencySystem.Workers\HrAgencySystem.Workers.csproj" />
     <ProjectReference Include="..\..\src\HrAgencySystem.Forms\HrAgencySystem.Forms.csproj" />
     <ProjectReference Include="..\..\src\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Tasks\HrAgencySystem.Tasks.csproj" />
     <ProjectReference Include="..\..\src\HrAgencySystem.LegalEntities\HrAgencySystem.LegalEntities.csproj" />
     <ProjectReference Include="..\..\src\HrAgencySystem.Teams\HrAgencySystem.Teams.csproj" />
     <ProjectReference Include="..\..\src\services\HrAgencySystem.NotificationWorker\HrAgencySystem.NotificationWorker.csproj" />

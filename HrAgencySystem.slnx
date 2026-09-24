@@ -16,6 +16,8 @@
     <Project Path="src/HrAgencySystem.Projects/HrAgencySystem.Projects.csproj" />
     <Project Path="src/HrAgencySystem.Projects.Contracts/HrAgencySystem.Projects.Contracts.csproj" />
     <Project Path="src/HrAgencySystem.Recruitment.Contracts/HrAgencySystem.Recruitment.Contracts.csproj" />
+    <Project Path="src/HrAgencySystem.Tasks.Contracts/HrAgencySystem.Tasks.Contracts.csproj" />
+    <Project Path="src/HrAgencySystem.Tasks/HrAgencySystem.Tasks.csproj" />
     <Project Path="src/HrAgencySystem.Teams.Contracts/HrAgencySystem.Teams.Contracts.csproj" />
     <Project Path="src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj" />
     <Project Path="src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj" />

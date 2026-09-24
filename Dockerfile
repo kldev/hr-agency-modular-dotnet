@@ -30,6 +30,8 @@ COPY src/HrAgencySystem.Recruitment/HrAgencySystem.Recruitment.csproj HrAgencySy
 COPY src/HrAgencySystem.Recruitment.Contracts/HrAgencySystem.Recruitment.Contracts.csproj HrAgencySystem.Recruitment.Contracts/
 COPY src/HrAgencySystem.Reports.ReadModel/HrAgencySystem.Reports.ReadModel.csproj HrAgencySystem.Reports.ReadModel/
 COPY src/HrAgencySystem.Sales/HrAgencySystem.Sales.csproj HrAgencySystem.Sales/
+COPY src/HrAgencySystem.Tasks/HrAgencySystem.Tasks.csproj HrAgencySystem.Tasks/
+COPY src/HrAgencySystem.Tasks.Contracts/HrAgencySystem.Tasks.Contracts.csproj HrAgencySystem.Tasks.Contracts/
 COPY src/HrAgencySystem.LegalEntities/HrAgencySystem.LegalEntities.csproj HrAgencySystem.LegalEntities/
 COPY src/HrAgencySystem.Teams/HrAgencySystem.Teams.csproj HrAgencySystem.Teams/
 COPY src/HrAgencySystem.Teams.Contracts/HrAgencySystem.Teams.Contracts.csproj HrAgencySystem.Teams.Contracts/
