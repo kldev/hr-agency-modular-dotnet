@@ -12,6 +12,8 @@ public sealed record ActivityProjection(
     // ReSharper disable once NotAccessedPositionalProperty.Global
     Guid OpportunityId,
     // ReSharper disable once NotAccessedPositionalProperty.Global
+    string OpportunityTitle,
+    // ReSharper disable once NotAccessedPositionalProperty.Global
     SalesActivityType ActivityType,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string Note,
@@ -33,6 +35,7 @@ public sealed record ActivityProjection(
             @event.SalesActivityId,
             @event.OrganizationId,
             @event.SalesOpportunityId,
+            @event.OpportunityTitle,
             @event.ActivityType,
             @event.Note,
             @event.CreatedAt,

@@ -1,3 +1,4 @@
+using HrAgencySystem.Sales.Domain.Activity;
 using HrAgencySystem.Sales.Domain.Opportunity;
 using HrAgencySystem.Sales.Events.FollowUp;
 using HrAgencySystem.Sales.Events.Opportunity;
@@ -42,7 +43,10 @@ public sealed record OpportunityProjection(
     Guid? FollowUpActionId,
     // ReSharper disable once NotAccessedPositionalProperty.Global
     string? FollowUpContent,
-    DateTimeOffset? FollowUpDateTime
+    DateTimeOffset? FollowUpDateTime,
+    // when the deal was last worked on, from the activity copies on the opportunity stream
+    DateTimeOffset? LastActivityAt = null,
+    SalesActivityType? LastActivityType = null
 ) : IAudit
 {
     public static OpportunityProjection Create(OpportunityCreated @event)
@@ -104,6 +108,14 @@ public sealed record OpportunityProjection(
             ModifiedAt = @event.ChangedAt,
             ModifiedBy = @event.ChangedBy,
         };
+    }
+
+    // an activity backdated behind the latest one does not move the date back
+    public OpportunityProjection Apply(OpportunityActivityLogged @event)
+    {
+        return LastActivityAt is { } last && last > @event.LoggedAt
+            ? this
+            : this with { LastActivityAt = @event.LoggedAt, LastActivityType = @event.ActivityType };
     }
 
     public OpportunityProjection Apply(FollowUpActionCreated @event)

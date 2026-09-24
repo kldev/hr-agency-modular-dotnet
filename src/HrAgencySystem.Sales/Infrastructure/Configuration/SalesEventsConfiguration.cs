@@ -28,6 +28,7 @@ internal static class SalesEventsConfiguration
         options.Events.AddEventType<OpportunityUpdated>();
         options.Events.AddEventType<ResponsiblePersonChanged>();
         options.Events.AddEventType<StageChanged>();
+        options.Events.AddEventType<OpportunityActivityLogged>();
     }
 
     private static void ConfigureFollowUpActionEvents(StoreOptions options)

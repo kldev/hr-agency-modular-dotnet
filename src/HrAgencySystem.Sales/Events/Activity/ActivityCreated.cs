@@ -7,6 +7,7 @@ public sealed record ActivityCreated(
     Guid SalesActivityId,
     Guid OrganizationId,
     Guid SalesOpportunityId,
+    string OpportunityTitle,
     SalesActivityType ActivityType,
     string Note,
     DateTimeOffset CreatedAt,
