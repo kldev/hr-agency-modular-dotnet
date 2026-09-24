@@ -88,28 +88,31 @@ function ResponseContent({
 			<FormWizard className="form-wizard--in-dialog">
 				<FormWizard.Body>
 					<FormWizard.Content>
-						<div className="mb-5 flex flex-wrap items-center gap-3 text-sm text-(--color-text-secondary)">
-							<FormResponseStatusBadge status={response.status} />
-							<span>Version {String(response.formVersion)}</span>
-							{Number(response.revision) > 0 ? (
-								<span>Revision {String(response.revision)}</span>
-							) : null}
-						</div>
-
-						<DynamicReview pages={pages} answers={response.answers} />
-
 						<FormWizard.Section>
-							<FormWizard.SectionHeader title="History" />
-							<ul className="form-wizard__summary-list">
-								{response.history
-									.filter((entry) => entry.kind !== "DraftSaved")
-									.map((entry) => (
-										<li key={`${entry.kind}-${entry.at}`}>
-											{historyLabels[entry.kind]} {formatDateTime(entry.at)} by {entry.by.fullname}
-											{entry.reason ? ` - ${entry.reason}` : ""}
-										</li>
-									))}
-							</ul>
+							<div className="mb-5 flex flex-wrap items-center gap-3 text-sm text-(--color-text-secondary)">
+								<FormResponseStatusBadge status={response.status} />
+								<span>Version {String(response.formVersion)}</span>
+								{Number(response.revision) > 0 ? (
+									<span>Revision {String(response.revision)}</span>
+								) : null}
+							</div>
+
+							<DynamicReview pages={pages} answers={response.answers} />
+
+							<div className="form-wizard__summary-section">
+								<h3 className="form-wizard__summary-title">History</h3>
+								<ul className="flex flex-col gap-1 text-sm">
+									{response.history
+										.filter((entry) => entry.kind !== "DraftSaved")
+										.map((entry) => (
+											<li key={`${entry.kind}-${entry.at}`}>
+												{historyLabels[entry.kind]} {formatDateTime(entry.at)} by{" "}
+												{entry.by.fullname}
+												{entry.reason ? ` - ${entry.reason}` : ""}
+											</li>
+										))}
+								</ul>
+							</div>
 						</FormWizard.Section>
 					</FormWizard.Content>
 

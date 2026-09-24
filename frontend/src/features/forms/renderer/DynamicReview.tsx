@@ -1,5 +1,4 @@
 import type { FieldAnswer, FormPage } from "#/api/models";
-import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { SummaryItem } from "#/components/form-wizard/ReviewSummary";
 import { formatAnswer } from "./formatAnswer";
 
@@ -18,15 +17,13 @@ export function DynamicReview({
 	const byCode = new Map(answers.map((answer) => [answer.fieldCode, answer.value]));
 
 	return (
-		<>
+		<div className="form-wizard__summary">
 			{pages.map((page) => (
-				<FormWizard.Section key={page.pageId}>
-					<FormWizard.SectionHeader
-						title={page.title}
-						description={page.description ?? undefined}
-					/>
+				<div key={page.pageId} className="form-wizard__summary-section">
+					<h3 className="form-wizard__summary-title">{page.title}</h3>
+					{page.description ? <p className="form-hint mb-3">{page.description}</p> : null}
 
-					<div className="form-wizard__summary-list">
+					<div className="form-wizard__summary-grid">
 						{page.fields.map((field) => (
 							<SummaryItem
 								key={field.fieldId}
@@ -35,8 +32,8 @@ export function DynamicReview({
 							/>
 						))}
 					</div>
-				</FormWizard.Section>
+				</div>
 			))}
-		</>
+		</div>
 	);
 }

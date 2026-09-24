@@ -190,7 +190,7 @@ export function DynamicForm({
 					) : (
 						<form.Subscribe selector={(state) => state.values}>
 							{(values) => (
-								<>
+								<FormWizard.Section>
 									{problems.length > 0 ? (
 										<div className="wizard-review-error">
 											<div className="form-error" role="alert">
@@ -220,7 +220,7 @@ export function DynamicForm({
 									/>
 									<DynamicReview pages={pages} answers={toAnswers(pages, values)} />
 									{reviewAddon}
-								</>
+								</FormWizard.Section>
 							)}
 						</form.Subscribe>
 					)}
