@@ -21,6 +21,7 @@ export interface ActivityCreated {
 	salesActivityId: string;
 	organizationId: string;
 	salesOpportunityId: string;
+	opportunityTitle: string;
 	activityType: SalesActivityType;
 	note: string;
 	createdAt: string;

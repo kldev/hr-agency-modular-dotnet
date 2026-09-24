@@ -53,4 +53,9 @@ export interface CreateProjectRequest {
 	 * @nullable
 	 */
 	teamId: string | null;
+	/**
+	 * Optional sales opportunity the project was sold as; it must be the same company's.
+	 * @nullable
+	 */
+	salesOpportunityId?: string | null;
 }

@@ -14,14 +14,10 @@
  * OpenAPI spec version: v1
  */
 
-export type SalesActivityType = (typeof SalesActivityType)[keyof typeof SalesActivityType];
+export type TaskPriority = (typeof TaskPriority)[keyof typeof TaskPriority];
 
-export const SalesActivityType = {
-	Call: "Call",
-	Email: "Email",
-	Meeting: "Meeting",
-	Note: "Note",
-	Presentation: "Presentation",
-	Task: "Task",
-	Other: "Other",
+export const TaskPriority = {
+	Low: "Low",
+	Medium: "Medium",
+	High: "High",
 } as const;

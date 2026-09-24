@@ -13,20 +13,11 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
-import type { CompanySnapshot } from "./companySnapshot.ts";
-import type { SalesActivityType } from "./salesActivityType.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface ActivityProjection {
-	id: string;
-	orgId: string;
-	opportunityId: string;
-	opportunityTitle: string;
-	activityType: SalesActivityType;
-	note: string;
-	createdAt: string;
-	createdById: string;
-	createdBy: UserSnapshot;
-	companyId: string;
-	company: CompanySnapshot;
+export interface TaskItemReopened {
+	taskId: string;
+	organizationId: string;
+	reopenedBy: UserSnapshot;
+	reopenedAt: string;
 }

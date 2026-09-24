@@ -14,19 +14,21 @@
  * OpenAPI spec version: v1
  */
 import type { CompanySnapshot } from "./companySnapshot.ts";
-import type { SalesActivityType } from "./salesActivityType.ts";
+import type { TaskOpportunity } from "./taskOpportunity.ts";
+import type { TaskPriority } from "./taskPriority.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
-export interface ActivityProjection {
-	id: string;
-	orgId: string;
-	opportunityId: string;
-	opportunityTitle: string;
-	activityType: SalesActivityType;
-	note: string;
-	createdAt: string;
-	createdById: string;
-	createdBy: UserSnapshot;
-	companyId: string;
+export interface TaskItemCreated {
+	taskId: string;
+	organizationId: string;
+	title: string;
+	/** @nullable */
+	description: string | null;
+	dueAt: string;
+	priority: TaskPriority;
 	company: CompanySnapshot;
+	opportunity: null | TaskOpportunity;
+	assignee: UserSnapshot;
+	createdBy: UserSnapshot;
+	createdAt: string;
 }

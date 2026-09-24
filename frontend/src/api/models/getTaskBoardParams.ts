@@ -13,15 +13,19 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { TaskRangeKind } from "./taskRangeKind.ts";
 
-export type SalesActivityType = (typeof SalesActivityType)[keyof typeof SalesActivityType];
-
-export const SalesActivityType = {
-	Call: "Call",
-	Email: "Email",
-	Meeting: "Meeting",
-	Note: "Note",
-	Presentation: "Presentation",
-	Task: "Task",
-	Other: "Other",
-} as const;
+export type GetTaskBoardParams = {
+	/**
+	 * Day, Week or Month.
+	 */
+	range?: TaskRangeKind;
+	/**
+	 * IANA time zone the range is counted in, e.g. Europe/Warsaw.
+	 */
+	timeZone?: string;
+	/**
+	 * Only the tasks of this company.
+	 */
+	companyId?: string;
+};
