@@ -1,0 +1,121 @@
+/* =========================================================
+   Sales workspace - company | tabs | tasks
+   ========================================================= */
+
+.sales-workspace {
+	display: grid;
+	grid-template-columns: 280px minmax(0, 1fr) 360px;
+	grid-template-areas: "company main tasks";
+	align-items: start;
+	gap: var(--space-4);
+}
+
+.sales-workspace-company {
+	grid-area: company;
+	min-width: 0;
+}
+
+.sales-workspace-main {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+	grid-area: main;
+	min-width: 0;
+}
+
+.sales-workspace-tasks {
+	grid-area: tasks;
+	min-width: 0;
+}
+
+/* The two side columns stay in view while the middle scrolls through a long history. */
+@media (min-width: 1101px) {
+	.sales-workspace-company,
+	.sales-workspace-tasks {
+		position: sticky;
+		top: var(--space-4);
+	}
+}
+
+/* Tablet and phone: one column, in reading order - who, what, then my to-do list. */
+@media (max-width: 1100px) {
+	.sales-workspace {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas:
+			"company"
+			"main"
+			"tasks";
+	}
+}
+
+.workspace-company-body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-4);
+
+	padding: var(--space-4);
+}
+
+.workspace-company-name {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--space-3);
+}
+
+.workspace-company-name h3 {
+	margin: 0 0 var(--space-1);
+
+	color: var(--color-text);
+	font-size: var(--font-size-md);
+	font-weight: var(--font-weight-semibold);
+}
+
+.workspace-company-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 36px;
+
+	width: 36px;
+	height: 36px;
+
+	border: 1px solid var(--color-border);
+	background: var(--color-surface-subtle);
+	color: var(--color-primary);
+}
+
+.workspace-company-facts {
+	display: flex;
+	flex-direction: column;
+	gap: var(--space-3);
+
+	margin: 0;
+}
+
+.workspace-company-link {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-1);
+
+	color: var(--color-primary);
+	font-size: var(--font-size-sm);
+}
+
+.workspace-activity-type {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-2);
+}
+
+.workspace-note {
+	display: block;
+	overflow: hidden;
+
+	text-overflow: ellipsis;
+}
+
+.sales-workspace .data-details-section .table-container {
+	border-right: 0;
+	border-bottom: 0;
+	border-left: 0;
+}

@@ -20,6 +20,7 @@ export interface SalesPageFillters {
 	page?: number;
 	pageSize?: number;
 	responsibleId?: string;
+	companyId?: string;
 }
 const getSingleServerFn = createServerFn({
 	method: "GET",
@@ -41,6 +42,7 @@ const getSliceServerFn = createServerFn({
 				page: data.page,
 				pageSize: data.pageSize,
 				responsibleId: data.responsibleId,
+				companyId: data.companyId,
 			},
 			await getFnOptions(),
 		);
@@ -49,13 +51,17 @@ const getSliceServerFn = createServerFn({
 const getActivitiesSliceServerFn = createServerFn({
 	method: "GET",
 })
-	.validator((input: { opportunityId: string; page: number }) => input)
+	.validator(
+		(input: { opportunityId?: string; companyId?: string; page: number; pageSize?: number }) =>
+			input,
+	)
 	.handler(async ({ data }) => {
 		return getSalesActivities(
 			{
 				opportunityId: data.opportunityId,
+				companyId: data.companyId,
 				page: data.page,
-				pageSize: ACTIVITY_PAGE_SIZE,
+				pageSize: data.pageSize ?? ACTIVITY_PAGE_SIZE,
 			},
 			await getFnOptions(),
 		);
@@ -151,5 +157,23 @@ export function useGetOpportunity(id: string) {
 					id,
 				},
 			}),
+	});
+}
+
+/** Every activity of every opportunity of one company, newest first - filtered by the API. */
+export function useGetCompanyActivities(companyId: string, pageSize = 20) {
+	return useInfiniteQuery({
+		queryKey: salesKeys.companyActivities(companyId),
+
+		enabled: Boolean(companyId),
+
+		initialPageParam: 1,
+
+		queryFn: ({ pageParam }) =>
+			getActivitiesSliceServerFn({ data: { companyId, page: pageParam, pageSize } }),
+
+		getNextPageParam: (lastPage, _pages, lastPageParam) => {
+			return lastPage.hasMore ? lastPageParam + 1 : undefined;
+		},
 	});
 }

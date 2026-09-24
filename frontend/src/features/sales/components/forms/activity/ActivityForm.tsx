@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { type CreateOpportunityRequest, SalesActivityType } from "#/api/models";
+import type { CreateOpportunityRequest } from "#/api/models";
 
 import { ApiError } from "#/components/ui/ApiError";
-import { activityTypeOptions } from "#/features/sales/types";
+import { activityTypeOptions, type LoggableActivityType } from "#/features/sales/types";
 import { useAppForm } from "#/forms";
 
 interface ActivityFormProps {
@@ -11,16 +11,24 @@ interface ActivityFormProps {
 	isSubmitting?: boolean;
 	formId: string;
 	initial?: CreateOpportunityRequest;
+	/**
+	 * The deals to log against, by id - for a screen about a company rather than one deal. Without
+	 * it the form logs against the opportunity its drawer was opened for.
+	 */
+	opportunities?: Record<string, string>;
 }
 
 const activitySchema = z.object({
-	type: z.enum(SalesActivityType),
+	type: z.enum(
+		Object.keys(activityTypeOptions) as [LoggableActivityType, ...LoggableActivityType[]],
+	),
 	note: z.string(),
 });
 
 export type ActivityLogFormValues = {
 	note: string;
-	type: SalesActivityType;
+	type: LoggableActivityType;
+	opportunityId?: string;
 };
 
 export const empty: ActivityLogFormValues = {
@@ -28,9 +36,15 @@ export const empty: ActivityLogFormValues = {
 	type: "Call",
 };
 
-export function ActivityForm({ onSubmit, formId, error, isSubmitting = false }: ActivityFormProps) {
+export function ActivityForm({
+	onSubmit,
+	formId,
+	error,
+	isSubmitting = false,
+	opportunities,
+}: ActivityFormProps) {
 	const form = useAppForm({
-		defaultValues: empty,
+		defaultValues: opportunities ? { ...empty, opportunityId: "" } : empty,
 
 		validators: {
 			onChange: activitySchema,
@@ -50,6 +64,27 @@ export function ActivityForm({ onSubmit, formId, error, isSubmitting = false }: 
 				void form.handleSubmit();
 			}}
 		>
+			{opportunities ? (
+				<form.AppField
+					name="opportunityId"
+					validators={{
+						onChange: ({ value }) => (value ? undefined : "Pick the opportunity."),
+					}}
+				>
+					{(field) => (
+						<field.FormSelectEnum
+							fieldValue={field.state.value ?? ""}
+							options={opportunities}
+							label="Opportunity"
+							errors={field.state.meta.errors}
+							fieldName={field.name}
+							handleChange={(val) => field.handleChange(val)}
+							isSubmitting={isSubmitting}
+						/>
+					)}
+				</form.AppField>
+			) : null}
+
 			<form.AppField name="type">
 				{(field) => (
 					<field.FormSelectEnum

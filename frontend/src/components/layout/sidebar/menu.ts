@@ -15,6 +15,7 @@ import {
 	LayoutDashboard,
 	MessageSquare,
 	Network,
+	PanelsTopLeft,
 	Plane,
 	Users,
 	UsersRound,
@@ -42,6 +43,7 @@ const menuGroups: MenuGroup[] = [
 			{ label: "Job descriptions", icon: ChessRook, link: "/app/job-descriptions" },
 			{ label: "Companies", icon: Building2, link: "/app/companies" },
 			{ label: "Sales", icon: DollarSign, link: "/app/sales" },
+			{ label: "Sales workspace", icon: PanelsTopLeft, link: "/app/sales-workspace" },
 		],
 	},
 	{
