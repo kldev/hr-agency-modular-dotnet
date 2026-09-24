@@ -1,6 +1,6 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "e2e", "playwright.config.ts"],
+  "exclude": ["node_modules", "e2e", "playwright.config.ts", "vitest.config.ts", "src/**/*.test.ts"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",

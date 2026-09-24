@@ -44,6 +44,7 @@ public static class AuthenticationExtensions
         authorization.AddPayrollPolicy();
         authorization.AddRatesPolicy();
         authorization.AddAdminPolicy();
+        authorization.AddFormsDesignPolicy();
         authorization.AddInternalApiPolicy();
 
         services.Configure<JwtConfig>(configuration.GetSection(JwtConfig.Section));

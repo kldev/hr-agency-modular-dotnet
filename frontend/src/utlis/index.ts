@@ -27,3 +27,4 @@ export * from "./formatFileSize";
 export * from "./formatRecord";
 export * from "./formatSalary";
 export * from "./generatePassword";
+export * from "./newId";

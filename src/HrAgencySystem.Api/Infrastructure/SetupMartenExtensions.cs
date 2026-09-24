@@ -1,6 +1,7 @@
 using HrAgencySystem.Agency;
 using HrAgencySystem.Company;
 using HrAgencySystem.EmailTemplates.Messaging;
+using HrAgencySystem.Forms;
 using HrAgencySystem.Identity;
 using HrAgencySystem.JobDescription;
 using HrAgencySystem.LegalEntities;
@@ -56,6 +57,7 @@ public static class SetupMartenExtensions
         AgencyModule.ConfigureMarten(options);
         ProjectsModule.ConfigureMarten(options);
         WorkersModule.ConfigureMarten(options);
+        FormsModule.ConfigureMarten(options);
         SalesModule.ConfigureMarten(options);
         TeamsModule.ConfigureMarten(options);
         LegalEntitiesModule.ConfigureMarten(options);
@@ -92,6 +94,7 @@ public static class SetupMartenExtensions
         options.Discovery.IncludeAssembly(typeof(AgencyModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(ProjectsModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(WorkersModule).Assembly);
+        options.Discovery.IncludeAssembly(typeof(FormsModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(SalesModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(TeamsModule).Assembly);
         options.Discovery.IncludeAssembly(typeof(LegalEntitiesModule).Assembly);

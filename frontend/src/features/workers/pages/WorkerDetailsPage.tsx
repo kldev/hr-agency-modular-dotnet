@@ -5,6 +5,7 @@ import {
 	type PlanAssignmentWizardCommand,
 	PlanAssignmentWizardDialog,
 } from "#/features/assignments/wizards/plan/PlanAssignmentWizardDialog";
+import { WorkerFormsSection } from "#/features/forms/responses/WorkerFormsSection";
 import type { UserSnapshot } from "@/api/models";
 import { getCountryLabel } from "@/components/labels";
 import {
@@ -37,13 +38,14 @@ import {
 import { WorkerActions } from "./components/table/WorkerActions";
 import { useGetWorker } from "./hooks";
 
-export type WorkerTab = "overview" | "documents" | "permissions" | "assignments";
+export type WorkerTab = "overview" | "documents" | "permissions" | "assignments" | "forms";
 
 export const workerTabs: readonly WorkerTab[] = [
 	"overview",
 	"documents",
 	"permissions",
 	"assignments",
+	"forms",
 ];
 
 interface WorkerDetailsPageProps {
@@ -98,6 +100,7 @@ const WorkerDetailsPage: React.FC<WorkerDetailsPageProps> = ({ tab, onTabChange 
 			label: "Assignments",
 			count: Number(worker.assignmentCount ?? 0),
 		},
+		{ id: "forms", label: "Forms" },
 	];
 
 	/* A tab that does not apply to this person falls back rather than showing an empty page. */
@@ -171,6 +174,12 @@ const WorkerDetailsPage: React.FC<WorkerDetailsPageProps> = ({ tab, onTabChange 
 										worker={worker}
 										onPlanAssignment={() => planAssignmentRef.current?.plan({ workerId: id })}
 									/>
+								</section>
+							) : null}
+
+							{active === "forms" ? (
+								<section className="data-details-section mt-1">
+									<WorkerFormsSection workerId={id} />
 								</section>
 							) : null}
 						</TabPanel>

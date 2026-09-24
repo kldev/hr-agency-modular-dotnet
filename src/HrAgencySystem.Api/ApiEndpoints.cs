@@ -354,6 +354,55 @@ internal static class ApiEndpoints
         public const string Comments = $"{Sheet}/comments";
     }
 
+    /// <summary>Forms, documents and surveys the agency defines itself, and their published versions.</summary>
+    internal static class Forms
+    {
+        private const string FormsBase = $"{Base}/forms";
+        private const string Form = $"{FormsBase}/{{formId:guid}}";
+
+        public const string Slice = FormsBase;
+        public const string Create = FormsBase;
+        public const string Get = Form;
+        public const string UpdateDetails = Form;
+        public const string Draft = $"{Form}/draft";
+        public const string Publish = $"{Form}/publish";
+        public const string Archive = $"{Form}/archive";
+        public const string PreviewLayout = $"{Form}/preview-layout";
+        public const string Version = $"{Form}/versions/{{version:int}}";
+        public const string Responses = $"{Form}/responses";
+    }
+
+    /// <summary>The organization's catalogue of fields that describe a person, shared by every form.</summary>
+    internal static class SystemFields
+    {
+        private const string SystemFieldsBase = $"{Base}/system-fields";
+
+        public const string List = SystemFieldsBase;
+        public const string Define = SystemFieldsBase;
+        public const string Standard = $"{SystemFieldsBase}/standard";
+        public const string Update = $"{SystemFieldsBase}/{{systemFieldId:guid}}";
+        public const string Archive = $"{SystemFieldsBase}/{{systemFieldId:guid}}/archive";
+    }
+
+    /// <summary>
+    /// Responses have a root of their own: a response id is unique on its own, and nesting it under
+    /// the form would only add a second id to check against the first.
+    /// </summary>
+    internal static class FormResponses
+    {
+        private const string ResponsesBase = $"{Base}/form-responses";
+        private const string Response = $"{ResponsesBase}/{{responseId:guid}}";
+        private const string Subject = $"{Base}/subjects/{{subjectKind}}/{{subjectId:guid}}";
+
+        public const string Start = ResponsesBase;
+        public const string Get = Response;
+        public const string Draft = $"{Response}/draft";
+        public const string Submit = $"{Response}/submit";
+        public const string Correct = $"{Response}/correct";
+        public const string ForSubject = $"{Subject}/form-responses";
+        public const string AvailableForSubject = $"{Subject}/available-forms";
+    }
+
     internal static class Positions
     {
         private const string PositionsBase = $"{Base}/positions";

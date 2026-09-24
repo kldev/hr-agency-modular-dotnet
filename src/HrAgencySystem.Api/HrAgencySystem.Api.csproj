@@ -28,6 +28,7 @@
     <ProjectReference Include="..\HrAgencySystem.Agency\HrAgencySystem.Agency.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Projects\HrAgencySystem.Projects.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Workers\HrAgencySystem.Workers.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.Forms\HrAgencySystem.Forms.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Sales\HrAgencySystem.Sales.csproj" />
     <ProjectReference Include="..\HrAgencySystem.LegalEntities\HrAgencySystem.LegalEntities.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Teams\HrAgencySystem.Teams.csproj" />

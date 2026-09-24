@@ -130,6 +130,26 @@ public sealed partial class HrAgencyShowcaseSeeder
             today
         );
 
+        // Forms are started for workers, and the worker lookup behind a response replays the
+        // stream - but picking which workers to use reads the register.
+        await WaitForProjections();
+
+        var workerIds = await session
+            .Query<WorkerProjection>()
+            .Where(w => w.OrganizationId == organization.OrganizationId)
+            .OrderBy(w => w.LastName)
+            .Select(w => w.Id)
+            .ToListAsync();
+
+        var formResponses = await new FormsScenario(bus, session).Seed(
+            organization.OrganizationId,
+            userIds[0],
+            workerIds,
+            today
+        );
+
+        logger.LogInformation("Seeded forms with {Count} responses", formResponses);
+
         logger.LogInformation(
             "Delivery seed completed for {Slug}: {WorkerCount} workers across {ProjectCount} projects",
             organization.Slug,

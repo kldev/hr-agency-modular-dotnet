@@ -1,0 +1,978 @@
+{
+  "_comment": "Shared by FormAnswersValidatorCasesTests (xUnit) and buildAnswerSchema.test.ts (Vitest). Values are normalized first (trim, upper-case country, distinct selection), then validated. 'expected' is the error code, or null when the value is accepted.",
+  "cases": [
+    {
+      "name": "required text missing",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": null,
+      "mode": "submit",
+      "expected": "required"
+    },
+    {
+      "name": "required text blank",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": {
+        "text": "   "
+      },
+      "mode": "submit",
+      "expected": "required"
+    },
+    {
+      "name": "required text missing in a draft is fine",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": null,
+      "mode": "draft",
+      "expected": null
+    },
+    {
+      "name": "optional text missing",
+      "field": {
+        "type": "Text",
+        "rules": {},
+        "options": []
+      },
+      "value": null,
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "required text given",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": {
+        "text": "Jan"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "required consent unticked",
+      "field": {
+        "type": "Boolean",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": {
+        "boolean": false
+      },
+      "mode": "submit",
+      "expected": "required"
+    },
+    {
+      "name": "required consent ticked",
+      "field": {
+        "type": "Boolean",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": {
+        "boolean": true
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "optional boolean false",
+      "field": {
+        "type": "Boolean",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "boolean": false
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "required number missing",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": null,
+      "mode": "submit",
+      "expected": "required"
+    },
+    {
+      "name": "required multi choice empty",
+      "field": {
+        "type": "MultiChoice",
+        "rules": {
+          "required": true
+        },
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "values": []
+      },
+      "mode": "submit",
+      "expected": "required"
+    },
+    {
+      "name": "required date missing",
+      "field": {
+        "type": "Date",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": null,
+      "mode": "submit",
+      "expected": "required"
+    },
+    {
+      "name": "number given as text",
+      "field": {
+        "type": "Number",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "12"
+      },
+      "mode": "submit",
+      "expected": "wrongType"
+    },
+    {
+      "name": "text given as number",
+      "field": {
+        "type": "Text",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "number": 12
+      },
+      "mode": "submit",
+      "expected": "wrongType"
+    },
+    {
+      "name": "boolean given as text",
+      "field": {
+        "type": "Boolean",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "true"
+      },
+      "mode": "submit",
+      "expected": "wrongType"
+    },
+    {
+      "name": "date given as text",
+      "field": {
+        "type": "Date",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "2026-01-01"
+      },
+      "mode": "submit",
+      "expected": "wrongType"
+    },
+    {
+      "name": "multi choice given as text",
+      "field": {
+        "type": "MultiChoice",
+        "rules": {},
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "text": "a"
+      },
+      "mode": "submit",
+      "expected": "wrongType"
+    },
+    {
+      "name": "single choice given as values",
+      "field": {
+        "type": "SingleChoice",
+        "rules": {},
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "values": [
+          "a"
+        ]
+      },
+      "mode": "submit",
+      "expected": "wrongType"
+    },
+    {
+      "name": "wrong type wins over required",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "required": true
+        },
+        "options": []
+      },
+      "value": {
+        "text": "x"
+      },
+      "mode": "submit",
+      "expected": "wrongType"
+    },
+    {
+      "name": "text shorter than min",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "minLength": 3
+        },
+        "options": []
+      },
+      "value": {
+        "text": "ab"
+      },
+      "mode": "submit",
+      "expected": "minLength"
+    },
+    {
+      "name": "text at min",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "minLength": 3
+        },
+        "options": []
+      },
+      "value": {
+        "text": "abc"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "text longer than max",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "maxLength": 5
+        },
+        "options": []
+      },
+      "value": {
+        "text": "abcdef"
+      },
+      "mode": "submit",
+      "expected": "maxLength"
+    },
+    {
+      "name": "text at max",
+      "field": {
+        "type": "TextArea",
+        "rules": {
+          "maxLength": 5
+        },
+        "options": []
+      },
+      "value": {
+        "text": "abcde"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "text length counted after trimming",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "maxLength": 3
+        },
+        "options": []
+      },
+      "value": {
+        "text": "  abc  "
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "text above the global limit",
+      "field": {
+        "type": "TextArea",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      },
+      "mode": "submit",
+      "expected": "maxLength"
+    },
+    {
+      "name": "pesel matches",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "pattern": "\\d{11}"
+        },
+        "options": []
+      },
+      "value": {
+        "text": "44051401359"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "pesel too short",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "pattern": "\\d{11}"
+        },
+        "options": []
+      },
+      "value": {
+        "text": "4405140135"
+      },
+      "mode": "submit",
+      "expected": "pattern"
+    },
+    {
+      "name": "pattern must match the whole value",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "pattern": "\\d{11}"
+        },
+        "options": []
+      },
+      "value": {
+        "text": "44051401359x"
+      },
+      "mode": "submit",
+      "expected": "pattern"
+    },
+    {
+      "name": "pattern alternatives are anchored as a group",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "pattern": "cat|dog"
+        },
+        "options": []
+      },
+      "value": {
+        "text": "catdog"
+      },
+      "mode": "submit",
+      "expected": "pattern"
+    },
+    {
+      "name": "pattern alternative matches",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "pattern": "cat|dog"
+        },
+        "options": []
+      },
+      "value": {
+        "text": "dog"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "empty optional value skips the pattern",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "pattern": "\\d{11}"
+        },
+        "options": []
+      },
+      "value": null,
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "valid email",
+      "field": {
+        "type": "Email",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "jan.kowalski@example.com"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "email without domain",
+      "field": {
+        "type": "Email",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "jan.kowalski@"
+      },
+      "mode": "submit",
+      "expected": "email"
+    },
+    {
+      "name": "email with space",
+      "field": {
+        "type": "Email",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "jan kowalski@example.com"
+      },
+      "mode": "submit",
+      "expected": "email"
+    },
+    {
+      "name": "valid phone with plus and spaces",
+      "field": {
+        "type": "Phone",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "+48 600 100 200"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "phone with brackets and dashes",
+      "field": {
+        "type": "Phone",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "(22) 555-12-34"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "phone with letters",
+      "field": {
+        "type": "Phone",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "600 abc 200"
+      },
+      "mode": "submit",
+      "expected": "phone"
+    },
+    {
+      "name": "phone too short",
+      "field": {
+        "type": "Phone",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "12345"
+      },
+      "mode": "submit",
+      "expected": "phone"
+    },
+    {
+      "name": "phone too long",
+      "field": {
+        "type": "Phone",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "1234567890123456"
+      },
+      "mode": "submit",
+      "expected": "phone"
+    },
+    {
+      "name": "valid country",
+      "field": {
+        "type": "Country",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "PL"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "country lower case is normalized",
+      "field": {
+        "type": "Country",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "de"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "country of three letters",
+      "field": {
+        "type": "Country",
+        "rules": {},
+        "options": []
+      },
+      "value": {
+        "text": "POL"
+      },
+      "mode": "submit",
+      "expected": "country"
+    },
+    {
+      "name": "number below min",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "min": 0
+        },
+        "options": []
+      },
+      "value": {
+        "number": -1
+      },
+      "mode": "submit",
+      "expected": "min"
+    },
+    {
+      "name": "number at min",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "min": 0
+        },
+        "options": []
+      },
+      "value": {
+        "number": 0
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "number above max",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "max": 100
+        },
+        "options": []
+      },
+      "value": {
+        "number": 101
+      },
+      "mode": "submit",
+      "expected": "max"
+    },
+    {
+      "name": "whole number required",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "decimals": 0
+        },
+        "options": []
+      },
+      "value": {
+        "number": 1.5
+      },
+      "mode": "submit",
+      "expected": "decimals"
+    },
+    {
+      "name": "two decimals allowed",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "decimals": 2
+        },
+        "options": []
+      },
+      "value": {
+        "number": 1.25
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "three decimals refused",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "decimals": 2
+        },
+        "options": []
+      },
+      "value": {
+        "number": 1.255
+      },
+      "mode": "submit",
+      "expected": "decimals"
+    },
+    {
+      "name": "trailing zeros are not decimals",
+      "field": {
+        "type": "Number",
+        "rules": {
+          "decimals": 1
+        },
+        "options": []
+      },
+      "value": {
+        "number": 2.5
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "date before min",
+      "field": {
+        "type": "Date",
+        "rules": {
+          "minDate": "2026-01-01"
+        },
+        "options": []
+      },
+      "value": {
+        "date": "2025-12-31"
+      },
+      "mode": "submit",
+      "expected": "minDate"
+    },
+    {
+      "name": "date on min",
+      "field": {
+        "type": "Date",
+        "rules": {
+          "minDate": "2026-01-01"
+        },
+        "options": []
+      },
+      "value": {
+        "date": "2026-01-01"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "date after max",
+      "field": {
+        "type": "Date",
+        "rules": {
+          "maxDate": "2026-12-31"
+        },
+        "options": []
+      },
+      "value": {
+        "date": "2027-01-01"
+      },
+      "mode": "submit",
+      "expected": "maxDate"
+    },
+    {
+      "name": "single choice from the list",
+      "field": {
+        "type": "SingleChoice",
+        "rules": {},
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "text": "b"
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "single choice outside the list",
+      "field": {
+        "type": "SingleChoice",
+        "rules": {},
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "text": "z"
+      },
+      "mode": "submit",
+      "expected": "option"
+    },
+    {
+      "name": "multi choice from the list",
+      "field": {
+        "type": "MultiChoice",
+        "rules": {},
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "values": [
+          "a",
+          "c"
+        ]
+      },
+      "mode": "submit",
+      "expected": null
+    },
+    {
+      "name": "multi choice with an unknown value",
+      "field": {
+        "type": "MultiChoice",
+        "rules": {},
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "values": [
+          "a",
+          "z"
+        ]
+      },
+      "mode": "submit",
+      "expected": "option"
+    },
+    {
+      "name": "multi choice below min selected",
+      "field": {
+        "type": "MultiChoice",
+        "rules": {
+          "minSelected": 2
+        },
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "values": [
+          "a"
+        ]
+      },
+      "mode": "submit",
+      "expected": "minSelected"
+    },
+    {
+      "name": "multi choice above max selected",
+      "field": {
+        "type": "MultiChoice",
+        "rules": {
+          "maxSelected": 2
+        },
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "values": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      "mode": "submit",
+      "expected": "maxSelected"
+    },
+    {
+      "name": "multi choice repeats are dropped before counting",
+      "field": {
+        "type": "MultiChoice",
+        "rules": {
+          "minSelected": 2
+        },
+        "options": [
+          {
+            "value": "a",
+            "label": "A"
+          },
+          {
+            "value": "b",
+            "label": "B"
+          },
+          {
+            "value": "c",
+            "label": "C"
+          }
+        ]
+      },
+      "value": {
+        "values": [
+          "a",
+          "a"
+        ]
+      },
+      "mode": "submit",
+      "expected": "minSelected"
+    },
+    {
+      "name": "own message replaces the default",
+      "field": {
+        "type": "Text",
+        "rules": {
+          "pattern": "\\d{11}",
+          "message": "Enter a valid PESEL number (11 digits)."
+        },
+        "options": []
+      },
+      "value": {
+        "text": "123"
+      },
+      "mode": "submit",
+      "expected": "pattern"
+    }
+  ]
+}

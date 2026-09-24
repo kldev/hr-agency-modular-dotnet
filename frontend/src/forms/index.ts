@@ -8,6 +8,7 @@ export { useFieldContext, useFormContext };
 import { FormSaveChangesButton } from "#/components/ui";
 import {
 	FormArrayField,
+	FormCheckbox,
 	FormChoiceGroup,
 	FormCompanyPicker,
 	FormCountrySelect,
@@ -16,6 +17,7 @@ import {
 	FormInput,
 	FormLanguageSelect,
 	FormMoneyInput,
+	FormMultiChoice,
 	FormPasswordInput,
 	FormSelectEnum,
 	FormTeamPicker,
@@ -43,6 +45,8 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
 		FormLanguageSelect,
 		FormArrayField,
 		FormTimeInput,
+		FormCheckbox,
+		FormMultiChoice,
 	},
 	formComponents: { FormSaveChangesButton },
 	fieldContext,

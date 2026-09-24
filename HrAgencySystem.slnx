@@ -9,6 +9,7 @@
     <Project Path="src/HrAgencySystem.Reports.ReadModel/HrAgencySystem.Reports.ReadModel.csproj" />
     <Project Path="src/HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj" />
     <Project Path="src/HrAgencySystem.Files/HrAgencySystem.Files.csproj" />
+    <Project Path="src/HrAgencySystem.Forms/HrAgencySystem.Forms.csproj" />
     <Project Path="src/HrAgencySystem.Identity/HrAgencySystem.Identity.csproj" />
     <Project Path="src/HrAgencySystem.JobDescription/HrAgencySystem.JobDescription.csproj" />
     <Project Path="src/HrAgencySystem.Organization/HrAgencySystem.Organization.csproj" />

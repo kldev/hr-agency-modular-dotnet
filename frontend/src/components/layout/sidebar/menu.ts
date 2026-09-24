@@ -8,6 +8,7 @@ import {
 	ClipboardList,
 	DollarSign,
 	FileBadge,
+	FileText,
 	FolderKanban,
 	HardHat,
 	Landmark,
@@ -51,6 +52,7 @@ const menuGroups: MenuGroup[] = [
 			{ label: "Workers", icon: HardHat, link: "/app/workers" },
 			{ label: "Workers abroad", icon: Plane, link: "/app/workers-abroad" },
 			{ label: "Assignments", icon: ClipboardCheck, link: "/app/assignments" },
+			{ label: "Forms", icon: FileText, link: "/app/forms" },
 		],
 	},
 	{
