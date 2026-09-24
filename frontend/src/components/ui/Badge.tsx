@@ -13,11 +13,13 @@ import { interviewFormats, interviewStatuses, interviewTypes } from "#/features/
 import { jobDescriptionStatuses } from "#/features/job-descriptions/type";
 import { jobPostsStatuses } from "#/features/job-posts/type";
 import { contractStatusClass, contractStatuses, projectStatuses } from "#/features/projects/types";
+import { taskPriorities, taskPriorityClass } from "#/features/tasks/types";
 import { timeSheetStatusClass, timeSheetStatuses } from "#/features/timesheets/types";
 import { workerStatusClass, workerStatuses } from "#/features/workers/types";
 import type {
 	AssignmentStatus,
 	CandidateSource,
+	CompanyStatus,
 	ComplianceStatus,
 	ContractStatus,
 	FormResponseStatus,
@@ -30,6 +32,7 @@ import type {
 	JobPostStatus,
 	OpportunityStage,
 	ProjectStatus,
+	TaskPriority,
 	TimeSheetStatus,
 	WorkerContractType,
 	WorkerStatus,
@@ -228,5 +231,19 @@ export function FormStatusBadge({ status }: { status: FormStatus }) {
 export function FormResponseStatusBadge({ status }: { status: FormResponseStatus }) {
 	return (
 		<span className={clsx("badge", responseStatusClass[status])}>{responseStatuses[status]}</span>
+	);
+}
+
+export function TaskPriorityBadge({ priority }: { priority: TaskPriority }) {
+	return (
+		<span className={clsx("badge", taskPriorityClass[priority])}>{taskPriorities[priority]}</span>
+	);
+}
+
+export function CompanyStatusBadge({ status }: { status: CompanyStatus }) {
+	return (
+		<span className={clsx("badge", status === "Active" ? "badge-active" : "badge-inactive")}>
+			{status}
+		</span>
 	);
 }

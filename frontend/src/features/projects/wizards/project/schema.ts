@@ -24,6 +24,7 @@ export const projectSchema = z
 		startsOn: z.string().min(1, "Start date is required"),
 		endsOn: z.string(),
 		teamId: z.string(),
+		salesOpportunityId: z.string(),
 	})
 	.superRefine((value, context) => {
 		if (value.endsOn && value.endsOn < value.startsOn) {
@@ -54,4 +55,5 @@ export const emptyProject: ProjectFormValues = {
 	startsOn: "",
 	endsOn: "",
 	teamId: "",
+	salesOpportunityId: "",
 };

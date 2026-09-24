@@ -10,4 +10,7 @@ export const salesKeys = {
 	totals: (params?: unknown) => [...salesKeys.all, "totals", params] as const,
 
 	activities: (opportunityId: string) => [...salesKeys.all, "activities", opportunityId] as const,
+
+	companyActivities: (companyId: string) =>
+		[...salesKeys.all, "company-activities", companyId] as const,
 };

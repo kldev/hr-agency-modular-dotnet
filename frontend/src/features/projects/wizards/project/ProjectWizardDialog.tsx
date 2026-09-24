@@ -34,6 +34,7 @@ function toFormValues(project: ProjectProjection): ProjectFormValues {
 		startsOn: project.startsOn,
 		endsOn: project.endsOn ?? "",
 		teamId: project.teamId ?? "",
+		salesOpportunityId: project.opportunity?.id ?? "",
 	};
 }
 

@@ -1,6 +1,7 @@
 import { ClipboardList } from "lucide-react";
 import type { EngagementType } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
+import { OpportunitySelect } from "#/features/sales/components/OpportunitySelect";
 import { withForm } from "#/forms";
 import { engagementTypeDescriptions, engagementTypes } from "../../../types";
 import { emptyProject } from "../schema";
@@ -48,6 +49,25 @@ export const BasicsStep = withForm({
 						/>
 					)}
 				</form.AppField>
+
+				{/* The deal it was sold as - optional, and only one of the client's own. */}
+				<form.Subscribe selector={(state) => state.values.companyId}>
+					{(companyId) => (
+						<form.AppField name="salesOpportunityId">
+							{(field) => (
+								<OpportunitySelect
+									label="Sold as (opportunity)"
+									companyId={companyId || null}
+									fieldName={field.name}
+									value={field.state.value}
+									onChange={field.handleChange}
+									errors={field.state.meta.errors}
+									isSubmitting={isSubmitting}
+								/>
+							)}
+						</form.AppField>
+					)}
+				</form.Subscribe>
 
 				{/*
 				 * Offered only while the project is being created. `UpdateProjectRequest` does not carry

@@ -17,6 +17,7 @@ export * from "./reportsKeys";
 export * from "./salesKeys";
 export * from "./serviceApiKeysKeys";
 export * from "./suggestionKeys";
+export * from "./tasksKeys";
 export * from "./teamsKeys";
 export * from "./timeSheetsKeys";
 export * from "./usersKeys";

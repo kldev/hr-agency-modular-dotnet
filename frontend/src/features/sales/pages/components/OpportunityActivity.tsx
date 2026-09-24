@@ -1,31 +1,16 @@
-import {
-	CalendarDays,
-	type LucideIcon,
-	Mail,
-	MessageSquare,
-	Phone,
-	Presentation,
-} from "lucide-react";
-import type { ActivityProjection, SalesActivityType } from "#/api/models";
+import { MessageSquare } from "lucide-react";
+import type { ActivityProjection } from "#/api/models";
 import { MessagePreview } from "#/components/ui/MessagePreview";
 import { formatDateTime } from "#/utlis";
 import { Button, LoadMore } from "@/components/ui";
+import { activityIcons } from "../../activityIcons";
 import { useGetActivitiesSlice } from "../../hooks";
-import { activityTypeOptions } from "../../types";
+import { activityTypeLabels } from "../../types";
 
 interface OpportunityActivityProps {
 	opportunityId: string;
 	onLogActivity: () => void;
 }
-
-const activityIcons: Record<SalesActivityType, LucideIcon> = {
-	Call: Phone,
-	Email: Mail,
-	Meeting: CalendarDays,
-	Note: MessageSquare,
-	Presentation: Presentation,
-	Other: MessageSquare,
-};
 
 function ActivityItem({ activity }: { activity: ActivityProjection }) {
 	const Icon = activityIcons[activity.activityType];
@@ -39,7 +24,7 @@ function ActivityItem({ activity }: { activity: ActivityProjection }) {
 			<div className="sales-activity-content">
 				<div className="sales-activity-heading">
 					<h3>
-						{activityTypeOptions[activity.activityType]} · {activity.createdBy?.fullname}
+						{activityTypeLabels[activity.activityType]} · {activity.createdBy?.fullname}
 					</h3>
 
 					<time>{formatDateTime(activity.createdAt)}</time>

@@ -67,6 +67,7 @@ export function ProjectWizard({
 				countryCode: value.countryCode.toUpperCase(),
 				startsOn: toDateOnly(value.startsOn),
 				endsOn: value.endsOn ? toDateOnly(value.endsOn) : null,
+				salesOpportunityId: value.salesOpportunityId || null,
 			};
 
 			try {

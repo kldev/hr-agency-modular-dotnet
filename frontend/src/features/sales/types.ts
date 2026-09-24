@@ -19,11 +19,19 @@ export const currenciesOptions: Record<CurrencyCode, string> = {
 	GBP: "GBP",
 };
 
-export const activityTypeOptions: Record<SalesActivityType, string> = {
+/** An activity somebody logs by hand - a completed task is written by the tasks module instead. */
+export type LoggableActivityType = Exclude<SalesActivityType, "Task">;
+
+export const activityTypeOptions: Record<LoggableActivityType, string> = {
 	Call: "Call",
 	Email: "Email",
 	Meeting: "Meeting",
 	Note: "Note",
 	Presentation: "Presentation",
 	Other: "Other",
+};
+
+export const activityTypeLabels: Record<SalesActivityType, string> = {
+	...activityTypeOptions,
+	Task: "Task",
 };

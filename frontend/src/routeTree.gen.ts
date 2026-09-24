@@ -59,6 +59,7 @@ import { Route as AppPositionsIndexRouteImport } from './routes/app/positions/in
 import { Route as AppProfileIndexRouteImport } from './routes/app/profile/index'
 import { Route as AppProjectsIndexRouteImport } from './routes/app/projects/index'
 import { Route as AppProjectsIdRouteImport } from './routes/app/projects/$id'
+import { Route as AppSalesWorkspaceIndexRouteImport } from './routes/app/sales-workspace/index'
 import { Route as AppSalesIndexRouteImport } from './routes/app/sales/index'
 import { Route as AppTeamsIndexRouteImport } from './routes/app/teams/index'
 import { Route as AppTeamsIdRouteImport } from './routes/app/teams/$id'
@@ -320,6 +321,11 @@ const AppProjectsIdRoute = AppProjectsIdRouteImport.update({
   path: '/projects/$id',
   getParentRoute: () => AppRouteRoute,
 } as any)
+const AppSalesWorkspaceIndexRoute = AppSalesWorkspaceIndexRouteImport.update({
+  id: '/sales-workspace/',
+  path: '/sales-workspace/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 const AppSalesIndexRoute = AppSalesIndexRouteImport.update({
   id: '/sales/',
   path: '/sales/',
@@ -426,6 +432,7 @@ export interface FileRoutesByFullPath {
   '/app/positions/': typeof AppPositionsIndexRoute
   '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
+  '/app/sales-workspace/': typeof AppSalesWorkspaceIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
   '/app/users/': typeof AppUsersIndexRoute
@@ -486,6 +493,7 @@ export interface FileRoutesByTo {
   '/app/positions': typeof AppPositionsIndexRoute
   '/app/profile': typeof AppProfileIndexRoute
   '/app/projects': typeof AppProjectsIndexRoute
+  '/app/sales-workspace': typeof AppSalesWorkspaceIndexRoute
   '/app/sales': typeof AppSalesIndexRoute
   '/app/teams': typeof AppTeamsIndexRoute
   '/app/users': typeof AppUsersIndexRoute
@@ -549,6 +557,7 @@ export interface FileRoutesById {
   '/app/positions/': typeof AppPositionsIndexRoute
   '/app/profile/': typeof AppProfileIndexRoute
   '/app/projects/': typeof AppProjectsIndexRoute
+  '/app/sales-workspace/': typeof AppSalesWorkspaceIndexRoute
   '/app/sales/': typeof AppSalesIndexRoute
   '/app/teams/': typeof AppTeamsIndexRoute
   '/app/users/': typeof AppUsersIndexRoute
@@ -613,6 +622,7 @@ export interface FileRouteTypes {
     | '/app/positions/'
     | '/app/profile/'
     | '/app/projects/'
+    | '/app/sales-workspace/'
     | '/app/sales/'
     | '/app/teams/'
     | '/app/users/'
@@ -673,6 +683,7 @@ export interface FileRouteTypes {
     | '/app/positions'
     | '/app/profile'
     | '/app/projects'
+    | '/app/sales-workspace'
     | '/app/sales'
     | '/app/teams'
     | '/app/users'
@@ -735,6 +746,7 @@ export interface FileRouteTypes {
     | '/app/positions/'
     | '/app/profile/'
     | '/app/projects/'
+    | '/app/sales-workspace/'
     | '/app/sales/'
     | '/app/teams/'
     | '/app/users/'
@@ -1109,6 +1121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProjectsIdRouteImport
       parentRoute: typeof AppRouteRoute
     }
+    '/app/sales-workspace/': {
+      id: '/app/sales-workspace/'
+      path: '/sales-workspace'
+      fullPath: '/app/sales-workspace/'
+      preLoaderRoute: typeof AppSalesWorkspaceIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
     '/app/sales/': {
       id: '/app/sales/'
       path: '/sales'
@@ -1244,6 +1263,7 @@ interface AppRouteRouteChildren {
   AppPositionsIndexRoute: typeof AppPositionsIndexRoute
   AppProfileIndexRoute: typeof AppProfileIndexRoute
   AppProjectsIndexRoute: typeof AppProjectsIndexRoute
+  AppSalesWorkspaceIndexRoute: typeof AppSalesWorkspaceIndexRoute
   AppSalesIndexRoute: typeof AppSalesIndexRoute
   AppTeamsIndexRoute: typeof AppTeamsIndexRoute
   AppUsersIndexRoute: typeof AppUsersIndexRoute
@@ -1289,6 +1309,7 @@ const AppRouteRouteChildren: AppRouteRouteChildren = {
   AppPositionsIndexRoute: AppPositionsIndexRoute,
   AppProfileIndexRoute: AppProfileIndexRoute,
   AppProjectsIndexRoute: AppProjectsIndexRoute,
+  AppSalesWorkspaceIndexRoute: AppSalesWorkspaceIndexRoute,
   AppSalesIndexRoute: AppSalesIndexRoute,
   AppTeamsIndexRoute: AppTeamsIndexRoute,
   AppUsersIndexRoute: AppUsersIndexRoute,

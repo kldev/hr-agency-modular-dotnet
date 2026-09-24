@@ -18,7 +18,7 @@ export const basicsStepDef = {
 	id: "basics",
 	title: "Basics",
 	description: "Name, description and engagement",
-	fields: ["name", "description", "engagementType"],
+	fields: ["name", "description", "engagementType", "salesOpportunityId"],
 } as const satisfies ProjectStep;
 
 export const assignmentStepDef = {

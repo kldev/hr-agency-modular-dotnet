@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { UsersRound } from "lucide-react";
 import type { ProjectProjection } from "@/api/models";
 import { Button, DetailItem, DetailOverviewHeader } from "@/components/ui";
@@ -30,6 +31,18 @@ export function ProjectOverviewSection({ project, onAssignTeam }: ProjectOvervie
 				</DetailItem>
 
 				<DetailItem label="Team">{project.teamName ?? "Not assigned"}</DetailItem>
+
+				<DetailItem label="Sold as">
+					{project.opportunity ? (
+						<Link to="/app/sales/opportunities/$id" params={{ id: project.opportunity.id }}>
+							{project.opportunity.title}
+						</Link>
+					) : (
+						"No opportunity"
+					)}
+				</DetailItem>
+
+				<DetailItem label="People">{Number(project.peopleCount ?? 0)}</DetailItem>
 
 				<DetailItem label="Description">{project.description}</DetailItem>
 			</dl>

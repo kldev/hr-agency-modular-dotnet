@@ -1,0 +1,171 @@
+/* =========================================================
+   Tasks panel
+   ========================================================= */
+
+.tasks-panel-range {
+	padding: var(--space-3) var(--space-4) 0;
+}
+
+.tasks-panel-title {
+	margin: 0;
+	padding: var(--space-4) var(--space-4) var(--space-2);
+
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+	font-weight: var(--font-weight-bold);
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.tasks-panel-none {
+	padding: 0 var(--space-4) var(--space-4);
+}
+
+.tasks-panel .empty-state {
+	padding: var(--space-4);
+}
+
+.task-list {
+	display: flex;
+	flex-direction: column;
+
+	margin: 0;
+	padding: 0 0 var(--space-2);
+
+	list-style: none;
+}
+
+.task-row {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--space-2);
+
+	padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
+
+	border-top: 1px solid var(--color-border-subtle);
+}
+
+.task-row:first-child {
+	border-top: 0;
+}
+
+/* The whole 44 px square is the target, the visible box is the usual checkbox size. */
+.task-check {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 44px;
+
+	width: 44px;
+	height: 44px;
+	margin-top: -6px;
+	padding: 0;
+
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+
+.task-check-input {
+	position: absolute;
+	inset: 0;
+
+	width: 100%;
+	height: 100%;
+	margin: 0;
+
+	opacity: 0;
+	cursor: pointer;
+}
+
+.task-check-input:disabled {
+	cursor: default;
+}
+
+.task-check-box {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 18px;
+	height: 18px;
+
+	border: 1px solid var(--color-border-strong);
+	border-radius: var(--radius-sm);
+	background: var(--color-surface);
+	color: #fff;
+
+	transition:
+		background var(--transition-fast),
+		border-color var(--transition-fast);
+}
+
+.task-check:hover .task-check-box {
+	border-color: var(--color-primary);
+}
+
+.task-check-input:focus-visible + .task-check-box {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+.task-row.is-done .task-check-box {
+	border-color: var(--color-success);
+	background: var(--color-success);
+}
+
+.task-body {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	gap: 2px;
+
+	min-width: 0;
+}
+
+.task-title {
+	padding: 0;
+
+	border: 0;
+	background: none;
+	color: var(--color-text);
+
+	font: inherit;
+	font-size: var(--font-size-sm);
+	font-weight: var(--font-weight-medium);
+	text-align: left;
+}
+
+button.task-title {
+	cursor: pointer;
+}
+
+button.task-title:hover {
+	color: var(--color-primary);
+}
+
+.task-meta {
+	display: flex;
+	min-width: 0;
+
+	color: var(--color-text-muted);
+	font-size: var(--font-size-xs);
+}
+
+.task-due {
+	font-variant-numeric: tabular-nums;
+}
+
+.task-row.is-overdue .task-due {
+	color: var(--color-danger);
+}
+
+.task-row.is-done .task-title {
+	color: var(--color-text-muted);
+	text-decoration: line-through;
+}
+
+.task-row.is-done .task-meta {
+	color: var(--color-text-disabled);
+}
