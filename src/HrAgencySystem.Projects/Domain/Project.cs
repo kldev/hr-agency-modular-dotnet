@@ -47,6 +47,8 @@ public sealed class Project : IOrganizationDomain
 
     public string? TeamName { get; private set; }
 
+    public ProjectOpportunity? Opportunity { get; private set; }
+
     // Marten rehydrates an aggregate without running field initialisers, so these are nullable
     // behind non-null accessors. A stream that has never seen a contact event has no contacts, and
     // no reader should have to know that means null.
@@ -104,6 +106,7 @@ public sealed class Project : IOrganizationDomain
         Placement = @event.Placement;
         TeamId = @event.TeamId;
         TeamName = @event.TeamName;
+        Opportunity = @event.Opportunity;
         CreatedBy = @event.CreatedBy;
         CreatedAt = @event.CreatedAt;
     }
@@ -119,6 +122,7 @@ public sealed class Project : IOrganizationDomain
         Name = ProjectName.Create(@event.Name);
         Description = LongText.Create(@event.Description, false);
         Placement = @event.Placement;
+        Opportunity = @event.Opportunity;
         Touch(@event.ModifiedBy, @event.ModifiedAt);
     }
 

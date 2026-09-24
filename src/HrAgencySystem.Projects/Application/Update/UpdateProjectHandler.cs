@@ -26,6 +26,19 @@ public static class UpdateProjectHandler
         var (name, description, assignment) = ProjectDataFactory.Create(command);
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 
+        // The link already made is kept as it was; only a different deal is looked up again.
+        var opportunity = command.SalesOpportunityId switch
+        {
+            null => null,
+            { } id when id == aggregate.Opportunity?.Id => aggregate.Opportunity,
+            { } id => await service.GetOpportunityAsync(
+                aggregate.OrganizationId,
+                id,
+                aggregate.Company.Id,
+                ct
+            ),
+        };
+
         var @event = new ProjectUpdated(
             aggregate.Id.Value,
             aggregate.OrganizationId.Value,
@@ -33,7 +46,8 @@ public static class UpdateProjectHandler
             description.Value,
             assignment,
             user,
-            clock.UtcNow
+            clock.UtcNow,
+            opportunity
         );
 
         return (@event, [@event]);

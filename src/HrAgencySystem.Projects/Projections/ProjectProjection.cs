@@ -57,9 +57,18 @@ public sealed record ProjectProjection(
     DateTimeOffset CreatedAt,
     Guid? ModifiedById,
     UserSnapshot? ModifiedBy,
-    DateTimeOffset? ModifiedAt
+    DateTimeOffset? ModifiedAt,
+    ProjectOpportunity? Opportunity = null,
+    /// <summary>
+    /// The assignments that took a seat on one of the project's roles. A set of ids rather than a
+    /// counter: staffing messages arrive at least once, and a repeat must not count twice.
+    /// </summary>
+    IReadOnlyList<Guid>? StaffedAssignmentIds = null
 )
 {
+    /// <summary>How many people are on the delivery, planned or at work.</summary>
+    public int PeopleCount => StaffedAssignmentIds?.Count ?? 0;
+
     public static ProjectProjection Create(ProjectCreated @event)
     {
         return new ProjectProjection(
@@ -100,7 +109,9 @@ public sealed record ProjectProjection(
             @event.CreatedAt,
             null,
             null,
-            null
+            null,
+            @event.Opportunity,
+            []
         ).WithComplianceCounts();
     }
 
@@ -125,6 +136,7 @@ public sealed record ProjectProjection(
                 WorkplaceAddress = @event.Placement.WorkplaceAddress,
                 StartsOn = @event.Placement.StartsOn,
                 EndsOn = @event.Placement.EndsOn,
+                Opportunity = @event.Opportunity,
             }
         )
             .WithComplianceCounts()
@@ -213,6 +225,17 @@ public sealed record ProjectProjection(
             ResponsibleContact = contacts
                 .FirstOrDefault(c => c.Role == ContactRole.Responsible)
                 ?.Person,
+        };
+
+    public ProjectProjection Apply(ProjectPositionStaffed @event) =>
+        (StaffedAssignmentIds ?? []).Contains(@event.AssignmentId)
+            ? this
+            : this with { StaffedAssignmentIds = [.. StaffedAssignmentIds ?? [], @event.AssignmentId] };
+
+    public ProjectProjection Apply(ProjectPositionUnstaffed @event) =>
+        this with
+        {
+            StaffedAssignmentIds = [.. (StaffedAssignmentIds ?? []).Where(id => id != @event.AssignmentId)],
         };
 
     public ProjectProjection Apply(ProjectPositionOpened @event) =>

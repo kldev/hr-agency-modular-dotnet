@@ -61,7 +61,11 @@ internal static class MapUpdate
         [property: Description("Country where the work happens, ISO 3166-1 alpha-2.")]
             string CountryCode,
         [property: Description("First day of the project.")] DateOnly StartsOn,
-        [property: Description("Last day of the project, or null for open-ended.")] DateOnly? EndsOn
+        [property: Description("Last day of the project, or null for open-ended.")] DateOnly? EndsOn,
+        [property: Description(
+            "The sales opportunity the project was sold as, or null for none; it must be the same company's."
+        )]
+            Guid? SalesOpportunityId = null
     )
     {
         public UpdateProject ToCommand(
@@ -82,7 +86,8 @@ internal static class MapUpdate
                 CountryCode,
                 StartsOn,
                 EndsOn,
-                modifiedBy
+                modifiedBy,
+                SalesOpportunityId
             );
     }
 }

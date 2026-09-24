@@ -24,9 +24,12 @@ public class ProjectServiceTests
     private readonly ITeamSnapshotRepository _teams = Substitute.For<ITeamSnapshotRepository>();
     private readonly ILegalEntitySnapshotRepository _legalEntities =
         Substitute.For<ILegalEntitySnapshotRepository>();
+    private readonly IOpportunitySnapshotRepository _opportunities =
+        Substitute.For<IOpportunitySnapshotRepository>();
     private readonly IOrganizationChecker _checker = Substitute.For<IOrganizationChecker>();
 
-    private ProjectService Service => new(_users, _companies, _teams, _legalEntities, _checker);
+    private ProjectService Service =>
+        new(_users, _companies, _teams, _legalEntities, _opportunities, _checker);
 
     [Fact]
     public void ValidateAggregateUpdate_WithAForeignAggregate_Throws()
@@ -98,5 +101,72 @@ public class ProjectServiceTests
         await Assert.ThrowsAsync<BusinessRuleException>(() =>
             Service.ValidateOrganization(ProjectScenario.OrganizationId, CancellationToken.None)
         );
+    }
+
+    [Fact]
+    public async Task GetOpportunityAsync_OfTheProjectsCompany_ReturnsTheLink()
+    {
+        var opportunityId = Guid.NewGuid();
+        _opportunities
+            .GetOpportunityAsync(opportunityId, Organization, Arg.Any<CancellationToken>())
+            .Returns(
+                new OpportunitySnapshot(
+                    opportunityId,
+                    ProjectScenario.OrganizationId,
+                    ProjectScenario.CompanyId,
+                    "Warehouse Workers"
+                )
+            );
+
+        var link = await Service.GetOpportunityAsync(
+            Organization,
+            opportunityId,
+            ProjectScenario.CompanyId,
+            CancellationToken.None
+        );
+
+        Assert.Equal(opportunityId, link.Id);
+        Assert.Equal("Warehouse Workers", link.Title);
+    }
+
+    [Fact]
+    public async Task GetOpportunityAsync_OfAnotherCompany_ThrowsBusinessRule()
+    {
+        var opportunityId = Guid.NewGuid();
+        _opportunities
+            .GetOpportunityAsync(opportunityId, Organization, Arg.Any<CancellationToken>())
+            .Returns(
+                new OpportunitySnapshot(opportunityId, ProjectScenario.OrganizationId, Guid.NewGuid(), "Other")
+            );
+
+        var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Service.GetOpportunityAsync(
+                Organization,
+                opportunityId,
+                ProjectScenario.CompanyId,
+                CancellationToken.None
+            )
+        );
+
+        Assert.Equal(IProjectService.OpportunityOfAnotherCompanyMessage, error.Message);
+    }
+
+    [Fact]
+    public async Task GetOpportunityAsync_NotInOrganization_ThrowsBusinessRule()
+    {
+        _opportunities
+            .GetOpportunityAsync(Arg.Any<Guid>(), Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .ReturnsNull();
+
+        var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
+            Service.GetOpportunityAsync(
+                Organization,
+                Guid.NewGuid(),
+                ProjectScenario.CompanyId,
+                CancellationToken.None
+            )
+        );
+
+        Assert.Equal(IProjectService.OpportunityNotInOrganizationMessage, error.Message);
     }
 }

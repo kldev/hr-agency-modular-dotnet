@@ -43,6 +43,9 @@ public class AssignmentPositionTests(IntegrationEnvironment env, ITestOutputHelp
         await Eventually.AssertAsync(async () =>
             Assert.Equal(1, await AssignedCountAsync(organizationId, delivery))
         );
+        await Eventually.AssertAsync(async () =>
+            Assert.Equal(1, (await ProjectClient.GetAsync(organizationId, delivery.ProjectId))?.PeopleCount)
+        );
 
         await WorkerClient.ChangeAssignmentStatusAsync(
             organizationId,
@@ -52,6 +55,9 @@ public class AssignmentPositionTests(IntegrationEnvironment env, ITestOutputHelp
 
         await Eventually.AssertAsync(async () =>
             Assert.Equal(0, await AssignedCountAsync(organizationId, delivery))
+        );
+        await Eventually.AssertAsync(async () =>
+            Assert.Equal(0, (await ProjectClient.GetAsync(organizationId, delivery.ProjectId))?.PeopleCount)
         );
     }
 

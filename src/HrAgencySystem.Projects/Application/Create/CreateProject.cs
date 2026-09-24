@@ -20,5 +20,6 @@ public sealed record CreateProject(
     DateOnly StartsOn,
     DateOnly? EndsOn,
     Guid? TeamId,
-    Guid CreatedBy
+    Guid CreatedBy,
+    Guid? SalesOpportunityId = null
 ) : ICreateCommand, IProjectData;

@@ -16,5 +16,6 @@ public sealed record ProjectCreated(
     Guid? TeamId,
     string? TeamName,
     UserSnapshot CreatedBy,
-    DateTimeOffset CreatedAt
+    DateTimeOffset CreatedAt,
+    ProjectOpportunity? Opportunity = null
 );

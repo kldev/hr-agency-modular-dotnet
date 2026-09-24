@@ -40,6 +40,10 @@ public static class CreateProjectHandler
             ? null
             : await service.GetTeamAsync(organizationId, command.TeamId.Value, ct);
 
+        var opportunity = command.SalesOpportunityId is { } opportunityId
+            ? await service.GetOpportunityAsync(organizationId, opportunityId, company.Id, ct)
+            : null;
+
         var projectId = ProjectId.New();
 
         var @event = new ProjectCreated(
@@ -54,7 +58,8 @@ public static class CreateProjectHandler
             team?.TeamId,
             team?.Name,
             createdBy,
-            clock.UtcNow
+            clock.UtcNow,
+            opportunity
         );
 
         session.Events.StartStream<Project>(projectId.Value, @event);
