@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using HrAgencySystem.PlatformSeeder.Scenario;
+using HrAgencySystem.Sales.Services;
 using Marten;
 using Microsoft.Extensions.Logging;
 using Wolverine;
@@ -10,6 +11,7 @@ namespace HrAgencySystem.PlatformSeeder.HrAgency;
 public sealed partial class HrAgencyShowcaseSeeder(
     IMessageBus bus,
     IDocumentSession session,
+    ISalesService sales,
     ILogger<HrAgency.HrAgencyShowcaseSeeder> logger
 ) : IPlatformSeeder
 {

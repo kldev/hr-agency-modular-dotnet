@@ -93,6 +93,12 @@ public sealed partial class HrAgencyShowcaseSeeder
             return;
         }
 
+        // The workspace's named clients go to the front of the list, so the staffed projects below
+        // land on them and the salesperson's screen shows people on a delivery.
+        var workspace = new SalesWorkspaceScenario(bus, session, sales);
+        var workspaceCompanies = await workspace.CreateCompanies(organization.OrganizationId, userIds[0]);
+        companyIds = [.. workspaceCompanies, .. companyIds];
+
         var legalEntities = await ExistingLegalEntities(organization.OrganizationId);
 
         if (legalEntities.Count == 0)
@@ -149,6 +155,15 @@ public sealed partial class HrAgencyShowcaseSeeder
         );
 
         logger.LogInformation("Seeded forms with {Count} responses", formResponses);
+
+        var tasks = await workspace.Seed(
+            organization.OrganizationId,
+            workspaceCompanies,
+            legalEntities[0].LegalEntityId,
+            () => WaitForProjections()
+        );
+
+        logger.LogInformation("Seeded the sales workspace with {Count} tasks per person", tasks);
 
         logger.LogInformation(
             "Delivery seed completed for {Slug}: {WorkerCount} workers across {ProjectCount} projects",
