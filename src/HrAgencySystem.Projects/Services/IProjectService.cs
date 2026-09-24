@@ -1,3 +1,4 @@
+using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 
@@ -51,6 +52,23 @@ public interface IProjectService
     Task<TeamSnapshot> GetTeamAsync(
         OrganizationId organizationId,
         Guid teamId,
+        CancellationToken ct
+    );
+
+    public const string OpportunityNotInOrganizationMessage =
+        "The specified opportunity does not exist in this organization.";
+
+    public const string OpportunityOfAnotherCompanyMessage =
+        "The opportunity was sold to another company than the project is for.";
+
+    /// <summary>
+    /// The deal a project came from: it must be this organization's and sold to the project's own
+    /// client - a delivery for one company cannot descend from another company's sale.
+    /// </summary>
+    Task<ProjectOpportunity> GetOpportunityAsync(
+        OrganizationId organizationId,
+        Guid opportunityId,
+        Guid companyId,
         CancellationToken ct
     );
 

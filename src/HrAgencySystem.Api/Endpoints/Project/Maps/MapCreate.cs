@@ -71,7 +71,11 @@ internal static class MapCreate
             "Last day of the project. Optional for an open-ended one; not before StartsOn."
         )]
             DateOnly? EndsOn,
-        [property: Description("Optional recruitment team that staffs the project.")] Guid? TeamId
+        [property: Description("Optional recruitment team that staffs the project.")] Guid? TeamId,
+        [property: Description(
+            "Optional sales opportunity the project was sold as; it must be the same company's."
+        )]
+            Guid? SalesOpportunityId = null
     )
     {
         public CreateProject ToCommand(OrganizationId organizationId, Guid createdBy) =>
@@ -91,7 +95,8 @@ internal static class MapCreate
                 StartsOn,
                 EndsOn,
                 TeamId,
-                createdBy
+                createdBy,
+                SalesOpportunityId
             );
     }
 }

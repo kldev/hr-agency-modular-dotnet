@@ -10,5 +10,6 @@ public sealed record ProjectUpdated(
     string Description,
     Placement Placement,
     UserSnapshot ModifiedBy,
-    DateTimeOffset ModifiedAt
+    DateTimeOffset ModifiedAt,
+    ProjectOpportunity? Opportunity = null
 );

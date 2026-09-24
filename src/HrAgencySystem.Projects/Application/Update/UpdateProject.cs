@@ -17,5 +17,6 @@ public sealed record UpdateProject(
     string CountryCode,
     DateOnly StartsOn,
     DateOnly? EndsOn,
-    Guid ModifiedBy
+    Guid ModifiedBy,
+    Guid? SalesOpportunityId = null
 ) : IUpdateCommand, IProjectData;

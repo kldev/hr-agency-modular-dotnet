@@ -1,3 +1,4 @@
+using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
@@ -10,6 +11,7 @@ public sealed class ProjectService(
     ICompanySnapshotRepository companies,
     ITeamSnapshotRepository teams,
     ILegalEntitySnapshotRepository legalEntities,
+    IOpportunitySnapshotRepository opportunities,
     IOrganizationChecker checker
 ) : IProjectService
 {
@@ -38,6 +40,23 @@ public sealed class ProjectService(
         // exists in somebody else's tenant.
         return company
             ?? throw new BusinessRuleException(IProjectService.CompanyNotInOrganizationMessage);
+    }
+
+    public async Task<ProjectOpportunity> GetOpportunityAsync(
+        OrganizationId organizationId,
+        Guid opportunityId,
+        Guid companyId,
+        CancellationToken ct
+    )
+    {
+        var opportunity =
+            await opportunities.GetOpportunityAsync(opportunityId, organizationId, ct)
+            ?? throw new BusinessRuleException(IProjectService.OpportunityNotInOrganizationMessage);
+
+        if (opportunity.CompanyId != companyId)
+            throw new BusinessRuleException(IProjectService.OpportunityOfAnotherCompanyMessage);
+
+        return new ProjectOpportunity(opportunity.OpportunityId, opportunity.Title);
     }
 
     public async Task<LegalEntitySnapshot> GetLegalEntityAsync(
