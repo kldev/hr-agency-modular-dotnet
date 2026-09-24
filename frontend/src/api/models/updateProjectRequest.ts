@@ -41,4 +41,9 @@ export interface UpdateProjectRequest {
 	 * @nullable
 	 */
 	endsOn: string | null;
+	/**
+	 * The sales opportunity the project was sold as, or null for none; it must be the same company's.
+	 * @nullable
+	 */
+	salesOpportunityId?: string | null;
 }

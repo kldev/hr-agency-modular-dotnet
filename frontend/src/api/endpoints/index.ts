@@ -22,5 +22,6 @@ export * from "./reports/reports.ts";
 export * from "./sales-job-description/sales-job-description.ts";
 export * from "./sales-opportunity/sales-opportunity.ts";
 export * from "./sales-projects/sales-projects.ts";
+export * from "./sales-tasks/sales-tasks.ts";
 export * from "./suggestion/suggestion.ts";
 export * from "./users/users.ts";

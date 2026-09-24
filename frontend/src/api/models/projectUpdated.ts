@@ -14,6 +14,7 @@
  * OpenAPI spec version: v1
  */
 import type { Placement } from "./placement.ts";
+import type { ProjectOpportunity } from "./projectOpportunity.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface ProjectUpdated {
@@ -24,4 +25,5 @@ export interface ProjectUpdated {
 	placement: Placement;
 	modifiedBy: UserSnapshot;
 	modifiedAt: string;
+	opportunity?: null | ProjectOpportunity;
 }

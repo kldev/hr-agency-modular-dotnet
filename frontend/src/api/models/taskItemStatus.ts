@@ -14,14 +14,9 @@
  * OpenAPI spec version: v1
  */
 
-export type SalesActivityType = (typeof SalesActivityType)[keyof typeof SalesActivityType];
+export type TaskItemStatus = (typeof TaskItemStatus)[keyof typeof TaskItemStatus];
 
-export const SalesActivityType = {
-	Call: "Call",
-	Email: "Email",
-	Meeting: "Meeting",
-	Note: "Note",
-	Presentation: "Presentation",
-	Task: "Task",
-	Other: "Other",
+export const TaskItemStatus = {
+	Open: "Open",
+	Done: "Done",
 } as const;

@@ -22,6 +22,7 @@ import type { ProjectContact } from "./projectContact.ts";
 import type { ProjectContract } from "./projectContract.ts";
 import type { ProjectDocument } from "./projectDocument.ts";
 import type { ProjectEmailRecipient } from "./projectEmailRecipient.ts";
+import type { ProjectOpportunity } from "./projectOpportunity.ts";
 import type { ProjectPosition } from "./projectPosition.ts";
 import type { ProjectStatus } from "./projectStatus.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
@@ -71,4 +72,9 @@ export interface ProjectProjection {
 	modifiedBy: null | UserSnapshot;
 	/** @nullable */
 	modifiedAt: string | null;
+	opportunity?: null | ProjectOpportunity;
+	/** @nullable */
+	staffedAssignmentIds?: string[] | null;
+	/** @pattern ^-?(?:0|[1-9]\d*)$ */
+	peopleCount?: number | string;
 }

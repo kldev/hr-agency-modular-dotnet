@@ -28,5 +28,4 @@ export interface FieldValue {
 	boolean?: boolean | null;
 	/** @nullable */
 	values?: string[] | null;
-	isEmpty?: boolean;
 }

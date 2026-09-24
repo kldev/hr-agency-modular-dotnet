@@ -17,6 +17,7 @@ import type { CompanySnapshot } from "./companySnapshot.ts";
 import type { DeliveringEntitySnapshot } from "./deliveringEntitySnapshot.ts";
 import type { EngagementType } from "./engagementType.ts";
 import type { Placement } from "./placement.ts";
+import type { ProjectOpportunity } from "./projectOpportunity.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface ProjectCreated {
@@ -34,4 +35,5 @@ export interface ProjectCreated {
 	teamName: string | null;
 	createdBy: UserSnapshot;
 	createdAt: string;
+	opportunity?: null | ProjectOpportunity;
 }

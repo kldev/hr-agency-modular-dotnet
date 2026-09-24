@@ -16,6 +16,7 @@
 import type { CompanySnapshot } from "./companySnapshot.ts";
 import type { CurrencyCode } from "./currencyCode.ts";
 import type { OpportunityStage } from "./opportunityStage.ts";
+import type { SalesActivityType } from "./salesActivityType.ts";
 import type { UserSnapshot } from "./userSnapshot.ts";
 
 export interface OpportunityProjection {
@@ -46,4 +47,7 @@ export interface OpportunityProjection {
 	followUpContent: string | null;
 	/** @nullable */
 	followUpDateTime: string | null;
+	/** @nullable */
+	lastActivityAt?: string | null;
+	lastActivityType?: null | SalesActivityType;
 }

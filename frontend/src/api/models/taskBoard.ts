@@ -13,15 +13,11 @@
  * - schedule interviews
  * OpenAPI spec version: v1
  */
+import type { TaskItemRow } from "./taskItemRow.ts";
 
-export type SalesActivityType = (typeof SalesActivityType)[keyof typeof SalesActivityType];
-
-export const SalesActivityType = {
-	Call: "Call",
-	Email: "Email",
-	Meeting: "Meeting",
-	Note: "Note",
-	Presentation: "Presentation",
-	Task: "Task",
-	Other: "Other",
-} as const;
+export interface TaskBoard {
+	from: string;
+	to: string;
+	active: TaskItemRow[];
+	completed: TaskItemRow[];
+}
