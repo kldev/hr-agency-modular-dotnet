@@ -32,7 +32,7 @@ export function VersionsTab({
 
 	return (
 		<div className="grid gap-5 lg:grid-cols-[260px_minmax(0,1fr)]">
-			<ul className="data-details-section flex flex-col gap-1">
+			<ul className="data-details-section flex flex-col gap-1 p-3">
 				{versions.map((candidate) => (
 					<li key={String(candidate.version)}>
 						<Button
@@ -46,7 +46,7 @@ export function VersionsTab({
 				))}
 			</ul>
 
-			<section className="data-details-section">
+			<section className="data-details-section p-4">
 				{version.data ? (
 					<>
 						<p className="form-hint mb-4">

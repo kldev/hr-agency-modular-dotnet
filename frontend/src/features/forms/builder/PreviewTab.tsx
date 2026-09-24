@@ -49,7 +49,7 @@ export function PreviewTab({ formId, layout }: { formId: string; layout: readonl
 			) : null}
 
 			{resolved && resolved.pages.length > 0 ? (
-				<div className="data-details-section h-[70vh]">
+				<div className="data-details-section h-[70vh] overflow-auto p-4">
 					<DynamicForm
 						key={JSON.stringify(resolved.pages)}
 						pages={resolved.pages}

@@ -1,4 +1,5 @@
 import type { FieldType, FormField, FormPage, SystemField } from "#/api/models";
+import { newId } from "#/utlis/newId";
 
 /*
  * The builder's working copy of a layout, and every change it can make to it. Pure functions over
@@ -40,10 +41,7 @@ export function layoutReducer(layout: Layout, action: LayoutAction): Layout {
 			return action.layout;
 
 		case "addPage":
-			return [
-				...layout,
-				{ pageId: crypto.randomUUID(), title: action.title, description: null, fields: [] },
-			];
+			return [...layout, { pageId: newId(), title: action.title, description: null, fields: [] }];
 
 		case "renamePage":
 			return layout.map((page) =>
@@ -123,7 +121,7 @@ export const noRules: FormField["rules"] = {
 /** A field the author writes; the code starts from the label and stays editable. */
 export function newFormField(type: FieldType, label: string, code: string): FormField {
 	return {
-		fieldId: crypto.randomUUID(),
+		fieldId: newId(),
 		source: "Form",
 		systemFieldId: null,
 		code,
@@ -151,7 +149,7 @@ export function newFormField(type: FieldType, label: string, code: string): Form
  */
 export function newSystemField(definition: SystemField): FormField {
 	return {
-		fieldId: crypto.randomUUID(),
+		fieldId: newId(),
 		source: "System",
 		systemFieldId: definition.systemFieldId,
 		code: definition.code,

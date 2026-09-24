@@ -85,8 +85,8 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 				</div>
 			) : null}
 
-			<div className="grid gap-5 lg:grid-cols-[240px_minmax(0,1fr)_380px]">
-				<section className="data-details-section" aria-label="Pages">
+			<div className="grid gap-5 lg:grid-cols-[240px_minmax(0,1fr)_380px] 2xl:grid-cols-[240px_minmax(0,1fr)_570px]">
+				<section className="data-details-section p-4" aria-label="Pages">
 					<h3 className="mb-3 text-sm font-semibold">Pages</h3>
 
 					<ul className="flex flex-col gap-1">
@@ -123,7 +123,7 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 					</Button>
 				</section>
 
-				<section className="data-details-section" aria-label="Fields">
+				<section className="data-details-section p-4" aria-label="Fields">
 					{page ? (
 						<>
 							<div className="mb-3 flex items-center gap-2">
@@ -243,7 +243,7 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 					)}
 				</section>
 
-				<section className="data-details-section" aria-label="Field settings">
+				<section className="data-details-section p-4" aria-label="Field settings">
 					{field ? (
 						<FieldEditor
 							key={field.fieldId}
