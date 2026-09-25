@@ -14,11 +14,20 @@ The project explores how far a well-structured monolith can go using **Marten** 
 
 A SaaS for recruitment agencies hiring for IT roles. Agencies post to JustJoinIt, NoFluffJobs and RocketJobs alongside Pracuj.pl and OLX, and `InterviewType` includes `Technical`.
 
+The product has **three axes**, and the easiest mistake in the model is confusing the last two:
+
+1. **recruiting for a client** — sale, job description, posts, applications, interviews;
+2. **delivering the sold service** — project, contract, the people we send to the client and the law that follows them (`Projects`, `Workers`, `Compliance`);
+3. **the agency as an employer** — its own org chart, its own people's contracts and their hours (`Agency`).
+
+`Workers` is about people at the **client**; `Agency` is about people **here**. Both have hours, contracts and documents, and they are settled with entirely different parties.
+
 The main flow, including where it currently breaks off:
 
 ```text
-SalesOpportunity  ──X──►  (no Project aggregate yet)
-New→…→Won/Lost                    │
+SalesOpportunity  ──X──►  Project (exists, not yet linked to the opportunity)
+New→…→Won/Lost            Draft→Active→Suspended→Completed/Cancelled
+                                  │
                                   ▼
                          JobDescription  ──1:N──►  JobPost  ──►  Candidate ──► JobApplication ──► Interview
                          one per position          candidate-facing copy,
@@ -39,7 +48,7 @@ Organization (tenant)
 
 A team outlives the people on it: "the Tiggers team handles this" survives recruiter rotation in a way that "Katy handles this" does not.
 
-**Known gaps, on purpose:** a won opportunity should produce a recruitment project, but no `Project` aggregate exists yet — a job description is created independently and only points at a company. Nothing enforces "every job description has at least one job post". There is no integration with the job boards: `PostToChannel` records that a post was published, it does not publish it.
+**Known gaps, on purpose:** a won opportunity should produce a project; the `Projects` module exists, but nothing links it to `SalesOpportunity` yet — a project is created by hand and points at a company. Nothing enforces "every job description has at least one job post". There is no integration with the job boards: `PostToChannel` records that a post was published, it does not publish it.
 
 ---
 
@@ -88,6 +97,13 @@ The job description wizard - one position, written once, before any post goes ou
 | Opportunities | Companies |
 | --- | --- |
 | ![Sales table](docs/screenshots/sales.png) | ![Companies](docs/screenshots/companies.png) |
+
+The sales workspace - one client company at a time, with its activity, opportunities, projects and
+the salesperson's own task list:
+
+| Workspace | Projects | Tasks |
+| --- | --- | --- |
+| ![Sales workspace](docs/screenshots/sales-workspace.png) | ![Sales workspace projects](docs/screenshots/sales-workspace-projects.png) | ![Sales workspace tasks](docs/screenshots/sales-workspace-tasks.png) |
 
 ### Delivery - from a client to people at work
 
@@ -145,38 +161,67 @@ only the stages the person may go to accept it:
 
 ## Architecture
 
-One deployable API composed of business modules, plus three satellite hosts. Modules never reference each other's projects.
+One deployable API composed of business modules, plus satellite hosts: two workers without HTTP, two internal HTTP services and a public job board. Modules never reference each other's projects.
 
-### Projects
+```text
+Frontend (:4300) ─────────────┐
+Web job board (:5050) ─X-Api-Key─┤
+                                 ▼
+                      HR API (:5000) ── Marten: events + documents on PostgreSQL 17
+                        │
+                        ├─ service token ──► FileService (:5100) ────► S3 bucket "documents" + schema `files`
+                        ├─ service token ──► ReportsService (:5200) ─► schema `reports` (Dapper, Excel)
+                        ├─ outbox ─► RabbitMQ x.emails ─► NotificationWorker ─► SMTP (Mailpit locally)
+                        └─ projection ─► feeds.job_posts ─► FeedsWorker ─► S3 {org}/jobs.{xml,json}
+```
+
+### Business modules
 
 | Project | Responsibility |
 | --- | --- |
-| **Identity** | Users, platform owners, credentials, JWT, refresh tokens, password-reset saga |
+| **Identity** | Users, platform owners, credentials, JWT, refresh tokens, service API keys, password-reset saga |
 | **Organization** | Tenants, slugs |
-| **Company** | Client companies and their contacts |
+| **Company** | Client companies, their contacts and the client profile |
 | **Sales** | Sales opportunities and follow-up actions |
 | **JobDescription** | One job description per position |
 | **Recruitment** | Largest module: job posts, channels, candidates, applications, interviews, tags |
-| **Teams** | Teams and role-tagged membership |
+| **Projects** | Delivery of a sold service: project lifecycle, contract, contacts with roles, documents, per-country compliance |
+| **Workers** | People sent to clients: `Worker` (the person, a status pipeline, permits) and `Assignment` (one posting, its documents and per-person compliance — A1, Limosa) |
+| **Compliance** | Shared domain library, no persistence: the `(country, EngagementType) → requirements` catalogue read by `Projects` and `Workers` |
+| **Agency** | The agency as an employer: org chart, `AgencyEmployment` (contract, hours, rate), monthly time sheets and the settlement export |
+| **Forms** | Forms, documents and surveys an administrator builds without a developer: layouts, system field catalogue, frozen published versions, responses per worker |
+| **Tasks** | A person's own to-do list for client companies, optionally within a deal; Day/Week/Month board in the caller's time zone |
+| **LegalEntities** | The companies the agency trades and posts people through |
+| **Teams** | Recruitment teams and role-tagged membership |
 | **Feeds** | Job-feed read model, XML/JSON serializers, task queue — knows nothing about `Recruitment` |
-| **Files** | S3-compatible object storage (RustFS) |
-| **SharedKernel** | Deliberately small: exceptions, `OrganizationId`, `IClock`, paging, snapshot ports |
-| **Audit** | ⚠️ an empty `.csproj` — a placeholder, not wired into composition |
+
+### Supporting projects and hosts
+
+| Project | Responsibility |
+| --- | --- |
+| **SharedKernel** | Deliberately small: exceptions, `OrganizationId`, `IClock`, shared value objects, paging, snapshot ports |
+| **Files** | Low-level S3 object storage over RustFS (`IObjectStorage`) — no tenancy, no ownership |
+| **Reports.ReadModel** | The `reports` schema — EF Core tables filled by projections in Organization, Recruitment and Projects |
+| **EmailTemplates**, **EmailTemplates.Messaging** | Embedded liquid templates, rendering and sending; the single description of the mail topology |
+| **Observability**, **Observability.AspNetCore** | Serilog, OpenTelemetry traces/metrics/logs and health endpoints for every host |
 | **PlatformSeeder** | Demo data, registered only in `Development`/`docker` |
+| **Audit** | ⚠️ an empty `.csproj` — a placeholder, not wired into composition |
 | **Api** | HTTP endpoints, composition root, infrastructure configuration |
-| **Web** | Separate public job board (Razor Pages) reusing a reduced subset of the modules |
+| **Web** | Public job board (Razor Pages) with no database and no project references — it talks to the API's internal routes with a service API key |
 | **FeedsWorker** | Worker host that generates job feeds — no HTTP surface |
 | **NotificationWorker** | Worker host that consumes mail queues, renders and sends |
+| **FileService** | Separate HTTP host owning private documents: metadata, ownership, tenant isolation; the only process that talks to the document bucket |
+| **ReportsService** | Separate HTTP host that aggregates the `reports` tables with SQL (Dapper) and exports Excel; no event store |
 
-Anything that crosses a module boundary lives in a dependency-free contracts project:
+Anything that crosses a module or process boundary lives in a dependency-free contracts project:
 
 | Contracts project | Carries |
 | --- | --- |
-| **Recruitment.Contracts** | Integration events from `Recruitment` to other modules |
+| **Recruitment.Contracts**, **Projects.Contracts**, **Workers.Contracts**, **Tasks.Contracts** | Integration events from the producing module to other modules |
 | **Teams.Contracts** | `TeamRole`, `TeamInfo`, `TeamMembershipChanged`, `AssignUserToTeam` |
 | **EmailTemplates.Contracts** | The mail messages themselves (`IEmailTemplateContract`) |
-
-Mail delivery is split across two more supporting projects: **EmailTemplates** holds the embedded liquid templates, rendering and sending, and **EmailTemplates.Messaging** is the single description of the mail topology — topics, queues and the publish/consume wiring that both hosts read.
+| **FileService.Contracts** | `IFileServiceClient`, `FileDescriptor`, `FileOwnerRef`, service-token constants |
+| **ReportsService.Contracts** | `IReportsClient`, report DTOs, `ReportPeriod`, service-token constants |
 
 There is **no** `Suggestion` project. Typeahead repositories live inside the module that owns the data and are exposed through `Api/Endpoints/Suggestion`.
 
@@ -206,7 +251,7 @@ Handlers are **static classes with a static `Handle` method**. Wolverine discove
 Two sanctioned mechanisms, and nothing else:
 
 * **Integration events** via a `*.Contracts` project. The producing handler returns the event in `OutgoingMessages`; the consuming module translates it into its own domain event inside an `Integration/` folder. For example, `Teams` announces `TeamMembershipChanged`, and `Identity` turns it into `UserTeamChanged` so the user read model can show which team somebody is on.
-* **SharedKernel ports** — `IUserSnapshotRepository`, `ICompanySnapshotRepository`, `IJobDescriptionSnapshotRepository`, `ITeamSnapshotRepository`, `IOrganizationChecker`. Each module implements the port for the data it owns; consumers depend only on the interface.
+* **SharedKernel ports** — `IUserSnapshotRepository`, `ICompanySnapshotRepository`, `IJobDescriptionSnapshotRepository`, `ITeamSnapshotRepository`, `IProjectSnapshotRepository`, `IWorkerSnapshotRepository`, `IOrganizationChecker`. Each module implements the port for the data it owns; consumers depend only on the interface.
 
 ### Multi-tenancy
 
@@ -214,7 +259,7 @@ Every aggregate, projection and query is scoped by `OrganizationId`, carried in 
 
 ### Uniqueness invariants
 
-Cross-aggregate uniqueness — company tax id, user email per organization, organization slug, candidate email, one-team-per-person — is enforced by a dedicated **reservation document** with a unique Marten index, written in the same transaction as the event. The handler checks the reservation first for a friendly error and relies on the unique index to defeat concurrent requests.
+Cross-aggregate uniqueness — company tax id, user email per organization, organization slug, candidate email, one-team-per-person, a worker's identity document and e-mail — is enforced by a dedicated **reservation document** with a unique Marten index, written in the same transaction as the event. The handler checks the reservation first for a friendly error and relies on the unique index to defeat concurrent requests.
 
 ### Email over RabbitMQ
 
@@ -223,10 +268,13 @@ Mail leaves the API as a message and becomes an actual email in `NotificationWor
 ```text
 Api handler ──returns OutgoingMessages──► outbox ──► x.emails (topic)
                                                         │ recruitment.#  ──► q.emails.recruitment ─┐
-                                                        │ identity.#     ──► q.emails.identity     ├─► NotificationWorker
-                                                        │ sales.#        ──► q.emails.sales        │
-                                                        └ teams.#        ──► q.emails.teams       ─┘
+                                                        │ identity.#     ──► q.emails.identity     │
+                                                        │ sales.#        ──► q.emails.sales        ├─► NotificationWorker
+                                                        │ teams.#        ──► q.emails.teams        │
+                                                        └ agency.#       ──► q.emails.agency      ─┘
 ```
+
+Delivery is at-least-once without double sends: the worker claims the event id in `notifications.processed_events` before sending and releases the claim if the send throws. Transient SMTP, socket and database failures get three short retries; a malformed address or a 5xx refusal goes straight to the dead letter queue.
 
 Rendering and sending are separate concerns: liquid templates are rendered through FluentEmail.Liquid, and `ISendEmail` puts the html on the wire via MailKit. A host without SMTP falls back to a logging sender, so it still runs. Locally, mail lands in Mailpit.
 
@@ -240,6 +288,34 @@ Rendering and sending are separate concerns: liquid templates are rendered throu
 
 Feed content comes from its **own** read model — the relational table `feeds.job_posts`, filled by an EF Core-backed Marten projection that lives in `Recruitment` (the module that owns the events) and read with Dapper. That table is the entire contract between the two projects.
 
+### Delivery: projects, workers and compliance
+
+* A **project** goes `Draft → Active → Suspended → Completed/Cancelled`. Going live needs a **signed contract**, a **responsible contact** and a **complete client profile**, each reported separately. The contract lives on the project stream rather than in its own aggregate, so the rule is never checked against a lagging read model.
+* **`Worker` is the person, `Assignment` is one posting.** Moving somebody from a Polish project to a German one ends one assignment and opens another on the same file, so their history stays a history. The worker's status is a pipeline with an owner per stage (`Recruitment → ContractPreparation → Legalisation → Onboarding → Employed`), and `Legalisation` exists only for people whose citizenship needs it.
+* **Compliance is a catalogue, not control flow.** `ComplianceCatalogue` maps `(country, EngagementType, scope) → requirements`; there is no `if (country == …)` anywhere. Posting an IT specialist to Germany triggers almost nothing, hiring the same person out triggers a licence, a notification and document duties. Project-level requirements sit on the project, per-person ones (A1, Limosa) on the assignment.
+
+### The agency as an employer
+
+* The **org chart** is one document per organization. A supervisor is never stored — it is worked out by walking up the tree at the moment of the question.
+* A **time sheet** is one stream per person and month, its id derived from `(organization, user, year, month)`, so "one sheet per month" cannot be broken. `Draft → Submitted → Approved → Settled`, plus `Correction`; the supervisor from the chart approves, payroll settles.
+* No money in the domain: the only place a rate becomes an amount is the settlement export (minutes × hourly rate, rounded once per person).
+
+### Forms
+
+Administrators define forms without a developer: the builder saves a whole layout, publishing freezes a version, and a response stays bound to that version for life. System fields (`employee.*`) come from a per-organization catalogue and pre-fill the next form; answers are one typed record, queried through a GIN index. Validation lives twice — C# is the authority, the TypeScript mirror is held to the same JSON fixture of cases.
+
+### Files and the file service
+
+A domain never sees a storage key, only a `FileId`. Uploads go through the owning resource's endpoint into the **FileService**, which builds the key (`{organizationId}/{ownerKind}/{ownerId}/{fileId}{ext}`), records ownership and answers **404** for a file of another organization. Every call carries a short-lived HMAC service token with the organization as a signed claim.
+
+### Reports
+
+The **ReportsService** reads its own `reports` schema — one row per entity with first-reached timestamps, not counters — filled by EF Core-backed Marten projections. It serves the agency's recruitment funnel (a cohort) and monthly activity, the platform owner's cross-organization view, and Excel exports.
+
+### Observability
+
+Every host logs through Serilog and exports logs, traces and metrics over OTLP. `./infrastructure/start.sh --build --observability` adds an OpenTelemetry Collector, **Prometheus** (:9090), **Grafana** (:3000, five provisioned dashboards) and **Rootprint** (:8282) over Quickwit for logs and traces. Domain metrics come from the event store (`marten.event.append{event.type}`), so a new event is counted without code. Without `OTEL_EXPORTER_OTLP_ENDPOINT` nothing is exported.
+
 ---
 
 ## Technology stack
@@ -247,32 +323,42 @@ Feed content comes from its **own** read model — the relational table `feeds.j
 ### Backend
 
 * **.NET 10**, ASP.NET Core Minimal APIs
-* **Marten 9.37** — event store and document database
-* **Wolverine 6.39** — messaging, handler discovery, transactional outbox
+* **Marten 9.39** — event store and document database
+* **Wolverine 6.39** — messaging, handler discovery, transactional outbox, sagas
 * **PostgreSQL 17**
 * **RabbitMQ 4** — mail transport
-* **EF Core** (feed projection) and **Dapper** (feed reads)
+* **RustFS** — S3-compatible storage for documents, feeds and observability indexes
+* **EF Core** (feed and report projections) and **Dapper** (feed and report reads)
+* **DocumentFormat.OpenXml** — Excel exports
 * **MailKit** + **FluentEmail.Liquid**
-* **BCrypt.Net**, **JWT bearer**
+* **BCrypt.Net**, **JWT bearer**, HMAC service tokens, service API keys
+* **Serilog** + **OpenTelemetry** (OTLP) — Prometheus, Grafana, Rootprint/Quickwit
 * **OpenAPI** + **Scalar**
 * **CSharpier** (enforced by a Husky pre-commit hook)
 
 ### Frontend (`frontend/`)
 
 * **React 19** + **TanStack Start** (Router, Query, Form, Table) on **Vite**
-* **Tailwind CSS 4**, **Zod**, **Zustand**, **axios**
+* **Tailwind CSS 4**, **Zod**, **Zustand**, **axios**, **recharts**, **dnd-kit** (kanban boards)
 * **Yarn 4**, **Biome** for lint and format
 * **orval** generates the API client from the running API's OpenAPI document
+* **Vitest** for pure logic, **Playwright** for flows
 
 ### Testing
 
 ```text
 tests/
-├── HrAgencySystem.UnitTests/               static handlers + NSubstitute + FixedClock
-├── HrAgencySystem.IntegrationTests/        real HTTP against a PostgreSQL Testcontainer
-└── HrAgencySystem.EmailTemplates.UnitTests/ renders every liquid template
+├── HrAgencySystem.UnitTests/                      static handlers + NSubstitute + FixedClock
+├── HrAgencySystem.IntegrationTests/               real HTTP against a PostgreSQL Testcontainer
+├── HrAgencySystem.EmailTemplates.UnitTests/       renders every liquid template
+├── HrAgencySystem.FileService.UnitTests/          file service rules
+├── HrAgencySystem.ReportsService.UnitTests/       report shaping and export
+├── HrAgencySystem.ReportsService.IntegrationTests/ report SQL against its own Testcontainer
+└── fixtures/                                      cases shared by the C# and TypeScript form validators
 
-frontend/e2e/                               Playwright: the panel's main flows against the real stack
+frontend/src/**/*.test.ts                          Vitest: pure logic
+frontend/e2e/                                      Playwright: the panel's main flows against the real stack
+k6/                                                load scripts: panel, mail, file uploads, public job board
 ```
 
 Integration tests spin up their **own** PostgreSQL 17 Testcontainer, so Docker must be running but the local compose stack is not required. External Wolverine transports are stubbed, so no broker is needed either. Because projections run in an async daemon, read-model assertions are wrapped in `Eventually.AssertAsync(...)`.
@@ -310,8 +396,10 @@ docker compose up -d
 There is also a full stack including the containerized API:
 
 ```bash
-./infrastructure/start.sh --build     # bring everything up
-./infrastructure/start.sh --logs      # tail webapi logs;  --stop, --clean
+./infrastructure/start.sh --build                   # bring everything up
+./infrastructure/start.sh --build --observability   # + Grafana :3000, Prometheus :9090, Rootprint :8282
+./infrastructure/start.sh --status | --logs [service]   # also --stop, --clean
+./infrastructure/start.sh --traffic | --emails | --files | --job-board   # k6 scripts, see k6/README.md
 ```
 
 `infrastructure/docker-compose.yml` requires the environment variables `SecretKey`, `RustFsAccessKey`, `RustFsSecretKey`, `FileServiceSecret`, `ReportsSecret`, `WebApiKey`, `Cors`, `RabbitMqUser` and `RabbitMqPassword` (see `infrastructure/.env-sample`).
@@ -320,13 +408,14 @@ There is also a full stack including the containerized API:
 
 ```bash
 dotnet run --project src/HrAgencySystem.Api        # API           → http://localhost:5000  (Scalar at /docs)
-dotnet run --project src/HrAgencySystem.Web        # job board     → http://localhost:5050
+dotnet run --project src/HrAgencySystem.Web        # job board     → http://localhost:5050 (needs a service API key)
 dotnet run --project src/HrAgencySystem.FeedsWorker              # feed generation, no HTTP
 dotnet run --project src/services/HrAgencySystem.NotificationWorker  # email delivery, no HTTP
-dotnet run --project src/services/HrAgencySystem.ReportsService      # reports → http://localhost:5200
+dotnet run --project src/services/HrAgencySystem.FileService         # documents → http://localhost:5100
+dotnet run --project src/services/HrAgencySystem.ReportsService      # reports   → http://localhost:5200
 ```
 
-Start `NotificationWorker` **before** triggering the first email: it declares the queues and bindings, and a topic exchange silently drops a message that matches no binding.
+Start `NotificationWorker` **before** triggering the first email: it declares the queues and bindings, and a topic exchange silently drops a message that matches no binding. The API is not self-sufficient for documents: without the file service, document endpoints fail, and `GET /healthz` (or `/health/ready`) shows it.
 
 ### 4. Frontend
 
@@ -347,6 +436,8 @@ GET /api/development/seed/{type}
 GET /api/development/seed-sales?count=N
 ```
 
+Every seeded account shares one password. A seeded platform also has a fixed job-board API key, which is the default the `Web` host uses in development, so the public board works with no manual step; anywhere else, issue a key in the owner panel (**Admin → API keys**).
+
 ---
 
 ## Running tests
@@ -356,6 +447,8 @@ dotnet test                                       # everything
 dotnet test tests/HrAgencySystem.UnitTests
 dotnet test tests/HrAgencySystem.IntegrationTests
 dotnet test tests/HrAgencySystem.UnitTests --filter "FullyQualifiedName~CreateCompanyHandlerTests"
+
+cd frontend && yarn test                          # Vitest
 ```
 
 ### End-to-end tests
