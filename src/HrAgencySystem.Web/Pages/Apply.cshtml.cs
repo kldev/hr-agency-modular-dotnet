@@ -54,7 +54,7 @@ public partial class Apply(IJobBoardClient board, ILogger<Apply> logger) : PageM
 
     public async Task<IActionResult> OnPostAsync(string slug, string postslug, CancellationToken ct)
     {
-        LogApplyingJobSlugWithEmail(slug, Email);
+        LogApplying(slug, postslug);
         Slug = slug;
 
         try
@@ -101,6 +101,7 @@ public partial class Apply(IJobBoardClient board, ILogger<Apply> logger) : PageM
         return RedirectToPage("/Error");
     }
 
-    [LoggerMessage(LogLevel.Information, "Applying job {slug} with {email}")]
-    partial void LogApplyingJobSlugWithEmail(string slug, string email);
+    // Identifiers, not people: the candidate's e-mail stays out of the log.
+    [LoggerMessage(LogLevel.Information, "Applying to {Slug}/{PostSlug}")]
+    partial void LogApplying(string slug, string postSlug);
 }

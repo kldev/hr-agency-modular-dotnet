@@ -72,7 +72,6 @@ public static class SetupMartenExtensions
     {
         var section = configuration.GetSection(RabbitMqConfig.SectionName);
         var config = RabbitMqConfig.FromSection(section);
-        Console.WriteLine("Configure WolverineForApplication with: " + config.GetConnectionUri());
         builder
             .UseWolverine(options =>
             {
