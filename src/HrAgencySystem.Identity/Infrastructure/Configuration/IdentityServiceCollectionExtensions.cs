@@ -3,6 +3,7 @@ using HrAgencySystem.Identity.Infrastructure.IAM;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.Identity.Infrastructure.Query;
 using HrAgencySystem.Identity.Services;
+using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +28,7 @@ internal static class IdentityServiceCollectionExtensions
             services.AddScoped<IUserQueryRepository, UserQueryRepository>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<ISeeder, SeedStartupAccount>();
         }
     }
 }
