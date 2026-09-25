@@ -129,7 +129,7 @@ public static class ObservabilityExtensions
                     metrics
                         .AddMeter(
                             TelemetryNames.Application,
-                            TelemetryNames.Wolverine,
+                            TelemetryNames.WolverineMeters,
                             TelemetryNames.Marten,
                             TelemetryNames.Npgsql,
                             TelemetryNames.Runtime

@@ -12,6 +12,13 @@ public static class TelemetryNames
     /// <summary>Handlers, outbox, RabbitMQ send and receive - and the trace context between them.</summary>
     public const string Wolverine = "Wolverine";
 
+    /// <summary>
+    /// Wolverine names its meter <c>Wolverine:&lt;service name&gt;</c>, so the exact name above - right
+    /// for the activity source - would subscribe to nothing: handled, failed and dead-lettered
+    /// messages, execution and effective time.
+    /// </summary>
+    public const string WolverineMeters = "Wolverine*";
+
     /// <summary>Sessions, appended events, and the async daemon's progress per projection.</summary>
     public const string Marten = "Marten";
 
