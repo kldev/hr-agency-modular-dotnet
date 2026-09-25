@@ -131,11 +131,15 @@ public static class ObservabilityExtensions
                             TelemetryNames.Application,
                             TelemetryNames.Wolverine,
                             TelemetryNames.Marten,
-                            TelemetryNames.Npgsql
+                            TelemetryNames.Npgsql,
+                            TelemetryNames.Runtime
                         )
+                        .AddInstrumentation<ProcessLimitsMetrics>()
                         .AddHttpClientInstrumentation()
-                        .AddRuntimeInstrumentation()
                         .AddAWSInstrumentation()
+                        // A histogram sample recorded inside a sampled span keeps its trace id, so a
+                        // dot on a latency chart in Grafana opens that very request in Rootprint.
+                        .SetExemplarFilter(ExemplarFilterType.TraceBased)
                 );
 
             // Tracing and metrics stay registered without an exporter: activities still exist, so a

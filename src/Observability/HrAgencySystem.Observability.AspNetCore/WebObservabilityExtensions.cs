@@ -40,6 +40,9 @@ public static class WebObservabilityExtensions
                     tracing.AddAspNetCoreInstrumentation(options =>
                     {
                         options.Filter = context => !IsQuiet(context.Request.Path);
+                        // The exception as a span event: the trace view then shows what failed,
+                        // not only that something returned 500.
+                        options.RecordException = true;
                     })
                 )
                 .WithMetrics(metrics => metrics.AddAspNetCoreInstrumentation());
