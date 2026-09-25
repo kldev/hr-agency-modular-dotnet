@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using HrAgencySystem.FileService.Contracts;
 using HrAgencySystem.ReportsService.Contracts;
 using HrAgencySystem.SharedKernel.Exception;
@@ -105,7 +106,7 @@ public sealed class GlobalExceptionHandler(
                 logger.LogError(
                     exception,
                     "File service failure. TraceId: {TraceId}",
-                    httpContext.TraceIdentifier
+                    Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier
                 );
                 return await WriteErrorAsync(
                     httpContext,
@@ -133,7 +134,7 @@ public sealed class GlobalExceptionHandler(
                 logger.LogError(
                     exception,
                     "BadHttpRequestException TraceId: {TraceId}",
-                    httpContext.TraceIdentifier
+                    Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier
                 );
                 return await WriteErrorAsync(
                     httpContext,
@@ -146,7 +147,7 @@ public sealed class GlobalExceptionHandler(
                 logger.LogError(
                     exception,
                     "Unhandled exception occurred. TraceId: {TraceId}",
-                    httpContext.TraceIdentifier
+                    Activity.Current?.TraceId.ToString() ?? httpContext.TraceIdentifier
                 );
 
                 return await WriteErrorAsync(

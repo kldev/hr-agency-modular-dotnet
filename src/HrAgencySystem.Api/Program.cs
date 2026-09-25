@@ -49,8 +49,10 @@ var app = builder.Build();
         .ExcludeFromDescription()
         .AllowAnonymous();
 
-    Console.WriteLine("HR agency API started");
-    Console.WriteLine("Environment: " + app.Environment.EnvironmentName);
+    app.Logger.LogInformation(
+        "HR agency API starting in {Environment}",
+        app.Environment.EnvironmentName
+    );
 
     await app.RunAsync();
 }

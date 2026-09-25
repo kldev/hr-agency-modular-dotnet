@@ -18,6 +18,9 @@ public class RabbitMqConfig
 
     public string GetConnectionUri() => $"amqp://{Username}:{Password}@{Host}{VHost}";
 
+    /// <summary>The coordinates without the password, for anything that ends up in a log.</summary>
+    public override string ToString() => $"amqp://{Username}@{Host}{VHost}";
+
     public static RabbitMqConfig FromSection(IConfigurationSection section) =>
         new()
         {
