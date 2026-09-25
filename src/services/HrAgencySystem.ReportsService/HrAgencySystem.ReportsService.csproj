@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Observability\HrAgencySystem.Observability.AspNetCore\HrAgencySystem.Observability.AspNetCore.csproj" />
     <ProjectReference Include="..\..\HrAgencySystem.Reports.ReadModel\HrAgencySystem.Reports.ReadModel.csproj" />
     <ProjectReference Include="..\HrAgencySystem.ReportsService.Contracts\HrAgencySystem.ReportsService.Contracts.csproj" />
   </ItemGroup>

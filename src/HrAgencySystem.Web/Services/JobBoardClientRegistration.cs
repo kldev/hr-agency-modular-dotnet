@@ -55,6 +55,7 @@ public static class JobBoardClientRegistration
                 });
 
             services.AddHttpClient(ApiHealthClient);
+            services.AddSingleton<ApiHealthProbe>();
         }
     }
 

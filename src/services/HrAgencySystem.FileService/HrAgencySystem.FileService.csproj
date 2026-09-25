@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Observability\HrAgencySystem.Observability.AspNetCore\HrAgencySystem.Observability.AspNetCore.csproj" />
     <ProjectReference Include="..\..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
     <ProjectReference Include="..\HrAgencySystem.FileService.Contracts\HrAgencySystem.FileService.Contracts.csproj" />
   </ItemGroup>

@@ -1,10 +1,14 @@
 using HrAgencySystem.EmailTemplates;
 using HrAgencySystem.EmailTemplates.Messaging;
 using HrAgencySystem.NotificationWorker.Infrastructure;
+using HrAgencySystem.Observability;
+using HrAgencySystem.Observability.Health;
 using Wolverine;
 
 var builder = Host.CreateApplicationBuilder(args);
 {
+    builder.AddObservability("hr-notification-worker");
+
     builder.Services.AddEMailTemplates(builder.Configuration);
     builder.Services.AddNpgsqlDataSource(
         builder.Configuration.GetConnectionString("Postgres")
@@ -16,6 +20,11 @@ var builder = Host.CreateApplicationBuilder(args);
     var config = RabbitMqConfig.FromSection(
         builder.Configuration.GetSection(RabbitMqConfig.SectionName)
     );
+
+    builder
+        .Services.AddHealthChecks()
+        .AddNpgSql(name: "postgres", tags: HealthTags.ReadyOnly, timeout: TimeSpan.FromSeconds(5))
+        .AddRabbitMq(config, HealthTags.ReadyOnly);
 
     builder.UseWolverine(opts =>
     {

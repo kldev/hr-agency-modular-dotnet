@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Observability\HrAgencySystem.Observability\HrAgencySystem.Observability.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Files\HrAgencySystem.Files.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Organization\HrAgencySystem.Organization.csproj" />
