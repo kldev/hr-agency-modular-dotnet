@@ -17,4 +17,10 @@ public static class TelemetryNames
 
     /// <summary>Connection pool and command metrics; the traces come from <c>AddNpgsql()</c>.</summary>
     public const string Npgsql = "Npgsql";
+
+    /// <summary>
+    /// The runtime's own meter (.NET 9+): CPU time, working set, GC, thread pool, exceptions - the
+    /// <c>dotnet_*</c> series the dashboards read. Replaces the OpenTelemetry runtime package.
+    /// </summary>
+    public const string Runtime = "System.Runtime";
 }
