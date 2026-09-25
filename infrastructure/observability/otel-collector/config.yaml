@@ -1,0 +1,49 @@
+# Every host --OTLP--> collector --+-- logs, traces --OTLP/HTTP--> Rootprint --> Quickwit --> S3 (RustFS)
+#                                  +-- metrics --> :8889 <--scrape-- Prometheus --> Grafana
+#
+# One exit for all six hosts, the two workers included - they have no HTTP port Prometheus could
+# scrape. The collector also holds the Rootprint ingest key, which exists only after
+# rootprint-bootstrap has run, so no service has to be configured or restarted for it.
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 300
+  batch:
+    timeout: 2s
+
+exporters:
+  otlp_http/rootprint:
+    endpoint: http://rootprint:8282 # the exporter appends /v1/logs and /v1/traces
+    headers:
+      authorization: "Bearer ${file:/bootstrap/rootprint-ingest-key}"
+
+  # job = service.name (hr-api, hr-notification-worker, ...), instance = service.instance.id (the
+  # container id), and the resource itself as target_info. OpenMetrics, because only that format
+  # carries exemplars - the trace id behind a dot on a latency chart.
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    enable_open_metrics: true
+    metric_expiration: 5m
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp_http/rootprint]
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [otlp_http/rootprint]
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter, batch]
+      exporters: [prometheus]
