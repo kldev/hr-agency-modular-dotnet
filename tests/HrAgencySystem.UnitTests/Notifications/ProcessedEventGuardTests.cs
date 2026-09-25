@@ -1,13 +1,46 @@
 using HrAgencySystem.EmailTemplates.Contracts.Identity;
+using System.Diagnostics.Metrics;
 using HrAgencySystem.NotificationWorker.Infrastructure;
+using HrAgencySystem.NotificationWorker.Infrastructure.Telemetry;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.Metrics.Testing;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 
 namespace HrAgencySystem.UnitTests.Notifications;
 
-public sealed class ProcessedEventGuardTests
+public sealed class ProcessedEventGuardTests : IDisposable
 {
     private readonly IProcessedEventStore _store = Substitute.For<IProcessedEventStore>();
+    private readonly ServiceProvider _services;
+    private readonly NotificationMetrics _metrics;
+    private readonly MetricCollector<long> _emails;
+
+    public ProcessedEventGuardTests()
+    {
+        _services = new ServiceCollection().AddMetrics().BuildServiceProvider();
+        var meters = _services.GetRequiredService<IMeterFactory>();
+        _metrics = new NotificationMetrics(meters);
+        _emails = new MetricCollector<long>(
+            meters,
+            NotificationMetrics.MeterName,
+            "hr.notifications.emails"
+        );
+    }
+
+    public void Dispose()
+    {
+        _emails.Dispose();
+        _services.Dispose();
+    }
+
+    private void AssertSingleOutcome(string outcome)
+    {
+        var measurement = Assert.Single(_emails.GetMeasurementSnapshot());
+        Assert.Equal(1, measurement.Value);
+        Assert.Equal(outcome, measurement.Tags["outcome"]);
+        Assert.Equal(nameof(SendPasswordReset), measurement.Tags["template"]);
+    }
 
     private static readonly SendPasswordReset Message = new(
         Guid.NewGuid(),
@@ -27,6 +60,7 @@ public sealed class ProcessedEventGuardTests
         await _store.SendOnceAsync(
             Message,
             NullLogger.Instance,
+            _metrics,
             () =>
             {
                 sent = true;
@@ -37,6 +71,7 @@ public sealed class ProcessedEventGuardTests
 
         Assert.True(sent);
         await _store.DidNotReceive().ReleaseAsync(Message, Arg.Any<CancellationToken>());
+        AssertSingleOutcome(NotificationMetrics.Sent);
     }
 
     [Fact]
@@ -48,6 +83,7 @@ public sealed class ProcessedEventGuardTests
         await _store.SendOnceAsync(
             Message,
             NullLogger.Instance,
+            _metrics,
             () =>
             {
                 sent = true;
@@ -57,6 +93,7 @@ public sealed class ProcessedEventGuardTests
         );
 
         Assert.False(sent);
+        AssertSingleOutcome(NotificationMetrics.Duplicate);
     }
 
     [Fact]
@@ -68,6 +105,7 @@ public sealed class ProcessedEventGuardTests
             _store.SendOnceAsync(
                 Message,
                 NullLogger.Instance,
+                _metrics,
                 () => throw new TimeoutException("smtp is down"),
                 CancellationToken.None
             )
@@ -76,5 +114,6 @@ public sealed class ProcessedEventGuardTests
         // Without this the next attempt would hit the guard, log "already handled" and report
         // success without ever sending the mail.
         await _store.Received(1).ReleaseAsync(Message, Arg.Any<CancellationToken>());
+        AssertSingleOutcome(NotificationMetrics.Failed);
     }
 }

@@ -1,14 +1,18 @@
+using System.Diagnostics.Metrics;
 using HrAgencySystem.Files.Model;
 using HrAgencySystem.Files.Service;
 using HrAgencySystem.FileService.Application;
 using HrAgencySystem.FileService.Contracts;
 using HrAgencySystem.FileService.Domain;
+using HrAgencySystem.FileService.Infrastructure.Telemetry;
 using Marten;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.Metrics.Testing;
 using NSubstitute;
 
 namespace HrAgencySystem.FileService.UnitTests;
 
-public sealed class FileStoreTests
+public sealed class FileStoreTests : IDisposable
 {
     private static readonly Guid OrganizationId = Guid.Parse(
         "11111111-1111-1111-1111-111111111111"
@@ -19,6 +23,23 @@ public sealed class FileStoreTests
     private readonly IDocumentSession _session = Substitute.For<IDocumentSession>();
     private readonly IObjectStorage _storage = Substitute.For<IObjectStorage>();
     private readonly IUploadInspector _inspector = Substitute.For<IUploadInspector>();
+    private readonly ServiceProvider _services = new ServiceCollection()
+        .AddMetrics()
+        .BuildServiceProvider();
+    private readonly IMeterFactory _meters;
+    private readonly MetricCollector<long> _uploads;
+
+    public FileStoreTests()
+    {
+        _meters = _services.GetRequiredService<IMeterFactory>();
+        _uploads = new MetricCollector<long>(_meters, FileMetrics.MeterName, "hr.files.uploads");
+    }
+
+    public void Dispose()
+    {
+        _uploads.Dispose();
+        _services.Dispose();
+    }
 
     [Fact]
     public async Task ARefusedUploadNeverReachesTheBucketOrTheDatabase()
@@ -35,6 +56,10 @@ public sealed class FileStoreTests
         await _storage.DidNotReceiveWithAnyArgs().StoreAsync(default!, default!, default!, default);
         _session.DidNotReceiveWithAnyArgs().Insert(Arg.Any<StoredFile>());
         await _session.DidNotReceiveWithAnyArgs().SaveChangesAsync();
+
+        var measurement = Assert.Single(_uploads.GetMeasurementSnapshot());
+        Assert.Equal(FileMetrics.Rejected, measurement.Tags["outcome"]);
+        Assert.Equal("unsupported_type", measurement.Tags["reason"]);
     }
 
     [Fact]
@@ -73,6 +98,9 @@ public sealed class FileStoreTests
                 Arg.Any<CancellationToken>()
             );
         await _session.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+
+        var measurement = Assert.Single(_uploads.GetMeasurementSnapshot());
+        Assert.Equal(FileMetrics.Stored, measurement.Tags["outcome"]);
     }
 
     private async Task<StoreResult> Store(string fileName, string contentType)
@@ -82,6 +110,7 @@ public sealed class FileStoreTests
             _storage,
             _inspector,
             TimeProvider.System,
+            new FileMetrics(_meters),
             NullLogger<FileStore>.Instance
         );
 

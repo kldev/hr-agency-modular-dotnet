@@ -4,6 +4,7 @@ using HrAgencySystem.Feeds.Application.ScheduleFeedTasks;
 using HrAgencySystem.Feeds.Config;
 using HrAgencySystem.Feeds.Persistence;
 using HrAgencySystem.Feeds.Port;
+using HrAgencySystem.Feeds.Telemetry;
 using HrAgencySystem.Feeds.Worker;
 using HrAgencySystem.SharedKernel.Port;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,7 @@ public static class FeedsModule
             services.AddScoped<IJobFeedTaskQueue, JobFeedTaskQueue>();
             services.AddScoped<IJobFeedScheduler, JobFeedScheduler>();
             services.AddScoped<IJobFeedProcessor, JobFeedProcessor>();
+            services.AddSingleton<FeedTelemetry>();
             services.AddScoped<IJobFeedGenerator, JobFeedGenerator>();
             services.AddScoped<IJobFeedReader, JobFeedReader>();
         }
