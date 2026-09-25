@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Observability\HrAgencySystem.Observability\HrAgencySystem.Observability.csproj" />
     <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates.Contracts\HrAgencySystem.EmailTemplates.Contracts.csproj" />
     <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates\HrAgencySystem.EmailTemplates.csproj" />
     <ProjectReference Include="..\..\EmailTemplates\HrAgencySystem.EmailTemplates.Messaging\HrAgencySystem.EmailTemplates.Messaging.csproj" />

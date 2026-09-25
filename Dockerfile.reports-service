@@ -18,6 +18,8 @@ COPY Directory.Packages.props .
 COPY src/HrAgencySystem.Reports.ReadModel/HrAgencySystem.Reports.ReadModel.csproj HrAgencySystem.Reports.ReadModel/
 COPY src/services/HrAgencySystem.ReportsService.Contracts/HrAgencySystem.ReportsService.Contracts.csproj services/HrAgencySystem.ReportsService.Contracts/
 COPY src/services/HrAgencySystem.ReportsService/HrAgencySystem.ReportsService.csproj services/HrAgencySystem.ReportsService/
+COPY src/Observability/HrAgencySystem.Observability/HrAgencySystem.Observability.csproj Observability/HrAgencySystem.Observability/
+COPY src/Observability/HrAgencySystem.Observability.AspNetCore/HrAgencySystem.Observability.AspNetCore.csproj Observability/HrAgencySystem.Observability.AspNetCore/
 
 RUN dotnet restore services/HrAgencySystem.ReportsService/HrAgencySystem.ReportsService.csproj
 

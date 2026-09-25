@@ -12,6 +12,7 @@ COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.E
 COPY src/EmailTemplates/HrAgencySystem.EmailTemplates/HrAgencySystem.EmailTemplates.csproj EmailTemplates/HrAgencySystem.EmailTemplates/
 COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/HrAgencySystem.EmailTemplates.Messaging.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Messaging/
 COPY src/services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj services/HrAgencySystem.NotificationWorker/
+COPY src/Observability/HrAgencySystem.Observability/HrAgencySystem.Observability.csproj Observability/HrAgencySystem.Observability/
 
 RUN dotnet restore services/HrAgencySystem.NotificationWorker/HrAgencySystem.NotificationWorker.csproj
 

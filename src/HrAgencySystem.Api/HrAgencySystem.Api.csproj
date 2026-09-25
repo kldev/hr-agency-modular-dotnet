@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Observability\HrAgencySystem.Observability.AspNetCore\HrAgencySystem.Observability.AspNetCore.csproj" />
     <ProjectReference Include="..\HrAgencySystem.PlatformSeeder\HrAgencySystem.PlatformSeeder.csproj" />
     <ProjectReference Include="..\HrAgencySystem.Feeds\HrAgencySystem.Feeds.csproj" />
     <ProjectReference Include="..\HrAgencySystem.SharedKernel\HrAgencySystem.SharedKernel.csproj" />

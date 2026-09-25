@@ -12,13 +12,17 @@ WORKDIR /src
 
 COPY Directory.Packages.props .
 
-# The public job board references no other project - it talks to the API over HTTP - so this is
-# the whole restore list. Adding a project reference to it means adding its COPY line here too.
+# The public job board references no module - it talks to the API over HTTP - so apart from the
+# shared observability plumbing this is the whole restore list. Adding a project reference to it
+# means adding its COPY line here, and its sources below, too.
 COPY src/HrAgencySystem.Web/HrAgencySystem.Web.csproj HrAgencySystem.Web/
+COPY src/Observability/HrAgencySystem.Observability/HrAgencySystem.Observability.csproj Observability/HrAgencySystem.Observability/
+COPY src/Observability/HrAgencySystem.Observability.AspNetCore/HrAgencySystem.Observability.AspNetCore.csproj Observability/HrAgencySystem.Observability.AspNetCore/
 
 RUN dotnet restore HrAgencySystem.Web/HrAgencySystem.Web.csproj
 
 COPY src/HrAgencySystem.Web HrAgencySystem.Web/
+COPY src/Observability Observability/
 
 RUN dotnet publish HrAgencySystem.Web/HrAgencySystem.Web.csproj \
     --configuration Release \

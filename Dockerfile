@@ -42,6 +42,8 @@ COPY src/HrAgencySystem.Workers.Contracts/HrAgencySystem.Workers.Contracts.cspro
 COPY src/services/HrAgencySystem.FileService.Contracts/HrAgencySystem.FileService.Contracts.csproj services/HrAgencySystem.FileService.Contracts/
 COPY src/services/HrAgencySystem.ReportsService.Contracts/HrAgencySystem.ReportsService.Contracts.csproj services/HrAgencySystem.ReportsService.Contracts/
 COPY src/HrAgencySystem.SharedKernel/HrAgencySystem.SharedKernel.csproj HrAgencySystem.SharedKernel/
+COPY src/Observability/HrAgencySystem.Observability/HrAgencySystem.Observability.csproj Observability/HrAgencySystem.Observability/
+COPY src/Observability/HrAgencySystem.Observability.AspNetCore/HrAgencySystem.Observability.AspNetCore.csproj Observability/HrAgencySystem.Observability.AspNetCore/
 
 RUN dotnet restore HrAgencySystem.Api/HrAgencySystem.Api.csproj
 

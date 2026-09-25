@@ -16,6 +16,7 @@ using JasperFx;
 using JasperFx.Events;
 using JasperFx.Events.Daemon;
 using Marten;
+using JasperFx.OpenTelemetry;
 using Wolverine;
 using Wolverine.Marten;
 
@@ -38,6 +39,11 @@ public static class SetupMartenExtensions
                 options.Events.StreamIdentity = StreamIdentity.AsGuid;
 
                 ConfigureModules(options);
+
+                // Spans for opening a connection and failing on one, and a counter per appended
+                // event type - the rest (every SQL command) comes from the Npgsql instrumentation.
+                options.OpenTelemetry.TrackConnections = TrackLevel.Normal;
+                options.OpenTelemetry.TrackEventCounters();
 
                 options.AutoCreateSchemaObjects = AutoCreate.CreateOrUpdate;
             })
