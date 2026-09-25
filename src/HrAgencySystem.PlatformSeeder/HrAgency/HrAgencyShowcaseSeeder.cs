@@ -24,7 +24,7 @@ public sealed partial class HrAgencyShowcaseSeeder(
 
         logger.LogInformation("Starting HR Agency showcase seeding");
 
-        var owner = await new OwnerScenario(bus).Create();
+        var owner = await new OwnerScenario(bus, session).Create();
 
         logger.LogInformation("Platform owner created: {PlatformOwnerId}", owner.PlatformOwnerId);
 
