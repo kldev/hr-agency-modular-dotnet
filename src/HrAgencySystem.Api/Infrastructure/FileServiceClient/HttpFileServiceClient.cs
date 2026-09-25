@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using HrAgencySystem.FileService.Contracts;
+using HrAgencySystem.SharedKernel.Exception;
 
 namespace HrAgencySystem.Api.Infrastructure.FileServiceClient;
 
@@ -34,10 +35,12 @@ public sealed class HttpFileServiceClient(
 
         using var response = await Send(request, ct);
 
+        // A refused file is the uploader's mistake, not an outage: a 400 with the reason, never the
+        // 503 a FileServiceException becomes - that would page somebody over a renamed .exe.
         if (response.StatusCode == HttpStatusCode.BadRequest)
         {
             var rejection = await response.Content.ReadFromJsonAsync<UploadRejected>(ct);
-            throw new FileServiceException(
+            throw new BusinessRuleException(
                 rejection?.Reason ?? FileServiceException.RejectedMessage
             );
         }
