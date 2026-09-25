@@ -1,0 +1,20 @@
+# Quickwit = the search engine under Rootprint. Both the metastore and the index splits live in the
+# S3 bucket on the stack's RustFS (a bucket of its own, next to the documents and the feeds), so
+# every log line and span ends up in S3. ${VAR} values come from the container environment.
+version: 0.8
+
+cluster_id: hr-agency
+node_id: quickwit-1
+listen_address: 0.0.0.0
+
+metastore_uri: s3://${S3_BUCKET}/quickwit/indexes
+default_index_root_uri: s3://${S3_BUCKET}/quickwit/indexes
+
+storage:
+  s3:
+    endpoint: ${S3_ENDPOINT}
+    region: ${S3_REGION}
+    force_path_style_access: true
+
+rest:
+  listen_port: 7280

@@ -1,4 +1,13 @@
 name: hr-agency-api
+
+# Telemetry of every .NET host. OtelEndpoint is empty unless the observability profile is on
+# (./start.sh --observability sets it), and an empty endpoint means no exporter at all - the
+# services run the same either way. Metrics every 5 s to match the Prometheus scrape interval.
+x-otel-env: &otel-env
+  OTEL_EXPORTER_OTLP_ENDPOINT: ${OtelEndpoint:-}
+  OTEL_METRIC_EXPORT_INTERVAL: "5000"
+  Observability__ConsoleFormat: json
+
 services:
   # ===================
   # Infrastructure
@@ -17,7 +26,12 @@ services:
       - -c 
       - max_connections=100
       - -c 
-      - shared_preload_libraries=pg_stat_statements     
+      - shared_preload_libraries=pg_stat_statements
+      # All statements incl. nested ones, plus read/write time per query - the top queries panels.
+      - -c
+      - pg_stat_statements.track=all
+      - -c
+      - track_io_timing=on
     ports:
       - "5432:5432"
     volumes:
@@ -105,6 +119,7 @@ services:
       replicas: ${ApiReplicaCount:-1}          
     environment:
       ASPNETCORE_ENVIRONMENT: docker
+      <<: *otel-env
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=50"
       Jwt__Issuer: "hr-agency-api"
       Jwt__Audience: "hr-agency"
@@ -152,6 +167,7 @@ services:
       - inner-cluster-communication
     environment:
       ASPNETCORE_ENVIRONMENT: docker
+      <<: *otel-env
       ASPNETCORE_HTTP_PORTS: 8080
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
       # Must match webapi - one shared key, and deliberately not the one user tokens are signed with.
@@ -180,6 +196,7 @@ services:
       - inner-cluster-communication
     environment:
       ASPNETCORE_ENVIRONMENT: docker
+      <<: *otel-env
       ASPNETCORE_HTTP_PORTS: 8080
       # Reads the `reports` schema only; the API's projections create and fill it.
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
@@ -206,6 +223,7 @@ services:
       - inner-cluster-communication
     environment:
       DOTNET_ENVIRONMENT: docker
+      <<: *otel-env
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
       RustFs__Endpoint: "http://hr-agency-api-s3:9000"
       RustFs__AccessKey: ${RustFsAccessKey}
@@ -232,6 +250,7 @@ services:
       replicas: ${EmailsWorkerReplicaCount:-1}
     environment:
       DOTNET_ENVIRONMENT: docker
+      <<: *otel-env
       ConnectionStrings__Postgres: "Host=postgres;Port=5432;Database=hr_app;Username=hr_app;Password=hr_app;Maximum Pool Size=10"
       # Must match webapi - producer and consumers share one topology description.
       RabbitMq__Host: "rabbitmq"
@@ -262,6 +281,7 @@ services:
       - inner-cluster-communication
     environment:
       ASPNETCORE_ENVIRONMENT: docker
+      <<: *otel-env
       # No connection string on purpose: the public job board reaches the system only through
       # the API's internal routes, with a service key. The default is the key the seeder writes
       # (/api/development/seed), so a seeded stack works without touching .env; on anything
@@ -306,6 +326,220 @@ services:
       webapi:
         condition: service_healthy                       
 
+  # ===================
+  # Observability (opt-in: ./start.sh --observability, i.e. the "observability" profile)
+  # ===================
+  #   every .NET host ──OTLP──▶ otel-collector ─┬─ logs + traces ──▶ rootprint ──▶ quickwit ──S3──▶ rustfs
+  #                                              └─ metrics :8889 ◀── prometheus ──▶ grafana
+  #   rabbitmq :15692, postgres-exporter :9187  ◀── prometheus
+  #
+  # Defaults below are local learning-project values; override them in .env (see .env-sample).
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: hr-agency-otel-collector
+    profiles: ["observability"]
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol/config.yaml"]
+    depends_on:
+      rootprint-bootstrap:
+        condition: service_completed_successfully
+    volumes:
+      - ./observability/otel-collector/config.yaml:/etc/otelcol/config.yaml:ro
+      - rootprint_bootstrap:/bootstrap:ro
+    ports:
+      # For hosts started with `dotnet run` - launchSettings point them at localhost:4317.
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - inner-cluster-communication
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: hr-agency-prometheus
+    profiles: ["observability"]
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=7d
+      - --enable-feature=exemplar-storage
+      - --web.enable-lifecycle
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - inner-cluster-communication
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: hr-agency-grafana
+    profiles: ["observability"]
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GrafanaUser:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GrafanaPassword:-admin}
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/hr-agency-overview.json
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_NEWS_NEWS_FEED_ENABLED: "false"
+      # Read by the datasource provisioning: where "Open trace in Rootprint" points.
+      ROOTPRINT_PUBLIC_URL: ${RootprintPublicUrl:-http://localhost:8282}
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - inner-cluster-communication
+
+  # Server-side PostgreSQL metrics. The services' own view of their SQL (Npgsql client metrics)
+  # comes through the collector with everything else.
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.20.1
+    container_name: hr-agency-postgres-exporter
+    profiles: ["observability"]
+    restart: unless-stopped
+    depends_on:
+      postgres-init:
+        condition: service_completed_successfully
+    command:
+      - --collector.stat_statements
+      - --collector.stat_statements.include_query
+      - --collector.stat_statements.query_length=200
+      - --collector.stat_statements.limit=50
+      - --collector.long_running_transactions
+      - --collector.stat_activity_autovacuum
+      - --collector.postmaster
+    environment:
+      DATA_SOURCE_URI: postgres:5432/hr_app?sslmode=disable
+      DATA_SOURCE_USER: postgres_exporter
+      DATA_SOURCE_PASS: ${PostgresExporterPassword:-postgres-exporter-local}
+    networks:
+      - inner-cluster-communication
+
+  # One-shot and repeatable: Rootprint's database, the exporter's role, pg_stat_statements.
+  postgres-init:
+    image: postgres:17
+    container_name: hr-agency-postgres-init
+    profiles: ["observability"]
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "/init-observability.sh"]
+    environment:
+      PGUSER: hr_app
+      PGPASSWORD: hr_app
+      PGDATABASE: hr_app
+      ROOTPRINT_DB_PASSWORD: ${RootprintDbPassword:-rootprint-local}
+      POSTGRES_EXPORTER_PASSWORD: ${PostgresExporterPassword:-postgres-exporter-local}
+    volumes:
+      - ./observability/postgres/init-observability.sh:/init-observability.sh:ro
+    networks:
+      - inner-cluster-communication
+
+  # Logs and traces: a UI over Quickwit, which keeps every index in S3.
+  rootprint:
+    image: ghcr.io/rootprint/rootprint:latest
+    container_name: hr-agency-rootprint
+    profiles: ["observability"]
+    restart: unless-stopped
+    depends_on:
+      postgres-init:
+        condition: service_completed_successfully
+      quickwit:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://rootprint:${RootprintDbPassword:-rootprint-local}@postgres:5432/rootprint
+      QUICKWIT_URL: http://quickwit:7280
+      ORIGIN: ${RootprintPublicUrl:-http://localhost:8282}
+    ports:
+      - "8282:8282"
+    healthcheck:
+      # The image has no curl or wget, but it has bun.
+      test: ["CMD", "bun", "-e", "const r = await fetch('http://localhost:8282/api/health'); process.exit(r.ok ? 0 : 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - inner-cluster-communication
+
+  # Creates the Rootprint admin and an ingest key once, and hands the key to the collector.
+  rootprint-bootstrap:
+    image: curlimages/curl:latest
+    container_name: hr-agency-rootprint-bootstrap
+    profiles: ["observability"]
+    user: "0"
+    restart: "no"
+    depends_on:
+      rootprint:
+        condition: service_healthy
+    environment:
+      ROOTPRINT_ORIGIN: ${RootprintPublicUrl:-http://localhost:8282}
+      ROOTPRINT_ADMIN_EMAIL: ${RootprintAdminEmail:-admin@hr-agency.com}
+      ROOTPRINT_ADMIN_PASSWORD: ${RootprintAdminPassword:-rootprint-admin-local}
+    entrypoint: ["/bin/sh", "/bootstrap.sh"]
+    volumes:
+      - ./observability/rootprint/bootstrap.sh:/bootstrap.sh:ro
+      - rootprint_bootstrap:/bootstrap
+    networks:
+      - inner-cluster-communication
+
+  # Rootprint's search engine. Metastore and index splits live in the observability bucket.
+  quickwit:
+    image: quickwit/quickwit:v0.9.0
+    container_name: hr-agency-quickwit
+    profiles: ["observability"]
+    restart: unless-stopped
+    command: ["run"]
+    depends_on:
+      observability-bucket:
+        condition: service_completed_successfully
+    environment:
+      QW_CONFIG: /quickwit/config/quickwit.yaml
+      QW_DISABLE_TELEMETRY: "1"
+      S3_ENDPOINT: http://rustfs:9000
+      S3_BUCKET: ${ObservabilityBucket:-observability-logs}
+      S3_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${RustFsAccessKey}
+      AWS_SECRET_ACCESS_KEY: ${RustFsSecretKey}
+      AWS_REGION: us-east-1
+    volumes:
+      - ./observability/rootprint/quickwit.yaml:/quickwit/config/quickwit.yaml:ro
+      - quickwit_data:/quickwit/qwdata # local cache and write-ahead queue only
+    healthcheck:
+      test: ["CMD-SHELL", 'bash -c "echo > /dev/tcp/localhost/7280"']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - inner-cluster-communication
+
+  # The bucket for logs and traces on the stack's RustFS - its own, apart from documents and feeds.
+  observability-bucket:
+    image: curlimages/curl:latest
+    container_name: hr-agency-observability-bucket
+    profiles: ["observability"]
+    restart: "no"
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    environment:
+      S3_ENDPOINT: http://rustfs:9000
+      S3_ACCESS_KEY: ${RustFsAccessKey}
+      S3_SECRET_KEY: ${RustFsSecretKey}
+      S3_BUCKET: ${ObservabilityBucket:-observability-logs}
+      S3_REGION: us-east-1
+    entrypoint: ["/bin/sh", "/create-bucket.sh"]
+    volumes:
+      - ./observability/rustfs/create-bucket.sh:/create-bucket.sh:ro
+    networks:
+      - inner-cluster-communication
+
 networks:
   inner-cluster-communication:
 
@@ -314,3 +548,7 @@ volumes:
   files_data:
   mailpit:
   rabbitmq_data:
+  prometheus_data:
+  grafana_data:
+  quickwit_data:
+  rootprint_bootstrap:

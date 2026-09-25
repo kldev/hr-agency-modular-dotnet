@@ -1,0 +1,32 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  # Every HR agency host, pushed over OTLP and exposed by the collector. honor_labels keeps the
+  # job/instance the collector derived from the resource (hr-api, hr-feeds-worker, ...) instead of
+  # renaming them to exported_job - the dashboards pick a service by job. Hosts started with
+  # `dotnet run` push to localhost:4317 and show up here the same way.
+  - job_name: hr-agency
+    honor_labels: true
+    static_configs:
+      - targets: ["otel-collector:8889"]
+
+  # RabbitMQ's built-in Prometheus plugin (infrastructure/rabbitmq/enabled_plugins): node-wide
+  # totals - connections, channels, message rates, memory.
+  - job_name: rabbitmq
+    static_configs:
+      - targets: ["rabbitmq:15692"]
+
+  # ...and the same plugin per queue: q.emails.* depth, consumers, utilisation.
+  - job_name: rabbitmq-queues
+    metrics_path: /metrics/detailed
+    params:
+      family: [queue_coarse_metrics, queue_consumer_count, queue_metrics]
+    static_configs:
+      - targets: ["rabbitmq:15692"]
+
+  # PostgreSQL server side: transactions, connections, locks, tables, pg_stat_statements.
+  - job_name: postgres
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
