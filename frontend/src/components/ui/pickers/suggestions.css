@@ -1,9 +1,18 @@
 /* =========================================================
    Suggestion Picker
-   ========================================================= */
+   =========================================================
+
+   HeroUI's ComboBox underneath: the parts carry these classes next to HeroUI's own
+   (`combo-box`, `combo-box__input-group`, `input`, `combo-box__trigger`, `combo-box__popover`,
+   `list-box`, `list-box-item`). HeroUI's rules sit in @layer components and these are unlayered,
+   so every property declared here wins in every state; the input selectors are long because
+   the panel's own `.input` rules (forms.css) would otherwise tie with them.
+*/
 
 .suggestion-picker {
 	position: relative;
+
+	display: block;
 
 	width: 100%;
 }
@@ -11,7 +20,16 @@
 .suggestion-picker > .form-label {
 	display: block;
 
+	width: auto;
 	margin-bottom: var(--space-2);
+
+	/* HeroUI's label sets its own; this was a plain <label> inheriting the page's */
+	line-height: inherit;
+}
+
+/* The picker writes its own " *" for a required field; HeroUI would add a second one. */
+.suggestion-picker > .form-label::after {
+	content: none;
 }
 
 /* =========================================================
@@ -40,31 +58,35 @@
 		background var(--transition-fast);
 }
 
-.suggestion-picker-control-open {
+.suggestion-picker[data-disabled="true"] .suggestion-picker-control {
+	background: var(--color-surface-subtle);
+
+	cursor: not-allowed;
+}
+
+.suggestion-picker[data-open="true"] .suggestion-picker-control {
 	border-color: var(--color-primary);
 
 	box-shadow: 0 0 0 2px var(--color-primary-soft);
 }
 
-.suggestion-picker-control-invalid {
+.suggestion-picker[data-invalid="true"] .suggestion-picker-control {
 	border-color: var(--color-danger);
 }
 
-.suggestion-picker-control-invalid.suggestion-picker-control-open {
+.suggestion-picker[data-invalid="true"][data-open="true"] .suggestion-picker-control {
 	box-shadow: 0 0 0 2px var(--color-danger-soft);
-}
-
-.suggestion-picker-control-disabled {
-	background: var(--color-surface-subtle);
-
-	cursor: not-allowed;
 }
 
 /* =========================================================
    Input
    ========================================================= */
 
-.suggestion-picker-input {
+.suggestion-picker .suggestion-picker-control > .suggestion-picker-input,
+.suggestion-picker .suggestion-picker-control > .suggestion-picker-input:focus,
+.suggestion-picker .suggestion-picker-control > .suggestion-picker-input:disabled {
+	flex: 1 1 auto;
+
 	width: 100%;
 	min-width: 0;
 	height: 34px;
@@ -74,7 +96,9 @@
 	padding: 0 72px 0 36px;
 
 	border: 0;
+	border-radius: 0;
 	outline: 0;
+	box-shadow: none;
 
 	background: transparent;
 	color: var(--color-text);
@@ -82,11 +106,11 @@
 	font-size: var(--font-size-md);
 }
 
-.suggestion-picker-input::placeholder {
+.suggestion-picker .suggestion-picker-control > .suggestion-picker-input::placeholder {
 	color: var(--color-text-muted);
 }
 
-.suggestion-picker-input:disabled {
+.suggestion-picker .suggestion-picker-control > .suggestion-picker-input:disabled {
 	color: var(--color-text-disabled);
 
 	cursor: not-allowed;
@@ -105,15 +129,6 @@
 	pointer-events: none;
 }
 
-.suggestion-picker-spinner {
-	position: absolute;
-	right: 40px;
-	top: 50%;
-	transform: translateY(-50%);
-	color: var(--color-muted-foreground);
-	pointer-events: none;
-}
-
 /* =========================================================
    Buttons
    ========================================================= */
@@ -121,6 +136,7 @@
 .suggestion-picker-clear,
 .suggestion-picker-trigger {
 	position: absolute;
+	top: auto;
 
 	display: grid;
 	place-items: center;
@@ -137,6 +153,10 @@
 	color: var(--color-text-muted);
 
 	cursor: pointer;
+
+	opacity: 1;
+	transform: none;
+	translate: none;
 }
 
 .suggestion-picker-clear {
@@ -144,6 +164,7 @@
 }
 
 .suggestion-picker-trigger {
+	inset-inline-end: auto;
 	right: 4px;
 }
 
@@ -160,7 +181,11 @@
 	opacity: 0.5;
 }
 
-.suggestion-picker-chevron-open {
+.suggestion-picker-chevron {
+	transition: transform var(--transition-fast);
+}
+
+.suggestion-picker-trigger[data-open="true"] .suggestion-picker-chevron {
 	transform: rotate(180deg);
 }
 
@@ -174,26 +199,33 @@
    Dropdown
    ========================================================= */
 
+/* React Aria positions it (flip, max height, offset) inline; this is only the look. */
 .suggestion-picker-menu {
-	position: fixed;
-
-	z-index: 1000;
-
 	box-sizing: border-box;
 
-	max-height: 320px;
+	width: var(--trigger-width);
+	min-width: 0;
 
 	overflow-y: auto;
 
+	padding: 0;
+
 	background: var(--color-surface);
+	color: var(--color-text);
 
 	border: 1px solid var(--color-border);
 	border-radius: var(--radius-md);
 
 	box-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
+
+	font-size: inherit;
+
+	/* it used to appear at once; HeroUI zooms its popovers in and out */
+	animation: none;
 }
 
-[data-theme="dark"] .suggestion-picker-menu {
+[data-theme="dark"] .suggestion-picker-menu,
+.dark .suggestion-picker-menu {
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
@@ -201,14 +233,18 @@
    List
    ========================================================= */
 
-.suggestion-picker-list {
+.suggestion-picker-menu .suggestion-picker-list {
 	display: flex;
 	flex-direction: column;
 
 	padding: var(--space-1);
 }
 
-.suggestion-picker-option {
+.suggestion-picker-list > * + * {
+	margin-top: 0;
+}
+
+.suggestion-picker-menu .suggestion-picker-option {
 	display: block;
 
 	width: 100%;
@@ -220,6 +256,8 @@
 
 	border: 0;
 	border-radius: var(--radius-sm);
+	outline: none;
+	box-shadow: none;
 
 	background: transparent;
 	color: var(--color-text);
@@ -228,28 +266,20 @@
 
 	cursor: pointer;
 
+	transform: none;
 	transition:
 		background var(--transition-fast),
 		color var(--transition-fast);
 }
 
-.suggestion-picker-option:hover,
-.suggestion-picker-option-selected {
-	background: var(--color-surface-selected);
-}
-
-.suggestion-picker-option-highlighted {
+/* React Aria focuses the option under the pointer as well as the one reached with the arrows. */
+.suggestion-picker-menu .suggestion-picker-option[data-hovered="true"],
+.suggestion-picker-menu .suggestion-picker-option[data-focused="true"] {
 	background: var(--color-surface-hover);
 }
 
-.suggestion-picker-option-selected:hover,
-.suggestion-picker-option-selected.suggestion-picker-option-highlighted {
+.suggestion-picker-menu .suggestion-picker-option[data-selected="true"] {
 	background: var(--color-surface-selected);
-}
-
-.suggestion-picker-option:focus-visible {
-	outline: 2px solid var(--color-primary);
-	outline-offset: -2px;
 }
 
 /* =========================================================
@@ -304,30 +334,8 @@
 }
 
 /* =========================================================
-   Loading / Empty
+   Empty
    ========================================================= */
-
-.suggestion-picker-state {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	gap: var(--space-2);
-
-	min-height: 64px;
-
-	padding: var(--space-4);
-
-	color: var(--color-text-muted);
-
-	font-size: var(--font-size-sm);
-}
-
-.suggestion-picker-state-spinner {
-	color: var(--color-primary);
-
-	animation: spin 700ms linear infinite;
-}
 
 .suggestion-picker-empty {
 	display: flex;
@@ -405,13 +413,6 @@
 
 	background: var(--color-primary-soft);
 	color: var(--color-primary);
-}
-
-.suggestion-picker-avatar img {
-	width: 100%;
-	height: 100%;
-
-	object-fit: cover;
 }
 
 .suggestion-picker-company-meta {

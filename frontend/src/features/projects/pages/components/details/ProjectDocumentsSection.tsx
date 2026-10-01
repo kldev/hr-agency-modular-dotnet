@@ -2,7 +2,7 @@ import { Table } from "@heroui/react";
 import { Download, Paperclip, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { ProjectDocument, ProjectProjection } from "@/api/models";
-import { Button, ConfirmDialog, DetailOverviewHeader } from "@/components/ui";
+import { ActionButton, Button, ConfirmDialog, DetailOverviewHeader } from "@/components/ui";
 import { formatDate } from "@/utlis/dateUtils";
 import { documentCategories } from "../../../types";
 import { formatFileSize, useRemoveProjectDocument } from "../../hooks";
@@ -75,15 +75,9 @@ export function ProjectDocumentsSection({
 													<Download size={15} />
 												</a>
 
-												<button
-													type="button"
-													className="action-button"
-													title="Remove"
-													aria-label="Remove"
-													onClick={() => setRemoving(document)}
-												>
+												<ActionButton title="Remove" onPress={() => setRemoving(document)}>
 													<Trash2 size={15} />
-												</button>
+												</ActionButton>
 											</div>
 										</Table.Cell>
 									</Table.Row>

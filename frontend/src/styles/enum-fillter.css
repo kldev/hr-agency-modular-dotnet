@@ -1,6 +1,11 @@
 /* =========================================================
    Enum Filter
-   ========================================================= */
+   =========================================================
+
+   HeroUI ToggleButtons (`toggle-button`, @layer components); these unlayered rules set every
+   property HeroUI's would change (pill shape, height, scale on press, its own colours), so the
+   buttons keep reading as one segmented control.
+*/
 
 .enum-filter {
 	display: inline-flex;
@@ -14,15 +19,22 @@
 }
 
 .enum-filter-button {
+	position: static;
+
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 
+	width: auto;
+	height: auto;
 	min-height: 32px;
+	gap: 0;
 	padding: 0 var(--space-3);
 
 	border: 0;
 	border-right: 1px solid var(--color-border);
+	border-radius: 0;
+	box-shadow: none;
 
 	background: transparent;
 
@@ -36,23 +48,25 @@
 		color var(--transition-fast);
 
 	white-space: nowrap;
+
+	transform: none;
 }
 
 .enum-filter-button:last-child {
 	border-right: 0;
 }
 
-.enum-filter-button:hover {
+.enum-filter-button[data-hovered="true"] {
 	background: var(--color-surface-hover);
 	color: var(--color-text);
 }
 
-.enum-filter-button.is-selected {
+.enum-filter-button[data-selected="true"] {
 	background: var(--color-primary-soft);
 	color: var(--color-primary);
 }
 
-.enum-filter-button:focus-visible {
+.enum-filter-button[data-focus-visible="true"] {
 	outline: 2px solid var(--color-primary);
 	outline-offset: -2px;
 }
@@ -61,112 +75,42 @@
    Status colors
    ========================================================= */
 
-.enum-filter-applied.is-selected {
+.enum-filter-applied[data-selected="true"] {
 	background: var(--color-info-soft);
 	color: var(--color-info);
 }
 
-.enum-filter-screening.is-selected {
+.enum-filter-screening[data-selected="true"] {
 	background: var(--color-violet-soft);
 	color: var(--color-violet);
 }
 
-.enum-filter-interview.is-selected {
+.enum-filter-interview[data-selected="true"] {
 	background: var(--color-cyan-soft);
 	color: var(--color-cyan);
 }
 
-.enum-filter-assessment.is-selected {
+.enum-filter-assessment[data-selected="true"] {
 	background: var(--color-warning-soft);
 	color: var(--color-warning);
 }
 
-.enum-filter-offer.is-selected {
+.enum-filter-offer[data-selected="true"] {
 	background: var(--color-orange-soft);
 	color: var(--color-orange);
 }
 
-.enum-filter-hired.is-selected {
+.enum-filter-hired[data-selected="true"] {
 	background: var(--color-success-soft);
 	color: var(--color-success);
 }
 
-.enum-filter-rejected.is-selected {
+.enum-filter-rejected[data-selected="true"] {
 	background: var(--color-danger-soft);
 	color: var(--color-danger);
 }
 
-.enum-filter-withdrawn.is-selected {
+.enum-filter-withdrawn[data-selected="true"] {
 	background: var(--color-neutral-soft);
 	color: var(--color-neutral);
-}
-
-.enum-combobox {
-	position: relative;
-
-	width: 100%;
-}
-
-.enum-combobox > input {
-	width: 100%;
-	height: 32px;
-
-	padding: 0 var(--space-2);
-
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius-2);
-
-	background: var(--color-surface);
-	color: var(--color-text);
-
-	font-size: var(--font-size-sm);
-}
-
-.enum-combobox > input:focus {
-	outline: none;
-	border-color: var(--color-primary);
-}
-
-.enum-combobox-options {
-	position: absolute;
-	z-index: 20;
-
-	top: calc(100% + 2px);
-	left: 0;
-	right: 0;
-
-	max-height: 240px;
-	overflow-y: auto;
-
-	border: 1px solid var(--color-border);
-	border-radius: var(--radius-2);
-
-	background: var(--color-surface);
-}
-
-.enum-combobox-option {
-	display: block;
-
-	width: 100%;
-	padding: 6px 8px;
-
-	border: 0;
-
-	background: transparent;
-	color: var(--color-text);
-
-	text-align: left;
-	cursor: pointer;
-}
-
-.enum-combobox-option:hover,
-.enum-combobox-option.selected {
-	background: var(--color-surface-hover);
-}
-
-.enum-combobox-empty {
-	padding: 8px;
-
-	color: var(--color-text-muted);
-	font-size: var(--font-size-sm);
 }

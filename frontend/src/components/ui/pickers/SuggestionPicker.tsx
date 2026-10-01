@@ -1,15 +1,9 @@
+import { ComboBox, Description, FieldError, Input, type Key, Label, ListBox } from "@heroui/react";
+import clsx from "clsx";
 import { Check, ChevronDown, Search, X } from "lucide-react";
-import {
-	type ReactNode,
-	useCallback,
-	useEffect,
-	useId,
-	useLayoutEffect,
-	useRef,
-	useState,
-} from "react";
+import { type ReactNode, type RefObject, use, useEffect, useId, useRef, useState } from "react";
+import { ComboBoxStateContext } from "react-aria-components";
 import "./suggestions.css";
-import { createPortal } from "react-dom";
 
 export type SuggestionPickerProps<T> = {
 	/** Lets an outside `<label htmlFor>` name the input; generated when not given. */
@@ -82,18 +76,41 @@ export type SuggestionPickerProps<T> = {
 	clearInputOnSelect?: boolean;
 };
 
-type MenuPosition = {
-	top: number;
-	left: number;
-	width: number;
-	maxHeight: number;
-};
+type ComboBoxState = NonNullable<React.ContextType<typeof ComboBoxStateContext>>;
 
 const MENU_GAP = 4;
 const MENU_MAX_HEIGHT = 320;
 const VIEWPORT_PADDING = 8;
 
-export function SuggestionPicker<T>({
+/*
+ * React Aria owns the open state and offers no prop to drive it, so the picker reaches the state
+ * through its context for the two moves it makes itself: closing after a pick that does not change
+ * the value, and reopening after "clear". The collection is also rendered once in a hidden tree,
+ * where there is no state - that render must not wipe the reference.
+ */
+function ComboBoxStateBridge({ stateRef }: { stateRef: RefObject<ComboBoxState | null> }) {
+	const state = use(ComboBoxStateContext);
+
+	useEffect(() => {
+		if (state) {
+			stateRef.current = state;
+		}
+	});
+
+	return null;
+}
+
+/**
+ * A typeahead over an API on HeroUI's ComboBox. The list is the server's answer, so the combo box
+ * does no filtering of its own (`items` is controlled); this component adds the debounce, the
+ * cancellation of stale requests, the minimum query length and the label for a bare id.
+ *
+ * Both the selection and the text are controlled, so React Aria leaves syncing them to us. It also
+ * reports a `null` selection on blur whenever the selected item is not in the current page of
+ * suggestions - which is nearly always, since the list is refetched per query - so `null` from it
+ * is ignored: clearing happens through typing or the clear button, both handled here.
+ */
+export function SuggestionPicker<T extends object>({
 	id,
 	label,
 	description,
@@ -126,12 +143,9 @@ export function SuggestionPicker<T>({
 	const generatedId = useId();
 
 	const inputId = id ?? `suggestion-picker-${generatedId}`;
-	const listboxId = `${inputId}-listbox`;
 
-	const rootRef = useRef<HTMLDivElement>(null);
-	const controlRef = useRef<HTMLDivElement>(null);
-	const menuRef = useRef<HTMLDivElement>(null);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const stateRef = useRef<ComboBoxState | null>(null);
 
 	const abortControllerRef = useRef<AbortController | null>(null);
 	const requestIdRef = useRef(0);
@@ -139,160 +153,12 @@ export function SuggestionPicker<T>({
 	const [suggestions, setSuggestions] = useState<T[]>([]);
 	const [isOpen, setIsOpen] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const [highlightedIndex, setHighlightedIndex] = useState(-1);
-
-	const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
+	const [menuRequest, setMenuRequest] = useState<"open" | "close" | null>(null);
 
 	const selectedItemRef = useRef<T | undefined>(undefined);
 	const clearInputAfterSelectRef = useRef(false);
 	const inputValueRef = useRef(inputValue);
 	const syncRef = useRef({ getKey, getLabel, onInputChange });
-
-	/*
-	 * =========================================================
-	 * Menu positioning
-	 * =========================================================
-	 */
-
-	const updateMenuPosition = useCallback(() => {
-		const control = controlRef.current;
-
-		if (!control) {
-			return;
-		}
-
-		const rect = control.getBoundingClientRect();
-
-		const viewportHeight = window.innerHeight;
-		const viewportWidth = window.innerWidth;
-
-		const spaceBelow = viewportHeight - rect.bottom - MENU_GAP - VIEWPORT_PADDING;
-
-		const spaceAbove = rect.top - MENU_GAP - VIEWPORT_PADDING;
-
-		const preferredHeight = Math.min(MENU_MAX_HEIGHT, Math.max(spaceBelow, spaceAbove));
-
-		const shouldOpenAbove = spaceBelow < 180 && spaceAbove > spaceBelow;
-
-		const top = shouldOpenAbove
-			? Math.max(VIEWPORT_PADDING, rect.top - MENU_GAP - preferredHeight)
-			: rect.bottom + MENU_GAP;
-
-		const maxHeight = Math.max(
-			120,
-			Math.min(MENU_MAX_HEIGHT, shouldOpenAbove ? spaceAbove : spaceBelow),
-		);
-
-		const width = rect.width;
-
-		const left = Math.min(
-			Math.max(VIEWPORT_PADDING, rect.left),
-			viewportWidth - width - VIEWPORT_PADDING,
-		);
-
-		setMenuPosition({
-			top,
-			left,
-			width,
-			maxHeight,
-		});
-	}, []);
-
-	/*
-	 * Position immediately when opening.
-	 *
-	 * useLayoutEffect prevents the dropdown from being
-	 * painted first at position 0,0.
-	 */
-	useLayoutEffect(() => {
-		if (!isOpen) {
-			setMenuPosition(null);
-			return;
-		}
-
-		updateMenuPosition();
-	}, [isOpen, updateMenuPosition]);
-
-	/*
-	 * Reposition while scrolling/resizing.
-	 *
-	 * `capture: true` is important because the picker can
-	 * be inside an overflow-auto container.
-	 */
-	useEffect(() => {
-		if (!isOpen) {
-			return;
-		}
-
-		const handleScroll = () => {
-			updateMenuPosition();
-		};
-
-		const handleResize = () => {
-			updateMenuPosition();
-		};
-
-		window.addEventListener("scroll", handleScroll, true);
-		window.addEventListener("resize", handleResize);
-
-		return () => {
-			window.removeEventListener("scroll", handleScroll, true);
-			window.removeEventListener("resize", handleResize);
-		};
-	}, [isOpen, updateMenuPosition]);
-
-	/*
-	 * Keep menu width synchronized with the control.
-	 */
-	useEffect(() => {
-		if (!isOpen || !controlRef.current) {
-			return;
-		}
-
-		const observer = new ResizeObserver(() => {
-			updateMenuPosition();
-		});
-
-		observer.observe(controlRef.current);
-
-		return () => {
-			observer.disconnect();
-		};
-	}, [isOpen, updateMenuPosition]);
-
-	/*
-	 * =========================================================
-	 * Click outside
-	 * =========================================================
-	 *
-	 * Because the menu lives in document.body, rootRef alone
-	 * is not enough. We have to consider menuRef as well.
-	 */
-
-	useEffect(() => {
-		if (!isOpen) {
-			return;
-		}
-
-		const handlePointerDown = (event: PointerEvent) => {
-			const target = event.target as Node;
-
-			const clickedInsideRoot = rootRef.current?.contains(target);
-
-			const clickedInsideMenu = menuRef.current?.contains(target);
-
-			if (!clickedInsideRoot && !clickedInsideMenu) {
-				setIsOpen(false);
-				setHighlightedIndex(-1);
-			}
-		};
-
-		document.addEventListener("pointerdown", handlePointerDown);
-
-		return () => {
-			document.removeEventListener("pointerdown", handlePointerDown);
-		};
-	}, [isOpen]);
 
 	/*
 	 * =========================================================
@@ -321,7 +187,6 @@ export function SuggestionPicker<T>({
 			abortControllerRef.current = controller;
 
 			setIsLoading(true);
-			setHighlightedIndex(-1);
 
 			loadSuggestions(inputValue, controller.signal)
 				.then((items) => {
@@ -417,6 +282,29 @@ export function SuggestionPicker<T>({
 	}, [value, selectedItem]);
 
 	/*
+	 * Runs after the render that follows a pick or a clear, so the state read here already knows
+	 * about it (the bridge's effect, a child's, has run first).
+	 */
+	useEffect(() => {
+		if (!menuRequest) {
+			return;
+		}
+
+		const state = stateRef.current;
+
+		if (menuRequest === "close" && state?.isOpen) {
+			// `setOpen` and not `close`: the latter commits the input, which is already settled
+			state.setOpen(false);
+		}
+
+		if (menuRequest === "open" && state && !state.isOpen) {
+			state.open(null, "manual");
+		}
+
+		setMenuRequest(null);
+	}, [menuRequest]);
+
+	/*
 	 * =========================================================
 	 * Actions
 	 * =========================================================
@@ -436,11 +324,9 @@ export function SuggestionPicker<T>({
 			onInputChange(getLabel(item));
 		}
 
-		setHighlightedIndex(-1);
-
-		if (closeOnSelect) {
-			setIsOpen(false);
-		}
+		// React Aria closes by itself only when the value changes, which a search box never does,
+		// and always when it does - so both directions are asked for explicitly
+		setMenuRequest(closeOnSelect ? "close" : "open");
 	};
 
 	const clear = () => {
@@ -450,16 +336,13 @@ export function SuggestionPicker<T>({
 		onInputChange("");
 
 		setSuggestions([]);
-		setHighlightedIndex(-1);
 
 		inputRef.current?.focus();
 		setIsLoading(true);
-		setIsOpen(true);
+		setMenuRequest("open");
 	};
 
-	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const nextValue = event.target.value;
-
+	const handleInputChange = (nextValue: string) => {
 		if (selectedItemRef.current && nextValue !== getLabel(selectedItemRef.current)) {
 			selectedItemRef.current = undefined;
 
@@ -469,86 +352,61 @@ export function SuggestionPicker<T>({
 		}
 
 		onInputChange(nextValue);
-		setIsOpen(true);
-		setHighlightedIndex(-1);
+
+		// typing opens the list - unless a pick in the same event has just asked to close it
+		setMenuRequest((current) => current ?? "open");
 	};
 
-	const handleFocus = () => {
-		if (disabled) {
+	const handleSelectionChange = (key: Key | null) => {
+		if (key === null) {
 			return;
 		}
 
-		setIsLoading(true);
-		setIsOpen(true);
-	};
+		const item = suggestions.find((candidate) => getKey(candidate) === String(key));
 
-	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-		if (disabled) {
-			return;
-		}
-
-		if (event.key === "ArrowDown") {
-			event.preventDefault();
-
-			if (!isOpen) {
-				setIsOpen(true);
-				return;
-			}
-
-			setHighlightedIndex((current) => {
-				if (suggestions.length === 0) {
-					return -1;
-				}
-
-				return current >= suggestions.length - 1 ? 0 : current + 1;
-			});
-
-			return;
-		}
-
-		if (event.key === "ArrowUp") {
-			event.preventDefault();
-
-			setHighlightedIndex((current) => {
-				if (suggestions.length === 0) {
-					return -1;
-				}
-
-				return current <= 0 ? suggestions.length - 1 : current - 1;
-			});
-
-			return;
-		}
-
-		if (event.key === "Enter") {
-			if (isOpen && highlightedIndex >= 0 && highlightedIndex < suggestions.length) {
-				event.preventDefault();
-
-				selectItem(suggestions[highlightedIndex]);
-			}
-
-			return;
-		}
-
-		if (event.key === "Escape") {
-			event.preventDefault();
-
-			setIsOpen(false);
-			setHighlightedIndex(-1);
-
-			return;
-		}
-
-		if (event.key === "Tab") {
-			setIsOpen(false);
-			setHighlightedIndex(-1);
+		if (item) {
+			selectItem(item);
 		}
 	};
 
-	const selectedKey = value;
+	const handleOpenChange = (open: boolean) => {
+		if (open && !isOpen) {
+			// nothing is said about an empty list until the request for it has answered
+			setIsLoading(true);
+		}
 
-	const showEmptyState =
-		!isLoading && suggestions.length === 0 && inputValue.length >= minQueryLength;
+		setIsOpen(open);
+	};
+
+	const renderEmpty = () => {
+		if (isLoading) {
+			return null;
+		}
+
+		if (inputValue.length < minQueryLength) {
+			return (
+				<div className="suggestion-picker-empty">
+					<div className="suggestion-picker-empty-description">
+						Enter at least {minQueryLength} characters to search.
+					</div>
+				</div>
+			);
+		}
+
+		if (renderEmptyState) {
+			return renderEmptyState(inputValue);
+		}
+
+		return (
+			<div className="suggestion-picker-empty">
+				<div className="suggestion-picker-empty-title">No suggestions found</div>
+
+				<div className="suggestion-picker-empty-description">
+					{inputValue ? "Try a different search term." : "No suggestions available."}
+				</div>
+			</div>
+		);
+	};
 
 	/*
 	 * =========================================================
@@ -557,52 +415,46 @@ export function SuggestionPicker<T>({
 	 */
 
 	return (
-		<div ref={rootRef} className={`suggestion-picker ${className}`}>
+		<ComboBox<T>
+			id={inputId}
+			className={clsx("suggestion-picker", className)}
+			items={suggestions}
+			inputValue={inputValue}
+			onInputChange={handleInputChange}
+			selectedKey={value || null}
+			onSelectionChange={handleSelectionChange}
+			onOpenChange={handleOpenChange}
+			// Opening is ours (focus, typing, clear): React Aria's own "focus"/"input" modes reopen
+			// the list right after Escape or blur whenever the text is not a selected item's label,
+			// which with server-side results is most of the time.
+			menuTrigger="manual"
+			onFocus={() => setMenuRequest("open")}
+			allowsEmptyCollection
+			allowsCustomValue={allowCustomValue}
+			shouldFocusWrap
+			isDisabled={disabled}
+			isRequired={required}
+			isInvalid={invalid || Boolean(error)}
+			validationBehavior="aria"
+		>
+			<ComboBoxStateBridge stateRef={stateRef} />
+
 			{label && (
-				<label htmlFor={inputId} className="form-label">
+				<Label className="form-label">
 					{label}
 
 					{required && <span aria-hidden="true"> *</span>}
-				</label>
+				</Label>
 			)}
 
 			<div className={fieldClassName}>
-				<div
-					ref={controlRef}
-					className={[
-						"suggestion-picker-control",
-						isOpen ? "suggestion-picker-control-open" : "",
-						invalid ? "suggestion-picker-control-invalid" : "",
-						disabled ? "suggestion-picker-control-disabled" : "",
-					]
-						.filter(Boolean)
-						.join(" ")}
-				>
+				<ComboBox.InputGroup className="suggestion-picker-control">
 					<Search size={16} aria-hidden="true" className="suggestion-picker-icon" />
 
-					<input
-						ref={inputRef}
-						id={inputId}
-						type="text"
-						role="combobox"
-						aria-expanded={isOpen}
-						aria-controls={isOpen ? listboxId : undefined}
-						aria-autocomplete="list"
-						aria-activedescendant={
-							highlightedIndex >= 0 ? `${listboxId}-option-${highlightedIndex}` : undefined
-						}
-						aria-invalid={invalid}
-						aria-required={required}
-						disabled={disabled}
-						value={inputValue}
-						placeholder={placeholder}
-						className="suggestion-picker-input"
-						onFocus={handleFocus}
-						onChange={handleInputChange}
-						onKeyDown={handleKeyDown}
-					/>
+					<Input ref={inputRef} placeholder={placeholder} className="suggestion-picker-input" />
 
 					{inputValue && (
+						// A plain button: a React Aria one inside the combo box would become its trigger.
 						<button
 							type="button"
 							className="suggestion-picker-clear"
@@ -617,154 +469,60 @@ export function SuggestionPicker<T>({
 						</button>
 					)}
 
-					<button
-						type="button"
-						tabIndex={-1}
-						className="suggestion-picker-trigger"
-						aria-label="Show suggestions"
-						disabled={disabled}
-						onMouseDown={(event) => {
-							event.preventDefault();
-						}}
-						onClick={() => {
-							inputRef.current?.focus();
-							setIsOpen((current) => !current);
-						}}
-					>
-						<ChevronDown size={16} className={isOpen ? "suggestion-picker-chevron-open" : ""} />
-					</button>
-				</div>
+					<ComboBox.Trigger className="suggestion-picker-trigger">
+						<ChevronDown size={16} className="suggestion-picker-chevron" />
+					</ComboBox.Trigger>
+				</ComboBox.InputGroup>
 
-				{description && !error && <div className="form-hint">{description}</div>}
+				{description && !error && <Description className="form-hint">{description}</Description>}
 
-				{error && <div className="form-error">{error}</div>}
+				{error && <FieldError className="form-error">{error}</FieldError>}
 			</div>
 
-			{isOpen &&
-				menuPosition &&
-				createPortal(
-					<div
-						ref={menuRef}
-						// Portalled outside the HeroUI dialog or drawer the picker usually sits in, which
-						// would make it inert; React Aria leaves alone what is marked as top layer.
-						data-react-aria-top-layer
-						id={listboxId}
-						role="listbox"
-						className="suggestion-picker-menu"
-						style={{
-							top: menuPosition.top,
-							left: menuPosition.left,
-							width: menuPosition.width,
-							maxHeight: menuPosition.maxHeight,
-						}}
-					>
-						{renderHeader && (
-							<div className="suggestion-picker-header">{renderHeader(inputValue)}</div>
-						)}
+			<ComboBox.Popover
+				className="suggestion-picker-menu"
+				offset={MENU_GAP}
+				maxHeight={MENU_MAX_HEIGHT}
+				containerPadding={VIEWPORT_PADDING}
+			>
+				{renderHeader && <div className="suggestion-picker-header">{renderHeader(inputValue)}</div>}
 
-						{/* {isLoading && (
-							<div className="suggestion-picker-state">
-								<LoaderCircle
-									size={16}
-									className="suggestion-picker-state-spinner"
-								/>
+				<ListBox<T> className="suggestion-picker-list" renderEmptyState={renderEmpty}>
+					{(item) => {
+						const key = getKey(item);
+						const selected = key === value;
+						const itemDescription = getDescription?.(item);
 
-								<span>
-									Loading suggestions...
-								</span>
-							</div>
-						)} */}
+						return (
+							<ListBox.Item
+								id={key}
+								textValue={getLabel(item)}
+								className="suggestion-picker-option"
+							>
+								{renderItem ? (
+									renderItem(item, selected)
+								) : (
+									<div className="suggestion-picker-default-item">
+										<div className="suggestion-picker-item-content">
+											<div className="suggestion-picker-item-label">{getLabel(item)}</div>
 
-						{suggestions.length > 0 && (
-							<div className="suggestion-picker-list">
-								{suggestions.map((item, index) => {
-									const key = getKey(item);
-
-									const selected = key === selectedKey;
-									const highlighted = index === highlightedIndex;
-
-									const itemDescription = getDescription?.(item);
-
-									return (
-										<button
-											key={key}
-											id={`${listboxId}-option-${index}`}
-											type="button"
-											role="option"
-											aria-selected={selected}
-											className={[
-												"suggestion-picker-option",
-												highlighted ? "suggestion-picker-option-highlighted" : "",
-												selected ? "suggestion-picker-option-selected" : "",
-											]
-												.filter(Boolean)
-												.join(" ")}
-											onMouseEnter={() => {
-												setHighlightedIndex(index);
-											}}
-											onMouseDown={(event) => {
-												event.preventDefault();
-											}}
-											onClick={() => {
-												selectItem(item);
-											}}
-										>
-											{renderItem ? (
-												renderItem(item, selected)
-											) : (
-												<div className="suggestion-picker-default-item">
-													<div className="suggestion-picker-item-content">
-														<div className="suggestion-picker-item-label">{getLabel(item)}</div>
-
-														{itemDescription && (
-															<div className="suggestion-picker-item-description">
-																{itemDescription}
-															</div>
-														)}
-													</div>
-
-													{selected && <Check size={16} className="suggestion-picker-item-check" />}
-												</div>
+											{itemDescription && (
+												<div className="suggestion-picker-item-description">{itemDescription}</div>
 											)}
-										</button>
-									);
-								})}
-							</div>
-						)}
-
-						{showEmptyState &&
-							(renderEmptyState ? (
-								renderEmptyState(inputValue)
-							) : (
-								<div className="suggestion-picker-empty">
-									<div className="suggestion-picker-empty-title">No suggestions found</div>
-
-									{inputValue ? (
-										<div className="suggestion-picker-empty-description">
-											Try a different search term.
 										</div>
-									) : (
-										<div className="suggestion-picker-empty-description">
-											No suggestions available.
-										</div>
-									)}
-								</div>
-							))}
 
-						{!isLoading && inputValue.length < minQueryLength && (
-							<div className="suggestion-picker-empty">
-								<div className="suggestion-picker-empty-description">
-									Enter at least {minQueryLength} characters to search.
-								</div>
-							</div>
-						)}
-					</div>,
-					document.body,
-				)}
+										{selected && <Check size={16} className="suggestion-picker-item-check" />}
+									</div>
+								)}
+							</ListBox.Item>
+						);
+					}}
+				</ListBox>
+			</ComboBox.Popover>
 
 			{allowCustomValue && inputValue && !value && (
 				<div className="suggestion-picker-custom-hint">You can enter a custom value.</div>
 			)}
-		</div>
+		</ComboBox>
 	);
 }

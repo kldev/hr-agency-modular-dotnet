@@ -1,7 +1,7 @@
-import { Input } from "@heroui/react";
+import { Input, ListBox } from "@heroui/react";
 import { Plus, Trash2 } from "lucide-react";
 import type { BankAccountData, BankAccountPurpose, CurrencyCode } from "#/api/models";
-import { Button, Select } from "#/components/ui";
+import { Button, SelectField } from "#/components/ui";
 import { bankAccountPurposes, currencyCodes } from "../types";
 
 interface BankAccountsFieldProps {
@@ -52,35 +52,33 @@ export function BankAccountsField({ values, error, disabled, onChange }: BankAcc
 						// Rows have no id of their own until they are saved, and two rows may be
 						// identical while being typed - the position is the only stable handle.
 						<div key={index} className="legal-entity-account-row">
-							<Select
+							<SelectField
 								aria-label="Purpose"
 								value={account.purpose}
-								disabled={disabled}
-								onChange={(event) =>
-									update(index, { purpose: event.target.value as BankAccountPurpose })
-								}
+								isDisabled={disabled}
+								onChange={(value) => update(index, { purpose: value as BankAccountPurpose })}
 							>
 								{Object.entries(bankAccountPurposes).map(([value, label]) => (
-									<option key={value} value={value}>
+									<ListBox.Item key={value} id={value} textValue={label}>
 										{label}
-									</option>
+										<ListBox.ItemIndicator />
+									</ListBox.Item>
 								))}
-							</Select>
+							</SelectField>
 
-							<Select
+							<SelectField
 								aria-label="Currency"
 								value={account.currency}
-								disabled={disabled}
-								onChange={(event) =>
-									update(index, { currency: event.target.value as CurrencyCode })
-								}
+								isDisabled={disabled}
+								onChange={(value) => update(index, { currency: value as CurrencyCode })}
 							>
 								{Object.entries(currencyCodes).map(([value, label]) => (
-									<option key={value} value={value}>
+									<ListBox.Item key={value} id={value} textValue={label}>
 										{label}
-									</option>
+										<ListBox.ItemIndicator />
+									</ListBox.Item>
 								))}
-							</Select>
+							</SelectField>
 
 							<Input
 								aria-label="IBAN"
