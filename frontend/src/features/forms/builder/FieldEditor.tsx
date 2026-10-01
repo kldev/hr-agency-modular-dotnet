@@ -1,9 +1,8 @@
+import { Input, TextArea } from "@heroui/react";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import type { FieldType, FormField, FormPage } from "#/api/models";
 import { Button, EnumSelectFilter } from "#/components/ui";
-import { Input } from "#/components/ui/Input";
 import { Select } from "#/components/ui/Select";
-import { Textarea } from "#/components/ui/Textarea";
 import { OptionsEditor } from "../components/OptionsEditor";
 import { RulesEditor } from "../components/RulesEditor";
 import { fieldTypes, hasOptions, takesTypedText } from "../types";
@@ -166,7 +165,7 @@ export function FieldEditor({
 
 					<label className="form-field" htmlFor={`${id}-description`}>
 						<span className="form-label">Help text</span>
-						<Textarea
+						<TextArea
 							id={`${id}-description`}
 							rows={2}
 							value={field.description ?? ""}

@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { ShieldCheck } from "lucide-react";
 import type { ComplianceRequirementView } from "@/api/models";
 import { Button, ComplianceStatusBadge, DetailOverviewHeader, EmptyState } from "@/components/ui";
@@ -58,62 +59,62 @@ export function ComplianceChecklist({
 			) : null}
 
 			{views && views.length > 0 ? (
-				<table className="table">
-					<thead>
-						<tr>
-							<th>Requirement</th>
-							<th>Status</th>
-							<th>Reference</th>
-							<th>Valid</th>
-							<th>Document</th>
-							<th />
-						</tr>
-					</thead>
+				<Table variant="secondary" className="table-container">
+					<Table.ScrollContainer>
+						<Table.Content aria-label="Compliance">
+							<Table.Header>
+								<Table.Column isRowHeader>Requirement</Table.Column>
+								<Table.Column>Status</Table.Column>
+								<Table.Column>Reference</Table.Column>
+								<Table.Column>Valid</Table.Column>
+								<Table.Column>Document</Table.Column>
+								<Table.Column aria-label="Actions" />
+							</Table.Header>
 
-					<tbody>
-						{views.map((view) => (
-							<tr key={view.requirement}>
-								{/* The legal names are long by nature - "Posting beyond 12 months notified
+							<Table.Body>
+								{views.map((view) => (
+									<Table.Row key={view.requirement}>
+										{/* The legal names are long by nature - "Posting beyond 12 months notified
 								    (§ 13b AEntG)" - so the cell truncates and the title carries the rest. */}
-								<td
-									className="table-cell-truncate"
-									title={complianceRequirements[view.requirement]}
-								>
-									{complianceRequirements[view.requirement]}
-								</td>
+										<Table.Cell className="table-cell-truncate">
+											<span title={complianceRequirements[view.requirement]}>
+												{complianceRequirements[view.requirement]}
+											</span>
+										</Table.Cell>
 
-								<td>
-									<ComplianceStatusBadge status={view.item?.status ?? "NotStarted"} />
-								</td>
+										<Table.Cell>
+											<ComplianceStatusBadge status={view.item?.status ?? "NotStarted"} />
+										</Table.Cell>
 
-								<td>{view.item?.referenceNumber ?? "—"}</td>
+										<Table.Cell>{view.item?.referenceNumber ?? "—"}</Table.Cell>
 
-								<td>
-									{view.item?.validFrom || view.item?.validTo
-										? `${view.item?.validFrom ? formatDate(view.item.validFrom) : "—"} – ${
-												view.item?.validTo ? formatDate(view.item.validTo) : "—"
-											}`
-										: "—"}
-								</td>
+										<Table.Cell>
+											{view.item?.validFrom || view.item?.validTo
+												? `${view.item?.validFrom ? formatDate(view.item.validFrom) : "—"} – ${
+														view.item?.validTo ? formatDate(view.item.validTo) : "—"
+													}`
+												: "—"}
+										</Table.Cell>
 
-								<td
-									className="table-cell-truncate"
-									title={documentName(view.item?.documentId ?? null)}
-								>
-									{documentName(view.item?.documentId ?? null)}
-								</td>
+										<Table.Cell className="table-cell-truncate">
+											<span title={documentName(view.item?.documentId ?? null)}>
+												{documentName(view.item?.documentId ?? null)}
+											</span>
+										</Table.Cell>
 
-								<td>
-									<div className="flex justify-end">
-										<Button variant="ghost" onPress={() => onRecord(view)}>
-											{view.item ? "Update" : "Record"}
-										</Button>
-									</div>
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+										<Table.Cell>
+											<div className="flex justify-end">
+												<Button variant="ghost" onPress={() => onRecord(view)}>
+													{view.item ? "Update" : "Record"}
+												</Button>
+											</div>
+										</Table.Cell>
+									</Table.Row>
+								))}
+							</Table.Body>
+						</Table.Content>
+					</Table.ScrollContainer>
+				</Table>
 			) : null}
 		</div>
 	);

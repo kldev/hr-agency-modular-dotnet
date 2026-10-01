@@ -46,7 +46,7 @@ test("shows a company's activities, opportunities and projects and switches comp
 	await expect(page.getByRole("heading", { name: "ACME Sp. z o.o." })).toBeVisible();
 	await expect(page.getByText("5260001001")).toBeVisible();
 	await expect(
-		page.getByRole("table").getByText("Discussed candidate requirements with Anna Kowalska."),
+		page.getByRole("grid").getByText("Discussed candidate requirements with Anna Kowalska."),
 	).toBeVisible();
 
 	await docShot(page, "sales-workspace");

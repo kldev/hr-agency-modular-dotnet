@@ -1,5 +1,6 @@
+import { Input, Switch } from "@heroui/react";
 import { Plus, Search } from "lucide-react";
-import { Button, Input, Toggle } from "@/components/ui";
+import { Button } from "@/components/ui";
 
 interface LegalEntitiesToolbarProps {
 	search: string;
@@ -36,11 +37,17 @@ export function LegalEntitiesToolbar({
 				</span>
 
 				<span className="toolbar-toggle">
-					<Toggle
+					<Switch
 						id="legal-entities-active-only"
-						checked={activeOnly}
-						onChange={(event) => onActiveOnlyChange(event.target.checked)}
-					/>
+						isSelected={activeOnly}
+						onChange={(selected) => onActiveOnlyChange(selected)}
+					>
+						<Switch.Content>
+							<Switch.Control>
+								<Switch.Thumb />
+							</Switch.Control>
+						</Switch.Content>
+					</Switch>
 
 					<label htmlFor="legal-entities-active-only">Trading only</label>
 				</span>

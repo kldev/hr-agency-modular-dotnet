@@ -126,104 +126,104 @@ export function TimeSheetsPage() {
 					/>
 				}
 			>
-				<Tabs value={active} tabs={tabs} onChange={setTab} label="Time sheet views" />
+				<Tabs value={active} tabs={tabs} onChange={setTab} label="Time sheet views">
+					{active === "mine" ? (
+						<TabPanel id="mine">
+							<MyMonthPanel
+								month={month}
+								userId={user?.userId ?? ""}
+								sheet={mine.data ?? null}
+								loading={mine.isPending}
+								onChanged={refresh}
+							/>
+						</TabPanel>
+					) : null}
 
-				{active === "mine" ? (
-					<TabPanel id="mine">
-						<MyMonthPanel
-							month={month}
-							userId={user?.userId ?? ""}
-							sheet={mine.data ?? null}
-							loading={mine.isPending}
-							onChanged={refresh}
-						/>
-					</TabPanel>
-				) : null}
-
-				{active === "team" ? (
-					<TabPanel id="team">
-						{teamRows.length === 0 ? (
-							<EmptyState
-								title="Nobody to chase"
-								description="Nobody below you in the chart owes hours for this month."
-							>
-								<CalendarClock size={24} />
-							</EmptyState>
-						) : (
-							<>
-								<TeamMonitoringTable rows={teamRows} month={month} />
-								<TeamMonitoringCardList rows={teamRows} month={month} />
-							</>
-						)}
-					</TabPanel>
-				) : null}
-
-				{active === "approvals" ? (
-					<TabPanel id="approvals">
-						<TwoPaneSheets
-							month={month}
-							canSettle={payroll}
-							selected={search.person}
-							onSelect={setPerson}
-							entries={submitted.map((row) => ({
-								userId: row.userId,
-								name: `${row.user.firstName} ${row.user.lastName}`,
-								meta: `${formatMinutes(Number(row.totalMinutes))} · ${Number(row.filledDays)} days`,
-								status: "Submitted" as const,
-							}))}
-							emptyTitle="Nothing waiting"
-							emptyDescription={`Nobody has sent ${monthLabel(month)} for approval yet. The team tab is where the chasing happens.`}
-							onApprove={onApprove}
-							onReturn={onReturn}
-							onSettle={setToSettle}
-							onComment={onComment}
-						/>
-					</TabPanel>
-				) : null}
-
-				{active === "settlement" ? (
-					<TabPanel id="settlement">
-						{/*
-						 * Only once there is something agreed: an empty file is a download that looks
-						 * like it worked. The file carries rates, so it follows `RatesPolicy`, not the tab.
-						 */}
-						{rates && (settlement.data ?? []).length > 0 ? (
-							<div className="settlement-toolbar">
-								<span className="settlement-toolbar-hint">
-									Hours × hourly rate for every month on this list - a help for the transfers, not a
-									payslip. Downloading does not settle anything.
-								</span>
-								<a
-									className={buttonVariants({ variant: "outline" })}
-									href={exported.href}
-									download={exported.fileName}
+					{active === "team" ? (
+						<TabPanel id="team">
+							{teamRows.length === 0 ? (
+								<EmptyState
+									title="Nobody to chase"
+									description="Nobody below you in the chart owes hours for this month."
 								>
-									<FileSpreadsheet size={14} />
-									Export to Excel
-								</a>
-							</div>
-						) : null}
+									<CalendarClock size={24} />
+								</EmptyState>
+							) : (
+								<>
+									<TeamMonitoringTable rows={teamRows} month={month} />
+									<TeamMonitoringCardList rows={teamRows} month={month} />
+								</>
+							)}
+						</TabPanel>
+					) : null}
 
-						<TwoPaneSheets
-							month={month}
-							canSettle
-							selected={search.person}
-							onSelect={setPerson}
-							entries={(settlement.data ?? []).map((sheet) => ({
-								userId: sheet.userId,
-								name: `${sheet.user.firstName} ${sheet.user.lastName}`,
-								meta: `${formatMinutes(Number(sheet.totalMinutes ?? 0))} · ${Number(sheet.filledDays ?? 0)} days`,
-								status: sheet.status,
-							}))}
-							emptyTitle="Nothing to settle"
-							emptyDescription={`No month of ${monthLabel(month)} has been approved yet, so there is nothing to hand to payroll.`}
-							onApprove={onApprove}
-							onReturn={onReturn}
-							onSettle={setToSettle}
-							onComment={onComment}
-						/>
-					</TabPanel>
-				) : null}
+					{active === "approvals" ? (
+						<TabPanel id="approvals">
+							<TwoPaneSheets
+								month={month}
+								canSettle={payroll}
+								selected={search.person}
+								onSelect={setPerson}
+								entries={submitted.map((row) => ({
+									userId: row.userId,
+									name: `${row.user.firstName} ${row.user.lastName}`,
+									meta: `${formatMinutes(Number(row.totalMinutes))} · ${Number(row.filledDays)} days`,
+									status: "Submitted" as const,
+								}))}
+								emptyTitle="Nothing waiting"
+								emptyDescription={`Nobody has sent ${monthLabel(month)} for approval yet. The team tab is where the chasing happens.`}
+								onApprove={onApprove}
+								onReturn={onReturn}
+								onSettle={setToSettle}
+								onComment={onComment}
+							/>
+						</TabPanel>
+					) : null}
+
+					{active === "settlement" ? (
+						<TabPanel id="settlement">
+							{/*
+							 * Only once there is something agreed: an empty file is a download that looks
+							 * like it worked. The file carries rates, so it follows `RatesPolicy`, not the tab.
+							 */}
+							{rates && (settlement.data ?? []).length > 0 ? (
+								<div className="settlement-toolbar">
+									<span className="settlement-toolbar-hint">
+										Hours × hourly rate for every month on this list - a help for the transfers, not
+										a payslip. Downloading does not settle anything.
+									</span>
+									<a
+										className={buttonVariants({ variant: "outline" })}
+										href={exported.href}
+										download={exported.fileName}
+									>
+										<FileSpreadsheet size={14} />
+										Export to Excel
+									</a>
+								</div>
+							) : null}
+
+							<TwoPaneSheets
+								month={month}
+								canSettle
+								selected={search.person}
+								onSelect={setPerson}
+								entries={(settlement.data ?? []).map((sheet) => ({
+									userId: sheet.userId,
+									name: `${sheet.user.firstName} ${sheet.user.lastName}`,
+									meta: `${formatMinutes(Number(sheet.totalMinutes ?? 0))} · ${Number(sheet.filledDays ?? 0)} days`,
+									status: sheet.status,
+								}))}
+								emptyTitle="Nothing to settle"
+								emptyDescription={`No month of ${monthLabel(month)} has been approved yet, so there is nothing to hand to payroll.`}
+								onApprove={onApprove}
+								onReturn={onReturn}
+								onSettle={setToSettle}
+								onComment={onComment}
+							/>
+						</TabPanel>
+					) : null}
+				</Tabs>
 			</Page>
 
 			{/* Settling takes no fields at all, so it is a confirmation rather than a drawer. */}

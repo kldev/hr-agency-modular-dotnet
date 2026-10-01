@@ -1,7 +1,7 @@
+import { Input } from "@heroui/react";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import type { ProjectStatus } from "@/api/models";
 import { Button, EnumFilter } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
 import { projectStatuses } from "../../types";
 
 interface ProjectsToolbarProps {

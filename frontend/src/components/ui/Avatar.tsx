@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Avatar as HeroAvatar } from "@heroui/react";
+import clsx from "clsx";
 
 interface AvatarProps {
 	/** Used for the initials shown when there is no picture. */
@@ -25,20 +26,14 @@ function initials(name: string | null | undefined) {
  * border, whether it is round - comes from the caller's class, because a 32px square in a table and
  * a 96px circle on the profile page are the same idea drawn two ways.
  *
- * The `onError` fallback is a safety net rather than the signal: "has no picture" is `src` being
- * null. It catches the file service being down or a reference that outlived its file, which would
- * otherwise leave a broken image where a name should be.
+ * HeroUI shows the fallback while the picture loads and when it fails, so the file service being
+ * down or a reference that outlived its file still leaves a name rather than a broken image.
  */
 export function Avatar({ name, src, className }: AvatarProps) {
-	const [failed, setFailed] = useState(false);
-
 	return (
-		<span className={className ? `avatar ${className}` : "avatar"}>
-			{src && !failed ? (
-				<img src={src} alt="" className="avatar-image" onError={() => setFailed(true)} />
-			) : (
-				<span className="avatar-initials">{initials(name)}</span>
-			)}
-		</span>
+		<HeroAvatar className={clsx("panel-avatar", className)}>
+			{src ? <HeroAvatar.Image src={src} alt="" /> : null}
+			<HeroAvatar.Fallback className="avatar-initials">{initials(name)}</HeroAvatar.Fallback>
+		</HeroAvatar>
 	);
 }

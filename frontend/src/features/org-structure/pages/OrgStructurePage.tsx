@@ -1,11 +1,11 @@
-import { toast } from "@heroui/react";
+import { Switch, toast } from "@heroui/react";
 import { Network, Plus } from "lucide-react";
 import type React from "react";
 import { useMemo, useRef, useState } from "react";
 import { Route } from "#/routes/app/org-structure";
 import type { OrgUnitMember, OrgUnitRow } from "@/api/models";
 import { Page } from "@/components/layout";
-import { Button, ConfirmDialog, EmptyState, Toggle } from "@/components/ui";
+import { Button, ConfirmDialog, EmptyState } from "@/components/ui";
 import {
 	AddOrgUnitMemberDrawer,
 	type AddOrgUnitMemberFormCommand,
@@ -166,18 +166,24 @@ const OrgStructurePage: React.FC = () => {
 								<h2>Chart</h2>
 
 								<span className="toolbar-toggle">
-									<Toggle
+									<Switch
 										id="org-structure-include-archived"
-										checked={includeArchived}
-										onChange={(event) =>
+										isSelected={includeArchived}
+										onChange={(selected) =>
 											void navigate({
 												search: (previous) => ({
 													...previous,
-													includeArchived: event.target.checked ? true : undefined,
+													includeArchived: selected ? true : undefined,
 												}),
 											})
 										}
-									/>
+									>
+										<Switch.Content>
+											<Switch.Control>
+												<Switch.Thumb />
+											</Switch.Control>
+										</Switch.Content>
+									</Switch>
 
 									<label htmlFor="org-structure-include-archived">Include archived</label>
 								</span>

@@ -1,7 +1,7 @@
+import { Input } from "@heroui/react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { AssignmentStatus } from "@/api/models";
 import { Button, EnumFilter } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
 import { assignmentStatuses } from "../../types";
 
 interface AssignmentsToolbarProps {

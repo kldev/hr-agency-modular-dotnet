@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
 import { Ban } from "lucide-react";
 import type { ServiceApiKeyRow } from "#/api/models";
@@ -16,11 +17,17 @@ interface Props {
 
 export function KeyState({ apiKey }: { apiKey: ServiceApiKeyRow }) {
 	return apiKey.revokedAt ? (
-		<span className="badge badge-closed" title={`Revoked ${formatDateTime(apiKey.revokedAt)}`}>
+		<Chip
+			size="sm"
+			className="badge badge-closed"
+			title={`Revoked ${formatDateTime(apiKey.revokedAt)}`}
+		>
 			Revoked
-		</span>
+		</Chip>
 	) : (
-		<span className="badge badge-active">Active</span>
+		<Chip size="sm" className="badge badge-active">
+			Active
+		</Chip>
 	);
 }
 

@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { FileText, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { AssignmentDocument, AssignmentProjection } from "@/api/models";
@@ -44,54 +45,62 @@ export function AssignmentDocumentsSection({
 						<FileText size={24} />
 					</EmptyState>
 				) : (
-					<table className="table">
-						<thead>
-							<tr>
-								<th>Category</th>
-								<th>File</th>
-								<th className="table-header-sm">Issued</th>
-								<th className="table-header-sm">Valid until</th>
-								<th className="table-header-ssm">Size</th>
-								<th />
-							</tr>
-						</thead>
+					<Table variant="secondary" className="table-container">
+						<Table.ScrollContainer>
+							<Table.Content aria-label="Documents">
+								<Table.Header>
+									<Table.Column isRowHeader>Category</Table.Column>
+									<Table.Column>File</Table.Column>
+									<Table.Column className="table-header-sm">Issued</Table.Column>
+									<Table.Column className="table-header-sm">Valid until</Table.Column>
+									<Table.Column className="table-header-ssm">Size</Table.Column>
+									<Table.Column aria-label="Actions" />
+								</Table.Header>
 
-						<tbody>
-							{documents.map((document) => (
-								<tr key={document.documentId}>
-									<td>{assignmentDocumentCategories[document.category]}</td>
+								<Table.Body>
+									{documents.map((document) => (
+										<Table.Row key={document.documentId}>
+											<Table.Cell>{assignmentDocumentCategories[document.category]}</Table.Cell>
 
-									<td className="table-cell-truncate" title={document.fileName}>
-										<a
-											href={`/api/assignments/${assignment.id}/documents/${document.documentId}/content`}
-										>
-											{document.fileName}
-										</a>
-									</td>
+											<Table.Cell className="table-cell-truncate">
+												<span title={document.fileName}>
+													<a
+														href={`/api/assignments/${assignment.id}/documents/${document.documentId}/content`}
+													>
+														{document.fileName}
+													</a>
+												</span>
+											</Table.Cell>
 
-									<td className="table-figure">{formatDate(document.documentDate)}</td>
+											<Table.Cell className="table-figure">
+												{formatDate(document.documentDate)}
+											</Table.Cell>
 
-									<td className="table-figure">
-										{document.validUntil ? formatDate(document.validUntil) : "—"}
-									</td>
+											<Table.Cell className="table-figure">
+												{document.validUntil ? formatDate(document.validUntil) : "—"}
+											</Table.Cell>
 
-									<td className="table-figure">{formatFileSize(Number(document.size))}</td>
+											<Table.Cell className="table-figure">
+												{formatFileSize(Number(document.size))}
+											</Table.Cell>
 
-									<td>
-										<div className="flex justify-end">
-											<Button
-												variant="ghost"
-												icon={<Trash2 size={15} />}
-												aria-label="Remove"
-												title="Remove"
-												onPress={() => setRemoving(document)}
-											/>
-										</div>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+											<Table.Cell>
+												<div className="flex justify-end">
+													<Button
+														variant="ghost"
+														icon={<Trash2 size={15} />}
+														aria-label="Remove"
+														title="Remove"
+														onPress={() => setRemoving(document)}
+													/>
+												</div>
+											</Table.Cell>
+										</Table.Row>
+									))}
+								</Table.Body>
+							</Table.Content>
+						</Table.ScrollContainer>
+					</Table>
 				)}
 			</div>
 

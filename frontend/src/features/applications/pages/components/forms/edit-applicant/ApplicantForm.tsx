@@ -1,6 +1,7 @@
+import { Input } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import type { UpdateApplicantRequest } from "@/api/models";
-import { FieldError, Input } from "@/components/ui";
+import { FieldError } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 
 interface ApplicantFormProps {

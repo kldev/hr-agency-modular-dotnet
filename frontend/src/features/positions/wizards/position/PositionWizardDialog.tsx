@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
 import type { ProjectPositionProjection } from "#/api/models";
 import { ConfirmDialog, Dialog, useUnsavedChangesGuard } from "#/components/ui";
-import { moneyInputValue } from "#/components/ui/Input";
+import { moneyInputValue } from "#/components/ui/money";
 import { useGetPosition } from "../../pages/hooks";
 import { PositionWizard } from "./PositionWizard";
 import { emptyPosition, type PositionFormValues } from "./schema";

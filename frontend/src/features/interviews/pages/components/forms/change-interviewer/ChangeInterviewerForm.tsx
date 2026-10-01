@@ -1,7 +1,8 @@
+import { TextArea } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import type { ChangeInterviewerRequest } from "@/api/models";
-import { FieldError, Textarea, UsersPicker } from "@/components/ui";
+import { FieldError, UsersPicker } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 
 interface ChangeInterviewerFormProps {
@@ -81,7 +82,7 @@ export function ChangeInterviewerForm({
 							Note
 						</label>
 
-						<Textarea
+						<TextArea
 							id={field.name}
 							name={field.name}
 							value={field.state.value ?? ""}

@@ -1,6 +1,6 @@
+import { Switch } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import type { BadRequestDetails, CompanyContactRequest, ContactPerson } from "@/api/models";
-import { Toggle } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { ContactPersonForm } from "@/features/company-contacts/components/ContactPersonForm";
 
@@ -92,12 +92,18 @@ export function CompanyContactForm({
 								<div className="form-help">Set this contact as the company's primary contact.</div>
 							</div>
 
-							<Toggle
+							<Switch
 								id="update-primary"
-								checked={field.state.value ?? false}
-								disabled={isSubmitting}
-								onChange={(event) => field.handleChange(event.target.checked)}
-							/>
+								isSelected={field.state.value ?? false}
+								isDisabled={isSubmitting}
+								onChange={(selected) => field.handleChange(selected)}
+							>
+								<Switch.Content>
+									<Switch.Control>
+										<Switch.Thumb />
+									</Switch.Control>
+								</Switch.Content>
+							</Switch>
 						</div>
 					</div>
 				)}

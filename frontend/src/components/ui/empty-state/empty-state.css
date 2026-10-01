@@ -38,14 +38,3 @@
 	align-items: center;
 	gap: var(--space-2);
 }
-
-.spinner {
-	width: 14px;
-	height: 14px;
-
-	border: 2px solid var(--color-border);
-	border-top-color: var(--color-primary);
-	border-radius: 50%;
-
-	animation: spin 700ms linear infinite;
-}

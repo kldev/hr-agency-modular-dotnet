@@ -1,3 +1,4 @@
+import { Spinner } from "@heroui/react";
 import { addMonths, endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { CalendarDays, CheckCircle2, Plus, UserX } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -110,7 +111,7 @@ export default function InterviewCalendarPage() {
 				<section className="interviews-calendar-panel">
 					{query.isPending ? (
 						<div className="interviews-calendar-loading">
-							<span className="spinner" />
+							<Spinner size="sm" />
 							Loading interviews...
 						</div>
 					) : null}

@@ -1,6 +1,7 @@
+import { TextArea } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import type { ChangeJobApplicationStatusRequest } from "@/api/models";
-import { EnumSelectFilter, FieldError, Textarea } from "@/components/ui";
+import { EnumSelectFilter, FieldError } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { applicationStatuses } from "@/features/applications/types";
 
@@ -79,7 +80,7 @@ export function ChangeJobApplicationStatusForm({
 							Note
 						</label>
 
-						<Textarea
+						<TextArea
 							id={field.name}
 							name={field.name}
 							value={field.state.value ?? ""}
