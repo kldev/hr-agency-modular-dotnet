@@ -53,13 +53,13 @@
     <Project Path="tests/HrAgencySystem.ReportsService.UnitTests/HrAgencySystem.ReportsService.UnitTests.csproj" />
     <Project Path="tests/HrAgencySystem.ReportsService.IntegrationTests/HrAgencySystem.ReportsService.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Agency/HrAgencySystem.IntegrationTests.Agency.csproj" />
+    <Project Path="tests/HrAgencySystem.IntegrationTests.CrossCutting/HrAgencySystem.IntegrationTests.CrossCutting.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Delivery/HrAgencySystem.IntegrationTests.Delivery.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Persistence/HrAgencySystem.IntegrationTests.Persistence.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Platform/HrAgencySystem.IntegrationTests.Platform.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Recruitment/HrAgencySystem.IntegrationTests.Recruitment.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Sales/HrAgencySystem.IntegrationTests.Sales.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Shared/HrAgencySystem.IntegrationTests.Shared.csproj" />
-    <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.UnitTests/HrAgencySystem.UnitTests.csproj" />
   </Folder>
 </Solution>

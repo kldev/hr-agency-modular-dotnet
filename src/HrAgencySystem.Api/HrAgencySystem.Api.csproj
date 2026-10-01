@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests" />
+    <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.CrossCutting" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Agency" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Delivery" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Recruitment" />
