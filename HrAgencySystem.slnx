@@ -52,6 +52,7 @@
     <Project Path="tests/HrAgencySystem.FileService.UnitTests/HrAgencySystem.FileService.UnitTests.csproj" />
     <Project Path="tests/HrAgencySystem.ReportsService.UnitTests/HrAgencySystem.ReportsService.UnitTests.csproj" />
     <Project Path="tests/HrAgencySystem.ReportsService.IntegrationTests/HrAgencySystem.ReportsService.IntegrationTests.csproj" />
+    <Project Path="tests/HrAgencySystem.IntegrationTests.Persistence/HrAgencySystem.IntegrationTests.Persistence.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests.Shared/HrAgencySystem.IntegrationTests.Shared.csproj" />
     <Project Path="tests/HrAgencySystem.IntegrationTests/HrAgencySystem.IntegrationTests.csproj" />
     <Project Path="tests/HrAgencySystem.UnitTests/HrAgencySystem.UnitTests.csproj" />
