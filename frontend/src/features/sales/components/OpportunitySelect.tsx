@@ -1,5 +1,6 @@
+import { ListBox } from "@heroui/react";
 import { FieldError } from "#/components/ui";
-import { Select } from "#/components/ui/Select";
+import { SelectField } from "#/components/ui/Select";
 import { useGetOpportunitesSlice } from "../hooks";
 
 interface OpportunitySelectProps {
@@ -35,22 +36,22 @@ export function OpportunitySelect({
 
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
-			<Select
+			<SelectField
 				id={fieldName}
+				name={fieldName}
+				label={label}
 				value={value}
-				disabled={isSubmitting || !companyId}
-				onChange={(event) => onChange(event.target.value)}
+				emptyLabel="No opportunity"
+				isDisabled={isSubmitting || !companyId}
+				onChange={onChange}
 			>
-				<option value="">No opportunity</option>
 				{deals.map((deal) => (
-					<option key={deal.id} value={deal.id}>
+					<ListBox.Item key={deal.id} id={deal.id} textValue={deal.title}>
 						{deal.title}
-					</option>
+						<ListBox.ItemIndicator />
+					</ListBox.Item>
 				))}
-			</Select>
+			</SelectField>
 			<FieldError errors={errors} />
 		</div>
 	);

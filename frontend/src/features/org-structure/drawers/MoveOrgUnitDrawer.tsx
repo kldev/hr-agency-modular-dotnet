@@ -1,10 +1,11 @@
+import { Description, Label, ListBox } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { z } from "zod";
 import type { OrgUnitRow } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
-import { Select } from "@/components/ui";
+import { SelectField } from "@/components/ui";
 import { useMoveOrgUnit } from "../pages/hooks";
 import type { MoveTarget } from "../types";
 import type { MoveOrgUnitFormCommand } from "./OrgUnitFormCommand";
@@ -64,36 +65,33 @@ const FormContent: React.FC<{
 						<form.AppField name="parentId">
 							{(field) => (
 								<div className="form-field">
-									<label className="form-label" htmlFor={field.name}>
-										New parent
-									</label>
-
-									<Select
+									<SelectField
 										id={field.name}
 										name={field.name}
+										label="New parent"
 										value={field.state.value}
-										disabled={mutation.isPending}
-										onChange={(event) => field.handleChange(event.target.value)}
+										placeholder="Select a unit"
+										isDisabled={mutation.isPending}
+										disabledKeys={target.targets
+											.filter(({ disabledReason }) => disabledReason !== null)
+											.map(({ unit }) => unit.unitId)}
+										onChange={field.handleChange}
 									>
-										<option value="">Select a unit</option>
-
 										{/*
 										 * Everything is listed, and what the domain would refuse comes disabled
-										 * with its reason as the hover title. Hiding those rows would leave
+										 * with its reason under the name. Hiding those rows would leave
 										 * somebody hunting for a department that is deliberately not on offer.
 										 */}
 										{target.targets.map(({ unit, depth, disabledReason }) => (
-											<option
-												key={unit.unitId}
-												value={unit.unitId}
-												disabled={disabledReason !== null}
-												title={disabledReason ?? undefined}
-											>
-												{`${"  ".repeat(depth)}${unit.name}`}
-												{disabledReason ? " —" : ""}
-											</option>
+											<ListBox.Item key={unit.unitId} id={unit.unitId} textValue={unit.name}>
+												<div className="flex flex-col">
+													<Label>{`${"\u00a0\u00a0".repeat(depth)}${unit.name}`}</Label>
+													{disabledReason ? <Description>{disabledReason}</Description> : null}
+												</div>
+												<ListBox.ItemIndicator />
+											</ListBox.Item>
 										))}
-									</Select>
+									</SelectField>
 								</div>
 							)}
 						</form.AppField>

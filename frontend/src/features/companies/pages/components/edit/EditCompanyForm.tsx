@@ -85,14 +85,12 @@ export function EditCompanyForm({
 			<form.Field name="countryCode">
 				{(field) => (
 					<div className="form-field">
-						<label className="form-label" htmlFor={field.name}>
-							Country
-						</label>
-
 						<CountrySelect
+							id={field.name}
+							label="Country"
 							value={field.state.value}
-							disabled={isSubmitting}
-							onChange={(event) => field.handleChange(event.target.value)}
+							isDisabled={isSubmitting}
+							onChange={field.handleChange}
 						/>
 
 						<FieldError errors={field.state.meta.errors} />

@@ -2,7 +2,8 @@ import { expect, type Locator, type Page } from "@playwright/test";
 
 /**
  * Chooses an item in a `SuggestionPicker` (company, user, team...). The input is a combobox and
- * the options are portaled to `<body>`, so they are looked up on the page, not inside the form.
+ * the options live in a React Aria popover portaled to `<body>`, so they are looked up on the
+ * page, not inside the form.
  */
 export async function chooseSuggestion(
 	input: Locator,
@@ -63,35 +64,32 @@ function selectTrigger(scope: Page | Locator, label: string) {
 }
 
 /**
- * The `<select>` that holds a field's value, whatever draws the field: the panel's own native
- * select, or the hidden one a HeroUI `Select` keeps next to its trigger for forms. Its value is
- * the option's key either way, so `toHaveValue` reads the same for both.
+ * The `<select>` that holds a HeroUI `Select`'s value: the hidden one it keeps next to its trigger
+ * for forms. Its value is the option's key, so `toHaveValue` reads like a native select's.
  */
 export function selectValue(scope: Page | Locator, label: string) {
 	return selectTrigger(scope, label).locator("xpath=..").locator('select[tabindex="-1"]');
 }
 
 /**
- * Picks an option in a labelled select. Native selects (countries, languages, lists built by hand)
- * take `selectOption`; a HeroUI `Select` is opened and its option clicked - by key when a string is
- * given, as `selectOption` would match a value. An index counts real options from 1, as in a
- * native select whose option 0 is the placeholder.
+ * Picks an option in a labelled select: a HeroUI `Select` (enums, lists built by hand, languages)
+ * or a combo box over a static list (countries), opened from its chevron so the whole list shows.
+ * A string picks by key, as `selectOption` matched a value; a label by the option's name; an index
+ * counts the options from 1 as they are listed - a placeholder is not an option.
  */
 export async function chooseOption(scope: Page | Locator, label: string, pick: OptionPick) {
 	const page = "page" in scope && typeof scope.page === "function" ? scope.page() : (scope as Page);
-	const native = scope
-		.getByLabel(label, { exact: true })
-		.and(scope.locator('select:not([tabindex="-1"])'));
 	const trigger = selectTrigger(scope, label);
+	const combobox = scope.getByRole("combobox", { name: label, exact: true });
 
-	await expect(native.or(trigger).first()).toBeVisible();
+	await expect(trigger.or(combobox).first()).toBeVisible();
 
-	if ((await native.count()) > 0) {
-		await native.selectOption(pick);
-		return;
+	if ((await combobox.count()) > 0) {
+		await combobox.locator("xpath=..").locator('[data-slot="combo-box-trigger"]').click();
+	} else {
+		await trigger.click();
 	}
 
-	await trigger.click();
 	const listbox = page.getByRole("listbox").last();
 	const option =
 		typeof pick === "string"

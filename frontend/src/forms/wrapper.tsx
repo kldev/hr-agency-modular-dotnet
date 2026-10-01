@@ -240,11 +240,9 @@ export function FormUserPicker({
 
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
 			<UsersPicker
 				id={fieldName}
+				label={label}
 				placeholder={placeholder}
 				disabled={isSubmitting}
 				value={fieldValue?.id ?? ""}
@@ -278,11 +276,9 @@ export function FormCompanyPicker({
 
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
 			<CompaniesPicker
 				id={fieldName}
+				label={label}
 				disabled={isSubmitting}
 				value={fieldValue?.id ?? ""}
 				inputValue={input}
@@ -315,11 +311,9 @@ export function FormTeamPicker({
 
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
 			<TeamsPicker
 				id={fieldName}
+				label={label}
 				placeholder={placeholder}
 				disabled={isSubmitting}
 				value={fieldValue?.id ?? ""}
@@ -606,22 +600,19 @@ export function FormCountrySelect({
 	handleChange,
 	favorites,
 }: FormCountrySelectProps) {
+	const messages = errorMessages(errors);
+
 	return (
-		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
-
-			<CountrySelect
-				id={fieldName}
-				value={fieldValue ?? ""}
-				onChange={(event) => handleChange(event.target.value)}
-				disabled={isSubmitting}
-				favorites={favorites}
-			/>
-
-			<FieldError errors={errors} />
-		</div>
+		<CountrySelect
+			id={fieldName}
+			name={fieldName}
+			label={label}
+			value={fieldValue}
+			onChange={handleChange}
+			isDisabled={isSubmitting}
+			favorites={favorites}
+			errorMessage={messages.length > 0 ? <FieldMessageList messages={messages} /> : undefined}
+		/>
 	);
 }
 
@@ -644,22 +635,21 @@ export function FormLanguageSelect({
 	handleChange,
 	hint,
 }: FormLanguageSelectProps) {
+	const messages = errorMessages(errors);
+
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
-
 			<LanguageSelect
 				id={fieldName}
-				value={fieldValue ?? ""}
-				onChange={(event) => handleChange(event.target.value)}
-				disabled={isSubmitting}
+				name={fieldName}
+				label={label}
+				value={fieldValue}
+				onChange={handleChange}
+				isDisabled={isSubmitting}
+				errorMessage={messages.length > 0 ? <FieldMessageList messages={messages} /> : undefined}
 			/>
 
 			{hint && <p className="text-xs text-(--color-text-muted)">{hint}</p>}
-
-			<FieldError errors={errors} />
 		</div>
 	);
 }

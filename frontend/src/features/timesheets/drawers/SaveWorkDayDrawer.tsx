@@ -1,10 +1,10 @@
-import { toast } from "@heroui/react";
+import { ListBox, toast } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
-import { Button, Select } from "@/components/ui";
+import { Button, SelectField } from "@/components/ui";
 import { useRemoveWorkDay, useSaveWorkDay } from "../pages/hooks";
 import { formatMinutes, fromDateKey, hourOptions, minuteOptions, toTimeOfDay } from "../types";
 import type { SaveWorkDayFormCommand, WorkDayTarget } from "./TimeSheetFormCommand";
@@ -128,39 +128,41 @@ const FormContent: React.FC<{
 							<div className="grid grid-cols-2 gap-3">
 								<form.AppField name="hours">
 									{(field) => (
-										<Select
+										<SelectField
 											id={field.name}
 											name={field.name}
 											value={field.state.value}
-											disabled={pending}
+											isDisabled={pending}
 											aria-label="Hours"
-											onChange={(event) => field.handleChange(event.target.value)}
+											onChange={field.handleChange}
 										>
 											{hourOptions.map((hour) => (
-												<option key={hour} value={hour}>
+												<ListBox.Item key={hour} id={String(hour)} textValue={`${hour} h`}>
 													{hour} h
-												</option>
+													<ListBox.ItemIndicator />
+												</ListBox.Item>
 											))}
-										</Select>
+										</SelectField>
 									)}
 								</form.AppField>
 
 								<form.AppField name="minutes">
 									{(field) => (
-										<Select
+										<SelectField
 											id={field.name}
 											name={field.name}
 											value={field.state.value}
-											disabled={pending}
+											isDisabled={pending}
 											aria-label="Minutes"
-											onChange={(event) => field.handleChange(event.target.value)}
+											onChange={field.handleChange}
 										>
 											{minuteOptions.map((minute) => (
-												<option key={minute} value={minute}>
+												<ListBox.Item key={minute} id={String(minute)} textValue={`${minute} min`}>
 													{minute} min
-												</option>
+													<ListBox.ItemIndicator />
+												</ListBox.Item>
 											))}
-										</Select>
+										</SelectField>
 									)}
 								</form.AppField>
 							</div>

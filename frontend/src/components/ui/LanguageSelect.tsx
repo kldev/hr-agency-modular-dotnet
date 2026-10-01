@@ -1,28 +1,32 @@
-import clsx from "clsx";
-import type { SelectHTMLAttributes } from "react";
+import { ListBox } from "@heroui/react";
+import type { ReactNode } from "react";
 import { jobLanguages } from "../types/languages";
-import { Select } from "./Select";
+import { SelectField } from "./Select";
 
-export function LanguageSelect({
-	value,
-	onChange,
-	className,
-	...props
-}: SelectHTMLAttributes<HTMLSelectElement>) {
+type LanguageSelectProps = {
+	id?: string;
+	name?: string;
+	label?: string;
+	"aria-label"?: string;
+	/** A language code, or "" / null for none. */
+	value: string | null;
+	onChange: (code: string) => void;
+	isDisabled?: boolean;
+	errorMessage?: ReactNode;
+	onBlur?: () => void;
+	className?: string;
+};
+
+/** The ten languages the agency publishes in - short enough for a plain select. */
+export function LanguageSelect(props: LanguageSelectProps) {
 	return (
-		<Select
-			{...props}
-			value={value}
-			onChange={onChange}
-			className={clsx("language-select", className)}
-		>
-			<option value="">Select language</option>
-
+		<SelectField {...props} placeholder="Select language">
 			{Object.entries(jobLanguages).map(([code, name]) => (
-				<option key={code} value={code}>
+				<ListBox.Item key={code} id={code} textValue={`${code} — ${name}`}>
 					{code} — {name}
-				</option>
+					<ListBox.ItemIndicator />
+				</ListBox.Item>
 			))}
-		</Select>
+		</SelectField>
 	);
 }

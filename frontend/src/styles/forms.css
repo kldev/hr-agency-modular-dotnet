@@ -5,12 +5,11 @@
 /*
  * The panel's field look on HeroUI's fields. HeroUI renders `.input`, `.textarea` and
  * `.select__trigger` inside @layer components; these rules are unlayered, so they win wherever the
- * two disagree (height, padding, border, radius, type size). `.native-select` is the plain <select>
- * the screens with hand-written <option>s still use (components/ui/Select).
+ * two disagree (height, padding, border, radius, type size). A combo box (`CountrySelect`) draws
+ * the same `.input`; the typeahead pickers style their own control (pickers/suggestions.css).
  */
 .input,
 .textarea,
-.native-select,
 .select__trigger {
 	width: 100%;
 
@@ -27,7 +26,6 @@
 }
 
 .input,
-.native-select,
 .select__trigger {
 	height: 36px;
 
@@ -63,7 +61,6 @@
 
 .input:focus,
 .textarea:focus,
-.native-select:focus,
 .select__trigger[data-focused="true"],
 .select__trigger[data-focus-visible="true"],
 .select[data-open="true"] .select__trigger {
@@ -89,7 +86,6 @@
 }
 
 .input:disabled,
-.native-select:disabled,
 textarea:disabled,
 .select__trigger[data-disabled="true"] {
 	cursor: not-allowed;
@@ -246,4 +242,18 @@ textarea:disabled::placeholder {
 .radio__control,
 .radio__indicator:empty::before {
 	border-radius: 50%;
+}
+
+/*
+ * The country combo box reads like the select it replaced: the select's type size, and the
+ * chevron over the end of the input in the select indicator's colour.
+ */
+.country-select .combo-box__input-group > .input {
+	padding-inline-end: 28px;
+
+	font-size: inherit;
+}
+
+.country-select .combo-box__trigger {
+	color: var(--field-placeholder);
 }
