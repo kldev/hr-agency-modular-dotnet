@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { Link } from "@tanstack/react-router";
 import { Users } from "lucide-react";
 import type { ProjectProjection } from "@/api/models";
@@ -45,55 +46,59 @@ export function ProjectAssignmentsSection({
 
 			{assignments.length > 0 ? (
 				<>
-					<table className="table">
-						<thead>
-							<tr>
-								<th>Worker</th>
-								<th>Position</th>
-								<th>Engagement</th>
-								<th className="table-header-md">Period</th>
-								<th className="table-header-sm">Status</th>
-								<th className="table-header-sm">Compliance</th>
-							</tr>
-						</thead>
+					<Table variant="secondary" className="table-container">
+						<Table.ScrollContainer>
+							<Table.Content aria-label="Assignments">
+								<Table.Header>
+									<Table.Column isRowHeader>Worker</Table.Column>
+									<Table.Column>Position</Table.Column>
+									<Table.Column>Engagement</Table.Column>
+									<Table.Column className="table-header-md">Period</Table.Column>
+									<Table.Column className="table-header-sm">Status</Table.Column>
+									<Table.Column className="table-header-sm">Compliance</Table.Column>
+								</Table.Header>
 
-						<tbody>
-							{assignments.map((assignment) => (
-								<tr key={assignment.id}>
-									<td className="table-cell-truncate" title={assignment.workerFullName}>
-										<Link
-											to="/app/assignments/$id"
-											params={{ id: assignment.id }}
-											search={{ search: undefined }}
-										>
-											{assignment.workerFullName}
-										</Link>
-									</td>
+								<Table.Body>
+									{assignments.map((assignment) => (
+										<Table.Row key={assignment.id}>
+											<Table.Cell className="table-cell-truncate">
+												<span title={assignment.workerFullName}>
+													<Link
+														to="/app/assignments/$id"
+														params={{ id: assignment.id }}
+														search={{ search: undefined }}
+													>
+														{assignment.workerFullName}
+													</Link>
+												</span>
+											</Table.Cell>
 
-									<td className="table-cell-truncate" title={assignment.positionName}>
-										{assignment.positionName}
-									</td>
+											<Table.Cell className="table-cell-truncate">
+												<span title={assignment.positionName}>{assignment.positionName}</span>
+											</Table.Cell>
 
-									<td>{engagementTypes[assignment.engagementType]}</td>
+											<Table.Cell>{engagementTypes[assignment.engagementType]}</Table.Cell>
 
-									<td className="table-figure">
-										{formatPeriod(assignment.startsOn, assignment.endsOn)}
-									</td>
+											<Table.Cell className="table-figure">
+												{formatPeriod(assignment.startsOn, assignment.endsOn)}
+											</Table.Cell>
 
-									<td>
-										<AssignmentStatusBadge status={assignment.status} />
-									</td>
+											<Table.Cell>
+												<AssignmentStatusBadge status={assignment.status} />
+											</Table.Cell>
 
-									<td>
-										<ComplianceChip
-											outstanding={assignment.complianceOutstandingCount}
-											nextExpiryOn={assignment.nextComplianceExpiryOn}
-										/>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+											<Table.Cell>
+												<ComplianceChip
+													outstanding={assignment.complianceOutstandingCount}
+													nextExpiryOn={assignment.nextComplianceExpiryOn}
+												/>
+											</Table.Cell>
+										</Table.Row>
+									))}
+								</Table.Body>
+							</Table.Content>
+						</Table.ScrollContainer>
+					</Table>
 
 					{/* Only the first page is shown here; the register itself does paging and filtering. */}
 					{query.hasNextPage ? (

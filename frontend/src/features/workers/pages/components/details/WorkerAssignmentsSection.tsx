@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { Link } from "@tanstack/react-router";
 import { Briefcase } from "lucide-react";
 import type { WorkerProjection } from "@/api/models";
@@ -38,60 +39,73 @@ export function WorkerAssignmentsSection({
 					<Briefcase size={24} />
 				</EmptyState>
 			) : (
-				<table className="table">
-					<thead>
-						<tr>
-							<th>Project</th>
-							<th>Client</th>
-							<th>Posted by</th>
-							<th className="table-header-ssm">Country</th>
-							<th>Position</th>
-							<th className="table-header-md">Period</th>
-							<th className="table-header-sm">Status</th>
-						</tr>
-					</thead>
+				<Table variant="secondary" className="table-container">
+					<Table.ScrollContainer>
+						<Table.Content aria-label="Assignments">
+							<Table.Header>
+								<Table.Column isRowHeader>Project</Table.Column>
+								<Table.Column>Client</Table.Column>
+								<Table.Column>Posted by</Table.Column>
+								<Table.Column className="table-header-ssm">Country</Table.Column>
+								<Table.Column>Position</Table.Column>
+								<Table.Column className="table-header-md">Period</Table.Column>
+								<Table.Column className="table-header-sm">Status</Table.Column>
+							</Table.Header>
 
-					<tbody>
-						{assignments.map((assignment) => (
-							<tr key={assignment.assignmentId}>
-								<td className="table-cell-truncate" title={assignment.projectName}>
-									<Link
-										to="/app/assignments/$id"
-										params={{ id: assignment.assignmentId }}
-										search={{ search: undefined }}
-									>
-										{assignment.projectName}
-									</Link>
-								</td>
+							<Table.Body>
+								{assignments.map((assignment) => (
+									<Table.Row key={assignment.assignmentId}>
+										<Table.Cell className="table-cell-truncate">
+											<span title={assignment.projectName}>
+												<Link
+													to="/app/assignments/$id"
+													params={{ id: assignment.assignmentId }}
+													search={{ search: undefined }}
+												>
+													{assignment.projectName}
+												</Link>
+											</span>
+										</Table.Cell>
 
-								<td className="table-cell-truncate" title={assignment.clientCompanyName}>
-									{assignment.clientCompanyName}
-								</td>
+										<Table.Cell className="table-cell-truncate">
+											<span title={assignment.clientCompanyName}>
+												{assignment.clientCompanyName}
+											</span>
+										</Table.Cell>
 
-								{/* Which of our companies posted them is frozen when the posting is planned:
+										{/* Which of our companies posted them is frozen when the posting is planned:
 								    it is the company that has to issue the A1. */}
-								<td className="table-cell-truncate" title={assignment.deliveringEntityName}>
-									{assignment.deliveringEntityName}
-								</td>
+										<Table.Cell className="table-cell-truncate">
+											<span title={assignment.deliveringEntityName}>
+												{assignment.deliveringEntityName}
+											</span>
+										</Table.Cell>
 
-								<td>{assignment.workCountry}</td>
+										<Table.Cell>{assignment.workCountry}</Table.Cell>
 
-								<td className="table-cell-truncate" title={assignment.positionName}>
-									{assignment.positionName}
-									<span className="data-meta"> · {engagementTypes[assignment.engagementType]}</span>
-								</td>
+										<Table.Cell className="table-cell-truncate">
+											<span title={assignment.positionName}>
+												{assignment.positionName}
+												<span className="data-meta">
+													{" "}
+													· {engagementTypes[assignment.engagementType]}
+												</span>
+											</span>
+										</Table.Cell>
 
-								<td className="table-figure">
-									{formatPeriod(assignment.startsOn, assignment.endsOn)}
-								</td>
+										<Table.Cell className="table-figure">
+											{formatPeriod(assignment.startsOn, assignment.endsOn)}
+										</Table.Cell>
 
-								<td>
-									<AssignmentStatusBadge status={assignment.status} />
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+										<Table.Cell>
+											<AssignmentStatusBadge status={assignment.status} />
+										</Table.Cell>
+									</Table.Row>
+								))}
+							</Table.Body>
+						</Table.Content>
+					</Table.ScrollContainer>
+				</Table>
 			)}
 		</div>
 	);

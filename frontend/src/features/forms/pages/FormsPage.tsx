@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { ClipboardList, ListChecks, Plus, Search } from "lucide-react";
 import { useRef } from "react";
@@ -91,54 +92,58 @@ export default function FormsPage({ search, kind, onSearchChange, onKindChange }
 					) : null}
 				</div>
 
-				<table className="table">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th className="table-header-sm">Kind</th>
-							<th className="table-header-sm">Status</th>
-							<th className="table-header-sm">Version</th>
-							<th className="table-header-sm">Fields</th>
-							<th>Last change</th>
-						</tr>
-					</thead>
-					<tbody>
-						{forms.map((form) => (
-							<tr key={form.id}>
-								<td>
-									{designer ? (
-										<Link
-											to="/app/forms/$formId"
-											params={{ formId: form.id }}
-											search={{ tab: undefined }}
-											className="font-medium"
-										>
-											{form.name}
-										</Link>
-									) : (
-										form.name
-									)}
-									<div className="text-xs text-(--color-text-muted)">{form.code}</div>
-								</td>
-								<td>{formKinds[form.kind]}</td>
-								<td>
-									<FormStatusBadge status={form.status} />
-								</td>
-								<td className="table-figure">
-									{Number(form.publishedVersion) > 0 ? `v${String(form.publishedVersion)}` : "—"}
-									{form.hasUnpublishedChanges && form.status === "Published"
-										? " · draft ahead"
-										: ""}
-								</td>
-								<td className="table-figure">
-									{String(form.fieldCount)} on {String(form.pageCount)}{" "}
-									{Number(form.pageCount) === 1 ? "page" : "pages"}
-								</td>
-								<td>{formatDateTime(form.modifiedAt ?? form.createdAt)}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+				<Table variant="secondary" className="table-container">
+					<Table.ScrollContainer>
+						<Table.Content aria-label="Forms">
+							<Table.Header>
+								<Table.Column isRowHeader>Name</Table.Column>
+								<Table.Column className="table-header-sm">Kind</Table.Column>
+								<Table.Column className="table-header-sm">Status</Table.Column>
+								<Table.Column className="table-header-sm">Version</Table.Column>
+								<Table.Column className="table-header-sm">Fields</Table.Column>
+								<Table.Column>Last change</Table.Column>
+							</Table.Header>
+							<Table.Body>
+								{forms.map((form) => (
+									<Table.Row key={form.id}>
+										<Table.Cell>
+											{designer ? (
+												<Link
+													to="/app/forms/$formId"
+													params={{ formId: form.id }}
+													search={{ tab: undefined }}
+													className="font-medium"
+												>
+													{form.name}
+												</Link>
+											) : (
+												form.name
+											)}
+											<div className="text-xs text-(--color-text-muted)">{form.code}</div>
+										</Table.Cell>
+										<Table.Cell>{formKinds[form.kind]}</Table.Cell>
+										<Table.Cell>
+											<FormStatusBadge status={form.status} />
+										</Table.Cell>
+										<Table.Cell className="table-figure">
+											{Number(form.publishedVersion) > 0
+												? `v${String(form.publishedVersion)}`
+												: "—"}
+											{form.hasUnpublishedChanges && form.status === "Published"
+												? " · draft ahead"
+												: ""}
+										</Table.Cell>
+										<Table.Cell className="table-figure">
+											{String(form.fieldCount)} on {String(form.pageCount)}{" "}
+											{Number(form.pageCount) === 1 ? "page" : "pages"}
+										</Table.Cell>
+										<Table.Cell>{formatDateTime(form.modifiedAt ?? form.createdAt)}</Table.Cell>
+									</Table.Row>
+								))}
+							</Table.Body>
+						</Table.Content>
+					</Table.ScrollContainer>
+				</Table>
 
 				<LoadMore
 					loading={query.isFetchingNextPage}

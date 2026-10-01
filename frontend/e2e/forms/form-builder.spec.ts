@@ -89,7 +89,7 @@ test("builds, previews and publishes a two page form", async ({ page }) => {
 
 test("adds a system field to the catalogue", async ({ page }) => {
 	await open(page, "/app/forms/system-fields");
-	await expect(page.getByRole("cell", { name: "employee.pesel" })).toBeVisible();
+	await expect(page.getByRole("gridcell", { name: "employee.pesel" })).toBeVisible();
 
 	await page.getByRole("button", { name: "New system field" }).click();
 
@@ -101,7 +101,7 @@ test("adds a system field to the catalogue", async ({ page }) => {
 	await drawer.getByLabel("Maximum").fill("52");
 	await drawer.getByRole("button", { name: "Save changes" }).click();
 
-	await expect(page.getByRole("cell", { name: "employee.shoeSize" })).toBeVisible();
+	await expect(page.getByRole("gridcell", { name: "employee.shoeSize" })).toBeVisible();
 
 	await docShot(page, "system-fields");
 });
