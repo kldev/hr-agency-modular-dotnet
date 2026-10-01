@@ -2,6 +2,15 @@
    Table
    ========================================================= */
 
+/*
+ * `MainTable` is HeroUI's `Table` (BEM: `table-root`, `table__column`, `table__cell`, ...); the
+ * detail sections still draw a bare `<table class="table">`. One look for both, so the two kinds of
+ * table cannot drift apart: each rule names the bare selector next to its HeroUI twin. Unlayered on
+ * purpose - these win over HeroUI's `@layer components` and undo what its `secondary` variant adds
+ * and the panel does not have (rounded header cells, the separator between column headers, the
+ * tinted cell background on hover).
+ */
+
 .table-container {
 	width: 100%;
 
@@ -11,7 +20,13 @@
 	background: var(--color-surface);
 }
 
-.table {
+/* HeroUI scrolls in `table__scroll-container`; the root keeps the border and clips, as HeroUI does. */
+.table-root.table-container {
+	overflow: clip;
+}
+
+.table,
+.table-root .table__content {
 	width: 100%;
 
 	border-collapse: collapse;
@@ -19,48 +34,87 @@
 	table-layout: fixed;
 
 	font-size: var(--font-size-sm);
+	line-height: inherit;
 }
 
 .table-wide {
 	min-width: 1200px;
 }
 
-.table th {
+.table-root .table__header {
+	border: 0;
+	background: transparent;
+}
+
+.table th,
+.table-root .table__column {
 	height: 40px;
 
 	padding: 0 var(--space-3);
 
 	background: var(--color-surface-subtle);
 	border-bottom: 1px solid var(--color-border);
+	border-radius: 0;
 
 	color: var(--color-text-secondary);
 
 	font-size: var(--font-size-xs);
 	font-weight: var(--font-weight-semibold);
+	line-height: inherit;
 	text-align: left;
 	white-space: nowrap;
 }
 
-.table td {
+.table-root .table__column::after {
+	content: none;
+}
+
+/* The label of a sortable column; the column header itself is the control. */
+.table-sort-label {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--space-1);
+}
+
+.table td,
+.table-root .table__cell {
 	height: 52px;
 
 	padding: var(--space-2) var(--space-3);
 
 	border-bottom: 1px solid var(--color-border-subtle);
+	border-radius: 0;
 
 	vertical-align: middle;
 	white-space: nowrap;
 }
 
-.table tbody tr:nth-child(even) {
+/* The row carries the background (stripes, hover), so a HeroUI cell must not paint over it. */
+.table-root .table__cell {
+	background: transparent;
+
+	color: inherit;
+
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.table-root .table__row {
+	border-bottom: 0;
+}
+
+.table tbody tr:nth-child(even),
+.table-root .table__body .table__row:nth-child(even) {
 	background: var(--color-surface-subtle);
 }
 
-.table tbody tr:hover {
+.table tbody tr:hover,
+.table-root .table__body .table__row:hover {
 	background: var(--color-surface-hover);
 }
 
-.table tbody tr:last-child td {
+.table tbody tr:last-child td,
+.table-root .table__body .table__row:last-child .table__cell {
 	border-bottom: 0;
 }
 
@@ -69,7 +123,8 @@
  * clips it mid-letter with no sign that anything is missing; this adds the ellipsis, and the call
  * site adds a `title` so the whole value is still readable on hover.
  */
-.table td.table-cell-truncate {
+.table td.table-cell-truncate,
+.table-root .table__cell.table-cell-truncate {
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
