@@ -2,9 +2,6 @@
    Dropdown
    ========================================================= */
 
-.action-menu {
-	position: relative;
-}
 .app-dropdown {
 	position: fixed;
 	z-index: 1000;

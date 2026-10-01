@@ -119,10 +119,6 @@
 	gap: var(--space-1);
 }
 
-.action-menu {
-	position: relative;
-}
-
 .action-button,
 .button.action-button {
 	display: grid;
