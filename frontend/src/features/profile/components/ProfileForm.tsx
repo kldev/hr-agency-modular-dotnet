@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from "@heroui/react";
 import { z } from "zod";
 import type { MyProfileResponse, UpdateOwnProfileRequest } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";

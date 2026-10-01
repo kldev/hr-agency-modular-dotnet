@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import type { BadRequestDetails } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
@@ -76,7 +76,7 @@ export function CreateJobDescriptionWizard() {
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(details?.title ?? "Unable to create the job description");
+				toast.danger(details?.title ?? "Unable to create the job description");
 
 				return;
 			}

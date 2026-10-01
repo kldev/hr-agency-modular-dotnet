@@ -1,6 +1,6 @@
+import { toast } from "@heroui/react";
 import { CalendarClock, FileSpreadsheet } from "lucide-react";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
 import { Route } from "#/routes/app/timesheets";
 import { useAuthStore } from "#/stores/authStore";
 import type { TimeSheetProjection } from "@/api/models";
@@ -62,7 +62,7 @@ export function TimeSheetsPage() {
 
 		onError: () => {
 			setToSettle(null);
-			toast.error("The month could not be settled");
+			toast.danger("The month could not be settled");
 		},
 	});
 

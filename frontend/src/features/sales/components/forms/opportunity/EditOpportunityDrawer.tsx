@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import type { OpportunityProjection, UpdateOpportunityRequest } from "#/api/models";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useGetOpportunity } from "#/features/sales/hooks";
@@ -107,7 +107,7 @@ const EditOpportunityDrawer = forwardRef<EditOpportunityRef, EditOpportunityProp
 		const opprotunity = query.data;
 
 		if (query.isError) {
-			toast.error("Unabled to load opportunity");
+			toast.danger("Unabled to load opportunity");
 		}
 		if (!opportunityId || !opprotunity) return null;
 

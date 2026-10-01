@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { BadRequestDetails, IdentityDocumentKind, WorkerRequest } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
@@ -103,7 +103,7 @@ export function WorkerWizard({
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(
+				toast.danger(
 					details?.title ?? (editing ? "Unable to update the worker" : "Unable to register"),
 				);
 			}

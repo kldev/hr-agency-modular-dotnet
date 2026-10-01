@@ -1,6 +1,6 @@
+import { toast } from "@heroui/react";
 import { Banknote, Building2, MapPin, UserCheck } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { BadRequestDetails, CompanyProjection } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
@@ -71,7 +71,7 @@ export function CompleteCompanyProfileWizard({
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(details?.title ?? "Unable to save the client data");
+				toast.danger(details?.title ?? "Unable to save the client data");
 			}
 		},
 	});

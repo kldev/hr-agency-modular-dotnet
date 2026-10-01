@@ -52,8 +52,6 @@
     "react-dom": "^19.2.0",
     "react-is": "^19.3.0",
     "recharts": "^3.10.1",
-    "sonner": "^2.0.8",
-    "sooner": "^1.1.4",
     "tailwindcss": "^4.1.18",
     "zod": "^4.3.6",
     "zustand": "^5.0.15"

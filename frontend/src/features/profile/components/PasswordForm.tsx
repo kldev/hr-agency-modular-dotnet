@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
 import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { useAppForm } from "#/forms";

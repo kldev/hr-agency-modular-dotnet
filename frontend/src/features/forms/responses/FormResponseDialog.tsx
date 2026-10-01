@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import type { BadRequestDetails, FormResponseView } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import {

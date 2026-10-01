@@ -1,6 +1,6 @@
+import { toast } from "@heroui/react";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import type { BadRequestDetails } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
@@ -199,7 +199,7 @@ function CreateWizardForm({
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(details?.title ?? "Unable to create the job post");
+				toast.danger(details?.title ?? "Unable to create the job post");
 
 				return;
 			}
