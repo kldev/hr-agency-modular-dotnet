@@ -1,10 +1,10 @@
-import { Chip, Input } from "@heroui/react";
+import { Chip, Input, ListBox } from "@heroui/react";
 import clsx from "clsx";
 import { ArrowDown, ArrowUp, CircleAlert, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { SystemField } from "#/api/models";
 import { Button, EmptyState } from "#/components/ui";
-import { Select } from "#/components/ui/Select";
+import { SelectField } from "#/components/ui/Select";
 import { fieldTypes } from "../types";
 import { FieldEditor } from "./FieldEditor";
 import {
@@ -216,19 +216,24 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 									Add question
 								</Button>
 
-								<Select
+								<SelectField
 									aria-label="System field to add"
 									className="max-w-64"
 									value={systemFieldId}
-									onChange={(event) => setSystemFieldId(event.target.value)}
+									placeholder="System field…"
+									onChange={setSystemFieldId}
 								>
-									<option value="">System field…</option>
 									{offered.map((definition) => (
-										<option key={definition.systemFieldId} value={definition.systemFieldId}>
+										<ListBox.Item
+											key={definition.systemFieldId}
+											id={definition.systemFieldId}
+											textValue={`${definition.label} (${definition.code})`}
+										>
 											{definition.label} ({definition.code})
-										</option>
+											<ListBox.ItemIndicator />
+										</ListBox.Item>
 									))}
-								</Select>
+								</SelectField>
 
 								<Button variant="secondary" isDisabled={!systemFieldId} onPress={addSystemField}>
 									Add system field

@@ -1,3 +1,4 @@
+import { ToggleButton } from "@heroui/react";
 import clsx from "clsx";
 
 type EnumFilterProps<T extends string> = {
@@ -10,6 +11,12 @@ type EnumFilterProps<T extends string> = {
 	className?: string;
 };
 
+/*
+ * A row of HeroUI toggle buttons, each controlled on its own rather than through a
+ * ToggleButtonGroup: a single-selection group turns the buttons into radios, and the filters (and
+ * the tests that read them) speak "pressed". Pressing the chosen one again keeps it chosen, as it
+ * always did - clearing is what "All" is for.
+ */
 export function EnumFilter<T extends string>({
 	value,
 	onChange,
@@ -21,30 +28,24 @@ export function EnumFilter<T extends string>({
 	return (
 		<fieldset className={clsx("enum-filter", className)}>
 			{hideAll ? null : (
-				<button
-					type="button"
-					className={clsx("enum-filter-button", {
-						"is-selected": value === null,
-					})}
-					aria-pressed={value === null}
-					onClick={() => onChange(null)}
+				<ToggleButton
+					className="enum-filter-button"
+					isSelected={value === null}
+					onChange={() => onChange(null)}
 				>
 					{allLabel}
-				</button>
+				</ToggleButton>
 			)}
 
 			{(Object.keys(options) as T[]).map((option) => (
-				<button
+				<ToggleButton
 					key={option}
-					type="button"
-					className={clsx("enum-filter-button", `enum-filter-${option.toLowerCase()}`, {
-						"is-selected": value === option,
-					})}
-					aria-pressed={value === option}
-					onClick={() => onChange(option)}
+					className={clsx("enum-filter-button", `enum-filter-${option.toLowerCase()}`)}
+					isSelected={value === option}
+					onChange={() => onChange(option)}
 				>
 					{options[option]}
-				</button>
+				</ToggleButton>
 			))}
 		</fieldset>
 	);

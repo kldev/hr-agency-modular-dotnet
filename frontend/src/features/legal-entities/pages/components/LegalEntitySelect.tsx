@@ -1,4 +1,5 @@
-import { Select } from "@/components/ui";
+import { ListBox } from "@heroui/react";
+import { SelectField } from "@/components/ui";
 import { useActiveLegalEntities } from "../hooks";
 
 interface LegalEntitySelectProps {
@@ -29,25 +30,26 @@ export function LegalEntitySelect({
 
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
-
-			<Select
+			<SelectField
 				id={fieldName}
 				name={fieldName}
-				value={fieldValue ?? ""}
-				disabled={isSubmitting || query.isPending || isEmpty}
-				onChange={(event) => handleChange(event.target.value)}
+				label={label}
+				value={fieldValue}
+				placeholder="Select a company"
+				isDisabled={isSubmitting || query.isPending || isEmpty}
+				onChange={handleChange}
 			>
-				<option value="">Select a company</option>
-
 				{entities.map((entity) => (
-					<option key={entity.id} value={entity.id}>
+					<ListBox.Item
+						key={entity.id}
+						id={entity.id}
+						textValue={`${entity.name} · ${entity.taxId}`}
+					>
 						{entity.name} · {entity.taxId}
-					</option>
+						<ListBox.ItemIndicator />
+					</ListBox.Item>
 				))}
-			</Select>
+			</SelectField>
 
 			{isEmpty ? (
 				<p className="form-error">

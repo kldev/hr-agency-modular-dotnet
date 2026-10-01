@@ -1,8 +1,8 @@
-import { Input, TextArea } from "@heroui/react";
+import { Input, ListBox, TextArea } from "@heroui/react";
 import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import type { FieldType, FormField, FormPage } from "#/api/models";
 import { Button, EnumSelectFilter } from "#/components/ui";
-import { Select } from "#/components/ui/Select";
+import { SelectField } from "#/components/ui/Select";
 import { OptionsEditor } from "../components/OptionsEditor";
 import { RulesEditor } from "../components/RulesEditor";
 import { fieldTypes, hasOptions, takesTypedText } from "../types";
@@ -98,20 +98,19 @@ export function FieldEditor({
 			) : null}
 
 			{pages.length > 1 ? (
-				<label className="form-field" htmlFor={`${id}-page`}>
-					<span className="form-label">Page</span>
-					<Select
-						id={`${id}-page`}
-						value={page?.pageId ?? ""}
-						onChange={(event) => onMoveToPage(event.target.value)}
-					>
-						{pages.map((candidate) => (
-							<option key={candidate.pageId} value={candidate.pageId}>
-								{candidate.title}
-							</option>
-						))}
-					</Select>
-				</label>
+				<SelectField
+					id={`${id}-page`}
+					label="Page"
+					value={page?.pageId ?? ""}
+					onChange={onMoveToPage}
+				>
+					{pages.map((candidate) => (
+						<ListBox.Item key={candidate.pageId} id={candidate.pageId} textValue={candidate.title}>
+							{candidate.title}
+							<ListBox.ItemIndicator />
+						</ListBox.Item>
+					))}
+				</SelectField>
 			) : null}
 
 			{system ? (

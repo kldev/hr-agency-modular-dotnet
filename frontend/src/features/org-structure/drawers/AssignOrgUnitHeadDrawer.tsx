@@ -1,10 +1,11 @@
+import { ListBox } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import { z } from "zod";
 import type { OrgUnitRow } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
 import { useAppForm } from "#/forms";
-import { Select } from "@/components/ui";
+import { SelectField } from "@/components/ui";
 import { useAssignOrgUnitHead } from "../pages/hooks";
 import { headMustBeAMemberMessage } from "../types";
 import type { AssignOrgUnitHeadFormCommand, OrgUnitPerson } from "./OrgUnitFormCommand";
@@ -71,30 +72,27 @@ const FormContent: React.FC<{
 						<form.AppField name="headUserId">
 							{(field) => (
 								<div className="form-field">
-									<label className="form-label" htmlFor={field.name}>
-										Head
-									</label>
-
 									{/*
 									 * Only the people already in this unit are offered, which is the rule rather
 									 * than a filter over a wider picker: the domain refuses anybody else, and a
 									 * search box spanning the whole organization would keep suggesting them.
 									 */}
-									<Select
+									<SelectField
 										id={field.name}
 										name={field.name}
+										label="Head"
 										value={field.state.value}
-										disabled={mutation.isPending || isEmpty}
-										onChange={(event) => field.handleChange(event.target.value)}
+										placeholder="Select a person"
+										isDisabled={mutation.isPending || isEmpty}
+										onChange={field.handleChange}
 									>
-										<option value="">Select a person</option>
-
 										{target.candidates.map((person) => (
-											<option key={person.userId} value={person.userId}>
+											<ListBox.Item key={person.userId} id={person.userId} textValue={person.name}>
 												{person.name}
-											</option>
+												<ListBox.ItemIndicator />
+											</ListBox.Item>
 										))}
-									</Select>
+									</SelectField>
 								</div>
 							)}
 						</form.AppField>
