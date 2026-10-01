@@ -645,6 +645,9 @@ export function SuggestionPicker<T>({
 				createPortal(
 					<div
 						ref={menuRef}
+						// Portalled outside the HeroUI dialog or drawer the picker usually sits in, which
+						// would make it inert; React Aria leaves alone what is marked as top layer.
+						data-react-aria-top-layer
 						id={listboxId}
 						role="listbox"
 						className="suggestion-picker-menu"

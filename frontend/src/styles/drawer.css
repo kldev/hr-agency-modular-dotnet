@@ -1,96 +1,105 @@
 /* =========================================================
-   Drawer
+   Drawer (HeroUI Drawer, placement="right")
    ========================================================= */
 
-.drawer-overlay {
-	position: fixed;
-	inset: 0;
-	z-index: 100;
-
-	background: rgba(15, 23, 30, 0.35);
-
-	animation: overlay-in 160ms ease;
+/*
+ * The panel's slide-over on HeroUI's parts: a 460px sheet with a hairline left edge and the drawer
+ * shadow, a 56px header, a scrolling body and a footer that stays put. HeroUI's own sheet is
+ * 384px of padded, muted 14px text, so most of this is undoing that.
+ */
+.drawer__backdrop {
+	background: rgb(15 23 30 / 35%);
 }
 
-.drawer {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 101;
-
-	display: flex;
-	flex-direction: column;
-
+.drawer__dialog[data-placement="right"] {
 	width: min(460px, 90vw);
-
-	background: var(--color-surface);
-	border-left: 1px solid var(--color-border);
-
-	box-shadow: var(--shadow-drawer);
-
-	animation: drawer-in 180ms ease;
+	max-width: none;
 }
 
-.drawer-header {
+.drawer__dialog {
+	padding: 0;
+	border-left: 1px solid var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-text);
+	box-shadow: var(--shadow-drawer);
+}
+
+/* FormDrawer's <form> sits between the dialog and its parts, so it has to pass the column on. */
+.drawer__form {
 	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.drawer__header {
+	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-
 	min-height: 56px;
-
 	padding: 0 var(--space-5);
-
 	border-bottom: 1px solid var(--color-border);
 }
 
-.drawer-title {
+.drawer__heading {
 	margin: 0;
-
+	color: inherit;
 	font-size: var(--font-size-lg);
 	font-weight: var(--font-weight-semibold);
 }
 
-.drawer-content {
-	flex: 1;
-
-	padding: var(--space-5);
-
-	overflow-y: auto;
+/* In the header row, not pinned to the corner. `.action-button` gives it the panel's look. */
+.drawer__close-trigger {
+	position: static;
 }
+
+.drawer__close-trigger svg {
+	width: 17px;
+	height: 17px;
+	margin: 0;
+}
+
+.drawer__body {
+	flex: 1;
+	margin: 0;
+	padding: var(--space-5);
+	overflow-y: auto;
+	color: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+/* Buttons stretch to the footer's height, as they did in the old flex footer. */
+.drawer__footer {
+	position: sticky;
+	bottom: 0;
+	align-items: stretch;
+	gap: var(--space-2);
+	min-height: 64px;
+	padding: var(--space-3) var(--space-5);
+	border-top: 1px solid var(--color-border);
+	background: var(--color-surface);
+}
+
+/* HeroUI spaces the parts with margins; the borders above do that job. */
+.drawer__header + .drawer__body,
+.drawer__body + .drawer__footer,
+.drawer__header + .drawer__footer {
+	margin-top: 0;
+}
+
+/* =========================================================
+   Drawer forms
+   ========================================================= */
 
 .drawer-form {
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-4);
 	box-sizing: border-box;
-	padding: vaR(--space-3);
-}
-
-.drawer-form-invalid {
-	/* border: 1px;
-	border-color: var(--color-danger);
-	background-color: var(--color-red-100);
-	border-radius: var(--radius-md); */
-	box-shadow: var(--shadow-md);
+	padding: var(--space-3);
 }
 
 .form-field-error {
 	color: var(--color-danger);
-}
-
-.drawer-footer {
-	display: flex;
-	justify-content: flex-end;
-	gap: var(--space-2);
-
-	min-height: 64px;
-
-	padding: var(--space-3) var(--space-5);
-
-	border-top: 1px solid var(--color-border);
-	background: var(--color-surface);
-
-	position: sticky;
-	bottom: 0;
 }

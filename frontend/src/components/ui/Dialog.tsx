@@ -1,5 +1,6 @@
+import { Modal } from "@heroui/react";
+import clsx from "clsx";
 import { X } from "lucide-react";
-import { useEffect, useId, useRef } from "react";
 
 type Props = {
 	open: boolean;
@@ -10,80 +11,42 @@ type Props = {
 	maxWidth?: "sm" | "md" | "lg" | "wide";
 };
 
+/**
+ * Every way out - Escape, the cross - goes through `onClose`, never straight to a closed state:
+ * a wizard host passes `requestClose` from `useUnsavedChangesGuard` here, and that is what asks
+ * before a dirty form disappears. The backdrop does not dismiss, as it never did: one stray click
+ * beside a seventeen-field wizard is not a decision to throw it away.
+ *
+ * Sizes live in `styles/dialog.css` (`dialog--<size>`): `wide` is the wizard's 80vw x 80vh,
+ * which takes the whole screen on a phone.
+ */
 export function Dialog({ open, title, children, footer, onClose, maxWidth = "md" }: Props) {
-	const titleId = useId();
-	const dialogRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		if (!open) return;
-
-		const previous = document.body.style.overflow;
-		document.body.style.overflow = "hidden";
-
-		const onKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") onClose();
-		};
-
-		window.addEventListener("keydown", onKeyDown);
-		dialogRef.current?.focus();
-
-		return () => {
-			document.body.style.overflow = previous;
-			window.removeEventListener("keydown", onKeyDown);
-		};
-	}, [open, onClose]);
-
-	if (!open) return null;
-
-	// A wizard needs room the three form sizes do not have: 80vw x 80vh on a desktop. On a phone
-	// "80% of the viewport" is just a smaller phone, so it takes the whole screen and reads as a
-	// page instead of a floating card.
-	const widths = {
-		sm: "max-w-[420px]",
-		md: "max-w-[520px]",
-		lg: "max-w-[720px]",
-		wide: "max-w-[80vw] h-[80vh] max-sm:h-full max-sm:max-h-full max-sm:max-w-full max-sm:rounded-none",
-	};
-
-	const isWide = maxWidth === "wide";
-
 	return (
-		<div
-			className={`fixed inset-0 z-1000 flex items-center justify-center bg-black/45 p-4 ${
-				isWide ? "max-sm:p-0" : ""
-			}`}
-			role="presentation"
+		<Modal.Backdrop
+			isOpen={open}
+			onOpenChange={(isOpen) => {
+				if (!isOpen) onClose();
+			}}
+			isDismissable={false}
 		>
-			<div
-				ref={dialogRef}
-				tabIndex={-1}
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby={titleId}
-				className={`flex max-h-[calc(100vh-40px)] w-full ${widths[maxWidth]} flex-col overflow-hidden rounded-lg border border-(--color-border) bg-(--color-surface) text-(--color-text) shadow-[0_20px_50px_rgba(0,0,0,0.20)]`}
+			<Modal.Container
+				placement="center"
+				scroll="inside"
+				className={clsx(maxWidth === "wide" && "dialog-container--wide")}
 			>
-				<header className="flex min-h-14 items-center justify-between gap-4 border-b border-(--color-border) px-4 sm:px-5">
-					<h2 id={titleId} className="text-base font-semibold">
-						{title}
-					</h2>
-					<button
-						type="button"
-						aria-label="Close dialog"
-						onClick={onClose}
-						className="flex h-8 w-8 items-center justify-center rounded-md text-(--color-text-muted) hover:bg-(--color-surface-hover) hover:text-(--color-text)"
-					>
-						<X size={17} className="cursor-pointer" />
-					</button>
-				</header>
+				<Modal.Dialog className={`dialog--${maxWidth}`}>
+					<Modal.Header>
+						<Modal.Heading>{title}</Modal.Heading>
+						<Modal.CloseTrigger aria-label="Close dialog">
+							<X size={17} />
+						</Modal.CloseTrigger>
+					</Modal.Header>
 
-				<div className="min-h-0 overflow-y-auto p-4 sm:p-5">{children}</div>
+					<Modal.Body>{children}</Modal.Body>
 
-				{footer && (
-					<footer className="flex flex-col-reverse gap-2 border-t border-(--color-border) bg-(--color-surface-subtle) p-3 sm:flex-row sm:items-center sm:justify-end sm:p-4">
-						{footer}
-					</footer>
-				)}
-			</div>
-		</div>
+					{footer && <Modal.Footer>{footer}</Modal.Footer>}
+				</Modal.Dialog>
+			</Modal.Container>
+		</Modal.Backdrop>
 	);
 }
