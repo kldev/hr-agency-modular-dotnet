@@ -82,19 +82,15 @@ export function ArrayField({
 									onBlur={() => normalize(index)}
 									className="array-field-input min-w-0 flex-1"
 								/>
-								<button
-									type="button"
+								<Button
+									variant="ghost"
+									isIconOnly
+									className="action-button action-button-danger shrink-0"
 									aria-label={`Remove ${itemLabel?.toLowerCase()} ${index + 1}`}
-									disabled={disabled}
-									onClick={() => remove(index)}
-									className={[
-										"flex h-9 w-9 shrink-0 items-center justify-center",
-										"rounded-md text-(--color-text-muted)",
-										"hover:bg-(--color-danger-soft) hover:text-(--color-danger)",
-									].join(" ")}
-								>
-									<Trash2 size={15} />
-								</button>
+									isDisabled={disabled}
+									onPress={() => remove(index)}
+									icon={<Trash2 size={15} />}
+								/>
 							</div>
 
 							{tooShort && (

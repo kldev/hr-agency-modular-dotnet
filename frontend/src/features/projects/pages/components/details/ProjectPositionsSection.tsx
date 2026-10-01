@@ -2,7 +2,7 @@ import { Table } from "@heroui/react";
 import { Link } from "@tanstack/react-router";
 import { BriefcaseBusiness, Pencil } from "lucide-react";
 import type { PositionListItem, ProjectProjection } from "@/api/models";
-import { DetailOverviewHeader, EmptyState } from "@/components/ui";
+import { ActionButton, DetailOverviewHeader, EmptyState } from "@/components/ui";
 import { PositionStaffing } from "@/features/positions/components/PositionStaffing";
 import { useGetPositionsSlice } from "@/features/positions/pages/hooks";
 import { rateUnitShort, workerContractTypes } from "@/features/positions/types";
@@ -89,15 +89,9 @@ export function ProjectPositionsSection({
 											<Table.Cell>
 												<div className="flex gap-2 justify-end">
 													{onEditPosition ? (
-														<button
-															type="button"
-															className="action-button"
-															title="Edit"
-															aria-label="Edit"
-															onClick={() => onEditPosition(position)}
-														>
+														<ActionButton title="Edit" onPress={() => onEditPosition(position)}>
 															<Pencil size={15} />
-														</button>
+														</ActionButton>
 													) : null}
 												</div>
 											</Table.Cell>
