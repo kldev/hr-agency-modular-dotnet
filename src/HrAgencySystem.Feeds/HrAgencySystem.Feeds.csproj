@@ -24,5 +24,6 @@
     <InternalsVisibleTo Include="HrAgencySystem.UnitTests" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Shared" />
+    <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Persistence" />
   </ItemGroup>
 </Project>
