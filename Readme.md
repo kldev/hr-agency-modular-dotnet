@@ -349,7 +349,14 @@ Every host logs through Serilog and exports logs, traces and metrics over OTLP. 
 ```text
 tests/
 ├── HrAgencySystem.UnitTests/                      static handlers + NSubstitute + FixedClock
-├── HrAgencySystem.IntegrationTests/               real HTTP against a PostgreSQL Testcontainer
+├── HrAgencySystem.IntegrationTests.Shared/        library: API host over a Testcontainer, fakes, cleaner, test clients
+├── HrAgencySystem.IntegrationTests.Platform/      real HTTP: auth, users, organization, owner, teams, health
+├── HrAgencySystem.IntegrationTests.Sales/         real HTTP: companies, activities, follow-ups, opportunities, tasks
+├── HrAgencySystem.IntegrationTests.Recruitment/   real HTTP: job descriptions and posts, candidates, interviews, feeds, job board API
+├── HrAgencySystem.IntegrationTests.Delivery/      real HTTP: projects, workers, legal entities, forms
+├── HrAgencySystem.IntegrationTests.Agency/        real HTTP: org chart, employments, time sheets, settlement
+├── HrAgencySystem.IntegrationTests.CrossCutting/  real HTTP: suggestions and reports, which read several areas
+├── HrAgencySystem.IntegrationTests.Persistence/   repositories against a bare Testcontainer, no API host
 ├── HrAgencySystem.EmailTemplates.UnitTests/       renders every liquid template
 ├── HrAgencySystem.FileService.UnitTests/          file service rules
 ├── HrAgencySystem.ReportsService.UnitTests/       report shaping and export
@@ -361,7 +368,7 @@ frontend/e2e/                                      Playwright: the panel's main 
 k6/                                                load scripts: panel, mail, file uploads, public job board
 ```
 
-Integration tests spin up their **own** PostgreSQL 17 Testcontainer, so Docker must be running but the local compose stack is not required. External Wolverine transports are stubbed, so no broker is needed either. Because projections run in an async daemon, read-model assertions are wrapped in `Eventually.AssertAsync(...)`.
+Integration tests spin up their **own** PostgreSQL 17 Testcontainer, so Docker must be running but the local compose stack is not required. Each integration test project gets its own container and host, so working on one area builds and runs only that area; `dotnet test` on the solution runs the projects in parallel. The test clients (`*TestClient`, `*TestData`) live in `.Shared` because areas build fixtures through each other's clients; xUnit finds `[CollectionDefinition]` only in the assembly that holds the tests, so every project declares its own `IntegrationCollection` in `Infrastructure/Collections.cs`. External Wolverine transports are stubbed, so no broker is needed either. Because projections run in an async daemon, read-model assertions are wrapped in `Eventually.AssertAsync(...)`.
 
 ---
 
@@ -445,7 +452,7 @@ Every seeded account shares one password. A seeded platform also has a fixed job
 ```bash
 dotnet test                                       # everything
 dotnet test tests/HrAgencySystem.UnitTests
-dotnet test tests/HrAgencySystem.IntegrationTests
+dotnet test tests/HrAgencySystem.IntegrationTests.Delivery   # one area: Platform, Sales, Recruitment, Delivery, Agency, CrossCutting, Persistence
 dotnet test tests/HrAgencySystem.UnitTests --filter "FullyQualifiedName~CreateCompanyHandlerTests"
 
 cd frontend && yarn test                          # Vitest
