@@ -55,22 +55,16 @@ export function RepeatableField<T>({
 					<div key={getRowKey(item, index)} className="flex items-start gap-2">
 						<div className="min-w-0 flex-1">{renderRow(item, index)}</div>
 
-						<button
-							type="button"
+						<Button
+							variant="ghost"
+							isIconOnly
+							className="action-button action-button-danger shrink-0"
 							aria-label={`Remove row ${index + 1}`}
 							title={canRemove ? "Remove" : `At least ${minItems} required`}
-							disabled={disabled || !canRemove}
-							onClick={() => onRemove(index)}
-							className={[
-								"flex h-9 w-9 shrink-0 items-center justify-center",
-								"rounded-md text-(--color-text-muted)",
-								"hover:bg-(--color-danger-soft) hover:text-(--color-danger)",
-								"disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent",
-								"disabled:hover:text-(--color-text-muted)",
-							].join(" ")}
-						>
-							<Trash2 size={15} />
-						</button>
+							isDisabled={disabled || !canRemove}
+							onPress={() => onRemove(index)}
+							icon={<Trash2 size={15} />}
+						/>
 					</div>
 				))}
 

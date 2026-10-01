@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { Paperclip, UploadCloud, X } from "lucide-react";
 import { type DragEvent, useId, useRef, useState } from "react";
 import { formatFileSize } from "#/utlis";
+import { ActionButton } from "./Button";
 import "./file-dropzone.css";
 
 interface FileDropzoneProps {
@@ -152,16 +153,14 @@ export function FileDropzone({
 
 					<span className="file-dropzone-selected-size">{formatFileSize(file.size)}</span>
 
-					<button
-						type="button"
-						className="action-button shrink-0"
+					<ActionButton
+						className="shrink-0"
 						title="Remove the chosen file"
-						aria-label="Remove the chosen file"
-						disabled={disabled}
-						onClick={() => onSelect(null)}
+						isDisabled={disabled}
+						onPress={() => onSelect(null)}
 					>
 						<X size={15} />
-					</button>
+					</ActionButton>
 				</div>
 			) : null}
 
