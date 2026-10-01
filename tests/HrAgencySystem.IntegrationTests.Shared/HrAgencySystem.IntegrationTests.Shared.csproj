@@ -29,6 +29,7 @@
   <ItemGroup>
     <!-- The test clients are internal: they send the API's internal request records. -->
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests" />
+    <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Delivery" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Recruitment" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Sales" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Platform" />
