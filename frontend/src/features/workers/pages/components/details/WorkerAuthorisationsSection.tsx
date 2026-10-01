@@ -78,7 +78,7 @@ export function WorkerAuthorisationsSection({
 												icon={<Trash2 size={15} />}
 												aria-label="Remove"
 												title="Remove"
-												onClick={() => setRemoving(authorisation)}
+												onPress={() => setRemoving(authorisation)}
 											/>
 										</div>
 									</td>

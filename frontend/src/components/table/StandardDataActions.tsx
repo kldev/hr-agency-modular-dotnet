@@ -10,12 +10,12 @@ interface StandardDataActionsProps {
 export function StandardDataActions({ onEdit, onDelete }: StandardDataActionsProps) {
 	return (
 		<div className="standard-actions">
-			<ActionButton title="Edit" onClick={onEdit}>
+			<ActionButton title="Edit" onPress={onEdit}>
 				<Pencil size={15} />
 			</ActionButton>
 
 			{onDelete ? (
-				<ActionButton title="Delete" onClick={onDelete}>
+				<ActionButton title="Delete" onPress={onDelete}>
 					<Trash2 size={15} />
 				</ActionButton>
 			) : null}

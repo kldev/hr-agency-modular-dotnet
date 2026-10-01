@@ -1,50 +1,75 @@
+import { Button as HeroButton, type ButtonProps as HeroButtonProps, Spinner } from "@heroui/react";
 import clsx from "clsx";
-import { LoaderCircle } from "lucide-react";
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-	variant?: "primary" | "secondary" | "ghost" | "danger" | "back";
-	icon?: ReactNode;
-	loading?: boolean;
+type Variant = "primary" | "secondary" | "ghost" | "danger" | "back";
+
+/*
+ * The panel's names for HeroUI's variants. "secondary" here has always been the outlined button on
+ * the surface - HeroUI calls that "outline"; its own "secondary" is a filled neutral button the
+ * panel has never had. buttons.css dresses each one in the panel's colours.
+ */
+const HERO_VARIANT: Record<Variant, NonNullable<HeroButtonProps["variant"]>> = {
+	primary: "primary",
+	secondary: "outline",
+	ghost: "ghost",
+	danger: "danger",
+	back: "secondary",
 };
 
+export type ButtonProps = Omit<HeroButtonProps, "variant" | "children"> & {
+	variant?: Variant;
+	icon?: ReactNode;
+	/** A native tooltip. React Aria does not pass `title` through, so it is put back on the element. */
+	title?: string;
+	children?: ReactNode;
+};
+
+/**
+ * HeroUI's Button with the two things every call site here wants: an icon slot, and a spinner in
+ * its place while the action is pending.
+ */
 export function Button({
 	variant = "secondary",
 	icon,
-	loading = false,
-	disabled,
+	title,
+	isPending = false,
 	children,
 	className,
 	...props
 }: ButtonProps) {
 	return (
-		<button
+		<HeroButton
 			{...props}
-			type={props.type ?? "button"}
-			disabled={disabled || loading}
-			className={clsx("button", `button-${variant}`, className)}
+			isPending={isPending}
+			variant={HERO_VARIANT[variant]}
+			className={clsx(variant === "back" && "button-back", className)}
+			render={title ? (domProps) => <button {...domProps} title={title} /> : undefined}
 		>
-			{loading ? <LoaderCircle size={14} className="spinner" /> : icon}
+			{isPending ? <Spinner color="current" size="sm" /> : icon}
 			{children}
-		</button>
+		</HeroButton>
 	);
 }
 
-type ActionButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-	children?: React.ReactNode;
+type ActionButtonProps = Omit<HeroButtonProps, "children" | "isIconOnly"> & {
+	children?: ReactNode;
 	title: string;
 };
 
-export function ActionButton({ onClick, children, title }: ActionButtonProps) {
+/** The icon-only button of a table row or a card: the label is its tooltip and its accessible name. */
+export function ActionButton({ children, title, className, ...props }: ActionButtonProps) {
 	return (
-		<button
-			type="button"
-			className="action-button"
+		<HeroButton
+			{...props}
+			isIconOnly
+			variant="ghost"
+			size="sm"
 			aria-label={title}
-			title={title}
-			onClick={onClick}
+			className={clsx("action-button", className)}
+			render={(domProps) => <button {...domProps} title={title} />}
 		>
 			{children}
-		</button>
+		</HeroButton>
 	);
 }

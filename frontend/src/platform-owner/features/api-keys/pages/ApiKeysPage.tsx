@@ -46,7 +46,7 @@ export function ApiKeysPage() {
 					<Button
 						variant="primary"
 						icon={<Plus size={15} />}
-						onClick={() => issueRef.current?.issue()}
+						onPress={() => issueRef.current?.issue()}
 					>
 						Issue key
 					</Button>

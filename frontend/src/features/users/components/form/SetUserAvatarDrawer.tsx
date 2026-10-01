@@ -83,7 +83,7 @@ const DrawerContent: React.FC<{
 			title={`Picture of ${user.fullName ?? user.email}`}
 			onClose={handleClose}
 			footer={
-				<Button variant="secondary" onClick={handleClose}>
+				<Button variant="secondary" onPress={handleClose}>
 					Done
 				</Button>
 			}
@@ -119,8 +119,8 @@ const DrawerContent: React.FC<{
 							<Button
 								variant="ghost"
 								icon={<Trash2 size={15} />}
-								disabled={isBusy}
-								onClick={() => remove.mutate(user.id)}
+								isDisabled={isBusy}
+								onPress={() => remove.mutate(user.id)}
 							>
 								Remove picture
 							</Button>

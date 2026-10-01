@@ -50,7 +50,7 @@ export default function SystemFieldsPage() {
 						<Button
 							variant="primary"
 							icon={<Sparkles size={15} />}
-							onClick={() => standard.mutation.mutate(undefined)}
+							onPress={() => standard.mutation.mutate(undefined)}
 						>
 							Add standard fields
 						</Button>
@@ -73,15 +73,15 @@ export default function SystemFieldsPage() {
 						<Button
 							variant="secondary"
 							icon={<Sparkles size={15} />}
-							loading={standard.mutation.isPending}
-							onClick={() => standard.mutation.mutate(undefined)}
+							isPending={standard.mutation.isPending}
+							onPress={() => standard.mutation.mutate(undefined)}
 						>
 							Add standard fields
 						</Button>
 						<Button
 							variant="primary"
 							icon={<Plus size={15} />}
-							onClick={() => drawerRef.current?.define()}
+							onPress={() => drawerRef.current?.define()}
 						>
 							New system field
 						</Button>
@@ -118,14 +118,14 @@ export default function SystemFieldsPage() {
 												icon={<Pencil size={15} />}
 												aria-label="Edit"
 												title="Edit"
-												onClick={() => drawerRef.current?.edit(field)}
+												onPress={() => drawerRef.current?.edit(field)}
 											/>
 											<Button
 												variant="ghost"
 												icon={<Archive size={15} />}
 												aria-label="Archive"
 												title="Archive"
-												onClick={() => setArchiving(field)}
+												onPress={() => setArchiving(field)}
 											/>
 										</div>
 									)}

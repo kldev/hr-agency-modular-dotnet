@@ -82,7 +82,7 @@ export function WorkerDocumentsSection({
 												icon={<Trash2 size={15} />}
 												aria-label="Remove"
 												title="Remove"
-												onClick={() => setRemoving(document)}
+												onPress={() => setRemoving(document)}
 											/>
 										</div>
 									</td>

@@ -95,7 +95,7 @@ export function TagForm({ onSubmit, error, isSubmitting }: TagFormProps) {
 										<td align="right">
 											<Button
 												type="button"
-												onClick={() => removeTag(z)}
+												onPress={() => removeTag(z)}
 												variant="ghost"
 												icon={<Trash size={14} />}
 											></Button>

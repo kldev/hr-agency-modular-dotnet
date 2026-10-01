@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { useState } from "react";
+import { Button } from "#/components/ui";
 import { readApiError } from "#/features/auth/readApiError";
 import { storeOwnerToken } from "#/server/auth";
 import { getAuthenticatedOwner, loginPlatformOwner } from "@/api/endpoints";
@@ -117,19 +118,16 @@ const OwnerLoginPage: React.FC = () => {
 					</div>
 				</div>
 
-				<button type="submit" className="button button-primary auth-submit" disabled={isLoading}>
+				<Button type="submit" variant="primary" className="auth-submit" isPending={isLoading}>
 					{isLoading ? (
-						<>
-							<span className="spinner" />
-							Signing in...
-						</>
+						<>Signing in...</>
 					) : (
 						<>
 							Sign in
 							<ArrowRight size={16} />
 						</>
 					)}
-				</button>
+				</Button>
 			</form>
 		</AuthLayout>
 	);

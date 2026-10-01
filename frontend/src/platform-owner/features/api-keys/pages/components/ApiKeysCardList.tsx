@@ -30,7 +30,7 @@ export function ApiKeysCardList({ keys, onRevoke }: Props) {
 
 					{key.revokedAt ? null : (
 						<div className="px-4">
-							<Button variant="danger" onClick={() => onRevoke(key)}>
+							<Button variant="danger" onPress={() => onRevoke(key)}>
 								Revoke
 							</Button>
 						</div>

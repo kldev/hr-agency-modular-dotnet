@@ -19,7 +19,7 @@ export function DetailsListSection({
 				<h2>{title}</h2>
 				<div className="flex flex-row gap-2 items-center justify-end">
 					{onAdd ? (
-						<Button variant="ghost" onClick={onAdd} icon={<PlusIcon size={16} />}></Button>
+						<Button variant="ghost" onPress={onAdd} icon={<PlusIcon size={16} />}></Button>
 					) : null}
 					<span className="data-details-list-count">{items.length}</span>
 				</div>

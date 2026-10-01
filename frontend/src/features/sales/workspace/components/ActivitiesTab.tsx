@@ -81,7 +81,7 @@ export function ActivitiesTab({ companyId, onLog }: ActivitiesTabProps) {
 					<p>Latest activity across all the company's opportunities</p>
 				</div>
 
-				<Button icon={<MessageSquare size={14} />} onClick={onLog}>
+				<Button icon={<MessageSquare size={14} />} onPress={onLog}>
 					Log activity
 				</Button>
 			</div>

@@ -1,6 +1,9 @@
+import { buttonVariants } from "@heroui/react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import clsx from "clsx";
 import { ArrowLeft, ArrowRight, CheckCircle2, Eye, EyeOff, LockKeyhole } from "lucide-react";
 import { useState } from "react";
+import { Button } from "#/components/ui";
 import { completePasswordReset } from "@/api/endpoints";
 import { AuthLayout } from "../layout";
 import { readApiError } from "../readApiError";
@@ -66,7 +69,10 @@ const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({ id, token }) => {
 					</p>
 				</div>
 
-				<Link to="/forgot-password" className="button button-primary auth-submit">
+				<Link
+					to="/forgot-password"
+					className={clsx(buttonVariants({ variant: "primary" }), "auth-submit")}
+				>
 					Request a new link
 					<ArrowRight size={16} />
 				</Link>
@@ -92,14 +98,14 @@ const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({ id, token }) => {
 					<p>Your new password is active. Sign in with it to continue.</p>
 				</div>
 
-				<button
-					type="button"
-					className="button button-primary auth-submit"
-					onClick={() => navigate({ to: "/login" })}
+				<Button
+					variant="primary"
+					className="auth-submit"
+					onPress={() => navigate({ to: "/login" })}
 				>
 					Go to sign in
 					<ArrowRight size={16} />
-				</button>
+				</Button>
 			</AuthLayout>
 		);
 	}
@@ -175,19 +181,16 @@ const ResetPasswordPage: React.FC<ResetPasswordPageProps> = ({ id, token }) => {
 					</span>
 				</div>
 
-				<button type="submit" className="button button-primary auth-submit" disabled={isLoading}>
+				<Button type="submit" variant="primary" className="auth-submit" isPending={isLoading}>
 					{isLoading ? (
-						<>
-							<span className="spinner" />
-							Saving...
-						</>
+						<>Saving...</>
 					) : (
 						<>
 							Set new password
 							<ArrowRight size={16} />
 						</>
 					)}
-				</button>
+				</Button>
 			</form>
 
 			<Link to="/login" className="auth-back-link">

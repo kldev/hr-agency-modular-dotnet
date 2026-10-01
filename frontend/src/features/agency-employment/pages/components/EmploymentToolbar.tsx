@@ -52,7 +52,7 @@ export function EmploymentToolbar({
 			</div>
 
 			<div className="toolbar-right">
-				<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
+				<Button variant="primary" icon={<Plus size={15} />} onPress={onAdd}>
 					Record employment
 				</Button>
 			</div>

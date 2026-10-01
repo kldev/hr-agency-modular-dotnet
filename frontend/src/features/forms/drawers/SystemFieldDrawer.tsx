@@ -205,7 +205,7 @@ function FormContent({
 			</FormDrawer.Content>
 
 			<FormDrawer.Footer>
-				<Button variant="primary" type="submit" loading={mutation.isPending}>
+				<Button variant="primary" type="submit" isPending={mutation.isPending}>
 					Save changes
 				</Button>
 			</FormDrawer.Footer>

@@ -91,7 +91,7 @@ export function TeamMembersSection({ team, onRefresh }: TeamMembersSectionProps)
 				) : null}
 
 				<div className="mt-4 p-2">
-					<Button variant="secondary" onClick={() => addRef.current?.add(team.id, team.name)}>
+					<Button variant="secondary" onPress={() => addRef.current?.add(team.id, team.name)}>
 						Add member
 					</Button>
 				</div>

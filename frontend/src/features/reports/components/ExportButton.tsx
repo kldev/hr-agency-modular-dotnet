@@ -1,3 +1,4 @@
+import { buttonVariants } from "@heroui/react";
 import { FileSpreadsheet } from "lucide-react";
 
 interface ExportButtonProps {
@@ -10,7 +11,7 @@ interface ExportButtonProps {
  */
 export function ExportButton({ href }: ExportButtonProps) {
 	return (
-		<a className="button button-secondary" href={href} download>
+		<a className={buttonVariants({ variant: "outline" })} href={href} download>
 			<FileSpreadsheet size={14} />
 			Export to Excel
 		</a>

@@ -28,7 +28,7 @@ export function ViewSwitch({ view, onChange }: ViewSwitchProps) {
 					aria-pressed={view === value}
 					aria-label={`${label} view`}
 					title={`${label} view`}
-					onClick={() => onChange(value)}
+					onPress={() => onChange(value)}
 				>
 					{label}
 				</Button>

@@ -54,19 +54,19 @@ export function TimeSheetPanel({
 
 				<div className="time-sheet-panel-actions">
 					{next.includes("Approved") ? (
-						<Button variant="primary" icon={<Check size={15} />} onClick={() => onApprove(sheet)}>
+						<Button variant="primary" icon={<Check size={15} />} onPress={() => onApprove(sheet)}>
 							Approve
 						</Button>
 					) : null}
 
 					{next.includes("Correction") ? (
-						<Button variant="secondary" icon={<Undo2 size={15} />} onClick={() => onReturn(sheet)}>
+						<Button variant="secondary" icon={<Undo2 size={15} />} onPress={() => onReturn(sheet)}>
 							Send back
 						</Button>
 					) : null}
 
 					{canSettle && next.includes("Settled") ? (
-						<Button variant="primary" icon={<Wallet size={15} />} onClick={() => onSettle(sheet)}>
+						<Button variant="primary" icon={<Wallet size={15} />} onPress={() => onSettle(sheet)}>
 							Settle
 						</Button>
 					) : null}
@@ -74,7 +74,7 @@ export function TimeSheetPanel({
 					<Button
 						variant="ghost"
 						icon={<MessageSquare size={15} />}
-						onClick={() => onComment(sheet)}
+						onPress={() => onComment(sheet)}
 					>
 						Comment
 					</Button>

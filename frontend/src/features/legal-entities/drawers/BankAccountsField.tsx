@@ -108,9 +108,9 @@ export function BankAccountsField({ values, error, disabled, onChange }: BankAcc
 							<Button
 								variant="ghost"
 								icon={<Trash2 size={15} />}
-								disabled={disabled}
+								isDisabled={disabled}
 								aria-label="Remove account"
-								onClick={() => onChange(accounts.filter((_, i) => i !== index))}
+								onPress={() => onChange(accounts.filter((_, i) => i !== index))}
 							/>
 
 							{isDuplicate ? (
@@ -126,8 +126,8 @@ export function BankAccountsField({ values, error, disabled, onChange }: BankAcc
 			<Button
 				variant="ghost"
 				icon={<Plus size={15} />}
-				disabled={disabled}
-				onClick={() => onChange([...accounts, { ...emptyAccount }])}
+				isDisabled={disabled}
+				onPress={() => onChange([...accounts, { ...emptyAccount }])}
 			>
 				Add account
 			</Button>

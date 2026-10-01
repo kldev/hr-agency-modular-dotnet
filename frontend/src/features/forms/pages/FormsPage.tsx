@@ -83,7 +83,7 @@ export default function FormsPage({ search, kind, onSearchChange, onKindChange }
 							<Button
 								variant="primary"
 								icon={<Plus size={15} />}
-								onClick={() => createRef.current?.create()}
+								onPress={() => createRef.current?.create()}
 							>
 								New form
 							</Button>

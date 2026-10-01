@@ -118,7 +118,7 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 						))}
 					</ul>
 
-					<Button variant="secondary" className="mt-3" icon={<Plus size={14} />} onClick={addPage}>
+					<Button variant="secondary" className="mt-3" icon={<Plus size={14} />} onPress={addPage}>
 						Add page
 					</Button>
 				</section>
@@ -139,21 +139,21 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 									icon={<ArrowUp size={15} />}
 									aria-label="Move page up"
 									title="Move page up"
-									onClick={() => dispatch({ type: "movePage", pageId: page.pageId, by: -1 })}
+									onPress={() => dispatch({ type: "movePage", pageId: page.pageId, by: -1 })}
 								/>
 								<Button
 									variant="ghost"
 									icon={<ArrowDown size={15} />}
 									aria-label="Move page down"
 									title="Move page down"
-									onClick={() => dispatch({ type: "movePage", pageId: page.pageId, by: 1 })}
+									onPress={() => dispatch({ type: "movePage", pageId: page.pageId, by: 1 })}
 								/>
 								<Button
 									variant="ghost"
 									icon={<Trash2 size={15} />}
 									aria-label="Remove page"
 									title="Remove page"
-									onClick={() => {
+									onPress={() => {
 										dispatch({ type: "removePage", pageId: page.pageId });
 										setPageId(null);
 										setFieldId(null);
@@ -210,7 +210,7 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 							)}
 
 							<div className="mt-4 flex flex-wrap items-center gap-2">
-								<Button variant="secondary" icon={<Plus size={14} />} onClick={addFormField}>
+								<Button variant="secondary" icon={<Plus size={14} />} onPress={addFormField}>
 									Add question
 								</Button>
 
@@ -228,7 +228,7 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 									))}
 								</Select>
 
-								<Button variant="secondary" disabled={!systemFieldId} onClick={addSystemField}>
+								<Button variant="secondary" isDisabled={!systemFieldId} onPress={addSystemField}>
 									Add system field
 								</Button>
 							</div>

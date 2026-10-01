@@ -41,7 +41,7 @@ export function DetailsHeader({
 				{extraAdd}
 				{onEdit ? (
 					<div className="data-details-header-actions">
-						<ActionButton title="Edit data" onClick={onEdit}>
+						<ActionButton title="Edit data" onPress={onEdit}>
 							<Pencil size={15} />
 							<span>Edit</span>
 						</ActionButton>

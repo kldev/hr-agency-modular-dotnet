@@ -131,7 +131,7 @@ export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props
 						<Button
 							variant="ghost"
 							icon={<MessageSquare size={15} />}
-							onClick={() => commentRef.current?.comment(sheet)}
+							onPress={() => commentRef.current?.comment(sheet)}
 						>
 							Comment
 						</Button>
@@ -141,8 +141,8 @@ export function MyMonthPanel({ month, userId, sheet, loading, onChanged }: Props
 					<Button
 						variant="primary"
 						icon={<Send size={15} />}
-						disabled={!editable || totalMinutes === 0 || loading}
-						onClick={() =>
+						isDisabled={!editable || totalMinutes === 0 || loading}
+						onPress={() =>
 							submitRef.current?.submit({
 								year: month.year,
 								month: month.month,

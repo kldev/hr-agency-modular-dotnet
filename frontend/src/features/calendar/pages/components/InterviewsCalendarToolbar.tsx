@@ -24,7 +24,7 @@ export function InterviewsCalendarToolbar({
 	return (
 		<header className="interviews-calendar-toolbar">
 			<div className="interviews-calendar-navigation">
-				<Button variant="secondary" onClick={onToday}>
+				<Button variant="secondary" onPress={onToday}>
 					Today
 				</Button>
 
@@ -32,12 +32,12 @@ export function InterviewsCalendarToolbar({
 					variant="ghost"
 					className="button-icon"
 					aria-label="Previous period"
-					onClick={onPrevious}
+					onPress={onPrevious}
 				>
 					<ChevronLeft size={16} />
 				</Button>
 
-				<Button variant="ghost" className="button-icon" aria-label="Next period" onClick={onNext}>
+				<Button variant="ghost" className="button-icon" aria-label="Next period" onPress={onNext}>
 					<ChevronRight size={16} />
 				</Button>
 

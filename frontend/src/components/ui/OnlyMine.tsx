@@ -20,7 +20,7 @@ export function OnlyMine({
 			icon={<UserRound size={15} />}
 			aria-label="My opportunities"
 			aria-pressed={onlyMine}
-			onClick={() => onChange(!onlyMine)}
+			onPress={() => onChange(!onlyMine)}
 			className={clsx(
 				"shrink-0 whitespace-nowrap",
 				onlyMine && [

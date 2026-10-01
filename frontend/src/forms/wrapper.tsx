@@ -121,7 +121,7 @@ export function FormPasswordInput({
 				<Button
 					variant="ghost"
 					icon={<KeyRound size={16} />}
-					onClick={async () => {
+					onPress={async () => {
 						const password = generatePassword();
 						await copyToClipboard(`User password: ${password}`);
 						handleChange(password);

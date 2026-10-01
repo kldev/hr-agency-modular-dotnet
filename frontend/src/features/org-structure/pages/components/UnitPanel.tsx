@@ -137,12 +137,12 @@ export function UnitPanel({
 					</div>
 
 					<div className="flex gap-2 shrink-0">
-						<Button variant="secondary" icon={<UserRoundCog size={15} />} onClick={onAssignHead}>
+						<Button variant="secondary" icon={<UserRoundCog size={15} />} onPress={onAssignHead}>
 							{unit.headUserId ? "Change" : "Assign"}
 						</Button>
 
 						{unit.headUserId ? (
-							<Button variant="ghost" icon={<X size={15} />} onClick={onClearHead}>
+							<Button variant="ghost" icon={<X size={15} />} onPress={onClearHead}>
 								Clear
 							</Button>
 						) : null}
@@ -185,8 +185,8 @@ export function UnitPanel({
 					<Button
 						variant="secondary"
 						icon={<Plus size={15} />}
-						disabled={unit.isArchived}
-						onClick={onAddMember}
+						isDisabled={unit.isArchived}
+						onPress={onAddMember}
 					>
 						Add person
 					</Button>

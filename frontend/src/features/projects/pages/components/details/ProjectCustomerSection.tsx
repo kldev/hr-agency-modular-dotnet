@@ -61,7 +61,7 @@ export function ProjectCustomerSection({
 						</span>
 					</div>
 
-					<Button variant="primary" onClick={() => onCompleteProfile(project.companyId)}>
+					<Button variant="primary" onPress={() => onCompleteProfile(project.companyId)}>
 						Complete client data
 					</Button>
 				</div>
@@ -88,7 +88,7 @@ export function ProjectCustomerSection({
 
 			<div className="project-section-body">
 				{isDraft ? (
-					<Button variant="ghost" icon={<Landmark size={15} />} onClick={onChangeLegalEntity}>
+					<Button variant="ghost" icon={<Landmark size={15} />} onPress={onChangeLegalEntity}>
 						Change company
 					</Button>
 				) : (

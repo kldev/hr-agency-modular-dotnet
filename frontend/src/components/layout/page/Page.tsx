@@ -43,8 +43,8 @@ const Page: React.FC<Props> = ({
 						<Button
 							variant="secondary"
 							icon={<RefreshCcw size={15} />}
-							onClick={() => onRefresh(0)}
-							loading={loading}
+							onPress={() => onRefresh(0)}
+							isPending={loading}
 						>
 							Refresh
 						</Button>

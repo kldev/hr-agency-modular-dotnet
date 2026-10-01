@@ -55,7 +55,7 @@ export function SalesToolbar({
 					icon={<SlidersHorizontal size={15} />}
 					aria-label="Clear"
 					title="Clear"
-					onClick={onClear}
+					onPress={onClear}
 				>
 					Clear
 				</Button>
@@ -64,7 +64,7 @@ export function SalesToolbar({
 			<div className="toolbar-right">
 				<ViewSwitch view={view} onChange={onViewChange} />
 
-				<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
+				<Button variant="primary" icon={<Plus size={15} />} onPress={onAdd}>
 					Add opportunity
 				</Button>
 			</div>

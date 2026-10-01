@@ -72,7 +72,7 @@ export function ApplicationsToolbar({
 					icon={<SlidersHorizontal size={15} />}
 					aria-label="Clear"
 					title="Clear"
-					onClick={onClear}
+					onPress={onClear}
 				>
 					Clear
 				</Button>

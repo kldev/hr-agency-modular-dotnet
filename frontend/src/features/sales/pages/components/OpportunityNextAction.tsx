@@ -27,11 +27,11 @@ export function OpportunityNextAction({ opportunity, onAdd, onEdit }: Opportunit
 
 				{hasFollowUp ? (
 					<div className="toolbar-right">
-						<ActionButton title="Add follow up" onClick={onAdd}>
+						<ActionButton title="Add follow up" onPress={onAdd}>
 							<Plus size={15} />
 						</ActionButton>
 
-						<ActionButton title="Edit follow up" onClick={onEdit}>
+						<ActionButton title="Edit follow up" onPress={onEdit}>
 							<Pencil size={15} />
 						</ActionButton>
 					</div>
@@ -52,7 +52,7 @@ export function OpportunityNextAction({ opportunity, onAdd, onEdit }: Opportunit
 				<div className="data-details-empty">
 					<div>No follow up scheduled.</div>
 
-					<Button className="mt-3" onClick={onAdd}>
+					<Button className="mt-3" onPress={onAdd}>
 						<CalendarClock size={16} />
 						Schedule follow up
 					</Button>

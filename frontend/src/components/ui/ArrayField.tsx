@@ -112,8 +112,8 @@ export function ArrayField({
 				<Button
 					type="button"
 					variant="secondary"
-					disabled={disabled || !canAdd}
-					onClick={() => onChange([...items, ""])}
+					isDisabled={disabled || !canAdd}
+					onPress={() => onChange([...items, ""])}
 				>
 					<Plus size={15} />
 					Add item

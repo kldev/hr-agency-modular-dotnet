@@ -39,7 +39,7 @@ export function TasksPanel({ range, onRangeChange, onAdd, onOpen }: TasksPanelPr
 					</p>
 				</div>
 
-				<Button variant="secondary" icon={<Plus size={14} />} onClick={onAdd}>
+				<Button variant="secondary" icon={<Plus size={14} />} onPress={onAdd}>
 					Add task
 				</Button>
 			</div>

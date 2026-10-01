@@ -47,14 +47,14 @@ export function JobsDescriptopnToolbar({ search, onSearchChange, onClear }: Jobs
 					icon={<SlidersHorizontal size={15} />}
 					aria-label="Clear"
 					title="Clear"
-					onClick={onClear}
+					onPress={onClear}
 				>
 					Clear
 				</Button>
 			</div>
 
 			<div className="toolbar-right">
-				<Button variant="primary" icon={<Plus size={15} />} onClick={handleAdd}>
+				<Button variant="primary" icon={<Plus size={15} />} onPress={handleAdd}>
 					Add job description
 				</Button>
 			</div>

@@ -48,7 +48,7 @@ export function ProjectOverviewSection({ project, onAssignTeam }: ProjectOvervie
 			</dl>
 
 			<div className="project-section-body">
-				<Button variant="ghost" icon={<UsersRound size={15} />} onClick={onAssignTeam}>
+				<Button variant="ghost" icon={<UsersRound size={15} />} onPress={onAssignTeam}>
 					{project.teamId ? "Change team" : "Assign team"}
 				</Button>
 			</div>
