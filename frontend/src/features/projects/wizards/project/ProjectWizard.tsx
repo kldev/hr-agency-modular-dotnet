@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { BadRequestDetails, EngagementType } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
@@ -93,7 +93,7 @@ export function ProjectWizard({
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(
+				toast.danger(
 					details?.title ??
 						(editing ? "Unable to update the project" : "Unable to create the project"),
 				);

@@ -1,7 +1,7 @@
+import { toast } from "@heroui/react";
 import { Network, Plus } from "lucide-react";
 import type React from "react";
 import { useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 import { Route } from "#/routes/app/org-structure";
 import type { OrgUnitMember, OrgUnitRow } from "@/api/models";
 import { Page } from "@/components/layout";
@@ -109,7 +109,7 @@ const OrgStructurePage: React.FC = () => {
 	 * unlikely - but a dialog that just closes on one would be worse than the refusal it swallowed.
 	 */
 	const reportRefusal = (error: unknown) =>
-		toast.error(refusalMessage(error, "The change was refused."));
+		toast.danger(refusalMessage(error, "The change was refused."));
 
 	const archive = useArchiveOrgUnit({
 		onSuccess: () => {

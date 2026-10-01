@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type { BadRequestDetails, BankAccountData, LegalEntityRequest } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
@@ -83,7 +83,7 @@ export function LegalEntityWizard({
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(
+				toast.danger(
 					details?.title ??
 						(editing ? "Unable to update the legal entity" : "Unable to create the legal entity"),
 				);

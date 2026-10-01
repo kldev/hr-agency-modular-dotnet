@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
@@ -31,7 +31,7 @@ const FormContent: React.FC<{
 		},
 
 		onError: () => {
-			toast.error("The month could not be sent");
+			toast.danger("The month could not be sent");
 		},
 	});
 

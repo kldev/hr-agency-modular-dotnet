@@ -1,6 +1,6 @@
+import { toast } from "@heroui/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import type { BadRequestDetails, JobPostProjection } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
@@ -81,7 +81,7 @@ function EditWizardForm({ jobPost }: { jobPost: JobPostProjection }) {
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(details?.title ?? "Unable to save the job post");
+				toast.danger(details?.title ?? "Unable to save the job post");
 
 				return;
 			}

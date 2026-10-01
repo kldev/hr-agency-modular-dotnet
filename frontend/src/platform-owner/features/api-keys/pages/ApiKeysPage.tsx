@@ -1,6 +1,6 @@
+import { toast } from "@heroui/react";
 import { KeyRound, Plus } from "lucide-react";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
 import type { ServiceApiKeyRow } from "#/api/models";
 import { Page } from "@/components/layout";
 import { Button, ConfirmDialog, EmptyState } from "@/components/ui";
@@ -72,7 +72,7 @@ export function ApiKeysPage() {
 					toRevoke &&
 					revoke.mutate(toRevoke.id, {
 						onSuccess: () => setToRevoke(null),
-						onError: () => toast.error("The key could not be revoked"),
+						onError: () => toast.danger("The key could not be revoked"),
 					})
 				}
 				onClose={() => setToRevoke(null)}

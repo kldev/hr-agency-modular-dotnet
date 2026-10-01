@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { toast } from "sonner";
 import { z } from "zod";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
@@ -50,7 +50,7 @@ const FormContent: React.FC<{
 			handleClose();
 		},
 
-		onError: () => toast.error("The day could not be removed"),
+		onError: () => toast.danger("The day could not be removed"),
 	});
 
 	const existing = target.day;

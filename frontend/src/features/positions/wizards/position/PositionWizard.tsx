@@ -1,5 +1,5 @@
+import { toast } from "@heroui/react";
 import { useState } from "react";
-import { toast } from "sonner";
 import type {
 	BadRequestDetails,
 	EngagementType,
@@ -118,7 +118,7 @@ export function PositionWizard({
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(
+				toast.danger(
 					details?.title ?? (editing ? "Unable to update the role" : "Unable to open the role"),
 				);
 			}

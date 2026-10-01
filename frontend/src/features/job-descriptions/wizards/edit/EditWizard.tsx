@@ -1,6 +1,6 @@
+import { toast } from "@heroui/react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import type { BadRequestDetails, JobDescriptionProjection } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
@@ -73,7 +73,7 @@ function EditWizardForm({ jobDescription }: { jobDescription: JobDescriptionProj
 			} catch (error) {
 				const details = error as BadRequestDetails;
 
-				toast.error(details?.title ?? "Unable to save the job description");
+				toast.danger(details?.title ?? "Unable to save the job description");
 
 				return;
 			}
