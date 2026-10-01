@@ -1,0 +1,80 @@
+/* =========================================================
+   HeroUI on the HR Agency design system
+   ========================================================= */
+
+/*
+ * HeroUI reads its own variables (--accent, --surface, --border, ...); this file feeds them from
+ * tokens.css, so a HeroUI control looks like the rest of the panel. Unlayered on purpose: HeroUI
+ * declares its theme in @layer base, and an unlayered rule wins over any layer.
+ *
+ * Every theme selector HeroUI knows points at the same tokens. The theme script in __root.tsx puts
+ * a .dark class on <html> in "auto" mode but switches tokens.css only through data-theme="dark";
+ * if HeroUI followed the class it would go dark while the panel around it stays light. Following
+ * the tokens keeps the two in step whatever the script does.
+ *
+ * Several names collide with Tailwind's theme on purpose: tokens.css already defines
+ * --color-surface, --color-border, --color-success, ... and those win over HeroUI's mapping of
+ * the same names. Only reference tokens here that tokens.css defines in both themes, or a
+ * reference would fall back to HeroUI's mapping and loop back to the variable being set.
+ */
+:root,
+.light,
+.dark,
+[data-theme="light"],
+[data-theme="dark"] {
+	--background: var(--color-bg);
+	--foreground: var(--color-text);
+
+	--surface: var(--color-surface);
+	--surface-foreground: var(--color-text);
+	--surface-secondary: var(--color-surface-subtle);
+	--surface-secondary-foreground: var(--color-text);
+	--surface-tertiary: var(--color-surface-selected);
+	--surface-tertiary-foreground: var(--color-text);
+
+	--overlay: var(--color-surface);
+	--overlay-foreground: var(--color-text);
+
+	--muted: var(--color-text-secondary);
+
+	--default: var(--color-surface-hover);
+	--default-foreground: var(--color-text);
+	--default-hover: var(--color-surface-selected);
+
+	--accent: var(--color-primary);
+	--accent-foreground: #ffffff;
+	--accent-hover: var(--color-primary-hover);
+	--accent-soft: var(--color-primary-soft);
+	--accent-soft-foreground: var(--color-primary);
+
+	--success: var(--color-success);
+	--success-foreground: #ffffff;
+	--success-soft: var(--color-success-soft);
+	--success-soft-foreground: var(--color-success);
+	--warning: var(--color-warning);
+	--warning-foreground: #ffffff;
+	--warning-soft: var(--color-warning-soft);
+	--warning-soft-foreground: var(--color-warning);
+	--danger: var(--color-danger);
+	--danger-foreground: #ffffff;
+	--danger-soft: var(--color-danger-soft);
+	--danger-soft-foreground: var(--color-danger);
+
+	--field-background: var(--color-surface);
+	--field-foreground: var(--color-text);
+	--field-placeholder: var(--color-text-muted);
+	--field-border: var(--color-border-strong);
+	--field-border-width: 1px;
+	--field-shadow: none;
+
+	--border: var(--color-border);
+	--separator: var(--color-border-subtle);
+	--focus: var(--color-primary);
+	--link: var(--color-primary);
+
+	--radius: var(--radius-lg);
+	--field-radius: var(--radius-md);
+
+	--surface-shadow: var(--shadow-subtle);
+	--overlay-shadow: var(--shadow-drawer);
+}

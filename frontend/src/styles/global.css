@@ -1,7 +1,9 @@
 @import "tailwindcss";
+@import "@heroui/styles";
 
 @import "./tokens.css";
 @import "./sidebar-tokens.css";
+@import "./heroui-theme.css";
 @import "./main.css";
 @import "./buttons.css";
 @import "./metrics.css";
