@@ -15,7 +15,7 @@ test("shows the sales pipeline and an opportunity", async ({ page }) => {
 
 	await open(page, "/app/sales");
 	await expect(page.getByRole("heading", { name: "Sales", level: 1 })).toBeVisible();
-	await expect(page.getByRole("table").getByRole("row").nth(1)).toBeVisible();
+	await expect(page.getByRole("grid").getByRole("row").nth(1)).toBeVisible();
 
 	await docShot(page, "sales");
 

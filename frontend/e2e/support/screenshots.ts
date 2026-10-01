@@ -5,7 +5,7 @@ import type { Locator, Page } from "@playwright/test";
 const screenshotsDir = fileURLToPath(new URL("../../../docs/screenshots/", import.meta.url));
 
 /** Toasts come and go on their own clock; they are feedback, not part of the screen. */
-const hideTransient = "[data-sonner-toaster] { display: none !important; }";
+const hideTransient = '.toast-region, [data-slot="toast-region"] { display: none !important; }';
 
 /**
  * Writes a documentation screenshot, and only when asked to (`yarn e2e:screenshots` sets

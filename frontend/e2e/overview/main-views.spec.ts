@@ -20,7 +20,8 @@ for (const view of views) {
 		await open(page, view.url);
 
 		await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-		await expect(page.getByRole("table").getByRole("row").nth(1)).toBeVisible();
+		// MainTable is React Aria's table, a grid: rows and cells move with the arrow keys.
+		await expect(page.getByRole("grid").getByRole("row").nth(1)).toBeVisible();
 
 		await docShot(page, view.name);
 	});
