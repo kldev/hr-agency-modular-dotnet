@@ -1,6 +1,6 @@
-import { AlertTriangle } from "lucide-react";
+import { AlertDialog } from "@heroui/react";
+import { AlertTriangle, X } from "lucide-react";
 import { Button } from "./Button";
-import { Dialog } from "./Dialog";
 
 interface ConfirmDialogProps {
 	open: boolean;
@@ -13,6 +13,12 @@ interface ConfirmDialogProps {
 	onClose: () => void;
 }
 
+/**
+ * HeroUI's AlertDialog, dressed as the panel's `Dialog` (header with a cross, icon beside the
+ * text, one button in the footer). AlertDialog ignores Escape by default; here it closes, as the
+ * confirmation always did - and stacked on a wizard, only the confirmation hears it, so "keep
+ * editing" is one key away.
+ */
 export function ConfirmDialog({
 	open,
 	title,
@@ -24,26 +30,42 @@ export function ConfirmDialog({
 	onClose,
 }: ConfirmDialogProps) {
 	return (
-		<Dialog
-			maxWidth="md"
-			open={open}
-			title={title}
-			onClose={onClose}
-			footer={
-				<Button variant={danger ? "danger" : "primary"} onPress={onConfirm} isPending={loading}>
-					{confirmLabel}
-				</Button>
-			}
+		<AlertDialog.Backdrop
+			isOpen={open}
+			onOpenChange={(isOpen) => {
+				if (!isOpen) onClose();
+			}}
+			isDismissable={false}
+			isKeyboardDismissDisabled={false}
 		>
-			<div className="confirm-dialog">
-				<div className="confirm-dialog-icon">
-					<AlertTriangle size={20} />
-				</div>
+			<AlertDialog.Container placement="center">
+				<AlertDialog.Dialog className="dialog--md">
+					<AlertDialog.Header>
+						<AlertDialog.Heading>{title}</AlertDialog.Heading>
+						<AlertDialog.CloseTrigger aria-label="Close dialog">
+							<X size={17} />
+						</AlertDialog.CloseTrigger>
+					</AlertDialog.Header>
 
-				<div>
-					<p className="confirm-dialog-description">{description}</p>
-				</div>
-			</div>
-		</Dialog>
+					<AlertDialog.Body>
+						<div className="confirm-dialog">
+							<AlertDialog.Icon className="confirm-dialog-icon">
+								<AlertTriangle size={20} />
+							</AlertDialog.Icon>
+
+							<div>
+								<p className="confirm-dialog-description">{description}</p>
+							</div>
+						</div>
+					</AlertDialog.Body>
+
+					<AlertDialog.Footer>
+						<Button variant={danger ? "danger" : "primary"} onPress={onConfirm} isPending={loading}>
+							{confirmLabel}
+						</Button>
+					</AlertDialog.Footer>
+				</AlertDialog.Dialog>
+			</AlertDialog.Container>
+		</AlertDialog.Backdrop>
 	);
 }

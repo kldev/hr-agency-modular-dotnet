@@ -1,7 +1,7 @@
+import { Drawer as HeroDrawer } from "@heroui/react";
 import clsx from "clsx";
-import { X } from "lucide-react";
 import type { FormHTMLAttributes, ReactNode } from "react";
-import { useEffect, useId } from "react";
+import { DrawerFrame } from "./Drawer";
 
 type FormDrawerProps = Omit<FormHTMLAttributes<HTMLFormElement>, "children"> & {
 	open: boolean;
@@ -20,72 +20,34 @@ type FormDrawerFooterProps = {
 	className?: string;
 };
 
+/**
+ * A drawer that is a form. The `<form>` wraps the header, `FormDrawer.Content` and
+ * `FormDrawer.Footer` alike, so a plain `type="submit"` in the footer submits it without the
+ * `form={id}` pairing `Drawer` needs. The dialog role and its label stay on HeroUI's dialog.
+ */
 function FormDrawer({ open, title, children, onClose, className, ...formProps }: FormDrawerProps) {
-	const titleId = useId();
-
-	useEffect(() => {
-		if (!open) {
-			return;
-		}
-
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				onClose();
-			}
-		};
-
-		document.addEventListener("keydown", handleKeyDown);
-		document.body.style.overflow = "hidden";
-
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-			document.body.style.overflow = "";
-		};
-	}, [open, onClose]);
-
-	if (!open) {
-		return null;
-	}
-
 	return (
-		<>
-			<div className="drawer-overlay" />
-
-			<form
-				{...formProps}
-				role="dialog"
-				aria-modal="true"
-				aria-labelledby={titleId}
-				className={clsx("drawer", className)}
-			>
-				<header className="drawer-header">
-					<h2 id={titleId} className="drawer-title">
-						{title}
-					</h2>
-
-					<button
-						type="button"
-						className="action-button"
-						aria-label="Close"
-						title="Close"
-						onClick={onClose}
-					>
-						<X size={17} />
-					</button>
-				</header>
-
-				{children}
-			</form>
-		</>
+		<DrawerFrame
+			open={open}
+			title={title}
+			onClose={onClose}
+			wrap={(content) => (
+				<form {...formProps} className={clsx("drawer__form", className)}>
+					{content}
+				</form>
+			)}
+		>
+			{children}
+		</DrawerFrame>
 	);
 }
 
 function Content({ children, className }: FormDrawerContentProps) {
-	return <div className={clsx("drawer-content", className)}>{children}</div>;
+	return <HeroDrawer.Body className={className}>{children}</HeroDrawer.Body>;
 }
 
 function Footer({ children, className }: FormDrawerFooterProps) {
-	return <footer className={clsx("drawer-footer", className)}>{children}</footer>;
+	return <HeroDrawer.Footer className={className}>{children}</HeroDrawer.Footer>;
 }
 
 export { FormDrawer };

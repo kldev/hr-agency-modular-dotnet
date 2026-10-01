@@ -448,6 +448,10 @@ export function DatePicker({
 				createPortal(
 					<div
 						ref={popoverRef}
+						// Portalled outside the HeroUI dialog or drawer the field usually sits in, which
+						// would make it inert and pull focus back out of it; React Aria leaves alone what
+						// is marked as top layer.
+						data-react-aria-top-layer
 						// Above the dialogs, drawers and dropdowns, which all sit at 1000 - the field
 						// this belongs to is often inside one of them.
 						className="fixed z-[1100] max-w-[calc(100vw-16px)]"
