@@ -1,8 +1,9 @@
+import { Input } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import type { OrganizationRequest } from "@/api/models";
-import { ArrayField, Button, FieldError, Input, WebsiteInput } from "@/components/ui";
+import { ArrayField, Button, FieldError, WebsiteInput } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 
 interface OrganizationFormProps {

@@ -1,7 +1,8 @@
+import { Input } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { WebsiteInput } from "#/components/ui";
 import type { BadRequestDetails, Industry, UpdateCompanyRequest } from "@/api/models";
-import { CountrySelect, EnumSelectFilter, FieldError, Input } from "@/components/ui";
+import { CountrySelect, EnumSelectFilter, FieldError } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { industries } from "@/features/companies/types";
 

@@ -1,3 +1,4 @@
+import { Input } from "@heroui/react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "./Button";
 
@@ -70,7 +71,8 @@ export function ArrayField({
 					return (
 						<div key={index}>
 							<div className="flex items-center gap-2">
-								<input
+								{/* the panel's `.input` look comes from forms.css; the red border is this row's own */}
+								<Input
 									value={item}
 									aria-label={`${itemLabel} ${index + 1}`}
 									aria-invalid={tooShort}
@@ -78,12 +80,7 @@ export function ArrayField({
 									disabled={disabled}
 									onChange={(event) => update(index, event.target.value)}
 									onBlur={() => normalize(index)}
-									className={[
-										"h-9 min-w-0 flex-1 rounded-md border bg-(--color-surface) px-3",
-										tooShort ? "border-(--color-danger)" : "border-(--color-border-strong)",
-										"text-sm text-(--color-text) placeholder:text-(--color-text-muted) focus:border-(--color-primary)",
-										" focus:ring-2 focus:ring-(--color-primary-soft)",
-									].join(" ")}
+									className="array-field-input min-w-0 flex-1"
 								/>
 								<button
 									type="button"

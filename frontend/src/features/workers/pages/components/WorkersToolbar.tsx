@@ -1,7 +1,7 @@
+import { Input } from "@heroui/react";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import type { WorkerStatus } from "@/api/models";
 import { Button, EnumFilter, type ViewMode, ViewSwitch } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
 import { workerStatuses } from "../../types";
 
 interface WorkersToolbarProps {

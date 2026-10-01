@@ -1,10 +1,9 @@
-import { Chip } from "@heroui/react";
+import { Chip, Input } from "@heroui/react";
 import clsx from "clsx";
 import { ArrowDown, ArrowUp, CircleAlert, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { SystemField } from "#/api/models";
 import { Button, EmptyState } from "#/components/ui";
-import { Input } from "#/components/ui/Input";
 import { Select } from "#/components/ui/Select";
 import { fieldTypes } from "../types";
 import { FieldEditor } from "./FieldEditor";

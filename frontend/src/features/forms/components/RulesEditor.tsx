@@ -1,6 +1,5 @@
+import { Input, Switch } from "@heroui/react";
 import type { FieldRules, FieldType } from "#/api/models";
-import { Input } from "#/components/ui/Input";
-import { Toggle } from "#/components/ui/Toggle";
 import { takesTypedText } from "../types";
 
 type RulesEditorProps = {
@@ -50,12 +49,18 @@ export function RulesEditor({ idPrefix, type, rules, disabled, onChange }: Rules
 	return (
 		<div className="flex flex-col gap-3">
 			<span className="toolbar-toggle">
-				<Toggle
+				<Switch
 					id={`${idPrefix}-required`}
-					checked={rules.required === true}
-					disabled={disabled}
-					onChange={(event) => set({ required: event.target.checked })}
-				/>
+					isSelected={rules.required === true}
+					isDisabled={disabled}
+					onChange={(selected) => set({ required: selected })}
+				>
+					<Switch.Content>
+						<Switch.Control>
+							<Switch.Thumb />
+						</Switch.Control>
+					</Switch.Content>
+				</Switch>
 				<label htmlFor={`${idPrefix}-required`}>
 					{type === "Boolean" ? "Must be ticked" : "Required"}
 				</label>

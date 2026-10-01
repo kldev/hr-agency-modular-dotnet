@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { moneyInputValue, parseMoney } from "#/components/ui/Input";
+import { moneyInputValue, parseMoney } from "#/components/ui/money";
 import { withFieldGroup } from "#/forms";
 import type { CurrencyCode, RateBasis, RateInput, RateUnit, WorkRate } from "@/api/models";
 import { rateBases, rateUnits } from "@/features/positions/types";

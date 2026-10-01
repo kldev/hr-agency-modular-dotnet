@@ -1,5 +1,6 @@
+import { Input, Switch } from "@heroui/react";
 import { Plus, Search } from "lucide-react";
-import { Button, Input, Toggle } from "@/components/ui";
+import { Button } from "@/components/ui";
 
 interface Props {
 	search: string;
@@ -41,11 +42,17 @@ export function EmploymentToolbar({
 				 * second question.
 				 */}
 				<span className="toolbar-toggle">
-					<Toggle
+					<Switch
 						id="employment-covered-only"
-						checked={coveredOnly}
-						onChange={(event) => onCoveredOnlyChange(event.target.checked)}
-					/>
+						isSelected={coveredOnly}
+						onChange={(selected) => onCoveredOnlyChange(selected)}
+					>
+						<Switch.Content>
+							<Switch.Control>
+								<Switch.Thumb />
+							</Switch.Control>
+						</Switch.Content>
+					</Switch>
 
 					<label htmlFor="employment-covered-only">Owes hours</label>
 				</span>

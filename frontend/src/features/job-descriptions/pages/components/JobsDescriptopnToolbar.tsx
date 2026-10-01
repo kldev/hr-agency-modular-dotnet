@@ -1,7 +1,7 @@
+import { Input } from "@heroui/react";
 import { useRouter } from "@tanstack/react-router";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
 
 interface JobsPageToolbarProps {
 	search: string;

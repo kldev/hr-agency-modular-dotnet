@@ -1,8 +1,7 @@
-import clsx from "clsx";
-import type { ChangeEvent, InputHTMLAttributes } from "react";
-import { Input } from "./Input";
+import { Input, type InputProps } from "@heroui/react";
+import type { ChangeEvent } from "react";
 
-type WebsiteInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
+type WebsiteInputProps = Omit<InputProps, "type">;
 
 function normalizeWebsite(value: string): string {
 	const trimmed = value.trim();
@@ -80,7 +79,7 @@ export function WebsiteInput({
 		<Input
 			{...props}
 			type="url"
-			className={clsx(className)}
+			className={className}
 			onChange={handleChange}
 			onPaste={handlePaste}
 			onBlur={handleBlur}

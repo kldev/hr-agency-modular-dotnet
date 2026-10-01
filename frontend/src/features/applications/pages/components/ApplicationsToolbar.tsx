@@ -1,7 +1,7 @@
+import { Input } from "@heroui/react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type { CandidateSource } from "@/api/models";
 import { Button, EnumSelectFilter, type ViewMode, ViewSwitch } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
 import { applicationSources, type WorkerFileFilter, workerFileFilters } from "../../types";
 
 interface ApplicationsToolbarProps {

@@ -1,7 +1,7 @@
+import { Input, Switch } from "@heroui/react";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import type { WorkerContractType } from "@/api/models";
-import { Button, EnumFilter, Toggle } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
+import { Button, EnumFilter } from "@/components/ui";
 import { workerContractTypes } from "../../types";
 
 interface PositionsToolbarProps {
@@ -54,11 +54,17 @@ export function PositionsToolbar({
 					 * default and asked for explicitly rather than filtered out of a full list.
 					 */}
 					<span className="toolbar-toggle">
-						<Toggle
+						<Switch
 							id="positions-include-archived"
-							checked={includeArchived}
-							onChange={(event) => onIncludeArchivedChange(event.target.checked)}
-						/>
+							isSelected={includeArchived}
+							onChange={(selected) => onIncludeArchivedChange(selected)}
+						>
+							<Switch.Content>
+								<Switch.Control>
+									<Switch.Thumb />
+								</Switch.Control>
+							</Switch.Content>
+						</Switch>
 
 						<label htmlFor="positions-include-archived">Include archived</label>
 					</span>

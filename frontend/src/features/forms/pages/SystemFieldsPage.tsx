@@ -1,10 +1,9 @@
-import { Chip, Table, toast } from "@heroui/react";
+import { Chip, Switch, Table, toast } from "@heroui/react";
 import { Archive, ListChecks, Pencil, Plus, Sparkles } from "lucide-react";
 import { useRef, useState } from "react";
 import type { SystemField } from "#/api/models";
 import { Page } from "#/components/layout";
 import { Button, ConfirmDialog, EmptyState } from "#/components/ui";
-import { Toggle } from "#/components/ui/Toggle";
 import { type SystemFieldCommand, SystemFieldDrawer } from "../drawers/SystemFieldDrawer";
 import { useAddStandardSystemFields, useArchiveSystemField, useGetSystemFields } from "../hooks";
 import { fieldTypes, systemFieldSources } from "../types";
@@ -60,11 +59,17 @@ export default function SystemFieldsPage() {
 				<div className="toolbar">
 					<div className="toolbar-left">
 						<span className="toolbar-toggle">
-							<Toggle
+							<Switch
 								id="system-fields-archived"
-								checked={includeArchived}
-								onChange={(event) => setIncludeArchived(event.target.checked)}
-							/>
+								isSelected={includeArchived}
+								onChange={(selected) => setIncludeArchived(selected)}
+							>
+								<Switch.Content>
+									<Switch.Control>
+										<Switch.Thumb />
+									</Switch.Control>
+								</Switch.Content>
+							</Switch>
 							<label htmlFor="system-fields-archived">Include archived</label>
 						</span>
 					</div>

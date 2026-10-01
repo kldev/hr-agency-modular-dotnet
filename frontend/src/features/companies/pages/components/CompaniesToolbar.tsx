@@ -1,7 +1,6 @@
+import { Input } from "@heroui/react";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
 
 interface CompaniesToolbarProps {
 	search: string;

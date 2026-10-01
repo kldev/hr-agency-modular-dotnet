@@ -2,9 +2,16 @@
    Form Controls
    ========================================================= */
 
+/*
+ * The panel's field look on HeroUI's fields. HeroUI renders `.input`, `.textarea` and
+ * `.select__trigger` inside @layer components; these rules are unlayered, so they win wherever the
+ * two disagree (height, padding, border, radius, type size). `.native-select` is the plain <select>
+ * the screens with hand-written <option>s still use (components/ui/Select).
+ */
 .input,
-.select,
-.textarea {
+.textarea,
+.native-select,
+.select__trigger {
 	width: 100%;
 
 	border: 1px solid var(--color-border-strong);
@@ -12,6 +19,7 @@
 
 	background: var(--color-surface);
 	color: var(--color-text);
+	box-shadow: none;
 
 	transition:
 		border-color var(--transition-fast),
@@ -19,16 +27,31 @@
 }
 
 .input,
-.select {
+.native-select,
+.select__trigger {
 	height: 36px;
 
 	padding: 0 var(--space-3);
+}
+
+/* HeroUI's Select: the trigger reads like the native select it replaced. */
+.select__trigger {
+	align-items: center;
+
+	/* room for the chevron, which HeroUI positions absolutely at the end */
+	padding-inline-end: 28px;
+}
+
+.input {
+	font-size: 0.875rem;
 }
 
 .textarea {
 	min-height: 90px;
 
 	padding: var(--space-3);
+
+	font-size: inherit;
 
 	resize: vertical;
 }
@@ -38,19 +61,57 @@
 	color: var(--color-text-muted);
 }
 
-.input:hover,
-.select:hover,
-.textarea:hover {
-	border-color: var(--color-border-strong);
-}
-
 .input:focus,
-.select:focus,
-.textarea:focus {
+.textarea:focus,
+.native-select:focus,
+.select__trigger[data-focused="true"],
+.select__trigger[data-focus-visible="true"],
+.select[data-open="true"] .select__trigger {
 	border-color: var(--color-primary);
+	outline: none;
 
 	box-shadow: 0 0 0 2px var(--color-primary-soft);
 }
+
+/*
+ * HeroUI outlines an invalid field in red; the panel marks an error with the message under the
+ * field alone, so the outline is taken off to keep fields looking the way they always have.
+ */
+.input[data-invalid="true"],
+.textarea[data-invalid="true"],
+.select[data-invalid="true"] .select__trigger {
+	outline: none;
+}
+
+/* ArrayField marks a row that is too short straight away, before the schema has run. */
+.input.array-field-input[data-invalid="true"] {
+	border-color: var(--color-danger);
+}
+
+.input:disabled,
+.native-select:disabled,
+textarea:disabled,
+.select__trigger[data-disabled="true"] {
+	cursor: not-allowed;
+	background: var(--color-surface-subtle);
+	color: var(--color-text-muted);
+	border-color: var(--color-border);
+
+	opacity: 1;
+}
+
+.input:disabled::placeholder,
+textarea:disabled::placeholder {
+	color: var(--color-text-muted);
+}
+
+.select__value {
+	font-size: inherit;
+}
+
+/* =========================================================
+   Field layout
+   ========================================================= */
 
 .form-field {
 	display: flex;
@@ -65,9 +126,19 @@
 	font-weight: var(--font-weight-medium);
 }
 
+/* HeroUI dims the label of a disabled field; a form being saved keeps its labels readable. */
+.label.form-label {
+	opacity: 1;
+}
+
 .form-hint {
 	color: var(--color-text-muted);
 	font-size: var(--font-size-xs);
+}
+
+/* HeroUI hides a field's description once it is invalid; a hint here stays next to the error. */
+.textfield[data-invalid="true"] > .form-hint {
+	display: block;
 }
 
 .form-error {
@@ -75,159 +146,11 @@
 	font-size: var(--font-size-xs);
 }
 
-/* =========================================================
-   Toggle
-   ========================================================= */
-
-.toggle {
-	position: relative;
-
-	display: inline-flex;
-	align-items: center;
-
-	width: 36px;
-	height: 20px;
-
-	flex-shrink: 0;
-
-	cursor: pointer;
-}
-
-.toggle input {
-	position: absolute;
-
-	width: 1px;
-	height: 1px;
-
-	margin: -1px;
+/* HeroUI's FieldError in the panel's error style (color from .form-field-error in drawer.css). */
+.field-error.form-field-error {
 	padding: 0;
 
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-
-	white-space: nowrap;
-
-	border: 0;
-}
-
-.toggle-slider {
-	position: relative;
-
-	display: block;
-
-	width: 36px;
-	height: 20px;
-
-	border: 1px solid var(--color-border-strong);
-	border-radius: 999px;
-
-	background: var(--color-surface-hover);
-
-	transition:
-		background var(--transition-fast),
-		border-color var(--transition-fast);
-}
-
-.toggle-slider::after {
-	content: "";
-
-	position: absolute;
-	top: 2px;
-	left: 2px;
-
-	width: 14px;
-	height: 14px;
-
-	border-radius: 50%;
-
-	background: var(--color-surface);
-
-	box-shadow: var(--shadow-subtle);
-
-	transition: transform var(--transition-fast);
-}
-
-.toggle:hover .toggle-slider {
-	border-color: var(--color-primary);
-}
-
-.toggle input:checked + .toggle-slider {
-	border-color: var(--color-primary);
-	background: var(--color-primary);
-}
-
-.toggle input:checked + .toggle-slider::after {
-	transform: translateX(16px);
-}
-
-.toggle input:focus-visible + .toggle-slider {
-	box-shadow: 0 0 0 2px var(--color-primary-soft);
-}
-
-.toggle input:disabled + .toggle-slider {
-	cursor: not-allowed;
-
-	border-color: var(--color-border);
-	background: var(--color-surface-subtle);
-	opacity: 0.6;
-}
-
-.toggle:has(input:disabled) {
-	cursor: not-allowed;
-}
-
-.input {
-	height: 2.25rem;
-	width: 100%;
-	padding: 0 var(--space-3);
-
-	border: 1px solid var(--color-border-strong);
-	border-radius: var(--radius-md);
-
-	background: var(--color-surface);
-	color: var(--color-text);
-	font-size: 0.875rem;
-}
-
-.input::placeholder {
-	color: var(--color-text-muted);
-}
-
-.input:hover {
-	border-color: var(--color-border-strong);
-}
-
-.input:focus {
-	border-color: var(--color-primary);
-	outline: none;
-	box-shadow: 0 0 0 2px var(--color-primary-soft);
-}
-
-.input:disabled {
-	cursor: not-allowed;
-	background: var(--color-surface-subtle);
-	color: var(--color-text-muted);
-	border-color: var(--color-border);
-}
-
-.input:disabled:hover {
-	border-color: var(--color-border);
-}
-
-.input:disabled,
-.select:disabled,
-textarea:disabled {
-	cursor: not-allowed;
-	background: var(--color-surface-subtle);
-	color: var(--color-text-muted);
-	border-color: var(--color-border);
-
-	opacity: 1;
-}
-
-.input:disabled::placeholder,
-textarea:disabled::placeholder {
-	color: var(--color-text-muted);
+	font-size: inherit;
 }
 
 .form-input-action {
@@ -243,4 +166,84 @@ textarea:disabled::placeholder {
 
 .form-input-action .button {
 	flex-shrink: 0;
+}
+
+/* =========================================================
+   Switch - HeroUI's Switch in the panel's toggle look
+   ========================================================= */
+
+.switch__control {
+	width: 36px;
+	height: 20px;
+
+	border: 1px solid var(--color-border-strong);
+	border-radius: 999px;
+
+	background: var(--color-surface-hover);
+
+	transition:
+		background var(--transition-fast),
+		border-color var(--transition-fast);
+}
+
+.switch__thumb {
+	width: 14px;
+	height: 14px;
+
+	margin-inline-start: 2px;
+
+	border-radius: 50%;
+
+	background: var(--color-surface);
+	box-shadow: var(--shadow-subtle);
+
+	transition: margin var(--transition-fast);
+}
+
+.switch[data-selected="true"] .switch__control {
+	border-color: var(--color-primary);
+	background: var(--color-primary);
+}
+
+.switch[data-selected="true"] .switch__thumb {
+	margin-inline-start: 18px;
+
+	background: var(--color-surface);
+	box-shadow: var(--shadow-subtle);
+}
+
+.switch[data-disabled="true"] {
+	cursor: not-allowed;
+
+	opacity: 1;
+}
+
+.switch[data-disabled="true"] .switch__control {
+	border-color: var(--color-border);
+	background: var(--color-surface-subtle);
+	opacity: 0.6;
+}
+
+.switch[data-disabled="true"] .switch__thumb {
+	background: var(--color-surface);
+	opacity: 1;
+}
+
+.switch:not([data-disabled="true"]):hover .switch__control,
+.switch [data-slot="switch-content"][data-hovered="true"] .switch__control {
+	border-color: var(--color-primary);
+}
+
+.switch [data-slot="switch-content"][data-focus-visible="true"] .switch__control {
+	box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+/* =========================================================
+   Radio - HeroUI rounds the control with the theme radius, and the panel's radii are small
+   enough to turn the circle into a square
+   ========================================================= */
+
+.radio__control,
+.radio__indicator:empty::before {
+	border-radius: 50%;
 }

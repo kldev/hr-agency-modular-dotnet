@@ -1,10 +1,10 @@
+import { Input } from "@heroui/react";
 import { Check, Copy, TriangleAlert } from "lucide-react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import type { ServiceApiKeyIssued } from "#/api/models";
 import { ApiError } from "#/components/ui/ApiError";
 import { Button } from "#/components/ui/Button";
 import { Drawer } from "#/components/ui/Drawer";
-import { Input } from "#/components/ui/Input";
 import { copyToClipboard } from "#/utlis/copyToClipboard";
 import { useIssueServiceApiKey } from "../hooks";
 

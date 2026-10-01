@@ -1,9 +1,16 @@
+import { FieldError, Label, Radio, RadioGroup } from "@heroui/react";
 import clsx from "clsx";
+import type { ReactNode } from "react";
 
+/*
+ * Each option is a card. Tailwind utilities sit in a later layer than HeroUI's components, so these
+ * classes win over `.radio__content`'s own inline row.
+ */
 const optionClass = [
-	"flex cursor-pointer items-start gap-3 rounded-[var(--radius-md)]",
-	"border bg-(--color-surface) p-3 transition",
+	"flex w-full cursor-pointer items-start gap-3 rounded-[var(--radius-md)]",
+	"border border-(--color-border) bg-(--color-surface) p-3 font-normal text-(--color-text) transition",
 	"hover:border-(--color-primary) hover:bg-(--color-surface-hover)",
+	"data-[selected=true]:border-(--color-primary) data-[selected=true]:bg-(--color-primary-soft)",
 ].join(" ");
 
 export type ChoiceGroupProps<T extends string> = {
@@ -15,6 +22,8 @@ export type ChoiceGroupProps<T extends string> = {
 	columns?: 1 | 2 | 3;
 	disabled?: boolean;
 	className?: string;
+	/** Marks the group invalid and shows the message under it, linked for assistive tech. */
+	errorMessage?: ReactNode;
 	onChange: (value: T) => void;
 };
 
@@ -27,12 +36,23 @@ export function ChoiceGroup<T extends string>({
 	columns = 3,
 	disabled,
 	className,
+	errorMessage,
 	onChange,
 }: ChoiceGroupProps<T>) {
 	return (
-		<fieldset className={className} disabled={disabled}>
+		<RadioGroup
+			className={className}
+			name={name}
+			aria-label={label ? undefined : name}
+			value={value ?? null}
+			isDisabled={disabled}
+			isInvalid={Boolean(errorMessage)}
+			// the form's schema is the authority; native validation would add a second message
+			validationBehavior="aria"
+			onChange={(next) => onChange(next as T)}
+		>
 			{label ? (
-				<legend className="mb-3 text-sm font-medium text-(--color-text-secondary)">{label}</legend>
+				<Label className="mb-3 text-sm font-medium text-(--color-text-secondary)">{label}</Label>
 			) : null}
 
 			<div
@@ -47,39 +67,30 @@ export function ChoiceGroup<T extends string>({
 					const description = descriptions?.[option];
 
 					return (
-						<label
-							key={option}
-							className={clsx(
-								optionClass,
-								value === option
-									? "border-(--color-primary) bg-(--color-primary-soft)"
-									: "border-(--color-border)",
-								disabled && "cursor-not-allowed opacity-60",
-							)}
-						>
-							<input
-								type="radio"
-								name={name}
-								value={option}
-								checked={value === option}
-								disabled={disabled}
-								onChange={() => onChange(option)}
-								className="mt-0.5 h-4 w-4 accent-(--color-primary)"
-							/>
+						<Radio key={option} value={option} className="mt-0 data-[disabled=true]:opacity-60">
+							<Radio.Content className={optionClass}>
+								<Radio.Control className="mt-0.5">
+									<Radio.Indicator />
+								</Radio.Control>
 
-							<span>
-								<span className="block text-sm font-medium">{options[option]}</span>
+								<span>
+									<span className="block text-sm font-medium">{options[option]}</span>
 
-								{description ? (
-									<span className="mt-0.5 block text-xs leading-5 text-(--color-text-muted)">
-										{description}
-									</span>
-								) : null}
-							</span>
-						</label>
+									{description ? (
+										<span className="mt-0.5 block text-xs leading-5 text-(--color-text-muted)">
+											{description}
+										</span>
+									) : null}
+								</span>
+							</Radio.Content>
+						</Radio>
 					);
 				})}
 			</div>
-		</fieldset>
+
+			{errorMessage ? (
+				<FieldError className="form-field-error mt-2 font-medium">{errorMessage}</FieldError>
+			) : null}
+		</RadioGroup>
 	);
 }
