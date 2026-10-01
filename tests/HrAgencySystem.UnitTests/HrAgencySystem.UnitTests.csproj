@@ -47,6 +47,6 @@
     <ProjectReference Include="..\..\src\HrAgencySystem.LegalEntities\HrAgencySystem.LegalEntities.csproj" />
     <ProjectReference Include="..\..\src\HrAgencySystem.Teams\HrAgencySystem.Teams.csproj" />
     <ProjectReference Include="..\..\src\services\HrAgencySystem.NotificationWorker\HrAgencySystem.NotificationWorker.csproj" />
-    <ProjectReference Include="..\HrAgencySystem.IntegrationTests\HrAgencySystem.IntegrationTests.csproj" />
+    <ProjectReference Include="..\..\src\HrAgencySystem.Api\HrAgencySystem.Api.csproj" />
   </ItemGroup>
 </Project>

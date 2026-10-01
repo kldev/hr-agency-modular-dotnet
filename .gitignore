@@ -9,3 +9,5 @@ frontend/.plans/
 .docs/
 
 tests/.temp/
+
+.instructions/
