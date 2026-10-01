@@ -35,13 +35,19 @@ export async function continueTo(scope: Page | Locator, title: string) {
 	await expectStep(scope, title);
 }
 
-/** Types a day into a `DatePicker` the way a user would, as dd.mm.yyyy, and commits it. */
+/**
+ * Types a day into a `DatePicker` the way a user would, as dd.mm.yyyy. The field is HeroUI's
+ * segmented `DateField`: a group named by its label, one spinbutton per part, so the day segment
+ * is focused and the keys go to the page - each segment moves on by itself, and a dot moves on
+ * too. A whole day is taken as soon as the year is typed; there is nothing to commit.
+ */
 export async function fillDate(scope: Page | Locator, label: string, day: string) {
-	const input = scope.getByRole("textbox", { name: label, exact: true });
+	const page = "page" in scope && typeof scope.page === "function" ? scope.page() : (scope as Page);
+	const field = scope.getByRole("group", { name: label, exact: true });
 
-	await input.fill(day);
-	await input.press("Enter");
-	await expect(input).toHaveValue(day);
+	await field.locator('[data-type="day"]').click();
+	await page.keyboard.type(day);
+	await expect(field.locator('[data-slot="date-input-group-input"]')).toHaveText(day);
 }
 
 /** A `SummaryItem` on a wizard's review step: the label and the value it answers. */

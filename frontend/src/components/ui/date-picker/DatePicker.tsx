@@ -1,34 +1,32 @@
+import { DateField, DatePicker as HeroDatePicker, Label } from "@heroui/react";
+import type { CalendarDate, DateValue } from "@internationalized/date";
 import clsx from "clsx";
 import type { Locale } from "date-fns";
 import { pl } from "date-fns/locale";
 import { CalendarDays, ChevronDown, X } from "lucide-react";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import type React from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { I18nProvider } from "react-aria-components";
 import { DatePickerCalendar } from "./DatePickerCalendar";
 import {
+	boundsError,
 	clampDate,
-	isDateDisabled,
-	normalizeDate,
+	dayKey,
+	fromCalendarDate,
+	isDateSeparator,
+	isYearIncomplete,
+	NOT_A_DATE_MESSAGE,
 	parseTypedDate,
-	withDateSeparators,
-	yearsBetween,
+	segmentsFill,
+	toCalendarDate,
+	yearRangeFor,
 } from "./datePickerUtils";
-
-/** How far back and ahead a year select reaches when neither a range nor a limit says otherwise. */
-const DEFAULT_YEARS_BACK = 100;
-const DEFAULT_YEARS_AHEAD = 20;
-
-/** Enough room to decide whether the calendar still fits below the field before it is measured. */
-const ESTIMATED_CALENDAR_HEIGHT = 340;
-
-const VIEWPORT_MARGIN = 8;
-
-const FIELD_GAP = 6;
 
 export interface DatePickerProps {
 	value?: Date | null;
 	onChange?: (value: Date | null) => void;
 
+	/** Names the field when it has neither a `label` nor an `aria-label`. */
 	placeholder?: string;
 
 	minDate?: Date;
@@ -40,6 +38,10 @@ export interface DatePickerProps {
 
 	error?: string;
 
+	/**
+	 * Kept for the callers that pass it. The field always shows the panel's `dd.MM.yyyy` - the
+	 * segments come from `locale`, and Polish writes a day exactly that way.
+	 */
 	format?: string;
 
 	locale?: Locale;
@@ -50,12 +52,15 @@ export interface DatePickerProps {
 
 	name?: string;
 
+	/** A visible label inside the field, which names it for assistive technology too. */
+	label?: React.ReactNode;
+
 	"aria-label"?: string;
 
 	/**
-	 * A year select in the calendar header. Off by default: most dates here are a few weeks either
-	 * side of today - an interview, a start date - and a select would only be noise. Turn it on
-	 * where the year is the hard part: a date of birth, a document issued years ago.
+	 * A month and a year select in the calendar header. Off by default: most dates here are a few
+	 * weeks either side of today - an interview, a start date - and selects would only be noise.
+	 * Turn it on where the year is the hard part: a date of birth, a document issued years ago.
 	 */
 	yearSelect?: boolean;
 
@@ -66,6 +71,37 @@ export interface DatePickerProps {
 	yearRange?: { from: number; to: number };
 }
 
+const SEGMENT = '[data-slot="date-input-group-segment"]:not([data-type="literal"])';
+
+/*
+ * What an empty segment shows. The segments follow the calendar's locale, and Polish would show
+ * "dd.mm.rrrr"; the panel is English and has always asked for "dd.mm.yyyy".
+ */
+const SEGMENT_PLACEHOLDERS: Partial<Record<string, string>> = {
+	day: "dd",
+	month: "mm",
+	year: "yyyy",
+};
+
+/** The editable segments of a field, in order. */
+function segmentsOf(group: HTMLElement | null): HTMLElement[] {
+	return group ? Array.from(group.querySelectorAll<HTMLElement>(SEGMENT)) : [];
+}
+
+/**
+ * HeroUI's `DatePicker`: a segmented field (`DateField`) and a calendar in a React Aria popover.
+ * The API is the panel's own and speaks `Date`; the conversion to `CalendarDate` stays in here.
+ *
+ * What the panel adds on top of the segments, because a date is typed far more often than picked:
+ *
+ * - "1.03.1959", "1-3-1959" - a separator moves to the next part even before it is full, so a
+ *   one digit day does not swallow the month's first digit. "07031959" needs nothing: segments
+ *   move on when full.
+ * - Pasting "07.03.1959", "07031959", "07-03-1959" or an ISO date fills the whole field - a
+ *   segment on its own takes digits one at a time and would ignore a pasted string.
+ * - A day outside `minDate`/`maxDate`, and a half-typed one on leaving the field, stay in the
+ *   field with the reason under it; the form keeps its last good value until they are fixed.
+ */
 export function DatePicker({
 	value = null,
 	onChange,
@@ -75,409 +111,275 @@ export function DatePicker({
 	disabled = false,
 	clearable = true,
 	error,
-	//format: dateFormat = "dd.MM.yyyy",
 	locale = pl,
 	className,
 	id,
 	name,
+	label,
 	"aria-label": ariaLabel,
 	yearSelect = false,
 	yearRange,
 }: DatePickerProps) {
-	const rootRef = useRef<HTMLDivElement>(null);
-	const inputRef = useRef<HTMLInputElement>(null);
-	const popoverRef = useRef<HTMLDivElement>(null);
-
-	const [open, setOpen] = useState(false);
-
-	const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
-
-	const [visibleMonth, setVisibleMonth] = useState<Date>(normalizeDate(value ?? new Date()));
-
-	useEffect(() => {
-		if (value) {
-			setVisibleMonth(normalizeDate(value));
-		}
-	}, [value]);
+	const groupRef = useRef<HTMLDivElement>(null);
 
 	/*
-	 * The calendar is rendered into the body rather than next to the field, so it is positioned by
-	 * hand. Anything else would put it inside whichever scroll container the field happens to sit in
-	 * - and the wizard dialog clips its own overflow, which is where a half-cut calendar came from.
+	 * What the field shows. It follows `value` whenever the value changes from outside - a pick,
+	 * a form reset - but is also allowed to hold a day the form does not take (outside the limits),
+	 * so a refused entry stays on screen. React Aria resets its segments whenever this object
+	 * changes, so it is only ever replaced when the day really changes.
 	 */
-	const updatePosition = useCallback(() => {
-		const anchor = rootRef.current;
-
-		if (!anchor) {
-			return;
-		}
-
-		const field = anchor.getBoundingClientRect();
-		const calendar = popoverRef.current?.getBoundingClientRect();
-
-		const height = calendar?.height ?? ESTIMATED_CALENDAR_HEIGHT;
-		const width = calendar?.width ?? field.width;
-
-		const fitsBelow = window.innerHeight - field.bottom >= height + FIELD_GAP + VIEWPORT_MARGIN;
-		const fitsAbove = field.top >= height + FIELD_GAP + VIEWPORT_MARGIN;
-
-		// Below by default; above only when there is genuinely no room below but there is above.
-		const top = fitsBelow || !fitsAbove ? field.bottom + FIELD_GAP : field.top - height - FIELD_GAP;
-
-		const left = Math.max(
-			VIEWPORT_MARGIN,
-			Math.min(field.left, window.innerWidth - width - VIEWPORT_MARGIN),
-		);
-
-		setPosition({ top, left });
-	}, []);
-
-	useLayoutEffect(() => {
-		if (!open) {
-			setPosition(null);
-			return;
-		}
-
-		updatePosition();
-
-		// Capture, so scrolling any ancestor - including a dialog body - moves the calendar with it.
-		window.addEventListener("scroll", updatePosition, true);
-		window.addEventListener("resize", updatePosition);
-
-		return () => {
-			window.removeEventListener("scroll", updatePosition, true);
-			window.removeEventListener("resize", updatePosition);
-		};
-	}, [open, updatePosition]);
-
-	useEffect(() => {
-		if (!open) {
-			return;
-		}
-
-		const handlePointerDown = (event: PointerEvent) => {
-			const target = event.target as Node;
-
-			const insideField = rootRef.current?.contains(target) ?? false;
-
-			// The calendar is no longer a descendant of the field, so it has to be asked separately.
-			const insideCalendar = popoverRef.current?.contains(target) ?? false;
-
-			if (!insideField && !insideCalendar) {
-				setOpen(false);
-			}
-		};
-
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				setOpen(false);
-
-				requestAnimationFrame(() => {
-					inputRef.current?.focus();
-				});
-			}
-		};
-
-		document.addEventListener("pointerdown", handlePointerDown);
-
-		document.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			document.removeEventListener("pointerdown", handlePointerDown);
-
-			document.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [open]);
-
-	const formatted = useCallback(
-		(date: Date | null) =>
-			date
-				? new Intl.DateTimeFormat(locale.code, {
-						day: "2-digit",
-						month: "2-digit",
-						year: "numeric",
-					}).format(date)
-				: "",
-		[locale.code],
-	);
+	const [fieldValue, setFieldValue] = useState<CalendarDate | null>(() => toCalendarDate(value));
 
 	/*
-	 * What is in the field while somebody types. It follows the value whenever the value changes
-	 * from outside - a pick in the calendar, a form reset - and is only read back on commit, so a
-	 * half typed "22.0" never reaches the form as a date.
-	 */
-	const [text, setText] = useState(() => formatted(value));
-
-	/*
-	 * Why the typed text was not taken. The text stays in the field next to it - wiping what
-	 * somebody typed because of one wrong digit makes them type it all again.
+	 * Why the entry was not taken. The entry stays in the field next to it - wiping what somebody
+	 * typed because of one wrong digit makes them type it all again.
 	 */
 	const [typedError, setTypedError] = useState<string | null>(null);
 
+	const [open, setOpen] = useState(false);
+
+	const [focusedValue, setFocusedValue] = useState<CalendarDate>(
+		() => toCalendarDate(clampDate(value ?? new Date(), minDate, maxDate)) as CalendarDate,
+	);
+
+	const valueKey = dayKey(value);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: follows the day, not the Date object
 	useEffect(() => {
-		setText(formatted(value));
-		setTypedError(null);
-	}, [value, formatted]);
-
-	const years = useMemo(() => {
-		if (!yearSelect) {
-			return undefined;
-		}
-
-		const now = new Date().getFullYear();
-
-		return yearsBetween(
-			yearRange?.from ?? minDate?.getFullYear() ?? now - DEFAULT_YEARS_BACK,
-			yearRange?.to ?? maxDate?.getFullYear() ?? now + DEFAULT_YEARS_AHEAD,
+		setFieldValue((current) =>
+			dayKey(fromCalendarDate(current)) === valueKey ? current : toCalendarDate(value),
 		);
-	}, [yearSelect, yearRange?.from, yearRange?.to, minDate, maxDate]);
+		setTypedError(null);
+	}, [valueKey]);
 
-	/**
-	 * Takes what was typed. Text that is not a day, or a day outside the limits, stays in the field
-	 * with a reason under it, and the form keeps its last good value until it is fixed.
-	 */
-	const commitText = () => {
-		const parsed = parseTypedDate(text);
+	const years = useMemo(
+		() =>
+			yearSelect
+				? yearRangeFor({ yearRange, minDate, maxDate, currentYear: new Date().getFullYear() })
+				: undefined,
+		[yearSelect, yearRange, minDate, maxDate],
+	);
 
-		if (parsed === null) {
+	/** Takes a whole day - typed to the end, picked, pasted - or refuses it with a reason. */
+	const accept = (next: DateValue | null) => {
+		const date = fromCalendarDate(next);
+
+		if (!date) {
 			setTypedError(null);
 
 			if (clearable) {
+				setFieldValue(null);
 				if (value) onChange?.(null);
 			} else {
-				setText(formatted(value));
+				// Nothing to fall back on but the last day the form holds.
+				setFieldValue(toCalendarDate(value));
 			}
 
 			return;
 		}
 
+		setFieldValue(toCalendarDate(date));
+
+		if (isYearIncomplete(next)) {
+			// Shown as typed, judged on the last digit or on leaving the field.
+			setTypedError(null);
+			return;
+		}
+
+		const outside = boundsError(date, minDate, maxDate);
+
+		setTypedError(outside);
+
+		if (!outside && dayKey(date) !== valueKey) {
+			onChange?.(date);
+		}
+	};
+
+	/** Leaving the field with only part of a date in it is a mistake worth saying out loud. */
+	const handleBlur = () => {
+		const fill = segmentsFill(
+			segmentsOf(groupRef.current).map((segment) => !segment.hasAttribute("data-placeholder")),
+		);
+
+		if (fill === "partial" || isYearIncomplete(fieldValue)) {
+			setTypedError(NOT_A_DATE_MESSAGE);
+		} else if (fill === "empty" && typedError === NOT_A_DATE_MESSAGE) {
+			setTypedError(null);
+		}
+	};
+
+	const handlePaste = (event: React.ClipboardEvent) => {
+		const text = event.clipboardData.getData("text");
+
+		if (!text) {
+			return;
+		}
+
+		event.preventDefault();
+
+		const parsed = parseTypedDate(text);
+
 		if (parsed === undefined) {
-			setTypedError("Not a date - type it as dd.mm.yyyy.");
+			setTypedError(NOT_A_DATE_MESSAGE);
 			return;
 		}
 
-		if (isDateDisabled(parsed, minDate, maxDate)) {
-			setTypedError("That date is outside the allowed range.");
-			return;
-		}
-
-		setTypedError(null);
-
-		const normalized = normalizeDate(parsed);
-
-		if (!value || normalized.getTime() !== normalizeDate(value).getTime()) {
-			onChange?.(normalized);
-		}
-
-		setText(formatted(normalized));
-		setVisibleMonth(normalized);
+		accept(toCalendarDate(parsed));
 	};
 
-	const handleOpen = () => {
-		if (disabled) {
+	/*
+	 * Whether the focused segment got a digit since it took focus. A separator only moves on from
+	 * a segment that has one: after "07" the field has already moved to the month by itself, and
+	 * the dot that follows must not skip the month too.
+	 */
+	const typedInSegment = useRef(false);
+
+	const handleKeyDown = (event: React.KeyboardEvent) => {
+		const target = event.target as HTMLElement;
+
+		if (!target.matches(SEGMENT)) {
 			return;
 		}
 
-		if (value) {
-			setVisibleMonth(normalizeDate(value));
+		if (/^\d$/.test(event.key)) {
+			typedInSegment.current = true;
+			return;
 		}
 
-		setOpen((current) => !current);
+		if (!isDateSeparator(event.key)) {
+			return;
+		}
+
+		event.preventDefault();
+
+		if (!typedInSegment.current) {
+			return;
+		}
+
+		const segments = segmentsOf(groupRef.current);
+		segments[segments.indexOf(target) + 1]?.focus();
 	};
 
-	const handleSelect = (date: Date) => {
-		const normalized = normalizeDate(date);
+	const handleOpenChange = (isOpen: boolean) => {
+		if (isOpen) {
+			setFocusedValue(
+				fieldValue ?? (toCalendarDate(clampDate(new Date(), minDate, maxDate)) as CalendarDate),
+			);
+		}
 
-		onChange?.(normalized);
-		// Set here too: picking the day already held changes no value, so the effect would not run.
-		setText(formatted(normalized));
-		setTypedError(null);
-		setVisibleMonth(normalized);
-		setOpen(false);
-
-		requestAnimationFrame(() => {
-			inputRef.current?.focus();
-		});
+		setOpen(isOpen);
 	};
 
 	const handleClear = () => {
-		onChange?.(null);
-		setText("");
 		setTypedError(null);
+		setFieldValue(null);
 		setOpen(false);
-
-		requestAnimationFrame(() => {
-			inputRef.current?.focus();
-		});
+		if (value) onChange?.(null);
+		segmentsOf(groupRef.current)[0]?.focus();
 	};
 
 	const handleToday = () => {
 		const today = clampDate(new Date(), minDate, maxDate);
 
-		onChange?.(today);
-		setText(formatted(today));
-		setTypedError(null);
-		setVisibleMonth(today);
+		accept(toCalendarDate(today));
 		setOpen(false);
-
-		requestAnimationFrame(() => {
-			inputRef.current?.focus();
-		});
 	};
 
-	const handleMonthChange = (month: Date) => {
-		setVisibleMonth(month);
-	};
+	const message = typedError ?? error;
 
 	return (
-		<div ref={rootRef} className={clsx("relative w-full", className)}>
-			{name && (
-				<input
-					type="hidden"
-					name={name}
-					value={
-						value
-							? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, "0")}-${String(
-									value.getDate(),
-								).padStart(2, "0")}`
-							: ""
-					}
-				/>
-			)}
-
-			<div
-				className={clsx(
-					"flex min-h-9.5 w-full items-center gap-2",
-					"rounded-[3px]",
-					"border",
-					"bg-(--color-surface)",
-					"px-3",
-					"transition-colors",
-					error || typedError ? "border-(--color-danger)" : "border-(--color-border)",
-					!disabled && !error && !typedError && "hover:border-(--color-border-strong)",
-					!disabled && "focus-within:ring-2 focus-within:ring-(--color-primary-soft)",
-					disabled && "cursor-not-allowed bg-(--color-surface-subtle) opacity-60",
-				)}
+		// The segments, the placeholders and the calendar speak the panel's locale, set here
+		// rather than for the whole app: the rest of the panel is English, and React Aria would
+		// otherwise take the browser's locale and render differently on the server.
+		<I18nProvider locale={locale.code ?? "pl"}>
+			<HeroDatePicker
+				className={clsx("panel-date-picker", className)}
+				id={id}
+				name={name}
+				aria-label={label ? undefined : (ariaLabel ?? placeholder)}
+				value={fieldValue}
+				onChange={accept}
+				onBlur={handleBlur}
+				// No minValue/maxValue on the field: React Aria would mark it invalid the moment the
+				// first digit of a year is typed. The limits are checked once the day is whole, and
+				// the calendar gets them below to grey out the days beyond.
+				isDisabled={disabled}
+				isInvalid={Boolean(message)}
+				validationBehavior="aria"
+				granularity="day"
+				shouldForceLeadingZeros
+				isOpen={open}
+				onOpenChange={handleOpenChange}
 			>
-				<button
-					type="button"
-					tabIndex={-1}
-					disabled={disabled}
-					aria-label="Open calendar"
-					aria-haspopup="dialog"
-					aria-expanded={open}
-					onClick={handleOpen}
-					className="inline-flex shrink-0 items-center outline-none"
-				>
-					<CalendarDays size={16} strokeWidth={1.8} className="text-(--color-text-muted)" />
-				</button>
+				{label && <Label className="form-label">{label}</Label>}
 
-				<input
-					ref={inputRef}
-					id={id}
-					type="text"
-					inputMode="numeric"
-					autoComplete="off"
-					disabled={disabled}
-					// With an id an outside `<label htmlFor>` names the field; the placeholder is the fallback.
-					aria-label={ariaLabel ?? (id ? undefined : placeholder)}
-					// The shape to type in; what the field is for is the label and the aria-label.
-					placeholder="dd.mm.yyyy"
-					value={text}
-					onChange={(event) => setText(withDateSeparators(event.target.value, text))}
-					onBlur={commitText}
-					onKeyDown={(event) => {
-						if (event.key === "Enter") {
-							// Commit instead of submitting the form with a half typed date in it.
-							event.preventDefault();
-							commitText();
-						}
-
-						if (event.key === "ArrowDown" && !open) {
-							event.preventDefault();
-							handleOpen();
-						}
+				<DateField.Group
+					ref={groupRef}
+					fullWidth
+					className="panel-date-field"
+					onKeyDown={handleKeyDown}
+					onFocus={() => {
+						typedInSegment.current = false;
 					}}
-					className="min-w-0 flex-1 bg-transparent text-sm text-(--color-text) outline-none placeholder:text-(--color-text-muted)"
-				/>
-
-				<button
-					type="button"
-					tabIndex={-1}
-					disabled={disabled}
-					aria-label={open ? "Close calendar" : "Open calendar"}
-					onClick={handleOpen}
-					className="inline-flex shrink-0 items-center outline-none"
+					onPaste={handlePaste}
 				>
-					<ChevronDown
-						size={16}
-						className={clsx("text-(--color-text-muted) transition-transform", open && "rotate-180")}
-					/>
-				</button>
+					<DateField.Prefix>
+						<HeroDatePicker.Trigger
+							aria-label="Open calendar"
+							className="panel-date-field__trigger"
+						>
+							<CalendarDays size={16} strokeWidth={1.8} />
+						</HeroDatePicker.Trigger>
+					</DateField.Prefix>
 
-				{(value || text) && clearable && !disabled && (
-					<button
-						type="button"
-						aria-label="Clear date"
-						onClick={handleClear}
-						className="
-					inline-flex
-					h-6
-					w-6
-					shrink-0
-					items-center
-					justify-center
-					rounded-[3px]
-					text-(--color-text-muted)
-					transition-colors
-					hover:bg-(--color-surface-hover)
-					hover:text-(--color-text)
-				"
-					>
-						<X size={14} />
-					</button>
-				)}
-			</div>
+					<DateField.Input>
+						{(segment) => (
+							<DateField.Segment segment={segment}>
+								{({ isPlaceholder, text, type }) =>
+									isPlaceholder ? (SEGMENT_PLACEHOLDERS[type] ?? text) : text
+								}
+							</DateField.Segment>
+						)}
+					</DateField.Input>
 
-			{(typedError ?? error) && (
-				<div className="mt-1 text-xs text-(--color-danger)">{typedError ?? error}</div>
-			)}
-
-			{open &&
-				typeof document !== "undefined" &&
-				createPortal(
-					<div
-						ref={popoverRef}
-						// Portalled outside the HeroUI dialog or drawer the field usually sits in, which
-						// would make it inert and pull focus back out of it; React Aria leaves alone what
-						// is marked as top layer.
-						data-react-aria-top-layer
-						// Above the dialogs, drawers and dropdowns, which all sit at 1000 - the field
-						// this belongs to is often inside one of them.
-						className="fixed z-[1100] max-w-[calc(100vw-16px)]"
-						style={{
-							top: position?.top ?? 0,
-							left: position?.left ?? 0,
-							// Hidden for the single frame before it has been measured, so it is never
-							// seen in the wrong place.
-							visibility: position ? "visible" : "hidden",
-						}}
-					>
-						<DatePickerCalendar
-							month={visibleMonth}
-							selectedDate={value}
-							minDate={minDate}
-							maxDate={maxDate}
-							locale={locale}
-							onMonthChange={handleMonthChange}
-							onSelect={handleSelect}
-							onToday={handleToday}
-							years={years}
+					<DateField.Suffix>
+						{/* Decorative, like the arrow of a select; the calendar icon is the control. */}
+						<ChevronDown
+							size={16}
+							aria-hidden
+							className={clsx("panel-date-field__chevron", open && "rotate-180")}
+							onClick={() => !disabled && handleOpenChange(!open)}
 						/>
-					</div>,
-					document.body,
-				)}
-		</div>
+
+						{fieldValue && clearable && !disabled && (
+							// A plain button: a React Aria one would take the trigger's props from the picker.
+							<button
+								type="button"
+								aria-label="Clear date"
+								className="panel-date-field__clear"
+								onClick={handleClear}
+							>
+								<X size={14} />
+							</button>
+						)}
+					</DateField.Suffix>
+				</DateField.Group>
+
+				{message && <div className="panel-date-field__error">{message}</div>}
+
+				<HeroDatePicker.Popover placement="bottom start" className="panel-date-popover">
+					<DatePickerCalendar
+						focusedValue={focusedValue}
+						onFocusChange={setFocusedValue}
+						minDate={minDate}
+						maxDate={maxDate}
+						locale={locale}
+						onToday={handleToday}
+						years={years}
+					/>
+				</HeroDatePicker.Popover>
+			</HeroDatePicker>
+		</I18nProvider>
 	);
 }
 

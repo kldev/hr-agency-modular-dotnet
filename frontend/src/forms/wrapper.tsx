@@ -431,13 +431,11 @@ export function FormDatePicker({
 	const initialDate = useMemo(() => parseScheduledAt(fieldValue ?? ""), [fieldValue]);
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
-
+			{/* The label goes inside: it has to name a group of segments, not a single <input>. */}
 			<DatePicker
 				{...props}
 				id={fieldName}
+				label={label}
 				value={initialDate.date}
 				onChange={(val) => handleChange(val ? formatLocalDateTime(val, "12:00") : "")}
 				disabled={isSubmitting}
@@ -504,15 +502,14 @@ export function FormDateTime({
 
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
+			{/* A heading for the pair, not a <label>: each half names itself, "Date" and "Time". */}
+			<span className="form-label">{label}</span>
 
 			<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
 				<div className="form-field">
-					<span className="form-label">Date</span>
-
 					<DatePicker
+						id={fieldName}
+						label="Date"
 						value={datePart}
 						onChange={(v) => {
 							handleChange({ date: v, time: timePart ?? "" });
@@ -523,9 +520,8 @@ export function FormDateTime({
 				</div>
 
 				<div className="form-field">
-					<span className="form-label">Time</span>
-
 					<TimeInput
+						label="Time"
 						value={timePart ?? undefined}
 						onChange={(v) => handleChange({ date: datePart, time: v })}
 						disabled={isSubmitting}
@@ -561,11 +557,8 @@ export function FormTimeInput({
 }: FormTimeInputProps) {
 	return (
 		<div className="form-field">
-			<label className="form-label" htmlFor={fieldName}>
-				{label}
-			</label>
-
 			<TimeInput
+				label={label}
 				id={fieldName}
 				name={fieldName}
 				value={fieldValue ?? ""}
