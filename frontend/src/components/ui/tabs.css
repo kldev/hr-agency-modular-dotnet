@@ -1,28 +1,46 @@
-.tabs {
+/*
+ * HeroUI's tabs in the panel's look: an underlined strip, no filled pill. `.tabs` is HeroUI's root
+ * (strip and panels together), so the strip's divider sits on the list container, not on the root.
+ * The animated indicator is not rendered; the selected tab draws its own underline, as before.
+ */
+.panel-tabs.tabs {
 	display: flex;
-	gap: var(--space-1);
+	flex-direction: column;
+	gap: 0;
+}
 
+.panel-tabs .tabs__list-container {
 	/* The strip is a divider as much as a control: the panel under it needs room to read as its
 	   own thing, and the header above it needs room not to look welded to it. */
 	margin: var(--space-2) 0 var(--space-4);
 	padding: 0;
 
-	border: 0;
 	border-bottom: 1px solid var(--color-border);
-
-	overflow-x: auto;
 }
 
-.tabs-tab {
+.panel-tabs .tabs__list {
+	display: flex;
+	gap: var(--space-1);
+
+	padding: 0;
+
+	border-radius: 0;
+	background: transparent;
+}
+
+.panel-tabs .tabs__tab {
 	display: inline-flex;
 	align-items: center;
 	gap: var(--space-2);
 
+	width: auto;
+	height: auto;
 	min-height: 40px;
 	padding: 0 var(--space-4);
 
 	border: 0;
 	border-bottom: 2px solid transparent;
+	border-radius: 0;
 
 	background: transparent;
 
@@ -38,16 +56,16 @@
 		color var(--transition-fast);
 }
 
-.tabs-tab:hover {
+.panel-tabs .tabs__tab[data-hovered="true"] {
 	color: var(--color-text);
 }
 
-.tabs-tab.is-selected {
+.panel-tabs .tabs__tab[aria-selected="true"] {
 	border-bottom-color: var(--color-primary);
 	color: var(--color-primary);
 }
 
-.tabs-tab:focus-visible {
+.panel-tabs .tabs__tab[data-focus-visible="true"] {
 	outline: 2px solid var(--color-primary);
 	outline-offset: -2px;
 }
@@ -66,7 +84,7 @@
 	text-align: center;
 }
 
-.tabs-tab.is-selected .tabs-count {
+.panel-tabs .tabs__tab[aria-selected="true"] .tabs-count {
 	background: var(--color-primary-soft);
 	color: var(--color-primary);
 }
@@ -75,4 +93,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: var(--space-5);
+
+	padding: 0;
 }

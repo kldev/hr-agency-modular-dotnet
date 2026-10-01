@@ -165,29 +165,29 @@ function Builder({
 					</div>
 				) : null}
 
-				<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Builder sections" />
+				<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Builder sections">
+					<TabPanel id={tab}>
+						{tab === "build" ? (
+							archived ? (
+								<p className="form-hint">
+									This form is archived; its versions stay readable under Versions.
+								</p>
+							) : (
+								<BuildTab
+									layout={layout}
+									dispatch={dispatch}
+									catalogue={catalogue.data ?? []}
+									codePrefix={codePrefix(form.code)}
+									errors={errors}
+								/>
+							)
+						) : null}
 
-				<TabPanel id={tab}>
-					{tab === "build" ? (
-						archived ? (
-							<p className="form-hint">
-								This form is archived; its versions stay readable under Versions.
-							</p>
-						) : (
-							<BuildTab
-								layout={layout}
-								dispatch={dispatch}
-								catalogue={catalogue.data ?? []}
-								codePrefix={codePrefix(form.code)}
-								errors={errors}
-							/>
-						)
-					) : null}
+						{tab === "preview" ? <PreviewTab formId={form.id} layout={layout} /> : null}
 
-					{tab === "preview" ? <PreviewTab formId={form.id} layout={layout} /> : null}
-
-					{tab === "versions" ? <VersionsTab formId={form.id} versions={form.versions} /> : null}
-				</TabPanel>
+						{tab === "versions" ? <VersionsTab formId={form.id} versions={form.versions} /> : null}
+					</TabPanel>
+				</Tabs>
 			</Page>
 
 			<ConfirmDialog

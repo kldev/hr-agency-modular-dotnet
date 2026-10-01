@@ -71,73 +71,73 @@ const CandidateDetailsPage: React.FC<CandidateDetailsPageProps> = ({ id, tab, on
 				}}
 			/>
 
-			<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Candidate sections" />
-
-			<DataDetailsLayout
-				main={
-					<TabPanel id={tab}>
-						{tab === "profile" ? (
-							<section className="data-details-section">
-								<div className="data-details-section-header">
-									<div>
-										<h2>Applicant</h2>
-										<p>Candidate contact information</p>
+			<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Candidate sections">
+				<DataDetailsLayout
+					main={
+						<TabPanel id={tab}>
+							{tab === "profile" ? (
+								<section className="data-details-section">
+									<div className="data-details-section-header">
+										<div>
+											<h2>Applicant</h2>
+											<p>Candidate contact information</p>
+										</div>
 									</div>
-								</div>
 
-								<dl className="data-details-list">
-									<DetailItem label="First name">{candidate.firstName || "-"}</DetailItem>
+									<dl className="data-details-list">
+										<DetailItem label="First name">{candidate.firstName || "-"}</DetailItem>
 
-									<DetailItem label="Last name">{candidate.lastName || "-"}</DetailItem>
+										<DetailItem label="Last name">{candidate.lastName || "-"}</DetailItem>
 
-									<DetailItem label="Email">
-										<a href={`mailto:${candidate.email}`}>{candidate.email}</a>
+										<DetailItem label="Email">
+											<a href={`mailto:${candidate.email}`}>{candidate.email}</a>
+										</DetailItem>
+
+										<DetailItem label="Phone">
+											<a href={`tel:${candidate.phoneNumber}`}>{candidate.phoneNumber || "-"}</a>
+										</DetailItem>
+
+										<DetailItem label="Source">{applicationSources[candidate.source]}</DetailItem>
+										<DetailItem label=""> </DetailItem>
+									</dl>
+									<DetailItem label="Note">
+										<MessagePreview message={candidate.note} />
 									</DetailItem>
+								</section>
+							) : null}
 
-									<DetailItem label="Phone">
-										<a href={`tel:${candidate.phoneNumber}`}>{candidate.phoneNumber || "-"}</a>
-									</DetailItem>
-
-									<DetailItem label="Source">{applicationSources[candidate.source]}</DetailItem>
-									<DetailItem label=""> </DetailItem>
-								</dl>
-								<DetailItem label="Note">
-									<MessagePreview message={candidate.note} />
-								</DetailItem>
-							</section>
-						) : null}
-
-						{tab === "timeline" ? <CandidateTimeline candidateId={candidate.id} /> : null}
-					</TabPanel>
-				}
-				sidebar={
-					<>
-						<AuditInformation
-							createdAt={candidate.createdAt}
-							createdBy={candidate.createdBy}
-							modifiedAt={candidate.modifiedAt}
-							modifiedBy={candidate.modifiedBy}
-						/>
-						<div className="data-content-lists ">
-							<DetailsListSection
-								title="Tags"
-								items={tags}
-								className="short-items-section"
-								onAdd={() => {
-									tagRef.current?.addTag(
-										candidate.id,
-										candidate.fullName || candidate.email,
-										"candidate",
-									);
-								}}
+							{tab === "timeline" ? <CandidateTimeline candidateId={candidate.id} /> : null}
+						</TabPanel>
+					}
+					sidebar={
+						<>
+							<AuditInformation
+								createdAt={candidate.createdAt}
+								createdBy={candidate.createdBy}
+								modifiedAt={candidate.modifiedAt}
+								modifiedBy={candidate.modifiedBy}
 							/>
-						</div>
-					</>
-				}
-			/>
+							<div className="data-content-lists ">
+								<DetailsListSection
+									title="Tags"
+									items={tags}
+									className="short-items-section"
+									onAdd={() => {
+										tagRef.current?.addTag(
+											candidate.id,
+											candidate.fullName || candidate.email,
+											"candidate",
+										);
+									}}
+								/>
+							</div>
+						</>
+					}
+				/>
 
-			<EditCandidateDrawer ref={formRef} onSuccess={refetch} />
-			<AddTagsDrawer ref={tagRef} onSuccess={refetch} />
+				<EditCandidateDrawer ref={formRef} onSuccess={refetch} />
+				<AddTagsDrawer ref={tagRef} onSuccess={refetch} />
+			</Tabs>
 		</DataDetails>
 	);
 };
