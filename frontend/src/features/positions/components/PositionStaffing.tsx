@@ -1,3 +1,5 @@
+import { Chip } from "@heroui/react";
+
 interface PositionStaffingProps {
 	assigned: number | string;
 	planned: number | string | null | undefined;
@@ -20,7 +22,11 @@ export function PositionStaffing({ assigned, planned }: PositionStaffingProps) {
 	return (
 		<span className="table-figure">
 			{assignedCount}/{plannedCount}
-			{missing > 0 ? <span className="badge badge-warning ml-2">{missing} short</span> : null}
+			{missing > 0 ? (
+				<Chip size="sm" className="badge badge-warning ml-2">
+					{missing} short
+				</Chip>
+			) : null}
 		</span>
 	);
 }

@@ -1,4 +1,4 @@
-import { toast } from "@heroui/react";
+import { Chip, toast } from "@heroui/react";
 import { Archive, Save, Send } from "lucide-react";
 import { useEffect, useReducer, useRef, useState } from "react";
 import type { BadRequestDetails, FormDefinitionView } from "#/api/models";
@@ -116,13 +116,19 @@ function Builder({
 					<div className="flex flex-wrap items-center gap-2">
 						<FormStatusBadge status={form.status} />
 						{Number(form.publishedVersion) > 0 ? (
-							<span className="badge badge-inactive">v{String(form.publishedVersion)}</span>
+							<Chip size="sm" className="badge badge-inactive">
+								v{String(form.publishedVersion)}
+							</Chip>
 						) : null}
-						{dirty ? <span className="badge badge-suspended">Unsaved changes</span> : null}
+						{dirty ? (
+							<Chip size="sm" className="badge badge-suspended">
+								Unsaved changes
+							</Chip>
+						) : null}
 						{!dirty && form.hasUnpublishedChanges && form.status === "Published" ? (
-							<span className="badge badge-viewed">
+							<Chip size="sm" className="badge badge-viewed">
 								Draft ahead of v{String(form.publishedVersion)}
-							</span>
+							</Chip>
 						) : null}
 
 						{archived ? null : (

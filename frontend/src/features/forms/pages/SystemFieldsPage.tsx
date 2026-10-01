@@ -1,4 +1,4 @@
-import { Table, toast } from "@heroui/react";
+import { Chip, Table, toast } from "@heroui/react";
 import { Archive, ListChecks, Pencil, Plus, Sparkles } from "lucide-react";
 import { useRef, useState } from "react";
 import type { SystemField } from "#/api/models";
@@ -104,7 +104,9 @@ export default function SystemFieldsPage() {
 										<Table.Cell>
 											{field.label}
 											{field.isArchived ? (
-												<span className="badge badge-closed ml-2">Archived</span>
+												<Chip size="sm" className="badge badge-closed ml-2">
+													Archived
+												</Chip>
 											) : null}
 										</Table.Cell>
 										<Table.Cell className="table-figure">{field.code}</Table.Cell>

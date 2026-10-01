@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { FileSignature, Mail, Pencil } from "lucide-react";
 import type { EmailPurpose, ProjectProjection } from "@/api/models";
 import { Button, ContractStatusBadge, DetailItem, DetailOverviewHeader } from "@/components/ui";
@@ -93,9 +94,9 @@ export function ProjectContractSection({
 								{emails.length > 0 ? (
 									<div className="project-email-chips">
 										{emails.map((email) => (
-											<span key={email} className="badge badge-inactive">
+											<Chip size="sm" key={email} className="badge badge-inactive">
 												{email}
-											</span>
+											</Chip>
 										))}
 									</div>
 								) : (

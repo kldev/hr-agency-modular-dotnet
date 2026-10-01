@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { useParams } from "@tanstack/react-router";
 import { useRef } from "react";
 import type { ContactRole, EmailPurpose } from "@/api/models";
@@ -150,9 +151,9 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 						<>
 							<ProjectStatusBadge status={project.status} />
 
-							<span className="badge badge-inactive">
+							<Chip size="sm" className="badge badge-inactive">
 								{engagementTypes[project.engagementType]}
-							</span>
+							</Chip>
 						</>
 					}
 					extraAdd={
