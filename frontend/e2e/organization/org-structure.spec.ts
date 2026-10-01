@@ -1,7 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { pickSuggestion } from "../support/ui";
+import { chooseOption, pickSuggestion, selectValue } from "../support/ui";
 
 /*
  * A reorganisation on top of the seeded chart: the recruitment department grows two sections and
@@ -22,7 +22,7 @@ async function addUnitUnder(page: Page, parent: string, name: string) {
 
 	const drawer = page.getByRole("dialog", { name: `New unit under ${parent}` });
 	await drawer.getByLabel("Name").fill(name);
-	await expect(drawer.getByLabel("Kind")).toHaveValue("Section");
+	await expect(selectValue(drawer, "Kind")).toHaveValue("Section");
 	await drawer.getByRole("button", { name: "Save changes" }).click();
 	await expect(drawer).toBeHidden();
 	await expect(unit(page, name)).toBeVisible();
@@ -40,7 +40,7 @@ test("reorganises a department in the org chart", async ({ page }) => {
 	await page.getByRole("button", { name: `Actions for ${person}` }).click();
 	await page.getByRole("menuitem", { name: "Take out of this unit" }).click();
 	await page
-		.getByRole("dialog", { name: "Take out of the unit" })
+		.getByRole("alertdialog", { name: "Take out of the unit" })
 		.getByRole("button", { name: "Take out" })
 		.click();
 	await expect(page.getByRole("button", { name: `Actions for ${person}` })).toBeHidden();
@@ -57,7 +57,7 @@ test("reorganises a department in the org chart", async ({ page }) => {
 
 	await page.getByRole("button", { name: "Assign" }).click();
 	const head = page.getByRole("dialog", { name: "Head of Talent Acquisition" });
-	await head.getByLabel("Head").selectOption({ label: person });
+	await chooseOption(head, "Head", { label: person });
 	await head.getByRole("button", { name: "Save changes" }).click();
 	await expect(head).toBeHidden();
 

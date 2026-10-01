@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { continueTo, expectStep, summaryItem } from "../support/ui";
+import { chooseOption, continueTo, expectStep, summaryItem } from "../support/ui";
 
 /*
  * An administrator builds a two page statement without a developer: a page of the form's own
@@ -38,9 +38,7 @@ test("builds, previews and publishes a two page form", async ({ page }) => {
 		.getByLabel("Own error message (optional)")
 		.fill("Enter a registration number, e.g. WX12345");
 
-	await page
-		.getByLabel("System field to add")
-		.selectOption({ label: "First name (employee.firstName)" });
+	await chooseOption(page, "System field to add", { label: "First name (employee.firstName)" });
 	await page.getByRole("button", { name: "Add system field" }).click();
 
 	// The system field was added last; it goes first.
@@ -52,7 +50,7 @@ test("builds, previews and publishes a two page form", async ({ page }) => {
 	await page.getByLabel("Page title").fill("Statement");
 	await page.getByRole("button", { name: "Add question" }).click();
 	await page.getByLabel("Label *").fill("I will use the car for work only");
-	await page.getByLabel("Type").selectOption({ label: "Yes / no (tick box)" });
+	await chooseOption(page, "Type", { label: "Yes / no (tick box)" });
 	await page.getByLabel("Must be ticked").check({ force: true });
 
 	await docShot(page, "form-builder");
@@ -95,7 +93,7 @@ test("adds a system field to the catalogue", async ({ page }) => {
 
 	const drawer = page.getByRole("dialog", { name: "New system field" });
 	await drawer.getByLabel("Code (never changes)").fill("employee.shoeSize");
-	await drawer.getByLabel("Type").selectOption({ label: "Number" });
+	await chooseOption(drawer, "Type", { label: "Number" });
 	await drawer.getByLabel("Label").fill("Shoe size");
 	await drawer.getByLabel("Minimum").fill("30");
 	await drawer.getByLabel("Maximum").fill("52");

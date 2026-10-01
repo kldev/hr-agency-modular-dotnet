@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
+import { selectValue } from "../support/ui";
 
 /*
  * A drop only opens the drawer: nothing is saved here, so the seed stays as it was and the test
@@ -40,7 +41,7 @@ test("a worker dropped on the next stage opens the status drawer with it presele
 
 	const drawer = page.getByRole("dialog", { name: "Change status" });
 	await expect(drawer).toBeVisible();
-	await expect(drawer.getByLabel("New status")).toHaveValue("ContractPreparation");
+	await expect(selectValue(drawer, "New status")).toHaveValue("ContractPreparation");
 	await expect(drawer.getByLabel("Reason")).toBeVisible();
 
 	await docShot(page, "workers-kanban-drop");

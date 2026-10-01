@@ -3,7 +3,14 @@ import { demoClient, ensureDemoClient } from "../support/api";
 import { attachDocument } from "../support/documents";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { continueTo, expectStep, fillDate, pickSuggestion, summaryItem } from "../support/ui";
+import {
+	chooseOption,
+	continueTo,
+	expectStep,
+	fillDate,
+	pickSuggestion,
+	summaryItem,
+} from "../support/ui";
 
 /*
  * The main business flow of the delivery side: a client, a project for it, a signed contract and
@@ -35,7 +42,7 @@ test("creates a project, takes it live and posts a worker onto it", async ({ pag
 	await expect(wizard.getByText("Pick a client")).toBeVisible();
 
 	await pickSuggestion(wizard, "Client", "ACME", demoClient.name);
-	await wizard.getByLabel("Our company").selectOption({ index: 1 });
+	await chooseOption(wizard, "Our company", { index: 1 });
 
 	// Basics
 	await continueTo(wizard, "Basics");
@@ -55,7 +62,7 @@ test("creates a project, takes it live and posts a worker onto it", async ({ pag
 	await wizard.getByLabel("Building number").fill("8");
 	await wizard.getByLabel("Postal code").fill("45-125");
 	await wizard.getByLabel("City").fill("Opole");
-	await wizard.getByLabel("Country").selectOption("PL");
+	await chooseOption(wizard, "Country", "PL");
 	await fillDate(wizard, "Starts on", "01.10.2026");
 	await fillDate(wizard, "Ends on", "30.09.2027");
 
@@ -82,7 +89,7 @@ test("creates a project, takes it live and posts a worker onto it", async ({ pag
 	await page.getByRole("button", { name: "Record contract" }).click();
 	const contract = page.getByRole("dialog", { name: "Record contract" });
 	await contract.getByLabel("Contract number").fill("ACME/2026/014");
-	await contract.getByLabel("Status").selectOption("Signed");
+	await chooseOption(contract, "Status", "Signed");
 	await fillDate(contract, "Signed on", "15.09.2026");
 	await fillDate(contract, "Valid from", "01.10.2026");
 	await fillDate(contract, "Valid to", "30.09.2027");
@@ -105,7 +112,7 @@ test("creates a project, takes it live and posts a worker onto it", async ({ pag
 	await page.getByRole("button", { name: "More actions" }).click();
 	await page.getByRole("menuitem", { name: "Change status" }).click();
 	const status = page.getByRole("dialog", { name: "Change status" });
-	await status.getByLabel("New status").selectOption("Active");
+	await chooseOption(status, "New status", "Active");
 	await expect(status.getByText("The contract is signed")).toBeVisible();
 	await status.getByRole("button", { name: "Save changes" }).click();
 	await expect(status).toBeHidden();

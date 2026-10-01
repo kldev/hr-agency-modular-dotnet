@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { reloadUntilVisible } from "../support/api";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { chooseSuggestion, pickSuggestion } from "../support/ui";
+import { chooseOption, chooseSuggestion, pickSuggestion } from "../support/ui";
 
 /*
  * A recruitment team built from people the seed leaves outside any team (a person belongs to at
@@ -33,7 +33,7 @@ test("creates a team and adds a member", async ({ page }) => {
 			member.query,
 			member.name,
 		);
-		await drawer.getByLabel(`Team role ${index + 1}`).selectOption(member.role);
+		await chooseOption(drawer, `Team role ${index + 1}`, member.role);
 	}
 
 	await drawer.getByRole("button", { name: "Save changes" }).click();
@@ -50,7 +50,7 @@ test("creates a team and adds a member", async ({ page }) => {
 	await page.getByRole("button", { name: "Add member" }).click();
 	const add = page.getByRole("dialog", { name: `Add to ${teamName}` });
 	await pickSuggestion(add, "Person", "Iryna", /Iryna Kovalenko/);
-	await add.getByLabel("Team role").selectOption("Recruiter");
+	await chooseOption(add, "Team role", "Recruiter");
 	await add.getByRole("button", { name: "Save changes" }).click();
 	await expect(add).toBeHidden();
 

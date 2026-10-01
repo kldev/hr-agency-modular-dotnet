@@ -47,3 +47,58 @@ export async function fillDate(scope: Page | Locator, label: string, day: string
 export function summaryItem(scope: Page | Locator, label: string) {
 	return scope.getByRole("group", { name: label, exact: true });
 }
+
+type OptionPick = string | { label: string } | { index: number };
+
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+/**
+ * The trigger of a HeroUI `Select` named by its label. React Aria names it "<value> <label>", so
+ * the label is matched at the end of the name.
+ */
+function selectTrigger(scope: Page | Locator, label: string) {
+	return scope
+		.locator('[data-slot="select-trigger"]')
+		.and(scope.getByRole("button", { name: new RegExp(`(^|\\s)${escapeRegExp(label)}$`) }));
+}
+
+/**
+ * The `<select>` that holds a field's value, whatever draws the field: the panel's own native
+ * select, or the hidden one a HeroUI `Select` keeps next to its trigger for forms. Its value is
+ * the option's key either way, so `toHaveValue` reads the same for both.
+ */
+export function selectValue(scope: Page | Locator, label: string) {
+	return selectTrigger(scope, label).locator("xpath=..").locator('select[tabindex="-1"]');
+}
+
+/**
+ * Picks an option in a labelled select. Native selects (countries, languages, lists built by hand)
+ * take `selectOption`; a HeroUI `Select` is opened and its option clicked - by key when a string is
+ * given, as `selectOption` would match a value. An index counts real options from 1, as in a
+ * native select whose option 0 is the placeholder.
+ */
+export async function chooseOption(scope: Page | Locator, label: string, pick: OptionPick) {
+	const page = "page" in scope && typeof scope.page === "function" ? scope.page() : (scope as Page);
+	const native = scope
+		.getByLabel(label, { exact: true })
+		.and(scope.locator('select:not([tabindex="-1"])'));
+	const trigger = selectTrigger(scope, label);
+
+	await expect(native.or(trigger).first()).toBeVisible();
+
+	if ((await native.count()) > 0) {
+		await native.selectOption(pick);
+		return;
+	}
+
+	await trigger.click();
+	const listbox = page.getByRole("listbox").last();
+	const option =
+		typeof pick === "string"
+			? listbox.locator(`[role="option"][data-key="${pick}"]`)
+			: "label" in pick
+				? listbox.getByRole("option", { name: pick.label, exact: true })
+				: listbox.getByRole("option").nth(pick.index - 1);
+	await option.click();
+	await expect(listbox).toBeHidden();
+}

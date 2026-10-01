@@ -8,7 +8,7 @@ import {
 import { attachDocument } from "../support/documents";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { continueTo, expectStep, fillDate, summaryItem } from "../support/ui";
+import { chooseOption, continueTo, expectStep, fillDate, summaryItem } from "../support/ui";
 
 /*
  * The hand-over from recruitment to delivery: somebody who applied through us is taken onto the
@@ -49,15 +49,15 @@ test("registers an applicant as a worker", async ({ page }) => {
 	await expect(wizard.getByText("Citizenship is required")).toBeVisible();
 
 	await fillDate(wizard, "Date of birth", "14.05.1994");
-	await wizard.getByLabel("Citizenship").selectOption("UA");
+	await chooseOption(wizard, "Citizenship", "UA");
 	await expect(wizard.getByText(/goes through the legalisation stage/)).toBeVisible();
 
 	await docShot(page, "worker-wizard");
 
 	await continueTo(wizard, "Identity document");
-	await wizard.getByLabel("Kind").selectOption({ label: "Passport" });
+	await chooseOption(wizard, "Kind", { label: "Passport" });
 	await wizard.getByLabel("Document number").fill("FX482913");
-	await wizard.getByLabel("Issued by").selectOption("UA");
+	await chooseOption(wizard, "Issued by", "UA");
 	await fillDate(wizard, "Valid until", "30.06.2031");
 
 	await continueTo(wizard, "Contact");
@@ -66,7 +66,7 @@ test("registers an applicant as a worker", async ({ page }) => {
 	await wizard.getByLabel("Building number").fill("12");
 	await wizard.getByLabel("Postal code").fill("45-001");
 	await wizard.getByLabel("City").fill("Opole");
-	await wizard.getByLabel("Country").selectOption("PL");
+	await chooseOption(wizard, "Country", "PL");
 
 	await continueTo(wizard, "Review");
 	await expect(summaryItem(wizard, "Name")).toContainText("Olena Marchenko");

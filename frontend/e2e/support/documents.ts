@@ -1,5 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { fillDate } from "./ui";
+import { chooseOption, fillDate } from "./ui";
 
 /**
  * A real, one page PDF built in memory, so uploads go through the file service with a file any
@@ -68,7 +68,7 @@ export async function attachDocument(page: Page, tab: Locator, document: Documen
 	});
 	await expect(drawer.getByText(document.fileName)).toBeVisible();
 
-	await drawer.getByLabel("Category").selectOption({ label: document.category });
+	await chooseOption(drawer, "Category", { label: document.category });
 
 	if (document.documentDate) {
 		await fillDate(drawer, "Document date", document.documentDate);
