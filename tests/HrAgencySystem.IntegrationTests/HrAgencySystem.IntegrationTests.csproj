@@ -28,6 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\HrAgencySystem.Api\HrAgencySystem.Api.csproj" />
+    <ProjectReference Include="..\HrAgencySystem.IntegrationTests.Shared\HrAgencySystem.IntegrationTests.Shared.csproj" />
   </ItemGroup>
 </Project>

@@ -49,9 +49,3 @@ public sealed class IntegrationEnvironment : IAsyncLifetime
 
     public IServiceProvider Services => Factory.Services;
 }
-
-[CollectionDefinition(Name)]
-public class IntegrationCollection : ICollectionFixture<IntegrationEnvironment>
-{
-    public const string Name = "Integration";
-}
