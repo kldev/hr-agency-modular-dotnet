@@ -1,7 +1,7 @@
 import { expect, type Page, test } from "@playwright/test";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { continueTo, expectStep, fillDate, summaryItem } from "../support/ui";
+import { chooseOption, continueTo, expectStep, fillDate, summaryItem } from "../support/ui";
 
 /*
  * Filling forms in for a worker, against the seeded forms: a consent nobody has given yet, a
@@ -75,7 +75,7 @@ test("finishes a questionnaire somebody left on the tax page", async ({ page }) 
 	await dialog.getByRole("button", { name: "Continue" }).click();
 	await expect(dialog.getByText("This field is required.").first()).toBeVisible();
 
-	await dialog.getByLabel("Country of tax residence *").selectOption("FR");
+	await chooseOption(dialog, "Country of tax residence *", "FR");
 	await dialog.getByText("No declaration", { exact: true }).click();
 
 	await docShot(page, "worker-form-wizard");

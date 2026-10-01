@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { demoClient, ensureDemoClient, reloadUntilVisible } from "../support/api";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { continueTo, expectStep, pickSuggestion, summaryItem } from "../support/ui";
+import { chooseOption, continueTo, expectStep, pickSuggestion, summaryItem } from "../support/ui";
 
 const title = "Senior C# Developer";
 
@@ -72,12 +72,12 @@ test("creates a job description through the wizard", async ({ page }) => {
 	// Employment
 	await wizard.getByRole("button", { name: "Continue" }).click();
 	await wizard.getByRole("textbox", { name: "Location" }).fill("Opole");
-	await wizard.getByLabel("Country").selectOption("PL");
+	await chooseOption(wizard, "Country", "PL");
 	await wizard.getByRole("radio", { name: /^Hybrid/ }).check();
 	await wizard.getByRole("radio", { name: /^Full time/ }).check();
 	await wizard.getByLabel("Minimum").fill("22000");
 	await wizard.getByLabel("Maximum").fill("18000");
-	await wizard.getByLabel("Currency").selectOption("PLN");
+	await chooseOption(wizard, "Currency", "PLN");
 
 	await wizard.getByRole("button", { name: "Continue" }).click();
 	await expect(wizard.getByText("Maximum salary cannot be lower than the minimum")).toBeVisible();

@@ -2,7 +2,7 @@ import { expect, type Page, test } from "@playwright/test";
 import { reloadUntilVisible } from "../support/api";
 import { open } from "../support/navigation";
 import { docShot } from "../support/screenshots";
-import { pickSuggestion } from "../support/ui";
+import { chooseOption, pickSuggestion } from "../support/ui";
 
 /*
  * The salesperson's workspace (plan 029). The four named clients, their deals, projects and a
@@ -132,7 +132,7 @@ test("adds a task for the company on screen", async ({ page }) => {
 
 	const drawer = page.getByRole("dialog", { name: "New task" });
 	await expect(drawer.getByRole("combobox", { name: "Company" })).toHaveValue("ACME Sp. z o.o.");
-	await drawer.getByLabel("Opportunity").selectOption({ label: "Recruitment Q4" });
+	await chooseOption(drawer, "Opportunity", { label: "Recruitment Q4" });
 	await drawer.getByLabel("Title").fill(title);
 	await drawer.getByRole("button", { name: "Save changes" }).click();
 
