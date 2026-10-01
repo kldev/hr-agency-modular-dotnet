@@ -20,43 +20,17 @@ public sealed class OrgStructureQueryRepository(
         CancellationToken ct
     )
     {
-        var streamId = OrgStructureId.For(organizationId.Value);
-
-        var projection = await session.LoadAsync<OrgStructureProjection>(streamId, ct);
-
-        if (projection is not null)
-            return projection;
-
         /*
-         * The same fallback the project snapshot makes. It matters more here than it looks: a unit
-         * is usually created and then filled with people in the same minute, and a supervisor read
-         * against a read model that has not caught up would answer "nobody" - which reads exactly
-         * like the legitimate answer for the person at the top.
+         * FetchLatest, not LoadAsync: the snapshot is async, so the stored document can lag behind
+         * the chart. A unit is usually created and then filled with people in the same minute, and
+         * a supervisor read against a read model that has not caught up would answer "nobody" -
+         * which reads exactly like the legitimate answer for the person at the top. Falling back to
+         * the stream only when the document was missing covered the first event and nothing after
+         * it; FetchLatest applies every event the daemon has not processed yet.
          */
-        var structure = await session.Events.AggregateStreamAsync<OrgStructure>(
-            streamId,
-            token: ct
-        );
-
-        if (structure is null)
-            return null;
-
-        return new OrgStructureProjection(
-            streamId,
-            organizationId.Value,
-            [
-                .. structure.Units.Select(unit => new OrgUnitRow(
-                    unit.UnitId,
-                    unit.ParentId,
-                    unit.Name,
-                    unit.Kind,
-                    unit.HeadUserId,
-                    unit.Members,
-                    unit.IsArchived
-                )),
-            ],
-            null,
-            null
+        return await session.Events.FetchLatest<OrgStructureProjection>(
+            OrgStructureId.For(organizationId.Value),
+            ct
         );
     }
 
