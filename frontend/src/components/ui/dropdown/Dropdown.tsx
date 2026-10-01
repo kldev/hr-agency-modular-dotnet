@@ -89,7 +89,7 @@ export const Dropdown: React.FC<Props> = ({ children, placement = "right", onClo
 	return (
 		<div
 			ref={ref}
-			className={clsx("dropdown", `dropdown - ${placement} `)}
+			className={clsx("app-dropdown", `app-dropdown-${placement}`)}
 			role="menu"
 			style={style}
 		>

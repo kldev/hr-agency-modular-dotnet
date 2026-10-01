@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { Link } from "@tanstack/react-router";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { PositionListItem } from "@/api/models";
@@ -101,7 +102,11 @@ export function getColumns(actions: positionsActions) {
 			header: "",
 			meta: { align: "center", width: "xs" },
 			cell: ({ getValue }) =>
-				getValue() ? <span className="badge badge-inactive">Archived</span> : null,
+				getValue() ? (
+					<Chip size="sm" className="badge badge-inactive">
+						Archived
+					</Chip>
+				) : null,
 		}),
 	]);
 }

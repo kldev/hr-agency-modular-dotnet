@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { useParams } from "@tanstack/react-router";
 import { useRef } from "react";
 import type { ContactRole, EmailPurpose } from "@/api/models";
@@ -150,9 +151,9 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 						<>
 							<ProjectStatusBadge status={project.status} />
 
-							<span className="badge badge-inactive">
+							<Chip size="sm" className="badge badge-inactive">
 								{engagementTypes[project.engagementType]}
-							</span>
+							</Chip>
 						</>
 					}
 					extraAdd={
@@ -165,113 +166,113 @@ export function ProjectDetailsPage({ tab, onTabChange }: ProjectDetailsPageProps
 					}
 				/>
 
-				<Tabs value={active} tabs={tabs} onChange={onTabChange} label="Project sections" />
+				<Tabs value={active} tabs={tabs} onChange={onTabChange} label="Project sections">
+					<DataDetailsLayout
+						main={
+							<TabPanel id={active}>
+								{active === "overview" ? (
+									<>
+										<section className="data-details-section">
+											<ProjectOverviewSection
+												project={project}
+												onAssignTeam={() => teamRef.current?.assignTeam(project)}
+											/>
+										</section>
 
-				<DataDetailsLayout
-					main={
-						<TabPanel id={active}>
-							{active === "overview" ? (
-								<>
+										<section className="data-details-section">
+											<ProjectCustomerSection
+												project={project}
+												onCompleteProfile={(companyId) => profileRef.current?.complete(companyId)}
+												onChangeLegalEntity={() => legalEntityRef.current?.change(project)}
+											/>
+										</section>
+									</>
+								) : null}
+
+								{/* The contract and the people who signed it: both answer "who agreed to what". */}
+								{active === "contract" ? (
+									<>
+										<section className="data-details-section">
+											<ProjectContractSection
+												project={project}
+												onRecordContract={() => contractRef.current?.record(project)}
+												onEditEmails={(purpose: EmailPurpose) =>
+													emailsRef.current?.edit(project, purpose)
+												}
+											/>
+										</section>
+
+										<section className="data-details-section">
+											<ProjectContactsSection
+												project={project}
+												onAssign={(role: ContactRole) => contactRef.current?.assign(project, role)}
+												onRemove={(role: ContactRole) => {
+													removeContact.mutate({ projectId: project.id, role });
+												}}
+											/>
+										</section>
+									</>
+								) : null}
+
+								{active === "positions" ? (
 									<section className="data-details-section">
-										<ProjectOverviewSection
+										<ProjectPositionsSection
 											project={project}
-											onAssignTeam={() => teamRef.current?.assignTeam(project)}
+											onOpenPosition={() => positionRef.current?.open(project.id)}
+											onEditPosition={(position) => positionRef.current?.edit(position.id)}
 										/>
 									</section>
+								) : null}
 
+								{active === "people" ? (
 									<section className="data-details-section">
-										<ProjectCustomerSection
+										<ProjectAssignmentsSection
 											project={project}
-											onCompleteProfile={(companyId) => profileRef.current?.complete(companyId)}
-											onChangeLegalEntity={() => legalEntityRef.current?.change(project)}
-										/>
-									</section>
-								</>
-							) : null}
-
-							{/* The contract and the people who signed it: both answer "who agreed to what". */}
-							{active === "contract" ? (
-								<>
-									<section className="data-details-section">
-										<ProjectContractSection
-											project={project}
-											onRecordContract={() => contractRef.current?.record(project)}
-											onEditEmails={(purpose: EmailPurpose) =>
-												emailsRef.current?.edit(project, purpose)
+											onPlanAssignment={() =>
+												planAssignmentRef.current?.plan({ projectId: project.id })
 											}
 										/>
 									</section>
+								) : null}
 
+								{active === "documents" ? (
 									<section className="data-details-section">
-										<ProjectContactsSection
+										<ProjectDocumentsSection
 											project={project}
-											onAssign={(role: ContactRole) => contactRef.current?.assign(project, role)}
-											onRemove={(role: ContactRole) => {
-												removeContact.mutate({ projectId: project.id, role });
-											}}
+											onAttach={() => documentRef.current?.attach(project.id)}
+											onRefresh={refresh}
 										/>
 									</section>
-								</>
-							) : null}
+								) : null}
 
-							{active === "positions" ? (
-								<section className="data-details-section">
-									<ProjectPositionsSection
-										project={project}
-										onOpenPosition={() => positionRef.current?.open(project.id)}
-										onEditPosition={(position) => positionRef.current?.edit(position.id)}
-									/>
-								</section>
-							) : null}
-
-							{active === "people" ? (
-								<section className="data-details-section">
-									<ProjectAssignmentsSection
-										project={project}
-										onPlanAssignment={() =>
-											planAssignmentRef.current?.plan({ projectId: project.id })
-										}
-									/>
-								</section>
-							) : null}
-
-							{active === "documents" ? (
-								<section className="data-details-section">
-									<ProjectDocumentsSection
-										project={project}
-										onAttach={() => documentRef.current?.attach(project.id)}
-										onRefresh={refresh}
-									/>
-								</section>
-							) : null}
-
-							{active === "compliance" ? (
-								<section className="data-details-section">
-									<ProjectComplianceSection
-										project={project}
-										onRecord={(view) => complianceRef.current?.record(project, view)}
-									/>
-								</section>
-							) : null}
-						</TabPanel>
-					}
-					sidebar={
-						<>
-							{/* Outside the tabs on purpose: whether the project can go live, and what is
+								{active === "compliance" ? (
+									<section className="data-details-section">
+										<ProjectComplianceSection
+											project={project}
+											onRecord={(view) => complianceRef.current?.record(project, view)}
+										/>
+									</section>
+								) : null}
+							</TabPanel>
+						}
+						sidebar={
+							<>
+								{/* Outside the tabs on purpose: whether the project can go live, and what is
 							    still missing for it, is worth seeing whichever section is open. */}
-							<section className="data-details-section">
-								<ProjectStatusSidebar project={project} />
-							</section>
+								<section className="data-details-section">
+									<ProjectStatusSidebar project={project} />
+								</section>
 
-							<AuditInformation
-								createdAt={project.createdAt}
-								createdBy={project.createdBy}
-								modifiedAt={project.modifiedAt}
-								modifiedBy={project.modifiedBy}
-							/>
-						</>
-					}
-				/>
+								<AuditInformation
+									createdAt={project.createdAt}
+									createdBy={project.createdBy}
+									modifiedAt={project.modifiedAt}
+									modifiedBy={project.modifiedBy}
+								/>
+							</>
+						}
+					/>
+				</Tabs>
 			</DataDetails>
 
 			<ProjectWizardDialog ref={editRef} onSuccess={refresh} />

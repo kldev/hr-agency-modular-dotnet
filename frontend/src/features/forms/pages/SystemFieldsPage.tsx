@@ -1,4 +1,4 @@
-import { Switch, toast } from "@heroui/react";
+import { Chip, Switch, Table, toast } from "@heroui/react";
 import { Archive, ListChecks, Pencil, Plus, Sparkles } from "lucide-react";
 import { useRef, useState } from "react";
 import type { SystemField } from "#/api/models";
@@ -93,52 +93,58 @@ export default function SystemFieldsPage() {
 					</div>
 				</div>
 
-				<table className="table">
-					<thead>
-						<tr>
-							<th>Label</th>
-							<th>Code</th>
-							<th className="table-header-sm">Type</th>
-							<th>Pre-filled from</th>
-							<th />
-						</tr>
-					</thead>
-					<tbody>
-						{fields.map((field) => (
-							<tr key={field.systemFieldId}>
-								<td>
-									{field.label}
-									{field.isArchived ? (
-										<span className="badge badge-closed ml-2">Archived</span>
-									) : null}
-								</td>
-								<td className="table-figure">{field.code}</td>
-								<td>{fieldTypes[field.type]}</td>
-								<td>{field.source === "None" ? "—" : systemFieldSources[field.source]}</td>
-								<td>
-									{field.isArchived ? null : (
-										<div className="flex justify-end gap-1">
-											<Button
-												variant="ghost"
-												icon={<Pencil size={15} />}
-												aria-label="Edit"
-												title="Edit"
-												onPress={() => drawerRef.current?.edit(field)}
-											/>
-											<Button
-												variant="ghost"
-												icon={<Archive size={15} />}
-												aria-label="Archive"
-												title="Archive"
-												onPress={() => setArchiving(field)}
-											/>
-										</div>
-									)}
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+				<Table variant="secondary" className="table-container">
+					<Table.ScrollContainer>
+						<Table.Content aria-label="System fields">
+							<Table.Header>
+								<Table.Column isRowHeader>Label</Table.Column>
+								<Table.Column>Code</Table.Column>
+								<Table.Column className="table-header-sm">Type</Table.Column>
+								<Table.Column>Pre-filled from</Table.Column>
+								<Table.Column aria-label="Actions" />
+							</Table.Header>
+							<Table.Body>
+								{fields.map((field) => (
+									<Table.Row key={field.systemFieldId}>
+										<Table.Cell>
+											{field.label}
+											{field.isArchived ? (
+												<Chip size="sm" className="badge badge-closed ml-2">
+													Archived
+												</Chip>
+											) : null}
+										</Table.Cell>
+										<Table.Cell className="table-figure">{field.code}</Table.Cell>
+										<Table.Cell>{fieldTypes[field.type]}</Table.Cell>
+										<Table.Cell>
+											{field.source === "None" ? "—" : systemFieldSources[field.source]}
+										</Table.Cell>
+										<Table.Cell>
+											{field.isArchived ? null : (
+												<div className="flex justify-end gap-1">
+													<Button
+														variant="ghost"
+														icon={<Pencil size={15} />}
+														aria-label="Edit"
+														title="Edit"
+														onPress={() => drawerRef.current?.edit(field)}
+													/>
+													<Button
+														variant="ghost"
+														icon={<Archive size={15} />}
+														aria-label="Archive"
+														title="Archive"
+														onPress={() => setArchiving(field)}
+													/>
+												</div>
+											)}
+										</Table.Cell>
+									</Table.Row>
+								))}
+							</Table.Body>
+						</Table.Content>
+					</Table.ScrollContainer>
+				</Table>
 
 				{fields.length === 0 && includeArchived ? (
 					<EmptyState title="Nothing here">

@@ -1,4 +1,6 @@
+import { Tabs as HeroTabs } from "@heroui/react";
 import clsx from "clsx";
+import type { Key, ReactNode } from "react";
 import "./tabs.css";
 
 export type TabDefinition<T extends string> = {
@@ -14,12 +16,15 @@ type TabsProps<T extends string> = {
 	onChange: (value: T) => void;
 	className?: string;
 	label?: string;
+	/** The `TabPanel`s - React Aria ties a panel to its tab only when it sits inside the tabs. */
+	children?: ReactNode;
 };
 
 /**
- * A plain tab bar: it renders the strip and reports what was clicked, and the caller decides what
- * that means. Deliberately unaware of routing, so the selected tab can live in the URL, in state,
- * or nowhere at all.
+ * HeroUI's tabs over a list of definitions: the caller decides what a selection means, so the
+ * selected tab can live in the URL, in state, or nowhere at all. Only the selected panel is
+ * mounted, which is why pages may render their panels conditionally or as one panel keyed by the
+ * active id.
  */
 export function Tabs<T extends string>({
 	value,
@@ -27,32 +32,34 @@ export function Tabs<T extends string>({
 	onChange,
 	className,
 	label = "Sections",
+	children,
 }: TabsProps<T>) {
 	return (
-		<div className={clsx("tabs", className)} role="tablist" aria-label={label}>
-			{tabs.map((tab) => (
-				<button
-					key={tab.id}
-					type="button"
-					role="tab"
-					id={`tab-${tab.id}`}
-					aria-selected={value === tab.id}
-					aria-controls={`tabpanel-${tab.id}`}
-					className={clsx("tabs-tab", { "is-selected": value === tab.id })}
-					onClick={() => onChange(tab.id)}
-				>
-					{tab.label}
+		<HeroTabs
+			className={clsx("panel-tabs", className)}
+			selectedKey={value}
+			onSelectionChange={(key: Key) => onChange(String(key) as T)}
+		>
+			<HeroTabs.ListContainer>
+				<HeroTabs.List aria-label={label}>
+					{tabs.map((tab) => (
+						<HeroTabs.Tab key={tab.id} id={tab.id}>
+							{tab.label}
 
-					{tab.count === undefined ? null : <span className="tabs-count">{tab.count}</span>}
-				</button>
-			))}
-		</div>
+							{tab.count === undefined ? null : <span className="tabs-count">{tab.count}</span>}
+						</HeroTabs.Tab>
+					))}
+				</HeroTabs.List>
+			</HeroTabs.ListContainer>
+
+			{children}
+		</HeroTabs>
 	);
 }
 
 type TabPanelProps = {
 	id: string;
-	children: React.ReactNode;
+	children: ReactNode;
 };
 
 /**
@@ -61,8 +68,8 @@ type TabPanelProps = {
  */
 export function TabPanel({ id, children }: TabPanelProps) {
 	return (
-		<div role="tabpanel" id={`tabpanel-${id}`} aria-labelledby={`tab-${id}`} className="tabs-panel">
+		<HeroTabs.Panel id={id} className="tabs-panel">
 			{children}
-		</div>
+		</HeroTabs.Panel>
 	);
 }

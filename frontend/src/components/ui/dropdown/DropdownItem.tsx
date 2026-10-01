@@ -15,7 +15,7 @@ const DropdownItem: React.FC<Props> = ({ children, onClick, disabled, title }) =
 			type="button"
 			disabled={disabled}
 			title={title}
-			className="dropdown-item"
+			className="app-dropdown-item"
 			role="menuitem"
 		>
 			{children}

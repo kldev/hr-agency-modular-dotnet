@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import type { OrganizationActivity } from "#/api/models";
 import { formatDateTime } from "#/utlis/dateUtils";
 import { DetailOverviewHeader } from "@/components/ui";
@@ -10,41 +11,47 @@ export function OrganizationsTable({ organizations }: { organizations: Organizat
 				description="Activity in the period, most recently active first. Projects active is today's count."
 			/>
 
-			<table className="table">
-				<thead>
-					<tr>
-						<th>Organization</th>
-						<th className="table-header-sm">Job posts</th>
-						<th className="table-header-sm">Applications</th>
-						<th className="table-header-sm">Interviews</th>
-						<th className="table-header-sm">Offers</th>
-						<th className="table-header-sm">Hires</th>
-						<th className="table-header-sm">Projects live</th>
-						<th className="table-header-sm">Projects active</th>
-						<th className="table-header-md">Last activity</th>
-					</tr>
-				</thead>
-				<tbody>
-					{organizations.map((organization) => (
-						<tr key={organization.organizationId}>
-							<td>
-								<div>{organization.name}</div>
-								<div className="report-hint">{organization.slug}</div>
-							</td>
-							<td className="table-figure">{organization.jobPostsPublished}</td>
-							<td className="table-figure">{organization.applications}</td>
-							<td className="table-figure">{organization.interviewsScheduled}</td>
-							<td className="table-figure">{organization.offers}</td>
-							<td className="table-figure">{organization.hires}</td>
-							<td className="table-figure">{organization.projectsWentLive}</td>
-							<td className="table-figure">{organization.projectsActive}</td>
-							<td className="table-figure">
-								{organization.lastActivityAt ? formatDateTime(organization.lastActivityAt) : "—"}
-							</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+			<Table variant="secondary" className="table-container">
+				<Table.ScrollContainer>
+					<Table.Content aria-label="Organizations">
+						<Table.Header>
+							<Table.Column isRowHeader>Organization</Table.Column>
+							<Table.Column className="table-header-sm">Job posts</Table.Column>
+							<Table.Column className="table-header-sm">Applications</Table.Column>
+							<Table.Column className="table-header-sm">Interviews</Table.Column>
+							<Table.Column className="table-header-sm">Offers</Table.Column>
+							<Table.Column className="table-header-sm">Hires</Table.Column>
+							<Table.Column className="table-header-sm">Projects live</Table.Column>
+							<Table.Column className="table-header-sm">Projects active</Table.Column>
+							<Table.Column className="table-header-md">Last activity</Table.Column>
+						</Table.Header>
+						<Table.Body>
+							{organizations.map((organization) => (
+								<Table.Row key={organization.organizationId}>
+									<Table.Cell>
+										<div>{organization.name}</div>
+										<div className="report-hint">{organization.slug}</div>
+									</Table.Cell>
+									<Table.Cell className="table-figure">{organization.jobPostsPublished}</Table.Cell>
+									<Table.Cell className="table-figure">{organization.applications}</Table.Cell>
+									<Table.Cell className="table-figure">
+										{organization.interviewsScheduled}
+									</Table.Cell>
+									<Table.Cell className="table-figure">{organization.offers}</Table.Cell>
+									<Table.Cell className="table-figure">{organization.hires}</Table.Cell>
+									<Table.Cell className="table-figure">{organization.projectsWentLive}</Table.Cell>
+									<Table.Cell className="table-figure">{organization.projectsActive}</Table.Cell>
+									<Table.Cell className="table-figure">
+										{organization.lastActivityAt
+											? formatDateTime(organization.lastActivityAt)
+											: "—"}
+									</Table.Cell>
+								</Table.Row>
+							))}
+						</Table.Body>
+					</Table.Content>
+				</Table.ScrollContainer>
+			</Table>
 		</section>
 	);
 }

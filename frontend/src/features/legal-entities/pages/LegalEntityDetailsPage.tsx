@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { useParams } from "@tanstack/react-router";
 import { useRef } from "react";
 import {
@@ -131,33 +132,37 @@ export function LegalEntityDetailsPage() {
 											<p className="data-details-empty">No accounts recorded.</p>
 										</div>
 									) : (
-										<table className="table">
-											<thead>
-												<tr>
-													<th>Purpose</th>
-													<th>Currency</th>
-													<th>IBAN</th>
-													<th>BIC</th>
-													<th>Bank</th>
-												</tr>
-											</thead>
+										<Table variant="secondary" className="table-container">
+											<Table.ScrollContainer>
+												<Table.Content aria-label="Bank accounts">
+													<Table.Header>
+														<Table.Column isRowHeader>Purpose</Table.Column>
+														<Table.Column>Currency</Table.Column>
+														<Table.Column>IBAN</Table.Column>
+														<Table.Column>BIC</Table.Column>
+														<Table.Column>Bank</Table.Column>
+													</Table.Header>
 
-											<tbody>
-												{entity.bankAccounts.map((account) => (
-													<tr key={`${account.purpose}-${account.currency}`}>
-														<td>{bankAccountPurposes[account.purpose]}</td>
-														<td>{currencyCodes[account.currency]}</td>
-														<td className="table-cell-truncate" title={account.iban}>
-															{account.iban}
-														</td>
-														<td>{account.bic || "—"}</td>
-														<td className="table-cell-truncate" title={account.bankName ?? ""}>
-															{account.bankName || "—"}
-														</td>
-													</tr>
-												))}
-											</tbody>
-										</table>
+													<Table.Body>
+														{entity.bankAccounts.map((account) => (
+															<Table.Row key={`${account.purpose}-${account.currency}`}>
+																<Table.Cell>{bankAccountPurposes[account.purpose]}</Table.Cell>
+																<Table.Cell>{currencyCodes[account.currency]}</Table.Cell>
+																<Table.Cell className="table-cell-truncate">
+																	<span title={account.iban}>{account.iban}</span>
+																</Table.Cell>
+																<Table.Cell>{account.bic || "—"}</Table.Cell>
+																<Table.Cell className="table-cell-truncate">
+																	<span title={account.bankName ?? ""}>
+																		{account.bankName || "—"}
+																	</span>
+																</Table.Cell>
+															</Table.Row>
+														))}
+													</Table.Body>
+												</Table.Content>
+											</Table.ScrollContainer>
+										</Table>
 									)}
 								</div>
 							</section>

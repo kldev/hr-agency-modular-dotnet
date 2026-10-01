@@ -1,4 +1,4 @@
-import { Input } from "@heroui/react";
+import { Chip, Input } from "@heroui/react";
 import clsx from "clsx";
 import { ArrowDown, ArrowUp, CircleAlert, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
@@ -198,7 +198,9 @@ export function BuildTab({ layout, dispatch, catalogue, codePrefix, errors }: Bu
 													</span>
 												</span>
 												{candidate.source === "System" ? (
-													<span className="badge badge-viewed">system</span>
+													<Chip size="sm" className="badge badge-viewed">
+														system
+													</Chip>
 												) : null}
 												{errors[candidate.fieldId] ? (
 													<CircleAlert size={15} className="text-(--color-danger)" />

@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { Download, Paperclip, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { ProjectDocument, ProjectProjection } from "@/api/models";
@@ -34,59 +35,63 @@ export function ProjectDocumentsSection({
 			/>
 
 			{project.documents.length === 0 ? null : (
-				<table className="table">
-					<thead>
-						<tr>
-							<th>Category</th>
-							<th>Name</th>
-							<th>Document date</th>
-							<th>Valid until</th>
-							<th>Size</th>
-							<th />
-						</tr>
-					</thead>
+				<Table variant="secondary" className="table-container">
+					<Table.ScrollContainer>
+						<Table.Content aria-label="Documents">
+							<Table.Header>
+								<Table.Column isRowHeader>Category</Table.Column>
+								<Table.Column>Name</Table.Column>
+								<Table.Column>Document date</Table.Column>
+								<Table.Column>Valid until</Table.Column>
+								<Table.Column>Size</Table.Column>
+								<Table.Column aria-label="Actions" />
+							</Table.Header>
 
-					<tbody>
-						{project.documents.map((document) => (
-							<tr key={document.documentId}>
-								<td>{documentCategories[document.category]}</td>
-								<td className="table-cell-truncate" title={document.fileName}>
-									{document.fileName}
-								</td>
-								<td>{formatDate(document.documentDate)}</td>
-								<td>{document.validUntil ? formatDate(document.validUntil) : "—"}</td>
-								<td>{formatFileSize(Number(document.size))}</td>
-								<td>
-									<div className="flex gap-2 justify-end">
-										{/*
-										 * A plain link: the proxy route attaches the token on the server and the API
-										 * streams the bytes from the file service. The browser never sees a storage
-										 * key, and there is no such thing in the generated types to leak.
-										 */}
-										<a
-											className="action-button"
-											href={`/api/projects/${project.id}/documents/${document.documentId}/content`}
-											title="Download"
-											aria-label="Download"
-										>
-											<Download size={15} />
-										</a>
+							<Table.Body>
+								{project.documents.map((document) => (
+									<Table.Row key={document.documentId}>
+										<Table.Cell>{documentCategories[document.category]}</Table.Cell>
+										<Table.Cell className="table-cell-truncate">
+											<span title={document.fileName}>{document.fileName}</span>
+										</Table.Cell>
+										<Table.Cell>{formatDate(document.documentDate)}</Table.Cell>
+										<Table.Cell>
+											{document.validUntil ? formatDate(document.validUntil) : "—"}
+										</Table.Cell>
+										<Table.Cell>{formatFileSize(Number(document.size))}</Table.Cell>
+										<Table.Cell>
+											<div className="flex gap-2 justify-end">
+												{/*
+												 * A plain link: the proxy route attaches the token on the server and the API
+												 * streams the bytes from the file service. The browser never sees a storage
+												 * key, and there is no such thing in the generated types to leak.
+												 */}
+												<a
+													className="action-button"
+													href={`/api/projects/${project.id}/documents/${document.documentId}/content`}
+													title="Download"
+													aria-label="Download"
+												>
+													<Download size={15} />
+												</a>
 
-										<button
-											type="button"
-											className="action-button"
-											title="Remove"
-											aria-label="Remove"
-											onClick={() => setRemoving(document)}
-										>
-											<Trash2 size={15} />
-										</button>
-									</div>
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+												<button
+													type="button"
+													className="action-button"
+													title="Remove"
+													aria-label="Remove"
+													onClick={() => setRemoving(document)}
+												>
+													<Trash2 size={15} />
+												</button>
+											</div>
+										</Table.Cell>
+									</Table.Row>
+								))}
+							</Table.Body>
+						</Table.Content>
+					</Table.ScrollContainer>
+				</Table>
 			)}
 
 			<div className="project-section-body">

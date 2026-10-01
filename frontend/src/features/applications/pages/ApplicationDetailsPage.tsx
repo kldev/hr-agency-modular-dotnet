@@ -90,103 +90,109 @@ const ApplicationDetailsPage: React.FC<ApplicationDetailsPageProps> = ({
 				}
 			/>
 
-			<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Application sections" />
-
-			<DataDetailsLayout
-				main={
-					<TabPanel id={tab}>
-						{tab === "details" ? (
-							<>
-								<section className="data-details-section">
-									<div className="data-details-section-header">
-										<div>
-											<h2>Applicant</h2>
-											<p>Candidate contact information</p>
+			<Tabs value={tab} tabs={tabs} onChange={onTabChange} label="Application sections">
+				<DataDetailsLayout
+					main={
+						<TabPanel id={tab}>
+							{tab === "details" ? (
+								<>
+									<section className="data-details-section">
+										<div className="data-details-section-header">
+											<div>
+												<h2>Applicant</h2>
+												<p>Candidate contact information</p>
+											</div>
 										</div>
-									</div>
 
-									<dl className="data-details-list">
-										<DetailItem label="First name">{application.applicantFirstName}</DetailItem>
+										<dl className="data-details-list">
+											<DetailItem label="First name">{application.applicantFirstName}</DetailItem>
 
-										<DetailItem label="Last name">{application.applicantLastName}</DetailItem>
+											<DetailItem label="Last name">{application.applicantLastName}</DetailItem>
 
-										<DetailItem label="Email">
-											<a href={`mailto:${application.applicantEmail}`}>
-												{application.applicantEmail}
-											</a>
-										</DetailItem>
+											<DetailItem label="Email">
+												<a href={`mailto:${application.applicantEmail}`}>
+													{application.applicantEmail}
+												</a>
+											</DetailItem>
 
-										<DetailItem label="Phone">
-											<a href={`tel:${application.applicantPhone}`}>{application.applicantPhone}</a>
-										</DetailItem>
+											<DetailItem label="Phone">
+												<a href={`tel:${application.applicantPhone}`}>
+													{application.applicantPhone}
+												</a>
+											</DetailItem>
 
-										<DetailItem label="Candidate ID">{application.candidateId}</DetailItem>
+											<DetailItem label="Candidate ID">{application.candidateId}</DetailItem>
 
-										<DetailItem label="Source">{applicationSources[application.source]}</DetailItem>
-									</dl>
-								</section>
-								<section className="data-details-section">
-									<div className="data-details-section-header">
-										<div>
-											<h2>Application</h2>
-											<p>Application and recruitment details</p>
+											<DetailItem label="Source">
+												{applicationSources[application.source]}
+											</DetailItem>
+										</dl>
+									</section>
+									<section className="data-details-section">
+										<div className="data-details-section-header">
+											<div>
+												<h2>Application</h2>
+												<p>Application and recruitment details</p>
+											</div>
 										</div>
-									</div>
 
-									<dl className="data-details-list">
-										<DetailItem label="Job post">{application.jobPostTitle}</DetailItem>
+										<dl className="data-details-list">
+											<DetailItem label="Job post">{application.jobPostTitle}</DetailItem>
 
-										<DetailItem label="Company">{application.company.name}</DetailItem>
+											<DetailItem label="Company">{application.company.name}</DetailItem>
 
-										<DetailItem label="Status">
-											<ApplicationBadge status={application.status} />
-										</DetailItem>
-									</dl>
-								</section>
+											<DetailItem label="Status">
+												<ApplicationBadge status={application.status} />
+											</DetailItem>
+										</dl>
+									</section>
 
-								<NotesList
-									id={application.id}
-									add={() => {
-										formRef?.current?.update(application.id, "add-note");
+									<NotesList
+										id={application.id}
+										add={() => {
+											formRef?.current?.update(application.id, "add-note");
+										}}
+									/>
+								</>
+							) : null}
+
+							{tab === "timeline" ? (
+								<ApplicationTimeline jobApplicationId={application.id} />
+							) : null}
+						</TabPanel>
+					}
+					sidebar={
+						<>
+							<AuditInformation
+								createdAt={application.createdAt}
+								createdBy={application.createdBy}
+								modifiedAt={application.modifiedAt}
+								modifiedBy={application.modifiedBy}
+							/>
+							<div className="data-content-lists ">
+								<DetailsListSection
+									title="Tags"
+									items={tags}
+									className="short-items-section"
+									onAdd={() => {
+										formRef.current?.update(application.id, "tag", undefined, {
+											fullName: application.applicantFullName,
+											email: application.applicantEmail,
+										});
 									}}
 								/>
-							</>
-						) : null}
+							</div>
+						</>
+					}
+				/>
 
-						{tab === "timeline" ? <ApplicationTimeline jobApplicationId={application.id} /> : null}
-					</TabPanel>
-				}
-				sidebar={
-					<>
-						<AuditInformation
-							createdAt={application.createdAt}
-							createdBy={application.createdBy}
-							modifiedAt={application.modifiedAt}
-							modifiedBy={application.modifiedBy}
-						/>
-						<div className="data-content-lists ">
-							<DetailsListSection
-								title="Tags"
-								items={tags}
-								className="short-items-section"
-								onAdd={() => {
-									formRef.current?.update(application.id, "tag", undefined, {
-										fullName: application.applicantFullName,
-										email: application.applicantEmail,
-									});
-								}}
-							/>
-						</div>
-					</>
-				}
-			/>
-
-			<ApplicationsActionDrawers
-				ref={formRef}
-				onSuccess={() => {
-					refetch();
-				}}
-			/>
+				<ApplicationsActionDrawers
+					ref={formRef}
+					onSuccess={() => {
+						refetch();
+					}}
+				/>
+			</Tabs>
 		</DataDetails>
 	);
 };

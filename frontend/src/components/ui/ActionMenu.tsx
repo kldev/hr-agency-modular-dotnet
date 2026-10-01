@@ -1,6 +1,6 @@
+import { Button, Dropdown, Label, Separator } from "@heroui/react";
 import { MoreVertical } from "lucide-react";
-import { type ComponentType, useCallback, useState } from "react";
-import { Dropdown, DropdownDivider, DropdownItem } from "@/components/ui";
+import { type ComponentType, Fragment, type HTMLAttributes, type Key } from "react";
 
 export interface ActionMenuItem {
 	label: string;
@@ -18,57 +18,61 @@ interface ActionMenuProps {
 	title?: string;
 }
 
+/** The row menu of a table or a card: HeroUI's dropdown over a list of actions. */
 export function ActionMenu({
 	actions,
 	ariaLabel = "More actions",
 	title = "More actions",
 }: ActionMenuProps) {
-	const [open, setOpen] = useState(false);
-
-	// Stable, because the dropdown re-subscribes its document listeners whenever this changes.
-	const close = useCallback(() => setOpen(false), []);
+	// The index is the key: labels are not guaranteed unique, and the list is rebuilt every render.
+	const run = (key: Key) => actions[Number(key)]?.action();
 
 	return (
-		<div className="action-menu">
-			<button
-				type="button"
-				className="action-button action-button-trigger"
+		<Dropdown>
+			<Button
+				isIconOnly
+				variant="ghost"
+				size="sm"
 				aria-label={ariaLabel}
-				title={title}
-				aria-expanded={open}
-				onClick={() => {
-					setOpen((prev) => !prev);
-				}}
+				className="action-button action-button-trigger"
+				render={(domProps) => <button {...domProps} title={title} />}
 			>
 				<MoreVertical size={20} />
-			</button>
+			</Button>
 
-			{open ? (
-				<Dropdown placement="right" onClose={close}>
+			<Dropdown.Popover placement="bottom end" className="action-menu-popover">
+				<Dropdown.Menu aria-label={ariaLabel} onAction={run}>
 					{actions.map((item, index) => {
 						const Icon = item.icon;
 
 						return (
-							<div key={`drop-item-${index}`}>
-								<DropdownItem
-									key={`drop-item-${index}`}
-									disabled={item.disabled}
-									title={item.hint}
-									onClick={() => {
-										item.action();
-										setOpen(false);
-									}}
+							<Fragment key={index}>
+								<Dropdown.Item
+									id={String(index)}
+									textValue={item.label}
+									isDisabled={item.disabled}
+									render={
+										item.hint
+											? // An action is never a link, so the item is always the <div> React Aria renders.
+												(domProps) => (
+													<div
+														{...(domProps as HTMLAttributes<HTMLDivElement>)}
+														title={item.hint}
+													/>
+												)
+											: undefined
+									}
 								>
-									{Icon && <Icon size={15} />}
-									{item.label}
-								</DropdownItem>
+									{Icon ? <Icon size={15} /> : null}
+									<Label>{item.label}</Label>
+								</Dropdown.Item>
 
-								{item.dividerAfter && <DropdownDivider />}
-							</div>
+								{item.dividerAfter ? <Separator /> : null}
+							</Fragment>
 						);
 					})}
-				</Dropdown>
-			) : null}
-		</div>
+				</Dropdown.Menu>
+			</Dropdown.Popover>
+		</Dropdown>
 	);
 }

@@ -1,3 +1,6 @@
+import { Card } from "@heroui/react";
+import clsx from "clsx";
+
 interface MetricsProps {
 	children: React.ReactNode;
 	columns?: number;
@@ -23,7 +26,7 @@ interface MetricCardProps {
 
 export function MetricCard({ label, icon, value, className = "" }: MetricCardProps) {
 	return (
-		<div className={`metric-card ${className}`}>
+		<Card className={clsx("metric-card", className)}>
 			<div className="metric-card-icon">{icon}</div>
 
 			<div>
@@ -31,6 +34,6 @@ export function MetricCard({ label, icon, value, className = "" }: MetricCardPro
 
 				<div className="metric-card-label">{label}</div>
 			</div>
-		</div>
+		</Card>
 	);
 }

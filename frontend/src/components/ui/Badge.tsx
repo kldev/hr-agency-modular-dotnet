@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import clsx from "clsx";
 import { applicationSources, applicationStatuses } from "#/features/applications/types";
 import { assignmentStatusClass, assignmentStatuses } from "#/features/assignments/types";
@@ -49,7 +50,11 @@ const opportunityClass: Record<OpportunityStage, string> = {
 };
 
 export function OpportunityStageBadge({ status }: { status: OpportunityStage }) {
-	return <span className={clsx("badge", opportunityClass[status])}>{status}</span>;
+	return (
+		<Chip size="sm" className={clsx("badge", opportunityClass[status])}>
+			{status}
+		</Chip>
+	);
 }
 
 const applicationsClass: Record<JobApplicationStatus, string> = {
@@ -65,7 +70,9 @@ const applicationsClass: Record<JobApplicationStatus, string> = {
 
 export function ApplicationBadge({ status }: { status: JobApplicationStatus }) {
 	return (
-		<span className={clsx("badge", applicationsClass[status])}>{applicationStatuses[status]}</span>
+		<Chip size="sm" className={clsx("badge", applicationsClass[status])}>
+			{applicationStatuses[status]}
+		</Chip>
 	);
 }
 
@@ -77,7 +84,11 @@ const jobPostsClass: Record<JobPostStatus, string> = {
 };
 
 export function JobPostsBadge({ status }: { status: JobPostStatus }) {
-	return <span className={clsx("badge", jobPostsClass[status])}>{jobPostsStatuses[status]}</span>;
+	return (
+		<Chip size="sm" className={clsx("badge", jobPostsClass[status])}>
+			{jobPostsStatuses[status]}
+		</Chip>
+	);
 }
 
 const jobDescriptionClass: Record<JobDescriptionStatus, string> = {
@@ -90,9 +101,9 @@ const jobDescriptionClass: Record<JobDescriptionStatus, string> = {
 
 export function JobDescriptionBadge({ status }: { status: JobDescriptionStatus }) {
 	return (
-		<span className={clsx("badge", jobDescriptionClass[status])}>
+		<Chip size="sm" className={clsx("badge", jobDescriptionClass[status])}>
 			{jobDescriptionStatuses[status]}
-		</span>
+		</Chip>
 	);
 }
 
@@ -107,7 +118,11 @@ const interviewClass: Record<InterviewStatus, string> = {
 };
 
 export function InterviewStatusBadge({ status }: { status: InterviewStatus }) {
-	return <span className={clsx("badge", interviewClass[status])}>{interviewStatuses[status]}</span>;
+	return (
+		<Chip size="sm" className={clsx("badge", interviewClass[status])}>
+			{interviewStatuses[status]}
+		</Chip>
+	);
 }
 
 const interviewFormatClasses: Record<InterviewFormat, string> = {
@@ -118,9 +133,9 @@ const interviewFormatClasses: Record<InterviewFormat, string> = {
 
 export function InterviewFormatBadge({ format }: { format: InterviewFormat }) {
 	return (
-		<span className={clsx("badge", interviewFormatClasses[format])}>
+		<Chip size="sm" className={clsx("badge", interviewFormatClasses[format])}>
 			{interviewFormats[format]}
-		</span>
+		</Chip>
 	);
 }
 
@@ -132,11 +147,19 @@ const interviewType: Record<InterviewType, string> = {
 };
 
 export function InterviewTypeBadge({ status }: { status: InterviewType }) {
-	return <span className={clsx("badge", interviewType[status])}>{interviewTypes[status]}</span>;
+	return (
+		<Chip size="sm" className={clsx("badge", interviewType[status])}>
+			{interviewTypes[status]}
+		</Chip>
+	);
 }
 
 export function CandidateSourceBadge({ source }: { source: CandidateSource }) {
-	return <span className="badge badge-contacted">{applicationSources[source]}</span>;
+	return (
+		<Chip size="sm" className="badge badge-contacted">
+			{applicationSources[source]}
+		</Chip>
+	);
 }
 
 const projectClass: Record<ProjectStatus, string> = {
@@ -148,12 +171,18 @@ const projectClass: Record<ProjectStatus, string> = {
 };
 
 export function ProjectStatusBadge({ status }: { status: ProjectStatus }) {
-	return <span className={clsx("badge", projectClass[status])}>{projectStatuses[status]}</span>;
+	return (
+		<Chip size="sm" className={clsx("badge", projectClass[status])}>
+			{projectStatuses[status]}
+		</Chip>
+	);
 }
 
 export function ContractStatusBadge({ status }: { status: ContractStatus }) {
 	return (
-		<span className={clsx("badge", contractStatusClass[status])}>{contractStatuses[status]}</span>
+		<Chip size="sm" className={clsx("badge", contractStatusClass[status])}>
+			{contractStatuses[status]}
+		</Chip>
 	);
 }
 
@@ -163,35 +192,41 @@ export function ContractStatusBadge({ status }: { status: ContractStatus }) {
  */
 export function LegalEntityStatusBadge({ isTrading }: { isTrading: boolean }) {
 	return (
-		<span className={clsx("badge", isTrading ? "badge-active" : "badge-closed")}>
+		<Chip size="sm" className={clsx("badge", isTrading ? "badge-active" : "badge-closed")}>
 			{isTrading ? "Trading" : "Closed"}
-		</span>
+		</Chip>
 	);
 }
 
 export function ComplianceStatusBadge({ status }: { status: ComplianceStatus }) {
 	return (
-		<span className={clsx("badge", complianceStatusClass[status])}>
+		<Chip size="sm" className={clsx("badge", complianceStatusClass[status])}>
 			{complianceStatuses[status]}
-		</span>
+		</Chip>
 	);
 }
 
 export function WorkerStatusBadge({ status }: { status: WorkerStatus }) {
-	return <span className={clsx("badge", workerStatusClass[status])}>{workerStatuses[status]}</span>;
+	return (
+		<Chip size="sm" className={clsx("badge", workerStatusClass[status])}>
+			{workerStatuses[status]}
+		</Chip>
+	);
 }
 
 export function AssignmentStatusBadge({ status }: { status: AssignmentStatus }) {
 	return (
-		<span className={clsx("badge", assignmentStatusClass[status])}>
+		<Chip size="sm" className={clsx("badge", assignmentStatusClass[status])}>
 			{assignmentStatuses[status]}
-		</span>
+		</Chip>
 	);
 }
 
 export function TimeSheetStatusBadge({ status }: { status: TimeSheetStatus }) {
 	return (
-		<span className={clsx("badge", timeSheetStatusClass[status])}>{timeSheetStatuses[status]}</span>
+		<Chip size="sm" className={clsx("badge", timeSheetStatusClass[status])}>
+			{timeSheetStatuses[status]}
+		</Chip>
 	);
 }
 
@@ -200,7 +235,12 @@ export function TimeSheetStatusBadge({ status }: { status: TimeSheetStatus }) {
  * row - so it says so in words rather than showing an empty status cell.
  */
 export function TimeSheetStatusOrNotStartedBadge({ status }: { status: TimeSheetStatus | null }) {
-	if (!status) return <span className="badge badge-inactive">Not started</span>;
+	if (!status)
+		return (
+			<Chip size="sm" className="badge badge-inactive">
+				Not started
+			</Chip>
+		);
 
 	return <TimeSheetStatusBadge status={status} />;
 }
@@ -208,7 +248,8 @@ export function TimeSheetStatusOrNotStartedBadge({ status }: { status: TimeSheet
 /** Whether this contract carries the duty to record hours - derived, exactly as the backend has it. */
 export function ContractTypeBadge({ contractType }: { contractType: WorkerContractType }) {
 	return (
-		<span
+		<Chip
+			size="sm"
 			className={clsx(
 				"badge",
 				contractRequiresTimeRecord[contractType] ? "badge-active" : "badge-inactive",
@@ -220,30 +261,41 @@ export function ContractTypeBadge({ contractType }: { contractType: WorkerContra
 			}
 		>
 			{workerContractTypes[contractType]}
-		</span>
+		</Chip>
 	);
 }
 
 export function FormStatusBadge({ status }: { status: FormStatus }) {
-	return <span className={clsx("badge", formStatusClass[status])}>{formStatuses[status]}</span>;
+	return (
+		<Chip size="sm" className={clsx("badge", formStatusClass[status])}>
+			{formStatuses[status]}
+		</Chip>
+	);
 }
 
 export function FormResponseStatusBadge({ status }: { status: FormResponseStatus }) {
 	return (
-		<span className={clsx("badge", responseStatusClass[status])}>{responseStatuses[status]}</span>
+		<Chip size="sm" className={clsx("badge", responseStatusClass[status])}>
+			{responseStatuses[status]}
+		</Chip>
 	);
 }
 
 export function TaskPriorityBadge({ priority }: { priority: TaskPriority }) {
 	return (
-		<span className={clsx("badge", taskPriorityClass[priority])}>{taskPriorities[priority]}</span>
+		<Chip size="sm" className={clsx("badge", taskPriorityClass[priority])}>
+			{taskPriorities[priority]}
+		</Chip>
 	);
 }
 
 export function CompanyStatusBadge({ status }: { status: CompanyStatus }) {
 	return (
-		<span className={clsx("badge", status === "Active" ? "badge-active" : "badge-inactive")}>
+		<Chip
+			size="sm"
+			className={clsx("badge", status === "Active" ? "badge-active" : "badge-inactive")}
+		>
 			{status}
-		</span>
+		</Chip>
 	);
 }
