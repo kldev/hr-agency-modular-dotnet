@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="HrAgencySystem.ReportsService.UnitTests" />
-    <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Shared" />
   </ItemGroup>
 </Project>
