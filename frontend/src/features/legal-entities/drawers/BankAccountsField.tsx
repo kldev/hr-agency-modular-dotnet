@@ -1,6 +1,7 @@
+import { Input } from "@heroui/react";
 import { Plus, Trash2 } from "lucide-react";
 import type { BankAccountData, BankAccountPurpose, CurrencyCode } from "#/api/models";
-import { Button, Input, Select } from "#/components/ui";
+import { Button, Select } from "#/components/ui";
 import { bankAccountPurposes, currencyCodes } from "../types";
 
 interface BankAccountsFieldProps {

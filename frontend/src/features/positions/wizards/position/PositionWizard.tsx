@@ -11,7 +11,7 @@ import type {
 import { FormWizard } from "#/components/form-wizard/FormWizard";
 import { DirtyReporter, stepHasErrors } from "#/components/form-wizard/stepValidation";
 import { ApiError } from "#/components/ui/ApiError";
-import { parseMoney } from "#/components/ui/Input";
+import { parseMoney } from "#/components/ui/money";
 import { useAppForm } from "#/forms";
 import { useProjectSuggestion } from "#/hooks";
 import { useOpenPosition, useUpdatePosition } from "../../pages/hooks";

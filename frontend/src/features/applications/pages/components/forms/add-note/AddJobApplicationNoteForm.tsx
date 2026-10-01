@@ -1,6 +1,7 @@
+import { TextArea } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import type { CreateNoteRequest } from "@/api/models";
-import { FieldError, Textarea } from "@/components/ui";
+import { FieldError } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 
 interface AddJobApplicationNoteFormProps {
@@ -55,7 +56,7 @@ export function AddJobApplicationNoteForm({
 							Note
 						</label>
 
-						<Textarea
+						<TextArea
 							id={field.name}
 							name={field.name}
 							value={field.state.value}

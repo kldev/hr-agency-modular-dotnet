@@ -1,6 +1,7 @@
+import { Input } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import type { ApplyToPostRequest } from "@/api/models";
-import { EnumSelectFilter, FieldError, Input } from "@/components/ui";
+import { EnumSelectFilter, FieldError } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { applicationSources } from "@/features/applications/types";
 

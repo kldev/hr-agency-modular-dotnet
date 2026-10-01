@@ -1,3 +1,4 @@
+import { Input, Switch } from "@heroui/react";
 import { useForm } from "@tanstack/react-form";
 import { useState } from "react";
 import { WebsiteInput } from "#/components/ui";
@@ -7,7 +8,7 @@ import {
 	type CreateCompanyRequest,
 	Industry,
 } from "@/api/models";
-import { CountrySelect, EnumSelectFilter, FieldError, Input, Toggle } from "@/components/ui";
+import { CountrySelect, EnumSelectFilter, FieldError } from "@/components/ui";
 import { ApiError } from "@/components/ui/ApiError";
 import { industries } from "@/features/companies/types";
 import { ContactPersonForm } from "@/features/company-contacts/components/ContactPersonForm";
@@ -293,14 +294,20 @@ export function CreateCompanyForm({
 									Contact
 								</label>
 
-								<Toggle
+								<Switch
 									id="company-contact-toggle"
-									checked={hasContact}
-									disabled={isSubmitting}
-									onChange={(event) => {
-										setHasContact(event.target.checked);
+									isSelected={hasContact}
+									isDisabled={isSubmitting}
+									onChange={(selected) => {
+										setHasContact(selected);
 									}}
-								/>
+								>
+									<Switch.Content>
+										<Switch.Control>
+											<Switch.Thumb />
+										</Switch.Control>
+									</Switch.Content>
+								</Switch>
 							</div>
 
 							{hasContact && (

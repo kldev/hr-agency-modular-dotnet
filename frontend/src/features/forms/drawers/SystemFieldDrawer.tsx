@@ -1,3 +1,4 @@
+import { Input, TextArea } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import type {
 	BadRequestDetails,
@@ -10,8 +11,6 @@ import type {
 import { Button, EnumSelectFilter } from "#/components/ui";
 import { ApiError } from "#/components/ui/ApiError";
 import { FormDrawer } from "#/components/ui/FormDrawer";
-import { Input } from "#/components/ui/Input";
-import { Textarea } from "#/components/ui/Textarea";
 import { OptionsEditor } from "../components/OptionsEditor";
 import { RulesEditor } from "../components/RulesEditor";
 import { useDefineSystemField, useUpdateSystemField } from "../hooks";
@@ -165,7 +164,7 @@ function FormContent({
 
 					<label className="form-field" htmlFor="system-field-description">
 						<span className="form-label">Description</span>
-						<Textarea
+						<TextArea
 							id="system-field-description"
 							rows={2}
 							value={draft.description}

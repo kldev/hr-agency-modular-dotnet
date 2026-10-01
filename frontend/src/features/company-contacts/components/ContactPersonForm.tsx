@@ -1,5 +1,5 @@
+import { Input } from "@heroui/react";
 import type { ContactPerson } from "@/api/models";
-import { Input } from "@/components/ui";
 
 export type ContactPersonFormMode = "company-create-form" | "contact-form";
 

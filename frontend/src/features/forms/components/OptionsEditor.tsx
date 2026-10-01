@@ -1,7 +1,7 @@
+import { Input } from "@heroui/react";
 import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
 import type { ChoiceOption } from "#/api/models";
 import { Button } from "#/components/ui";
-import { Input } from "#/components/ui/Input";
 
 type OptionsEditorProps = {
 	idPrefix: string;

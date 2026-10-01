@@ -1,7 +1,6 @@
+import { Input } from "@heroui/react";
 import { Plus, Search, SlidersHorizontal } from "lucide-react";
-
 import { Button, OnlyMine, ViewSwitch } from "@/components/ui";
-import { Input } from "@/components/ui/Input";
 import type { SalesView } from "../types";
 
 interface SalesToolbarProps {

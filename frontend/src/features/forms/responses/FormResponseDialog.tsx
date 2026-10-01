@@ -1,4 +1,4 @@
-import { toast } from "@heroui/react";
+import { TextArea, toast } from "@heroui/react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import type { BadRequestDetails, FormResponseView } from "#/api/models";
 import { FormWizard } from "#/components/form-wizard/FormWizard";
@@ -8,7 +8,6 @@ import {
 	DetailsLoading,
 	Dialog,
 	FormResponseStatusBadge,
-	Textarea,
 	useUnsavedChangesGuard,
 } from "#/components/ui";
 import { ApiError } from "#/components/ui/ApiError";
@@ -160,7 +159,7 @@ function ResponseContent({
 			reviewAddon={
 				correcting ? (
 					<FormWizard.Field label="Why is it being corrected?" required htmlFor="correction-reason">
-						<Textarea
+						<TextArea
 							id="correction-reason"
 							rows={3}
 							value={reason}
