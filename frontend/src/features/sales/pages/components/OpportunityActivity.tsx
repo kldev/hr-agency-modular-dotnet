@@ -50,7 +50,7 @@ export function OpportunityActivity({ opportunityId, onLogActivity }: Opportunit
 				</div>
 
 				<div className="toolbar-right">
-					<Button onClick={onLogActivity}>
+					<Button onPress={onLogActivity}>
 						<MessageSquare size={16} />
 						Log activity
 					</Button>

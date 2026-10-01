@@ -74,7 +74,7 @@ export function RepeatableField<T>({
 					</div>
 				))}
 
-				<Button type="button" variant="secondary" disabled={disabled || !canAdd} onClick={onAdd}>
+				<Button type="button" variant="secondary" isDisabled={disabled || !canAdd} onPress={onAdd}>
 					<Plus size={15} />
 					{addLabel}
 				</Button>

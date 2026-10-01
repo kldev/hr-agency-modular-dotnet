@@ -87,7 +87,7 @@ export function ContactSection() {
 								)}{" "}
 								about {form.sent.agencyName.trim()}.
 							</p>
-							<Button variant="secondary" onClick={form.reset}>
+							<Button variant="secondary" onPress={form.reset}>
 								Send another request
 							</Button>
 						</div>
@@ -168,7 +168,7 @@ export function ContactSection() {
 							<Button
 								type="submit"
 								variant="primary"
-								loading={form.sending}
+								isPending={form.sending}
 								className="landing-form-submit"
 							>
 								Request a call back

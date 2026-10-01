@@ -16,7 +16,7 @@ const NotFoundPage: React.FC = () => {
 						<br />
 						Please check the URL or return to the previous page.
 					</p>
-					<Button variant="back" onClick={() => naviage({ to: "/app/dashboard" })}>
+					<Button variant="back" onPress={() => naviage({ to: "/app/dashboard" })}>
 						Back to Home
 					</Button>
 				</div>

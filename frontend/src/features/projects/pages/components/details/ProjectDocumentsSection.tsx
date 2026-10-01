@@ -94,7 +94,7 @@ export function ProjectDocumentsSection({
 					<p className="project-role-empty">Nothing attached yet.</p>
 				) : null}
 
-				<Button variant="ghost" icon={<Paperclip size={15} />} onClick={onAttach}>
+				<Button variant="ghost" icon={<Paperclip size={15} />} onPress={onAttach}>
 					Attach document
 				</Button>
 			</div>

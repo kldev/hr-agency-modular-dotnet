@@ -134,9 +134,9 @@ export function OrganizationForm({
 
 							<Button
 								variant="ghost"
-								disabled={name.length < 3}
+								isDisabled={name.length < 3}
 								icon={<RefreshCcw size={16} />}
-								onClick={() => {
+								onPress={() => {
 									const slug = createSlug(field.form.getFieldValue("name"));
 									field.handleChange(slug);
 								}}

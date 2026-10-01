@@ -25,10 +25,10 @@ export function SaveChangesButton({
 			variant="primary"
 			type="submit"
 			icon={!wait ? null : <Loader size={15} />}
-			loading={wait}
-			disabled={isPending}
+			isPending={wait}
+			isDisabled={isPending}
 			form={form}
-			onClick={onClick}
+			onPress={onClick}
 		>
 			{isPending ? (labelPending ?? "Saving...") : (label ?? "Save changes")}
 		</Button>
@@ -56,8 +56,8 @@ export function FormSaveChangesButton({ wait, isPending }: FormSaveChangesButton
 						variant="primary"
 						type="submit"
 						icon={!wait ? null : <Loader size={15} />}
-						loading={wait}
-						disabled={isDisabled}
+						isPending={wait}
+						isDisabled={isDisabled}
 					>
 						Save changes
 					</Button>

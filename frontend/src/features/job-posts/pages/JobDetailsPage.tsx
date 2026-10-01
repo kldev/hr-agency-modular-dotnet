@@ -137,7 +137,7 @@ const JobPostDetailsPage: React.FC = () => {
 						<Button
 							variant="ghost"
 							title="Add application"
-							onClick={() => {
+							onPress={() => {
 								addAppRef.current?.create(jobPost.id, jobPost.title);
 							}}
 						>
@@ -147,7 +147,7 @@ const JobPostDetailsPage: React.FC = () => {
 						<Button
 							variant="ghost"
 							title="Copy to new language"
-							onClick={() =>
+							onPress={() =>
 								navigate({
 									to: "/app/jobs/add",
 									search: { fromJobPostId: jobPost.id, jobDescriptionId: undefined },
@@ -160,7 +160,7 @@ const JobPostDetailsPage: React.FC = () => {
 						<Button
 							variant="ghost"
 							title="Edit data"
-							onClick={() =>
+							onPress={() =>
 								navigate({
 									to: "/app/jobs/edit/$id",
 									params: { id: jobPost.id },

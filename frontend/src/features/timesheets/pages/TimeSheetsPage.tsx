@@ -1,4 +1,4 @@
-import { toast } from "@heroui/react";
+import { buttonVariants, toast } from "@heroui/react";
 import { CalendarClock, FileSpreadsheet } from "lucide-react";
 import { useRef, useState } from "react";
 import { Route } from "#/routes/app/timesheets";
@@ -194,7 +194,7 @@ export function TimeSheetsPage() {
 									payslip. Downloading does not settle anything.
 								</span>
 								<a
-									className="button button-secondary"
+									className={buttonVariants({ variant: "outline" })}
 									href={exported.href}
 									download={exported.fileName}
 								>

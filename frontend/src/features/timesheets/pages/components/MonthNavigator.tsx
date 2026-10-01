@@ -24,8 +24,8 @@ export function MonthNavigator({ month, onChange, onRefresh, loading }: Props) {
 				className="shrink-0"
 				variant="secondary"
 				icon={<RefreshCcw size={15} />}
-				onClick={() => onRefresh(0)}
-				loading={loading}
+				onPress={() => onRefresh(0)}
+				isPending={loading}
 			>
 				Refresh
 			</Button>
@@ -33,7 +33,7 @@ export function MonthNavigator({ month, onChange, onRefresh, loading }: Props) {
 				variant="ghost"
 				aria-label="Previous month"
 				icon={<ChevronLeft size={16} />}
-				onClick={() => onChange(shiftMonth(month, -1))}
+				onPress={() => onChange(shiftMonth(month, -1))}
 			/>
 
 			<span className="month-navigator-label">{monthLabel(month)}</span>
@@ -42,12 +42,12 @@ export function MonthNavigator({ month, onChange, onRefresh, loading }: Props) {
 				variant="ghost"
 				aria-label="Next month"
 				icon={<ChevronRight size={16} />}
-				disabled={isFutureMonth(shiftMonth(month, 1))}
-				onClick={() => onChange(shiftMonth(month, 1))}
+				isDisabled={isFutureMonth(shiftMonth(month, 1))}
+				onPress={() => onChange(shiftMonth(month, 1))}
 			/>
 
 			{isNow ? null : (
-				<Button variant="secondary" onClick={() => onChange(now)}>
+				<Button variant="secondary" onPress={() => onChange(now)}>
 					Today
 				</Button>
 			)}

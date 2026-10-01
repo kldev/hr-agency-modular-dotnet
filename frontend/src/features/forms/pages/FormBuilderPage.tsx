@@ -130,27 +130,27 @@ function Builder({
 								<Button
 									variant="secondary"
 									icon={<Save size={14} />}
-									disabled={!dirty}
-									loading={save.mutation.isPending}
-									onClick={() => void saveDraft().catch(() => undefined)}
+									isDisabled={!dirty}
+									isPending={save.mutation.isPending}
+									onPress={() => void saveDraft().catch(() => undefined)}
 								>
 									Save draft
 								</Button>
 								<Button
 									variant="primary"
 									icon={<Send size={14} />}
-									loading={publish.mutation.isPending || publish.waiting}
-									disabled={
+									isPending={publish.mutation.isPending || publish.waiting}
+									isDisabled={
 										!dirty && !form.hasUnpublishedChanges && Number(form.publishedVersion) > 0
 									}
-									onClick={() => void onPublish().catch(() => undefined)}
+									onPress={() => void onPublish().catch(() => undefined)}
 								>
 									Publish
 								</Button>
 								<Button
 									variant="ghost"
 									icon={<Archive size={14} />}
-									onClick={() => setArchiving(true)}
+									onPress={() => setArchiving(true)}
 								>
 									Archive
 								</Button>

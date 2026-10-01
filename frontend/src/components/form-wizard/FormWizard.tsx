@@ -241,8 +241,8 @@ function WizardFooter({
 					<Button
 						variant="secondary"
 						icon={<ArrowLeft size={14} />}
-						onClick={onBack}
-						disabled={!canGoBack || isSubmitting}
+						onPress={onBack}
+						isDisabled={!canGoBack || isSubmitting}
 					>
 						<span className="button-label">Back</span>
 					</Button>
@@ -253,7 +253,7 @@ function WizardFooter({
 				{children}
 
 				{onCancel && (
-					<Button variant="ghost" onClick={onCancel} disabled={isSubmitting}>
+					<Button variant="ghost" onPress={onCancel} isDisabled={isSubmitting}>
 						<span className="button-label">Cancel</span>
 					</Button>
 				)}
@@ -262,9 +262,9 @@ function WizardFooter({
 					? onSubmit && (
 							<Button
 								variant="primary"
-								onClick={onSubmit}
-								loading={isSubmitting}
-								disabled={!canSubmit}
+								onPress={onSubmit}
+								isPending={isSubmitting}
+								isDisabled={!canSubmit}
 							>
 								{submitLabel}
 							</Button>
@@ -273,8 +273,8 @@ function WizardFooter({
 							<Button
 								variant="primary"
 								icon={<ArrowRight size={14} />}
-								onClick={onNext}
-								disabled={!canGoNext}
+								onPress={onNext}
+								isDisabled={!canGoNext}
 							>
 								{nextLabel}
 							</Button>

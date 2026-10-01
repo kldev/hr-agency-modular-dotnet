@@ -50,13 +50,13 @@ function RoleRow({
 				<Button
 					variant="ghost"
 					icon={assigned ? <Pencil size={15} /> : <Plus size={15} />}
-					onClick={() => onAssign(role)}
+					onPress={() => onAssign(role)}
 				>
 					{assigned ? "Change" : "Assign"}
 				</Button>
 
 				{assigned ? (
-					<Button variant="ghost" icon={<Trash2 size={15} />} onClick={() => onRemove(role)}>
+					<Button variant="ghost" icon={<Trash2 size={15} />} onPress={() => onRemove(role)}>
 						Remove
 					</Button>
 				) : null}

@@ -113,7 +113,7 @@ const JobDescriptionDetailsPage: React.FC<{ id: string }> = ({ id }) => {
 						<Button
 							variant="ghost"
 							title="Create job post"
-							onClick={() =>
+							onPress={() =>
 								navigate({
 									to: "/app/jobs/add",
 									search: { jobDescriptionId: jobDescription.id, fromJobPostId: undefined },

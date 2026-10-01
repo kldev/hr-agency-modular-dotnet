@@ -30,8 +30,8 @@ export function PreviewTab({ formId, layout }: { formId: string; layout: readonl
 				<Button
 					variant="secondary"
 					icon={<RefreshCcw size={14} />}
-					loading={preview.isPending}
-					onClick={() => mutate({ formId, req: { pages: [...layout] } })}
+					isPending={preview.isPending}
+					onPress={() => mutate({ formId, req: { pages: [...layout] } })}
 				>
 					Refresh preview
 				</Button>

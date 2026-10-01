@@ -39,7 +39,7 @@ export function UsersToolbar({ search, onSearchChange, onAdd, onClear }: UsersTo
 					icon={<SlidersHorizontal size={15} />}
 					aria-label="Clear"
 					title="Clear"
-					onClick={onClear}
+					onPress={onClear}
 				>
 					Clear
 				</Button>
@@ -47,7 +47,7 @@ export function UsersToolbar({ search, onSearchChange, onAdd, onClear }: UsersTo
 
 			{onAdd ? (
 				<div className="toolbar-right">
-					<Button variant="primary" icon={<Plus size={15} />} onClick={onAdd}>
+					<Button variant="primary" icon={<Plus size={15} />} onPress={onAdd}>
 						Add user
 					</Button>
 				</div>

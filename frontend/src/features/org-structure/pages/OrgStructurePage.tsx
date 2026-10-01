@@ -152,7 +152,7 @@ const OrgStructurePage: React.FC = () => {
 						<Button
 							variant="primary"
 							icon={<Plus size={15} />}
-							onClick={() => createRef.current?.create(null)}
+							onPress={() => createRef.current?.create(null)}
 						>
 							Create the top unit
 						</Button>

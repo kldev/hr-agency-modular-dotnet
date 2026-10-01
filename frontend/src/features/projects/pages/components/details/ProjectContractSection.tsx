@@ -73,7 +73,7 @@ export function ProjectContractSection({
 				<Button
 					variant={contract ? "ghost" : "primary"}
 					icon={contract ? <Pencil size={15} /> : <FileSignature size={15} />}
-					onClick={onRecordContract}
+					onPress={onRecordContract}
 				>
 					{contract ? "Update contract" : "Record contract"}
 				</Button>
@@ -108,7 +108,7 @@ export function ProjectContractSection({
 							<Button
 								variant="ghost"
 								icon={<Mail size={15} />}
-								onClick={() => onEditEmails(purpose)}
+								onPress={() => onEditEmails(purpose)}
 							>
 								Edit
 							</Button>

@@ -32,7 +32,7 @@ export function OpportunityPipeline({
 				<div className="sales-pipeline-lost">
 					<span>Lost: {lostReason || "no reason given"}</span>
 
-					<Button variant="ghost" onClick={() => onStageChange("New")}>
+					<Button variant="ghost" onPress={() => onStageChange("New")}>
 						Reopen opportunity
 					</Button>
 				</div>
@@ -51,7 +51,7 @@ export function OpportunityPipeline({
 								"sales-pipeline-stage-current": isCurrent,
 								"sales-pipeline-stage-completed": isCompleted,
 							})}
-							onClick={() => onStageChange(item)}
+							onPress={() => onStageChange(item)}
 						>
 							{isCompleted ? (
 								<span className="sales-pipeline-check">

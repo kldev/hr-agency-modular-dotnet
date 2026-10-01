@@ -38,7 +38,7 @@ export function VersionsTab({
 						<Button
 							variant={Number(candidate.version) === selected ? "primary" : "ghost"}
 							className="w-full justify-start"
-							onClick={() => setSelected(Number(candidate.version))}
+							onPress={() => setSelected(Number(candidate.version))}
 						>
 							v{String(candidate.version)} · {formatDateTime(candidate.publishedAt)}
 						</Button>

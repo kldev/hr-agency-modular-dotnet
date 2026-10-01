@@ -105,7 +105,7 @@ export function ComplianceChecklist({
 
 								<td>
 									<div className="flex justify-end">
-										<Button variant="ghost" onClick={() => onRecord(view)}>
+										<Button variant="ghost" onPress={() => onRecord(view)}>
 											{view.item ? "Update" : "Record"}
 										</Button>
 									</div>

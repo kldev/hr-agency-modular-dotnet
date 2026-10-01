@@ -61,7 +61,7 @@ export function WorkerFormsSection({ workerId }: { workerId: string }) {
 										<div className="flex justify-end">
 											<Button
 												variant="secondary"
-												onClick={() => responseRef.current?.open(response.id)}
+												onPress={() => responseRef.current?.open(response.id)}
 											>
 												{response.status === "Draft" ? "Continue" : "Open"}
 											</Button>

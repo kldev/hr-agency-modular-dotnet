@@ -95,8 +95,8 @@ export function AvatarUploader({ profile }: AvatarUploaderProps) {
 						<Button
 							variant="ghost"
 							icon={<Trash2 size={15} />}
-							disabled={isBusy}
-							onClick={() => remove.mutate()}
+							isDisabled={isBusy}
+							onPress={() => remove.mutate()}
 						>
 							Remove picture
 						</Button>

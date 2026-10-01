@@ -92,7 +92,7 @@ export function CompanyPanel({ companyId, onChange }: CompanyPanelProps) {
 					<Button
 						variant="secondary"
 						icon={<ArrowLeftRight size={14} />}
-						onClick={() => setPicking(true)}
+						onPress={() => setPicking(true)}
 					>
 						Change company
 					</Button>

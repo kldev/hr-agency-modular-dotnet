@@ -206,8 +206,8 @@ const FormContent: React.FC<{
 						<Button
 							variant="danger"
 							type="button"
-							loading={removal.mutation.isPending || removal.waiting}
-							onClick={() => removal.mutation.mutate({ date: target.date })}
+							isPending={removal.mutation.isPending || removal.waiting}
+							onPress={() => removal.mutation.mutate({ date: target.date })}
 						>
 							Remove day
 						</Button>

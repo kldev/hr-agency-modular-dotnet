@@ -1,6 +1,9 @@
+import { buttonVariants } from "@heroui/react";
 import { Link } from "@tanstack/react-router";
+import clsx from "clsx";
 import { ArrowLeft, ArrowRight, CheckCircle2, Mail, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { Button } from "#/components/ui";
 import { requestPasswordReset } from "@/api/endpoints";
 import { AuthLayout } from "../layout";
 import { readApiError } from "../readApiError";
@@ -67,7 +70,7 @@ const ForgotPasswordPage: React.FC = () => {
 					</div>
 				</div>
 
-				<Link to="/login" className="button button-primary auth-submit">
+				<Link to="/login" className={clsx(buttonVariants({ variant: "primary" }), "auth-submit")}>
 					<ArrowLeft size={16} />
 					Back to sign in
 				</Link>
@@ -126,19 +129,16 @@ const ForgotPasswordPage: React.FC = () => {
 					</span>
 				</div>
 
-				<button type="submit" className="button button-primary auth-submit" disabled={isLoading}>
+				<Button type="submit" variant="primary" className="auth-submit" isPending={isLoading}>
 					{isLoading ? (
-						<>
-							<span className="spinner" />
-							Sending...
-						</>
+						<>Sending...</>
 					) : (
 						<>
 							Send reset link
 							<ArrowRight size={16} />
 						</>
 					)}
-				</button>
+				</Button>
 			</form>
 
 			<Link to="/login" className="auth-back-link">

@@ -71,21 +71,21 @@ export function FieldEditor({
 						icon={<ArrowUp size={15} />}
 						aria-label="Move up"
 						title="Move up"
-						onClick={() => onMove(-1)}
+						onPress={() => onMove(-1)}
 					/>
 					<Button
 						variant="ghost"
 						icon={<ArrowDown size={15} />}
 						aria-label="Move down"
 						title="Move down"
-						onClick={() => onMove(1)}
+						onPress={() => onMove(1)}
 					/>
 					<Button
 						variant="ghost"
 						icon={<Trash2 size={15} />}
 						aria-label="Remove field"
 						title="Remove field"
-						onClick={onRemove}
+						onPress={onRemove}
 					/>
 				</div>
 			</div>

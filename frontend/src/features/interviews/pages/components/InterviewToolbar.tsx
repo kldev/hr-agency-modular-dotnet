@@ -38,7 +38,7 @@ export function InterviewToolbar({ search, onSearchChange, onClear }: InterviewT
 					icon={<SlidersHorizontal size={15} />}
 					aria-label="Clear"
 					title="Clear"
-					onClick={onClear}
+					onPress={onClear}
 				>
 					Clear
 				</Button>

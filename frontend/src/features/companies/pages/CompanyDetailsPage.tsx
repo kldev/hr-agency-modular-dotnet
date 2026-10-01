@@ -50,7 +50,7 @@ export function CompanyDetailsPage() {
 						company.isProfileComplete ? null : (
 							<ActionButton
 								title="Complete client data"
-								onClick={() => profileRef.current?.complete(company.id)}
+								onPress={() => profileRef.current?.complete(company.id)}
 							>
 								Complete client data
 							</ActionButton>

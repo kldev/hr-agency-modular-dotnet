@@ -69,15 +69,15 @@ export const IssueApiKeyDrawer = forwardRef<IssueApiKeyCommand>((_, ref) => {
 			onClose={close}
 			footer={
 				issued ? (
-					<Button variant="primary" onClick={close}>
+					<Button variant="primary" onPress={close}>
 						{copied ? "Done" : "I have stored it"}
 					</Button>
 				) : (
 					<Button
 						variant="primary"
-						loading={mutation.isPending}
-						disabled={!trimmed || Boolean(nameError)}
-						onClick={submit}
+						isPending={mutation.isPending}
+						isDisabled={!trimmed || Boolean(nameError)}
+						onPress={submit}
 					>
 						Issue key
 					</Button>
@@ -111,7 +111,7 @@ export const IssueApiKeyDrawer = forwardRef<IssueApiKeyCommand>((_, ref) => {
 							<Button
 								className="min-w-[100px]"
 								icon={copied ? <Check size={15} /> : <Copy size={15} />}
-								onClick={() => void copy()}
+								onPress={() => void copy()}
 							>
 								{copied ? "Copied" : "Copy"}
 							</Button>

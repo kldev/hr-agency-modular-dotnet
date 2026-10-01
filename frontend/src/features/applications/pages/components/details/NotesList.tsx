@@ -56,7 +56,7 @@ export function NotesList({ id, add }: { id: string; add: () => void }) {
 				<h2>Notes</h2>
 
 				<div className="flex flex-row gap-2 items-center justify-items-end">
-					<Button variant="ghost" onClick={add} icon={<PlusIcon size={16} />}></Button>
+					<Button variant="ghost" onPress={add} icon={<PlusIcon size={16} />}></Button>
 					{notes.length > 0 && <span className="notes-count">{notes.length}</span>}
 				</div>
 			</div>

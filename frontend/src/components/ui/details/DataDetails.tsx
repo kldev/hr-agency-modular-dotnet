@@ -57,7 +57,7 @@ export function DetailOverviewHeader({
 						icon={<Plus size={15} />}
 						aria-label="Add"
 						title="Add"
-						onClick={onAdd}
+						onPress={onAdd}
 					></Button>
 				</div>
 			) : null}

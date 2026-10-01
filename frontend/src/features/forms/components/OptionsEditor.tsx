@@ -55,22 +55,22 @@ export function OptionsEditor({ idPrefix, options, disabled, onChange }: Options
 						variant="ghost"
 						icon={<ArrowUp size={14} />}
 						aria-label="Up"
-						disabled={disabled}
-						onClick={() => move(index, -1)}
+						isDisabled={disabled}
+						onPress={() => move(index, -1)}
 					/>
 					<Button
 						variant="ghost"
 						icon={<ArrowDown size={14} />}
 						aria-label="Down"
-						disabled={disabled}
-						onClick={() => move(index, 1)}
+						isDisabled={disabled}
+						onPress={() => move(index, 1)}
 					/>
 					<Button
 						variant="ghost"
 						icon={<Trash2 size={14} />}
 						aria-label="Remove option"
-						disabled={disabled}
-						onClick={() => onChange(options.filter((_, i) => i !== index))}
+						isDisabled={disabled}
+						onPress={() => onChange(options.filter((_, i) => i !== index))}
 					/>
 				</div>
 			))}
@@ -80,7 +80,7 @@ export function OptionsEditor({ idPrefix, options, disabled, onChange }: Options
 					<Button
 						variant="secondary"
 						icon={<Plus size={14} />}
-						onClick={() =>
+						onPress={() =>
 							onChange([...options, { value: `option${options.length + 1}`, label: "" }])
 						}
 					>

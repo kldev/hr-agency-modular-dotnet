@@ -119,11 +119,11 @@ function ResponseContent({
 					<footer className="form-wizard__footer">
 						<div className="form-wizard__footer-left" />
 						<div className="form-wizard__footer-right">
-							<Button variant="ghost" onClick={onClose}>
+							<Button variant="ghost" onPress={onClose}>
 								Close
 							</Button>
 							{isFormsDesigner(role) ? (
-								<Button variant="primary" onClick={() => setMode("correct")}>
+								<Button variant="primary" onPress={() => setMode("correct")}>
 									Correct
 								</Button>
 							) : null}
