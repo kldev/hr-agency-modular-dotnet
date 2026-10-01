@@ -121,24 +121,24 @@ export default function SalesWorkspacePage({ search, onSearchChange }: SalesWork
 							id,
 							label: workspaceTabs[id],
 						}))}
-					/>
-
-					{companyId ? (
-						<TabPanel id={tab}>
-							{tab === "activities" ? (
-								<ActivitiesTab companyId={companyId} onLog={() => logDrawer.current?.open()} />
-							) : null}
-							{tab === "opportunities" ? <OpportunitiesTab companyId={companyId} /> : null}
-							{tab === "projects" ? <ProjectsTab companyId={companyId} /> : null}
-						</TabPanel>
-					) : (
-						<EmptyState
-							title="No company selected"
-							description="Choose a company on the left to see its activities, opportunities and projects."
-						>
-							<Building2 size={24} />
-						</EmptyState>
-					)}
+					>
+						{companyId ? (
+							<TabPanel id={tab}>
+								{tab === "activities" ? (
+									<ActivitiesTab companyId={companyId} onLog={() => logDrawer.current?.open()} />
+								) : null}
+								{tab === "opportunities" ? <OpportunitiesTab companyId={companyId} /> : null}
+								{tab === "projects" ? <ProjectsTab companyId={companyId} /> : null}
+							</TabPanel>
+						) : (
+							<EmptyState
+								title="No company selected"
+								description="Choose a company on the left to see its activities, opportunities and projects."
+							>
+								<Building2 size={24} />
+							</EmptyState>
+						)}
+					</Tabs>
 				</div>
 
 				<div className="sales-workspace-tasks">

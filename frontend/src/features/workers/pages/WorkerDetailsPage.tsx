@@ -131,76 +131,76 @@ const WorkerDetailsPage: React.FC<WorkerDetailsPageProps> = ({ tab, onTabChange 
 					}
 				/>
 
-				<Tabs value={active} tabs={tabs} onChange={onTabChange} label="Worker sections" />
+				<Tabs value={active} tabs={tabs} onChange={onTabChange} label="Worker sections">
+					<DataDetailsLayout
+						main={
+							<TabPanel id={active}>
+								{active === "overview" ? (
+									<>
+										<section className="data-details-section mt-1">
+											<WorkerIdentitySection worker={worker} />
+										</section>
 
-				<DataDetailsLayout
-					main={
-						<TabPanel id={active}>
-							{active === "overview" ? (
-								<>
+										<section className="data-details-section mt-5">
+											<WorkerContactSection worker={worker} />
+										</section>
+									</>
+								) : null}
+
+								{active === "documents" ? (
 									<section className="data-details-section mt-1">
-										<WorkerIdentitySection worker={worker} />
+										<WorkerDocumentsSection
+											worker={worker}
+											onAttach={() => documentRef.current?.attach(id)}
+											onRefresh={refresh}
+										/>
 									</section>
+								) : null}
 
-									<section className="data-details-section mt-5">
-										<WorkerContactSection worker={worker} />
+								{active === "permissions" ? (
+									<section className="data-details-section mt-1">
+										<WorkerAuthorisationsSection
+											worker={worker}
+											onRecord={() => authorisationRef.current?.record(worker)}
+											onRefresh={refresh}
+										/>
 									</section>
-								</>
-							) : null}
+								) : null}
 
-							{active === "documents" ? (
-								<section className="data-details-section mt-1">
-									<WorkerDocumentsSection
-										worker={worker}
-										onAttach={() => documentRef.current?.attach(id)}
-										onRefresh={refresh}
-									/>
-								</section>
-							) : null}
+								{active === "assignments" ? (
+									<section className="data-details-section section mt-1">
+										<WorkerAssignmentsSection
+											worker={worker}
+											onPlanAssignment={() => planAssignmentRef.current?.plan({ workerId: id })}
+										/>
+									</section>
+								) : null}
 
-							{active === "permissions" ? (
-								<section className="data-details-section mt-1">
-									<WorkerAuthorisationsSection
-										worker={worker}
-										onRecord={() => authorisationRef.current?.record(worker)}
-										onRefresh={refresh}
-									/>
-								</section>
-							) : null}
-
-							{active === "assignments" ? (
-								<section className="data-details-section section mt-1">
-									<WorkerAssignmentsSection
-										worker={worker}
-										onPlanAssignment={() => planAssignmentRef.current?.plan({ workerId: id })}
-									/>
-								</section>
-							) : null}
-
-							{active === "forms" ? (
-								<section className="data-details-section mt-1">
-									<WorkerFormsSection workerId={id} />
-								</section>
-							) : null}
-						</TabPanel>
-					}
-					sidebar={
-						<>
-							{/* Outside the tabs on purpose: whose desk this person is on is the one thing
+								{active === "forms" ? (
+									<section className="data-details-section mt-1">
+										<WorkerFormsSection workerId={id} />
+									</section>
+								) : null}
+							</TabPanel>
+						}
+						sidebar={
+							<>
+								{/* Outside the tabs on purpose: whose desk this person is on is the one thing
 							    worth seeing whichever section you opened. */}
-							<section className="data-details-section mt-1">
-								<WorkerPipelineSidebar worker={worker} />
-							</section>
+								<section className="data-details-section mt-1">
+									<WorkerPipelineSidebar worker={worker} />
+								</section>
 
-							<AuditInformation
-								createdAt={worker.createdAt ?? ""}
-								createdBy={worker.createdBy as UserSnapshot}
-								modifiedAt={worker.modifiedAt ?? null}
-								modifiedBy={worker.modifiedBy ?? null}
-							/>
-						</>
-					}
-				/>
+								<AuditInformation
+									createdAt={worker.createdAt ?? ""}
+									createdBy={worker.createdBy as UserSnapshot}
+									modifiedAt={worker.modifiedAt ?? null}
+									modifiedBy={worker.modifiedBy ?? null}
+								/>
+							</>
+						}
+					/>
+				</Tabs>
 			</DataDetails>
 
 			<WorkerWizardDialog ref={wizardRef} onSuccess={refresh} />
