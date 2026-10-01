@@ -3,6 +3,7 @@ import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/reac
 import { Toaster } from "sonner";
 
 import NotFoundPage from "#/features/common/NotFoundPage";
+import { AriaRouterProvider } from "#/integrations/aria-router";
 
 import appCss from "../styles/global.css?url";
 
@@ -46,7 +47,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]">
-				{children}
+				<AriaRouterProvider>{children}</AriaRouterProvider>
 
 				{/* <TanStackDevtools
 					config={{
