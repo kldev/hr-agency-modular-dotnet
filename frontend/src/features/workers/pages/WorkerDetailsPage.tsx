@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { useParams } from "@tanstack/react-router";
 import type React from "react";
 import { useRef } from "react";
@@ -116,9 +117,9 @@ const WorkerDetailsPage: React.FC<WorkerDetailsPageProps> = ({ tab, onTabChange 
 						<>
 							<WorkerStatusBadge status={worker.status ?? "Recruitment"} />
 
-							<span className="badge badge-inactive">
+							<Chip size="sm" className="badge badge-inactive">
 								{getCountryLabel(worker.citizenship ?? "")}
-							</span>
+							</Chip>
 						</>
 					}
 					extraAdd={

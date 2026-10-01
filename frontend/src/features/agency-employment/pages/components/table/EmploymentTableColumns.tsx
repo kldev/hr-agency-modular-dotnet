@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { createColumnHelper } from "@tanstack/react-table";
 import type { AgencyEmploymentProjection } from "@/api/models";
 import type { appTableFeaturesType } from "@/components/table";
@@ -98,9 +99,12 @@ export function getColumns({ onChangeTerms, onEnd, showsRate }: ColumnHandlers) 
 			header: "State",
 			meta: { width: "sm" },
 			cell: ({ row }) => (
-				<span className={`badge ${isEnded(row.original) ? "badge-closed" : "badge-active"}`}>
+				<Chip
+					size="sm"
+					className={`badge ${isEnded(row.original) ? "badge-closed" : "badge-active"}`}
+				>
 					{isEnded(row.original) ? "Ended" : "Running"}
-				</span>
+				</Chip>
 			),
 		}),
 	]);

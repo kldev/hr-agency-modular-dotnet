@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import clsx from "clsx";
 import { differenceInCalendarDays } from "date-fns";
 import { AlertTriangle } from "lucide-react";
@@ -57,12 +58,13 @@ export function WorkerExpiryChip({
 	const soon = days <= EXPIRY_WARNING_DAYS;
 
 	return (
-		<span
+		<Chip
+			size="sm"
 			className={clsx("badge", lapsed ? "badge-cancelled" : soon ? "badge-new" : "badge-active")}
 			title={`${next.what} ${lapsed ? "expired" : "valid until"} ${formatDate(next.date)}`}
 		>
 			{(lapsed || soon) && <AlertTriangle size={12} className="mr-1" />}
 			{formatDate(next.date)}
-		</span>
+		</Chip>
 	);
 }

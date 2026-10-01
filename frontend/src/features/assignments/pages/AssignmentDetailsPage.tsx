@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { useParams } from "@tanstack/react-router";
 import type React from "react";
 import { useRef } from "react";
@@ -58,9 +59,9 @@ const AssignmentDetailsPage: React.FC = () => {
 						<>
 							<AssignmentStatusBadge status={assignment.status} />
 
-							<span className="badge badge-inactive">
+							<Chip size="sm" className="badge badge-inactive">
 								{engagementTypes[assignment.engagementType]}
-							</span>
+							</Chip>
 						</>
 					}
 					extraAdd={
