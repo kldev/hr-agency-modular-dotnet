@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { Link } from "@tanstack/react-router";
 import { BriefcaseBusiness, Pencil } from "lucide-react";
 import type { PositionListItem, ProjectProjection } from "@/api/models";
@@ -50,60 +51,62 @@ export function ProjectPositionsSection({
 
 			{positions.length > 0 ? (
 				<>
-					<table className="table">
-						<thead>
-							<tr>
-								<th>Position</th>
-								<th className="table-header-md">We sign</th>
-								<th className="table-header-sm">Rate</th>
-								<th className="table-header-sm">Staffed</th>
-								<th />
-							</tr>
-						</thead>
+					<Table variant="secondary" className="table-container">
+						<Table.ScrollContainer>
+							<Table.Content aria-label="Positions">
+								<Table.Header>
+									<Table.Column isRowHeader>Position</Table.Column>
+									<Table.Column className="table-header-md">We sign</Table.Column>
+									<Table.Column className="table-header-sm">Rate</Table.Column>
+									<Table.Column className="table-header-sm">Staffed</Table.Column>
+									<Table.Column aria-label="Actions" />
+								</Table.Header>
 
-						<tbody>
-							{positions.map((position) => (
-								<tr key={position.id}>
-									<td className="table-cell-truncate" title={position.name}>
-										{position.name}
-									</td>
+								<Table.Body>
+									{positions.map((position) => (
+										<Table.Row key={position.id}>
+											<Table.Cell className="table-cell-truncate">
+												<span title={position.name}>{position.name}</span>
+											</Table.Cell>
 
-									<td>{workerContractTypes[position.contractType]}</td>
+											<Table.Cell>{workerContractTypes[position.contractType]}</Table.Cell>
 
-									<td className="table-figure">
-										{position.proposedRate
-											? `${position.proposedRate.amount} ${position.proposedRate.currency}/${
-													rateUnitShort[position.proposedRate.unit]
-												}`
-											: "—"}
-									</td>
+											<Table.Cell className="table-figure">
+												{position.proposedRate
+													? `${position.proposedRate.amount} ${position.proposedRate.currency}/${
+															rateUnitShort[position.proposedRate.unit]
+														}`
+													: "—"}
+											</Table.Cell>
 
-									<td>
-										<PositionStaffing
-											assigned={position.assignedCount}
-											planned={position.plannedHeadcount}
-										/>
-									</td>
+											<Table.Cell>
+												<PositionStaffing
+													assigned={position.assignedCount}
+													planned={position.plannedHeadcount}
+												/>
+											</Table.Cell>
 
-									<td>
-										<div className="flex gap-2 justify-end">
-											{onEditPosition ? (
-												<button
-													type="button"
-													className="action-button"
-													title="Edit"
-													aria-label="Edit"
-													onClick={() => onEditPosition(position)}
-												>
-													<Pencil size={15} />
-												</button>
-											) : null}
-										</div>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+											<Table.Cell>
+												<div className="flex gap-2 justify-end">
+													{onEditPosition ? (
+														<button
+															type="button"
+															className="action-button"
+															title="Edit"
+															aria-label="Edit"
+															onClick={() => onEditPosition(position)}
+														>
+															<Pencil size={15} />
+														</button>
+													) : null}
+												</div>
+											</Table.Cell>
+										</Table.Row>
+									))}
+								</Table.Body>
+							</Table.Content>
+						</Table.ScrollContainer>
+					</Table>
 
 					{/* Archived roles and the search across projects live on the register itself. */}
 					<Link

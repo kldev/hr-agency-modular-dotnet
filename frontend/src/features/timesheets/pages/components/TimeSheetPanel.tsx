@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { Check, MessageSquare, Undo2, Wallet } from "lucide-react";
 import type { TimeSheetProjection } from "@/api/models";
 import { Button, TimeSheetStatusBadge } from "@/components/ui";
@@ -82,29 +83,33 @@ export function TimeSheetPanel({
 			</div>
 
 			{/* In a container so the four columns scroll on a narrow screen instead of spilling out. */}
-			<div className="table-container">
-				<table className="table">
-					<thead>
-						<tr>
-							<th className="table-header-md">Day</th>
-							<th className="table-header-ssm">From</th>
-							<th className="table-header-ssm">Worked</th>
-							<th>Note</th>
-						</tr>
-					</thead>
+			<Table variant="secondary" className="table-container">
+				<Table.ScrollContainer>
+					<Table.Content aria-label="Days">
+						<Table.Header>
+							<Table.Column isRowHeader className="table-header-md">
+								Day
+							</Table.Column>
+							<Table.Column className="table-header-ssm">From</Table.Column>
+							<Table.Column className="table-header-ssm">Worked</Table.Column>
+							<Table.Column>Note</Table.Column>
+						</Table.Header>
 
-					<tbody>
-						{sheet.days.map((day) => (
-							<tr key={day.date}>
-								<td className="table-figure">{formatDate(day.date)}</td>
-								<td className="table-figure">{toTimeOfDay(day.startsAt)}</td>
-								<td className="table-figure">{formatMinutes(Number(day.minutes))}</td>
-								<td>{day.note}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
+						<Table.Body>
+							{sheet.days.map((day) => (
+								<Table.Row key={day.date}>
+									<Table.Cell className="table-figure">{formatDate(day.date)}</Table.Cell>
+									<Table.Cell className="table-figure">{toTimeOfDay(day.startsAt)}</Table.Cell>
+									<Table.Cell className="table-figure">
+										{formatMinutes(Number(day.minutes))}
+									</Table.Cell>
+									<Table.Cell>{day.note}</Table.Cell>
+								</Table.Row>
+							))}
+						</Table.Body>
+					</Table.Content>
+				</Table.ScrollContainer>
+			</Table>
 
 			<TimeSheetComments comments={sheet.comments} />
 		</div>

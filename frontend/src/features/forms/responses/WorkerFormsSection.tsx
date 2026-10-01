@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { ClipboardList } from "lucide-react";
 import { useRef } from "react";
 import { Button, DetailOverviewHeader, EmptyState, FormResponseStatusBadge } from "#/components/ui";
@@ -31,46 +32,50 @@ export function WorkerFormsSection({ workerId }: { workerId: string }) {
 						<ClipboardList size={24} />
 					</EmptyState>
 				) : (
-					<table className="table">
-						<thead>
-							<tr>
-								<th>Form</th>
-								<th className="table-header-sm">Version</th>
-								<th className="table-header-sm">Status</th>
-								<th>Last change</th>
-								<th />
-							</tr>
-						</thead>
+					<Table variant="secondary" className="table-container">
+						<Table.ScrollContainer>
+							<Table.Content aria-label="Forms">
+								<Table.Header>
+									<Table.Column isRowHeader>Form</Table.Column>
+									<Table.Column className="table-header-sm">Version</Table.Column>
+									<Table.Column className="table-header-sm">Status</Table.Column>
+									<Table.Column>Last change</Table.Column>
+									<Table.Column aria-label="Actions" />
+								</Table.Header>
 
-						<tbody>
-							{responses.map((response) => (
-								<tr key={response.id}>
-									<td>{response.formName}</td>
-									<td className="table-figure">
-										v{String(response.formVersion)}
-										{Number(response.revision) > 0 ? ` · rev. ${String(response.revision)}` : ""}
-									</td>
-									<td>
-										<FormResponseStatusBadge status={response.status} />
-									</td>
-									<td>
-										{formatDateTime(response.modifiedAt ?? response.startedAt)}
-										{response.modifiedBy ? ` · ${response.modifiedBy.fullname}` : ""}
-									</td>
-									<td>
-										<div className="flex justify-end">
-											<Button
-												variant="secondary"
-												onPress={() => responseRef.current?.open(response.id)}
-											>
-												{response.status === "Draft" ? "Continue" : "Open"}
-											</Button>
-										</div>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+								<Table.Body>
+									{responses.map((response) => (
+										<Table.Row key={response.id}>
+											<Table.Cell>{response.formName}</Table.Cell>
+											<Table.Cell className="table-figure">
+												v{String(response.formVersion)}
+												{Number(response.revision) > 0
+													? ` · rev. ${String(response.revision)}`
+													: ""}
+											</Table.Cell>
+											<Table.Cell>
+												<FormResponseStatusBadge status={response.status} />
+											</Table.Cell>
+											<Table.Cell>
+												{formatDateTime(response.modifiedAt ?? response.startedAt)}
+												{response.modifiedBy ? ` · ${response.modifiedBy.fullname}` : ""}
+											</Table.Cell>
+											<Table.Cell>
+												<div className="flex justify-end">
+													<Button
+														variant="secondary"
+														onPress={() => responseRef.current?.open(response.id)}
+													>
+														{response.status === "Draft" ? "Continue" : "Open"}
+													</Button>
+												</div>
+											</Table.Cell>
+										</Table.Row>
+									))}
+								</Table.Body>
+							</Table.Content>
+						</Table.ScrollContainer>
+					</Table>
 				)}
 			</div>
 

@@ -1,3 +1,4 @@
+import { Table } from "@heroui/react";
 import { ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { WorkAuthorisation, WorkerProjection } from "@/api/models";
@@ -50,42 +51,44 @@ export function WorkerAuthorisationsSection({
 						<ShieldCheck size={24} />
 					</EmptyState>
 				) : (
-					<table className="table">
-						<thead>
-							<tr>
-								<th>Kind</th>
-								<th>Country</th>
-								<th>Number</th>
-								<th className="table-header-md">Valid</th>
-								<th />
-							</tr>
-						</thead>
+					<Table variant="secondary" className="table-container">
+						<Table.ScrollContainer>
+							<Table.Content aria-label="Work authorisations">
+								<Table.Header>
+									<Table.Column isRowHeader>Kind</Table.Column>
+									<Table.Column>Country</Table.Column>
+									<Table.Column>Number</Table.Column>
+									<Table.Column className="table-header-md">Valid</Table.Column>
+									<Table.Column aria-label="Actions" />
+								</Table.Header>
 
-						<tbody>
-							{authorisations.map((authorisation) => (
-								<tr key={authorisation.authorisationId}>
-									<td>{workAuthorisationKinds[authorisation.kind]}</td>
-									<td>{getCountryLabel(authorisation.country)}</td>
-									<td>{authorisation.number}</td>
-									<td className="table-figure">
-										{formatPeriod(authorisation.validFrom, authorisation.validUntil)}
-									</td>
+								<Table.Body>
+									{authorisations.map((authorisation) => (
+										<Table.Row key={authorisation.authorisationId}>
+											<Table.Cell>{workAuthorisationKinds[authorisation.kind]}</Table.Cell>
+											<Table.Cell>{getCountryLabel(authorisation.country)}</Table.Cell>
+											<Table.Cell>{authorisation.number}</Table.Cell>
+											<Table.Cell className="table-figure">
+												{formatPeriod(authorisation.validFrom, authorisation.validUntil)}
+											</Table.Cell>
 
-									<td>
-										<div className="flex justify-end">
-											<Button
-												variant="ghost"
-												icon={<Trash2 size={15} />}
-												aria-label="Remove"
-												title="Remove"
-												onPress={() => setRemoving(authorisation)}
-											/>
-										</div>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+											<Table.Cell>
+												<div className="flex justify-end">
+													<Button
+														variant="ghost"
+														icon={<Trash2 size={15} />}
+														aria-label="Remove"
+														title="Remove"
+														onPress={() => setRemoving(authorisation)}
+													/>
+												</div>
+											</Table.Cell>
+										</Table.Row>
+									))}
+								</Table.Body>
+							</Table.Content>
+						</Table.ScrollContainer>
+					</Table>
 				)}
 			</div>
 
