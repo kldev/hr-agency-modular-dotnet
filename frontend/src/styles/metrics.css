@@ -11,9 +11,15 @@
 	gap: 12px;
 	min-height: 72px;
 	padding: 14px 16px;
-	border: 1px solid var(--border);
+	/*
+	 * These cards were written against --border/--background/--muted, which nothing in the panel
+	 * ever defined, so they rendered with no frame, no fill and inherited text. HeroUI defines those
+	 * names now; the look is kept by saying it outright instead of through the old dead variables.
+	 */
+	border: 0;
 	border-radius: 10px;
-	background: var(--background);
+	background: transparent;
+	box-shadow: none;
 }
 
 .metric-card-icon {
@@ -23,8 +29,8 @@
 	width: 34px;
 	height: 34px;
 	border-radius: 8px;
-	background: var(--muted-background);
-	color: var(--muted);
+	background: transparent;
+	color: inherit;
 }
 
 .metric-card-value {
@@ -36,7 +42,7 @@
 .metric-card-label {
 	margin-top: 3px;
 	font-size: 12px;
-	color: var(--muted);
+	color: inherit;
 }
 
 @media (max-width: 1100px) {

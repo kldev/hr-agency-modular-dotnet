@@ -46,7 +46,6 @@ export function ActionMenu({
 						const Icon = item.icon;
 
 						return (
-							// biome-ignore lint/suspicious/noArrayIndexKey: the index is the item's key, see `run`
 							<Fragment key={index}>
 								<Dropdown.Item
 									id={String(index)}
