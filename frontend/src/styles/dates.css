@@ -1,0 +1,392 @@
+/* =========================================================
+   Date and time fields - HeroUI DatePicker / DateField / Calendar / TimeField
+   ========================================================= */
+
+/*
+ * The look is the one the hand-written picker had (Tailwind utilities on a 14px root, so the
+ * lengths are rem): a 3px field with a hairline border, the calendar icon first, a chevron and a
+ * clear cross last, and a 320px calendar card. These rules are unlayered and beat HeroUI's
+ * @layer components wherever the two disagree. Colours only from tokens.
+ */
+
+.panel-date-picker,
+.panel-time-field {
+	display: flex;
+	width: 100%;
+	flex-direction: column;
+	gap: var(--space-2);
+}
+
+/* HeroUI dims the label of a disabled field; a form being saved keeps its labels readable. */
+.panel-date-picker > .label,
+.panel-time-field > .label {
+	width: fit-content;
+
+	opacity: 1;
+}
+
+.panel-date-field {
+	height: auto;
+	min-height: 2.375rem;
+
+	gap: 0.5rem;
+
+	padding: 0 0.75rem;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	background: var(--color-surface);
+	color: var(--color-text);
+	box-shadow: none;
+
+	font-size: 0.875rem;
+
+	transition:
+		border-color var(--transition-fast),
+		box-shadow var(--transition-fast);
+}
+
+@media (hover: hover) {
+	.panel-date-field:hover:not(:focus-within, [data-disabled="true"], [data-invalid="true"]),
+	.panel-date-field[data-hovered="true"]:not(
+		[data-focus-within="true"],
+		[data-disabled="true"],
+		[data-invalid="true"]
+	) {
+		border-color: var(--color-border-strong);
+		background: var(--color-surface);
+	}
+}
+
+/* A ring, not a border colour: that is how the old field showed focus, the trigger included. */
+.panel-date-field:focus-within,
+.panel-date-field[data-focus-within="true"] {
+	border-color: var(--color-border);
+	box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+/* An error is a red border; HeroUI's tinted background and outline are taken off. */
+.panel-date-field[data-invalid="true"] {
+	border-color: var(--color-danger);
+	background: var(--color-surface);
+	outline: none;
+}
+
+.panel-date-field[data-disabled="true"],
+.panel-date-field[aria-disabled="true"] {
+	cursor: not-allowed;
+
+	background: var(--color-surface-subtle);
+	opacity: 0.6;
+}
+
+.panel-date-field .date-input-group__prefix,
+.panel-date-field .date-input-group__suffix {
+	margin: 0;
+
+	gap: 0.5rem;
+
+	color: var(--color-text-muted);
+}
+
+.panel-date-field .date-input-group__input {
+	min-width: 0;
+
+	gap: 0;
+
+	padding: 0;
+
+	font-size: 0.875rem;
+}
+
+.panel-date-field .date-input-group__segment {
+	padding: 0;
+
+	border-radius: 2px;
+
+	color: var(--color-text);
+}
+
+.panel-date-field .date-input-group__segment[data-type="literal"],
+.panel-date-field .date-input-group__segment[data-placeholder="true"] {
+	color: var(--color-text-muted);
+}
+
+.panel-date-field .date-input-group__segment:focus,
+.panel-date-field .date-input-group__segment[data-focused="true"] {
+	background: var(--color-primary-soft);
+	color: var(--color-primary);
+}
+
+/* The segment of a refused day stays readable; the border and the message say what is wrong. */
+.panel-date-field .date-input-group__segment[data-invalid="true"] {
+	color: var(--color-text);
+}
+
+.panel-date-field__trigger {
+	padding: 0;
+
+	color: var(--color-text-muted);
+}
+
+/* The field shows the ring already; the trigger inside it adds none of its own. */
+.panel-date-field__trigger:focus-visible,
+.panel-date-field__trigger[data-focus-visible="true"] {
+	box-shadow: none;
+	color: var(--color-primary);
+}
+
+.panel-date-field__chevron {
+	flex-shrink: 0;
+
+	cursor: pointer;
+
+	transition: transform var(--transition-fast);
+}
+
+.panel-date-field__clear {
+	display: inline-flex;
+	width: 1.5rem;
+	height: 1.5rem;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+
+	border-radius: var(--radius-md);
+
+	color: var(--color-text-muted);
+
+	transition:
+		background-color var(--transition-fast),
+		color var(--transition-fast);
+}
+
+.panel-date-field__clear:hover {
+	background: var(--color-surface-hover);
+	color: var(--color-text);
+}
+
+.panel-date-field__icon {
+	flex-shrink: 0;
+}
+
+.panel-date-field__error {
+	margin-top: calc(0.25rem - var(--space-2));
+
+	color: var(--color-danger);
+
+	font-size: 0.75rem;
+}
+
+/* =========================================================
+   The calendar card
+   ========================================================= */
+
+.panel-date-popover {
+	width: 320px;
+	max-width: calc(100vw - 16px);
+
+	padding: 0.75rem;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm);
+
+	background: var(--color-surface);
+	box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.date-picker-calendar__calendar {
+	width: 100%;
+	max-width: none;
+}
+
+.date-picker-calendar__header {
+	margin-bottom: 0.75rem;
+	padding: 0;
+}
+
+.date-picker-calendar__heading,
+.date-picker-calendar__selects {
+	display: flex;
+	align-items: center;
+	gap: 0.375rem;
+
+	color: var(--color-text);
+
+	font-size: 0.875rem;
+	font-weight: var(--font-weight-semibold);
+
+	user-select: none;
+}
+
+.date-picker-calendar__select {
+	height: 2rem;
+
+	padding: 0 0.375rem;
+
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-md);
+
+	background: var(--color-surface);
+	color: var(--color-text);
+
+	font-size: 0.875rem;
+	font-weight: var(--font-weight-semibold);
+}
+
+.date-picker-calendar__select:hover {
+	border-color: var(--color-border-strong);
+}
+
+.date-picker-calendar__select:focus {
+	outline: none;
+	box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+.date-picker-calendar .calendar__nav-button {
+	width: 2rem;
+	height: 2rem;
+
+	border-radius: var(--radius-md);
+
+	color: var(--color-text-secondary);
+}
+
+@media (hover: hover) {
+	.date-picker-calendar .calendar__nav-button:hover,
+	.date-picker-calendar .calendar__nav-button[data-hovered="true"] {
+		background: var(--color-surface-hover);
+		color: var(--color-text);
+	}
+}
+
+.date-picker-calendar .calendar__nav-button[data-focus-visible="true"] {
+	box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+.date-picker-calendar .calendar__nav-button[data-disabled="true"] {
+	opacity: 0.4;
+}
+
+.date-picker-calendar .calendar__header-cell {
+	height: 2rem;
+
+	padding: 0 0 0.25rem;
+
+	color: var(--color-text-muted);
+
+	font-size: 11px;
+	font-weight: var(--font-weight-semibold);
+	letter-spacing: 0.025em;
+	text-transform: uppercase;
+}
+
+.date-picker-calendar .calendar__grid-body > tr > td {
+	padding-block: 0.125rem;
+}
+
+.date-picker-calendar .calendar__cell {
+	width: 2.25rem;
+	height: 2.25rem;
+	margin-inline: auto;
+	aspect-ratio: auto;
+
+	border-radius: var(--radius-md);
+
+	color: var(--color-text);
+
+	font-size: 0.875rem;
+	font-weight: var(--font-weight-normal);
+
+	transition: background-color var(--transition-fast);
+}
+
+@media (hover: hover) {
+	.date-picker-calendar .calendar__cell:hover:not([data-selected="true"]),
+	.date-picker-calendar .calendar__cell[data-hovered="true"]:not([data-selected="true"]) {
+		background: var(--color-surface-hover);
+	}
+}
+
+.date-picker-calendar .calendar__cell[data-pressed="true"] {
+	background: var(--color-surface-hover);
+	transform: none;
+}
+
+.date-picker-calendar .calendar__cell[data-today="true"]:not([data-selected="true"]) {
+	background: transparent;
+	color: var(--color-text);
+	box-shadow: inset 0 0 0 1px var(--color-primary);
+
+	font-weight: var(--font-weight-semibold);
+}
+
+.date-picker-calendar .calendar__cell[data-selected="true"],
+.date-picker-calendar .calendar__cell[data-selected="true"][data-pressed="true"] {
+	background: var(--color-primary);
+	color: var(--accent-foreground);
+}
+
+@media (hover: hover) {
+	.date-picker-calendar .calendar__cell[data-selected="true"]:hover {
+		background: var(--color-primary-hover);
+	}
+}
+
+.date-picker-calendar .calendar__cell[data-outside-month="true"] {
+	color: var(--color-text-muted);
+	opacity: 0.5;
+}
+
+.date-picker-calendar .calendar__cell[data-disabled="true"]:not([data-outside-month="true"]),
+.date-picker-calendar .calendar__cell[data-unavailable="true"] {
+	cursor: not-allowed;
+
+	opacity: 0.3;
+
+	text-decoration: none;
+}
+
+.date-picker-calendar .calendar__cell[data-focus-visible="true"] {
+	box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+.date-picker-calendar__footer {
+	display: flex;
+	margin-top: 0.75rem;
+	align-items: center;
+	justify-content: space-between;
+
+	padding-top: 0.75rem;
+
+	border-top: 1px solid var(--color-border-subtle);
+}
+
+.date-picker-calendar__today {
+	padding: 0.375rem 0.5rem;
+
+	border-radius: var(--radius-md);
+
+	color: var(--color-primary);
+
+	font-size: 0.75rem;
+	font-weight: var(--font-weight-medium);
+
+	transition: background-color var(--transition-fast);
+}
+
+.date-picker-calendar__today:hover {
+	background: var(--color-primary-soft);
+}
+
+.date-picker-calendar__today:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+.date-picker-calendar__hint {
+	color: var(--color-text-muted);
+
+	font-size: 11px;
+}

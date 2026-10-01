@@ -1,6 +1,16 @@
-import clsx from "clsx";
-import { Check, ChevronDown, Clock } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Label, TimeField } from "@heroui/react";
+import type { Time } from "@internationalized/date";
+import { Clock } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { I18nProvider } from "react-aria-components";
+import {
+	DEFAULT_FROM_MINUTES,
+	DEFAULT_TO_MINUTES,
+	formatTimeOfDay,
+	parseTimeOfDay,
+	timeError,
+} from "./timeInputUtils";
 
 interface TimeInputProps {
 	value?: string;
@@ -11,32 +21,30 @@ interface TimeInputProps {
 	id?: string;
 	name?: string;
 
+	/** A visible label inside the field, which names it for assistive technology too. */
+	label?: React.ReactNode;
+
+	"aria-label"?: string;
+
 	/**
-	 * The window the options are drawn from, in minutes since midnight. The default is an office
-	 * day, which is what every caller but one wants; a shift that starts at eleven at night is a
-	 * legal work day (it simply ends on the next one), so the register has to be able to say so.
+	 * The window a time may fall in, in minutes since midnight. The default is an office day,
+	 * which is what every caller but one wants; a shift that starts at eleven at night is a legal
+	 * work day (it simply ends on the next one), so the register has to be able to say so.
 	 */
 	fromMinutes?: number;
 	toMinutes?: number;
 }
 
-const START_MINUTES = 8 * 60;
-const END_MINUTES = 22 * 60;
-const STEP = 5;
+/** "hh:mm" in an empty field, in place of React Aria's dashes - the shape to type in. */
+const TIME_PLACEHOLDERS: Partial<Record<string, string>> = { hour: "hh", minute: "mm" };
 
-function createTimeOptions(from: number, to: number): string[] {
-	const options: string[] = [];
-
-	for (let minutes = from; minutes <= to; minutes += STEP) {
-		const hours = Math.floor(minutes / 60);
-		const mins = minutes % 60;
-
-		options.push(`${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`);
-	}
-
-	return options;
-}
-
+/**
+ * HeroUI's `TimeField`: hours and minutes typed as segments, 24-hour, "HH:mm" in and out.
+ *
+ * It replaced a list of every fifth minute between the limits, so it keeps what the list
+ * guaranteed: a time outside `fromMinutes`..`toMinutes`, or between two five-minute steps, stays
+ * in the field with the reason under it and never reaches the form.
+ */
 export function TimeInput({
 	value = "",
 	onChange,
@@ -45,148 +53,91 @@ export function TimeInput({
 	error,
 	id,
 	name,
-	fromMinutes = START_MINUTES,
-	toMinutes = END_MINUTES,
+	label,
+	"aria-label": ariaLabel,
+	fromMinutes = DEFAULT_FROM_MINUTES,
+	toMinutes = DEFAULT_TO_MINUTES,
 }: TimeInputProps) {
-	const rootRef = useRef<HTMLDivElement>(null);
-	const [open, setOpen] = useState(false);
-
-	const options = useMemo(
-		() => createTimeOptions(fromMinutes, toMinutes),
-		[fromMinutes, toMinutes],
-	);
+	// Replaced only when the time really changes - React Aria resets the segments on a new object.
+	const [fieldValue, setFieldValue] = useState<Time | null>(() => parseTimeOfDay(value));
+	const [typedError, setTypedError] = useState<string | null>(null);
 
 	useEffect(() => {
-		if (!open) {
+		setFieldValue((current) =>
+			(current ? formatTimeOfDay(current) : "") === value ? current : parseTimeOfDay(value),
+		);
+		setTypedError(null);
+	}, [value]);
+
+	/*
+	 * A refusal is said once the field is left. Minutes are typed digit by digit and the field
+	 * reports 08:03 on the way to 08:30, so judging every keystroke would flash "steps of 5" at
+	 * everybody typing a perfectly good time.
+	 */
+	const [focused, setFocused] = useState(false);
+
+	const accept = (next: Time | null) => {
+		setFieldValue(next);
+
+		if (!next) {
+			setTypedError(null);
+			if (value) onChange("");
 			return;
 		}
 
-		const handlePointerDown = (event: PointerEvent) => {
-			const target = event.target as Node;
+		const refused = timeError(next, fromMinutes, toMinutes);
 
-			if (rootRef.current && !rootRef.current.contains(target)) {
-				setOpen(false);
-				onBlur?.();
-			}
-		};
+		setTypedError(refused);
 
-		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				setOpen(false);
-				onBlur?.();
-			}
-		};
-
-		document.addEventListener("pointerdown", handlePointerDown);
-		document.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			document.removeEventListener("pointerdown", handlePointerDown);
-			document.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [open, onBlur]);
-
-	const handleSelect = (time: string) => {
-		onChange(time);
-		setOpen(false);
-		onBlur?.();
+		if (!refused && formatTimeOfDay(next) !== value) {
+			onChange(formatTimeOfDay(next));
+		}
 	};
 
+	const message = (focused ? null : typedError) ?? error;
+
 	return (
-		<div ref={rootRef} className="relative w-full">
-			{name && <input type="hidden" name={name} value={value} />}
-
-			<button
+		<I18nProvider locale="pl">
+			<TimeField
+				fullWidth
+				className="panel-time-field"
 				id={id}
-				type="button"
-				disabled={disabled}
-				aria-haspopup="listbox"
-				aria-expanded={open}
-				onClick={() => setOpen((current) => !current)}
-				className={clsx(
-					"flex min-h-9.5 w-full items-center gap-2",
-					"rounded-[3px]",
-					"border",
-					"bg-(--color-surface)",
-					"px-3",
-					"text-left",
-					"transition-colors",
-					error ? "border-(--color-danger)" : "border-(--color-border)",
-					!disabled && !error && "hover:border-(--color-border-strong)",
-					!disabled && "focus:outline-none focus:ring-2 focus:ring-(--color-primary-soft)",
-					disabled && "cursor-not-allowed bg-(--color-surface-subtle) opacity-60",
-				)}
+				name={name}
+				aria-label={label ? undefined : (ariaLabel ?? "Time")}
+				value={fieldValue}
+				onChange={(next) => accept(next as Time | null)}
+				onFocusChange={setFocused}
+				onBlur={onBlur}
+				// The window is checked by `timeError`, not by React Aria: its minValue/maxValue would
+				// turn the field red at the first digit of the hour.
+				isDisabled={disabled}
+				isInvalid={Boolean(message)}
+				validationBehavior="aria"
+				hourCycle={24}
+				granularity="minute"
+				shouldForceLeadingZeros
 			>
-				<Clock size={16} strokeWidth={1.8} className="shrink-0 text-(--color-text-muted)" />
+				{label && <Label className="form-label">{label}</Label>}
 
-				<span
-					className={clsx(
-						"min-w-0 flex-1 text-sm",
-						value ? "text-(--color-text)" : "text-(--color-text-muted)",
-					)}
-				>
-					{value || "Select time"}
-				</span>
+				<TimeField.Group fullWidth className="panel-date-field">
+					<TimeField.Prefix>
+						<Clock size={16} strokeWidth={1.8} className="panel-date-field__icon" />
+					</TimeField.Prefix>
 
-				<ChevronDown
-					size={16}
-					className={clsx(
-						"shrink-0 text-(--color-text-muted) transition-transform",
-						open && "rotate-180",
-					)}
-				/>
-			</button>
+					<TimeField.Input>
+						{(segment) => (
+							<TimeField.Segment segment={segment}>
+								{({ isPlaceholder, text, type }) =>
+									isPlaceholder ? (TIME_PLACEHOLDERS[type] ?? text) : text
+								}
+							</TimeField.Segment>
+						)}
+					</TimeField.Input>
+				</TimeField.Group>
 
-			{error && <div className="mt-1 text-xs text-(--color-danger)">{error}</div>}
-
-			{open && (
-				<div
-					className="
-						absolute
-						left-0
-						top-[calc(100%+6px)]
-						z-50
-						w-full
-						min-w-32
-						overflow-hidden
-						rounded-[3px]
-						border
-						border-(--color-border)
-						bg-(--color-surface)
-						shadow-lg
-					"
-				>
-					<div role="listbox" aria-label="Select time" className="max-h-60 overflow-y-auto py-1">
-						{options.map((time) => {
-							const selected = time === value;
-
-							return (
-								<button
-									key={time}
-									type="button"
-									role="option"
-									aria-selected={selected}
-									onClick={() => handleSelect(time)}
-									className={clsx(
-										"flex w-full items-center gap-2",
-										"px-3 py-1.5",
-										"text-left text-sm",
-										"transition-colors",
-										selected
-											? "bg-(--color-primary-soft) text-(--color-primary)"
-											: "text-(--color-text) hover:bg-(--color-surface-hover)",
-									)}
-								>
-									<span className="w-4 shrink-0">{selected && <Check size={14} />}</span>
-
-									<span>{time}</span>
-								</button>
-							);
-						})}
-					</div>
-				</div>
-			)}
-		</div>
+				{message && <div className="panel-date-field__error">{message}</div>}
+			</TimeField>
+		</I18nProvider>
 	);
 }
 
