@@ -65,7 +65,7 @@ public static class AddStandardSystemFieldsHandler
         if (catalogue is null)
             session.Events.StartStream<SystemFieldCatalogue>(streamId, events);
         else
-            await session.Events.AppendExclusive(streamId, events);
+            await session.Events.AppendExclusive(streamId, ct, events);
 
         return new StandardSystemFieldsAdded(missing.Count);
     }

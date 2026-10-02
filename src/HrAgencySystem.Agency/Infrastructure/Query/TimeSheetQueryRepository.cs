@@ -60,7 +60,9 @@ public sealed class TimeSheetQueryRepository(
         if (people.Count == 0)
             return [];
 
-        var userIds = people.Select(employment => employment.UserId).ToArray();
+        // A list, not an array: under C# 14 array.Contains binds to MemoryExtensions' span overload,
+        // and the query would then depend on the provider knowing that one too.
+        var userIds = people.Select(employment => employment.UserId).ToList();
 
         var sheets = await session
             .Query<TimeSheetProjection>()

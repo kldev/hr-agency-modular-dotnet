@@ -40,7 +40,7 @@ public static class DefineSystemFieldHandler
         if (catalogue is null)
             session.Events.StartStream<SystemFieldCatalogue>(streamId, @event);
         else
-            await session.Events.AppendExclusive(streamId, @event);
+            await session.Events.AppendExclusive(streamId, ct, @event);
 
         return @event;
     }

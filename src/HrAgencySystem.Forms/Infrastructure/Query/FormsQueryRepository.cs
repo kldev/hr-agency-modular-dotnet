@@ -34,11 +34,19 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
             );
         }
 
-        if (query.Status is { Length: > 0 } status)
+        // Lists, not the query's arrays: under C# 14 array.Contains binds to MemoryExtensions' span
+        // overload, and the query would then depend on the provider knowing that one too.
+        if (query.Status is { Length: > 0 })
+        {
+            var status = query.Status.ToList();
             list = list.Where(f => status.Contains(f.Status));
+        }
 
-        if (query.Kind is { Length: > 0 } kind)
+        if (query.Kind is { Length: > 0 })
+        {
+            var kind = query.Kind.ToList();
             list = list.Where(f => kind.Contains(f.Kind));
+        }
 
         return await list.OrderBy(f => f.Name).ThenBy(f => f.Id).ToSlice(query, ct);
     }

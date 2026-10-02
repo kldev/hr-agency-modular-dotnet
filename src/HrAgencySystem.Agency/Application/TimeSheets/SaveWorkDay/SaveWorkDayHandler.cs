@@ -106,7 +106,7 @@ public static class SaveWorkDayHandler
             service.ValidateAggregateUpdate(sheet, command.OrganizationId);
             TimeSheetRules.EnsureEditable(sheet);
 
-            await session.Events.AppendExclusive(streamId, saved);
+            await session.Events.AppendExclusive(streamId, ct, saved);
         }
 
         return saved;

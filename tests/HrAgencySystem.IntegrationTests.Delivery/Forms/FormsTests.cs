@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using HrAgencySystem.Api;
 using HrAgencySystem.Api.Common.Errors;
 using HrAgencySystem.Forms.Application.Port;
 using HrAgencySystem.Forms.Domain;
@@ -456,5 +457,41 @@ public class FormsTests(IntegrationEnvironment env, ITestOutputHelper output)
             (await Forms.StartRawAsync(organizationId, formId, other.WorkerId)).StatusCode
         );
         await Forms.SubmitAsync(organizationId, started.ResponseId, Consented());
+    }
+
+    [Fact]
+    public async Task The_form_list_filters_by_status_and_kind()
+    {
+        // Arrange
+        var organizationId = Guid.NewGuid();
+        var publishedSurvey = await Forms.PublishedAsync(
+            organizationId,
+            CreateRequest(kind: FormKind.Survey),
+            Page("Consents", Consent())
+        );
+        var draftDocument = await Forms.CreateAsync(organizationId);
+
+        // Act / Assert
+        await Eventually.AssertAsync(async () =>
+        {
+            Assert.Equal(
+                [publishedSurvey],
+                await FormIdsAsync(organizationId, $"status={FormStatus.Published}")
+            );
+            Assert.Equal(
+                [draftDocument],
+                await FormIdsAsync(organizationId, $"kind={FormKind.Document}")
+            );
+        });
+    }
+
+    private async Task<List<Guid>> FormIdsAsync(Guid organizationId, string filter)
+    {
+        Forms.Http.WithOrganizationId(organizationId);
+        var slice = await (
+            await Forms.Http.GetAsync($"{ApiEndpoints.Forms.Slice}?{filter}")
+        ).ReadWithJson<SliceResponse<FormDefinitionProjection>>(OutputHelper);
+
+        return [.. slice!.Content.Select(form => form.Id)];
     }
 }
