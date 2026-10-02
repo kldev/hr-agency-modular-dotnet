@@ -51,7 +51,7 @@ public sealed class FileMetrics
             new KeyValuePair<string, object?>("reason", ReasonOf(rejection))
         );
 
-    public static string ReasonOf(string rejection) =>
+    private static string ReasonOf(string rejection) =>
         rejection switch
         {
             UploadInspector.EmptyFileMessage => "empty",

@@ -20,10 +20,11 @@ namespace HrAgencySystem.Forms.Application.Responses.Start;
 /// </summary>
 public static class StartFormResponseHandler
 {
-    public const string NotOpenMessage =
+    private const string NotOpenMessage =
         "This form is not open for responses. It has to be published and not archived.";
 
-    public const string WrongSubjectMessage = "This form is not filled in for that kind of record.";
+    private const string WrongSubjectMessage =
+        "This form is not filled in for that kind of record.";
 
     public static async Task<FormResponseStarted> Handle(
         StartFormResponse command,

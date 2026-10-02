@@ -18,7 +18,7 @@ public static class SubjectKinds
 
     public const string UnknownKindMessage = "Forms cannot be filled in for that kind of record.";
 
-    public static readonly IReadOnlyList<string> All = [Worker];
+    private static readonly IReadOnlyList<string> All = [Worker];
 
     public static bool IsKnown(string? kind) => kind is not null && All.Contains(kind);
 }

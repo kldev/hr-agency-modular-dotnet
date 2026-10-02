@@ -95,7 +95,7 @@ internal static class ProjectScenario
     /// <summary>The agency company every project is now delivered by.</summary>
     public static readonly Guid LegalEntityId = Guid.NewGuid();
 
-    public static readonly DeliveringEntitySnapshot DeliveringEntity = new(
+    private static readonly DeliveringEntitySnapshot DeliveringEntity = new(
         LegalEntityId,
         "HR Agency",
         "HR Agency sp. z o.o.",

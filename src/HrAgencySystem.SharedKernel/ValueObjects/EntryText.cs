@@ -16,7 +16,7 @@ public sealed record EntryText
 
     public string Value { get; }
 
-    public static EntryText Create(string value)
+    private static EntryText Create(string value)
     {
         var (entryText, error) = TryCreate(value);
 

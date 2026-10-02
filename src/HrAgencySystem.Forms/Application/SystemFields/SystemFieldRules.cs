@@ -6,12 +6,12 @@ namespace HrAgencySystem.Forms.Application.SystemFields;
 /// <summary>What a system field's editable part must satisfy, whether it is being defined or changed.</summary>
 public static class SystemFieldRules
 {
-    public const int MaxLabelLength = 300;
-    public const int MaxDescriptionLength = 2000;
+    private const int MaxLabelLength = 300;
+    private const int MaxDescriptionLength = 2000;
 
-    public const string LabelRequiredMessage = "A system field needs a label.";
-    public const string LabelTooLongMessage = "A label cannot exceed 300 characters.";
-    public const string DescriptionTooLongMessage = "A description cannot exceed 2000 characters.";
+    private const string LabelRequiredMessage = "A system field needs a label.";
+    private const string LabelTooLongMessage = "A label cannot exceed 300 characters.";
+    private const string DescriptionTooLongMessage = "A description cannot exceed 2000 characters.";
     public const string SourceTypeMismatchMessage =
         "This source gives a value of a different type than the field.";
     public const string CodeNotSystemMessage =

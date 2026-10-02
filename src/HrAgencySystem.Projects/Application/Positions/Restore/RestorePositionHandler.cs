@@ -11,7 +11,7 @@ namespace HrAgencySystem.Projects.Application.Positions.Restore;
 
 public static class RestorePositionHandler
 {
-    public const string NotArchivedMessage = "This position is not archived.";
+    private const string NotArchivedMessage = "This position is not archived.";
 
     [AggregateHandler]
     public static async Task<(ProjectPositionRestored, Wolverine.Marten.Events)> Handle(

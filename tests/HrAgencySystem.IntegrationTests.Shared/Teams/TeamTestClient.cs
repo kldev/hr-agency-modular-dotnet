@@ -15,7 +15,7 @@ namespace HrAgencySystem.IntegrationTests.Teams;
 
 public sealed class TeamTestClient(HttpClient client, ITestOutputHelper output)
 {
-    public const string BaseUrl = "/api/teams";
+    private const string BaseUrl = "/api/teams";
 
     private static readonly Random Random = new();
 

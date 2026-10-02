@@ -14,7 +14,7 @@ namespace HrAgencySystem.Agency.Application.OrgUnits.ClearHead;
 /// </summary>
 public static class ClearOrgUnitHeadHandler
 {
-    public const string NoHeadMessage = "This unit has no head to clear.";
+    private const string NoHeadMessage = "This unit has no head to clear.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
     public static async Task<(OrgUnitHeadCleared, Wolverine.Marten.Events)> Handle(

@@ -57,43 +57,43 @@ public static class FieldErrorCodes
 /// </summary>
 public static partial class FormAnswersValidator
 {
-    public const int MaxTextLength = 10_000;
+    private const int MaxTextLength = 10_000;
 
-    public const string UnknownFieldMessage = "This form has no such field.";
-    public const string DuplicateMessage = "The field is answered twice.";
-    public const string WrongTypeMessage = "The answer is not of the kind this field takes.";
-    public const string RequiredMessage = "This field is required.";
+    private const string UnknownFieldMessage = "This form has no such field.";
+    private const string DuplicateMessage = "The field is answered twice.";
+    private const string WrongTypeMessage = "The answer is not of the kind this field takes.";
+    private const string RequiredMessage = "This field is required.";
     public const string RequiredConsentMessage = "This box has to be ticked.";
-    public const string EmailMessage = "Enter a valid e-mail address.";
+    private const string EmailMessage = "Enter a valid e-mail address.";
     public const string PhoneMessage = "Enter a valid phone number.";
-    public const string CountryMessage = "Pick a country.";
-    public const string OptionMessage = "Pick one of the listed options.";
-    public const string PatternMessage = "The value has the wrong format.";
+    private const string CountryMessage = "Pick a country.";
+    private const string OptionMessage = "Pick one of the listed options.";
+    private const string PatternMessage = "The value has the wrong format.";
 
     private static readonly TimeSpan PatternTimeout = TimeSpan.FromMilliseconds(100);
 
-    public static string MinLengthMessage(int length) => $"Enter at least {length} characters.";
+    private static string MinLengthMessage(int length) => $"Enter at least {length} characters.";
 
-    public static string MaxLengthMessage(int length) => $"Enter at most {length} characters.";
+    private static string MaxLengthMessage(int length) => $"Enter at most {length} characters.";
 
-    public static string MinMessage(decimal min) =>
+    private static string MinMessage(decimal min) =>
         $"Enter a number no smaller than {Format(min)}.";
 
-    public static string MaxMessage(decimal max) =>
+    private static string MaxMessage(decimal max) =>
         $"Enter a number no greater than {Format(max)}.";
 
-    public static string DecimalsMessage(int decimals) =>
+    private static string DecimalsMessage(int decimals) =>
         decimals == 0 ? "Enter a whole number." : $"Use at most {decimals} decimal places.";
 
-    public static string MinDateMessage(DateOnly date) =>
+    private static string MinDateMessage(DateOnly date) =>
         $"Pick a date on or after {Format(date)}.";
 
-    public static string MaxDateMessage(DateOnly date) =>
+    private static string MaxDateMessage(DateOnly date) =>
         $"Pick a date on or before {Format(date)}.";
 
-    public static string MinSelectedMessage(int count) => $"Pick at least {count}.";
+    private static string MinSelectedMessage(int count) => $"Pick at least {count}.";
 
-    public static string MaxSelectedMessage(int count) => $"Pick at most {count}.";
+    private static string MaxSelectedMessage(int count) => $"Pick at most {count}.";
 
     public static IReadOnlyList<FieldError> Validate(
         IReadOnlyList<FormPage> pages,
@@ -259,7 +259,7 @@ public static partial class FormAnswersValidator
     /// past the timeout, counts as not matching; the layout policy refuses such a pattern long
     /// before an answer meets it.
     /// </summary>
-    internal static bool MatchesWhole(string pattern, string text)
+    private static bool MatchesWhole(string pattern, string text)
     {
         try
         {

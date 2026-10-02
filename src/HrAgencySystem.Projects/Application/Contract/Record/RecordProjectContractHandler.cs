@@ -12,7 +12,7 @@ namespace HrAgencySystem.Projects.Application.Contract.Record;
 public static class RecordProjectContractHandler
 {
     public const string ContractNumberRequiredMessage = "Contract number is required.";
-    public const string ContractNumberMaxLengthMessage =
+    private const string ContractNumberMaxLengthMessage =
         "Contract number cannot exceed 100 characters.";
     public const string ValidToBeforeValidFromMessage =
         "The contract cannot expire before it takes effect.";

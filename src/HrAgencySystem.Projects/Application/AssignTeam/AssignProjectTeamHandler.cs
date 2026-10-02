@@ -10,7 +10,7 @@ namespace HrAgencySystem.Projects.Application.AssignTeam;
 
 public static class AssignProjectTeamHandler
 {
-    public const string SameTeamMessage = "This team already runs the project.";
+    private const string SameTeamMessage = "This team already runs the project.";
 
     [AggregateHandler]
     public static async Task<(ProjectTeamAssigned, Wolverine.Marten.Events)> Handle(

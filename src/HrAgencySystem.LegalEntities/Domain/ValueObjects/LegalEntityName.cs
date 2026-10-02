@@ -11,8 +11,8 @@ public sealed record LegalEntityName
 {
     private const int MaxLength = 250;
 
-    public const string RequiredMessage = "Legal entity name is required.";
-    public const string MaxLengthMessage = "Legal entity name cannot exceed 250 characters.";
+    private const string RequiredMessage = "Legal entity name is required.";
+    private const string MaxLengthMessage = "Legal entity name cannot exceed 250 characters.";
 
     private LegalEntityName(string value)
     {

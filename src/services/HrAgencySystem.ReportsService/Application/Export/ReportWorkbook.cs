@@ -30,7 +30,7 @@ public static class ReportWorkbook
         "Hires",
     ];
 
-    public static readonly string[] SourceHeaders = ["Source", "Applications"];
+    private static readonly string[] SourceHeaders = ["Source", "Applications"];
 
     public static readonly string[] OrganizationHeaders =
     [

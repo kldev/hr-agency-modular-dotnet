@@ -11,7 +11,7 @@ namespace HrAgencySystem.Web.Services;
 public sealed class ApiHealthProbe(IHttpClientFactory clients, IOptions<InternalApiConfig> config)
     : IHealthCheck
 {
-    public const string Up = "UP";
+    private const string Up = "UP";
 
     public async Task<string> CheckAsync(CancellationToken ct)
     {

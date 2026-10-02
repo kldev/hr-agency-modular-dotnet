@@ -40,7 +40,7 @@ internal static class InterviewProjectionExtensions
         return query.Where(i => i.Id == interviewId);
     }
 
-    internal static IQueryable<InterviewProjection> WithJobApplicationId(
+    private static IQueryable<InterviewProjection> WithJobApplicationId(
         this IQueryable<InterviewProjection> query,
         Guid? jobApplicationId
     )
@@ -50,7 +50,7 @@ internal static class InterviewProjectionExtensions
             : query.Where(i => i.ApplicationId == jobApplicationId);
     }
 
-    internal static IQueryable<InterviewProjection> WithCandidateId(
+    private static IQueryable<InterviewProjection> WithCandidateId(
         this IQueryable<InterviewProjection> query,
         Guid? candidateId
     )
@@ -60,7 +60,7 @@ internal static class InterviewProjectionExtensions
             : query.Where(i => i.CandidateId == candidateId);
     }
 
-    internal static IQueryable<InterviewProjection> WithCreatedByUserId(
+    private static IQueryable<InterviewProjection> WithCreatedByUserId(
         this IQueryable<InterviewProjection> query,
         Guid? createdByUserId
     )
@@ -70,7 +70,7 @@ internal static class InterviewProjectionExtensions
             : query.Where(i => i.CreatedByUserId == createdByUserId);
     }
 
-    internal static IQueryable<InterviewProjection> WithInterviewerId(
+    private static IQueryable<InterviewProjection> WithInterviewerId(
         this IQueryable<InterviewProjection> query,
         Guid? interviewerId
     )
@@ -80,7 +80,7 @@ internal static class InterviewProjectionExtensions
             : query.Where(i => i.InterviewerId == interviewerId);
     }
 
-    internal static IQueryable<InterviewProjection> WithStatus(
+    private static IQueryable<InterviewProjection> WithStatus(
         this IQueryable<InterviewProjection> query,
         InterviewStatus? status
     )
@@ -88,7 +88,7 @@ internal static class InterviewProjectionExtensions
         return !status.HasValue ? query : query.Where(i => i.Status == status);
     }
 
-    internal static IQueryable<InterviewProjection> WithScheduleFrom(
+    private static IQueryable<InterviewProjection> WithScheduleFrom(
         this IQueryable<InterviewProjection> query,
         DateTimeOffset? from
     )
@@ -96,7 +96,7 @@ internal static class InterviewProjectionExtensions
         return !from.HasValue ? query : query.Where(i => i.ScheduleAt >= from.Value);
     }
 
-    internal static IQueryable<InterviewProjection> WithScheduleTo(
+    private static IQueryable<InterviewProjection> WithScheduleTo(
         this IQueryable<InterviewProjection> query,
         DateTimeOffset? to
     )
@@ -104,7 +104,7 @@ internal static class InterviewProjectionExtensions
         return !to.HasValue ? query : query.Where(i => i.ScheduleAt < to.Value);
     }
 
-    internal static IQueryable<InterviewProjection> WithSearch(
+    private static IQueryable<InterviewProjection> WithSearch(
         this IQueryable<InterviewProjection> query,
         string search
     )

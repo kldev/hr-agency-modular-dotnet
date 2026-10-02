@@ -23,7 +23,7 @@ public sealed record ValidTaskItemInput(
 /// <summary>Every field problem at once, in one <see cref="ValidationException"/>.</summary>
 public static class TaskItemInputValidator
 {
-    public const int DescriptionMaxLength = 2000;
+    private const int DescriptionMaxLength = 2000;
 
     public const string DescriptionTooLongMessage = "A description cannot exceed 2000 characters.";
 

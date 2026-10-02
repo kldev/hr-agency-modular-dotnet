@@ -14,14 +14,14 @@ namespace HrAgencySystem.Forms.Domain.ValueObjects;
 /// </summary>
 public sealed partial record FieldCode
 {
-    public const int MaxLength = 64;
+    private const int MaxLength = 64;
 
     /// <summary>The catalogue's namespace. A form's own field cannot take it, or a report asking
     /// for <c>employee.pesel</c> could not tell the person's number from a form's local copy.</summary>
-    public const string SystemPrefix = "employee.";
+    private const string SystemPrefix = "employee.";
 
-    public const string RequiredMessage = "A field needs a code.";
-    public const string MaxLengthMessage = "A field code cannot exceed 64 characters.";
+    private const string RequiredMessage = "A field needs a code.";
+    private const string MaxLengthMessage = "A field code cannot exceed 64 characters.";
 
     public const string FormatMessage =
         "A field code is made of camelCase words separated by dots, e.g. gdpr.consent.";

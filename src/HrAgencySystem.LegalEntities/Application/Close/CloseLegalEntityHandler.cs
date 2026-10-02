@@ -10,7 +10,7 @@ namespace HrAgencySystem.LegalEntities.Application.Close;
 
 public static class CloseLegalEntityHandler
 {
-    public const string AlreadyClosedMessage = "This legal entity is already closed.";
+    private const string AlreadyClosedMessage = "This legal entity is already closed.";
 
     [AggregateHandler]
     public static async Task<(LegalEntityClosed, Wolverine.Marten.Events)> Handle(

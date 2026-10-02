@@ -11,7 +11,7 @@ namespace HrAgencySystem.IntegrationTests.SalesActivities;
 
 public sealed class SalesActivityTestClient(HttpClient client, ITestOutputHelper output)
 {
-    public const string BaseUrl = "/api/sales";
+    private const string BaseUrl = "/api/sales";
 
     internal async Task<ActivityCreated> Create(
         Guid? organizationId = null,

@@ -7,7 +7,7 @@ public sealed record ProjectName
     private const int MaxLength = 250;
 
     public const string RequiredMessage = "Project name is required.";
-    public const string MaxLengthMessage = "Project name cannot exceed 250 characters.";
+    private const string MaxLengthMessage = "Project name cannot exceed 250 characters.";
 
     private ProjectName(string value)
     {

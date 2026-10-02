@@ -33,7 +33,7 @@ internal static class OrgScenario
         "aaaaaaaa-0000-0000-0000-000000000003"
     );
     public static readonly Guid OperationsId = Guid.Parse("aaaaaaaa-0000-0000-0000-000000000004");
-    public static readonly Guid OperationsAbroadId = Guid.Parse(
+    private static readonly Guid OperationsAbroadId = Guid.Parse(
         "aaaaaaaa-0000-0000-0000-000000000005"
     );
 
@@ -118,17 +118,17 @@ internal static class OrgScenario
         return structure;
     }
 
-    public static OrgUnitCreated Created(
+    private static OrgUnitCreated Created(
         Guid unitId,
         Guid? parentId,
         string name,
         OrgUnitKind kind
     ) => new(OrganizationId, unitId, parentId, name, kind, User, DateTimeOffset.UtcNow);
 
-    public static OrgUnitMemberAdded MemberAdded(Guid unitId, Guid userId, string title = "") =>
+    private static OrgUnitMemberAdded MemberAdded(Guid unitId, Guid userId, string title = "") =>
         new(OrganizationId, unitId, new OrgUnitMember(userId, title), User, DateTimeOffset.UtcNow);
 
-    public static OrgUnitHeadAssigned HeadAssigned(Guid unitId, Guid userId) =>
+    private static OrgUnitHeadAssigned HeadAssigned(Guid unitId, Guid userId) =>
         new(OrganizationId, unitId, userId, User, DateTimeOffset.UtcNow);
 
     /// <summary>

@@ -4,9 +4,9 @@ namespace HrAgencySystem.SharedKernel.ValueObjects;
 
 public sealed record WebSite
 {
-    public const int MaxLength = 250;
+    private const int MaxLength = 250;
 
-    public const string MaxLengthMessage = "Website url cannot exceed 250 characters.";
+    private const string MaxLengthMessage = "Website url cannot exceed 250 characters.";
 
     private WebSite(string value)
     {

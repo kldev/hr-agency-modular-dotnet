@@ -9,7 +9,7 @@ namespace HrAgencySystem.ReportsService.Contracts;
 /// </summary>
 public sealed record ReportPeriod
 {
-    public const string Format = "yyyy-MM";
+    private const string Format = "yyyy-MM";
 
     public const int MaxMonths = 24;
 

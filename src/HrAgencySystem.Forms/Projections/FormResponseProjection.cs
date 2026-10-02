@@ -83,6 +83,6 @@ public sealed record FormResponseProjection(
             ModifiedAt = @event.CorrectedAt,
         };
 
-    public static Dictionary<string, FieldValue> Keyed(IEnumerable<FieldAnswer> answers) =>
+    private static Dictionary<string, FieldValue> Keyed(IEnumerable<FieldAnswer> answers) =>
         answers.ToDictionary(answer => answer.FieldCode, answer => answer.Value);
 }

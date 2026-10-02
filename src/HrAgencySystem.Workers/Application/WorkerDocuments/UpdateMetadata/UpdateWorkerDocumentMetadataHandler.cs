@@ -9,7 +9,7 @@ namespace HrAgencySystem.Workers.Application.WorkerDocuments.UpdateMetadata;
 
 public static class UpdateWorkerDocumentMetadataHandler
 {
-    public const string UnknownDocumentMessage = "That document is not on this person's file.";
+    private const string UnknownDocumentMessage = "That document is not on this person's file.";
 
     [AggregateHandler]
     public static async Task<(WorkerDocumentMetadataChanged, Wolverine.Marten.Events)> Handle(

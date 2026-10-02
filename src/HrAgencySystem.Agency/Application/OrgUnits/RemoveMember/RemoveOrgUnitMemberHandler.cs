@@ -10,7 +10,7 @@ namespace HrAgencySystem.Agency.Application.OrgUnits.RemoveMember;
 
 public static class RemoveOrgUnitMemberHandler
 {
-    public const string NotHereMessage = "This person is not in this unit.";
+    private const string NotHereMessage = "This person is not in this unit.";
 
     public const string IsTheHeadMessage =
         "This person heads this unit. Name another head, or clear it, before taking them out.";

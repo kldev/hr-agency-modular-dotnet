@@ -12,7 +12,7 @@ namespace HrAgencySystem.IntegrationTests.Tasks;
 /// <summary>Tasks through the real HTTP surface, always as a named person of a named organization.</summary>
 public sealed class TasksTestClient(HttpClient client, ITestOutputHelper output)
 {
-    public const string BaseUrl = "/api/tasks";
+    private const string BaseUrl = "/api/tasks";
 
     public const string TimeZone = "Europe/Warsaw";
 

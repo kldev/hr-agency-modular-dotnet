@@ -6,8 +6,8 @@ public sealed record OrgUnitName
 {
     private const int MaxLength = 100;
 
-    public const string RequiredMessage = "The unit needs a name.";
-    public const string MaxLengthMessage = "The unit name cannot exceed 100 characters.";
+    private const string RequiredMessage = "The unit needs a name.";
+    private const string MaxLengthMessage = "The unit name cannot exceed 100 characters.";
 
     private OrgUnitName(string value) => Value = value;
 

@@ -10,10 +10,10 @@ namespace HrAgencySystem.Agency.Domain.TimeSheets;
 /// </summary>
 public sealed record WorkDuration
 {
-    public const int MinuteStep = 5;
-    public const int MaxTotalMinutes = 24 * 60;
+    private const int MinuteStep = 5;
+    private const int MaxTotalMinutes = 24 * 60;
 
-    public const string HoursRangeMessage = "Hours must be between 0 and 24.";
+    private const string HoursRangeMessage = "Hours must be between 0 and 24.";
     public const string MinutesRangeMessage = "Minutes must be between 0 and 55.";
     public const string MinuteStepMessage = "Minutes are recorded in steps of five.";
     public const string EmptyMessage =

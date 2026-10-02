@@ -18,7 +18,7 @@ namespace HrAgencySystem.Agency.Application.TimeSheets.Return;
 /// </summary>
 public static class ReturnTimeSheetForCorrectionHandler
 {
-    public const string ReasonRequiredMessage =
+    private const string ReasonRequiredMessage =
         "Say what needs correcting. A sheet handed back without a reason comes straight back.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]

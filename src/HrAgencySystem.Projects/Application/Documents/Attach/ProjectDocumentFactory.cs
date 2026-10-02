@@ -5,9 +5,9 @@ namespace HrAgencySystem.Projects.Application.Documents.Attach;
 
 internal static class ProjectDocumentFactory
 {
-    public const string ValidUntilBeforeDocumentDateMessage =
+    private const string ValidUntilBeforeDocumentDateMessage =
         "A document cannot stop being valid before it was issued.";
-    public const string FileNameRequiredMessage = "File name is required.";
+    private const string FileNameRequiredMessage = "File name is required.";
 
     public static (DateOnly documentDate, DateOnly? validUntil, string? note) Validate(
         DateOnly documentDate,

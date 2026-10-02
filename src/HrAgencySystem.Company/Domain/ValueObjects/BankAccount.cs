@@ -12,9 +12,9 @@ namespace HrAgencySystem.Company.Domain.ValueObjects;
 /// </summary>
 public sealed record BankAccount
 {
-    public const string InvalidIbanMessage =
+    private const string InvalidIbanMessage =
         "IBAN must be 15-34 characters starting with a two letter country code.";
-    public const string InvalidBicMessage = "BIC must be 8 or 11 alphanumeric characters.";
+    private const string InvalidBicMessage = "BIC must be 8 or 11 alphanumeric characters.";
     public const string BicWithoutIbanMessage = "A BIC cannot be given without an IBAN.";
 
     private BankAccount(string iban, string? bic)

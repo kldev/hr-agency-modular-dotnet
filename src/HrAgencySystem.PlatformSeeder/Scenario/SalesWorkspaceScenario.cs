@@ -42,7 +42,7 @@ internal sealed class SalesWorkspaceScenario(
     ISalesService sales
 )
 {
-    public const string AcmeName = "ACME Sp. z o.o.";
+    private const string AcmeName = "ACME Sp. z o.o.";
 
     private sealed record CompanySpec(
         string Name,

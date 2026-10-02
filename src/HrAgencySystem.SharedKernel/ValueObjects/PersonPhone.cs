@@ -6,7 +6,7 @@ public sealed record PersonPhone
 {
     public const int MaxLength = 40;
 
-    public const string MaxLengthMessage = "Phone number cannot exceed 40 characters.";
+    private const string MaxLengthMessage = "Phone number cannot exceed 40 characters.";
 
     private PersonPhone(string value)
     {

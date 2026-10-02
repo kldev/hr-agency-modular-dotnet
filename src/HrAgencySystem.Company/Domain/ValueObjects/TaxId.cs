@@ -6,7 +6,7 @@ public sealed record TaxId
 {
     private const int MaxLength = 50;
     public const string RequiredMessage = "Tax ID is required.";
-    public const string MaxLenghtMessage = "Tax ID cannot exceed 50 characters.";
+    private const string MaxLenghtMessage = "Tax ID cannot exceed 50 characters.";
 
     private TaxId(string value)
     {

@@ -15,8 +15,8 @@ public sealed record DocumentNumber
 {
     private const int MaxLength = 50;
 
-    public const string RequiredMessage = "Document number is required.";
-    public const string MaxLengthMessage = "Document number cannot exceed 50 characters.";
+    private const string RequiredMessage = "Document number is required.";
+    private const string MaxLengthMessage = "Document number cannot exceed 50 characters.";
 
     private DocumentNumber(string value)
     {

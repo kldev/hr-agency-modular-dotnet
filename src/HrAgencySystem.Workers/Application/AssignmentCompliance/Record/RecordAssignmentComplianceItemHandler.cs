@@ -29,12 +29,13 @@ public static class RecordAssignmentComplianceItemHandler
     public const string ReferenceNumberRequiredMessage =
         "Confirming this requirement needs the reference number it was filed under.";
 
-    public const string ValidToBeforeValidFromMessage = "The validity cannot end before it begins.";
+    private const string ValidToBeforeValidFromMessage =
+        "The validity cannot end before it begins.";
 
     public const string UnknownDocumentMessage =
         "The referenced document is not attached to this assignment.";
 
-    public const string ReferenceNumberMaxLengthMessage =
+    private const string ReferenceNumberMaxLengthMessage =
         "Reference number cannot exceed 100 characters.";
 
     private const int ReferenceNumberMaxLength = 100;

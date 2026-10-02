@@ -8,7 +8,7 @@ namespace HrAgencySystem.Observability;
 /// </summary>
 public sealed class ProcessLimitsMetrics
 {
-    public const string MeterName = "HrAgencySystem.Process";
+    private const string MeterName = "HrAgencySystem.Process";
 
     /// <summary>cgroup v2; <c>max</c> means no limit, and so does a missing file outside a container.</summary>
     private const string CgroupMemoryLimit = "/sys/fs/cgroup/memory.max";

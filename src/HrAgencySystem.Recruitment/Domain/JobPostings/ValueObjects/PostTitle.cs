@@ -4,10 +4,10 @@ namespace HrAgencySystem.Recruitment.Domain.JobPostings.ValueObjects;
 
 public sealed record PostTitle
 {
-    public const int MaxLength = 250;
+    private const int MaxLength = 250;
 
     public const string RequiredMessage = "Post title is required.";
-    public const string MaxLengthMessage = "Post title cannot exceed 250 characters.";
+    private const string MaxLengthMessage = "Post title cannot exceed 250 characters.";
 
     private PostTitle(string value)
     {

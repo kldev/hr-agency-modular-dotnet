@@ -16,7 +16,7 @@ public static class ChangeAgencyEmploymentTermsHandler
     public const string AlreadyEndedMessage =
         "This engagement has ended. Start a new one rather than changing terms that no longer run.";
 
-    public const string EffectiveBeforeStartMessage =
+    private const string EffectiveBeforeStartMessage =
         "New terms cannot take effect before the engagement began.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]

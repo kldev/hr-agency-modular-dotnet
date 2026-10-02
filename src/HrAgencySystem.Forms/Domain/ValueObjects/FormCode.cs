@@ -10,10 +10,10 @@ namespace HrAgencySystem.Forms.Domain.ValueObjects;
 /// </summary>
 public sealed partial record FormCode
 {
-    public const int MaxLength = 64;
+    private const int MaxLength = 64;
 
-    public const string RequiredMessage = "A form needs a code.";
-    public const string MaxLengthMessage = "A form code cannot exceed 64 characters.";
+    private const string RequiredMessage = "A form needs a code.";
+    private const string MaxLengthMessage = "A form code cannot exceed 64 characters.";
 
     public const string FormatMessage =
         "A form code is lower-case letters, digits and hyphens, starting with a letter, e.g. gdpr-consent.";

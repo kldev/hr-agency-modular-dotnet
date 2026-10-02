@@ -9,7 +9,7 @@ namespace HrAgencySystem.Workers.Application.WorkerDocuments.Remove;
 
 public static class RemoveWorkerDocumentHandler
 {
-    public const string UnknownDocumentMessage = "That document is not on this person's file.";
+    private const string UnknownDocumentMessage = "That document is not on this person's file.";
 
     public const string ReferencedByAuthorisationMessage =
         "This document is the proof behind a recorded permission. Remove the permission first.";

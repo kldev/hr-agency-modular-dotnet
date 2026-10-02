@@ -5,7 +5,7 @@ namespace HrAgencySystem.SharedKernel.ValueObjects;
 public sealed record LanguageCode
 {
     public const string InvalidFormatMessage = "Language code must be ISO 3166-1 alpha-2.";
-    public const string OnlyCharactersAllowedMessage = "Language code must contain only letters.";
+    private const string OnlyCharactersAllowedMessage = "Language code must contain only letters.";
     public const string RequiredMessage = "Language code is required.";
 
     private LanguageCode(string value)

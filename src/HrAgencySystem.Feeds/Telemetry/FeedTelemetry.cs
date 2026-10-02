@@ -9,7 +9,7 @@ namespace HrAgencySystem.Feeds.Telemetry;
 /// </summary>
 public sealed class FeedTelemetry
 {
-    public const string Name = "HrAgencySystem.Feeds";
+    private const string Name = "HrAgencySystem.Feeds";
 
     public const string Completed = "completed";
     public const string Failed = "failed";

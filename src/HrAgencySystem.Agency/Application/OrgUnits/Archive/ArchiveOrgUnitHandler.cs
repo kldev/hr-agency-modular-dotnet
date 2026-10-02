@@ -23,7 +23,7 @@ public static class ArchiveOrgUnitHandler
     public const string StillHasUnitsMessage =
         "This unit still has units under it. Move or archive those first.";
 
-    public const string AlreadyArchivedMessage = "This unit is already archived.";
+    private const string AlreadyArchivedMessage = "This unit is already archived.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
     public static async Task<(OrgUnitArchived, Wolverine.Marten.Events)> Handle(

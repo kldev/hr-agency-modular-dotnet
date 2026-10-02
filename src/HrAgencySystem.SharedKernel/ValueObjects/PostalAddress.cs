@@ -24,22 +24,22 @@ public sealed record PostalAddress(
     string CountryCode
 )
 {
-    public const int StreetMaxLength = 200;
-    public const int BuildingNumberMaxLength = 20;
-    public const int UnitNumberMaxLength = 20;
-    public const int PostalCodeMaxLength = 20;
-    public const int CityMaxLength = 120;
+    private const int StreetMaxLength = 200;
+    private const int BuildingNumberMaxLength = 20;
+    private const int UnitNumberMaxLength = 20;
+    private const int PostalCodeMaxLength = 20;
+    private const int CityMaxLength = 120;
 
-    public const string StreetRequiredMessage = "Street is required.";
-    public const string StreetMaxLengthMessage = "Street cannot exceed 200 characters.";
-    public const string BuildingNumberRequiredMessage = "Building number is required.";
-    public const string BuildingNumberMaxLengthMessage =
+    private const string StreetRequiredMessage = "Street is required.";
+    private const string StreetMaxLengthMessage = "Street cannot exceed 200 characters.";
+    private const string BuildingNumberRequiredMessage = "Building number is required.";
+    private const string BuildingNumberMaxLengthMessage =
         "Building number cannot exceed 20 characters.";
-    public const string UnitNumberMaxLengthMessage = "Unit number cannot exceed 20 characters.";
-    public const string PostalCodeRequiredMessage = "Postal code is required.";
-    public const string PostalCodeMaxLengthMessage = "Postal code cannot exceed 20 characters.";
+    private const string UnitNumberMaxLengthMessage = "Unit number cannot exceed 20 characters.";
+    private const string PostalCodeRequiredMessage = "Postal code is required.";
+    private const string PostalCodeMaxLengthMessage = "Postal code cannot exceed 20 characters.";
     public const string CityRequiredMessage = "City is required.";
-    public const string CityMaxLengthMessage = "City cannot exceed 120 characters.";
+    private const string CityMaxLengthMessage = "City cannot exceed 120 characters.";
     public const string PartialMessage =
         "An address needs street, building number, postal code, city and country together.";
 

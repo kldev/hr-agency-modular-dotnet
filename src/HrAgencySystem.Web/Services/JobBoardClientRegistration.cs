@@ -5,7 +5,7 @@ namespace HrAgencySystem.Web.Services;
 
 public static class JobBoardClientRegistration
 {
-    public const string MissingConfigMessage =
+    private const string MissingConfigMessage =
         "InternalApi:BaseUrl and InternalApi:ApiKey must be set. Issue a key as the platform owner "
         + "(POST /api/owners/api-keys) and put its sk_ value in user secrets or the environment.";
 

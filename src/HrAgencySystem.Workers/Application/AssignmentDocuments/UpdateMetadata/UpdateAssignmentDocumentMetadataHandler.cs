@@ -9,7 +9,7 @@ namespace HrAgencySystem.Workers.Application.AssignmentDocuments.UpdateMetadata;
 
 public static class UpdateAssignmentDocumentMetadataHandler
 {
-    public const string UnknownDocumentMessage = "That document is not on this assignment.";
+    private const string UnknownDocumentMessage = "That document is not on this assignment.";
 
     [AggregateHandler]
     public static async Task<(AssignmentDocumentMetadataChanged, Wolverine.Marten.Events)> Handle(

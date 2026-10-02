@@ -7,8 +7,8 @@ namespace HrAgencySystem.Agency.Domain.TimeSheets;
 /// </summary>
 public sealed record TimeSheetPeriod
 {
-    public const string YearRangeMessage = "The year must be between 2000 and 2100.";
-    public const string MonthRangeMessage = "The month must be between 1 and 12.";
+    private const string YearRangeMessage = "The year must be between 2000 and 2100.";
+    private const string MonthRangeMessage = "The month must be between 1 and 12.";
     public const string FutureMessage = "A month that has not started yet cannot be filled in.";
 
     private TimeSheetPeriod(int year, int month)

@@ -17,12 +17,12 @@ namespace HrAgencySystem.Forms.Application.Responses.Correct;
 /// </summary>
 public static class CorrectFormResponseHandler
 {
-    public const int MaxReasonLength = 1000;
+    private const int MaxReasonLength = 1000;
 
     public const string NotSubmittedMessage =
         "Only a submitted response is corrected. A draft is simply saved.";
     public const string ReasonRequiredMessage = "Say why the response is being corrected.";
-    public const string ReasonTooLongMessage = "The reason cannot exceed 1000 characters.";
+    private const string ReasonTooLongMessage = "The reason cannot exceed 1000 characters.";
 
     [AggregateHandler]
     public static async Task<(FormResponseCorrected, Wolverine.Marten.Events)> Handle(

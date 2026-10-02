@@ -17,7 +17,7 @@ public static class RecordWorkAuthorisationHandler
     public const string UnknownDocumentMessage =
         "The referenced document is not on this person's file.";
 
-    public const string UnknownAuthorisationMessage =
+    private const string UnknownAuthorisationMessage =
         "That permission is not on this person's file.";
 
     [AggregateHandler]

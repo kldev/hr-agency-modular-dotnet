@@ -12,7 +12,7 @@ public static class ChangeProjectLegalEntityHandler
     public const string ProjectAlreadyStartedMessage =
         "The delivering company cannot be changed once the project has started. Copy the project instead.";
 
-    public const string SameEntityMessage = "That is already the delivering company.";
+    private const string SameEntityMessage = "That is already the delivering company.";
 
     [AggregateHandler]
     public static async Task<(ProjectLegalEntityChanged, Wolverine.Marten.Events)> Handle(

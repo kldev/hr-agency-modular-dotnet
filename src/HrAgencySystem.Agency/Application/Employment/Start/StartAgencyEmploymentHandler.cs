@@ -14,7 +14,7 @@ namespace HrAgencySystem.Agency.Application.Employment.Start;
 /// </summary>
 public static class StartAgencyEmploymentHandler
 {
-    public const string AlreadyEmployedMessage =
+    private const string AlreadyEmployedMessage =
         "This person already has an employment record. Change its terms instead of adding a second one.";
 
     public const string WeeklyHoursRangeMessage = "Weekly hours must be between 0 and 168.";

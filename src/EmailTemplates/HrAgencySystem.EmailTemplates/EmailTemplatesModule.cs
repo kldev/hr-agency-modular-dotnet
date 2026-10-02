@@ -7,8 +7,8 @@ namespace HrAgencySystem.EmailTemplates;
 
 public static class EmailTemplatesModule
 {
-    public const string ProviderKey = "MailProvider";
-    public const string MailKitProvider = "mailkit";
+    private const string ProviderKey = "MailProvider";
+    private const string MailKitProvider = "mailkit";
 
     extension(IServiceCollection services)
     {

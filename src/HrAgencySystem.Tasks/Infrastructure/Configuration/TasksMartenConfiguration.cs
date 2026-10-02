@@ -7,7 +7,7 @@ namespace HrAgencySystem.Tasks.Infrastructure.Configuration;
 
 internal static class TasksMartenConfiguration
 {
-    public const string SchemaName = "tasks";
+    private const string SchemaName = "tasks";
 
     extension(StoreOptions options)
     {

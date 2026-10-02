@@ -20,7 +20,7 @@ namespace HrAgencySystem.Workers.Application.UpdateAssignment;
 /// </summary>
 public static class UpdateAssignmentHandler
 {
-    public const string AlreadyFinishedMessage =
+    private const string AlreadyFinishedMessage =
         "This assignment has finished, so its terms cannot be changed.";
 
     [AggregateHandler]

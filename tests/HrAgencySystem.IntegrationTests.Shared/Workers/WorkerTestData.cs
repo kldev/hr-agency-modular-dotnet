@@ -7,7 +7,7 @@ namespace HrAgencySystem.IntegrationTests.Workers;
 
 internal static class WorkerTestData
 {
-    public static readonly DateOnly StartsOn = new(2026, 10, 1);
+    private static readonly DateOnly StartsOn = new(2026, 10, 1);
 
     /// <summary>A Polish national: free movement, so legalisation has nothing to do.</summary>
     public const string PolishCitizenship = "pl";
@@ -60,7 +60,7 @@ internal static class WorkerTestData
     /// Derived from the name so that two different people in one test do not look like one person
     /// to the register - which is exactly what it would otherwise conclude, and rightly so.
     /// </summary>
-    public static string EmailFor(string firstName, string lastName) =>
+    private static string EmailFor(string firstName, string lastName) =>
         $"{firstName}.{lastName}@example.com".ToLowerInvariant();
 
     public static WorkerMaps.MapChangeStatus.ChangeWorkerStatusRequest WorkerStatusRequest(

@@ -13,7 +13,7 @@ namespace HrAgencySystem.Company.Domain.ValueObjects;
 /// </summary>
 public sealed record VatNumber
 {
-    public const int MaxLength = 20;
+    private const int MaxLength = 20;
     public const string InvalidFormatMessage =
         "VAT number must start with a two letter country code followed by 2-12 alphanumeric characters.";
 

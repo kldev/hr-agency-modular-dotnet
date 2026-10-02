@@ -5,8 +5,8 @@ namespace HrAgencySystem.Teams.Domain.ValueObjects;
 public sealed record TeamName
 {
     private const int MaxLength = 100;
-    public const string RequiredMessage = "Team name is required.";
-    public const string MaxLengthMessage = "Team name cannot exceed 100 characters.";
+    private const string RequiredMessage = "Team name is required.";
+    private const string MaxLengthMessage = "Team name cannot exceed 100 characters.";
 
     private TeamName(string value)
     {

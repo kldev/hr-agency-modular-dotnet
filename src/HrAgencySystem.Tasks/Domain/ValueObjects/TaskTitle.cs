@@ -4,11 +4,11 @@ namespace HrAgencySystem.Tasks.Domain.ValueObjects;
 
 public sealed record TaskTitle
 {
-    public const int MaxLength = 200;
+    private const int MaxLength = 200;
 
     public const string RequiredMessage = "Task title is required.";
 
-    public const string MaxLengthMessage = "Task title cannot exceed 200 characters.";
+    private const string MaxLengthMessage = "Task title cannot exceed 200 characters.";
 
     private TaskTitle(string value)
     {

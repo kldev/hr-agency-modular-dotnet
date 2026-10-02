@@ -64,7 +64,7 @@ public static class ResponsePrefill
         return SourceValue(source ?? SystemFieldSource.None, worker);
     }
 
-    public static FieldValue? SourceValue(SystemFieldSource source, WorkerSnapshot worker) =>
+    private static FieldValue? SourceValue(SystemFieldSource source, WorkerSnapshot worker) =>
         source switch
         {
             SystemFieldSource.WorkerFirstName => FieldValue.OfText(worker.FirstName),

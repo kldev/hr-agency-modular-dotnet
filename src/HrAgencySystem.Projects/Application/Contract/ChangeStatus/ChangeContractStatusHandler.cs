@@ -11,7 +11,7 @@ public static class ChangeContractStatusHandler
 {
     public const string NoContractMessage = "This project has no contract recorded yet.";
     public const string SameStatusMessage = "The contract is already in this status.";
-    public const string SignedOnRequiredMessage = "A signed contract needs a signature date.";
+    private const string SignedOnRequiredMessage = "A signed contract needs a signature date.";
 
     [AggregateHandler]
     public static async Task<(ProjectContractStatusChanged, Wolverine.Marten.Events)> Handle(

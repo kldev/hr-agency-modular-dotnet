@@ -9,7 +9,7 @@ namespace HrAgencySystem.Workers.Application.WorkAuthorisations.Remove;
 
 public static class RemoveWorkAuthorisationHandler
 {
-    public const string UnknownAuthorisationMessage =
+    private const string UnknownAuthorisationMessage =
         "That permission is not on this person's file.";
 
     [AggregateHandler]

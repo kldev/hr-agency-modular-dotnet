@@ -13,9 +13,9 @@ namespace HrAgencySystem.Api.Infrastructure;
 /// </summary>
 public sealed class TenantTelemetryMiddleware(RequestDelegate next)
 {
-    public const string OrganizationIdTag = "hr.organization_id";
-    public const string UserIdTag = "user.id";
-    public const string ImpersonatedByTag = "hr.impersonated_by";
+    private const string OrganizationIdTag = "hr.organization_id";
+    private const string UserIdTag = "user.id";
+    private const string ImpersonatedByTag = "hr.impersonated_by";
 
     public async Task InvokeAsync(HttpContext context, IDiagnosticContext diagnostics)
     {

@@ -12,12 +12,12 @@ namespace HrAgencySystem.Agency.Application.OrgUnits.AddMember;
 
 public static class AddOrgUnitMemberHandler
 {
-    public const string UnitArchivedMessage = "That unit is archived, so nobody new goes into it.";
+    private const string UnitArchivedMessage = "That unit is archived, so nobody new goes into it.";
 
     public const string AlreadyInAnotherUnitMessage =
         "This person already belongs to another unit. Move them instead of adding them twice.";
 
-    public const string AlreadyHereMessage = "This person is already in this unit.";
+    private const string AlreadyHereMessage = "This person is already in this unit.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
     public static async Task<(OrgUnitMemberAdded, Wolverine.Marten.Events)> Handle(

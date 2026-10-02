@@ -11,7 +11,7 @@ namespace HrAgencySystem.Observability.Health;
 /// </summary>
 public sealed class HealthStatusMetrics : IHealthCheckPublisher
 {
-    public const string MeterName = "HrAgencySystem.Health";
+    private const string MeterName = "HrAgencySystem.Health";
 
     private readonly ConcurrentDictionary<string, HealthStatus> _latest = new();
 

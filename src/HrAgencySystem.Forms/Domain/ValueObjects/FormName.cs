@@ -4,10 +4,10 @@ namespace HrAgencySystem.Forms.Domain.ValueObjects;
 
 public sealed record FormName
 {
-    public const int MaxLength = 200;
+    private const int MaxLength = 200;
 
     public const string RequiredMessage = "A form needs a name.";
-    public const string MaxLengthMessage = "A form name cannot exceed 200 characters.";
+    private const string MaxLengthMessage = "A form name cannot exceed 200 characters.";
 
     private FormName(string value) => Value = value;
 

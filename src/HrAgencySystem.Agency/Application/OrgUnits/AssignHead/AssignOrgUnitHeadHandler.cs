@@ -13,7 +13,7 @@ public static class AssignOrgUnitHeadHandler
     public const string NotAMemberMessage =
         "The head of a unit is one of its people. Put them in the unit first.";
 
-    public const string AlreadyTheHeadMessage = "This person already heads this unit.";
+    private const string AlreadyTheHeadMessage = "This person already heads this unit.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
     public static async Task<(OrgUnitHeadAssigned, Wolverine.Marten.Events)> Handle(

@@ -9,12 +9,12 @@ namespace HrAgencySystem.Workers.Application.WorkerDocuments;
 /// </summary>
 internal static class WorkerDocumentFactory
 {
-    public const string FileNameRequiredMessage = "The file name is required.";
-    public const string ValidUntilBeforeDocumentDateMessage =
+    private const string FileNameRequiredMessage = "The file name is required.";
+    private const string ValidUntilBeforeDocumentDateMessage =
         "A document cannot expire before it was issued.";
 
     private const int FileNameMaxLength = 255;
-    public const string FileNameMaxLengthMessage = "The file name cannot exceed 255 characters.";
+    private const string FileNameMaxLengthMessage = "The file name cannot exceed 255 characters.";
 
     public static (string fileName, string? note) Create(
         string fileName,

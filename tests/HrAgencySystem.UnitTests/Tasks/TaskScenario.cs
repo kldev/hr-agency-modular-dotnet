@@ -36,7 +36,7 @@ internal sealed class TaskScenario
         "Nowak",
         "anna@test.io"
     );
-    public static readonly CompanySnapshot Company = new(
+    private static readonly CompanySnapshot Company = new(
         CompanyId,
         "ACME Sp. z o.o.",
         "5260001234"

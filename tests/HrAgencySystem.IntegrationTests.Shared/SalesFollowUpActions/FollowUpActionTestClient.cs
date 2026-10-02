@@ -10,7 +10,7 @@ namespace HrAgencySystem.IntegrationTests.SalesFollowUpActions;
 
 public sealed class FollowUpActionTestClient(HttpClient client, ITestOutputHelper output)
 {
-    public const string BaseUrl = "/api/sales/follow-up";
+    private const string BaseUrl = "/api/sales/follow-up";
 
     internal async Task<HttpResponseMessage> CreateResponse(
         Guid? organizationId = null,

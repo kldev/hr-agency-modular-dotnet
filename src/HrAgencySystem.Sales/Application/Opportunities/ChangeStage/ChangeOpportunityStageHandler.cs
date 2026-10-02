@@ -10,7 +10,7 @@ namespace HrAgencySystem.Sales.Application.Opportunities.ChangeStage;
 
 public static class ChangeOpportunityStageHandler
 {
-    public const string SameStageError = "Opportunity is already at this stage";
+    private const string SameStageError = "Opportunity is already at this stage";
 
     [AggregateHandler]
     public static async Task<(StageChanged, Wolverine.Marten.Events)> Handle(

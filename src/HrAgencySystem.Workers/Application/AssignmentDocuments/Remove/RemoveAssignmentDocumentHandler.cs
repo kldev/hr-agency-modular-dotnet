@@ -8,9 +8,9 @@ namespace HrAgencySystem.Workers.Application.AssignmentDocuments.Remove;
 
 public static class RemoveAssignmentDocumentHandler
 {
-    public const string UnknownDocumentMessage = "That document is not on this assignment.";
+    private const string UnknownDocumentMessage = "That document is not on this assignment.";
 
-    public const string ReferencedByComplianceMessage =
+    private const string ReferencedByComplianceMessage =
         "This document is the proof behind a recorded requirement. Record the requirement without it first.";
 
     [AggregateHandler]

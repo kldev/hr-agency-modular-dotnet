@@ -9,8 +9,8 @@ namespace HrAgencySystem.Feeds.ReadModel;
 /// </summary>
 public sealed class FeedsDbContext(DbContextOptions<FeedsDbContext> options) : DbContext(options)
 {
-    public const string SchemaName = "feeds";
-    public const string TableName = "job_posts";
+    private const string SchemaName = "feeds";
+    private const string TableName = "job_posts";
 
     // ReSharper disable once UnusedMember.Global
     public DbSet<JobPostFeedRow> JobPosts => Set<JobPostFeedRow>();

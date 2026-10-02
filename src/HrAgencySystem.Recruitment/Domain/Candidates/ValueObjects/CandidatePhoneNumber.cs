@@ -4,9 +4,9 @@ namespace HrAgencySystem.Recruitment.Domain.Candidates.ValueObjects;
 
 public sealed record CandidatePhoneNumber
 {
-    public const int MaxLength = 40;
+    private const int MaxLength = 40;
 
-    public const string MaxLengthMessage = "Phone number cannot exceed 40 characters.";
+    private const string MaxLengthMessage = "Phone number cannot exceed 40 characters.";
 
     private CandidatePhoneNumber(string value)
     {

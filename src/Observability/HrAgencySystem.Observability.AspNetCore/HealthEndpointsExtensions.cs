@@ -11,7 +11,7 @@ namespace HrAgencySystem.Observability.AspNetCore;
 public static class HealthEndpointsExtensions
 {
     public const string Live = "/health/live";
-    public const string Ready = "/health/ready";
+    private const string Ready = "/health/ready";
 
     extension(IEndpointRouteBuilder app)
     {

@@ -12,35 +12,35 @@ namespace HrAgencySystem.Forms.Domain.Layout;
 /// </summary>
 public static class FieldRulesPolicy
 {
-    public const int MaxOptions = 200;
-    public const int MaxOptionLength = 200;
-    public const int MaxPatternLength = 500;
-    public const int MaxMessageLength = 300;
-    public const int MaxDecimals = 6;
+    private const int MaxOptions = 200;
+    private const int MaxOptionLength = 200;
+    private const int MaxPatternLength = 500;
+    private const int MaxMessageLength = 300;
+    private const int MaxDecimals = 6;
 
     public const string LengthNotForTypeMessage =
         "Length and pattern rules apply to typed text only.";
     public const string RangeNotForTypeMessage =
         "Minimum, maximum and decimals apply to numbers only.";
-    public const string DatesNotForTypeMessage = "Date limits apply to dates only.";
-    public const string SelectionNotForTypeMessage =
+    private const string DatesNotForTypeMessage = "Date limits apply to dates only.";
+    private const string SelectionNotForTypeMessage =
         "Selection limits apply to multiple choice only.";
-    public const string NegativeLengthMessage = "Lengths cannot be negative.";
-    public const string LengthRangeMessage = "The minimum length is greater than the maximum.";
-    public const string NumberRangeMessage = "The minimum is greater than the maximum.";
-    public const string DateRangeMessage = "The earliest date is after the latest.";
-    public const string SelectionRangeMessage =
+    private const string NegativeLengthMessage = "Lengths cannot be negative.";
+    private const string LengthRangeMessage = "The minimum length is greater than the maximum.";
+    private const string NumberRangeMessage = "The minimum is greater than the maximum.";
+    private const string DateRangeMessage = "The earliest date is after the latest.";
+    private const string SelectionRangeMessage =
         "The minimum selection is greater than the maximum.";
-    public const string NegativeSelectionMessage = "Selection limits cannot be negative.";
-    public const string SelectionAboveOptionsMessage =
+    private const string NegativeSelectionMessage = "Selection limits cannot be negative.";
+    private const string SelectionAboveOptionsMessage =
         "More selections are required than there are options.";
     public const string InvalidPatternMessage = "The pattern is not a valid regular expression.";
-    public const string PatternTooLongMessage = "The pattern cannot exceed 500 characters.";
-    public const string MessageTooLongMessage = "The error message cannot exceed 300 characters.";
-    public const string DecimalsRangeMessage = "Decimals must be between 0 and 6.";
-    public const string TooManyOptionsMessage = "A field cannot offer more than 200 options.";
-    public const string EmptyOptionMessage = "Every option needs a value and a label.";
-    public const string OptionTooLongMessage = "An option cannot exceed 200 characters.";
+    private const string PatternTooLongMessage = "The pattern cannot exceed 500 characters.";
+    private const string MessageTooLongMessage = "The error message cannot exceed 300 characters.";
+    private const string DecimalsRangeMessage = "Decimals must be between 0 and 6.";
+    private const string TooManyOptionsMessage = "A field cannot offer more than 200 options.";
+    private const string EmptyOptionMessage = "Every option needs a value and a label.";
+    private const string OptionTooLongMessage = "An option cannot exceed 200 characters.";
     public const string DuplicateOptionMessage = "Two options share the same value.";
 
     public static IReadOnlyList<string> Check(

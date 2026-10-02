@@ -31,14 +31,14 @@ public sealed record LegalEntityBankAccount(
     string? BankName
 )
 {
-    public const int BankNameMaxLength = 200;
+    private const int BankNameMaxLength = 200;
 
     public const string InvalidIbanMessage =
         "IBAN must be 15-34 characters starting with a two letter country code.";
 
-    public const string InvalidBicMessage = "BIC must be 8 or 11 alphanumeric characters.";
+    private const string InvalidBicMessage = "BIC must be 8 or 11 alphanumeric characters.";
 
-    public const string BankNameMaxLengthMessage = "Bank name cannot exceed 200 characters.";
+    private const string BankNameMaxLengthMessage = "Bank name cannot exceed 200 characters.";
 
     public const string DuplicateMessage =
         "There can be only one account per purpose and currency.";

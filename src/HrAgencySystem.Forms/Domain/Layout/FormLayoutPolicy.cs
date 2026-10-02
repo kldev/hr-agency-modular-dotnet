@@ -31,23 +31,23 @@ public sealed record LayoutError(Guid? Target, string Label, string Message)
 /// </summary>
 public static class FormLayoutPolicy
 {
-    public const int MaxPages = 30;
-    public const int MaxFields = 300;
-    public const int MaxTitleLength = 200;
+    private const int MaxPages = 30;
+    private const int MaxFields = 300;
+    private const int MaxTitleLength = 200;
     public const int MaxLabelLength = 300;
-    public const int MaxDescriptionLength = 2000;
-    public const int MaxPlaceholderLength = 200;
+    private const int MaxDescriptionLength = 2000;
+    private const int MaxPlaceholderLength = 200;
 
-    public const string TooManyPagesMessage = "A form cannot have more than 30 pages.";
-    public const string TooManyFieldsMessage = "A form cannot have more than 300 fields.";
-    public const string DuplicatePageMessage = "Two pages share the same id.";
-    public const string DuplicateFieldIdMessage = "Two fields share the same id.";
-    public const string PageTitleRequiredMessage = "A page needs a title.";
-    public const string PageTitleTooLongMessage = "A page title cannot exceed 200 characters.";
+    private const string TooManyPagesMessage = "A form cannot have more than 30 pages.";
+    private const string TooManyFieldsMessage = "A form cannot have more than 300 fields.";
+    private const string DuplicatePageMessage = "Two pages share the same id.";
+    private const string DuplicateFieldIdMessage = "Two fields share the same id.";
+    private const string PageTitleRequiredMessage = "A page needs a title.";
+    private const string PageTitleTooLongMessage = "A page title cannot exceed 200 characters.";
     public const string LabelRequiredMessage = "A field needs a label.";
     public const string LabelTooLongMessage = "A label cannot exceed 300 characters.";
-    public const string DescriptionTooLongMessage = "A description cannot exceed 2000 characters.";
-    public const string PlaceholderTooLongMessage = "A placeholder cannot exceed 200 characters.";
+    private const string DescriptionTooLongMessage = "A description cannot exceed 2000 characters.";
+    private const string PlaceholderTooLongMessage = "A placeholder cannot exceed 200 characters.";
     public const string DuplicateCodeMessage = "Another field on this form already uses this code.";
     public const string SystemFieldRequiredMessage = "Pick the system field this one shows.";
     public const string UnknownSystemFieldMessage =

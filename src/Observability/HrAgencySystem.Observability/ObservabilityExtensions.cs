@@ -18,10 +18,10 @@ namespace HrAgencySystem.Observability;
 public static class ObservabilityExtensions
 {
     /// <summary>Standard OpenTelemetry variable; set by compose, absent in tests and a bare run.</summary>
-    public const string OtlpEndpointKey = "OTEL_EXPORTER_OTLP_ENDPOINT";
+    private const string OtlpEndpointKey = "OTEL_EXPORTER_OTLP_ENDPOINT";
 
     /// <summary><c>text</c> (default, for a terminal) or <c>json</c> (for a container's log driver).</summary>
-    public const string ConsoleFormatKey = "Observability:ConsoleFormat";
+    private const string ConsoleFormatKey = "Observability:ConsoleFormat";
 
     private const string TextTemplate =
         "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <{SourceContext}>{NewLine}{Exception}";

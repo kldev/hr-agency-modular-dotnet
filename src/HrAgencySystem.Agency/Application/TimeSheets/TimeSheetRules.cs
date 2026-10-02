@@ -16,7 +16,7 @@ public static class TimeSheetRules
     public const string UnknownTimeSheetMessage =
         "There is no time sheet for that person and month.";
 
-    public const string NotEditableMessage =
+    private const string NotEditableMessage =
         "This sheet is not open for editing. Only a draft or a sheet sent back for correction can be changed.";
 
     public const string NotCoveredMessage =

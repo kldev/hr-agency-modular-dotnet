@@ -12,7 +12,7 @@ namespace HrAgencySystem.Agency.Application.TimeSheets.Comment;
 
 public static class CommentOnTimeSheetHandler
 {
-    public const string NotOnThisSheetMessage =
+    private const string NotOnThisSheetMessage =
         "Only the person this sheet belongs to, somebody above them, or payroll can write on it.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]

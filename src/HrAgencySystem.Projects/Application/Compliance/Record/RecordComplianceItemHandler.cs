@@ -20,7 +20,7 @@ public static class RecordComplianceItemHandler
     public const string ValidToBeforeValidFromMessage = "The validity cannot end before it begins.";
     public const string UnknownDocumentMessage =
         "The referenced document is not attached to this project.";
-    public const string ReferenceNumberMaxLengthMessage =
+    private const string ReferenceNumberMaxLengthMessage =
         "Reference number cannot exceed 100 characters.";
 
     private const int ReferenceNumberMaxLength = 100;

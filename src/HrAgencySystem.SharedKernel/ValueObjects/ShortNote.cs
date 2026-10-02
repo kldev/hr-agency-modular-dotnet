@@ -6,7 +6,7 @@ public sealed record ShortNote
 {
     public const int MaxLength = 500;
 
-    public const string RequiredMessage = "Note is required.";
+    private const string RequiredMessage = "Note is required.";
     public const string MaxLengthMessage = "Note cannot exceed 500 characters.";
 
     private ShortNote(string value)

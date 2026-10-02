@@ -74,6 +74,6 @@ public static class CreateFormDefinitionHandler
         return @event;
     }
 
-    public static ResponseCardinality DefaultCardinality(FormKind kind) =>
+    private static ResponseCardinality DefaultCardinality(FormKind kind) =>
         kind == FormKind.Survey ? ResponseCardinality.Many : ResponseCardinality.OnePerSubject;
 }

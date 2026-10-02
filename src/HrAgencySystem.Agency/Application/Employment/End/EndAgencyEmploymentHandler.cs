@@ -10,7 +10,7 @@ namespace HrAgencySystem.Agency.Application.Employment.End;
 
 public static class EndAgencyEmploymentHandler
 {
-    public const string EndsBeforeStartMessage =
+    private const string EndsBeforeStartMessage =
         "An engagement cannot end before the day it began.";
 
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
