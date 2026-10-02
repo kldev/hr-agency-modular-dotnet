@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
-COPY Directory.Packages.props .
+COPY Directory.Packages.props nuget.config ./
 
 COPY src/HrAgencySystem.Api/HrAgencySystem.Api.csproj HrAgencySystem.Api/
 COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.EmailTemplates.Contracts.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/
