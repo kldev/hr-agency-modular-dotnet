@@ -32,11 +32,14 @@ var app = builder.Build();
     await app.SeedAsync();
 
     app.UseRequestLogging();
+    // Right after the request log, so the log still sees the final status, and before
+    // authentication: the api key handler reads the database, and a failure there deserves
+    // ProblemDetails with a trace id as much as one inside an endpoint.
+    app.UseExceptionHandler();
     app.UseCors();
     app.UseAuthentication();
     app.UseTenantTelemetry();
     app.UseAuthorization();
-    app.UseExceptionHandler();
     app.MapApplicationEndpoints();
     app.MapOpenApi().AllowAnonymous();
     app.MapAppScalar();
