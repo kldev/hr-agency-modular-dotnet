@@ -3,6 +3,7 @@ using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Identity.Infrastructure.IAM;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HrAgencySystem.Api.Infrastructure;
@@ -47,32 +48,30 @@ public static class AuthenticationExtensions
         authorization.AddFormsDesignPolicy();
         authorization.AddInternalApiPolicy();
 
-        services.Configure<JwtConfig>(configuration.GetSection(JwtConfig.Section));
-
-        var config =
-            configuration.GetSection(JwtConfig.Section).Get<JwtConfig>()
-            ?? throw new InvalidOperationException(
-                $"Configuration section '{JwtConfig.Section}' is missing."
-            );
-
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = config.Issuer,
-                    ValidAudience = config.Audience,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(config.SecretKey)
-                    ),
-                };
-            })
+            .AddJwtBearer()
             // Asked only by the internal policy; the bearer stays the default for everything else.
             .AddServiceApiKeys();
+
+        // From the validated options rather than read before Build(): a missing or short key stops
+        // the host at startup with the reason, instead of throwing inside the first login.
+        services
+            .AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<IOptions<JwtConfig>>(
+                (options, jwt) =>
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwt.Value.Issuer,
+                        ValidAudience = jwt.Value.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(jwt.Value.SecretKey)
+                        ),
+                    }
+            );
     }
 }

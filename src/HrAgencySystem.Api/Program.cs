@@ -5,6 +5,7 @@ using HrAgencySystem.Api.Infrastructure.FileServiceClient;
 using HrAgencySystem.Api.Infrastructure.ReportsClient;
 using HrAgencySystem.Observability.AspNetCore;
 using HrAgencySystem.PlatformSeeder;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -25,6 +26,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
+    // Configuration before the database: a wrong secret or url stops the host naming the setting,
+    // instead of seeding first and failing later for a reason that looks unrelated.
+    app.Services.GetRequiredService<IStartupValidator>().Validate();
     await app.SeedAsync();
 
     app.UseRequestLogging();

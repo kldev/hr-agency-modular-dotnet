@@ -1,14 +1,29 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.EmailTemplates.Sending;
 
 public sealed class SmtpConfig
 {
     public const string SectionName = "Smtp";
 
-    public string Host { get; set; } = "localhost";
-    public int Port { get; set; } = 1025;
-    public string Username { get; set; } = "";
-    public string Password { get; set; } = "";
-    public bool UseSsl { get; set; }
-    public string FromEmail { get; set; } = "no-reply@hr-agency.com";
-    public string FromName { get; set; } = "HR Agency Portal";
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public string Host { get; init; } = "localhost";
+
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public int Port { get; init; } = 1025;
+
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public string Username { get; init; } = "";
+
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public string Password { get; init; } = "";
+
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public bool UseSsl { get; init; }
+
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public string FromEmail { get; init; } = "no-reply@hr-agency.com";
+
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public string FromName { get; init; } = "HR Agency Portal";
 }

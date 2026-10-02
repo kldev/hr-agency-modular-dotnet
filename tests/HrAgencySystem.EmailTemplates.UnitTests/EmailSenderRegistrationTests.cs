@@ -46,6 +46,18 @@ public class EmailSenderRegistrationTests
         Assert.IsType<MailKitEmailSender>(provider.GetRequiredService<ISendEmail>());
     }
 
+    [Fact]
+    public void AddEMailTemplates_WithMailKitProviderAndNoHost_RefusesTheConfiguration()
+    {
+        using var provider = Build(new() { ["MailProvider"] = "mailkit", ["Smtp:Host"] = "" });
+
+        var error = Assert.Throws<OptionsValidationException>(() =>
+            provider.GetRequiredService<IOptions<SmtpConfig>>().Value
+        );
+
+        Assert.Contains("Smtp:Host", error.Message);
+    }
+
     private static ServiceProvider Build(Dictionary<string, string?> settings)
     {
         var configuration = new ConfigurationBuilder().AddInMemoryCollection(settings).Build();

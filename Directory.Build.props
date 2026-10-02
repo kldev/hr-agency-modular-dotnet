@@ -1,0 +1,10 @@
+<Project>
+  <ItemGroup>
+    <!--
+      [UsedImplicitly] and friends for code only reflection reaches: options the binder fills,
+      enum values that arrive as JSON, commands Wolverine reads by convention. The attributes are
+      [Conditional], so nothing ships with them.
+    -->
+    <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

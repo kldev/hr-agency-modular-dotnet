@@ -24,7 +24,18 @@ public static class EmailTemplatesModule
                 return;
             }
 
-            services.Configure<SmtpConfig>(configuration.GetSection(SmtpConfig.SectionName));
+            services
+                .AddOptions<SmtpConfig>()
+                .Bind(configuration.GetSection(SmtpConfig.SectionName))
+                .Validate(
+                    config =>
+                        !string.IsNullOrWhiteSpace(config.Host)
+                        && config.Port is > 0 and <= 65535
+                        && !string.IsNullOrWhiteSpace(config.FromEmail),
+                    $"{SmtpConfig.SectionName}:Host, a port between 1 and 65535 and "
+                        + $"{SmtpConfig.SectionName}:FromEmail are required with the mailkit provider."
+                )
+                .ValidateOnStart();
             services.AddScoped<ISendEmail, MailKitEmailSender>();
         }
     }

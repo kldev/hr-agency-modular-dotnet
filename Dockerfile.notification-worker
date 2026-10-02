@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
-COPY Directory.Packages.props nuget.config ./
+COPY Directory.Build.props Directory.Packages.props nuget.config ./
 
 COPY src/EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/HrAgencySystem.EmailTemplates.Contracts.csproj EmailTemplates/HrAgencySystem.EmailTemplates.Contracts/
 COPY src/EmailTemplates/HrAgencySystem.EmailTemplates/HrAgencySystem.EmailTemplates.csproj EmailTemplates/HrAgencySystem.EmailTemplates/

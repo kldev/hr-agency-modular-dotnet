@@ -6,7 +6,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
-COPY Directory.Packages.props nuget.config ./
+COPY Directory.Build.props Directory.Packages.props nuget.config ./
 
 COPY src/HrAgencySystem.Feeds/HrAgencySystem.Feeds.csproj HrAgencySystem.Feeds/
 COPY src/HrAgencySystem.FeedsWorker/HrAgencySystem.FeedsWorker.csproj HrAgencySystem.FeedsWorker/

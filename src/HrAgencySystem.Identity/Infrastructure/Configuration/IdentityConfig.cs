@@ -7,5 +7,5 @@ public sealed class IdentityConfig
 
     /// How long a password reset link stays usable. The saga schedules its own timeout from this,
     /// so changing it here changes the window - there is no second place holding an expiry.
-    public int PasswordResetExpiresInMinutes { get; set; } = 15;
+    public int PasswordResetExpiresInMinutes { get; init; } = 15;
 }

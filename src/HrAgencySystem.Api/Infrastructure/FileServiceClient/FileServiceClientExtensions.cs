@@ -1,4 +1,5 @@
 using HrAgencySystem.FileService.Contracts;
+using Microsoft.Extensions.Options;
 
 namespace HrAgencySystem.Api.Infrastructure.FileServiceClient;
 
@@ -8,24 +9,29 @@ public static class FileServiceClientExtensions
     {
         public void AddFileServiceClient(IConfiguration configuration)
         {
-            var section = configuration.GetSection(FileServiceClientConfig.SectionName);
-            services.Configure<FileServiceClientConfig>(section);
-
-            var config = section.Get<FileServiceClientConfig>() ?? new FileServiceClientConfig();
+            services
+                .AddOptions<FileServiceClientConfig>()
+                .Bind(configuration.GetSection(FileServiceClientConfig.SectionName))
+                .ValidateBaseUrl(FileServiceClientConfig.SectionName, config => config.BaseUrl)
+                .ValidateServiceSecret(FileServiceClientConfig.SectionName, config => config.Secret)
+                .Validate(
+                    config => config.TimeoutSeconds > 0,
+                    $"{FileServiceClientConfig.SectionName}:TimeoutSeconds must be positive."
+                )
+                .ValidateOnStart();
 
             services.AddSingleton<FileServiceTokenFactory>();
             services.AddSingleton<FileServiceHealthProbe>();
             // No retry handler on purpose: the calls that matter here carry a request body stream,
             // and a stream cannot be replayed. Retrying an upload would send an empty file.
-            services.AddHttpClient<IFileServiceClient, HttpFileServiceClient>(client =>
-            {
-                client.BaseAddress = new Uri(
-                    string.IsNullOrWhiteSpace(config.BaseUrl)
-                        ? "http://localhost:5100"
-                        : config.BaseUrl
-                );
-                client.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
-            });
+            services.AddHttpClient<IFileServiceClient, HttpFileServiceClient>(
+                (provider, client) =>
+                {
+                    var config = provider.GetRequiredService<IOptions<FileServiceClientConfig>>();
+                    client.BaseAddress = new Uri(config.Value.BaseUrl);
+                    client.Timeout = TimeSpan.FromSeconds(config.Value.TimeoutSeconds);
+                }
+            );
         }
     }
 }

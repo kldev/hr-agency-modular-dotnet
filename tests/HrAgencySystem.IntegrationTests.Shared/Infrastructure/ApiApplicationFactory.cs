@@ -38,6 +38,11 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
         builder.UseSetting("Reports:Secret", "integration-tests-reports-service-secret");
         builder.UseSetting("Application:FeedUrl", "http://localhost:5050");
         builder.UseSetting("Application:PortalUrl", "http://localhost:4300");
+        // Registered with the files module; the feed endpoints are the only callers and no test
+        // reaches the bucket.
+        builder.UseSetting("RustFs:Endpoint", "http://localhost:9000");
+        builder.UseSetting("RustFs:AccessKey", "integration-tests");
+        builder.UseSetting("RustFs:SecretKey", "integration-tests");
         // Never dialled - the external transports are stubbed below - but the URI still has to parse.
         builder.UseSetting("RabbitMq:Host", "localhost");
         builder.UseSetting("RabbitMq:Username", "guest");

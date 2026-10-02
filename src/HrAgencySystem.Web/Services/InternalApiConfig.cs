@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Web.Services;
 
 /// <summary>
@@ -9,10 +11,12 @@ public sealed class InternalApiConfig
 {
     public const string Section = "InternalApi";
 
-    public string BaseUrl { get; set; } = "";
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public string BaseUrl { get; init; } = "";
 
-    public string ApiKey { get; set; } = "";
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
+    public string ApiKey { get; init; } = "";
 
     /// <summary>How long one call may take before the page gives up and says so.</summary>
-    public int TimeoutSeconds { get; set; } = 10;
+    public int TimeoutSeconds { get; init; } = 10;
 }

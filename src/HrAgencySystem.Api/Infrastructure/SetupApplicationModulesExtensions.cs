@@ -27,10 +27,17 @@ public static class SetupApplicationModulesExtensions
     {
         public void SetupApplicationModules(IConfiguration configuration)
         {
-            services.AddOptions<ApplicationConfig>();
-            services.Configure<ApplicationConfig>(
-                configuration.GetSection(ApplicationConfig.Section)
-            );
+            services
+                .AddOptions<ApplicationConfig>()
+                .Bind(configuration.GetSection(ApplicationConfig.Section))
+                .Validate(
+                    config =>
+                        ServiceSecrets.IsHttpUrl(config.FeedUrl)
+                        && ServiceSecrets.IsHttpUrl(config.PortalUrl),
+                    $"{ApplicationConfig.Section}:FeedUrl and {ApplicationConfig.Section}:PortalUrl "
+                        + "must be absolute http(s) urls - every link that leaves the system starts with one."
+                )
+                .ValidateOnStart();
 
             services.ConfigureJson();
             services.AddTransient<IClock, SystemClock>();
