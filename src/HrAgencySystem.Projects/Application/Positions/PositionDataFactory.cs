@@ -72,13 +72,13 @@ internal static class PositionDataFactory
         var rate = ReadRate(data, errors);
         var address = ReadAddress(data, errors);
 
-        if (data.WeeklyHours is not null and (<= 0 or > HoursInAWeek))
+        if (data.WeeklyHours is <= 0 or > HoursInAWeek)
             errors.Add(WeeklyHoursOutOfRangeMessage);
 
-        if (data.PayoutDay is not null and (< 1 or > 31))
+        if (data.PayoutDay is < 1 or > 31)
             errors.Add(PayoutDayOutOfRangeMessage);
 
-        if (data.PlannedHeadcount is not null and < 1)
+        if (data.PlannedHeadcount is < 1)
             errors.Add(PlannedHeadcountOutOfRangeMessage);
 
         var schedule = ReadNote(data.WorkSchedule, errors);

@@ -1,9 +1,12 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Api.Infrastructure.FileServiceClient;
 
 public sealed class FileServiceClientConfig
 {
     public const string SectionName = "FileService";
 
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
     public string BaseUrl { get; init; } = "http://localhost:5100";
 
     /// <summary>
@@ -12,5 +15,6 @@ public sealed class FileServiceClientConfig
     /// </summary>
     public string Secret { get; init; } = "";
 
+    [UsedImplicitly(ImplicitUseKindFlags.Assign)] // Set by the configuration binder only.
     public int TimeoutSeconds { get; init; } = 60;
 }

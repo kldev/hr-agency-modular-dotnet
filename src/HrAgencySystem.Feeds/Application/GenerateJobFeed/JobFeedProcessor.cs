@@ -25,6 +25,7 @@ internal sealed class JobFeedProcessor(
 
         foreach (var task in tasks)
         {
+            // ReSharper disable once ExplicitCallerInfoArgument - the span is named for the work, not the method.
             using var activity = FeedTelemetry.Source.StartActivity("generate job feed");
             activity?.SetTag("hr.organization_id", task.OrganizationId);
             var started = Stopwatch.GetTimestamp();

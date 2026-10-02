@@ -29,10 +29,10 @@ public sealed record ReportPeriod
     }
 
     /// <summary>The first day of the first month.</summary>
-    public DateOnly From { get; }
+    private DateOnly From { get; }
 
     /// <summary>The first day of the last month.</summary>
-    public DateOnly To { get; }
+    private DateOnly To { get; }
 
     /// <summary>Inclusive lower bound for timestamps.</summary>
     public DateTimeOffset StartsAt => new(From.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);

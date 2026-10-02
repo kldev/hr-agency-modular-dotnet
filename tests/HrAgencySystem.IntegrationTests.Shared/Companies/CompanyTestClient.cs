@@ -8,7 +8,7 @@ namespace HrAgencySystem.IntegrationTests.Companies;
 
 public sealed class CompanyTestClient(HttpClient client)
 {
-    private static readonly Random _random = new Random();
+    private static readonly Random _random = new();
 
     public async Task<CompanyCreated> CreateAsync(
         Guid organizationId,

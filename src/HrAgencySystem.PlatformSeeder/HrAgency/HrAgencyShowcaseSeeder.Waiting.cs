@@ -8,8 +8,7 @@ public sealed partial class HrAgencyShowcaseSeeder
 
     private async Task WaitForProjections(int times = 1)
     {
-        LoggerExtensions.LogDebug(
-            logger,
+        logger.LogDebug(
             "Waiting {DelayMs}ms for projections ({Times} times)",
             ProjectionDelayMs,
             times

@@ -44,11 +44,11 @@ public class ProjectEmailRecipientsHandlerTests : BaseTest
         Assert.Equal(2, project.EmailRecipients.Count);
         Assert.Contains(
             project.EmailRecipients,
-            r => r.Purpose == EmailPurpose.Document && r.Email == "docs@acme.example.com"
+            r => r is { Purpose: EmailPurpose.Document, Email: "docs@acme.example.com" }
         );
         Assert.Contains(
             project.EmailRecipients,
-            r => r.Purpose == EmailPurpose.Invoice && r.Email == "billing@acme.example.com"
+            r => r is { Purpose: EmailPurpose.Invoice, Email: "billing@acme.example.com" }
         );
     }
 

@@ -1,6 +1,5 @@
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
 using HrAgencySystem.Api.Endpoints.Project.Maps;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
@@ -237,7 +236,7 @@ public class ProjectDocumentTests(IntegrationEnvironment env, ITestOutputHelper 
         Client.WithOrganizationId(organizationId);
 
         using var form = new MultipartFormDataContent();
-        var file = new ByteArrayContent(Encoding.UTF8.GetBytes("the signed contract"));
+        var file = new ByteArrayContent("the signed contract"u8.ToArray());
         file.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(
             "application/pdf"
         );

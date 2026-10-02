@@ -8,4 +8,4 @@ public sealed record JobApplicationNoteAdded(
     DateTimeOffset OccurredAt,
     string Note,
     UserSnapshot Author
-) : IJobApplicationEvent { }
+) : IJobApplicationEvent;

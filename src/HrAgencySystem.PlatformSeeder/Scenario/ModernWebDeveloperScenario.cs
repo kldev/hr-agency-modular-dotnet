@@ -109,10 +109,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 22000m,
                 recruiterId,
                 recruiterId
-            ) with
-            {
-                RecruiterId = recruiterId,
-            }
+            )
         );
 
         return new JobDescriptionSeedResult(result.JobDescriptionId, recruiterId, result.Title);
@@ -159,10 +156,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 20000m,
                 recruiterId,
                 recruiterId
-            ) with
-            {
-                RecruiterId = recruiterId,
-            }
+            )
         );
 
         return new JobDescriptionSeedResult(result.JobDescriptionId, recruiterId, result.Title);
@@ -209,10 +203,7 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
                 21000m,
                 recruiterId,
                 recruiterId
-            ) with
-            {
-                RecruiterId = recruiterId,
-            }
+            )
         );
 
         return new JobDescriptionSeedResult(result.JobDescriptionId, recruiterId, result.Title);
@@ -488,6 +479,6 @@ internal sealed class ModernWebDeveloperScenario(IMessageBus bus)
     private sealed record JobDescriptionSeedResult(
         Guid JobDescriptionId,
         Guid RecruiterId,
-        String Title
-    ) { }
+        string Title
+    );
 }

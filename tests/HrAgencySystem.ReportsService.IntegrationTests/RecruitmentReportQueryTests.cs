@@ -32,7 +32,11 @@ public sealed class RecruitmentReportQueryTests(ReportsDatabaseFixture database)
         await Rows.ApplicationAsync(_organization, September, "Hired", hiredAt: September);
         await Rows.InterviewAsync(_organization, August, completedAt: September);
 
-        var report = await Query.RunAsync(_organization, Period("2026-08", "2026-09"), default);
+        var report = await Query.RunAsync(
+            _organization,
+            Period("2026-08", "2026-09"),
+            CancellationToken.None
+        );
 
         Assert.Equal(new RecruitmentTotals(1, 2, 1, 1, 1, 1), report.Totals);
     }
@@ -62,7 +66,11 @@ public sealed class RecruitmentReportQueryTests(ReportsDatabaseFixture database)
         // Received before the period: its September hire is activity, not part of this cohort.
         await Rows.ApplicationAsync(_organization, July, "Hired", hiredAt: September);
 
-        var report = await Query.RunAsync(_organization, Period("2026-08", "2026-09"), default);
+        var report = await Query.RunAsync(
+            _organization,
+            Period("2026-08", "2026-09"),
+            CancellationToken.None
+        );
 
         var funnel = report.Funnel;
         Assert.Equal(4, funnel.Applied);
@@ -83,7 +91,11 @@ public sealed class RecruitmentReportQueryTests(ReportsDatabaseFixture database)
         await Rows.ApplicationAsync(_organization, September, "Hired", hiredAt: September);
         await Rows.InterviewAsync(_organization, September);
 
-        var report = await Query.RunAsync(_organization, Period("2026-07", "2026-09"), default);
+        var report = await Query.RunAsync(
+            _organization,
+            Period("2026-07", "2026-09"),
+            CancellationToken.None
+        );
 
         Assert.Equal(
             [
@@ -107,7 +119,11 @@ public sealed class RecruitmentReportQueryTests(ReportsDatabaseFixture database)
             new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero)
         );
 
-        var report = await Query.RunAsync(_organization, Period("2026-09", "2026-09"), default);
+        var report = await Query.RunAsync(
+            _organization,
+            Period("2026-09", "2026-09"),
+            CancellationToken.None
+        );
 
         Assert.Equal(1, report.Totals.Applications);
     }
@@ -119,7 +135,11 @@ public sealed class RecruitmentReportQueryTests(ReportsDatabaseFixture database)
         await Rows.ApplicationAsync(_organization, August, source: "JustJoinIt");
         await Rows.ApplicationAsync(_organization, September, source: "JustJoinIt");
 
-        var report = await Query.RunAsync(_organization, Period("2026-08", "2026-09"), default);
+        var report = await Query.RunAsync(
+            _organization,
+            Period("2026-08", "2026-09"),
+            CancellationToken.None
+        );
 
         Assert.Equal(
             [new SourceCount("JustJoinIt", 2), new SourceCount("Referral", 1)],
@@ -133,7 +153,11 @@ public sealed class RecruitmentReportQueryTests(ReportsDatabaseFixture database)
         await Rows.ApplicationAsync(_otherOrganization, August, "Hired", hiredAt: August);
         await Rows.JobPostAsync(_otherOrganization, August, publishedAt: August);
 
-        var report = await Query.RunAsync(_organization, Period("2026-08", "2026-09"), default);
+        var report = await Query.RunAsync(
+            _organization,
+            Period("2026-08", "2026-09"),
+            CancellationToken.None
+        );
 
         Assert.Equal(new RecruitmentTotals(0, 0, 0, 0, 0, 0), report.Totals);
         Assert.Null(report.Funnel.HireRate);

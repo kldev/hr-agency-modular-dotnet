@@ -101,7 +101,7 @@ public sealed class RecruitmentService(
             user
         );
 
-        session.Events.Append(jobApplicationId.Value, @noteEvent);
+        session.Events.Append(jobApplicationId.Value, noteEvent);
 
         await noteRepository.CreateNoteAsync(
             new CreateNoteDocument(

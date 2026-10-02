@@ -1,5 +1,3 @@
-using HrAgencySystem.SharedKernel.ValueObjects;
-
 namespace HrAgencySystem.Compliance;
 
 /// <summary>

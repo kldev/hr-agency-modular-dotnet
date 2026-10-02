@@ -22,6 +22,7 @@ public sealed class BadRequestDetails : ProblemDetails
     /// sees a change.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    // ReSharper disable once MemberCanBePrivate.Global - clients deserialize it back, and a private init would be skipped.
     public IReadOnlyDictionary<string, IReadOnlyList<string>>? FieldErrors { get; init; }
 
     public static BadRequestDetails CreateValidation(ValidationException exception)

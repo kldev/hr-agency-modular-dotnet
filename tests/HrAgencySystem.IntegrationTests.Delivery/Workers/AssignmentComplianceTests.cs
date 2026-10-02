@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using HrAgencySystem.Api.Endpoints.Assignment.Maps;
 using HrAgencySystem.Compliance;
 using HrAgencySystem.IntegrationTests.Infrastructure;
@@ -74,7 +73,7 @@ public class AssignmentComplianceTests(IntegrationEnvironment env, ITestOutputHe
             // could never say.
             Assert.Contains(
                 covered.Compliance,
-                c => c.Requirement == ComplianceRequirement.A1Certificates && c.IsSettled
+                c => c is { Requirement: ComplianceRequirement.A1Certificates, IsSettled: true }
             );
             Assert.Empty(uncovered.Compliance);
             Assert.True(uncovered.ComplianceOutstandingCount > covered.ComplianceOutstandingCount);
@@ -241,13 +240,10 @@ public class AssignmentComplianceTests(IntegrationEnvironment env, ITestOutputHe
         Client.WithOrganizationId(organizationId);
 
         using var form = new MultipartFormDataContent();
-        var file = new ByteArrayContent(Encoding.UTF8.GetBytes("the A1 certificate"));
+        var file = new ByteArrayContent("the A1 certificate"u8.ToArray());
         file.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
         form.Add(file, "file", "a1.pdf");
-        form.Add(
-            new StringContent(AssignmentDocumentCategory.SocialSecurity.ToString()),
-            "category"
-        );
+        form.Add(new StringContent(nameof(AssignmentDocumentCategory.SocialSecurity)), "category");
         form.Add(new StringContent(new DateOnly(2026, 9, 15).ToString("O")), "documentDate");
 
         var response = await Client.PostAsync($"/api/assignments/{assignmentId}/documents", form);

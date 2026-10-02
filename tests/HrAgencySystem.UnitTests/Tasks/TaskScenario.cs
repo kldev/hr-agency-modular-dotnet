@@ -42,12 +42,12 @@ internal sealed class TaskScenario
         "5260001234"
     );
 
-    public IUserSnapshotRepository Users { get; } = Substitute.For<IUserSnapshotRepository>();
-    public ICompanySnapshotRepository Companies { get; } =
+    private IUserSnapshotRepository Users { get; } = Substitute.For<IUserSnapshotRepository>();
+    private ICompanySnapshotRepository Companies { get; } =
         Substitute.For<ICompanySnapshotRepository>();
     public IOpportunitySnapshotRepository Opportunities { get; } =
         Substitute.For<IOpportunitySnapshotRepository>();
-    public IOrganizationChecker Checker { get; } = Substitute.For<IOrganizationChecker>();
+    private IOrganizationChecker Checker { get; } = Substitute.For<IOrganizationChecker>();
 
     public IClock Clock { get; } = new FixedClock(Now);
 

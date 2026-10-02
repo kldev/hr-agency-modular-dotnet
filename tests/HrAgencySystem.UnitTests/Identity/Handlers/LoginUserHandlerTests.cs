@@ -84,7 +84,7 @@ public sealed class LoginUserHandlerTests
             .Returns((UserEmailReservation?)null);
 
         // Act
-        var action = () =>
+        Task<LoginUserResult> Act() =>
             LoginUserHandler.Handle(
                 command,
                 _hasher,
@@ -98,11 +98,11 @@ public sealed class LoginUserHandlerTests
             );
 
         // Assert
-        var exception = await Assert.ThrowsAsync<AuthorizationException>(action);
+        var exception = await Assert.ThrowsAsync<AuthorizationException>(Act);
 
         Assert.Equal("Invalid login or password", exception.Message);
 
-        _hasher.DidNotReceiveWithAnyArgs().Matches(default!, default!);
+        _hasher.DidNotReceiveWithAnyArgs().Matches(null!, null!);
         await _repository.DidNotReceive().GetUser(Arg.Any<UserId>(), Arg.Any<CancellationToken>());
 
         _tokenService.DidNotReceiveWithAnyArgs().GenerateUserToken(null!);
@@ -123,7 +123,7 @@ public sealed class LoginUserHandlerTests
         _hasher.Matches("wrong-password", "hashed-password").Returns(false);
 
         // Act
-        var action = () =>
+        Task<LoginUserResult> Act() =>
             LoginUserHandler.Handle(
                 command,
                 _hasher,
@@ -137,7 +137,7 @@ public sealed class LoginUserHandlerTests
             );
 
         // Assert
-        var exception = await Assert.ThrowsAsync<AuthorizationException>(action);
+        var exception = await Assert.ThrowsAsync<AuthorizationException>(Act);
 
         Assert.Equal("Invalid login or password", exception.Message);
 

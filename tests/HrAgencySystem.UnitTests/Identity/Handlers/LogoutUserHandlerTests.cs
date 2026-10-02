@@ -28,7 +28,11 @@ public sealed class LogoutUserHandlerTests
             .FindByHashAsync(SecureToken.Hash(value), Arg.Any<CancellationToken>())
             .Returns(stored);
 
-        await LogoutUserHandler.Handle(new LogoutUser(value), _refreshTokens, default);
+        await LogoutUserHandler.Handle(
+            new LogoutUser(value),
+            _refreshTokens,
+            CancellationToken.None
+        );
 
         // not just this token: a rotated-away sibling would otherwise survive the logout
         await _refreshTokens.Received(1).RevokeFamilyAsync(stored.FamilyId);
@@ -41,7 +45,11 @@ public sealed class LogoutUserHandlerTests
             .FindByHashAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns((RefreshToken?)null);
 
-        await LogoutUserHandler.Handle(new LogoutUser("never-issued"), _refreshTokens, default);
+        await LogoutUserHandler.Handle(
+            new LogoutUser("never-issued"),
+            _refreshTokens,
+            CancellationToken.None
+        );
 
         await _refreshTokens.DidNotReceive().RevokeFamilyAsync(Arg.Any<Guid>());
     }

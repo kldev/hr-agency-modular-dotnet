@@ -20,8 +20,6 @@ namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
 public class ApiApplicationFactory(string connectionString) : WebApplicationFactory<IApiMarker>
 {
-    public TestLoggerProvider LoggerProvider { get; } = new();
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         // Set here, not inside a configuration callback: by the time one runs the host has already

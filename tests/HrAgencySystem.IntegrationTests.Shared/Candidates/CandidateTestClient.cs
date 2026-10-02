@@ -95,10 +95,7 @@ public sealed class CandidateTestClient(HttpClient client, ITestOutputHelper out
     )
     {
         var sliceUrl = $"{BaseUrl}";
-        var query = new List<string>();
-
-        query.Add($"page={page ?? 1}");
-        query.Add($"pageSize={pageSize ?? 100}");
+        List<string> query = [$"page={page ?? 1}", $"pageSize={pageSize ?? 100}"];
 
         client.WithOrganizationId(organizationId);
         sliceUrl += $"?{string.Join("&", query)}";

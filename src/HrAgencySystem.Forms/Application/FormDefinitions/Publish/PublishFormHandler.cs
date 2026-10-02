@@ -44,7 +44,7 @@ public static class PublishFormHandler
         if (aggregate.IsArchived)
             throw new BusinessRuleException(UpdateFormDetailsHandler.ArchivedMessage);
 
-        if (aggregate.PublishedVersion > 0 && !aggregate.HasUnpublishedChanges)
+        if (aggregate is { PublishedVersion: > 0, HasUnpublishedChanges: false })
             throw new BusinessRuleException(NothingToPublishMessage);
 
         var catalogue = await repository.GetCatalogueAsync(command.OrganizationId, ct);

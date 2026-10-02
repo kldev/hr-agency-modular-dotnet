@@ -8,7 +8,7 @@ internal static class RouteGroupBuilderExtensions
     {
         builder.RequireAuthorization(opt =>
         {
-            opt.RequireRole([nameof(PlatformRole.Owner)]);
+            opt.RequireRole(nameof(PlatformRole.Owner));
         });
 
         return builder;

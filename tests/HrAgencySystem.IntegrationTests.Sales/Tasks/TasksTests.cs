@@ -220,7 +220,7 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
         {
             var all = await _tasks.BoardAsync(_organizationId, _userId, TaskRangeKind.Week);
             Assert.Equal(
-                new HashSet<Guid> { mine.TaskId, mineElsewhere.TaskId, handedToMe.TaskId },
+                [mine.TaskId, mineElsewhere.TaskId, handedToMe.TaskId],
                 all.Active.Select(t => t.Id).ToHashSet()
             );
 
@@ -231,7 +231,7 @@ public class TasksTests(IntegrationEnvironment env, ITestOutputHelper outputHelp
                 acme
             );
             Assert.Equal(
-                new HashSet<Guid> { mine.TaskId, handedToMe.TaskId },
+                [mine.TaskId, handedToMe.TaskId],
                 acmeOnly.Active.Select(t => t.Id).ToHashSet()
             );
             Assert.All(acmeOnly.Active, t => Assert.Equal(acme, t.Company.Id));

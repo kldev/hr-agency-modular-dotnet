@@ -47,5 +47,5 @@ internal sealed record PostToChannelRequest(
 )
 {
     internal PostToChannel ToCommand(Guid organizationId, Guid userId, Guid jobPostId) =>
-        new PostToChannel(jobPostId, organizationId, Channel, userId);
+        new(jobPostId, organizationId, Channel, userId);
 }

@@ -75,7 +75,7 @@ public class LegalEntityTests(IntegrationEnvironment env, ITestOutputHelper outp
         Assert.Equal(3, created.BankAccounts.Count);
 
         var incomingEur = created.BankAccounts.Single(a =>
-            a.Purpose == BankAccountPurpose.Incoming && a.Currency == CurrencyCode.EUR
+            a is { Purpose: BankAccountPurpose.Incoming, Currency: CurrencyCode.EUR }
         );
 
         Assert.Equal("DE89370400440532013000", incomingEur.Iban);

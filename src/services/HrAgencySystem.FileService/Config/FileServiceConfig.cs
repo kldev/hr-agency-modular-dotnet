@@ -8,16 +8,16 @@ public sealed class FileServiceConfig
     /// Signing key for the service token. Must differ from the API's user token secret - sharing one
     /// would turn every user token into a service token.
     /// </summary>
-    public string Secret { get; set; } = "";
+    public string Secret { get; init; } = "";
 
-    public long MaxSizeBytes { get; set; } = 25 * 1024 * 1024;
+    public long MaxSizeBytes { get; init; } = 25 * 1024 * 1024;
 
     /// <summary>
     /// Content type to file extension. The allowlist lives here rather than in code so a deployment
     /// can narrow it, but it ships populated: a missing configuration section must not silently mean
     /// "accept anything".
     /// </summary>
-    public Dictionary<string, string> AllowedTypes { get; set; } =
+    public Dictionary<string, string> AllowedTypes { get; init; } =
         new(StringComparer.OrdinalIgnoreCase)
         {
             ["application/pdf"] = ".pdf",

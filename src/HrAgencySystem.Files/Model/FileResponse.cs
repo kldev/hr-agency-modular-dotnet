@@ -22,8 +22,8 @@ public class FileResponse
         ContentType = "plain/text",
     };
 
-    public Stream? OutputStream { get; set; }
+    public Stream? OutputStream { get; private init; }
     public string ContentType { get; set; } = string.Empty;
-    public bool FileNotFound { get; set; }
+    public bool FileNotFound { get; private init; }
     public string FileNotFoundMessage { get; set; } = string.Empty;
 }

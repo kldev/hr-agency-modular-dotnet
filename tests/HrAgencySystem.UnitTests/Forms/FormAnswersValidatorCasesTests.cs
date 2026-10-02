@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using HrAgencySystem.Forms.Domain.Layout;
 using HrAgencySystem.Forms.Domain.Validation;
 using HrAgencySystem.Forms.Domain.Values;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.UnitTests.Forms;
 
@@ -70,6 +71,7 @@ public class FormAnswersValidatorCasesTests
 
     private sealed record CaseFile(IReadOnlyList<ValidationCase> Cases);
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by System.Text.Json from the shared cases file.
     private sealed record ValidationCase(
         string Name,
         CaseField Field,
@@ -78,6 +80,7 @@ public class FormAnswersValidatorCasesTests
         string? Expected
     );
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by System.Text.Json from the shared cases file.
     private sealed record CaseField(
         FieldType Type,
         FieldRules Rules,

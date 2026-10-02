@@ -1,5 +1,4 @@
 using Testcontainers.PostgreSql;
-using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
 

@@ -6,6 +6,7 @@ using HrAgencySystem.Projects.Domain;
 using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Interviews;
 using HrAgencySystem.Reports.ReadModel;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Xunit.Abstractions;
@@ -207,6 +208,7 @@ public sealed class ReportProjectionsTests(IntegrationEnvironment env, ITestOutp
 
     // Column-shaped on purpose: this is what the reports service will read, not the EF row type.
     // ReSharper disable InconsistentNaming, UnusedAutoPropertyAccessor.Local, UnusedMember.Local
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class ApplicationRow
     {
         public Guid organization_id { get; init; }
@@ -220,18 +222,21 @@ public sealed class ReportProjectionsTests(IntegrationEnvironment env, ITestOutp
         public DateTimeOffset? rejected_at { get; init; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class JobPostRow
     {
         public bool is_published { get; init; }
         public DateTimeOffset? first_published_at { get; init; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class InterviewRow
     {
         public string status { get; init; } = "";
         public DateTimeOffset? completed_at { get; init; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class ProjectRow
     {
         public Guid organization_id { get; init; }
@@ -239,6 +244,7 @@ public sealed class ReportProjectionsTests(IntegrationEnvironment env, ITestOutp
         public DateTimeOffset? went_live_at { get; init; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class OrganizationRow
     {
         public string name { get; init; } = "";

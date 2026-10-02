@@ -29,7 +29,7 @@ internal static class ProjectScenario
     public static PostalAddress Workplace { get; } =
         PostalAddress.Create("Rue de la Loi", "16", null, "1000", "Bruxelles", "BE");
 
-    public static PostalAddress RegisteredAddress { get; } =
+    private static PostalAddress RegisteredAddress { get; } =
         PostalAddress.Create("Prosta", "51", null, "00-838", "Warszawa", "PL");
 
     public static CompanySnapshot CompleteCompany { get; } =

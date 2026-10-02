@@ -30,7 +30,7 @@ public sealed class JobDescriptionTestClient(HttpClient client)
 
     internal async Task<JobDescriptionCreated> CreateAsync(CreateJobDescriptionRequest request)
     {
-        var response = await client.PostAsJsonAsync($"/api/job-description", request);
+        var response = await client.PostAsJsonAsync("/api/job-description", request);
 
         response.EnsureSuccessStatusCode();
 

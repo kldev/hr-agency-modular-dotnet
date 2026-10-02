@@ -38,7 +38,7 @@ public sealed class PlatformReportQueryTests(ReportsDatabaseFixture database) : 
 
         var report = await Query.RunAsync(
             ReportPeriod.Create("2026-08", "2026-09", Today),
-            default
+            CancellationToken.None
         );
 
         Assert.Equal(["HR Agency", "Tech Jobs"], report.Organizations.Select(o => o.Name));

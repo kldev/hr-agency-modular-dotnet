@@ -53,7 +53,9 @@ public sealed class FileStoreTests : IDisposable
         Assert.Null(result.File);
         Assert.Equal(UploadInspector.UnsupportedTypeMessage, result.Rejection);
 
-        await _storage.DidNotReceiveWithAnyArgs().StoreAsync(default!, default!, default!, default);
+        await _storage
+            .DidNotReceiveWithAnyArgs()
+            .StoreAsync(null!, null!, null!, CancellationToken.None);
         _session.DidNotReceiveWithAnyArgs().Insert(Arg.Any<StoredFile>());
         await _session.DidNotReceiveWithAnyArgs().SaveChangesAsync();
 

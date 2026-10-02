@@ -32,33 +32,33 @@ public static class ChangeJobDescriptionStatusHandler
         switch (command.Status)
         {
             case JobDescriptionStatus.Closed:
-                var @closedEvent = new JobDescriptionClosed(
+                var closedEvent = new JobDescriptionClosed(
                     aggregate.Id.Value,
                     modifiedBy,
                     clock.UtcNow
                 );
-                return (result, [@closedEvent]);
+                return (result, [closedEvent]);
             case JobDescriptionStatus.Cancelled:
-                var @canceledEvent = new JobDescriptionCancelled(
+                var canceledEvent = new JobDescriptionCancelled(
                     aggregate.Id.Value,
                     modifiedBy,
                     clock.UtcNow
                 );
-                return (result, [@canceledEvent]);
+                return (result, [canceledEvent]);
             case JobDescriptionStatus.OnHold:
-                var @holdEvent = new JobDescriptionPutOnHold(
+                var holdEvent = new JobDescriptionPutOnHold(
                     aggregate.Id.Value,
                     modifiedBy,
                     clock.UtcNow
                 );
                 return (result, [holdEvent]);
             case JobDescriptionStatus.Open:
-                var @openEvent = new JobDescriptionOpened(
+                var openEvent = new JobDescriptionOpened(
                     aggregate.Id.Value,
                     modifiedBy,
                     clock.UtcNow
                 );
-                return (result, [@openEvent]);
+                return (result, [openEvent]);
             case JobDescriptionStatus.Draft:
             default:
                 throw new BusinessRuleException("Invalid status change: " + command.Status);

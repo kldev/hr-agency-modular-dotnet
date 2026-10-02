@@ -1,6 +1,7 @@
 using Dapper;
 using HrAgencySystem.Reports.ReadModel;
 using HrAgencySystem.ReportsService.Contracts;
+using JetBrains.Annotations;
 using Npgsql;
 
 namespace HrAgencySystem.ReportsService.Application.Recruitment;
@@ -157,6 +158,7 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
 
     // Rows materialized by Dapper, which sets the init accessors through reflection.
     // ReSharper disable UnusedAutoPropertyAccessor.Local
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class TotalsRow
     {
         public long JobPostsPublished { get; init; }
@@ -167,6 +169,7 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
         public long Hires { get; init; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class FunnelRow
     {
         public long Applied { get; init; }
@@ -179,6 +182,7 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
         public long Withdrawn { get; init; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class MonthlyRow
     {
         public DateTime Month { get; init; }
@@ -186,6 +190,7 @@ public sealed class RecruitmentReportQuery(NpgsqlDataSource dataSource)
         public long Count { get; init; }
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Materialized by Dapper.
     private sealed class SourceRow
     {
         public string Source { get; init; } = "";

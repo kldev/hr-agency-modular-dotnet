@@ -31,7 +31,6 @@ internal static class MapTags
                 {
                     Title = "No search or category parameter were provided.",
                     Status = StatusCodes.Status400BadRequest,
-                    Detail = $"",
                 }
             );
         }
