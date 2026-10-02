@@ -20,7 +20,10 @@ public static class UpdateCandidateHandler
         CancellationToken ct
     )
     {
-        var (data, _) = CandidateDataFactory.Create(command);
+        var (data, errors) = CandidateDataFactory.Create(command);
+        if (errors.Count > 0)
+            throw new ValidationException(errors);
+
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
         if (aggregate.OrganizationId.Value != command.OrganizationId)
             throw new BusinessRuleException(IOrganizationChecker.OrganizationCheckMessage);

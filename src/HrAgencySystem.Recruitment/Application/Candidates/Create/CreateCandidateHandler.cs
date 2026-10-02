@@ -92,7 +92,7 @@ public static class CreateCandidateHandler
         LongText note
     ) CreateValueObjects(CreateCandidate command)
     {
-        var (data, errors) = CandidateDataFactory.Create(command, true);
+        var (data, errors) = CandidateDataFactory.Create(command);
         var (email, error) = Email.TryCreate(command.Email);
         if (error != null)
             errors.Add(error);

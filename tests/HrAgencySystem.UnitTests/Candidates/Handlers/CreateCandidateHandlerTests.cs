@@ -322,6 +322,15 @@ public class CreateCandidateHandlerTests : BaseTest
         });
     }
 
+    [Fact]
+    public async Task Handle_WithFirstNameTooLong_ThrowsValidationException()
+    {
+        var command = CreateValidCommand(firstName: new string('a', 101));
+        SetupCheckOrganization();
+
+        await Assert.ThrowsAsync<ValidationException>(() => Handle(command));
+    }
+
     private async Task<CandidateCreated> Handle(CreateCandidate command, IClock? clock = null)
     {
         return await CreateCandidateHandler.Handle(
