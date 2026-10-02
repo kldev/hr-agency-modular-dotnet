@@ -26,7 +26,12 @@ public static class ReopenTaskItemHandler
 
         var reopenedBy = await service.GetUserAsync(command.ModifiedBy, task.OrganizationId, ct);
 
-        var @event = new TaskItemReopened(task.Id, command.OrganizationId, reopenedBy, clock.UtcNow);
+        var @event = new TaskItemReopened(
+            task.Id,
+            command.OrganizationId,
+            reopenedBy,
+            clock.UtcNow
+        );
 
         return (@event, [@event]);
     }

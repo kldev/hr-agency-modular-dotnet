@@ -8,7 +8,11 @@ namespace HrAgencySystem.Forms.Domain.Layout;
 /// shape; until then <see cref="FormLayoutPolicy"/> refuses any value here, so nobody can believe it
 /// works.
 /// </summary>
-public sealed record FieldVisibility(string FieldCode, VisibilityOperator Operator, FieldValue? Value);
+public sealed record FieldVisibility(
+    string FieldCode,
+    VisibilityOperator Operator,
+    FieldValue? Value
+);
 
 public enum VisibilityOperator
 {

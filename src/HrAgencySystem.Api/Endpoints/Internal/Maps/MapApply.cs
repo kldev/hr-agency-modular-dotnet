@@ -33,7 +33,9 @@ internal static class MapApply
         var post = await BoardPosts.FindPublishedAsync(organizations, posts, slug, postSlug, ct);
 
         if (post is null)
-            return TypedResults.NotFound(DomainObjectNotFound.NotFound("Post", $"{slug}/{postSlug}"));
+            return TypedResults.NotFound(
+                DomainObjectNotFound.NotFound("Post", $"{slug}/{postSlug}")
+            );
 
         var created = await bus.InvokeAsync<JobApplicationCreated>(
             new ApplyToJobApplication(

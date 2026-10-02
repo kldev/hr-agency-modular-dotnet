@@ -27,7 +27,11 @@
 
   <ItemGroup>
     <!-- The same cases the front end's Vitest suite reads - see FormAnswersValidatorCasesTests. -->
-    <None Include="..\fixtures\forms-validation-cases.json" Link="Forms\forms-validation-cases.json" CopyToOutputDirectory="PreserveNewest" />
+    <None
+      Include="..\fixtures\forms-validation-cases.json"
+      Link="Forms\forms-validation-cases.json"
+      CopyToOutputDirectory="PreserveNewest"
+    />
   </ItemGroup>
 
   <ItemGroup>

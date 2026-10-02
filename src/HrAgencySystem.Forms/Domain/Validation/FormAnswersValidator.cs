@@ -76,16 +76,20 @@ public static partial class FormAnswersValidator
 
     public static string MaxLengthMessage(int length) => $"Enter at most {length} characters.";
 
-    public static string MinMessage(decimal min) => $"Enter a number no smaller than {Format(min)}.";
+    public static string MinMessage(decimal min) =>
+        $"Enter a number no smaller than {Format(min)}.";
 
-    public static string MaxMessage(decimal max) => $"Enter a number no greater than {Format(max)}.";
+    public static string MaxMessage(decimal max) =>
+        $"Enter a number no greater than {Format(max)}.";
 
     public static string DecimalsMessage(int decimals) =>
         decimals == 0 ? "Enter a whole number." : $"Use at most {decimals} decimal places.";
 
-    public static string MinDateMessage(DateOnly date) => $"Pick a date on or after {Format(date)}.";
+    public static string MinDateMessage(DateOnly date) =>
+        $"Pick a date on or after {Format(date)}.";
 
-    public static string MaxDateMessage(DateOnly date) => $"Pick a date on or before {Format(date)}.";
+    public static string MaxDateMessage(DateOnly date) =>
+        $"Pick a date on or before {Format(date)}.";
 
     public static string MinSelectedMessage(int count) => $"Pick at least {count}.";
 
@@ -104,9 +108,17 @@ public static partial class FormAnswersValidator
         foreach (var answer in answers)
         {
             if (!fields.ContainsKey(answer.FieldCode))
-                errors.Add(new FieldError(answer.FieldCode, FieldErrorCodes.UnknownField, UnknownFieldMessage));
+                errors.Add(
+                    new FieldError(
+                        answer.FieldCode,
+                        FieldErrorCodes.UnknownField,
+                        UnknownFieldMessage
+                    )
+                );
             else if (!given.TryAdd(answer.FieldCode, answer.Value))
-                errors.Add(new FieldError(answer.FieldCode, FieldErrorCodes.Duplicate, DuplicateMessage));
+                errors.Add(
+                    new FieldError(answer.FieldCode, FieldErrorCodes.Duplicate, DuplicateMessage)
+                );
         }
 
         foreach (var field in fields.Values)
@@ -133,11 +145,16 @@ public static partial class FormAnswersValidator
 
         var rules = field.Rules;
 
-        if (value is null || value.IsEmpty || (field.Type == FieldType.Boolean && value.Boolean is false))
+        if (
+            value is null
+            || value.IsEmpty
+            || (field.Type == FieldType.Boolean && value.Boolean is false)
+        )
         {
             if (mode == ValidationMode.Submit && rules.Required)
             {
-                var message = field.Type == FieldType.Boolean ? RequiredConsentMessage : RequiredMessage;
+                var message =
+                    field.Type == FieldType.Boolean ? RequiredConsentMessage : RequiredMessage;
 
                 return Error(field, FieldErrorCodes.Required, message);
             }
@@ -246,7 +263,12 @@ public static partial class FormAnswersValidator
     {
         try
         {
-            return Regex.IsMatch(text, $"^(?:{pattern})$", RegexOptions.CultureInvariant, PatternTimeout);
+            return Regex.IsMatch(
+                text,
+                $"^(?:{pattern})$",
+                RegexOptions.CultureInvariant,
+                PatternTimeout
+            );
         }
         catch (ArgumentException)
         {
@@ -292,12 +314,15 @@ public static partial class FormAnswersValidator
         new(
             field.Code,
             code,
-            overridable && !string.IsNullOrWhiteSpace(field.Rules.Message) ? field.Rules.Message : message
+            overridable && !string.IsNullOrWhiteSpace(field.Rules.Message)
+                ? field.Rules.Message
+                : message
         );
 
     private static string Format(decimal value) => value.ToString(CultureInfo.InvariantCulture);
 
-    private static string Format(DateOnly value) => value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+    private static string Format(DateOnly value) =>
+        value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
     [GeneratedRegex("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")]
     private static partial Regex EmailFormat();

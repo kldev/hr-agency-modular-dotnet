@@ -24,7 +24,11 @@ public interface IFormsRepository
 
     void AddVersion(FormVersion version);
 
-    Task<SubjectProfile?> GetProfileAsync(Guid organizationId, SubjectRef subject, CancellationToken ct);
+    Task<SubjectProfile?> GetProfileAsync(
+        Guid organizationId,
+        SubjectRef subject,
+        CancellationToken ct
+    );
 
     void StoreProfile(SubjectProfile profile);
 }

@@ -105,14 +105,9 @@ public static class ObservabilityExtensions
                             serviceVersion: version,
                             serviceInstanceId: Environment.MachineName
                         )
-                        .AddAttributes(
-                            [
-                                new(
-                                    "deployment.environment.name",
-                                    builder.Environment.EnvironmentName
-                                ),
-                            ]
-                        )
+                        .AddAttributes([
+                            new("deployment.environment.name", builder.Environment.EnvironmentName),
+                        ])
                 )
                 .WithTracing(tracing =>
                     tracing

@@ -25,14 +25,26 @@ internal sealed class TaskScenario
 
     public static readonly DateTimeOffset Now = new(2026, 9, 24, 8, 0, 0, TimeSpan.Zero);
 
-    public static readonly OrganizationId Organization = SharedKernel.Tenant.OrganizationId.From(OrganizationId);
+    public static readonly OrganizationId Organization = SharedKernel.Tenant.OrganizationId.From(
+        OrganizationId
+    );
 
     public static readonly UserSnapshot User = new(UserId, "Bob", "Wells", "bob@test.io");
-    public static readonly UserSnapshot Colleague = new(ColleagueId, "Anna", "Nowak", "anna@test.io");
-    public static readonly CompanySnapshot Company = new(CompanyId, "ACME Sp. z o.o.", "5260001234");
+    public static readonly UserSnapshot Colleague = new(
+        ColleagueId,
+        "Anna",
+        "Nowak",
+        "anna@test.io"
+    );
+    public static readonly CompanySnapshot Company = new(
+        CompanyId,
+        "ACME Sp. z o.o.",
+        "5260001234"
+    );
 
     public IUserSnapshotRepository Users { get; } = Substitute.For<IUserSnapshotRepository>();
-    public ICompanySnapshotRepository Companies { get; } = Substitute.For<ICompanySnapshotRepository>();
+    public ICompanySnapshotRepository Companies { get; } =
+        Substitute.For<ICompanySnapshotRepository>();
     public IOpportunitySnapshotRepository Opportunities { get; } =
         Substitute.For<IOpportunitySnapshotRepository>();
     public IOrganizationChecker Checker { get; } = Substitute.For<IOrganizationChecker>();
@@ -43,21 +55,37 @@ internal sealed class TaskScenario
     {
         Checker.Exists(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(true);
 
-        Users.GetUserAsync(Arg.Any<Guid>(), Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>()).ReturnsNull();
+        Users
+            .GetUserAsync(Arg.Any<Guid>(), Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .ReturnsNull();
         Users.GetUserAsync(UserId, Organization, Arg.Any<CancellationToken>()).Returns(User);
-        Users.GetUserAsync(ColleagueId, Organization, Arg.Any<CancellationToken>()).Returns(Colleague);
+        Users
+            .GetUserAsync(ColleagueId, Organization, Arg.Any<CancellationToken>())
+            .Returns(Colleague);
 
         Companies
-            .GetCompanyAsync(Arg.Any<Guid>(), Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .GetCompanyAsync(
+                Arg.Any<Guid>(),
+                Arg.Any<OrganizationId>(),
+                Arg.Any<CancellationToken>()
+            )
             .ReturnsNull();
-        Companies.GetCompanyAsync(CompanyId, Organization, Arg.Any<CancellationToken>()).Returns(Company);
+        Companies
+            .GetCompanyAsync(CompanyId, Organization, Arg.Any<CancellationToken>())
+            .Returns(Company);
 
         Opportunities
-            .GetOpportunityAsync(Arg.Any<Guid>(), Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .GetOpportunityAsync(
+                Arg.Any<Guid>(),
+                Arg.Any<OrganizationId>(),
+                Arg.Any<CancellationToken>()
+            )
             .ReturnsNull();
         Opportunities
             .GetOpportunityAsync(OpportunityId, Organization, Arg.Any<CancellationToken>())
-            .Returns(new OpportunitySnapshot(OpportunityId, OrganizationId, CompanyId, "Recruitment Q4"));
+            .Returns(
+                new OpportunitySnapshot(OpportunityId, OrganizationId, CompanyId, "Recruitment Q4")
+            );
     }
 
     public ITasksService Service => new TasksService(Users, Companies, Opportunities, Checker);

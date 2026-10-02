@@ -38,16 +38,29 @@ internal static class MapDefine
 
     internal sealed record DefineSystemFieldRequest(
         [property: Description("employee.<name>, e.g. employee.pesel. Never changes.")] string Code,
-        [property: Description("Never changes - a different type is a different field.")] FieldType Type,
+        [property: Description("Never changes - a different type is a different field.")]
+            FieldType Type,
         string Label,
         string? Description,
         FieldRules? Rules,
         IReadOnlyList<ChoiceOption>? Options,
-        [property: Description("Where a new response may be pre-filled from. None for most fields.")]
+        [property: Description(
+            "Where a new response may be pre-filled from. None for most fields."
+        )]
             SystemFieldSource Source
     )
     {
         public DefineSystemField ToCommand(OrganizationId organizationId, Guid createdBy) =>
-            new(organizationId.Value, Code, Type, Label, Description, Rules, Options, Source, createdBy);
+            new(
+                organizationId.Value,
+                Code,
+                Type,
+                Label,
+                Description,
+                Rules,
+                Options,
+                Source,
+                createdBy
+            );
     }
 }

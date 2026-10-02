@@ -11,7 +11,8 @@ using Marten;
 namespace HrAgencySystem.Forms.Infrastructure.Query;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository forms) : IFormsQueryRepository
+public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository forms)
+    : IFormsQueryRepository
 {
     public async Task<SliceResponse<FormDefinitionProjection>> GetForms(
         OrganizationId organizationId,
@@ -20,13 +21,17 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
     )
     {
         var organization = organizationId.Value;
-        var list = session.Query<FormDefinitionProjection>().Where(f => f.OrganizationId == organization);
+        var list = session
+            .Query<FormDefinitionProjection>()
+            .Where(f => f.OrganizationId == organization);
 
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             var search = query.Search.Trim();
-            list = list.Where(f => f.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
-                                   || f.Code.Contains(search, StringComparison.OrdinalIgnoreCase));
+            list = list.Where(f =>
+                f.Name.Contains(search, StringComparison.OrdinalIgnoreCase)
+                || f.Code.Contains(search, StringComparison.OrdinalIgnoreCase)
+            );
         }
 
         if (query.Status is { Length: > 0 } status)
@@ -38,7 +43,11 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
         return await list.OrderBy(f => f.Name).ThenBy(f => f.Id).ToSlice(query, ct);
     }
 
-    public async Task<FormDefinitionView?> GetForm(OrganizationId organizationId, Guid formId, CancellationToken ct)
+    public async Task<FormDefinitionView?> GetForm(
+        OrganizationId organizationId,
+        Guid formId,
+        CancellationToken ct
+    )
     {
         var form = await forms.GetFormAsync(formId, ct);
 
@@ -49,7 +58,12 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
             .Query<FormVersion>()
             .Where(v => v.FormId == formId && v.OrganizationId == organizationId.Value)
             .OrderByDescending(v => v.Version)
-            .Select(v => new { v.Version, v.PublishedBy, v.PublishedAt })
+            .Select(v => new
+            {
+                v.Version,
+                v.PublishedBy,
+                v.PublishedAt,
+            })
             .ToListAsync(ct);
 
         return new FormDefinitionView(
@@ -64,7 +78,13 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
             form.PublishedVersion,
             form.HasUnpublishedChanges,
             form.Pages,
-            [.. versions.Select(v => new FormVersionSummary(v.Version, v.PublishedBy, v.PublishedAt))],
+            [
+                .. versions.Select(v => new FormVersionSummary(
+                    v.Version,
+                    v.PublishedBy,
+                    v.PublishedAt
+                )),
+            ],
             form.CreatedBy,
             form.CreatedAt,
             form.ModifiedBy,
@@ -94,23 +114,29 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
 
         var open = await session
             .Query<FormDefinitionProjection>()
-            .Where(f => f.OrganizationId == organization
-                        && f.Status == FormStatus.Published
-                        && f.SubjectKind == subject.Kind)
+            .Where(f =>
+                f.OrganizationId == organization
+                && f.Status == FormStatus.Published
+                && f.SubjectKind == subject.Kind
+            )
             .OrderBy(f => f.Name)
             .ToListAsync(ct);
 
         var answered = await session
             .Query<FormResponseProjection>()
-            .Where(r => r.OrganizationId == organization
-                        && r.SubjectKind == subject.Kind
-                        && r.SubjectId == subject.Id)
+            .Where(r =>
+                r.OrganizationId == organization
+                && r.SubjectKind == subject.Kind
+                && r.SubjectId == subject.Id
+            )
             .Select(r => r.FormId)
             .ToListAsync(ct);
 
         return
         [
-            .. open.Where(f => f.Cardinality == ResponseCardinality.Many || !answered.Contains(f.Id)),
+            .. open.Where(f =>
+                f.Cardinality == ResponseCardinality.Many || !answered.Contains(f.Id)
+            ),
         ];
     }
 
@@ -131,7 +157,8 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
                 .GroupBy(error => error.Target?.ToString() ?? "")
                 .ToDictionary(
                     group => group.Key,
-                    group => (IReadOnlyList<string>)[.. group.Select(error => error.Message).Distinct()]
+                    group =>
+                        (IReadOnlyList<string>)[.. group.Select(error => error.Message).Distinct()]
                 ),
             errors.Count == 0
         );
@@ -149,6 +176,11 @@ public sealed class FormsQueryRepository(IQuerySession session, IFormsRepository
     {
         var catalogue = await forms.GetCatalogueAsync(organizationId.Value, ct);
 
-        return [.. catalogue.Where(field => includeArchived || !field.IsArchived).OrderBy(field => field.Code, StringComparer.Ordinal)];
+        return
+        [
+            .. catalogue
+                .Where(field => includeArchived || !field.IsArchived)
+                .OrderBy(field => field.Code, StringComparer.Ordinal),
+        ];
     }
 }

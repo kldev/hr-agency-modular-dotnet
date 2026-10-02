@@ -1,7 +1,8 @@
+using System.Net.Http.Json;
 using HrAgencySystem.IntegrationTests.Candidates;
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Application.Port;
+using HrAgencySystem.Recruitment.Domain.Applications;
 using HrAgencySystem.Recruitment.Domain.Candidates;
 using HrAgencySystem.Recruitment.Events.Applications;
 using HrAgencySystem.Recruitment.Projections;
@@ -10,7 +11,6 @@ using HrAgencySystem.SharedKernel.Web;
 using HrAgencySystem.Workers.Events;
 using Marten;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Json;
 using Xunit.Abstractions;
 
 namespace HrAgencySystem.IntegrationTests.Workers;
@@ -76,7 +76,9 @@ public class WorkerFromRecruitmentTests(IntegrationEnvironment env, ITestOutputH
         var candidate = await CandidateClient.Create(organizationId, Email: email);
         var applicationId = Guid.NewGuid();
 
-        await using var session = Services.GetRequiredService<IDocumentStore>().LightweightSession();
+        await using var session = Services
+            .GetRequiredService<IDocumentStore>()
+            .LightweightSession();
 
         session.Events.StartStream<JobApplication>(
             applicationId,
@@ -87,13 +89,7 @@ public class WorkerFromRecruitmentTests(IntegrationEnvironment env, ITestOutputH
                 "Backend developer",
                 CandidateSource.Direct,
                 new CompanySnapshot(Guid.NewGuid(), "Client", ""),
-                new CandidateInfo(
-                    candidate.CandidateId,
-                    email,
-                    "+1 123 123 123",
-                    "joe",
-                    "smith"
-                ),
+                new CandidateInfo(candidate.CandidateId, email, "+1 123 123 123", "joe", "smith"),
                 email,
                 "+1 123 123 123",
                 "joe",
@@ -143,20 +139,22 @@ public class WorkerFromRecruitmentTests(IntegrationEnvironment env, ITestOutputH
     private async Task<IReadOnlyList<JobApplicationProjection>> Applications(
         Guid organizationId,
         bool? registeredAsWorker
-    ) => await Slice<JobApplicationProjection>(
-        organizationId,
-        "/api/recruitment/job-applications",
-        registeredAsWorker
-    );
+    ) =>
+        await Slice<JobApplicationProjection>(
+            organizationId,
+            "/api/recruitment/job-applications",
+            registeredAsWorker
+        );
 
     private async Task<IReadOnlyList<CandidateProjection>> Candidates(
         Guid organizationId,
         bool? registeredAsWorker
-    ) => await Slice<CandidateProjection>(
-        organizationId,
-        CandidateTestClient.BaseUrl,
-        registeredAsWorker
-    );
+    ) =>
+        await Slice<CandidateProjection>(
+            organizationId,
+            CandidateTestClient.BaseUrl,
+            registeredAsWorker
+        );
 
     private async Task<IReadOnlyList<T>> Slice<T>(
         Guid organizationId,

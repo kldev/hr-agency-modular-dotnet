@@ -73,7 +73,11 @@ public sealed class TasksTestClient(HttpClient client, ITestOutputHelper output)
         return board;
     }
 
-    public async Task<HttpResponseMessage> GetResponseAsync(Guid organizationId, Guid userId, Guid taskId)
+    public async Task<HttpResponseMessage> GetResponseAsync(
+        Guid organizationId,
+        Guid userId,
+        Guid taskId
+    )
     {
         As(organizationId, userId);
 
@@ -84,10 +88,16 @@ public sealed class TasksTestClient(HttpClient client, ITestOutputHelper output)
     {
         var response = await GetResponseAsync(organizationId, userId, taskId);
 
-        return response.IsSuccessStatusCode ? await response.ReadWithJson<TaskItemProjection>() : null;
+        return response.IsSuccessStatusCode
+            ? await response.ReadWithJson<TaskItemProjection>()
+            : null;
     }
 
-    public async Task<HttpResponseMessage> CompleteResponseAsync(Guid organizationId, Guid userId, Guid taskId)
+    public async Task<HttpResponseMessage> CompleteResponseAsync(
+        Guid organizationId,
+        Guid userId,
+        Guid taskId
+    )
     {
         As(organizationId, userId);
 

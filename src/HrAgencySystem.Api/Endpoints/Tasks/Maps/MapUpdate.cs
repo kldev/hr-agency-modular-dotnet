@@ -38,7 +38,8 @@ internal static class MapUpdate
 
 // ReSharper disable once ClassNeverInstantiated.Global
 internal sealed record UpdateTaskRequest(
-    [property: Description("One of the task company's opportunities, or none.")] Guid? OpportunityId,
+    [property: Description("One of the task company's opportunities, or none.")]
+        Guid? OpportunityId,
     [property: Description("What has to be done, up to 200 characters.")] string Title,
     [property: Description("Optional details, up to 2000 characters.")] string? Description,
     [property: Description("When it has to be done by.")] DateTimeOffset DueAt,

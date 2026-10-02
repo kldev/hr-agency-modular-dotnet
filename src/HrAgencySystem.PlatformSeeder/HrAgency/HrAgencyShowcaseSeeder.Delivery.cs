@@ -96,7 +96,10 @@ public sealed partial class HrAgencyShowcaseSeeder
         // The workspace's named clients go to the front of the list, so the staffed projects below
         // land on them and the salesperson's screen shows people on a delivery.
         var workspace = new SalesWorkspaceScenario(bus, session, sales);
-        var workspaceCompanies = await workspace.CreateCompanies(organization.OrganizationId, userIds[0]);
+        var workspaceCompanies = await workspace.CreateCompanies(
+            organization.OrganizationId,
+            userIds[0]
+        );
         companyIds = [.. workspaceCompanies, .. companyIds];
 
         var legalEntities = await ExistingLegalEntities(organization.OrganizationId);

@@ -20,7 +20,8 @@ namespace HrAgencySystem.Forms.Application.Responses.Start;
 /// </summary>
 public static class StartFormResponseHandler
 {
-    public const string NotOpenMessage = "This form is not open for responses. It has to be published and not archived.";
+    public const string NotOpenMessage =
+        "This form is not open for responses. It has to be published and not archived.";
 
     public const string WrongSubjectMessage = "This form is not filled in for that kind of record.";
 
@@ -53,12 +54,15 @@ public static class StartFormResponseHandler
         // agency's worker, since the subject reference itself names no organization.
         var snapshot = await service.GetSubjectAsync(organizationId, subject, ct);
 
-        var responseId = form.Cardinality == ResponseCardinality.OnePerSubject
-            ? FormsStreamId.ForSingleResponse(command.OrganizationId, form.Id, subject)
-            : Guid.CreateVersion7();
+        var responseId =
+            form.Cardinality == ResponseCardinality.OnePerSubject
+                ? FormsStreamId.ForSingleResponse(command.OrganizationId, form.Id, subject)
+                : Guid.CreateVersion7();
 
-        if (form.Cardinality == ResponseCardinality.OnePerSubject
-            && await ExistingStart(session, responseId, ct) is { } existing)
+        if (
+            form.Cardinality == ResponseCardinality.OnePerSubject
+            && await ExistingStart(session, responseId, ct) is { } existing
+        )
             return existing;
 
         var version =

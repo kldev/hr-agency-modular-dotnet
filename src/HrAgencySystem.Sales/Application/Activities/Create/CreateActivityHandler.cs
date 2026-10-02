@@ -74,7 +74,13 @@ public static class CreateActivityHandler
         session.Events.StartStream<SalesActivity>(activityId.Value, @event);
         session.Events.Append(
             opportunity.OpportunityId,
-            new OpportunityActivityLogged(opportunity.OpportunityId, organizationId, activityId.Value, type, at)
+            new OpportunityActivityLogged(
+                opportunity.OpportunityId,
+                organizationId,
+                activityId.Value,
+                type,
+                at
+            )
         );
 
         return @event;

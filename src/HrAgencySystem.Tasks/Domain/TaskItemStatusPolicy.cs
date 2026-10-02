@@ -12,7 +12,8 @@ public static class TaskItemStatusPolicy
 
     public const string NotDoneMessage = "Only a done task can be reopened.";
 
-    public const string DoneCannotChangeMessage = "A done task cannot be changed - reopen it first.";
+    public const string DoneCannotChangeMessage =
+        "A done task cannot be changed - reopen it first.";
 
     public static void EnsureCanComplete(TaskItem task)
     {

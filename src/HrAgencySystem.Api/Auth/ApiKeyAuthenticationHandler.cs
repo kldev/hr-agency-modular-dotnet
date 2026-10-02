@@ -51,10 +51,7 @@ public sealed class ApiKeyAuthenticationHandler(
             return AuthenticateResult.Fail("This service API key has been revoked.");
 
         var identity = new ClaimsIdentity(
-            [
-                new Claim(KeyIdClaim, key.Id.ToString()),
-                new Claim(ClaimTypes.Name, key.Name),
-            ],
+            [new Claim(KeyIdClaim, key.Id.ToString()), new Claim(ClaimTypes.Name, key.Name)],
             SchemeName
         );
 

@@ -25,7 +25,9 @@ public class SeedStartupAccountTests : BaseTest
     {
         await Seeder(email: OwnerEmail, password: null).SeedAsync(CancellationToken.None);
 
-        _session.Events.DidNotReceive().StartStream<PlatformOwner>(Arg.Any<Guid>(), Arg.Any<object>());
+        _session
+            .Events.DidNotReceive()
+            .StartStream<PlatformOwner>(Arg.Any<Guid>(), Arg.Any<object>());
         await _session.DidNotReceiveWithAnyArgs().SaveChangesAsync();
     }
 
@@ -36,7 +38,9 @@ public class SeedStartupAccountTests : BaseTest
 
         await Seeder(OwnerEmail, OwnerPassword).SeedAsync(CancellationToken.None);
 
-        _session.Events.DidNotReceive().StartStream<PlatformOwner>(Arg.Any<Guid>(), Arg.Any<object>());
+        _session
+            .Events.DidNotReceive()
+            .StartStream<PlatformOwner>(Arg.Any<Guid>(), Arg.Any<object>());
         await _session.DidNotReceiveWithAnyArgs().SaveChangesAsync();
     }
 

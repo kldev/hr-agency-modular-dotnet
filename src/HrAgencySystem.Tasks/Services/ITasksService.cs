@@ -15,9 +15,17 @@ public interface ITasksService
     /// <summary>A 404 for somebody else's task - a 403 would confirm the id exists elsewhere.</summary>
     void ValidateAggregateUpdate(TaskItem? task, Guid commandOrganizationId, Guid taskId);
 
-    Task<UserSnapshot> GetUserAsync(Guid userId, OrganizationId organizationId, CancellationToken ct);
+    Task<UserSnapshot> GetUserAsync(
+        Guid userId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    );
 
-    Task<CompanySnapshot> GetCompanyAsync(Guid companyId, OrganizationId organizationId, CancellationToken ct);
+    Task<CompanySnapshot> GetCompanyAsync(
+        Guid companyId,
+        OrganizationId organizationId,
+        CancellationToken ct
+    );
 
     /// <summary>The deal, checked to be the same company's as the task.</summary>
     Task<TaskOpportunity> GetOpportunityAsync(

@@ -94,5 +94,9 @@ public sealed record FormDefinitionProjection(
         };
 
     private FormDefinitionProjection Counted(IReadOnlyList<FormPage> pages) =>
-        this with { PageCount = pages.Count, FieldCount = pages.AllFields.Count() };
+        this with
+        {
+            PageCount = pages.Count,
+            FieldCount = pages.AllFields.Count(),
+        };
 }

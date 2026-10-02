@@ -38,7 +38,10 @@ internal static class MapUpdateDetails
 
     internal sealed record UpdateFormDetailsRequest(string Name, string? Description, FormKind Kind)
     {
-        public UpdateFormDetails ToCommand(Guid formId, OrganizationId organizationId, Guid modifiedBy) =>
-            new(formId, organizationId.Value, Name, Description, Kind, modifiedBy);
+        public UpdateFormDetails ToCommand(
+            Guid formId,
+            OrganizationId organizationId,
+            Guid modifiedBy
+        ) => new(formId, organizationId.Value, Name, Description, Kind, modifiedBy);
     }
 }

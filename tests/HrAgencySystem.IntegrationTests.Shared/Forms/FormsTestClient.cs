@@ -35,22 +35,34 @@ internal sealed class FormsTestClient(HttpClient client, ITestOutputHelper outpu
     {
         client.WithOrganizationId(organizationId);
 
-        var fields = await (await client.GetAsync("/api/system-fields")).ReadWithJson<List<SystemField>>(output);
+        var fields = await (await client.GetAsync("/api/system-fields")).ReadWithJson<
+            List<SystemField>
+        >(output);
 
         return fields!;
     }
 
-    public async Task<Guid> CreateAsync(Guid organizationId, FormsMaps.MapCreate.CreateFormRequest? request = null)
+    public async Task<Guid> CreateAsync(
+        Guid organizationId,
+        FormsMaps.MapCreate.CreateFormRequest? request = null
+    )
     {
         client.WithOrganizationId(organizationId);
 
-        var response = await client.PostAsJsonAsync("/api/forms", request ?? FormsTestData.CreateRequest());
+        var response = await client.PostAsJsonAsync(
+            "/api/forms",
+            request ?? FormsTestData.CreateRequest()
+        );
         response.EnsureSuccessStatusCode();
 
         return (await response.ReadWithJson<FormDefinitionCreated>(output))!.FormId;
     }
 
-    public async Task<HttpResponseMessage> SaveDraftRawAsync(Guid organizationId, Guid formId, params FormPage[] pages)
+    public async Task<HttpResponseMessage> SaveDraftRawAsync(
+        Guid organizationId,
+        Guid formId,
+        params FormPage[] pages
+    )
     {
         client.WithOrganizationId(organizationId);
 
@@ -93,7 +105,9 @@ internal sealed class FormsTestClient(HttpClient client, ITestOutputHelper outpu
 
         var response = await client.GetAsync($"/api/forms/{formId}");
 
-        return response.IsSuccessStatusCode ? await response.ReadWithJson<FormDefinitionView>(output) : null;
+        return response.IsSuccessStatusCode
+            ? await response.ReadWithJson<FormDefinitionView>(output)
+            : null;
     }
 
     public async Task<FormVersion?> VersionAsync(Guid organizationId, Guid formId, int version)
@@ -102,20 +116,34 @@ internal sealed class FormsTestClient(HttpClient client, ITestOutputHelper outpu
 
         var response = await client.GetAsync($"/api/forms/{formId}/versions/{version}");
 
-        return response.IsSuccessStatusCode ? await response.ReadWithJson<FormVersion>(output) : null;
+        return response.IsSuccessStatusCode
+            ? await response.ReadWithJson<FormVersion>(output)
+            : null;
     }
 
-    public async Task<HttpResponseMessage> StartRawAsync(Guid organizationId, Guid formId, Guid workerId)
+    public async Task<HttpResponseMessage> StartRawAsync(
+        Guid organizationId,
+        Guid formId,
+        Guid workerId
+    )
     {
         client.WithOrganizationId(organizationId);
 
         return await client.PostAsJsonAsync(
             "/api/form-responses",
-            new ResponseMaps.MapStart.StartFormResponseRequest(formId, SubjectKinds.Worker, workerId)
+            new ResponseMaps.MapStart.StartFormResponseRequest(
+                formId,
+                SubjectKinds.Worker,
+                workerId
+            )
         );
     }
 
-    public async Task<FormResponseStarted> StartAsync(Guid organizationId, Guid formId, Guid workerId)
+    public async Task<FormResponseStarted> StartAsync(
+        Guid organizationId,
+        Guid formId,
+        Guid workerId
+    )
     {
         var response = await StartRawAsync(organizationId, formId, workerId);
 
@@ -127,7 +155,11 @@ internal sealed class FormsTestClient(HttpClient client, ITestOutputHelper outpu
         return (await response.ReadWithJson<FormResponseStarted>(output))!;
     }
 
-    public async Task<HttpResponseMessage> SaveAnswersRawAsync(Guid organizationId, Guid responseId, params FieldAnswer[] answers)
+    public async Task<HttpResponseMessage> SaveAnswersRawAsync(
+        Guid organizationId,
+        Guid responseId,
+        params FieldAnswer[] answers
+    )
     {
         client.WithOrganizationId(organizationId);
 
@@ -137,7 +169,11 @@ internal sealed class FormsTestClient(HttpClient client, ITestOutputHelper outpu
         );
     }
 
-    public async Task<HttpResponseMessage> SubmitRawAsync(Guid organizationId, Guid responseId, params FieldAnswer[] answers)
+    public async Task<HttpResponseMessage> SubmitRawAsync(
+        Guid organizationId,
+        Guid responseId,
+        params FieldAnswer[] answers
+    )
     {
         client.WithOrganizationId(organizationId);
 
@@ -147,8 +183,11 @@ internal sealed class FormsTestClient(HttpClient client, ITestOutputHelper outpu
         );
     }
 
-    public async Task SubmitAsync(Guid organizationId, Guid responseId, params FieldAnswer[] answers) =>
-        (await SubmitRawAsync(organizationId, responseId, answers)).EnsureSuccessStatusCode();
+    public async Task SubmitAsync(
+        Guid organizationId,
+        Guid responseId,
+        params FieldAnswer[] answers
+    ) => (await SubmitRawAsync(organizationId, responseId, answers)).EnsureSuccessStatusCode();
 
     public async Task<HttpResponseMessage> CorrectRawAsync(
         Guid organizationId,
@@ -171,15 +210,21 @@ internal sealed class FormsTestClient(HttpClient client, ITestOutputHelper outpu
 
         var response = await client.GetAsync($"/api/form-responses/{responseId}");
 
-        return response.IsSuccessStatusCode ? await response.ReadWithJson<FormResponseView>(output) : null;
+        return response.IsSuccessStatusCode
+            ? await response.ReadWithJson<FormResponseView>(output)
+            : null;
     }
 
-    public async Task<List<FormResponseProjection>> ForWorkerAsync(Guid organizationId, Guid workerId)
+    public async Task<List<FormResponseProjection>> ForWorkerAsync(
+        Guid organizationId,
+        Guid workerId
+    )
     {
         client.WithOrganizationId(organizationId);
 
-        var list = await (await client.GetAsync($"/api/subjects/worker/{workerId}/form-responses"))
-            .ReadWithJson<List<FormResponseProjection>>(output);
+        var list = await (
+            await client.GetAsync($"/api/subjects/worker/{workerId}/form-responses")
+        ).ReadWithJson<List<FormResponseProjection>>(output);
 
         return list!;
     }

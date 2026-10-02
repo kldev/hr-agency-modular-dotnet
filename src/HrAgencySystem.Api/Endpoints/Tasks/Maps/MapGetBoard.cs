@@ -28,7 +28,8 @@ internal static class MapGetBoard
         AppUserAuthenticated user,
         IClock clock,
         [Description("Day, Week or Month.")] TaskRangeKind range = TaskRangeKind.Week,
-        [Description("IANA time zone the range is counted in, e.g. Europe/Warsaw.")] string? timeZone = null,
+        [Description("IANA time zone the range is counted in, e.g. Europe/Warsaw.")]
+            string? timeZone = null,
         [Description("Only the tasks of this company.")] Guid? companyId = null,
         CancellationToken ct = default
     )

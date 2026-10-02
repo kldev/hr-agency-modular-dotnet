@@ -20,9 +20,15 @@ public static class SetupHealthChecks
         {
             services
                 .AddHealthChecks()
-                .AddNpgSql(name: "postgres", tags: HealthTags.ReadyOnly, timeout: TimeSpan.FromSeconds(5))
+                .AddNpgSql(
+                    name: "postgres",
+                    tags: HealthTags.ReadyOnly,
+                    timeout: TimeSpan.FromSeconds(5)
+                )
                 .AddRabbitMq(
-                    RabbitMqConfig.FromSection(configuration.GetSection(RabbitMqConfig.SectionName)),
+                    RabbitMqConfig.FromSection(
+                        configuration.GetSection(RabbitMqConfig.SectionName)
+                    ),
                     HealthTags.ReadyOnly
                 )
                 .AddObjectStorage(FeedBuckets.Jobs, HealthTags.ReadyOnly)

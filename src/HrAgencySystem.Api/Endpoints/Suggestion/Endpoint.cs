@@ -1,4 +1,5 @@
 using HrAgencySystem.Api.Infrastructure.OpenApi;
+
 namespace HrAgencySystem.Api.Endpoints.Suggestion;
 
 internal static class Endpoint

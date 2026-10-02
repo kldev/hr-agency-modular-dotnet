@@ -1,5 +1,5 @@
-using HrAgencySystem.Api.Infrastructure.OpenApi;
 using HrAgencySystem.Api.Endpoints.Auth.Maps;
+using HrAgencySystem.Api.Infrastructure.OpenApi;
 
 namespace HrAgencySystem.Api.Endpoints.Auth;
 

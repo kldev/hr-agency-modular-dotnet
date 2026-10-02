@@ -24,5 +24,8 @@ internal static class MapList
         IFormsQueryRepository repository,
         [FromQuery] bool includeArchived = false,
         CancellationToken ct = default
-    ) => TypedResults.Ok(await repository.GetSystemFields(user.GetOrganization, includeArchived, ct));
+    ) =>
+        TypedResults.Ok(
+            await repository.GetSystemFields(user.GetOrganization, includeArchived, ct)
+        );
 }

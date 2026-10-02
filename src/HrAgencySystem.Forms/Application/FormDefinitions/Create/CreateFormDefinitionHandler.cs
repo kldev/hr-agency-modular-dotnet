@@ -11,7 +11,8 @@ namespace HrAgencySystem.Forms.Application.FormDefinitions.Create;
 
 public static class CreateFormDefinitionHandler
 {
-    public const string CodeTakenMessage = "Another form in this organization already uses this code.";
+    public const string CodeTakenMessage =
+        "Another form in this organization already uses this code.";
 
     public const string DescriptionTooLongMessage = "A description cannot exceed 2000 characters.";
 
@@ -36,7 +37,9 @@ public static class CreateFormDefinitionHandler
         if (nameError is not null)
             errors.Add(nameError);
 
-        var description = string.IsNullOrWhiteSpace(command.Description) ? null : command.Description.Trim();
+        var description = string.IsNullOrWhiteSpace(command.Description)
+            ? null
+            : command.Description.Trim();
         if (description is { Length: > 2000 })
             errors.Add(DescriptionTooLongMessage);
 

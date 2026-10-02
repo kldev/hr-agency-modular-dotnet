@@ -27,7 +27,8 @@ public sealed class ApiHealthProbe(IHttpClientFactory clients, IOptions<Internal
 
             return response.IsSuccessStatusCode ? Up : $"DOWN ({(int)response.StatusCode})";
         }
-        catch (Exception exception) when (exception is HttpRequestException or TaskCanceledException)
+        catch (Exception exception)
+            when (exception is HttpRequestException or TaskCanceledException)
         {
             return "DOWN";
         }

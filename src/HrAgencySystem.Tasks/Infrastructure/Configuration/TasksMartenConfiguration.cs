@@ -28,11 +28,23 @@ internal static class TasksMartenConfiguration
                 .Schema.For<TaskItemProjection>()
                 .DatabaseSchemaName(SchemaName)
                 .Index(
-                    x => new { x.OrganizationId, x.AssigneeId, x.Status, x.DueAt },
+                    x => new
+                    {
+                        x.OrganizationId,
+                        x.AssigneeId,
+                        x.Status,
+                        x.DueAt,
+                    },
                     index => index.Name = "mt_doc_taskitem_idx_org_assignee_due"
                 )
                 .Index(
-                    x => new { x.OrganizationId, x.AssigneeId, x.Status, x.CompletedAt },
+                    x => new
+                    {
+                        x.OrganizationId,
+                        x.AssigneeId,
+                        x.Status,
+                        x.CompletedAt,
+                    },
                     index => index.Name = "mt_doc_taskitem_idx_org_assignee_done"
                 )
                 .Index(

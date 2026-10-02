@@ -22,7 +22,12 @@ public static class ArchiveSystemFieldHandler
         CancellationToken ct
     )
     {
-        service.ValidateAggregateUpdate(aggregate, command.OrganizationId, "System field", command.SystemFieldId);
+        service.ValidateAggregateUpdate(
+            aggregate,
+            command.OrganizationId,
+            "System field",
+            command.SystemFieldId
+        );
 
         var field =
             aggregate.FieldById(command.SystemFieldId)
@@ -33,7 +38,12 @@ public static class ArchiveSystemFieldHandler
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 
-        var @event = new SystemFieldArchived(command.OrganizationId, field.SystemFieldId, user, clock.UtcNow);
+        var @event = new SystemFieldArchived(
+            command.OrganizationId,
+            field.SystemFieldId,
+            user,
+            clock.UtcNow
+        );
 
         return (@event, [@event]);
     }

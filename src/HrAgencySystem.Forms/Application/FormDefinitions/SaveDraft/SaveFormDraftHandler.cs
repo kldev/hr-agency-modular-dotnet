@@ -37,7 +37,13 @@ public static class SaveFormDraftHandler
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 
-        var @event = new FormDraftSaved(command.OrganizationId, command.FormId, pages, user, clock.UtcNow);
+        var @event = new FormDraftSaved(
+            command.OrganizationId,
+            command.FormId,
+            pages,
+            user,
+            clock.UtcNow
+        );
 
         return (@event, [@event]);
     }

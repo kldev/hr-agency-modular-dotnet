@@ -12,8 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
     // This host reads and writes through the API's internal routes only - no database, no bus.
     builder.Services.AddJobBoardClient(builder.Configuration);
     builder.Services.AddRazorPages();
-    builder.Services.AddHealthChecks()
-        .AddCheck<ApiHealthProbe>("api", tags: HealthTags.ReadyOnly);
+    builder.Services.AddHealthChecks().AddCheck<ApiHealthProbe>("api", tags: HealthTags.ReadyOnly);
 }
 
 var app = builder.Build();

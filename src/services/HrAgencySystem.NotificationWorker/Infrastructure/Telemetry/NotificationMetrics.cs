@@ -40,5 +40,6 @@ public sealed class NotificationMetrics
     public void RecordDuration(string template, TimeSpan elapsed) =>
         _duration.Record(elapsed.TotalSeconds, Template(template));
 
-    private static KeyValuePair<string, object?> Template(string template) => new("template", template);
+    private static KeyValuePair<string, object?> Template(string template) =>
+        new("template", template);
 }

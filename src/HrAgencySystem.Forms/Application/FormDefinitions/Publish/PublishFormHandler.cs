@@ -59,7 +59,14 @@ public static class PublishFormHandler
         var version = aggregate.PublishedVersion + 1;
         var now = clock.UtcNow;
 
-        var @event = new FormPublished(command.OrganizationId, command.FormId, version, pages, user, now);
+        var @event = new FormPublished(
+            command.OrganizationId,
+            command.FormId,
+            version,
+            pages,
+            user,
+            now
+        );
 
         repository.AddVersion(
             new FormVersion(

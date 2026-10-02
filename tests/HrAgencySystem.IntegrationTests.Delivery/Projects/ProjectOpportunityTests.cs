@@ -29,7 +29,11 @@ public class ProjectOpportunityTests(IntegrationEnvironment env, ITestOutputHelp
     public async Task A_project_created_from_a_deal_names_it()
     {
         var companyId = await ProjectClient.CreateCompanyAsync(_organizationId);
-        var deal = await OpportunityTestClient.Create(_organizationId, companyId, title: "Warehouse Workers");
+        var deal = await OpportunityTestClient.Create(
+            _organizationId,
+            companyId,
+            title: "Warehouse Workers"
+        );
 
         var response = await PostAsync(companyId, deal.OpportunityId);
         response.EnsureSuccessStatusCode();
@@ -82,19 +86,28 @@ public class ProjectOpportunityTests(IntegrationEnvironment env, ITestOutputHelp
     {
         var companyId = await ProjectClient.CreateCompanyAsync(_organizationId);
         var project = await ProjectClient.CreateAsync(_organizationId, companyId);
-        var deal = await OpportunityTestClient.Create(_organizationId, companyId, title: "Maintenance Team");
+        var deal = await OpportunityTestClient.Create(
+            _organizationId,
+            companyId,
+            title: "Maintenance Team"
+        );
 
         Client.WithOrganizationId(_organizationId);
         var linked = await Client.PutAsJsonAsync(
             $"/api/projects/{project.ProjectId}",
-            ProjectTestData.UpdateRequest() with { SalesOpportunityId = deal.OpportunityId }
+            ProjectTestData.UpdateRequest() with
+            {
+                SalesOpportunityId = deal.OpportunityId,
+            }
         );
         linked.EnsureSuccessStatusCode();
 
         await Eventually.AssertAsync(async () =>
             Assert.Equal(
                 "Maintenance Team",
-                (await ProjectClient.GetAsync(_organizationId, project.ProjectId))?.Opportunity?.Title
+                (await ProjectClient.GetAsync(_organizationId, project.ProjectId))
+                    ?.Opportunity
+                    ?.Title
             )
         );
 
@@ -106,7 +119,9 @@ public class ProjectOpportunityTests(IntegrationEnvironment env, ITestOutputHelp
         unlinked.EnsureSuccessStatusCode();
 
         await Eventually.AssertAsync(async () =>
-            Assert.Null((await ProjectClient.GetAsync(_organizationId, project.ProjectId))?.Opportunity)
+            Assert.Null(
+                (await ProjectClient.GetAsync(_organizationId, project.ProjectId))?.Opportunity
+            )
         );
     }
 

@@ -36,15 +36,22 @@ internal static class MapCreate
         );
 
     internal sealed record CreateFormRequest(
-        [property: Description("Stable code, unique in the organization, e.g. gdpr-consent. Never changes.")]
+        [property: Description(
+            "Stable code, unique in the organization, e.g. gdpr-consent. Never changes."
+        )]
             string Code,
         [property: Description("What people read.")] string Name,
         string? Description,
-        [property: Description("Document or Survey - a label and a default, not a different mechanism.")]
+        [property: Description(
+            "Document or Survey - a label and a default, not a different mechanism."
+        )]
             FormKind Kind,
-        [property: Description("One response per person or many. Left out: one for a document, many for a survey. Never changes.")]
+        [property: Description(
+            "One response per person or many. Left out: one for a document, many for a survey. Never changes."
+        )]
             ResponseCardinality? Cardinality,
-        [property: Description("Whose responses these are. Only 'worker' today.")] string? SubjectKind
+        [property: Description("Whose responses these are. Only 'worker' today.")]
+            string? SubjectKind
     )
     {
         public CreateFormDefinition ToCommand(OrganizationId organizationId, Guid createdBy) =>

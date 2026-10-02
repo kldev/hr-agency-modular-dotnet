@@ -36,51 +36,201 @@ namespace HrAgencySystem.PlatformSeeder.Scenario;
 /// given to the two accounts somebody logs in as: <c>bob.sale</c> and <c>j.smith</c> (end to end).
 /// </para>
 /// </summary>
-internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession session, ISalesService sales)
+internal sealed class SalesWorkspaceScenario(
+    IMessageBus bus,
+    IDocumentSession session,
+    ISalesService sales
+)
 {
     public const string AcmeName = "ACME Sp. z o.o.";
 
-    private sealed record CompanySpec(string Name, string TaxId, string City, string Street, string Building, string PostalCode, Industry Industry, ContactPerson Contact);
+    private sealed record CompanySpec(
+        string Name,
+        string TaxId,
+        string City,
+        string Street,
+        string Building,
+        string PostalCode,
+        Industry Industry,
+        ContactPerson Contact
+    );
 
     private static readonly CompanySpec[] Companies =
     [
-        new(AcmeName, "5260001001", "Warszawa", "Aleje Jerozolimskie", "96", "00-807", Industry.Logistics,
-            new ContactPerson("anna.kowalska@acme.example.com", "Anna", "Kowalska", "HR Manager", "+48 600 123 456")),
-        new("Auto Parts Polska", "6340002002", "Katowice", "ul. Chorzowska", "50", "40-121", Industry.Manufacturing,
-            new ContactPerson("p.wisniewski@autoparts.example.com", "Piotr", "Wiśniewski", "Plant Director", "+48 601 222 333")),
-        new("Moto Service Group", "7790003003", "Poznań", "ul. Głogowska", "248", "60-104", Industry.Manufacturing,
-            new ContactPerson("m.lewandowska@motoservice.example.com", "Magdalena", "Lewandowska", "Head of Purchasing", "+48 602 444 555")),
-        new("Global Manufacturing", "8990004004", "Wrocław", "ul. Legnicka", "65", "54-206", Industry.Manufacturing,
-            new ContactPerson("t.zielinski@globalmfg.example.com", "Tomasz", "Zieliński", "Operations Manager", "+48 603 666 777")),
+        new(
+            AcmeName,
+            "5260001001",
+            "Warszawa",
+            "Aleje Jerozolimskie",
+            "96",
+            "00-807",
+            Industry.Logistics,
+            new ContactPerson(
+                "anna.kowalska@acme.example.com",
+                "Anna",
+                "Kowalska",
+                "HR Manager",
+                "+48 600 123 456"
+            )
+        ),
+        new(
+            "Auto Parts Polska",
+            "6340002002",
+            "Katowice",
+            "ul. Chorzowska",
+            "50",
+            "40-121",
+            Industry.Manufacturing,
+            new ContactPerson(
+                "p.wisniewski@autoparts.example.com",
+                "Piotr",
+                "Wiśniewski",
+                "Plant Director",
+                "+48 601 222 333"
+            )
+        ),
+        new(
+            "Moto Service Group",
+            "7790003003",
+            "Poznań",
+            "ul. Głogowska",
+            "248",
+            "60-104",
+            Industry.Manufacturing,
+            new ContactPerson(
+                "m.lewandowska@motoservice.example.com",
+                "Magdalena",
+                "Lewandowska",
+                "Head of Purchasing",
+                "+48 602 444 555"
+            )
+        ),
+        new(
+            "Global Manufacturing",
+            "8990004004",
+            "Wrocław",
+            "ul. Legnicka",
+            "65",
+            "54-206",
+            Industry.Manufacturing,
+            new ContactPerson(
+                "t.zielinski@globalmfg.example.com",
+                "Tomasz",
+                "Zieliński",
+                "Operations Manager",
+                "+48 603 666 777"
+            )
+        ),
     ];
 
-    private sealed record DealSpec(int Company, string Title, string Description, decimal Value, OpportunityStage Stage, int CloseInDays);
+    private sealed record DealSpec(
+        int Company,
+        string Title,
+        string Description,
+        decimal Value,
+        OpportunityStage Stage,
+        int CloseInDays
+    );
 
     private static readonly DealSpec[] Deals =
     [
-        new(0, "Recruitment Q4", "Twelve warehouse operatives for the Q4 peak.", 96_000, OpportunityStage.Proposal, 21),
-        new(0, "Warehouse Workers", "Permanent team for the new Błonie warehouse.", 72_000, OpportunityStage.Won, -10),
-        new(1, "Production Workers", "Line workers for the second shift.", 88_000, OpportunityStage.Qualified, 35),
-        new(2, "Maintenance Team", "Mechanics and electricians for the service halls.", 54_000, OpportunityStage.Won, -30),
-        new(3, "Production Workers Q1", "Seasonal staff for the January ramp-up.", 99_000, OpportunityStage.Contacted, 60),
+        new(
+            0,
+            "Recruitment Q4",
+            "Twelve warehouse operatives for the Q4 peak.",
+            96_000,
+            OpportunityStage.Proposal,
+            21
+        ),
+        new(
+            0,
+            "Warehouse Workers",
+            "Permanent team for the new Błonie warehouse.",
+            72_000,
+            OpportunityStage.Won,
+            -10
+        ),
+        new(
+            1,
+            "Production Workers",
+            "Line workers for the second shift.",
+            88_000,
+            OpportunityStage.Qualified,
+            35
+        ),
+        new(
+            2,
+            "Maintenance Team",
+            "Mechanics and electricians for the service halls.",
+            54_000,
+            OpportunityStage.Won,
+            -30
+        ),
+        new(
+            3,
+            "Production Workers Q1",
+            "Seasonal staff for the January ramp-up.",
+            99_000,
+            OpportunityStage.Contacted,
+            60
+        ),
     ];
 
-    private sealed record ActivitySpec(int Deal, SalesActivityType Type, string Note, int DaysAgo, int Hour);
+    private sealed record ActivitySpec(
+        int Deal,
+        SalesActivityType Type,
+        string Note,
+        int DaysAgo,
+        int Hour
+    );
 
     private static readonly ActivitySpec[] Activities =
     [
-        new(0, SalesActivityType.Call, "Discussed candidate requirements with Anna Kowalska.", 0, 10),
+        new(
+            0,
+            SalesActivityType.Call,
+            "Discussed candidate requirements with Anna Kowalska.",
+            0,
+            10
+        ),
         new(0, SalesActivityType.Email, "Sent the recruitment proposal and the price list.", 1, 15),
-        new(0, SalesActivityType.Meeting, "On-site meeting with the HR team, headcount confirmed.", 3, 11),
+        new(
+            0,
+            SalesActivityType.Meeting,
+            "On-site meeting with the HR team, headcount confirmed.",
+            3,
+            11
+        ),
         new(1, SalesActivityType.Note, "Contract signed, first ten people start on Monday.", 12, 9),
-        new(1, SalesActivityType.Presentation, "Presented the onboarding plan for the warehouse.", 18, 13),
-        new(2, SalesActivityType.Call, "Plant director interested, asked for rates per shift.", 2, 14),
+        new(
+            1,
+            SalesActivityType.Presentation,
+            "Presented the onboarding plan for the warehouse.",
+            18,
+            13
+        ),
+        new(
+            2,
+            SalesActivityType.Call,
+            "Plant director interested, asked for rates per shift.",
+            2,
+            14
+        ),
         new(2, SalesActivityType.Meeting, "Visited the production line in Katowice.", 6, 10),
         new(3, SalesActivityType.Email, "Confirmed the start date of the maintenance team.", 25, 8),
         new(4, SalesActivityType.Call, "First contact, they will send the headcount plan.", 4, 16),
     ];
 
-    private sealed record TaskSpec(int Company, int? Deal, string Title, int DayOffset, int Hour, int Minute, TaskPriority Priority, bool Done);
+    private sealed record TaskSpec(
+        int Company,
+        int? Deal,
+        string Title,
+        int DayOffset,
+        int Hour,
+        int Minute,
+        TaskPriority Priority,
+        bool Done
+    );
 
     private static readonly TaskSpec[] TaskSpecs =
     [
@@ -90,12 +240,28 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
         new(1, 2, "Prepare candidate report", 1, 9, 0, TaskPriority.Medium, false),
         new(2, 3, "Follow up contract", 2, 11, 0, TaskPriority.Low, false),
         new(3, 4, "Schedule client meeting", 4, 12, 0, TaskPriority.Medium, false),
-        new(1, null, "Check the plant's safety training requirements", 12, 10, 0, TaskPriority.Low, false),
+        new(
+            1,
+            null,
+            "Check the plant's safety training requirements",
+            12,
+            10,
+            0,
+            TaskPriority.Low,
+            false
+        ),
         new(0, 1, "Sent proposal to ACME", 0, 9, 0, TaskPriority.Medium, true),
         new(2, 3, "Called purchasing department", -1, 16, 30, TaskPriority.Low, true),
     ];
 
-    private sealed record ProjectSpec(int Deal, string Name, string City, string Street, string PostalCode, int StartOffsetDays);
+    private sealed record ProjectSpec(
+        int Deal,
+        string Name,
+        string City,
+        string Street,
+        string PostalCode,
+        int StartOffsetDays
+    );
 
     private static readonly ProjectSpec[] Projects =
     [
@@ -110,7 +276,11 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
     /// </summary>
     internal async Task<IReadOnlyList<Guid>> CreateCompanies(Guid organizationId, Guid createdBy)
     {
-        if (await session.Query<CompanyProjection>().AnyAsync(c => c.OrganizationId == organizationId && c.Name == AcmeName))
+        if (
+            await session
+                .Query<CompanyProjection>()
+                .AnyAsync(c => c.OrganizationId == organizationId && c.Name == AcmeName)
+        )
             return [];
 
         var ids = new List<Guid>();
@@ -118,7 +288,17 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
         foreach (var spec in Companies)
         {
             var created = await bus.InvokeAsync<CompanyCreated>(
-                new CreateCompany(organizationId, spec.Name, "PL", spec.TaxId, "KRS" + spec.TaxId[..7], createdBy, spec.Industry, "", spec.Contact)
+                new CreateCompany(
+                    organizationId,
+                    spec.Name,
+                    "PL",
+                    spec.TaxId,
+                    "KRS" + spec.TaxId[..7],
+                    createdBy,
+                    spec.Industry,
+                    "",
+                    spec.Contact
+                )
             );
 
             await bus.InvokeAsync<CompanyProfileCompleted>(
@@ -166,17 +346,28 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
 
         var deals = new List<Guid>();
         foreach (var deal in Deals)
-            deals.Add(await CreateDeal(organizationId, companyIds[deal.Company], deal, owner.Value));
+            deals.Add(
+                await CreateDeal(organizationId, companyIds[deal.Company], deal, owner.Value)
+            );
 
         await waitForProjections();
 
         var now = DateTimeOffset.UtcNow;
         foreach (var activity in Activities)
         {
-            var at = new DateTimeOffset(now.UtcDateTime.Date.AddDays(-activity.DaysAgo).AddHours(activity.Hour - 2), TimeSpan.Zero);
+            var at = new DateTimeOffset(
+                now.UtcDateTime.Date.AddDays(-activity.DaysAgo).AddHours(activity.Hour - 2),
+                TimeSpan.Zero
+            );
 
             await CreateActivityHandler.Handle(
-                new CreateActivity(organizationId, deals[activity.Deal], activity.Type, activity.Note, owner.Value),
+                new CreateActivity(
+                    organizationId,
+                    deals[activity.Deal],
+                    activity.Type,
+                    activity.Note,
+                    owner.Value
+                ),
                 sales,
                 session,
                 new FixedClock(at > now ? now : at),
@@ -187,7 +378,14 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
         await session.SaveChangesAsync();
 
         foreach (var project in Projects)
-            await CreateProject(organizationId, companyIds[Deals[project.Deal].Company], deals[project.Deal], legalEntityId, project, owner.Value);
+            await CreateProject(
+                organizationId,
+                companyIds[Deals[project.Deal].Company],
+                deals[project.Deal],
+                legalEntityId,
+                project,
+                owner.Value
+            );
 
         var count = 0;
         foreach (var person in new[] { salesperson, demo }.OfType<Guid>().Distinct())
@@ -196,7 +394,12 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
         return count;
     }
 
-    private async Task<Guid> CreateDeal(Guid organizationId, Guid companyId, DealSpec deal, Guid owner)
+    private async Task<Guid> CreateDeal(
+        Guid organizationId,
+        Guid companyId,
+        DealSpec deal,
+        Guid owner
+    )
     {
         var created = await bus.InvokeAsync<OpportunityCreated>(
             new CreateOpportunity(
@@ -215,13 +418,26 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
 
         if (deal.Stage != OpportunityStage.New)
             await bus.InvokeAsync<StageChanged>(
-                new ChangeOpportunityStage(created.OpportunityId, organizationId, deal.Stage, "", owner)
+                new ChangeOpportunityStage(
+                    created.OpportunityId,
+                    organizationId,
+                    deal.Stage,
+                    "",
+                    owner
+                )
             );
 
         return created.OpportunityId;
     }
 
-    private async Task CreateProject(Guid organizationId, Guid companyId, Guid dealId, Guid legalEntityId, ProjectSpec spec, Guid owner)
+    private async Task CreateProject(
+        Guid organizationId,
+        Guid companyId,
+        Guid dealId,
+        Guid legalEntityId,
+        ProjectSpec spec,
+        Guid owner
+    )
     {
         var startsOn = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(spec.StartOffsetDays));
 
@@ -248,14 +464,22 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
         );
     }
 
-    private async Task<int> CreateTasks(Guid organizationId, IReadOnlyList<Guid> companyIds, IReadOnlyList<Guid> deals, Guid person, DateTimeOffset now)
+    private async Task<int> CreateTasks(
+        Guid organizationId,
+        IReadOnlyList<Guid> companyIds,
+        IReadOnlyList<Guid> deals,
+        Guid person,
+        DateTimeOffset now
+    )
     {
         var warsaw = TimeZoneInfo.FindSystemTimeZoneById(TaskRange.DefaultTimeZone);
         var today = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(now, warsaw).DateTime);
 
         foreach (var spec in TaskSpecs)
         {
-            var local = today.AddDays(spec.DayOffset).ToDateTime(new TimeOnly(spec.Hour, spec.Minute));
+            var local = today
+                .AddDays(spec.DayOffset)
+                .ToDateTime(new TimeOnly(spec.Hour, spec.Minute));
             var dueAt = new DateTimeOffset(local, warsaw.GetUtcOffset(local));
 
             var created = await bus.InvokeAsync<TaskItemCreated>(
@@ -273,7 +497,9 @@ internal sealed class SalesWorkspaceScenario(IMessageBus bus, IDocumentSession s
             );
 
             if (spec.Done)
-                await bus.InvokeAsync<TaskItemCompleted>(new CompleteTaskItem(created.TaskId, organizationId, person));
+                await bus.InvokeAsync<TaskItemCompleted>(
+                    new CompleteTaskItem(created.TaskId, organizationId, person)
+                );
         }
 
         return TaskSpecs.Length;

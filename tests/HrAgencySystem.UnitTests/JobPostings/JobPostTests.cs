@@ -245,7 +245,6 @@ public sealed class JobPostTests
         Assert.Empty(post.Posts);
     }
 
-
     private static void ApplyUpdated(JobPost post, DateTimeOffset occurredAt, Guid modifierId)
     {
         post.Apply(

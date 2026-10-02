@@ -27,6 +27,9 @@ internal static class MapPublish
         CancellationToken ct
     ) =>
         TypedResults.Ok(
-            await bus.InvokeAsync<FormPublished>(new PublishForm(formId, user.OrganizationId, user.UserId), ct)
+            await bus.InvokeAsync<FormPublished>(
+                new PublishForm(formId, user.OrganizationId, user.UserId),
+                ct
+            )
         );
 }

@@ -33,7 +33,9 @@ public static class UpdateFormDetailsHandler
         if (nameError is not null)
             errors.Add(nameError);
 
-        var description = string.IsNullOrWhiteSpace(command.Description) ? null : command.Description.Trim();
+        var description = string.IsNullOrWhiteSpace(command.Description)
+            ? null
+            : command.Description.Trim();
         if (description is { Length: > 2000 })
             errors.Add(CreateFormDefinitionHandler.DescriptionTooLongMessage);
 

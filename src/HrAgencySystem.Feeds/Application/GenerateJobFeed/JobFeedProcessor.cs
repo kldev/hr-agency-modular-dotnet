@@ -32,7 +32,10 @@ internal sealed class JobFeedProcessor(
             try
             {
                 await ProcessTask(task, ct);
-                telemetry.RecordGeneration(FeedTelemetry.Completed, Stopwatch.GetElapsedTime(started));
+                telemetry.RecordGeneration(
+                    FeedTelemetry.Completed,
+                    Stopwatch.GetElapsedTime(started)
+                );
             }
             catch (Exception ex)
             {

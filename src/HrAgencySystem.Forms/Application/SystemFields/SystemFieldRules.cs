@@ -12,8 +12,10 @@ public static class SystemFieldRules
     public const string LabelRequiredMessage = "A system field needs a label.";
     public const string LabelTooLongMessage = "A label cannot exceed 300 characters.";
     public const string DescriptionTooLongMessage = "A description cannot exceed 2000 characters.";
-    public const string SourceTypeMismatchMessage = "This source gives a value of a different type than the field.";
-    public const string CodeNotSystemMessage = "A system field's code starts with 'employee.', e.g. employee.pesel.";
+    public const string SourceTypeMismatchMessage =
+        "This source gives a value of a different type than the field.";
+    public const string CodeNotSystemMessage =
+        "A system field's code starts with 'employee.', e.g. employee.pesel.";
     public const string CodeTakenMessage = "The catalogue already has a field with this code.";
     public const string UnknownFieldMessage = "There is no such system field in the catalogue.";
     public const string ArchivedMessage = "This system field is archived.";
@@ -45,5 +47,6 @@ public static class SystemFieldRules
         return errors;
     }
 
-    public static string? Blank(string? value) => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    public static string? Blank(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 }

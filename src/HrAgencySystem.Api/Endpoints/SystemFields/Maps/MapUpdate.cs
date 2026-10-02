@@ -46,7 +46,20 @@ internal static class MapUpdate
         SystemFieldSource Source
     )
     {
-        public UpdateSystemField ToCommand(Guid systemFieldId, OrganizationId organizationId, Guid modifiedBy) =>
-            new(organizationId.Value, systemFieldId, Label, Description, Rules, Options, Source, modifiedBy);
+        public UpdateSystemField ToCommand(
+            Guid systemFieldId,
+            OrganizationId organizationId,
+            Guid modifiedBy
+        ) =>
+            new(
+                organizationId.Value,
+                systemFieldId,
+                Label,
+                Description,
+                Rules,
+                Options,
+                Source,
+                modifiedBy
+            );
     }
 }

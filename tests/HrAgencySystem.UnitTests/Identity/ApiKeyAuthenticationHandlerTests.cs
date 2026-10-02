@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using HrAgencySystem.Api.Auth;
 using HrAgencySystem.Identity.Application.ApiKeys.Issue;
 using HrAgencySystem.Identity.Application.ApiKeys.Revoke;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using NSubstitute;
-using System.Text.Encodings.Web;
 
 namespace HrAgencySystem.UnitTests.Identity;
 
@@ -39,7 +39,9 @@ public class ApiKeyAuthenticationHandlerTests : BaseTest
 
         Assert.False(result.Succeeded);
         Assert.False(result.None);
-        await _keys.DidNotReceive().FindByHashAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
+        await _keys
+            .DidNotReceive()
+            .FindByHashAsync(Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -100,10 +102,16 @@ public class ApiKeyAuthenticationHandlerTests : BaseTest
 
         Assert.Equal("public job board", issued.Name);
         Assert.StartsWith(ServiceApiKey.ValuePrefix, issued.Value);
-        _keys.Received(1).Issue(Arg.Is<ServiceApiKey>(k => k.KeyHash == SecureToken.Hash(issued.Value)));
+        _keys
+            .Received(1)
+            .Issue(Arg.Is<ServiceApiKey>(k => k.KeyHash == SecureToken.Hash(issued.Value)));
 
         var error = Assert.Throws<ValidationException>(() =>
-            IssueServiceApiKeyHandler.Handle(new IssueServiceApiKey(" ", Guid.NewGuid()), _keys, TestClock)
+            IssueServiceApiKeyHandler.Handle(
+                new IssueServiceApiKey(" ", Guid.NewGuid()),
+                _keys,
+                TestClock
+            )
         );
         Assert.Contains(ServiceApiKey.NameRequiredMessage, error.Message);
     }

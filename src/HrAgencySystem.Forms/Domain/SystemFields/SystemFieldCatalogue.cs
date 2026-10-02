@@ -39,19 +39,22 @@ public sealed class SystemFieldCatalogue : IOrganizationDomain
     public void Apply(SystemFieldUpdated @event) =>
         Replace(
             @event.SystemFieldId,
-            field => field with
-            {
-                Label = @event.Label,
-                Description = @event.Description,
-                Rules = @event.Rules,
-                Options = @event.Options,
-                Source = @event.Source,
-            }
+            field =>
+                field with
+                {
+                    Label = @event.Label,
+                    Description = @event.Description,
+                    Rules = @event.Rules,
+                    Options = @event.Options,
+                    Source = @event.Source,
+                }
         );
 
     public void Apply(SystemFieldArchived @event) =>
         Replace(@event.SystemFieldId, field => field with { IsArchived = true });
 
     private void Replace(Guid systemFieldId, Func<SystemField, SystemField> change) =>
-        _fields = [.. Fields.Select(field => field.SystemFieldId == systemFieldId ? change(field) : field)];
+        _fields = [
+            .. Fields.Select(field => field.SystemFieldId == systemFieldId ? change(field) : field),
+        ];
 }

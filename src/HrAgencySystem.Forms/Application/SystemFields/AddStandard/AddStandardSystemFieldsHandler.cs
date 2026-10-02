@@ -25,10 +25,13 @@ public static class AddStandardSystemFieldsHandler
         await service.ValidateOrganization(command.OrganizationId, ct);
 
         var streamId = FormsStreamId.ForCatalogue(command.OrganizationId);
-        var catalogue = await session.Events.AggregateStreamAsync<SystemFieldCatalogue>(streamId, token: ct);
+        var catalogue = await session.Events.AggregateStreamAsync<SystemFieldCatalogue>(
+            streamId,
+            token: ct
+        );
 
-        var missing = StandardSystemFields.All
-            .Where(definition => catalogue?.HasCode(definition.Code) != true)
+        var missing = StandardSystemFields
+            .All.Where(definition => catalogue?.HasCode(definition.Code) != true)
             .ToList();
 
         if (missing.Count == 0)
@@ -38,22 +41,25 @@ public static class AddStandardSystemFieldsHandler
         var now = clock.UtcNow;
 
         var events = missing
-            .Select(definition => (object)new SystemFieldDefined(
-                command.OrganizationId,
-                new SystemField(
-                    Guid.CreateVersion7(),
-                    definition.Code,
-                    definition.Type,
-                    definition.Label,
-                    definition.Description,
-                    definition.Rules,
-                    [],
-                    definition.Source,
-                    false
-                ),
-                createdBy,
-                now
-            ))
+            .Select(definition =>
+                (object)
+                    new SystemFieldDefined(
+                        command.OrganizationId,
+                        new SystemField(
+                            Guid.CreateVersion7(),
+                            definition.Code,
+                            definition.Type,
+                            definition.Label,
+                            definition.Description,
+                            definition.Rules,
+                            [],
+                            definition.Source,
+                            false
+                        ),
+                        createdBy,
+                        now
+                    )
+            )
             .ToArray();
 
         if (catalogue is null)

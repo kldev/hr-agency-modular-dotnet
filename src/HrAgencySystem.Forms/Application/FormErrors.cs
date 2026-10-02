@@ -19,7 +19,8 @@ internal static class FormErrors
                 .GroupBy(error => error.Target?.ToString() ?? "")
                 .ToDictionary(
                     group => group.Key,
-                    group => (IReadOnlyList<string>)[.. group.Select(error => error.Message).Distinct()]
+                    group =>
+                        (IReadOnlyList<string>)[.. group.Select(error => error.Message).Distinct()]
                 )
         );
 
@@ -29,7 +30,11 @@ internal static class FormErrors
         IReadOnlyDictionary<string, string> labels
     ) =>
         new(
-            [.. errors.Select(error => $"{labels.GetValueOrDefault(error.FieldCode, error.FieldCode)}: {error.Message}")],
+            [
+                .. errors.Select(error =>
+                    $"{labels.GetValueOrDefault(error.FieldCode, error.FieldCode)}: {error.Message}"
+                ),
+            ],
             errors
                 .GroupBy(error => error.FieldCode)
                 .ToDictionary(

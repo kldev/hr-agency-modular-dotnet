@@ -133,7 +133,10 @@ public sealed partial class HrAgencyShowcaseSeeder
             organization.OrganizationId
         );
 
-        await new InterviewsScenario(bus, session, logger).SeedAsync(organization.OrganizationId, 200);
+        await new InterviewsScenario(bus, session, logger).SeedAsync(
+            organization.OrganizationId,
+            200
+        );
 
         logger.LogInformation(
             "Agency seed completed: {Slug} ({OrganizationId})",

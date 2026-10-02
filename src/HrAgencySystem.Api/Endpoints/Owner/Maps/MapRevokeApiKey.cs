@@ -25,6 +25,9 @@ internal static class MapRevokeApiKey
         CancellationToken ct
     ) =>
         TypedResults.Ok(
-            await bus.InvokeAsync<ServiceApiKeyRevoked>(new RevokeServiceApiKey(keyId, owner.Id), ct)
+            await bus.InvokeAsync<ServiceApiKeyRevoked>(
+                new RevokeServiceApiKey(keyId, owner.Id),
+                ct
+            )
         );
 }

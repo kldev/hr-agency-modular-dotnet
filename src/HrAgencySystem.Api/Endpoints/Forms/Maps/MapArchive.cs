@@ -27,6 +27,9 @@ internal static class MapArchive
         CancellationToken ct
     ) =>
         TypedResults.Ok(
-            await bus.InvokeAsync<FormArchived>(new ArchiveForm(formId, user.OrganizationId, user.UserId), ct)
+            await bus.InvokeAsync<FormArchived>(
+                new ArchiveForm(formId, user.OrganizationId, user.UserId),
+                ct
+            )
         );
 }

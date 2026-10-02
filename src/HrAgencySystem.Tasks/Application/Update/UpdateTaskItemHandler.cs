@@ -27,7 +27,12 @@ public static class UpdateTaskItemHandler
         {
             null => null,
             { } id when id == task.Opportunity?.Id => task.Opportunity,
-            { } id => await service.GetOpportunityAsync(id, task.Company.Id, task.OrganizationId, ct),
+            { } id => await service.GetOpportunityAsync(
+                id,
+                task.Company.Id,
+                task.OrganizationId,
+                ct
+            ),
         };
 
         var modifiedBy = await service.GetUserAsync(command.ModifiedBy, task.OrganizationId, ct);

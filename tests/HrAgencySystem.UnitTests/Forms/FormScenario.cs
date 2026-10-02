@@ -28,7 +28,8 @@ internal static class FormScenario
 
     public static readonly DateTimeOffset Yesterday = new(2026, 9, 22, 10, 0, 0, TimeSpan.Zero);
 
-    public static UserSnapshot User { get; } = new(Guid.NewGuid(), "Anna", "Nowak", "anna.nowak@hr-agency.com");
+    public static UserSnapshot User { get; } =
+        new(Guid.NewGuid(), "Anna", "Nowak", "anna.nowak@hr-agency.com");
 
     public static SystemField Pesel { get; } =
         new(
@@ -44,7 +45,17 @@ internal static class FormScenario
         );
 
     public static SystemField Phone { get; } =
-        new(PhoneFieldId, "employee.phone", FieldType.Phone, "Phone", null, FieldRules.None, [], SystemFieldSource.WorkerPhone, false);
+        new(
+            PhoneFieldId,
+            "employee.phone",
+            FieldType.Phone,
+            "Phone",
+            null,
+            FieldRules.None,
+            [],
+            SystemFieldSource.WorkerPhone,
+            false
+        );
 
     public static IReadOnlyList<SystemField> Catalogue { get; } = [Pesel, Phone];
 
@@ -56,17 +67,64 @@ internal static class FormScenario
         IReadOnlyList<ChoiceOption>? options = null,
         Guid? id = null
     ) =>
-        new(id ?? Guid.NewGuid(), FieldSource.Form, null, code, type, code, null, null, null, rules ?? FieldRules.None, options ?? [], null, null);
+        new(
+            id ?? Guid.NewGuid(),
+            FieldSource.Form,
+            null,
+            code,
+            type,
+            code,
+            null,
+            null,
+            null,
+            rules ?? FieldRules.None,
+            options ?? [],
+            null,
+            null
+        );
 
     /// <summary>A system field as the builder sends it: an id and nothing else worth trusting.</summary>
-    public static FormField FromCatalogue(Guid systemFieldId, string? labelOverride = null, Guid? id = null) =>
-        new(id ?? Guid.NewGuid(), FieldSource.System, systemFieldId, "", FieldType.Text, "", labelOverride, null, null, FieldRules.None, [], null, null);
+    public static FormField FromCatalogue(
+        Guid systemFieldId,
+        string? labelOverride = null,
+        Guid? id = null
+    ) =>
+        new(
+            id ?? Guid.NewGuid(),
+            FieldSource.System,
+            systemFieldId,
+            "",
+            FieldType.Text,
+            "",
+            labelOverride,
+            null,
+            null,
+            FieldRules.None,
+            [],
+            null,
+            null
+        );
 
     /// <summary>A system field as a published version holds it: resolved, a copy of the catalogue.</summary>
     public static FormField OnForm(SystemField field) =>
-        new(Guid.NewGuid(), FieldSource.System, field.SystemFieldId, field.Code, field.Type, field.Label, null, field.Description, null, field.Rules, field.Options, null, null);
+        new(
+            Guid.NewGuid(),
+            FieldSource.System,
+            field.SystemFieldId,
+            field.Code,
+            field.Type,
+            field.Label,
+            null,
+            field.Description,
+            null,
+            field.Rules,
+            field.Options,
+            null,
+            null
+        );
 
-    public static FormPage Page(params FormField[] fields) => new(Guid.NewGuid(), "Page", null, fields);
+    public static FormPage Page(params FormField[] fields) =>
+        new(Guid.NewGuid(), "Page", null, fields);
 
     public static FormDefinition Form(
         ResponseCardinality cardinality = ResponseCardinality.OnePerSubject,
@@ -77,11 +135,23 @@ internal static class FormScenario
     {
         var form = FormDefinition.Empty();
 
-        form.Apply(new FormDefinitionCreated(
-            OrganizationId, FormId, "gdpr-consent", "GDPR consent", null, FormKind.Document, cardinality,
-            SubjectKinds.Worker, User, Yesterday));
+        form.Apply(
+            new FormDefinitionCreated(
+                OrganizationId,
+                FormId,
+                "gdpr-consent",
+                "GDPR consent",
+                null,
+                FormKind.Document,
+                cardinality,
+                SubjectKinds.Worker,
+                User,
+                Yesterday
+            )
+        );
 
-        var pages = draft ?? [Page(Own("gdpr.consent", FieldType.Boolean, new FieldRules(Required: true)))];
+        var pages =
+            draft ?? [Page(Own("gdpr.consent", FieldType.Boolean, new FieldRules(Required: true)))];
         form.Apply(new FormDraftSaved(OrganizationId, FormId, pages, User, Yesterday));
 
         for (var version = 1; version <= publishedVersions; version++)
@@ -94,19 +164,52 @@ internal static class FormScenario
     }
 
     public static FormVersion Version(IReadOnlyList<FormPage> pages, int version = 1) =>
-        new(FormsStreamId.ForVersion(FormId, version), OrganizationId, FormId, "gdpr-consent", "GDPR consent",
-            FormKind.Document, version, pages, User, Yesterday);
+        new(
+            FormsStreamId.ForVersion(FormId, version),
+            OrganizationId,
+            FormId,
+            "gdpr-consent",
+            "GDPR consent",
+            FormKind.Document,
+            version,
+            pages,
+            User,
+            Yesterday
+        );
 
-    public static FormResponse Response(IReadOnlyList<FieldAnswer>? answers = null, bool submitted = false)
+    public static FormResponse Response(
+        IReadOnlyList<FieldAnswer>? answers = null,
+        bool submitted = false
+    )
     {
         var response = FormResponse.Empty();
 
-        response.Apply(new FormResponseStarted(
-            OrganizationId, ResponseId, FormId, "gdpr-consent", "GDPR consent", 1, SubjectKinds.Worker, WorkerId,
-            answers ?? [], User, Yesterday));
+        response.Apply(
+            new FormResponseStarted(
+                OrganizationId,
+                ResponseId,
+                FormId,
+                "gdpr-consent",
+                "GDPR consent",
+                1,
+                SubjectKinds.Worker,
+                WorkerId,
+                answers ?? [],
+                User,
+                Yesterday
+            )
+        );
 
         if (submitted)
-            response.Apply(new FormResponseSubmitted(OrganizationId, ResponseId, answers ?? [], User, Yesterday));
+            response.Apply(
+                new FormResponseSubmitted(
+                    OrganizationId,
+                    ResponseId,
+                    answers ?? [],
+                    User,
+                    Yesterday
+                )
+            );
 
         return response;
     }
@@ -120,13 +223,22 @@ internal static class FormScenario
         return service;
     }
 
-    public static IFormsRepository Repository(FormVersion? version = null, SubjectProfile? profile = null)
+    public static IFormsRepository Repository(
+        FormVersion? version = null,
+        SubjectProfile? profile = null
+    )
     {
         var repository = Substitute.For<IFormsRepository>();
 
-        repository.GetCatalogueAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).Returns(Catalogue);
-        repository.GetVersionAsync(Arg.Any<Guid>(), Arg.Any<int>(), Arg.Any<CancellationToken>()).Returns(version);
-        repository.GetProfileAsync(Arg.Any<Guid>(), Arg.Any<SubjectRef>(), Arg.Any<CancellationToken>()).Returns(profile);
+        repository
+            .GetCatalogueAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(Catalogue);
+        repository
+            .GetVersionAsync(Arg.Any<Guid>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(version);
+        repository
+            .GetProfileAsync(Arg.Any<Guid>(), Arg.Any<SubjectRef>(), Arg.Any<CancellationToken>())
+            .Returns(profile);
 
         return repository;
     }

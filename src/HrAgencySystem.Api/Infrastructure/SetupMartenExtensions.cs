@@ -15,8 +15,8 @@ using HrAgencySystem.Workers;
 using JasperFx;
 using JasperFx.Events;
 using JasperFx.Events.Daemon;
-using Marten;
 using JasperFx.OpenTelemetry;
+using Marten;
 using Wolverine;
 using Wolverine.Marten;
 

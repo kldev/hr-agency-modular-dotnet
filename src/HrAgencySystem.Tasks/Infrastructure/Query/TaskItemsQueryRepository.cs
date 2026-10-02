@@ -57,6 +57,8 @@ public sealed class TaskItemsQueryRepository(IQuerySession session) : ITaskItems
             .Query<TaskItemProjection>()
             .Where(t => t.OrganizationId == organizationId && t.AssigneeId == query.AssigneeId);
 
-        return query.CompanyId is { } companyId ? tasks.Where(t => t.CompanyId == companyId) : tasks;
+        return query.CompanyId is { } companyId
+            ? tasks.Where(t => t.CompanyId == companyId)
+            : tasks;
     }
 }

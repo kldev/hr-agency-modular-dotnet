@@ -24,7 +24,9 @@ public static class OpportunityTaskCompletedHandler
 {
     public const string NotePrefix = "Task done: ";
 
-    private static readonly Guid ActivityNamespace = Guid.Parse("6c1f0b9e-54d2-4a7e-9f3b-2d8a61c4e075");
+    private static readonly Guid ActivityNamespace = Guid.Parse(
+        "6c1f0b9e-54d2-4a7e-9f3b-2d8a61c4e075"
+    );
 
     public static async Task Handle(
         OpportunityTaskCompleted message,
@@ -39,7 +41,10 @@ public static class OpportunityTaskCompletedHandler
             return;
 
         var user = await service.GetUserAsync(message.CompletedById, ct);
-        var note = ShortNote.Create(Truncate(NotePrefix + message.Title, ShortNote.MaxLength), false);
+        var note = ShortNote.Create(
+            Truncate(NotePrefix + message.Title, ShortNote.MaxLength),
+            false
+        );
 
         await CreateActivityHandler.Log(
             session,
@@ -58,7 +63,10 @@ public static class OpportunityTaskCompletedHandler
     public static Guid ActivityIdOf(Guid taskId, int completion)
     {
         Span<byte> hash = stackalloc byte[32];
-        SHA256.HashData(Encoding.UTF8.GetBytes($"{ActivityNamespace:N}:{taskId:N}:{completion}"), hash);
+        SHA256.HashData(
+            Encoding.UTF8.GetBytes($"{ActivityNamespace:N}:{taskId:N}:{completion}"),
+            hash
+        );
 
         return new Guid(hash[..16]);
     }

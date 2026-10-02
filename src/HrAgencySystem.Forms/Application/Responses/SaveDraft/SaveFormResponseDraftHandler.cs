@@ -29,7 +29,12 @@ public static class SaveFormResponseDraftHandler
         CancellationToken ct
     )
     {
-        service.ValidateAggregateUpdate(aggregate, command.OrganizationId, "Form response", command.ResponseId);
+        service.ValidateAggregateUpdate(
+            aggregate,
+            command.OrganizationId,
+            "Form response",
+            command.ResponseId
+        );
 
         if (aggregate.Status != FormResponseStatus.Draft)
             throw new BusinessRuleException(AlreadySubmittedMessage);

@@ -29,7 +29,8 @@ public static class SystemFieldSources
         public FieldType? ValueType =>
             source switch
             {
-                SystemFieldSource.WorkerFirstName or SystemFieldSource.WorkerLastName => FieldType.Text,
+                SystemFieldSource.WorkerFirstName or SystemFieldSource.WorkerLastName =>
+                    FieldType.Text,
                 SystemFieldSource.WorkerDateOfBirth => FieldType.Date,
                 SystemFieldSource.WorkerCitizenship => FieldType.Country,
                 SystemFieldSource.WorkerEmail => FieldType.Email,

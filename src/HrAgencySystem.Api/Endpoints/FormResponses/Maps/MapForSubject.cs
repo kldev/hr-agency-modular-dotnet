@@ -28,6 +28,10 @@ internal static class MapForSubject
         CancellationToken ct
     ) =>
         TypedResults.Ok(
-            await repository.GetForSubject(user.GetOrganization, new SubjectRef(subjectKind, subjectId), ct)
+            await repository.GetForSubject(
+                user.GetOrganization,
+                new SubjectRef(subjectKind, subjectId),
+                ct
+            )
         );
 }

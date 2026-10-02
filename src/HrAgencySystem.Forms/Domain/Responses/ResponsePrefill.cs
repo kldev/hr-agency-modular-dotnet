@@ -28,11 +28,16 @@ public static class ResponsePrefill
 
         foreach (var field in pages.AllFields)
         {
-            var value = field.Source == FieldSource.System
-                ? profile?.ValueOf(field.Code)?.Value ?? FromWorker(field, worker, catalogue)
-                : field.DefaultValue;
+            var value =
+                field.Source == FieldSource.System
+                    ? profile?.ValueOf(field.Code)?.Value ?? FromWorker(field, worker, catalogue)
+                    : field.DefaultValue;
 
-            if (value is not null && !value.IsEmpty && !value.HasValueOutside(FieldValue.SlotFor(field.Type)))
+            if (
+                value is not null
+                && !value.IsEmpty
+                && !value.HasValueOutside(FieldValue.SlotFor(field.Type))
+            )
                 answers.Add(new FieldAnswer(field.Code, value));
         }
 
@@ -43,12 +48,18 @@ public static class ResponsePrefill
     /// The source is read from today's catalogue, not from the frozen version: where a value may be
     /// suggested from is a matter of pre-filling, not of what the version asks.
     /// </summary>
-    private static FieldValue? FromWorker(FormField field, WorkerSnapshot? worker, IReadOnlyList<SystemField> catalogue)
+    private static FieldValue? FromWorker(
+        FormField field,
+        WorkerSnapshot? worker,
+        IReadOnlyList<SystemField> catalogue
+    )
     {
         if (worker is null)
             return null;
 
-        var source = catalogue.FirstOrDefault(definition => definition.SystemFieldId == field.SystemFieldId)?.Source;
+        var source = catalogue
+            .FirstOrDefault(definition => definition.SystemFieldId == field.SystemFieldId)
+            ?.Source;
 
         return SourceValue(source ?? SystemFieldSource.None, worker);
     }
@@ -60,8 +71,12 @@ public static class ResponsePrefill
             SystemFieldSource.WorkerLastName => FieldValue.OfText(worker.LastName),
             SystemFieldSource.WorkerDateOfBirth => FieldValue.OfDate(worker.DateOfBirth),
             SystemFieldSource.WorkerCitizenship => FieldValue.OfText(worker.Citizenship),
-            SystemFieldSource.WorkerEmail when worker.Email is not null => FieldValue.OfText(worker.Email),
-            SystemFieldSource.WorkerPhone when worker.Phone is not null => FieldValue.OfText(worker.Phone),
+            SystemFieldSource.WorkerEmail when worker.Email is not null => FieldValue.OfText(
+                worker.Email
+            ),
+            SystemFieldSource.WorkerPhone when worker.Phone is not null => FieldValue.OfText(
+                worker.Phone
+            ),
             _ => null,
         };
 }

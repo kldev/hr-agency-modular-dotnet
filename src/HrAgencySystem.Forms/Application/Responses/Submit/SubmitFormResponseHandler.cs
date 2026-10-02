@@ -28,7 +28,12 @@ public static class SubmitFormResponseHandler
         CancellationToken ct
     )
     {
-        service.ValidateAggregateUpdate(aggregate, command.OrganizationId, "Form response", command.ResponseId);
+        service.ValidateAggregateUpdate(
+            aggregate,
+            command.OrganizationId,
+            "Form response",
+            command.ResponseId
+        );
 
         if (aggregate.Status != FormResponseStatus.Draft)
             throw new BusinessRuleException(SaveFormResponseDraftHandler.AlreadySubmittedMessage);
@@ -40,7 +45,13 @@ public static class SubmitFormResponseHandler
 
         await ResponseAnswering.UpdateProfile(aggregate, version, answers, now, repository, ct);
 
-        var @event = new FormResponseSubmitted(command.OrganizationId, command.ResponseId, answers, user, now);
+        var @event = new FormResponseSubmitted(
+            command.OrganizationId,
+            command.ResponseId,
+            answers,
+            user,
+            now
+        );
 
         return (@event, [@event]);
     }

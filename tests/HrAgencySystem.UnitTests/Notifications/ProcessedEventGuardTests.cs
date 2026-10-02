@@ -1,5 +1,5 @@
-using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using System.Diagnostics.Metrics;
+using HrAgencySystem.EmailTemplates.Contracts.Identity;
 using HrAgencySystem.NotificationWorker.Infrastructure;
 using HrAgencySystem.NotificationWorker.Infrastructure.Telemetry;
 using Microsoft.Extensions.DependencyInjection;

@@ -11,7 +11,10 @@ public class FormLayoutPolicyTests
     [Fact]
     public void PrepareDraft_FillsASystemFieldFromTheCatalogue()
     {
-        var (pages, errors) = FormLayoutPolicy.PrepareDraft([Page(FromCatalogue(PeselFieldId))], Catalogue);
+        var (pages, errors) = FormLayoutPolicy.PrepareDraft(
+            [Page(FromCatalogue(PeselFieldId))],
+            Catalogue
+        );
 
         Assert.Empty(errors);
         var field = pages.Single().Fields.Single();
@@ -37,12 +40,19 @@ public class FormLayoutPolicyTests
     public void PrepareDraft_DoesNotTrustWhatTheBuilderSaysAboutASystemField()
     {
         // The builder sends a type and rules too; the catalogue's win, or a form could loosen PESEL.
-        var sent = FromCatalogue(PeselFieldId) with { Type = FieldType.Number, Rules = FieldRules.None };
+        var sent = FromCatalogue(PeselFieldId) with
+        {
+            Type = FieldType.Number,
+            Rules = FieldRules.None,
+        };
 
         var (pages, _) = FormLayoutPolicy.PrepareDraft([Page(sent)], Catalogue);
 
         Assert.Equal(FieldType.Text, pages.Single().Fields.Single().Type);
-        Assert.Equal(StandardSystemFields.PeselPattern, pages.Single().Fields.Single().Rules.Pattern);
+        Assert.Equal(
+            StandardSystemFields.PeselPattern,
+            pages.Single().Fields.Single().Rules.Pattern
+        );
     }
 
     [Fact]
@@ -62,7 +72,10 @@ public class FormLayoutPolicyTests
     {
         var archived = Pesel with { IsArchived = true };
 
-        var (_, errors) = FormLayoutPolicy.PrepareDraft([Page(FromCatalogue(PeselFieldId))], [archived]);
+        var (_, errors) = FormLayoutPolicy.PrepareDraft(
+            [Page(FromCatalogue(PeselFieldId))],
+            [archived]
+        );
 
         Assert.Contains(errors, e => e.Message == FormLayoutPolicy.ArchivedSystemFieldMessage);
     }
@@ -77,7 +90,9 @@ public class FormLayoutPolicyTests
 
         Assert.Equal(
             [first.FieldId, second.FieldId],
-            errors.Where(e => e.Message == FormLayoutPolicy.DuplicateCodeMessage).Select(e => e.Target!.Value)
+            errors
+                .Where(e => e.Message == FormLayoutPolicy.DuplicateCodeMessage)
+                .Select(e => e.Target!.Value)
         );
     }
 
@@ -133,7 +148,11 @@ public class FormLayoutPolicyTests
     [Fact]
     public void PrepareDraft_DuplicateOptionValues_AreRefused()
     {
-        var field = Own("tax.form", FieldType.SingleChoice, options: [new("pit", "PIT"), new("pit", "PIT-2")]);
+        var field = Own(
+            "tax.form",
+            FieldType.SingleChoice,
+            options: [new("pit", "PIT"), new("pit", "PIT-2")]
+        );
 
         var (_, errors) = FormLayoutPolicy.PrepareDraft([Page(field)], Catalogue);
 
@@ -150,7 +169,10 @@ public class FormLayoutPolicyTests
 
         var (_, errors) = FormLayoutPolicy.PrepareDraft([Page(field)], Catalogue);
 
-        Assert.Contains(errors, e => e.Target == field.FieldId && e.Message.StartsWith("Default value"));
+        Assert.Contains(
+            errors,
+            e => e.Target == field.FieldId && e.Message.StartsWith("Default value")
+        );
     }
 
     [Fact]
@@ -158,7 +180,11 @@ public class FormLayoutPolicyTests
     {
         var field = Own("car.make") with
         {
-            VisibleWhen = new FieldVisibility("car.owned", VisibilityOperator.Equals, new FieldValue(Boolean: true)),
+            VisibleWhen = new FieldVisibility(
+                "car.owned",
+                VisibilityOperator.Equals,
+                new FieldValue(Boolean: true)
+            ),
         };
 
         var (_, errors) = FormLayoutPolicy.PrepareDraft([Page(field)], Catalogue);
@@ -182,9 +208,15 @@ public class FormLayoutPolicyTests
     [Fact]
     public void ValidatePublish_AsksForPagesFieldsAndOptions()
     {
-        Assert.Contains(FormLayoutPolicy.ValidatePublish([]), e => e.Message == FormLayoutPolicy.NoPagesMessage);
+        Assert.Contains(
+            FormLayoutPolicy.ValidatePublish([]),
+            e => e.Message == FormLayoutPolicy.NoPagesMessage
+        );
 
-        var errors = FormLayoutPolicy.ValidatePublish([Page(), Page(Own("tax.form", FieldType.SingleChoice))]);
+        var errors = FormLayoutPolicy.ValidatePublish([
+            Page(),
+            Page(Own("tax.form", FieldType.SingleChoice)),
+        ]);
 
         Assert.Contains(errors, e => e.Message == FormLayoutPolicy.EmptyPageMessage);
         Assert.Contains(errors, e => e.Message == FormLayoutPolicy.NoOptionsMessage);

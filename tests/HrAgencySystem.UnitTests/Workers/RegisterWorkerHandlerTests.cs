@@ -174,7 +174,11 @@ public class RegisterWorkerHandlerTests : BaseTest
         var applicationId = Guid.NewGuid();
 
         var (registered, message) = await HandleWithMessages(
-            Command() with { SourceCandidateId = candidateId, SourceApplicationId = applicationId }
+            Command() with
+            {
+                SourceCandidateId = candidateId,
+                SourceApplicationId = applicationId,
+            }
         );
 
         Assert.Equal(applicationId, registered.SourceApplicationId);
@@ -190,7 +194,12 @@ public class RegisterWorkerHandlerTests : BaseTest
     {
         var candidateId = Guid.NewGuid();
 
-        var (_, message) = await HandleWithMessages(Command() with { SourceCandidateId = candidateId });
+        var (_, message) = await HandleWithMessages(
+            Command() with
+            {
+                SourceCandidateId = candidateId,
+            }
+        );
 
         Assert.NotNull(message);
         Assert.Null(message.ApplicationId);

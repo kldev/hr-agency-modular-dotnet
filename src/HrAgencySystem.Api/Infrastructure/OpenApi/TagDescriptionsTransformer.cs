@@ -20,9 +20,7 @@ internal sealed class TagDescriptionsTransformer : IOpenApiDocumentTransformer
             .Paths.Values.SelectMany(path =>
                 path.Operations?.Values ?? Enumerable.Empty<OpenApiOperation>()
             )
-            .SelectMany(operation =>
-                operation.Tags ?? Enumerable.Empty<OpenApiTagReference>()
-            )
+            .SelectMany(operation => operation.Tags ?? Enumerable.Empty<OpenApiTagReference>())
             .Select(tag => tag.Name)
             .ToHashSet();
 

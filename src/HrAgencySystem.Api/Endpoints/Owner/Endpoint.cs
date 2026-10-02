@@ -1,11 +1,16 @@
 using HrAgencySystem.Api.Infrastructure.OpenApi;
+
 namespace HrAgencySystem.Api.Endpoints.Owner;
 
 public static class Endpoint
 {
     public static void Map(this IEndpointRouteBuilder endpoints)
     {
-        var group = endpoints.MapGroup("").WithTags(ApiTags.Owner).WithSummary("Owner").WithOwnerRole();
+        var group = endpoints
+            .MapGroup("")
+            .WithTags(ApiTags.Owner)
+            .WithSummary("Owner")
+            .WithOwnerRole();
 
         Maps.MapCreate.Map(group);
         Maps.MapGet.Map(group);

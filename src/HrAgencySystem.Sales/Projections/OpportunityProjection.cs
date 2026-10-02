@@ -115,7 +115,11 @@ public sealed record OpportunityProjection(
     {
         return LastActivityAt is { } last && last > @event.LoggedAt
             ? this
-            : this with { LastActivityAt = @event.LoggedAt, LastActivityType = @event.ActivityType };
+            : this with
+            {
+                LastActivityAt = @event.LoggedAt,
+                LastActivityType = @event.ActivityType,
+            };
     }
 
     public OpportunityProjection Apply(FollowUpActionCreated @event)

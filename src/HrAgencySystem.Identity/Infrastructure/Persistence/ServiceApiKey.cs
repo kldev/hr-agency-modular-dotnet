@@ -40,7 +40,8 @@ public sealed record ServiceApiKey(
 
     public const int NameMaxLength = 100;
 
-    public const string NameRequiredMessage = "Say what the key is for, so it can be told apart later.";
+    public const string NameRequiredMessage =
+        "Say what the key is for, so it can be told apart later.";
 
     public static readonly string NameTooLongMessage =
         $"A key name cannot be longer than {NameMaxLength} characters.";

@@ -37,86 +37,224 @@ internal sealed class FormsScenario(IMessageBus bus, IDocumentSession session)
         new("5", "5 - excellent"),
     ];
 
-    internal async Task<int> Seed(Guid organizationId, Guid createdBy, IReadOnlyList<Guid> workerIds, DateOnly today)
+    internal async Task<int> Seed(
+        Guid organizationId,
+        Guid createdBy,
+        IReadOnlyList<Guid> workerIds,
+        DateOnly today
+    )
     {
-        if (await session.Query<FormCodeReservation>().AnyAsync(r => r.OrganizationId == organizationId))
+        if (
+            await session
+                .Query<FormCodeReservation>()
+                .AnyAsync(r => r.OrganizationId == organizationId)
+        )
             return 0;
 
-        await bus.InvokeAsync<StandardSystemFieldsAdded>(new AddStandardSystemFields(organizationId, createdBy));
+        await bus.InvokeAsync<StandardSystemFieldsAdded>(
+            new AddStandardSystemFields(organizationId, createdBy)
+        );
 
         var catalogue = (
-            await session.Events.AggregateStreamAsync<SystemFieldCatalogue>(FormsStreamId.ForCatalogue(organizationId))
+            await session.Events.AggregateStreamAsync<SystemFieldCatalogue>(
+                FormsStreamId.ForCatalogue(organizationId)
+            )
         )!.Fields.ToDictionary(field => field.Code, field => field.SystemFieldId);
 
         FormField System(string code, string? label = null) =>
-            new(Guid.NewGuid(), FieldSource.System, catalogue[code], code, FieldType.Text, "", label, null, null, FieldRules.None, [], null, null);
+            new(
+                Guid.NewGuid(),
+                FieldSource.System,
+                catalogue[code],
+                code,
+                FieldType.Text,
+                "",
+                label,
+                null,
+                null,
+                FieldRules.None,
+                [],
+                null,
+                null
+            );
 
         var consent = await Publish(
             organizationId,
             createdBy,
-            new CreateFormDefinition(organizationId, "gdpr-consent", "GDPR consent", "Consent to the processing of personal data for recruitment and employment.", FormKind.Document, null, SubjectKinds.Worker, createdBy),
-            Page("Consent",
-                Own("gdpr.consent", FieldType.Boolean, "I consent to the processing of my personal data for the purposes of recruitment and employment.", new FieldRules(Required: true)),
-                Own("gdpr.marketingConsent", FieldType.Boolean, "I agree to receive job offers by e-mail."),
-                Own("gdpr.consentDate", FieldType.Date, "Date of consent", new FieldRules(Required: true)))
+            new CreateFormDefinition(
+                organizationId,
+                "gdpr-consent",
+                "GDPR consent",
+                "Consent to the processing of personal data for recruitment and employment.",
+                FormKind.Document,
+                null,
+                SubjectKinds.Worker,
+                createdBy
+            ),
+            Page(
+                "Consent",
+                Own(
+                    "gdpr.consent",
+                    FieldType.Boolean,
+                    "I consent to the processing of my personal data for the purposes of recruitment and employment.",
+                    new FieldRules(Required: true)
+                ),
+                Own(
+                    "gdpr.marketingConsent",
+                    FieldType.Boolean,
+                    "I agree to receive job offers by e-mail."
+                ),
+                Own(
+                    "gdpr.consentDate",
+                    FieldType.Date,
+                    "Date of consent",
+                    new FieldRules(Required: true)
+                )
+            )
         );
 
         var questionnaire = await Publish(
             organizationId,
             createdBy,
-            new CreateFormDefinition(organizationId, "personal-questionnaire", "Personal questionnaire", "What payroll needs before the first day of work.", FormKind.Document, null, SubjectKinds.Worker, createdBy),
-            Page("Personal data",
+            new CreateFormDefinition(
+                organizationId,
+                "personal-questionnaire",
+                "Personal questionnaire",
+                "What payroll needs before the first day of work.",
+                FormKind.Document,
+                null,
+                SubjectKinds.Worker,
+                createdBy
+            ),
+            Page(
+                "Personal data",
                 System("employee.firstName"),
                 System("employee.lastName"),
                 System("employee.dateOfBirth"),
                 System("employee.pesel"),
-                System("employee.citizenship")),
+                System("employee.citizenship")
+            ),
             Page("Contact", System("employee.email"), System("employee.phone")),
-            Page("Tax",
-                Own("tax.office", FieldType.Text, "Tax office", new FieldRules(Required: true, MaxLength: 200)),
-                Own("tax.residence", FieldType.Country, "Country of tax residence", new FieldRules(Required: true)),
-                Own("tax.formType", FieldType.SingleChoice, "Tax declaration", new FieldRules(Required: true),
-                    [new("pit2", "PIT-2 - I apply the tax-free amount here"), new("none", "No declaration")])),
-            Page("Payment",
+            Page(
+                "Tax",
+                Own(
+                    "tax.office",
+                    FieldType.Text,
+                    "Tax office",
+                    new FieldRules(Required: true, MaxLength: 200)
+                ),
+                Own(
+                    "tax.residence",
+                    FieldType.Country,
+                    "Country of tax residence",
+                    new FieldRules(Required: true)
+                ),
+                Own(
+                    "tax.formType",
+                    FieldType.SingleChoice,
+                    "Tax declaration",
+                    new FieldRules(Required: true),
+                    [
+                        new("pit2", "PIT-2 - I apply the tax-free amount here"),
+                        new("none", "No declaration"),
+                    ]
+                )
+            ),
+            Page(
+                "Payment",
                 System("employee.bankAccount"),
-                Own("statement.truthful", FieldType.Boolean, "I declare that the data above is true.", new FieldRules(Required: true)))
+                Own(
+                    "statement.truthful",
+                    FieldType.Boolean,
+                    "I declare that the data above is true.",
+                    new FieldRules(Required: true)
+                )
+            )
         );
 
         var survey = await Publish(
             organizationId,
             createdBy,
-            new CreateFormDefinition(organizationId, "satisfaction-survey", "Satisfaction survey", "Asked after every project.", FormKind.Survey, null, SubjectKinds.Worker, createdBy),
-            Page("Your opinion",
-                Own("survey.recruitment", FieldType.SingleChoice, "How do you rate the recruitment process?", new FieldRules(Required: true), Scale),
-                Own("survey.caretaker", FieldType.SingleChoice, "How do you rate the contact with your caretaker?", new FieldRules(Required: true), Scale),
+            new CreateFormDefinition(
+                organizationId,
+                "satisfaction-survey",
+                "Satisfaction survey",
+                "Asked after every project.",
+                FormKind.Survey,
+                null,
+                SubjectKinds.Worker,
+                createdBy
+            ),
+            Page(
+                "Your opinion",
+                Own(
+                    "survey.recruitment",
+                    FieldType.SingleChoice,
+                    "How do you rate the recruitment process?",
+                    new FieldRules(Required: true),
+                    Scale
+                ),
+                Own(
+                    "survey.caretaker",
+                    FieldType.SingleChoice,
+                    "How do you rate the contact with your caretaker?",
+                    new FieldRules(Required: true),
+                    Scale
+                ),
                 Own("survey.recommend", FieldType.Boolean, "Would you recommend us to a friend?"),
-                Own("survey.comment", FieldType.TextArea, "Comment", new FieldRules(MaxLength: 2000)))
+                Own(
+                    "survey.comment",
+                    FieldType.TextArea,
+                    "Comment",
+                    new FieldRules(MaxLength: 2000)
+                )
+            )
         );
 
         var responses = 0;
 
         foreach (var (workerId, index) in workerIds.Take(4).Select((id, i) => (id, i)))
         {
-            await Submit(organizationId, createdBy, consent, workerId,
+            await Submit(
+                organizationId,
+                createdBy,
+                consent,
+                workerId,
                 new FieldAnswer("gdpr.consent", new FieldValue(Boolean: true)),
                 new FieldAnswer("gdpr.marketingConsent", new FieldValue(Boolean: index % 2 == 0)),
-                new FieldAnswer("gdpr.consentDate", FieldValue.OfDate(today.AddDays(-10 * (index + 1)))));
+                new FieldAnswer(
+                    "gdpr.consentDate",
+                    FieldValue.OfDate(today.AddDays(-10 * (index + 1)))
+                )
+            );
             responses++;
         }
 
         if (workerIds.Count > 0)
         {
             var started = await Start(organizationId, createdBy, questionnaire, workerIds[0]);
-            await bus.InvokeAsync<FormResponseSubmitted>(new SubmitFormResponse(started.ResponseId, organizationId,
-            [
-                .. started.Prefill,
-                new FieldAnswer("employee.pesel", FieldValue.OfText("90051201238")),
-                new FieldAnswer("tax.office", FieldValue.OfText("Drugi Urząd Skarbowy Warszawa-Śródmieście")),
-                new FieldAnswer("tax.residence", FieldValue.OfText("PL")),
-                new FieldAnswer("tax.formType", FieldValue.OfText("pit2")),
-                new FieldAnswer("employee.bankAccount", FieldValue.OfText("PL61109010140000071219812874")),
-                new FieldAnswer("statement.truthful", new FieldValue(Boolean: true)),
-            ], createdBy));
+            await bus.InvokeAsync<FormResponseSubmitted>(
+                new SubmitFormResponse(
+                    started.ResponseId,
+                    organizationId,
+                    [
+                        .. started.Prefill,
+                        new FieldAnswer("employee.pesel", FieldValue.OfText("90051201238")),
+                        new FieldAnswer(
+                            "tax.office",
+                            FieldValue.OfText("Drugi Urząd Skarbowy Warszawa-Śródmieście")
+                        ),
+                        new FieldAnswer("tax.residence", FieldValue.OfText("PL")),
+                        new FieldAnswer("tax.formType", FieldValue.OfText("pit2")),
+                        new FieldAnswer(
+                            "employee.bankAccount",
+                            FieldValue.OfText("PL61109010140000071219812874")
+                        ),
+                        new FieldAnswer("statement.truthful", new FieldValue(Boolean: true)),
+                    ],
+                    createdBy
+                )
+            );
             responses++;
         }
 
@@ -124,45 +262,90 @@ internal sealed class FormsScenario(IMessageBus bus, IDocumentSession session)
         {
             // Left on the tax page: what a questionnaire looks like when somebody stopped half way.
             var started = await Start(organizationId, createdBy, questionnaire, workerIds[1]);
-            await bus.InvokeAsync<FormResponseDraftSaved>(new SaveFormResponseDraft(started.ResponseId, organizationId,
-                [.. started.Prefill, new FieldAnswer("tax.office", FieldValue.OfText("Urząd Skarbowy Kraków-Podgórze"))], createdBy));
+            await bus.InvokeAsync<FormResponseDraftSaved>(
+                new SaveFormResponseDraft(
+                    started.ResponseId,
+                    organizationId,
+                    [
+                        .. started.Prefill,
+                        new FieldAnswer(
+                            "tax.office",
+                            FieldValue.OfText("Urząd Skarbowy Kraków-Podgórze")
+                        ),
+                    ],
+                    createdBy
+                )
+            );
             responses++;
         }
 
         foreach (var (workerId, index) in workerIds.Take(3).Select((id, i) => (id, i)))
         {
-            await Submit(organizationId, createdBy, survey, workerId,
+            await Submit(
+                organizationId,
+                createdBy,
+                survey,
+                workerId,
                 new FieldAnswer("survey.recruitment", FieldValue.OfText($"{5 - index}")),
                 new FieldAnswer("survey.caretaker", FieldValue.OfText($"{4 - index % 2}")),
                 new FieldAnswer("survey.recommend", new FieldValue(Boolean: index < 2)),
-                new FieldAnswer("survey.comment", FieldValue.OfText(index == 2 ? "Accommodation was far from the site." : "")));
+                new FieldAnswer(
+                    "survey.comment",
+                    FieldValue.OfText(index == 2 ? "Accommodation was far from the site." : "")
+                )
+            );
             responses++;
         }
 
         return responses;
     }
 
-    private async Task<Guid> Publish(Guid organizationId, Guid createdBy, CreateFormDefinition create, params FormPage[] pages)
+    private async Task<Guid> Publish(
+        Guid organizationId,
+        Guid createdBy,
+        CreateFormDefinition create,
+        params FormPage[] pages
+    )
     {
         var created = await bus.InvokeAsync<FormDefinitionCreated>(create);
 
-        await bus.InvokeAsync<FormDraftSaved>(new SaveFormDraft(created.FormId, organizationId, pages, createdBy));
-        await bus.InvokeAsync<FormPublished>(new PublishForm(created.FormId, organizationId, createdBy));
+        await bus.InvokeAsync<FormDraftSaved>(
+            new SaveFormDraft(created.FormId, organizationId, pages, createdBy)
+        );
+        await bus.InvokeAsync<FormPublished>(
+            new PublishForm(created.FormId, organizationId, createdBy)
+        );
 
         return created.FormId;
     }
 
-    private Task<FormResponseStarted> Start(Guid organizationId, Guid createdBy, Guid formId, Guid workerId) =>
-        bus.InvokeAsync<FormResponseStarted>(new StartFormResponse(organizationId, formId, SubjectKinds.Worker, workerId, createdBy));
+    private Task<FormResponseStarted> Start(
+        Guid organizationId,
+        Guid createdBy,
+        Guid formId,
+        Guid workerId
+    ) =>
+        bus.InvokeAsync<FormResponseStarted>(
+            new StartFormResponse(organizationId, formId, SubjectKinds.Worker, workerId, createdBy)
+        );
 
-    private async Task Submit(Guid organizationId, Guid createdBy, Guid formId, Guid workerId, params FieldAnswer[] answers)
+    private async Task Submit(
+        Guid organizationId,
+        Guid createdBy,
+        Guid formId,
+        Guid workerId,
+        params FieldAnswer[] answers
+    )
     {
         var started = await Start(organizationId, createdBy, formId, workerId);
 
-        await bus.InvokeAsync<FormResponseSubmitted>(new SubmitFormResponse(started.ResponseId, organizationId, answers, createdBy));
+        await bus.InvokeAsync<FormResponseSubmitted>(
+            new SubmitFormResponse(started.ResponseId, organizationId, answers, createdBy)
+        );
     }
 
-    private static FormPage Page(string title, params FormField[] fields) => new(Guid.NewGuid(), title, null, fields);
+    private static FormPage Page(string title, params FormField[] fields) =>
+        new(Guid.NewGuid(), title, null, fields);
 
     private static FormField Own(
         string code,
@@ -170,5 +353,20 @@ internal sealed class FormsScenario(IMessageBus bus, IDocumentSession session)
         string label,
         FieldRules? rules = null,
         IReadOnlyList<ChoiceOption>? options = null
-    ) => new(Guid.NewGuid(), FieldSource.Form, null, code, type, label, null, null, null, rules ?? FieldRules.None, options ?? [], null, null);
+    ) =>
+        new(
+            Guid.NewGuid(),
+            FieldSource.Form,
+            null,
+            code,
+            type,
+            label,
+            null,
+            null,
+            null,
+            rules ?? FieldRules.None,
+            options ?? [],
+            null,
+            null
+        );
 }

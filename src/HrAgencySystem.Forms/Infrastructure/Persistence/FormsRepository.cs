@@ -9,7 +9,10 @@ namespace HrAgencySystem.Forms.Infrastructure.Persistence;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class FormsRepository(IDocumentSession session) : IFormsRepository
 {
-    public async Task<IReadOnlyList<SystemField>> GetCatalogueAsync(Guid organizationId, CancellationToken ct)
+    public async Task<IReadOnlyList<SystemField>> GetCatalogueAsync(
+        Guid organizationId,
+        CancellationToken ct
+    )
     {
         var catalogue = await session.Events.AggregateStreamAsync<SystemFieldCatalogue>(
             FormsStreamId.ForCatalogue(organizationId),
@@ -22,8 +25,11 @@ public sealed class FormsRepository(IDocumentSession session) : IFormsRepository
     public async Task<FormDefinition?> GetFormAsync(Guid formId, CancellationToken ct) =>
         await session.Events.AggregateStreamAsync<FormDefinition>(formId, token: ct);
 
-    public async Task<FormVersion?> GetVersionAsync(Guid formId, int version, CancellationToken ct) =>
-        await session.LoadAsync<FormVersion>(FormsStreamId.ForVersion(formId, version), ct);
+    public async Task<FormVersion?> GetVersionAsync(
+        Guid formId,
+        int version,
+        CancellationToken ct
+    ) => await session.LoadAsync<FormVersion>(FormsStreamId.ForVersion(formId, version), ct);
 
     public void AddVersion(FormVersion version) => session.Insert(version);
 
@@ -31,7 +37,11 @@ public sealed class FormsRepository(IDocumentSession session) : IFormsRepository
         Guid organizationId,
         SubjectRef subject,
         CancellationToken ct
-    ) => await session.LoadAsync<SubjectProfile>(FormsStreamId.ForProfile(organizationId, subject), ct);
+    ) =>
+        await session.LoadAsync<SubjectProfile>(
+            FormsStreamId.ForProfile(organizationId, subject),
+            ct
+        );
 
     public void StoreProfile(SubjectProfile profile) => session.Store(profile);
 }

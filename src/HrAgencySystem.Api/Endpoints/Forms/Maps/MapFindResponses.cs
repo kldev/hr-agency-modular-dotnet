@@ -47,8 +47,21 @@ internal static class MapFindResponses
         if (string.IsNullOrWhiteSpace(field))
             throw new ValidationException(FieldRequiredMessage);
 
-        var value = new FieldValue(text, number, date, boolean, values is { Length: > 0 } ? values : null);
-        var given = new object?[] { value.Text, value.Number, value.Date, value.Boolean, value.Values };
+        var value = new FieldValue(
+            text,
+            number,
+            date,
+            boolean,
+            values is { Length: > 0 } ? values : null
+        );
+        var given = new object?[]
+        {
+            value.Text,
+            value.Number,
+            value.Date,
+            value.Boolean,
+            value.Values,
+        };
 
         if (given.Count(v => v is not null) != 1)
             throw new ValidationException(ValueRequiredMessage);

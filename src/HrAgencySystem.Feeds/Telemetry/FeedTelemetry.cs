@@ -44,7 +44,10 @@ public sealed class FeedTelemetry
     public void RecordGeneration(string outcome, TimeSpan elapsed)
     {
         _generations.Add(1, new KeyValuePair<string, object?>("outcome", outcome));
-        _duration.Record(elapsed.TotalSeconds, new KeyValuePair<string, object?>("outcome", outcome));
+        _duration.Record(
+            elapsed.TotalSeconds,
+            new KeyValuePair<string, object?>("outcome", outcome)
+        );
     }
 
     public void RecordSize(string format, long bytes) =>

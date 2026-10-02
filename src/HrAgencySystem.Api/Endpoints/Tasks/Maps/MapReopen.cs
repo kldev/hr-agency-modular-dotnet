@@ -26,6 +26,9 @@ internal static class MapReopen
         CancellationToken ct
     ) =>
         TypedResults.Ok(
-            await bus.InvokeAsync<TaskItemReopened>(new ReopenTaskItem(taskId, user.OrganizationId, user.UserId), ct)
+            await bus.InvokeAsync<TaskItemReopened>(
+                new ReopenTaskItem(taskId, user.OrganizationId, user.UserId),
+                ct
+            )
         );
 }

@@ -136,7 +136,12 @@ public class ProjectServiceTests
         _opportunities
             .GetOpportunityAsync(opportunityId, Organization, Arg.Any<CancellationToken>())
             .Returns(
-                new OpportunitySnapshot(opportunityId, ProjectScenario.OrganizationId, Guid.NewGuid(), "Other")
+                new OpportunitySnapshot(
+                    opportunityId,
+                    ProjectScenario.OrganizationId,
+                    Guid.NewGuid(),
+                    "Other"
+                )
             );
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
@@ -155,7 +160,11 @@ public class ProjectServiceTests
     public async Task GetOpportunityAsync_NotInOrganization_ThrowsBusinessRule()
     {
         _opportunities
-            .GetOpportunityAsync(Arg.Any<Guid>(), Arg.Any<OrganizationId>(), Arg.Any<CancellationToken>())
+            .GetOpportunityAsync(
+                Arg.Any<Guid>(),
+                Arg.Any<OrganizationId>(),
+                Arg.Any<CancellationToken>()
+            )
             .ReturnsNull();
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>

@@ -6,7 +6,12 @@ namespace HrAgencySystem.Tasks.Application.Port;
 
 /// <param name="AssigneeId">Whose list it is.</param>
 /// <param name="CompanyId">One company only, or every company when left out.</param>
-public sealed record TaskBoardQuery(Guid AssigneeId, TaskRange Range, DateTimeOffset Now, Guid? CompanyId);
+public sealed record TaskBoardQuery(
+    Guid AssigneeId,
+    TaskRange Range,
+    DateTimeOffset Now,
+    Guid? CompanyId
+);
 
 public interface ITaskItemsQueryRepository
 {
@@ -20,9 +25,17 @@ public interface ITaskItemsQueryRepository
     /// Open tasks due before the end of the range - including overdue ones, which would otherwise
     /// drop out of sight exactly when they matter - and tasks done within it.
     /// </summary>
-    Task<TaskBoard> GetBoard(OrganizationId organizationId, TaskBoardQuery query, CancellationToken ct);
+    Task<TaskBoard> GetBoard(
+        OrganizationId organizationId,
+        TaskBoardQuery query,
+        CancellationToken ct
+    );
 
-    Task<TaskItemProjection?> GetTask(OrganizationId organizationId, Guid taskId, CancellationToken ct);
+    Task<TaskItemProjection?> GetTask(
+        OrganizationId organizationId,
+        Guid taskId,
+        CancellationToken ct
+    );
 }
 
 public sealed record TaskBoard(

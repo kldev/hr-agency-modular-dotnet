@@ -15,7 +15,8 @@ public class SystemFieldHandlerTests : BaseTest
     public void Define_CodeOutsideTheCatalogueNamespace_IsRefused()
     {
         var error = Assert.Throws<ValidationException>(() =>
-            DefineSystemFieldHandler.Prepare(Define("gdpr.consent"), Catalogue_()));
+            DefineSystemFieldHandler.Prepare(Define("gdpr.consent"), Catalogue_())
+        );
 
         Assert.Contains(SystemFieldRules.CodeNotSystemMessage, error.Errors);
     }
@@ -24,7 +25,8 @@ public class SystemFieldHandlerTests : BaseTest
     public void Define_CodeAlreadyInTheCatalogue_IsRefused()
     {
         var error = Assert.Throws<ValidationException>(() =>
-            DefineSystemFieldHandler.Prepare(Define("employee.pesel"), Catalogue_()));
+            DefineSystemFieldHandler.Prepare(Define("employee.pesel"), Catalogue_())
+        );
 
         Assert.Contains(SystemFieldRules.CodeTakenMessage, error.Errors);
     }
@@ -34,9 +36,13 @@ public class SystemFieldHandlerTests : BaseTest
     {
         var error = Assert.Throws<ValidationException>(() =>
             DefineSystemFieldHandler.Prepare(
-                Define("employee.birthDate") with { Source = SystemFieldSource.WorkerDateOfBirth },
+                Define("employee.birthDate") with
+                {
+                    Source = SystemFieldSource.WorkerDateOfBirth,
+                },
                 Catalogue_()
-            ));
+            )
+        );
 
         Assert.Contains(SystemFieldRules.SourceTypeMismatchMessage, error.Errors);
     }
@@ -47,12 +53,22 @@ public class SystemFieldHandlerTests : BaseTest
         // Text rules on a phone field are fine; number rules are not - the type is the catalogue's.
         var error = await Assert.ThrowsAsync<ValidationException>(() =>
             UpdateSystemFieldHandler.Handle(
-                new UpdateSystemField(OrganizationId, PhoneFieldId, "Phone", null, new FieldRules(Min: 1), [], SystemFieldSource.WorkerPhone, User.Id),
+                new UpdateSystemField(
+                    OrganizationId,
+                    PhoneFieldId,
+                    "Phone",
+                    null,
+                    new FieldRules(Min: 1),
+                    [],
+                    SystemFieldSource.WorkerPhone,
+                    User.Id
+                ),
                 Catalogue_(),
                 Service(),
                 TestClock,
                 CancellationToken.None
-            ));
+            )
+        );
 
         Assert.Contains(FieldRulesPolicy.RangeNotForTypeMessage, error.Errors);
     }
@@ -65,12 +81,22 @@ public class SystemFieldHandlerTests : BaseTest
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             UpdateSystemFieldHandler.Handle(
-                new UpdateSystemField(OrganizationId, PeselFieldId, "PESEL", null, null, null, SystemFieldSource.None, User.Id),
+                new UpdateSystemField(
+                    OrganizationId,
+                    PeselFieldId,
+                    "PESEL",
+                    null,
+                    null,
+                    null,
+                    SystemFieldSource.None,
+                    User.Id
+                ),
                 catalogue,
                 Service(),
                 TestClock,
                 CancellationToken.None
-            ));
+            )
+        );
 
         Assert.Equal(SystemFieldRules.ArchivedMessage, error.Message);
     }
@@ -85,7 +111,17 @@ public class SystemFieldHandlerTests : BaseTest
     }
 
     private static DefineSystemField Define(string code) =>
-        new(OrganizationId, code, FieldType.Text, "Field", null, null, null, SystemFieldSource.None, User.Id);
+        new(
+            OrganizationId,
+            code,
+            FieldType.Text,
+            "Field",
+            null,
+            null,
+            null,
+            SystemFieldSource.None,
+            User.Id
+        );
 
     private static SystemFieldCatalogue Catalogue_()
     {

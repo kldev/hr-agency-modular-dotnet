@@ -13,8 +13,12 @@ internal static class MapGetFeed
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet(ApiEndpoints.Internal.FeedJson, HandlerJson).WithSummary("The board's feed, json");
-        group.MapGet(ApiEndpoints.Internal.FeedXml, HandlerXml).WithSummary("The board's feed, xml");
+        group
+            .MapGet(ApiEndpoints.Internal.FeedJson, HandlerJson)
+            .WithSummary("The board's feed, json");
+        group
+            .MapGet(ApiEndpoints.Internal.FeedXml, HandlerXml)
+            .WithSummary("The board's feed, xml");
     }
 
     private static Task<IResult> HandlerJson(

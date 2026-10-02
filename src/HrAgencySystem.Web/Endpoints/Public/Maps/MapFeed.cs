@@ -11,11 +11,21 @@ internal static class MapFeed
 {
     internal static void Map(RouteGroupBuilder group)
     {
-        group.MapGet("{slug}/jobs.xml", (IJobBoardClient board, HttpContext http, string slug, CancellationToken ct) =>
-            Serve(board, http, slug, "xml", ct)).WithSummary("Get feed jobs.xml");
+        group
+            .MapGet(
+                "{slug}/jobs.xml",
+                (IJobBoardClient board, HttpContext http, string slug, CancellationToken ct) =>
+                    Serve(board, http, slug, "xml", ct)
+            )
+            .WithSummary("Get feed jobs.xml");
 
-        group.MapGet("{slug}/jobs.json", (IJobBoardClient board, HttpContext http, string slug, CancellationToken ct) =>
-            Serve(board, http, slug, "json", ct)).WithSummary("Get feed jobs.json");
+        group
+            .MapGet(
+                "{slug}/jobs.json",
+                (IJobBoardClient board, HttpContext http, string slug, CancellationToken ct) =>
+                    Serve(board, http, slug, "json", ct)
+            )
+            .WithSummary("Get feed jobs.json");
     }
 
     private static async Task<IResult> Serve(

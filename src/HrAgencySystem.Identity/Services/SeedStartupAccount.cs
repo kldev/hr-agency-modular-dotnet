@@ -49,6 +49,9 @@ public sealed class SeedStartupAccount(
         await session.SaveChangesAsync(ct);
 
         // The id, not the address: identifiers, not people, in the log.
-        logger.LogInformation("Startup platform owner {PlatformOwnerId} created", created.PlatformOwnerId);
+        logger.LogInformation(
+            "Startup platform owner {PlatformOwnerId} created",
+            created.PlatformOwnerId
+        );
     }
 }

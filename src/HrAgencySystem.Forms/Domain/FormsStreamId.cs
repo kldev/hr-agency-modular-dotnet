@@ -13,13 +13,21 @@ namespace HrAgencySystem.Forms.Domain;
 public static class FormsStreamId
 {
     /// <summary>Fixed namespaces. Changing one orphans everything derived with it.</summary>
-    private static readonly Guid CatalogueNamespace = Guid.Parse("4a8f2d61-93c7-4e0b-8b15-6f2e9c7d1a34");
+    private static readonly Guid CatalogueNamespace = Guid.Parse(
+        "4a8f2d61-93c7-4e0b-8b15-6f2e9c7d1a34"
+    );
 
-    private static readonly Guid VersionNamespace = Guid.Parse("d17c5e2a-0b46-4f98-a3e1-5c8b27f60d19");
+    private static readonly Guid VersionNamespace = Guid.Parse(
+        "d17c5e2a-0b46-4f98-a3e1-5c8b27f60d19"
+    );
 
-    private static readonly Guid ResponseNamespace = Guid.Parse("8e3b6f14-2c9d-47a5-b0f7-91d4e6a2c583");
+    private static readonly Guid ResponseNamespace = Guid.Parse(
+        "8e3b6f14-2c9d-47a5-b0f7-91d4e6a2c583"
+    );
 
-    private static readonly Guid ProfileNamespace = Guid.Parse("b5d92c07-6e1f-4a38-9c4b-2f7a80e13d66");
+    private static readonly Guid ProfileNamespace = Guid.Parse(
+        "b5d92c07-6e1f-4a38-9c4b-2f7a80e13d66"
+    );
 
     public static Guid ForCatalogue(Guid organizationId) =>
         Derive(CatalogueNamespace, $"{organizationId:N}");

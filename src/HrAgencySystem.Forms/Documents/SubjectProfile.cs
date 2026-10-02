@@ -21,7 +21,13 @@ public sealed record SubjectProfile(
 )
 {
     public static SubjectProfile EmptyFor(Guid organizationId, SubjectRef subject) =>
-        new(FormsStreamId.ForProfile(organizationId, subject), organizationId, subject.Kind, subject.Id, []);
+        new(
+            FormsStreamId.ForProfile(organizationId, subject),
+            organizationId,
+            subject.Kind,
+            subject.Id,
+            []
+        );
 
     public ProfileValue? ValueOf(string code) => Values.FirstOrDefault(value => value.Code == code);
 
@@ -40,14 +46,30 @@ public sealed record SubjectProfile(
 
         foreach (var answer in answers)
         {
-            if (values.TryGetValue(answer.FieldCode, out var current) && current.UpdatedAt > answeredAt)
+            if (
+                values.TryGetValue(answer.FieldCode, out var current)
+                && current.UpdatedAt > answeredAt
+            )
                 continue;
 
-            values[answer.FieldCode] = new ProfileValue(answer.FieldCode, answer.Value, responseId, answeredAt);
+            values[answer.FieldCode] = new ProfileValue(
+                answer.FieldCode,
+                answer.Value,
+                responseId,
+                answeredAt
+            );
         }
 
-        return this with { Values = [.. values.Values.OrderBy(value => value.Code, StringComparer.Ordinal)] };
+        return this with
+        {
+            Values = [.. values.Values.OrderBy(value => value.Code, StringComparer.Ordinal)],
+        };
     }
 }
 
-public sealed record ProfileValue(string Code, FieldValue Value, Guid ResponseId, DateTimeOffset UpdatedAt);
+public sealed record ProfileValue(
+    string Code,
+    FieldValue Value,
+    Guid ResponseId,
+    DateTimeOffset UpdatedAt
+);

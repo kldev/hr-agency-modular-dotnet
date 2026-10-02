@@ -28,11 +28,15 @@ public class OpportunityTaskCompletedHandlerTests
         _service.GetUserAsync(User.Id, Arg.Any<CancellationToken>()).Returns(User);
         _service
             .GetOpportunityAsync(OrganizationId, OpportunityId, Arg.Any<CancellationToken>())
-            .Returns(new OpportunitySnapshot(OpportunityId, OrganizationId, CompanyId, "Recruitment Q4"));
+            .Returns(
+                new OpportunitySnapshot(OpportunityId, OrganizationId, CompanyId, "Recruitment Q4")
+            );
         _service
             .GetCompanyAsync(CompanyId, Arg.Any<CancellationToken>())
             .Returns(new CompanySnapshot(CompanyId, "ACME Sp. z o.o.", "5260001234"));
-        _session.Events.FetchStreamStateAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>()).ReturnsNull();
+        _session
+            .Events.FetchStreamStateAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .ReturnsNull();
     }
 
     [Fact]
@@ -40,18 +44,30 @@ public class OpportunityTaskCompletedHandlerTests
     {
         var message = Message(completion: 1);
 
-        await OpportunityTaskCompletedHandler.Handle(message, _service, _session, CancellationToken.None);
+        await OpportunityTaskCompletedHandler.Handle(
+            message,
+            _service,
+            _session,
+            CancellationToken.None
+        );
 
         var activityId = OpportunityTaskCompletedHandler.ActivityIdOf(message.TaskId, 1);
 
-        var activity = Assert.Single(Written<ActivityCreated>(nameof(IEventStoreOperations.StartStream), activityId));
+        var activity = Assert.Single(
+            Written<ActivityCreated>(nameof(IEventStoreOperations.StartStream), activityId)
+        );
         Assert.Equal(SalesActivityType.Task, activity.ActivityType);
         Assert.Equal(User, activity.CreatedBy);
         Assert.Equal("Recruitment Q4", activity.OpportunityTitle);
-        Assert.Equal(OpportunityTaskCompletedHandler.NotePrefix + "Send recruitment proposal", activity.Note);
+        Assert.Equal(
+            OpportunityTaskCompletedHandler.NotePrefix + "Send recruitment proposal",
+            activity.Note
+        );
         Assert.Equal(CompletedAt, activity.CreatedAt);
 
-        var logged = Assert.Single(Written<OpportunityActivityLogged>(nameof(IEventStoreOperations.Append), OpportunityId));
+        var logged = Assert.Single(
+            Written<OpportunityActivityLogged>(nameof(IEventStoreOperations.Append), OpportunityId)
+        );
         Assert.Equal(activityId, logged.ActivityId);
         Assert.Equal(CompletedAt, logged.LoggedAt);
     }
@@ -67,7 +83,12 @@ public class OpportunityTaskCompletedHandlerTests
             )
             .Returns(new StreamState());
 
-        await OpportunityTaskCompletedHandler.Handle(message, _service, _session, CancellationToken.None);
+        await OpportunityTaskCompletedHandler.Handle(
+            message,
+            _service,
+            _session,
+            CancellationToken.None
+        );
 
         Assert.Empty(Written<ActivityCreated>(nameof(IEventStoreOperations.StartStream), null));
     }
@@ -97,13 +118,23 @@ public class OpportunityTaskCompletedHandlerTests
             .Where(call => call.GetMethodInfo().Name == method)
             .Select(call => call.GetArguments())
             .Where(arguments => streamId is null || Equals(arguments[0], streamId))
-            .SelectMany(arguments => arguments[1] switch
-            {
-                IEnumerable<object> events => events,
-                var single => [single!],
-            })
+            .SelectMany(arguments =>
+                arguments[1] switch
+                {
+                    IEnumerable<object> events => events,
+                    var single => [single!],
+                }
+            )
             .OfType<T>();
 
     private static OpportunityTaskCompleted Message(int completion) =>
-        new(OrganizationId, Guid.NewGuid(), completion, OpportunityId, "Send recruitment proposal", User.Id, CompletedAt);
+        new(
+            OrganizationId,
+            Guid.NewGuid(),
+            completion,
+            OpportunityId,
+            "Send recruitment proposal",
+            User.Id,
+            CompletedAt
+        );
 }

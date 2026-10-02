@@ -24,7 +24,10 @@ public sealed class ObjectStorageHealthCheck(IObjectStorage storage, string buck
         }
         catch (Exception exception) when (exception is not OperationCanceledException)
         {
-            return HealthCheckResult.Unhealthy($"Object storage bucket {bucket} unreachable", exception);
+            return HealthCheckResult.Unhealthy(
+                $"Object storage bucket {bucket} unreachable",
+                exception
+            );
         }
     }
 }

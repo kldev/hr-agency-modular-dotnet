@@ -28,6 +28,10 @@ internal static class MapAvailableForSubject
         CancellationToken ct
     ) =>
         TypedResults.Ok(
-            await repository.GetAvailableForms(user.GetOrganization, new SubjectRef(subjectKind, subjectId), ct)
+            await repository.GetAvailableForms(
+                user.GetOrganization,
+                new SubjectRef(subjectKind, subjectId),
+                ct
+            )
         );
 }

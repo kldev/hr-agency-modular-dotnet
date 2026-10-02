@@ -92,7 +92,10 @@ public class TaskItemHandlerTests
     {
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             CreateTaskItemHandler.Handle(
-                Create() with { CompanyId = Guid.NewGuid() },
+                Create() with
+                {
+                    CompanyId = Guid.NewGuid(),
+                },
                 _scenario.Service,
                 Substitute.For<IDocumentSession>(),
                 _scenario.Clock,
@@ -124,8 +127,14 @@ public class TaskItemHandlerTests
     {
         var foreignDeal = Guid.NewGuid();
         _scenario
-            .Opportunities.GetOpportunityAsync(foreignDeal, TaskScenario.Organization, Arg.Any<CancellationToken>())
-            .Returns(new OpportunitySnapshot(foreignDeal, OrganizationId, Guid.NewGuid(), "Other deal"));
+            .Opportunities.GetOpportunityAsync(
+                foreignDeal,
+                TaskScenario.Organization,
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                new OpportunitySnapshot(foreignDeal, OrganizationId, Guid.NewGuid(), "Other deal")
+            );
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             CreateTaskItemHandler.Handle(
@@ -175,7 +184,15 @@ public class TaskItemHandlerTests
 
         var message = Assert.Single(messages.OfType<OpportunityTaskCompleted>());
         Assert.Equal(
-            new OpportunityTaskCompleted(OrganizationId, task.Id, 1, OpportunityId, task.Title, UserId, Now),
+            new OpportunityTaskCompleted(
+                OrganizationId,
+                task.Id,
+                1,
+                OpportunityId,
+                task.Title,
+                UserId,
+                Now
+            ),
             message
         );
     }
@@ -200,7 +217,9 @@ public class TaskItemHandlerTests
     public async Task Complete_AfterReopening_CountsTheNextCompletion()
     {
         var task = Done();
-        task.Apply(new HrAgencySystem.Tasks.Events.TaskItemReopened(task.Id, OrganizationId, User, Now));
+        task.Apply(
+            new HrAgencySystem.Tasks.Events.TaskItemReopened(task.Id, OrganizationId, User, Now)
+        );
 
         var (completed, _, messages) = await CompleteTaskItemHandler.Handle(
             new CompleteTaskItem(task.Id, OrganizationId, UserId),
@@ -307,7 +326,11 @@ public class TaskItemHandlerTests
         var task = Open();
 
         var (updated, _) = await UpdateTaskItemHandler.Handle(
-            Update(task) with { Title = "Call the HR manager again", AssigneeId = ColleagueId },
+            Update(task) with
+            {
+                Title = "Call the HR manager again",
+                AssigneeId = ColleagueId,
+            },
             task,
             _scenario.Service,
             _scenario.Clock,
@@ -319,7 +342,11 @@ public class TaskItemHandlerTests
         Assert.Equal(task.Opportunity, updated.Opportunity);
         await _scenario
             .Opportunities.DidNotReceive()
-            .GetOpportunityAsync(Arg.Any<Guid>(), Arg.Any<SharedKernel.Tenant.OrganizationId>(), Arg.Any<CancellationToken>());
+            .GetOpportunityAsync(
+                Arg.Any<Guid>(),
+                Arg.Any<SharedKernel.Tenant.OrganizationId>(),
+                Arg.Any<CancellationToken>()
+            );
     }
 
     [Fact]
@@ -328,12 +355,21 @@ public class TaskItemHandlerTests
         var task = Open();
         var foreignDeal = Guid.NewGuid();
         _scenario
-            .Opportunities.GetOpportunityAsync(foreignDeal, TaskScenario.Organization, Arg.Any<CancellationToken>())
-            .Returns(new OpportunitySnapshot(foreignDeal, OrganizationId, Guid.NewGuid(), "Other deal"));
+            .Opportunities.GetOpportunityAsync(
+                foreignDeal,
+                TaskScenario.Organization,
+                Arg.Any<CancellationToken>()
+            )
+            .Returns(
+                new OpportunitySnapshot(foreignDeal, OrganizationId, Guid.NewGuid(), "Other deal")
+            );
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             UpdateTaskItemHandler.Handle(
-                Update(task) with { OpportunityId = foreignDeal },
+                Update(task) with
+                {
+                    OpportunityId = foreignDeal,
+                },
                 task,
                 _scenario.Service,
                 _scenario.Clock,

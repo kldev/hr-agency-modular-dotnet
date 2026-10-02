@@ -13,7 +13,12 @@ public interface ITaskItemInput
     TaskPriority Priority { get; }
 }
 
-public sealed record ValidTaskItemInput(string Title, string? Description, DateTimeOffset DueAt, TaskPriority Priority);
+public sealed record ValidTaskItemInput(
+    string Title,
+    string? Description,
+    DateTimeOffset DueAt,
+    TaskPriority Priority
+);
 
 /// <summary>Every field problem at once, in one <see cref="ValidationException"/>.</summary>
 public static class TaskItemInputValidator
@@ -34,7 +39,9 @@ public static class TaskItemInputValidator
         if (titleError is not null)
             errors.Add(titleError);
 
-        var description = string.IsNullOrWhiteSpace(input.Description) ? null : input.Description.Trim();
+        var description = string.IsNullOrWhiteSpace(input.Description)
+            ? null
+            : input.Description.Trim();
         if (description is { Length: > DescriptionMaxLength })
             errors.Add(DescriptionTooLongMessage);
 
@@ -47,6 +54,11 @@ public static class TaskItemInputValidator
         if (errors.Count > 0)
             throw new ValidationException(errors);
 
-        return new ValidTaskItemInput(title!.Value, description, input.DueAt.ToUniversalTime(), input.Priority);
+        return new ValidTaskItemInput(
+            title!.Value,
+            description,
+            input.DueAt.ToUniversalTime(),
+            input.Priority
+        );
     }
 }

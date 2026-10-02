@@ -26,6 +26,9 @@ internal static class MapComplete
         CancellationToken ct
     ) =>
         TypedResults.Ok(
-            await bus.InvokeAsync<TaskItemCompleted>(new CompleteTaskItem(taskId, user.OrganizationId, user.UserId), ct)
+            await bus.InvokeAsync<TaskItemCompleted>(
+                new CompleteTaskItem(taskId, user.OrganizationId, user.UserId),
+                ct
+            )
         );
 }

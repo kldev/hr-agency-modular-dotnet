@@ -31,7 +31,11 @@ internal static class FeedFile
         if (organization == null)
             return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));
 
-        var result = await storage.GetAsync($"{organization.Value}/jobs.{format}", FeedBuckets.Jobs, ct);
+        var result = await storage.GetAsync(
+            $"{organization.Value}/jobs.{format}",
+            FeedBuckets.Jobs,
+            ct
+        );
 
         if (result.FileNotFound)
             return TypedResults.NotFound(DomainObjectNotFound.NotFound("Feed", slug));

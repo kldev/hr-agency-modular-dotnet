@@ -1,11 +1,11 @@
 using HrAgencySystem.Files;
+using HrAgencySystem.Files.Service;
 using HrAgencySystem.FileService.Application;
 using HrAgencySystem.FileService.Config;
+using HrAgencySystem.FileService.Domain;
 using HrAgencySystem.FileService.Endpoints;
 using HrAgencySystem.FileService.Infrastructure;
 using HrAgencySystem.FileService.Infrastructure.Telemetry;
-using HrAgencySystem.FileService.Domain;
-using HrAgencySystem.Files.Service;
 using HrAgencySystem.Observability.AspNetCore;
 using HrAgencySystem.Observability.Health;
 using Microsoft.AspNetCore.Http.Features;

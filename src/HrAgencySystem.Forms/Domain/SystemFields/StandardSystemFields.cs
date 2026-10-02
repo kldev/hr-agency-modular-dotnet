@@ -22,12 +22,54 @@ public static class StandardSystemFields
 
     public static readonly IReadOnlyList<Definition> All =
     [
-        new("employee.firstName", FieldType.Text, "First name", null, new(MaxLength: 100), SystemFieldSource.WorkerFirstName),
-        new("employee.lastName", FieldType.Text, "Last name", null, new(MaxLength: 100), SystemFieldSource.WorkerLastName),
-        new("employee.dateOfBirth", FieldType.Date, "Date of birth", null, FieldRules.None, SystemFieldSource.WorkerDateOfBirth),
-        new("employee.citizenship", FieldType.Country, "Citizenship", null, FieldRules.None, SystemFieldSource.WorkerCitizenship),
-        new("employee.email", FieldType.Email, "E-mail", null, FieldRules.None, SystemFieldSource.WorkerEmail),
-        new("employee.phone", FieldType.Phone, "Phone", null, FieldRules.None, SystemFieldSource.WorkerPhone),
+        new(
+            "employee.firstName",
+            FieldType.Text,
+            "First name",
+            null,
+            new(MaxLength: 100),
+            SystemFieldSource.WorkerFirstName
+        ),
+        new(
+            "employee.lastName",
+            FieldType.Text,
+            "Last name",
+            null,
+            new(MaxLength: 100),
+            SystemFieldSource.WorkerLastName
+        ),
+        new(
+            "employee.dateOfBirth",
+            FieldType.Date,
+            "Date of birth",
+            null,
+            FieldRules.None,
+            SystemFieldSource.WorkerDateOfBirth
+        ),
+        new(
+            "employee.citizenship",
+            FieldType.Country,
+            "Citizenship",
+            null,
+            FieldRules.None,
+            SystemFieldSource.WorkerCitizenship
+        ),
+        new(
+            "employee.email",
+            FieldType.Email,
+            "E-mail",
+            null,
+            FieldRules.None,
+            SystemFieldSource.WorkerEmail
+        ),
+        new(
+            "employee.phone",
+            FieldType.Phone,
+            "Phone",
+            null,
+            FieldRules.None,
+            SystemFieldSource.WorkerPhone
+        ),
         new(
             "employee.pesel",
             FieldType.Text,

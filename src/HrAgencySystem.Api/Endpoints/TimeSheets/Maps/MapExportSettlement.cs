@@ -45,11 +45,7 @@ internal static class MapExportSettlement
             ct
         );
 
-        var bytes = SettlementWorkbook.Build(
-            year,
-            month,
-            SettlementCalculator.Rows(agreed, terms)
-        );
+        var bytes = SettlementWorkbook.Build(year, month, SettlementCalculator.Rows(agreed, terms));
 
         return TypedResults.File(
             bytes,

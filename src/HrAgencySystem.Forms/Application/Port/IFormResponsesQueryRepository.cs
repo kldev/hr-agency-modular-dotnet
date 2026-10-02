@@ -66,7 +66,11 @@ public interface IFormResponsesQueryRepository
     );
 
     /// <summary>Replayed, so a response opened right after "Next" shows what was just saved.</summary>
-    Task<FormResponseView?> GetResponse(OrganizationId organizationId, Guid responseId, CancellationToken ct);
+    Task<FormResponseView?> GetResponse(
+        OrganizationId organizationId,
+        Guid responseId,
+        CancellationToken ct
+    );
 
     /// <summary>
     /// A containment query on the answers - <c>data @> {"Answers": {code: value}}</c> - served by the

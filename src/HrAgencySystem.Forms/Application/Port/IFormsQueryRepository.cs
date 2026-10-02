@@ -37,7 +37,11 @@ public sealed record FormDefinitionView(
     DateTimeOffset? ModifiedAt
 );
 
-public sealed record FormVersionSummary(int Version, UserSnapshot PublishedBy, DateTimeOffset PublishedAt);
+public sealed record FormVersionSummary(
+    int Version,
+    UserSnapshot PublishedBy,
+    DateTimeOffset PublishedAt
+);
 
 /// <summary>
 /// A layout as it would be published, from a draft that may not even be saved: system fields filled
@@ -60,9 +64,18 @@ public interface IFormsQueryRepository
     );
 
     /// <summary>Replayed, not projected: the builder must see the draft it has just saved.</summary>
-    Task<FormDefinitionView?> GetForm(OrganizationId organizationId, Guid formId, CancellationToken ct);
+    Task<FormDefinitionView?> GetForm(
+        OrganizationId organizationId,
+        Guid formId,
+        CancellationToken ct
+    );
 
-    Task<FormVersion?> GetVersion(OrganizationId organizationId, Guid formId, int version, CancellationToken ct);
+    Task<FormVersion?> GetVersion(
+        OrganizationId organizationId,
+        Guid formId,
+        int version,
+        CancellationToken ct
+    );
 
     /// <summary>
     /// Forms that can be started for this person now: published, not archived, for their kind of

@@ -29,11 +29,15 @@ public class SettlementCalculatorTests
     [InlineData(RateUnit.Daily)]
     public void AmountFor_ARateThatIsNotHourly_IsEmpty(RateUnit unit) =>
         Assert.Null(
-            SettlementCalculator.AmountFor(160 * 60, new WorkRate(8500m, "PLN", unit, RateBasis.Gross))
+            SettlementCalculator.AmountFor(
+                160 * 60,
+                new WorkRate(8500m, "PLN", unit, RateBasis.Gross)
+            )
         );
 
     [Fact]
-    public void AmountFor_NoRate_IsEmpty() => Assert.Null(SettlementCalculator.AmountFor(480, null));
+    public void AmountFor_NoRate_IsEmpty() =>
+        Assert.Null(SettlementCalculator.AmountFor(480, null));
 
     /// <summary>30 minutes at 0.01 is half a grosz; banker's rounding would make it nothing.</summary>
     [Fact]
@@ -66,7 +70,9 @@ public class SettlementCalculatorTests
     {
         var sheet = Sheet(Person("Anna", "Kowalska"), Day(1, 480));
 
-        var row = Assert.Single(SettlementCalculator.Rows([sheet], [Employment(sheet.UserId, null)]));
+        var row = Assert.Single(
+            SettlementCalculator.Rows([sheet], [Employment(sheet.UserId, null)])
+        );
 
         Assert.Equal(480, row.Minutes);
         Assert.Null(row.Rate);
@@ -129,10 +135,7 @@ public class SettlementCalculatorTests
         var total = SettlementCalculator.Total(
             SettlementCalculator.Rows(
                 [anna, ola],
-                [
-                    Employment(anna.UserId, Hourly(45m)),
-                    Employment(ola.UserId, Hourly(12m, "EUR")),
-                ]
+                [Employment(anna.UserId, Hourly(45m)), Employment(ola.UserId, Hourly(12m, "EUR"))]
             )
         );
 

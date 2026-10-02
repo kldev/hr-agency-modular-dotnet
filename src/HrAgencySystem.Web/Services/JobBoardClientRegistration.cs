@@ -32,10 +32,15 @@ public static class JobBoardClientRegistration
                 .AddHttpClient<IJobBoardClient, HttpJobBoardClient>(
                     (provider, client) =>
                     {
-                        var config = provider.GetRequiredService<IOptions<InternalApiConfig>>().Value;
+                        var config = provider
+                            .GetRequiredService<IOptions<InternalApiConfig>>()
+                            .Value;
 
                         client.BaseAddress = new Uri(config.BaseUrl.TrimEnd('/') + "/");
-                        client.DefaultRequestHeaders.Add(HttpJobBoardClient.ApiKeyHeader, config.ApiKey);
+                        client.DefaultRequestHeaders.Add(
+                            HttpJobBoardClient.ApiKeyHeader,
+                            config.ApiKey
+                        );
                     }
                 )
                 .AddStandardResilienceHandler(options =>

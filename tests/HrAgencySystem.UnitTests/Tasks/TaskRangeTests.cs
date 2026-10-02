@@ -23,7 +23,11 @@ public class TaskRangeTests
     public void Day_JustAfterLocalMidnight_IsAlreadyTheNextDay()
     {
         // 22:30 UTC on the 24th is 00:30 on the 25th in Warsaw.
-        var range = TaskRange.Resolve(TaskRangeKind.Day, Warsaw, new DateTimeOffset(2026, 9, 24, 22, 30, 0, TimeSpan.Zero));
+        var range = TaskRange.Resolve(
+            TaskRangeKind.Day,
+            Warsaw,
+            new DateTimeOffset(2026, 9, 24, 22, 30, 0, TimeSpan.Zero)
+        );
 
         Assert.Equal(new DateTimeOffset(2026, 9, 24, 22, 0, 0, TimeSpan.Zero), range.From);
     }
@@ -41,7 +45,11 @@ public class TaskRangeTests
     public void Week_OnASunday_IsTheWeekThatEndsThatDay()
     {
         // Sunday, 27 September 2026, noon in Warsaw.
-        var range = TaskRange.Resolve(TaskRangeKind.Week, Warsaw, new DateTimeOffset(2026, 9, 27, 10, 0, 0, TimeSpan.Zero));
+        var range = TaskRange.Resolve(
+            TaskRangeKind.Week,
+            Warsaw,
+            new DateTimeOffset(2026, 9, 27, 10, 0, 0, TimeSpan.Zero)
+        );
 
         Assert.Equal(new DateTimeOffset(2026, 9, 20, 22, 0, 0, TimeSpan.Zero), range.From);
     }
@@ -50,7 +58,11 @@ public class TaskRangeTests
     public void Month_CrossingTheClockChange_EndsAtLocalMidnightInWinterTime()
     {
         // October ends on the 31st in CET (+01:00): the clocks go back on the 25th.
-        var range = TaskRange.Resolve(TaskRangeKind.Month, Warsaw, new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero));
+        var range = TaskRange.Resolve(
+            TaskRangeKind.Month,
+            Warsaw,
+            new DateTimeOffset(2026, 10, 10, 10, 0, 0, TimeSpan.Zero)
+        );
 
         Assert.Equal(new DateTimeOffset(2026, 9, 30, 22, 0, 0, TimeSpan.Zero), range.From);
         Assert.Equal(new DateTimeOffset(2026, 10, 31, 23, 0, 0, TimeSpan.Zero), range.To);
@@ -59,13 +71,18 @@ public class TaskRangeTests
     [Fact]
     public void NoTimeZone_CountsInWarsaw()
     {
-        Assert.Equal(TaskRange.Resolve(TaskRangeKind.Day, Warsaw, Now), TaskRange.Resolve(TaskRangeKind.Day, null, Now));
+        Assert.Equal(
+            TaskRange.Resolve(TaskRangeKind.Day, Warsaw, Now),
+            TaskRange.Resolve(TaskRangeKind.Day, null, Now)
+        );
     }
 
     [Fact]
     public void UnknownTimeZone_IsRefused()
     {
-        var error = Assert.Throws<BusinessRuleException>(() => TaskRange.Resolve(TaskRangeKind.Day, "Mars/Olympus", Now));
+        var error = Assert.Throws<BusinessRuleException>(() =>
+            TaskRange.Resolve(TaskRangeKind.Day, "Mars/Olympus", Now)
+        );
 
         Assert.Equal(TaskRange.UnknownTimeZoneMessage, error.Message);
     }

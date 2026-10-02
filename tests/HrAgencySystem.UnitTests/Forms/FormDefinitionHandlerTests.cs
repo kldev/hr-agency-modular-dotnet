@@ -21,7 +21,9 @@ public class FormDefinitionHandlerTests : BaseTest
     public async Task Create_TakenCode_Refuses()
     {
         var reservations = Substitute.For<IFormCodeReservationRepository>();
-        reservations.ExistsAsync(OrganizationId, "gdpr-consent", Arg.Any<CancellationToken>()).Returns(true);
+        reservations
+            .ExistsAsync(OrganizationId, "gdpr-consent", Arg.Any<CancellationToken>())
+            .Returns(true);
 
         var error = await Assert.ThrowsAsync<BusinessRuleException>(() =>
             CreateFormDefinitionHandler.Handle(
@@ -60,7 +62,11 @@ public class FormDefinitionHandlerTests : BaseTest
     {
         var error = await Assert.ThrowsAsync<ValidationException>(() =>
             CreateFormDefinitionHandler.Handle(
-                Create("Bad Code") with { Name = " ", SubjectKind = "candidate" },
+                Create("Bad Code") with
+                {
+                    Name = " ",
+                    SubjectKind = "candidate",
+                },
                 Service(),
                 Substitute.For<IFormCodeReservationRepository>(),
                 Substitute.For<IDocumentSession>(),
@@ -69,7 +75,10 @@ public class FormDefinitionHandlerTests : BaseTest
             )
         );
 
-        Assert.Equal([FormCode.FormatMessage, FormName.RequiredMessage, SubjectKinds.UnknownKindMessage], error.Errors);
+        Assert.Equal(
+            [FormCode.FormatMessage, FormName.RequiredMessage, SubjectKinds.UnknownKindMessage],
+            error.Errors
+        );
     }
 
     [Fact]
@@ -88,7 +97,10 @@ public class FormDefinitionHandlerTests : BaseTest
             )
         );
 
-        Assert.Equal([FormLayoutPolicy.LabelRequiredMessage], error.FieldErrors[broken.FieldId.ToString()]);
+        Assert.Equal(
+            [FormLayoutPolicy.LabelRequiredMessage],
+            error.FieldErrors[broken.FieldId.ToString()]
+        );
     }
 
     [Fact]
@@ -112,7 +124,19 @@ public class FormDefinitionHandlerTests : BaseTest
     public async Task Publish_FreezesTheVersionWithTodaysCatalogue()
     {
         // The draft was saved when PESEL was called "PESEL"; the catalogue has renamed it since.
-        var draft = Form(draft: [Page(Own("gdpr.consent", FieldType.Boolean), FromCatalogue(PeselFieldId) with { Code = "employee.pesel", Label = "PESEL" })]);
+        var draft = Form(
+            draft:
+            [
+                Page(
+                    Own("gdpr.consent", FieldType.Boolean),
+                    FromCatalogue(PeselFieldId) with
+                    {
+                        Code = "employee.pesel",
+                        Label = "PESEL",
+                    }
+                ),
+            ]
+        );
         var repository = Repository();
         repository
             .GetCatalogueAsync(OrganizationId, Arg.Any<CancellationToken>())
@@ -128,16 +152,34 @@ public class FormDefinitionHandlerTests : BaseTest
         );
 
         Assert.Equal(1, published.Version);
-        Assert.Equal("National ID (PESEL)", published.Pages.AllFields.Single(f => f.Code == "employee.pesel").Label);
-        repository.Received(1).AddVersion(Arg.Is<FormVersion>(v =>
-            v.Id == FormsStreamId.ForVersion(FormId, 1) && v.Version == 1 && v.Pages == published.Pages));
+        Assert.Equal(
+            "National ID (PESEL)",
+            published.Pages.AllFields.Single(f => f.Code == "employee.pesel").Label
+        );
+        repository
+            .Received(1)
+            .AddVersion(
+                Arg.Is<FormVersion>(v =>
+                    v.Id == FormsStreamId.ForVersion(FormId, 1)
+                    && v.Version == 1
+                    && v.Pages == published.Pages
+                )
+            );
     }
 
     [Fact]
     public async Task Publish_NumbersVersionsOneAfterAnother()
     {
         var form = Form(publishedVersions: 2);
-        form.Apply(new HrAgencySystem.Forms.Events.FormDraftSaved(OrganizationId, FormId, form.Pages, User, Yesterday));
+        form.Apply(
+            new HrAgencySystem.Forms.Events.FormDraftSaved(
+                OrganizationId,
+                FormId,
+                form.Pages,
+                User,
+                Yesterday
+            )
+        );
 
         var (published, _) = await PublishFormHandler.Handle(
             new PublishForm(FormId, OrganizationId, User.Id),

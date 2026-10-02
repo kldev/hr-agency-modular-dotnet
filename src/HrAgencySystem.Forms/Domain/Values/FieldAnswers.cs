@@ -44,8 +44,18 @@ public static class FieldAnswers
 
         IReadOnlyList<string>? values = value.Values is null
             ? null
-            : [.. value.Values.Where(v => !string.IsNullOrWhiteSpace(v)).Select(v => v.Trim()).Distinct()];
+            :
+            [
+                .. value
+                    .Values.Where(v => !string.IsNullOrWhiteSpace(v))
+                    .Select(v => v.Trim())
+                    .Distinct(),
+            ];
 
-        return value with { Text = text, Values = values is { Count: 0 } ? null : values };
+        return value with
+        {
+            Text = text,
+            Values = values is { Count: 0 } ? null : values,
+        };
     }
 }
