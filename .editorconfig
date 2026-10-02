@@ -34,3 +34,16 @@ dotnet_diagnostic.IDE1006.severity = none
 dotnet_diagnostic.CA1707.severity = none
 # An Assert inside a lambda is the point of the lambda, not a precondition check.
 resharper_parameter_only_used_for_precondition_check_local_highlighting = none
+
+# Wolverine discovers handlers by name - a class ending in Handler, a static Handle/HandleAsync -
+# and NotificationWorker does the same. Nothing calls them, the generated code does, so "never
+# used" here is a false positive by construction. The glob is the discovery rule itself.
+[src/**/*Handler.cs]
+resharper_unused_type_global_highlighting = none
+resharper_unused_member_global_highlighting = none
+
+# Request records are bound by Minimal APIs and stay internal so integration tests can send the
+# same type the endpoint reads (CLAUDE.md, *API layer*); the binder is what instantiates them.
+[src/HrAgencySystem.Api/Endpoints/**/Maps/*.cs]
+resharper_class_never_instantiated_global_highlighting = none
+resharper_member_can_be_private_global_highlighting = none
