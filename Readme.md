@@ -10,6 +10,23 @@ The project explores how far a well-structured monolith can go using **Marten** 
 
 ---
 
+## Specs and decisions
+
+The project was built plan-first; the specs and decisions below were **reverse-engineered from the whole commit history** (603 commits, 2026-08-30 → 2026-10-02) and are kept current from here on, following [spec-driven development for solo developers](https://www.danvega.dev/blog/spec-driven-development-solo-developers).
+
+| File | What it holds |
+| --- | --- |
+| [`PRODUCT.md`](PRODUCT.md) | what the product proves, its non-goals (not ever / not yet), key decisions, stops and current state |
+| [`.shipit/specs/done/`](.shipit/specs/done/README.md) | one spec per feature (001-033): why, promises, surface, out of scope, acceptance criteria, history |
+| [`docs/adr/`](docs/adr/README.md) | architecture decision records (ADR-0001-0025): context, decision, alternatives, consequences, revisit when |
+| [`.shipit/open.md`](.shipit/open.md) | known gaps and rough edges, checked against the code |
+| [`.shipit/retro/findings.md`](.shipit/retro/findings.md) | lessons from the history: process findings and stack traps, each with the change it led to |
+| [`verify`](verify) | `./verify <feature>` runs the tests behind one spec, `./verify list` names them, `./verify all` runs everything |
+
+New work starts from [`.shipit/specs/TEMPLATE.md`](.shipit/specs/TEMPLATE.md); a new decision from [`docs/adr/TEMPLATE.md`](docs/adr/TEMPLATE.md).
+
+---
+
 ## What the product does
 
 A SaaS for recruitment agencies hiring for IT roles. Agencies post to JustJoinIt, NoFluffJobs and RocketJobs alongside Pracuj.pl and OLX, and `InterviewType` includes `Technical`.
@@ -25,7 +42,7 @@ The product has **three axes**, and the easiest mistake in the model is confusin
 The main flow, including where it currently breaks off:
 
 ```text
-SalesOpportunity  ──X──►  Project (exists, not yet linked to the opportunity)
+SalesOpportunity  ··───►  Project (may point at the opportunity it was sold as; created by hand)
 New→…→Won/Lost            Draft→Active→Suspended→Completed/Cancelled
                                   │
                                   ▼
@@ -48,7 +65,7 @@ Organization (tenant)
 
 A team outlives the people on it: "the Tiggers team handles this" survives recruiter rotation in a way that "Katy handles this" does not.
 
-**Known gaps, on purpose:** a won opportunity should produce a project; the `Projects` module exists, but nothing links it to `SalesOpportunity` yet — a project is created by hand and points at a company. Nothing enforces "every job description has at least one job post". There is no integration with the job boards: `PostToChannel` records that a post was published, it does not publish it.
+**Known gaps, on purpose:** a won opportunity should produce a project; today a project is created by hand, points at a company and may optionally point at the opportunity it was sold as. Nothing enforces "every job description has at least one job post". There is no integration with the job boards: `PostToChannel` records that a post was published, it does not publish it.
 
 ---
 

@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Runs the tests that prove one feature, by the name its spec uses in .shipit/specs/done.
+#   ./verify <feature>    the tests behind one feature
+#   ./verify all          every test project
+#   ./verify list         the feature names
+# Integration tests start their own PostgreSQL Testcontainer, so Docker has to be running.
+set -euo pipefail
+cd "$(dirname "$0")"
+
+U=tests/HrAgencySystem.UnitTests
+I=tests/HrAgencySystem.IntegrationTests
+
+# feature -> "project|namespace filter" pairs, separated by spaces
+declare -A FEATURES=(
+  [organizations]="$U|UnitTests.Organizations. $I.Platform|IntegrationTests.Organization. $I.Persistence|IntegrationTests.Organization."
+  [identity]="$U|UnitTests.Identity. $I.Platform|IntegrationTests.Auth. $I.Platform|IntegrationTests.Users. $I.Platform|IntegrationTests.Owner."
+  [companies]="$U|UnitTests.Companies. $I.Sales|IntegrationTests.Companies."
+  [job-descriptions]="$U|UnitTests.JobDescriptions. $I.Recruitment|IntegrationTests.JobDescriptions."
+  [job-posts]="$U|UnitTests.JobPostings. $I.Recruitment|IntegrationTests.JobPosts."
+  [candidates]="$U|UnitTests.Candidates. $U|UnitTests.Applications. $I.Recruitment|IntegrationTests.Candidates."
+  [feeds]="$U|UnitTests.Feeds. $I.Recruitment|IntegrationTests.Feeds. $I.Persistence|IntegrationTests.Feeds."
+  [job-board]="$I.Recruitment|IntegrationTests.Internal."
+  [interviews]="$I.Recruitment|IntegrationTests.Interviews. $I.Persistence|IntegrationTests.Interviews."
+  [sales]="$U|UnitTests.Sales. $I.Sales|IntegrationTests.SalesOpportunities. $I.Sales|IntegrationTests.SalesActivities. $I.Sales|IntegrationTests.SalesFollowUpActions."
+  [suggestions]="$I.CrossCutting|IntegrationTests.Suggestion."
+  [emails]="$U|UnitTests.Notifications. tests/HrAgencySystem.EmailTemplates.UnitTests|"
+  [teams]="$U|UnitTests.Teams. $I.Platform|IntegrationTests.Teams."
+  [files]="$U|UnitTests.Files. tests/HrAgencySystem.FileService.UnitTests|"
+  [projects]="$U|UnitTests.Projects. $U|UnitTests.Compliance. $I.Delivery|IntegrationTests.Projects."
+  [legal-entities]="$U|UnitTests.LegalEntities. $I.Delivery|IntegrationTests.LegalEntities."
+  [workers]="$U|UnitTests.Workers. $I.Delivery|IntegrationTests.Workers."
+  [agency]="$U|UnitTests.Agency. $I.Agency|IntegrationTests.Agency."
+  [timeline]="$U|UnitTests.Applications. $I.Recruitment|IntegrationTests.Timeline."
+  [reports]="$U|UnitTests.Reports. $I.CrossCutting|IntegrationTests.Reports. tests/HrAgencySystem.ReportsService.UnitTests| tests/HrAgencySystem.ReportsService.IntegrationTests|"
+  [forms]="$U|UnitTests.Forms. $I.Delivery|IntegrationTests.Forms."
+  [tasks]="$U|UnitTests.Tasks. $I.Sales|IntegrationTests.Tasks."
+  [observability]="$I.Platform|IntegrationTests.Observability. $I.Platform|IntegrationTests.Hosting."
+)
+
+run() {
+  local project=${1%%|*} filter=${1#*|}
+  echo "==> $project ${filter:+(~$filter)}"
+  if [[ -n $filter ]]; then
+    dotnet test "$project" --filter "FullyQualifiedName~$filter"
+  else
+    dotnet test "$project"
+  fi
+}
+
+case "${1:-}" in
+  "" | -h | --help)
+    sed -n '2,6p' "$0" | sed 's/^# \{0,1\}//'
+    ;;
+  list)
+    printf '%s\n' "${!FEATURES[@]}" | sort
+    ;;
+  all)
+    dotnet test HrAgencySystem.slnx
+    ;;
+  *)
+    entries=${FEATURES[$1]:-}
+    if [[ -z $entries ]]; then
+      echo "unknown feature '$1' - see ./verify list" >&2
+      exit 2
+    fi
+    for entry in $entries; do run "$entry"; done
+    ;;
+esac
