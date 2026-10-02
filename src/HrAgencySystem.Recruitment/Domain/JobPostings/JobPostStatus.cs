@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Recruitment.Domain.JobPostings;
 
 public enum JobPostStatus
@@ -23,6 +25,7 @@ public enum JobPostStatus
     Archived,
 }
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum JobPostStatusApi
 {
     Published,

@@ -1,4 +1,5 @@
 using HrAgencySystem.Agency.Domain;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.Agency.Application.TimeSheets.Return;
 
@@ -16,5 +17,6 @@ public sealed record ReturnTimeSheetForCorrection(
     Guid ReturnedBy
 )
 {
+    [UsedImplicitly] // Wolverine's [AggregateHandler] loads the stream by this id.
     public Guid Id => AgencyStreamId.ForTimeSheet(OrganizationId, UserId, Year, Month);
 }

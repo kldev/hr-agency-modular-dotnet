@@ -1,4 +1,5 @@
 using HrAgencySystem.Forms.Domain.Values;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.Forms.Domain.Layout;
 
@@ -14,6 +15,7 @@ public sealed record FieldVisibility(
     FieldValue? Value
 );
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum VisibilityOperator
 {
     Equals,

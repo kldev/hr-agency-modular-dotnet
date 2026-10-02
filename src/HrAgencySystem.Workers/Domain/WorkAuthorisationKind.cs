@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Workers.Domain;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace HrAgencySystem.Workers.Domain;
 /// costs nothing, and the alternative - free text - makes "whose permit expires next month"
 /// impossible to ask, which is the one question legalisation actually has.
 /// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum WorkAuthorisationKind
 {
     WorkPermit,

@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Recruitment.Domain.JobPostings;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum PostingChannelType
 {
     /**

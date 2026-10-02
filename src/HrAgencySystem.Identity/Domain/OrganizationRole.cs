@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Identity.Domain;
 
 /// <summary>
@@ -25,6 +27,7 @@ public enum OrganizationRole
     System,
 }
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum OrganizationRoleApi
 {
     Admin,

@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Workers.Domain;
 
 /// <summary>
@@ -9,6 +11,7 @@ namespace HrAgencySystem.Workers.Domain;
 /// one posting and not of the person.
 /// </para>
 /// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum WorkerDocumentCategory
 {
     Identity,

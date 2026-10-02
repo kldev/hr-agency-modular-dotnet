@@ -1,4 +1,5 @@
 using HrAgencySystem.SharedKernel.Exception;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.SharedKernel.ValueObjects;
 
@@ -14,6 +15,7 @@ public enum RateUnit
 /// Before or after tax. Without it the number means nothing to the person being offered it, and
 /// two people comparing offers are comparing different things.
 /// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum RateBasis
 {
     Gross,

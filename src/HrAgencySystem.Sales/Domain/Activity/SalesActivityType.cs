@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Sales.Domain.Activity;
 
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum SalesActivityType
 {
     Call,

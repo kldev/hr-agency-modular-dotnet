@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Workers.Domain;
 
 /// <summary>
@@ -5,6 +7,7 @@ namespace HrAgencySystem.Workers.Domain;
 /// company - somebody moving to a project run by another of our companies needs new ones, even with
 /// the same client.
 /// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum AssignmentDocumentCategory
 {
     /// <summary>The contract or annex covering this posting.</summary>

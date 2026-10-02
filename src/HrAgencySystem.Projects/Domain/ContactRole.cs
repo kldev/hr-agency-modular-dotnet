@@ -1,9 +1,12 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Projects.Domain;
 
 /// <summary>
 /// One contact model with roles rather than a field per role: a third role would otherwise mean a
 /// schema change. Four of these sit on the client's side of the table.
 /// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.Members)] // Values arrive through the API and stored events.
 public enum ContactRole
 {
     /// <summary>Who answers for the project at the client. Required before a project goes live.</summary>
