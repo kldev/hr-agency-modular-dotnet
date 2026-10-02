@@ -49,4 +49,38 @@
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Platform" />
     <InternalsVisibleTo Include="HrAgencySystem.IntegrationTests.Shared" />
   </ItemGroup>
+
+  <!--
+    Installs the git hooks (.husky) on the first restore of a fresh clone - without it the hooks
+    are only files in the repository and nothing ever runs them. Skipped where there is no git
+    working tree (the Docker build context excludes .git) and with HUSKY=0.
+  -->
+  <PropertyGroup>
+    <HuskyRoot>$(MSBuildThisFileDirectory)../../</HuskyRoot>
+  </PropertyGroup>
+  <Target
+    Name="Husky"
+    AfterTargets="Restore"
+    Condition="'$(HUSKY)' != '0' And Exists('$(HuskyRoot).git')"
+    Inputs="$(HuskyRoot)dotnet-tools.json"
+    Outputs="$(HuskyRoot).husky/_/install.stamp"
+  >
+    <Exec
+      Command="dotnet tool restore"
+      StandardOutputImportance="Low"
+      StandardErrorImportance="High"
+      WorkingDirectory="$(HuskyRoot)"
+    />
+    <Exec
+      Command="dotnet husky install"
+      StandardOutputImportance="Low"
+      StandardErrorImportance="High"
+      WorkingDirectory="$(HuskyRoot)"
+    />
+    <Touch
+      Files="$(HuskyRoot).husky/_/install.stamp"
+      AlwaysCreate="true"
+      Condition="Exists('$(HuskyRoot).husky/_')"
+    />
+  </Target>
 </Project>
