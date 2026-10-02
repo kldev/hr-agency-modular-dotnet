@@ -12,7 +12,6 @@ using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Wolverine;
@@ -25,7 +24,25 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        Environment.SetEnvironmentVariable("ConnectionStrings__Postgres", connectionString);
+        // Set here, not inside a configuration callback: by the time one runs the host has already
+        // picked its environment, and the factory's default is Development - which would map the
+        // seeding endpoints, register the seeder and read appsettings.Development.json.
+        builder.UseEnvironment("Testing");
+
+        // UseSetting rather than ConfigureAppConfiguration: Program.cs reads these before Build().
+        builder.UseSetting("ConnectionStrings:Postgres", connectionString);
+        builder.UseSetting("Jwt:Issuer", "hr-agency-api");
+        builder.UseSetting("Jwt:Audience", "hr-agency");
+        builder.UseSetting("Jwt:SecretKey", "integration-tests-jwt-secret-at-least-32-bytes");
+        builder.UseSetting("FileService:Secret", "integration-tests-file-service-secret");
+        builder.UseSetting("Reports:Secret", "integration-tests-reports-service-secret");
+        builder.UseSetting("Application:FeedUrl", "http://localhost:5050");
+        builder.UseSetting("Application:PortalUrl", "http://localhost:4300");
+        // Never dialled - the external transports are stubbed below - but the URI still has to parse.
+        builder.UseSetting("RabbitMq:Host", "localhost");
+        builder.UseSetting("RabbitMq:Username", "guest");
+        builder.UseSetting("RabbitMq:Password", "guest");
+        builder.UseSetting("RabbitMq:VHost", "/");
 
         builder.ConfigureServices(services =>
         {
@@ -75,27 +92,6 @@ public class ApiApplicationFactory(string connectionString) : WebApplicationFact
 
             ConfigureAuthentication(services);
         });
-
-        builder.ConfigureAppConfiguration(
-            (_, configuration) =>
-            {
-                configuration.AddInMemoryCollection(
-                    new Dictionary<string, string?>
-                    {
-                        ["ConnectionStrings:Postgres"] = connectionString,
-                    }
-                );
-                builder.UseEnvironment("Testing");
-            }
-        );
-        // builder.ConfigureLogging(logging =>
-        // {
-        //     logging.ClearProviders();
-        //
-        //     logging.AddProvider(LoggerProvider);
-        //
-        //     logging.SetMinimumLevel(LogLevel.Debug);
-        // });
     }
 
     private void ConfigureAuthentication(IServiceCollection services)
