@@ -24,10 +24,6 @@ public sealed record WorkDuration
 
     public int TotalMinutes { get; }
 
-    public int Hours => TotalMinutes / 60;
-
-    public int Minutes => TotalMinutes % 60;
-
     public static (WorkDuration? value, string? error) TryCreate(int hours, int minutes)
     {
         if (hours is < 0 or > 24)

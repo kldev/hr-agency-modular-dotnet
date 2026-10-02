@@ -27,10 +27,4 @@ public interface IObjectStorage
         string bucketName,
         CancellationToken cancellationToken
     );
-
-    /// <summary>
-    /// A time limited direct link to the object. Nothing uses it yet; it exists so that moving the
-    /// download off the application process later is a wiring change rather than a redesign.
-    /// </summary>
-    Uri CreatePresignedGetUrl(string key, string bucketName, TimeSpan expiresIn);
 }

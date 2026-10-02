@@ -91,46 +91,6 @@ public static class SupervisorPolicy
         return found;
     }
 
-    /// <summary>How deep a unit sits, counting the root as zero. Straight from the parent chain.</summary>
-    public static int DepthOf(IReadOnlyList<OrgUnit> units, OrgUnit unit)
-    {
-        var depth = 0;
-        var current = unit;
-
-        while (current.ParentId is { } parentId)
-        {
-            var parent = units.FirstOrDefault(candidate => candidate.UnitId == parentId);
-
-            if (parent is null)
-                break;
-
-            depth++;
-            current = parent;
-        }
-
-        return depth;
-    }
-
-    /// <summary>The units from the root down to this one, this one last.</summary>
-    public static IReadOnlyList<Guid> PathOf(IReadOnlyList<OrgUnit> units, OrgUnit unit)
-    {
-        var path = new List<Guid> { unit.UnitId };
-        var current = unit;
-
-        while (current.ParentId is { } parentId)
-        {
-            var parent = units.FirstOrDefault(candidate => candidate.UnitId == parentId);
-
-            if (parent is null)
-                break;
-
-            path.Insert(0, parent.UnitId);
-            current = parent;
-        }
-
-        return path;
-    }
-
     /// <summary>
     /// Whether one person stands above another anywhere in the chart - their direct supervisor, or
     /// anybody further up the same line.

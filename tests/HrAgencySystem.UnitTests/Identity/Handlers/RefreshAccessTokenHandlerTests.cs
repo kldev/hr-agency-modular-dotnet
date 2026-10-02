@@ -98,9 +98,7 @@ public sealed class RefreshAccessTokenHandlerTests
 
         await Rejected("never-issued");
 
-        await _refreshTokens
-            .DidNotReceive()
-            .RevokeFamilyAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _refreshTokens.DidNotReceive().RevokeFamilyAsync(Arg.Any<Guid>());
     }
 
     [Fact]
@@ -114,17 +112,11 @@ public sealed class RefreshAccessTokenHandlerTests
 
         await Rejected(value);
 
-        await _refreshTokens
-            .Received(1)
-            .RevokeFamilyAsync(stored.FamilyId, Arg.Any<CancellationToken>());
+        await _refreshTokens.Received(1).RevokeFamilyAsync(stored.FamilyId);
 
         await _refreshTokens
             .DidNotReceive()
-            .RotateAsync(
-                Arg.Any<RefreshToken>(),
-                Arg.Any<RefreshToken>(),
-                Arg.Any<CancellationToken>()
-            );
+            .RotateAsync(Arg.Any<RefreshToken>(), Arg.Any<RefreshToken>());
     }
 
     [Fact]
@@ -136,9 +128,7 @@ public sealed class RefreshAccessTokenHandlerTests
 
         await Rejected(value, new FixedClock(Now.AddDays(ExpiresInDays)));
 
-        await _refreshTokens
-            .Received(1)
-            .RevokeFamilyAsync(stored.FamilyId, Arg.Any<CancellationToken>());
+        await _refreshTokens.Received(1).RevokeFamilyAsync(stored.FamilyId);
     }
 
     [Fact]

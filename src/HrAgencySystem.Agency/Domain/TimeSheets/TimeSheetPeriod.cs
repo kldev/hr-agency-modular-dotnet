@@ -22,8 +22,6 @@ public sealed record TimeSheetPeriod
 
     public DateOnly FirstDay => new(Year, Month, 1);
 
-    public DateOnly LastDay => FirstDay.AddMonths(1).AddDays(-1);
-
     public static (TimeSheetPeriod? value, string? error) TryCreate(int year, int month)
     {
         if (year is < 2000 or > 2100)

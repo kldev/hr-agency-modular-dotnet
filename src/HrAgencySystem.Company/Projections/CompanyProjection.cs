@@ -85,7 +85,7 @@ public sealed record CompanyProjection(
         return this with { ProfileCompletedAt = @event.CompletedAt };
     }
 
-    public CompanyProjection Apply(CompanyJobPostCreated @event)
+    public CompanyProjection Apply(CompanyJobPostCreated _)
     {
         return this with { JobsPostCount = JobsPostCount + 1 };
     }

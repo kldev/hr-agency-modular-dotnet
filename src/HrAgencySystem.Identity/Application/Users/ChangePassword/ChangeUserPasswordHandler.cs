@@ -48,7 +48,7 @@ public static class ChangeUserPasswordHandler
 
         // A new password has to end the old sessions, otherwise a refresh token taken together with
         // the old password keeps working for the rest of its thirty days.
-        await refreshTokens.RevokeUserSessionsAsync(aggregate.OrganizationId, aggregate.Id, ct);
+        await refreshTokens.RevokeUserSessionsAsync(aggregate.OrganizationId, aggregate.Id);
 
         var user = await service.GetUserAsync(command.ModifiedBy, ct);
 

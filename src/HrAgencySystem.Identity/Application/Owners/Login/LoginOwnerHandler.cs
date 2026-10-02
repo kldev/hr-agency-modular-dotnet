@@ -3,7 +3,6 @@ using HrAgencySystem.Identity.Domain.ValueObjects;
 using HrAgencySystem.Identity.Infrastructure.Persistence;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using Microsoft.Extensions.Logging;
 
 namespace HrAgencySystem.Identity.Application.Owners.Login;
 
@@ -11,7 +10,6 @@ public static class LoginOwnerHandler
 {
     public static async Task<LoginOwnerResult> Handle(
         LoginOwner command,
-        ILogger logger,
         IPasswordHasher hasher,
         IAccountRepository repository,
         IJwtTokenService tokenService,

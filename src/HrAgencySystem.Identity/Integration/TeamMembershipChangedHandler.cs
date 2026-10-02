@@ -44,6 +44,7 @@ public class TeamMembershipChangedHandler
 public static class UserTeamChangedHandler
 {
     [AggregateHandler]
+    // ReSharper disable once UnusedParameter.Global - Wolverine loads the stream through it and appends the result there.
     public static Task<UserTeamChanged> Handle(UserTeamChanged command, User aggregate)
     {
         return Task.FromResult(command);

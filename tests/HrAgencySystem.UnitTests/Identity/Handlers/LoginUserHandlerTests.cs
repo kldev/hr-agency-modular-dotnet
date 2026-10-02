@@ -10,7 +10,6 @@ using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 
@@ -18,7 +17,6 @@ namespace HrAgencySystem.UnitTests.Identity.Handlers;
 
 public sealed class LoginUserHandlerTests
 {
-    private readonly ILogger _logger = Substitute.For<ILogger>();
     private readonly IPasswordHasher _hasher = Substitute.For<IPasswordHasher>();
     private readonly IAccountRepository _repository = Substitute.For<IAccountRepository>();
     private readonly IJwtTokenService _tokenService = Substitute.For<IJwtTokenService>();
@@ -59,7 +57,6 @@ public sealed class LoginUserHandlerTests
         // Act
         var result = await LoginUserHandler.Handle(
             command,
-            _logger,
             _hasher,
             _repository,
             _tokenService,
@@ -90,7 +87,6 @@ public sealed class LoginUserHandlerTests
         var action = () =>
             LoginUserHandler.Handle(
                 command,
-                _logger,
                 _hasher,
                 _repository,
                 _tokenService,
@@ -130,7 +126,6 @@ public sealed class LoginUserHandlerTests
         var action = () =>
             LoginUserHandler.Handle(
                 command,
-                _logger,
                 _hasher,
                 _repository,
                 _tokenService,
@@ -173,7 +168,6 @@ public sealed class LoginUserHandlerTests
         // Act
         await LoginUserHandler.Handle(
             command,
-            _logger,
             _hasher,
             _repository,
             _tokenService,
@@ -226,7 +220,6 @@ public sealed class LoginUserHandlerTests
         // Act
         var result = await LoginUserHandler.Handle(
             command,
-            _logger,
             _hasher,
             _repository,
             _tokenService,
@@ -281,7 +274,6 @@ public sealed class LoginUserHandlerTests
         {
             await LoginUserHandler.Handle(
                 command,
-                _logger,
                 _hasher,
                 _repository,
                 _tokenService,
@@ -320,7 +312,6 @@ public sealed class LoginUserHandlerTests
         // Act
         await LoginUserHandler.Handle(
             command,
-            _logger,
             _hasher,
             _repository,
             _tokenService,
@@ -400,7 +391,6 @@ public sealed class LoginUserHandlerTests
     private Task<LoginUserResult> Login(LoginUser command) =>
         LoginUserHandler.Handle(
             command,
-            _logger,
             _hasher,
             _repository,
             _tokenService,

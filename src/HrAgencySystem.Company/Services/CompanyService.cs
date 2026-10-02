@@ -1,12 +1,13 @@
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Port;
 using HrAgencySystem.SharedKernel.Snapshots;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.Company.Services;
 
+[UsedImplicitly] // Registered in the container; handlers receive it as ICompanyService.
 public sealed class CompanyService(
     IUserSnapshotRepository userSnapshotRepository,
-    ICompanySnapshotRepository companySnapshotRepository,
     IOrganizationChecker checker
 ) : ICompanyService
 {
@@ -14,12 +15,6 @@ public sealed class CompanyService(
     {
         var user = await userSnapshotRepository.GetUserAsync(userId, ct);
         return user ?? throw new NotFoundException("User", userId);
-    }
-
-    public async Task<CompanySnapshot> GetCompanyAsync(Guid companyId, CancellationToken ct)
-    {
-        var company = await companySnapshotRepository.GetCompanyAsync(companyId, ct);
-        return company ?? throw new NotFoundException("Company", companyId);
     }
 
     public async Task ValidateOrganization(Guid organizationId, CancellationToken ct)

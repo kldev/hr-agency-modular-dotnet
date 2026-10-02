@@ -23,7 +23,7 @@ var builder = Host.CreateApplicationBuilder(args);
     builder.Services.AddFeedsModule(builder.Configuration);
     builder.Services.AddFeedsBackgroundWorkers();
     builder.Services.AddFilesModule(builder.Configuration);
-    builder.Services.AddOrganizationModule(builder.Configuration);
+    builder.Services.AddOrganizationModule();
     builder
         .Services.AddHealthChecks()
         .AddNpgSql(name: "postgres", tags: HealthTags.ReadyOnly, timeout: TimeSpan.FromSeconds(5))

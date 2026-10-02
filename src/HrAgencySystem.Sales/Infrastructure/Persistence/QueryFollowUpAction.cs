@@ -34,18 +34,4 @@ public sealed class QueryFollowUpAction(IQuerySession session) : IQueryFollowUpA
             .Where(z => z.Id == followUpActionId)
             .SingleOrDefaultAsync(ct);
     }
-
-    public async Task<FollowUpAction?> GetLatestAsync(
-        Guid organizationId,
-        Guid opportunityId,
-        CancellationToken ct
-    )
-    {
-        return await session
-            .Query<FollowUpAction>()
-            .WithOrganizationId(organizationId)
-            .WithOpportunityId(opportunityId)
-            .OrderByDescending(z => z.FollowDateTime)
-            .FirstOrDefaultAsync(ct);
-    }
 }

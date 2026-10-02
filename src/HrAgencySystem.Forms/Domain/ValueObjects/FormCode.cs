@@ -22,6 +22,7 @@ public sealed partial record FormCode
 
     public string Value { get; }
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static FormCode Create(string? value)
     {
         var (code, error) = TryCreate(value);

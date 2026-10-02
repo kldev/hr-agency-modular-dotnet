@@ -8,8 +8,6 @@ namespace HrAgencySystem.SharedKernel.Snapshots;
 /// </summary>
 public interface IProjectSnapshotRepository
 {
-    public const string NotFoundMessage = "Required project data not found.";
-
     /// <summary>
     /// Resolves a project only when it belongs to the given organization: nobody is ever assigned to
     /// another agency's delivery.

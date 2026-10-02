@@ -89,8 +89,7 @@ public sealed class PasswordResetSagaTests
             .Received(1)
             .RevokeUserSessionsAsync(
                 OrganizationId.From(OrganizationGuid),
-                UserIdentity.From(UserGuid),
-                Arg.Any<CancellationToken>()
+                UserIdentity.From(UserGuid)
             );
 
         Assert.True(saga.IsCompleted());
@@ -138,11 +137,7 @@ public sealed class PasswordResetSagaTests
 
         await _refreshTokens
             .DidNotReceive()
-            .RevokeUserSessionsAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<UserIdentity>(),
-                Arg.Any<CancellationToken>()
-            );
+            .RevokeUserSessionsAsync(Arg.Any<OrganizationId>(), Arg.Any<UserIdentity>());
     }
 
     private Task Handle(

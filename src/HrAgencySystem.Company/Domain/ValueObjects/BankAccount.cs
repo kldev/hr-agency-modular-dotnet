@@ -26,6 +26,7 @@ public sealed record BankAccount
     public string Iban { get; }
     public string? Bic { get; }
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static BankAccount Create(string? iban, string? bic)
     {
         var (account, error) = TryCreate(iban, bic);

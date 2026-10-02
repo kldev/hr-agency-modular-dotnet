@@ -27,6 +27,7 @@ public static class JobPostCreatedHandler
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
     public static Task<CompanyJobPostCreated> Handle(
         CompanyJobPostCreated command,
+        // ReSharper disable once UnusedParameter.Global - Wolverine loads the stream through it and appends the result there.
         Domain.Company aggregate
     )
     {

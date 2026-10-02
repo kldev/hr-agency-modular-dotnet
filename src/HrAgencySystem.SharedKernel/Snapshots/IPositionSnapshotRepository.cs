@@ -8,8 +8,6 @@ namespace HrAgencySystem.SharedKernel.Snapshots;
 /// </summary>
 public interface IPositionSnapshotRepository
 {
-    public const string NotFoundMessage = "Required position data not found.";
-
     /// <summary>
     /// Resolves a role inside the delivery it belongs to, and only within the given organization -
     /// nobody is ever assigned to another agency's role.

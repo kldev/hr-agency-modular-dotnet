@@ -51,7 +51,7 @@ public static class RefreshAccessTokenHandler
 
         var (issued, value) = stored.Rotate(clock);
 
-        await refreshTokens.RotateAsync(stored.SpentOn(issued, clock), issued, ct);
+        await refreshTokens.RotateAsync(stored.SpentOn(issued, clock), issued);
 
         var user = await accounts.GetUser(UserId.From(stored.UserId), ct);
         var access = tokenService.GenerateUserToken(user);
@@ -66,7 +66,7 @@ public static class RefreshAccessTokenHandler
         CancellationToken ct
     )
     {
-        await refreshTokens.RevokeFamilyAsync(stored.FamilyId, ct);
+        await refreshTokens.RevokeFamilyAsync(stored.FamilyId);
 
         // Rejecting is the whole point of this path, and the exception rolls the Wolverine
         // transaction back - so the revocation is committed here instead of being thrown away with it.

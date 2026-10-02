@@ -55,20 +55,4 @@ public sealed record JobApplicationNote(
             ModifyById = deleteBy.Id,
         };
     }
-
-    public JobApplicationNote Modify(
-        ShortNote note,
-        Guid modifyById,
-        UserSnapshot modifyBy,
-        DateTimeOffset modifyAt
-    )
-    {
-        return this with
-        {
-            ModifyAt = modifyAt,
-            ModifyBy = modifyBy,
-            ModifyById = modifyById,
-            Note = note.Value,
-        };
-    }
 }

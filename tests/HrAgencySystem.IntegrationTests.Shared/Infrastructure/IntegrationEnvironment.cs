@@ -42,10 +42,5 @@ public sealed class IntegrationEnvironment : IAsyncLifetime
         await _postgres.DisposeAsync();
     }
 
-    public void SetOutputHelper(ITestOutputHelper output)
-    {
-        Factory.LoggerProvider.SetOutput(output);
-    }
-
     public IServiceProvider Services => Factory.Services;
 }

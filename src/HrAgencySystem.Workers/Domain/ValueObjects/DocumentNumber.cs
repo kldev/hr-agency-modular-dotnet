@@ -25,6 +25,7 @@ public sealed record DocumentNumber
 
     public string Value { get; }
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static DocumentNumber Create(string value)
     {
         var (number, error) = TryCreate(value);

@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Security.Claims;
 using HrAgencySystem.ReportsService.Contracts;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.ReportsService.Auth;
 
@@ -10,6 +11,7 @@ namespace HrAgencySystem.ReportsService.Auth;
 /// </summary>
 public sealed record OrganizationCaller(Guid OrganizationId)
 {
+    [UsedImplicitly] // Minimal APIs bind the parameter through this static method.
     public static ValueTask<OrganizationCaller?> BindAsync(HttpContext context, ParameterInfo _)
     {
         var claim = context.User.FindFirstValue(ReportsServiceToken.OrganizationClaim);

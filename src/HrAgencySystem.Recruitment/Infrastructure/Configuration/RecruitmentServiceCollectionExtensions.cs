@@ -10,7 +10,6 @@ using HrAgencySystem.Recruitment.Infrastructure.Persistence;
 using HrAgencySystem.Recruitment.Infrastructure.Query;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Port;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HrAgencySystem.Recruitment.Infrastructure.Configuration;
@@ -19,7 +18,7 @@ public static class RecruitmentServiceCollectionExtensions
 {
     extension(IServiceCollection services)
     {
-        public void AddRecruitmentServices(IConfiguration configuration)
+        public void AddRecruitmentServices()
         {
             services.AddScoped<ISeeder, TagSeeder>();
 

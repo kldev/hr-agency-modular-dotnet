@@ -48,15 +48,6 @@ public sealed class IdentityService(
         return team ?? throw new BusinessRuleException(ITeamSnapshotRepository.NotFoundMessage);
     }
 
-    public async Task<string> GetOrganizationSlug(
-        OrganizationId organizationId,
-        CancellationToken ct
-    )
-    {
-        var slug = await checker.GetSlug(organizationId.Value, ct);
-        return slug ?? throw new NotFoundException("Organization", organizationId.Value);
-    }
-
     public void ValidateAggregateUpdate(IOrganizationDomain aggregate, Guid commandOrganizationId)
     {
         if (aggregate == null || aggregate.OrganizationId.Value != commandOrganizationId)

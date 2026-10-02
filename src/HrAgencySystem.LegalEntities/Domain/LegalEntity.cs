@@ -2,6 +2,7 @@ using HrAgencySystem.LegalEntities.Domain.ValueObjects;
 using HrAgencySystem.LegalEntities.Events;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.LegalEntities.Domain;
 
@@ -20,12 +21,8 @@ namespace HrAgencySystem.LegalEntities.Domain;
 /// </summary>
 public sealed class LegalEntity : IOrganizationDomain
 {
+    [UsedImplicitly] // Marten rebuilds the aggregate through it.
     private LegalEntity() { }
-
-    public static LegalEntity Empty()
-    {
-        return new LegalEntity();
-    }
 
     public LegalEntityId Id { get; private set; }
 
@@ -60,21 +57,6 @@ public sealed class LegalEntity : IOrganizationDomain
     public DateTimeOffset? ModifiedAt { get; private set; }
 
     public Guid? ModifiedById { get; private set; }
-
-    /// <summary>
-    /// Worked out from the dates rather than stored. A kept flag would be right on the day it was
-    /// written and wrong the morning after the entity's last day.
-    /// </summary>
-    public bool IsActiveOn(DateOnly date)
-    {
-        return date >= ActiveFrom && (ActiveTo is null || date <= ActiveTo);
-    }
-
-    /// <summary>The account an invoice in this currency should quote, if there is one.</summary>
-    public LegalEntityBankAccount? AccountFor(BankAccountPurpose purpose, CurrencyCode currency)
-    {
-        return BankAccounts.FirstOrDefault(a => a.Purpose == purpose && a.Currency == currency);
-    }
 
     public void Apply(LegalEntityCreated @event)
     {

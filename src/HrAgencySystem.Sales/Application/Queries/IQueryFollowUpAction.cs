@@ -16,12 +16,6 @@ public interface IQueryFollowUpAction
         Guid followUpActionId,
         CancellationToken ct
     );
-
-    Task<FollowUpAction?> GetLatestAsync(
-        Guid organizationId,
-        Guid opportunityId,
-        CancellationToken ct
-    );
 }
 
 // ReSharper disable once ClassNeverInstantiated.Global

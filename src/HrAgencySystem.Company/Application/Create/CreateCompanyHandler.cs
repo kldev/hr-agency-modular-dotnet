@@ -42,7 +42,7 @@ public static class CreateCompanyHandler
         var companyId = CompanyId.New();
 
         // The unique constraint protects against concurrent requests.
-        await taxIdReservationRepository.ReserveAsync(organizationId, taxId, companyId, ct);
+        await taxIdReservationRepository.ReserveAsync(organizationId, taxId, companyId);
 
         var (addContact, addContactId) = CreateAndSaveContact(
             session,

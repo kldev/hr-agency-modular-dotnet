@@ -28,16 +28,6 @@ public static class FieldTypes
 {
     extension(FieldType type)
     {
-        /// <summary>Types whose answer is a string in <see cref="Values.FieldValue.Text"/>.</summary>
-        public bool IsTextual =>
-            type
-                is FieldType.Text
-                    or FieldType.TextArea
-                    or FieldType.Email
-                    or FieldType.Phone
-                    or FieldType.Country
-                    or FieldType.SingleChoice;
-
         public bool HasOptions => type is FieldType.SingleChoice or FieldType.MultiChoice;
 
         /// <summary>Length and pattern apply to what somebody types, not to a picked value.</summary>

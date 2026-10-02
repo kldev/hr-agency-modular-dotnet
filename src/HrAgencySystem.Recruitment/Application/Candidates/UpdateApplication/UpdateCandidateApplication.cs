@@ -7,7 +7,4 @@ public sealed record UpdateCandidateApplication(
     Guid JobPostId,
     Guid CompanyId,
     CandidateSource Source
-)
-{
-    public Guid EventId { get; init; } = Guid.NewGuid();
-}
+);

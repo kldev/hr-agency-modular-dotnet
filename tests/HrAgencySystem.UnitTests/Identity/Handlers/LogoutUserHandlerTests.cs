@@ -31,9 +31,7 @@ public sealed class LogoutUserHandlerTests
         await LogoutUserHandler.Handle(new LogoutUser(value), _refreshTokens, default);
 
         // not just this token: a rotated-away sibling would otherwise survive the logout
-        await _refreshTokens
-            .Received(1)
-            .RevokeFamilyAsync(stored.FamilyId, Arg.Any<CancellationToken>());
+        await _refreshTokens.Received(1).RevokeFamilyAsync(stored.FamilyId);
     }
 
     [Fact]
@@ -45,8 +43,6 @@ public sealed class LogoutUserHandlerTests
 
         await LogoutUserHandler.Handle(new LogoutUser("never-issued"), _refreshTokens, default);
 
-        await _refreshTokens
-            .DidNotReceive()
-            .RevokeFamilyAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await _refreshTokens.DidNotReceive().RevokeFamilyAsync(Arg.Any<Guid>());
     }
 }

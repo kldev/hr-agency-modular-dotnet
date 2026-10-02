@@ -35,6 +35,7 @@ public sealed partial record FieldCode
 
     public bool IsSystemNamespace => Value.StartsWith(SystemPrefix, StringComparison.Ordinal);
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static FieldCode Create(string? value)
     {
         var (code, error) = TryCreate(value);

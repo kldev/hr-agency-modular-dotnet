@@ -10,8 +10,7 @@ using Marten;
 
 namespace HrAgencySystem.Identity.Application.Owners.Create;
 
-// ReSharper disable once UnusedType.Global
-public class CreatePlatformOwnerHandler
+public static class CreatePlatformOwnerHandler
 {
     private const string EmailAlreadyUsed = "Email already used";
 

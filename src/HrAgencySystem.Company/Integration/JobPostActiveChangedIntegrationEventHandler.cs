@@ -31,6 +31,7 @@ public static class CompanyJobPostActiveChangedHandler
     [AggregateHandler(ConcurrencyStyle.Exclusive)]
     public static Task<CompanyJobPostActiveChanged> Handle(
         CompanyJobPostActiveChanged command,
+        // ReSharper disable once UnusedParameter.Global - Wolverine loads the stream through it and appends the result there.
         Domain.Company aggregate
     )
     {

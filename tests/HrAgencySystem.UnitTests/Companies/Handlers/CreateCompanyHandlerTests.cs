@@ -87,8 +87,7 @@ public class CreateCompanyHandlerTests : BaseTest
             .ReserveAsync(
                 Arg.Is<OrganizationId>(x => x.Value == organizationId),
                 Arg.Is<TaxId>(x => x.Value == "PL123456789"),
-                Arg.Is<CompanyId>(x => x.Value == result.CompanyId),
-                Arg.Any<CancellationToken>()
+                Arg.Is<CompanyId>(x => x.Value == result.CompanyId)
             );
     }
 
@@ -131,12 +130,7 @@ public class CreateCompanyHandlerTests : BaseTest
 
         await _repository
             .DidNotReceive()
-            .ReserveAsync(
-                Arg.Any<OrganizationId>(),
-                Arg.Any<TaxId>(),
-                Arg.Any<CompanyId>(),
-                Arg.Any<CancellationToken>()
-            );
+            .ReserveAsync(Arg.Any<OrganizationId>(), Arg.Any<TaxId>(), Arg.Any<CompanyId>());
     }
 
     [Fact]

@@ -68,21 +68,6 @@ internal static class WorkerTestData
         string? reason = null
     ) => new(status, reason);
 
-    public static WorkerMaps.MapRecordAuthorisation.RecordWorkAuthorisationRequest AuthorisationRequest(
-        Guid? authorisationId = null,
-        Guid? documentId = null,
-        DateOnly? validUntil = null
-    ) =>
-        new(
-            WorkAuthorisationKind.WorkPermit,
-            "pl",
-            "ZEZW/2026/123",
-            new DateOnly(2026, 1, 1),
-            validUntil ?? new DateOnly(2028, 12, 31),
-            authorisationId,
-            documentId
-        );
-
     public static AssignmentMaps.MapPlan.PlanAssignmentRequest PlanRequest(
         Guid workerId,
         Guid projectId,

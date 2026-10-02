@@ -23,6 +23,6 @@ public static class LogoutUserHandler
 
         // The whole family goes, not just this one: a rotated-away token from the same login would
         // otherwise still be exchangeable after the user signed out.
-        await refreshTokens.RevokeFamilyAsync(stored.FamilyId, ct);
+        await refreshTokens.RevokeFamilyAsync(stored.FamilyId);
     }
 }

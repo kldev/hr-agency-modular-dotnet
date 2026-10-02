@@ -128,12 +128,6 @@ public static class ComplianceCatalogue
     /// single tick on a project in the first place.
     /// </summary>
     public static IReadOnlyList<ComplianceRequirement> For(
-        CountryCode country,
-        EngagementType engagement,
-        ComplianceScope scope
-    ) => For(country.Value, engagement, scope);
-
-    public static IReadOnlyList<ComplianceRequirement> For(
         string country,
         EngagementType engagement,
         ComplianceScope scope

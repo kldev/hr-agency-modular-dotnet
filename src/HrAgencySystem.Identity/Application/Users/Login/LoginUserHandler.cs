@@ -6,7 +6,6 @@ using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Services;
 using HrAgencySystem.SharedKernel.Time;
 using HrAgencySystem.SharedKernel.ValueObjects;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace HrAgencySystem.Identity.Application.Users.Login;
@@ -15,7 +14,6 @@ public static class LoginUserHandler
 {
     public static async Task<LoginUserResult> Handle(
         LoginUser command,
-        ILogger logger,
         IPasswordHasher hasher,
         IAccountRepository repository,
         IJwtTokenService tokenService,
@@ -50,7 +48,7 @@ public static class LoginUserHandler
             jwt.Value.RefreshTokenExpiresInDays
         );
 
-        await refreshTokens.IssueAsync(refreshToken, ct);
+        await refreshTokens.IssueAsync(refreshToken);
 
         return new LoginUserResult(
             access.Value,

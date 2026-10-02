@@ -1,5 +1,4 @@
 using HrAgencySystem.IntegrationTests.Infrastructure;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 
 namespace HrAgencySystem.IntegrationTests.Hosting;

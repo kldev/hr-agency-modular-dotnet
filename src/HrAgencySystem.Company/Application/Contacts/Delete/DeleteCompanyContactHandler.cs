@@ -1,16 +1,14 @@
 using HrAgencySystem.Company.Application.Port;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Time;
-using Wolverine;
 
 namespace HrAgencySystem.Company.Application.Contacts.Delete;
 
-public static class UpdateCompanyContactHandler
+public static class DeleteCompanyContactHandler
 {
     public static async Task<CompanyContactDeleted> Handle(
         DeleteCompanyContact command,
         ICompanyContactRepository repository,
-        IMessageBus bus,
         IClock clock,
         CancellationToken ct
     )

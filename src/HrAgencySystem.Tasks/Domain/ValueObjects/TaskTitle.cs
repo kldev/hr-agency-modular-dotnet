@@ -17,6 +17,7 @@ public sealed record TaskTitle
 
     public string Value { get; }
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static TaskTitle Create(string? value)
     {
         var (title, error) = TryCreate(value);

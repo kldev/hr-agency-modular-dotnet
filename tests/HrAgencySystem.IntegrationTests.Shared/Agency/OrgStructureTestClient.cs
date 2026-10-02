@@ -100,22 +100,6 @@ public sealed class OrgStructureTestClient(HttpClient client, ITestOutputHelper 
         return await response.ReadWithJson<SupervisorView>();
     }
 
-    public async Task<IReadOnlyList<Guid>> GetSubordinatesAsync(
-        Guid organizationId,
-        Guid userId,
-        bool wholeSubtree
-    )
-    {
-        client.WithOrganizationId(organizationId);
-
-        var response = await client.GetAsync(
-            $"{Base}/subordinates/{userId}?wholeSubtree={wholeSubtree}"
-        );
-        response.EnsureSuccessStatusCode();
-
-        return await response.ReadWithJson<List<Guid>>() ?? [];
-    }
-
     public async Task<OrgStructureProjection?> GetAsync(Guid organizationId)
     {
         client.WithOrganizationId(organizationId);

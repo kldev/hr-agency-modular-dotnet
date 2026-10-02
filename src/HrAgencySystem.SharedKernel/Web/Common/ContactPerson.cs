@@ -1,4 +1,5 @@
 using HrAgencySystem.SharedKernel.ValueObjects;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.SharedKernel.Web.Common;
 
@@ -10,6 +11,7 @@ public sealed record ContactPerson(
     string Phone
 )
 {
+    [UsedImplicitly] // Serialized into the API response; the front end reads it.
     public string Fullname { get; } = $"{FirstName} {LastName}".Trim();
 }
 
@@ -21,8 +23,6 @@ public sealed record ContactPersonValueObject(
     PersonPhone Phone
 )
 {
-    public string Fullname { get; } = $"{FirstName} {LastName}".Trim();
-
     public ContactPerson ToContact() =>
         new(Email.Value, FirstName.Value, LastName.Value, JobTitle.Value, Phone.Value);
 };

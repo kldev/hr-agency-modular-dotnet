@@ -42,10 +42,10 @@ public static class SetupApplicationModulesExtensions
             services.ConfigureJson();
             services.AddTransient<IClock, SystemClock>();
             services.AddCompanyModule();
-            services.AddOrganizationModule(configuration);
+            services.AddOrganizationModule();
             services.AddIdentityModule(configuration);
             services.AddJobDescriptionModule();
-            services.AddRecruitmentModule(configuration);
+            services.AddRecruitmentModule();
             services.AddFeedsModule(configuration);
             services.AddFilesModule(configuration);
             services.AddFileServiceClient(configuration);

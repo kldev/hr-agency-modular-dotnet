@@ -15,14 +15,14 @@ public sealed class RefreshTokenRepository(IDocumentSession session) : IRefreshT
             .SingleOrDefaultAsync(ct);
     }
 
-    public Task IssueAsync(RefreshToken token, CancellationToken ct)
+    public Task IssueAsync(RefreshToken token)
     {
         session.Insert(token);
 
         return Task.CompletedTask;
     }
 
-    public Task RotateAsync(RefreshToken spent, RefreshToken issued, CancellationToken ct)
+    public Task RotateAsync(RefreshToken spent, RefreshToken issued)
     {
         // One transaction: there is never a moment where the old token is spent and the new one
         // does not exist yet.
@@ -32,18 +32,14 @@ public sealed class RefreshTokenRepository(IDocumentSession session) : IRefreshT
         return Task.CompletedTask;
     }
 
-    public Task RevokeFamilyAsync(Guid familyId, CancellationToken ct)
+    public Task RevokeFamilyAsync(Guid familyId)
     {
         session.DeleteWhere<RefreshToken>(z => z.FamilyId == familyId);
 
         return Task.CompletedTask;
     }
 
-    public Task RevokeUserSessionsAsync(
-        OrganizationId organizationId,
-        UserId userId,
-        CancellationToken ct
-    )
+    public Task RevokeUserSessionsAsync(OrganizationId organizationId, UserId userId)
     {
         session.DeleteWhere<RefreshToken>(z =>
             z.OrganizationId == organizationId.Value && z.UserId == userId.Value

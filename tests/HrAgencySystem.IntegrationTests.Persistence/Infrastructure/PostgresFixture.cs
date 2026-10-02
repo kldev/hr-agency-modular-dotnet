@@ -1,8 +1,10 @@
+using JetBrains.Annotations;
 using Npgsql;
 using Testcontainers.PostgreSql;
 
 namespace HrAgencySystem.IntegrationTests.Infrastructure;
 
+[UsedImplicitly] // xUnit creates it as a collection fixture.
 public sealed class PostgresFixture : IAsyncLifetime
 {
     private readonly PostgreSqlContainer _container = new PostgreSqlBuilder("postgres:17-alpine")

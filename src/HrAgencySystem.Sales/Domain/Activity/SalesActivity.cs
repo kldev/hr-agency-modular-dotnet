@@ -18,7 +18,6 @@ public sealed class SalesActivity : IOrganizationDomain
     public ShortNote Note { get; private set; } = null!;
     public DateTimeOffset CreatedAt { get; private set; }
     public UserSnapshot CreatedBy { get; private set; } = null!;
-    public CompanySnapshot Company { get; private set; } = null!;
 
     public void Apply(ActivityCreated @event)
     {

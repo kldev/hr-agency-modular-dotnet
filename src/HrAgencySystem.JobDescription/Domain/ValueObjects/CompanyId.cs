@@ -2,11 +2,6 @@ namespace HrAgencySystem.JobDescription.Domain.ValueObjects;
 
 public readonly record struct CompanyId(Guid Value)
 {
-    public static CompanyId New()
-    {
-        return new(Guid.NewGuid());
-    }
-
     public static CompanyId From(Guid value)
     {
         return new(value);

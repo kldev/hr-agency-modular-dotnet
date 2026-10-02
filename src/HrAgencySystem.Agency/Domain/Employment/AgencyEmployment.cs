@@ -50,8 +50,6 @@ public sealed class AgencyEmployment : IOrganizationDomain
     /// <summary>Ended, as opposed to open-ended. Whether it is over today is a question for a date.</summary>
     public bool IsEnded => EndsOn is not null;
 
-    public bool RequiresTimeRecord => TimeRecordPolicy.RequiresTimeRecord(ContractType);
-
     public void Apply(AgencyEmploymentStarted @event)
     {
         OrganizationId = OrganizationId.From(@event.OrganizationId);

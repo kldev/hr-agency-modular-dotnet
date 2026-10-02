@@ -9,8 +9,6 @@ namespace HrAgencySystem.SharedKernel.Snapshots;
 /// </summary>
 public interface ILegalEntitySnapshotRepository
 {
-    public const string NotFoundMessage = "Required legal entity data not found.";
-
     /// <summary>
     /// Resolves an entity only when it belongs to the given organization: a project may only ever be
     /// delivered by one of its own agency's companies.

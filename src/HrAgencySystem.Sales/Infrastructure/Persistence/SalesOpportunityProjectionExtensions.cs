@@ -22,14 +22,6 @@ internal static class SalesOpportunityProjectionExtensions
         return query.Where(p => p.Id == opportunityId);
     }
 
-    internal static IQueryable<OpportunityProjection> WithCompanyId(
-        this IQueryable<OpportunityProjection> query,
-        Guid companyId
-    )
-    {
-        return query.Where(p => p.CompanyId == companyId);
-    }
-
     internal static IQueryable<OpportunityProjection> WithResponsibleId(
         this IQueryable<OpportunityProjection> query,
         Guid? responsibleId

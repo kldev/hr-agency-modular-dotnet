@@ -136,19 +136,6 @@ public sealed class S3ObjectStorage : IObjectStorage
         }
     }
 
-    public Uri CreatePresignedGetUrl(string key, string bucketName, TimeSpan expiresIn)
-    {
-        var request = new GetPreSignedUrlRequest
-        {
-            Key = key,
-            BucketName = bucketName,
-            Verb = HttpVerb.GET,
-            Expires = DateTime.UtcNow.Add(expiresIn),
-        };
-
-        return new Uri(_amazonS3.GetPreSignedURL(request));
-    }
-
     private static bool IsMissing(AmazonS3Exception exception) =>
         exception.StatusCode is HttpStatusCode.NotFound;
 

@@ -74,7 +74,7 @@ internal sealed class JobFeedProcessor(
         telemetry.RecordSize("json", streamJson.Length);
 
         await objectStorage.StoreAsync(
-            new FileInput(streamJson, "jobs.json", "application/json"),
+            new FileInput(streamJson, "application/json"),
             task.OrganizationId + "/jobs.json",
             FeedBuckets.Jobs,
             ct
@@ -91,7 +91,7 @@ internal sealed class JobFeedProcessor(
         telemetry.RecordSize("xml", stream.Length);
 
         await objectStorage.StoreAsync(
-            new FileInput(stream, "jobs.xml", "application/xml"),
+            new FileInput(stream, "application/xml"),
             task.OrganizationId + "/jobs.xml",
             FeedBuckets.Jobs,
             ct

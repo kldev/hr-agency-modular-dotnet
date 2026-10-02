@@ -21,12 +21,7 @@ public sealed class CompanyTaxIdReservationRepository(IDocumentSession session)
             .AnyAsync(cancellationToken);
     }
 
-    public Task ReserveAsync(
-        OrganizationId organizationId,
-        TaxId taxId,
-        CompanyId companyId,
-        CancellationToken cancellationToken = default
-    )
+    public Task ReserveAsync(OrganizationId organizationId, TaxId taxId, CompanyId companyId)
     {
         var reservation = new CompanyTaxIdReservation(
             Guid.NewGuid(),

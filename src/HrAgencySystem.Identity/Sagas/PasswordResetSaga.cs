@@ -98,8 +98,7 @@ public sealed class PasswordResetSaga : Saga
         // opened before it dies with it - the old refresh tokens would outlive the password by weeks.
         await refreshTokens.RevokeUserSessionsAsync(
             OrganizationIdentity.From(OrganizationId),
-            UserIdentity.From(UserId),
-            ct
+            UserIdentity.From(UserId)
         );
 
         var user = await identity.GetUserAsync(UserId, ct);

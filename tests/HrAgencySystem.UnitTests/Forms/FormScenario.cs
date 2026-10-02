@@ -24,8 +24,6 @@ internal static class FormScenario
     public static readonly Guid WorkerId = Guid.Parse("dddddddd-0000-0000-0000-000000000001");
     public static readonly Guid PeselFieldId = Guid.Parse("eeeeeeee-0000-0000-0000-000000000001");
     public static readonly Guid PhoneFieldId = Guid.Parse("eeeeeeee-0000-0000-0000-000000000002");
-    public static readonly Guid PageId = Guid.Parse("ffffffff-0000-0000-0000-000000000001");
-
     public static readonly DateTimeOffset Yesterday = new(2026, 9, 22, 10, 0, 0, TimeSpan.Zero);
 
     public static UserSnapshot User { get; } =

@@ -1,6 +1,7 @@
 using HrAgencySystem.Agency.Domain;
 using HrAgencySystem.Agency.Events;
 using HrAgencySystem.SharedKernel.Snapshots;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.Agency.Projections;
 
@@ -23,6 +24,7 @@ public sealed record OrgStructureProjection(
     DateTimeOffset? ModifiedAt
 )
 {
+    [UsedImplicitly] // Serialized into the API response; the front end reads it.
     public int UnitCount => Units.Count(unit => !unit.IsArchived);
 
     public static OrgStructureProjection Create(OrgUnitCreated @event)

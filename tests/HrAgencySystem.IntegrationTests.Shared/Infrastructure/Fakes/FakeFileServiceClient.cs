@@ -74,9 +74,6 @@ public sealed class FakeFileServiceClient : IFileServiceClient
         );
     }
 
-    public Task<FileDescriptor?> GetAsync(Guid organizationId, Guid fileId, CancellationToken ct) =>
-        Task.FromResult(Find(organizationId, fileId)?.Descriptor);
-
     public Task DeleteAsync(Guid organizationId, Guid fileId, Guid deletedBy, CancellationToken ct)
     {
         if (Find(organizationId, fileId) is not null)

@@ -8,17 +8,13 @@ using HrAgencySystem.SharedKernel.Services;
 using JasperFx.Events.Projections;
 using Marten;
 using Marten.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HrAgencySystem.Organization;
 
 public static class OrganizationModule
 {
-    public static void AddOrganizationModule(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    public static void AddOrganizationModule(this IServiceCollection services)
     {
         services.AddScoped<
             IOrganizationSlugReservationRepository,

@@ -4,7 +4,6 @@ using HrAgencySystem.Company.Events;
 using HrAgencySystem.SharedKernel.Exception;
 using HrAgencySystem.SharedKernel.Factories;
 using HrAgencySystem.SharedKernel.Time;
-using Wolverine;
 
 namespace HrAgencySystem.Company.Application.Contacts.Update;
 
@@ -13,7 +12,6 @@ public static class UpdateCompanyContactHandler
     public static async Task<(CompanyContact, Wolverine.Marten.Events)> Handle(
         UpdateCompanyContact command,
         ICompanyContactRepository repository,
-        IMessageBus bus,
         IClock clock,
         CancellationToken ct
     )

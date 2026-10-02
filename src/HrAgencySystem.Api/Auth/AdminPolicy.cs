@@ -21,8 +21,6 @@ public static class AdminPolicy
 
     private static readonly OrganizationRole[] Allowed = [OrganizationRole.Admin];
 
-    public static bool IsAdmin(OrganizationRole role) => Allowed.Contains(role);
-
     public static void AddAdminPolicy(this AuthorizationBuilder builder) =>
         builder.AddPolicy(
             Name,

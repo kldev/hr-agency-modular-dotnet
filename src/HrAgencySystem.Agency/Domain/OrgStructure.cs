@@ -36,9 +36,6 @@ public sealed class OrgStructure : IOrganizationDomain
 
     public IReadOnlyList<OrgUnit> Units => _units ?? [];
 
-    /// <summary>Units that still take people; the archived ones stay readable but are not offered.</summary>
-    public IReadOnlyList<OrgUnit> ActiveUnits => [.. Units.Where(unit => !unit.IsArchived)];
-
     public DateTimeOffset CreatedAt { get; private set; }
     public DateTimeOffset ModifiedAt { get; private set; }
     public Guid? ModifiedById { get; private set; }
@@ -46,9 +43,6 @@ public sealed class OrgStructure : IOrganizationDomain
     public OrgUnit? UnitById(Guid unitId) => Units.FirstOrDefault(unit => unit.UnitId == unitId);
 
     public OrgUnit? Root => Units.FirstOrDefault(unit => unit.IsRoot);
-
-    /// <summary>Which unit somebody sits in. One, or none - never two; see <see cref="UnitOfAnother"/>.</summary>
-    public OrgUnit? UnitOf(Guid userId) => Units.FirstOrDefault(unit => unit.HasMember(userId));
 
     /// <summary>The unit this person is already in, when it is not the one being written to.</summary>
     public OrgUnit? UnitOfAnother(Guid userId, Guid exceptUnitId) =>

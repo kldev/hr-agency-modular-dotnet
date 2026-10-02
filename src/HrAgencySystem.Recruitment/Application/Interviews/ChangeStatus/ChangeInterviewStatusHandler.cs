@@ -3,7 +3,6 @@ using HrAgencySystem.Recruitment.Events.Interviews;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using Marten;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.Interviews.ChangeStatus;
@@ -15,7 +14,6 @@ public static class ChangeInterviewStatusHandler
         ChangeInterviewStatus command,
         Interview aggregate,
         IRecruitmentService service,
-        IDocumentSession session,
         IClock clock,
         CancellationToken ct
     )

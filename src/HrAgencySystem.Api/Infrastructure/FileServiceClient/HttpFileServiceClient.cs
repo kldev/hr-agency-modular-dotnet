@@ -84,25 +84,6 @@ public sealed class HttpFileServiceClient(
         );
     }
 
-    public async Task<FileDescriptor?> GetAsync(
-        Guid organizationId,
-        Guid fileId,
-        CancellationToken ct
-    )
-    {
-        using var request = new HttpRequestMessage(HttpMethod.Get, $"/files/{fileId}");
-        request.Headers.Authorization = Bearer(organizationId, Guid.Empty);
-
-        using var response = await Send(request, ct);
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-            return null;
-
-        EnsureSuccess(response);
-
-        return await response.Content.ReadFromJsonAsync<FileDescriptor>(ct);
-    }
-
     public async Task DeleteAsync(
         Guid organizationId,
         Guid fileId,

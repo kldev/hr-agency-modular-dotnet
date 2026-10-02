@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.LegalEntities.Domain.ValueObjects;
 
 /// <summary>
@@ -10,6 +12,7 @@ namespace HrAgencySystem.LegalEntities.Domain.ValueObjects;
 /// </summary>
 public sealed record President(string FirstName, string LastName, string? Email)
 {
+    [UsedImplicitly] // Serialized into the API response; the front end reads it.
     public string FullName => $"{FirstName} {LastName}".Trim();
 
     public static (President? president, List<string> errors) TryCreate(

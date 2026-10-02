@@ -13,6 +13,7 @@ public sealed record OrgUnitName
 
     public string Value { get; }
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static OrgUnitName Create(string value)
     {
         var (name, error) = TryCreate(value);

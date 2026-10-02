@@ -3,7 +3,6 @@ using HrAgencySystem.Recruitment.Events.Interviews;
 using HrAgencySystem.Recruitment.Services;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.Time;
-using Marten;
 using Wolverine.Marten;
 
 namespace HrAgencySystem.Recruitment.Application.Interviews.ChangeInterviewer;
@@ -14,7 +13,6 @@ public static class ChangeInterviewerHandler
     public static async Task<(InterviewerChanged, Wolverine.Marten.Events)> Handle(
         ChangeInterviewer command,
         Interview aggregate,
-        IDocumentSession session,
         IRecruitmentService service,
         IClock clock,
         CancellationToken ct

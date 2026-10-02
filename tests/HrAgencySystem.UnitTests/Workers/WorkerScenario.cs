@@ -334,29 +334,4 @@ internal static class WorkerScenario
 
         return assignment;
     }
-
-    public static Assignment WithDocument(this Assignment assignment, Guid documentId)
-    {
-        assignment.Apply(
-            new AssignmentDocumentAttached(
-                assignment.Id.Value,
-                assignment.OrganizationId.Value,
-                new AssignmentDocument(
-                    documentId,
-                    AssignmentDocumentCategory.SocialSecurity,
-                    Guid.NewGuid(),
-                    "a1.pdf",
-                    "application/pdf",
-                    2048,
-                    new DateOnly(2026, 9, 15),
-                    null,
-                    null
-                ),
-                User,
-                DateTimeOffset.UtcNow
-            )
-        );
-
-        return assignment;
-    }
 }

@@ -1,5 +1,6 @@
 using Dapper;
 using HrAgencySystem.Reports.ReadModel;
+using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Testcontainers.PostgreSql;
@@ -11,6 +12,7 @@ namespace HrAgencySystem.ReportsService.IntegrationTests;
 /// themselves - the contract the API's projections write to. The queries are tested against the
 /// table shape, not against a hand-written copy of it that could drift.
 /// </summary>
+[UsedImplicitly] // xUnit creates it as a collection fixture.
 public sealed class ReportsDatabaseFixture : IAsyncLifetime
 {
     private readonly PostgreSqlContainer _container = new PostgreSqlBuilder("postgres:17-alpine")

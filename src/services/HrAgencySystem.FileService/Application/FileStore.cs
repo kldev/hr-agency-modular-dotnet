@@ -75,7 +75,7 @@ public sealed class FileStore(
         // worse than the orphan object this order can leave behind.
         session.Insert(stored);
         await storage.StoreAsync(
-            new FileInput(buffer, name, contentType),
+            new FileInput(buffer, contentType),
             key,
             BucketNames.Documents,
             ct

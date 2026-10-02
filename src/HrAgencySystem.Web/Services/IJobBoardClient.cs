@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace HrAgencySystem.Web.Services;
 
 /// <summary>
@@ -22,12 +24,14 @@ public interface IJobBoardClient
     Task<HttpResponseMessage?> GetFeedAsync(string slug, string format, CancellationToken ct);
 }
 
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Deserialized from the API response.
 public sealed record BoardInfo(string Slug, string Name);
 
 /// <summary>
 /// What the job page renders. The employment type is a string here on purpose: this host has no
 /// reference to the domain, and the value is only ever printed.
 /// </summary>
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)] // Deserialized from the API response.
 public sealed record BoardPost(
     string Title,
     string Description,

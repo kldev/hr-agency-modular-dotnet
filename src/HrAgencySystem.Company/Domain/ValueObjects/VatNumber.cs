@@ -24,6 +24,7 @@ public sealed record VatNumber
 
     public string Value { get; }
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static VatNumber Create(string? value)
     {
         var (vatNumber, error) = TryCreate(value);

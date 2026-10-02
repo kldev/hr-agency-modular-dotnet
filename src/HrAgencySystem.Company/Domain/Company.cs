@@ -76,7 +76,7 @@ public sealed class Company
         _profile = @event.Profile;
     }
 
-    public void Apply(CompanyProfileCompleted @event)
+    public void Apply(CompanyProfileCompleted _)
     {
         // Nothing to set: completeness is derived from the profile. The event exists so the stream
         // records when it happened and who did it.

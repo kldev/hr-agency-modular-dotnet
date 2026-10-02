@@ -23,8 +23,6 @@ public static class FormsDesignPolicy
         OrganizationRole.HumanResources,
     ];
 
-    public static bool IsFormsDesigner(OrganizationRole role) => Allowed.Contains(role);
-
     public static void AddFormsDesignPolicy(this AuthorizationBuilder builder) =>
         builder.AddPolicy(
             Name,

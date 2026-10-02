@@ -96,8 +96,7 @@ public class ChangeUserPasswordHandlerTests : BaseTest
             .Received(1)
             .RevokeUserSessionsAsync(
                 Arg.Is<OrganizationId>(z => z.Value == OrganizationGuid),
-                Arg.Is<UserId>(z => z.Value == UserGuid),
-                Arg.Any<CancellationToken>()
+                Arg.Is<UserId>(z => z.Value == UserGuid)
             );
     }
 

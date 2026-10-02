@@ -23,7 +23,5 @@ public interface IFileServiceClient
 
     Task<FileContent?> DownloadAsync(Guid organizationId, Guid fileId, CancellationToken ct);
 
-    Task<FileDescriptor?> GetAsync(Guid organizationId, Guid fileId, CancellationToken ct);
-
     Task DeleteAsync(Guid organizationId, Guid fileId, Guid deletedBy, CancellationToken ct);
 }

@@ -46,6 +46,7 @@ public sealed record WorkRate(decimal Amount, string Currency, RateUnit Unit, Ra
 
     public const string CurrencyRequiredMessage = "Currency is required for a rate.";
 
+    // ReSharper disable once UnusedMember.Global - value objects pair TryCreate with a throwing Create (CLAUDE.md).
     public static WorkRate Create(decimal amount, string currency, RateUnit unit, RateBasis basis)
     {
         var (rate, error) = TryCreate(amount, currency, unit, basis);

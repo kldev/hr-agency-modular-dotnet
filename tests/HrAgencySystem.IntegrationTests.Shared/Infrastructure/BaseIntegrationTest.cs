@@ -110,11 +110,6 @@ public abstract class BaseIntegrationTest : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    public void SetOutputHelper(ITestOutputHelper output)
-    {
-        _environment.SetOutputHelper(output);
-    }
-
     protected virtual Task BeforeEachAsync() => Task.CompletedTask;
 
     public IServiceProvider Services => _environment.Services;

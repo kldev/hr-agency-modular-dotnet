@@ -5,17 +5,14 @@ using HrAgencySystem.Recruitment.Events.Interviews;
 using HrAgencySystem.SharedKernel.Snapshots;
 using HrAgencySystem.SharedKernel.Tenant;
 using HrAgencySystem.SharedKernel.ValueObjects;
+using JetBrains.Annotations;
 
 namespace HrAgencySystem.Recruitment.Domain.Interviews;
 
 public sealed class Interview : IOrganizationDomain
 {
+    [UsedImplicitly] // Marten rebuilds the aggregate through it.
     private Interview() { }
-
-    public static Interview Empty()
-    {
-        return new Interview();
-    }
 
     public InterviewId Id { get; private set; }
     public OrganizationId OrganizationId { get; private set; }

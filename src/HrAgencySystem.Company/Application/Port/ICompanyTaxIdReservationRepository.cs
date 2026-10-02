@@ -12,10 +12,5 @@ public interface ICompanyTaxIdReservationRepository
         CancellationToken cancellationToken = default
     );
 
-    Task ReserveAsync(
-        OrganizationId organizationId,
-        TaxId taxId,
-        CompanyId companyId,
-        CancellationToken cancellationToken = default
-    );
+    Task ReserveAsync(OrganizationId organizationId, TaxId taxId, CompanyId companyId);
 }
