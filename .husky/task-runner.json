@@ -5,15 +5,46 @@
       "name": "format-staged",
       "group": "pre-commit",
       "command": "dotnet",
-      "args": ["csharpier", "format", "${staged}"],
-      "include": ["**/*.cs", "**/*.csproj", "**/*.props", "**/*.targets"]
+      "args": [
+        "csharpier",
+        "format",
+        "${staged}"
+      ],
+      "include": [
+        "**/*.cs",
+        "**/*.csproj",
+        "**/*.props",
+        "**/*.targets"
+      ]
     },
     {
       "name": "restage-formatted",
       "group": "pre-commit",
       "command": "git",
-      "args": ["add", "${staged}"],
-      "include": ["**/*.cs", "**/*.csproj", "**/*.props", "**/*.targets"]
+      "args": [
+        "add",
+        "${staged}"
+      ],
+      "include": [
+        "**/*.cs",
+        "**/*.csproj",
+        "**/*.props",
+        "**/*.targets"
+      ]
+    },
+    {
+      "name": "inspect-code",
+      "group": "pre-push",
+      "command": "bash",
+      "args": [
+        "scripts/inspect-code.sh"
+      ],
+      "include": [
+        "**/*.cs",
+        "**/*.csproj",
+        "**/*.props",
+        ".editorconfig"
+      ]
     }
   ]
 }
