@@ -78,18 +78,16 @@ public static class SetupMartenExtensions
     {
         var section = configuration.GetSection(RabbitMqConfig.SectionName);
         var config = RabbitMqConfig.FromSection(section);
-        builder
-            .UseWolverine(options =>
-            {
-                options.PublishEmailMessages(config);
-                ConfigureDiscover(options);
-                IdentityModule.ConfigureWolverine(options);
-                TeamsModule.ConfigureWolverine(options);
-                SalesModule.ConfigureWolverine(options);
+        builder.UseWolverine(options =>
+        {
+            options.PublishEmailMessages(config);
+            ConfigureDiscover(options);
+            IdentityModule.ConfigureWolverine(options);
+            TeamsModule.ConfigureWolverine(options);
+            SalesModule.ConfigureWolverine(options);
 
-                options.Policies.AutoApplyTransactions();
-            })
-            .StartAsync();
+            options.Policies.AutoApplyTransactions();
+        });
     }
 
     private static void ConfigureDiscover(WolverineOptions options)
