@@ -545,4 +545,4 @@ modular monolith · DDD · CQRS · event sourcing · domain and integration even
 
 ## License
 
-A learning, experimentation and portfolio project.
+A learning, experimentation and portfolio project, released under the [MIT License](LICENSE).
