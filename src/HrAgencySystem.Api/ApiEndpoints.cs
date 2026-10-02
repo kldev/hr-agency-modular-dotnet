@@ -85,7 +85,7 @@ internal static class ApiEndpoints
         public const string Slice = OrganizationBase;
         public const string Get = $"{OrganizationBase}/{{organizationId:guid}}";
         public const string Update = $"{OrganizationBase}/{{organizationId:guid}}";
-        public const string UpdateSlug = $"{OrganizationBase}/{{organizationId}}/slug";
+        public const string UpdateSlug = $"{OrganizationBase}/{{organizationId:guid}}/slug";
         public const string GetBySlug = $"{OrganizationBase}/{{slug}}";
 
         // ReSharper disable once MemberHidesStaticFromOuterClass
@@ -158,7 +158,7 @@ internal static class ApiEndpoints
         public const string Slice = JobDescriptionBase;
         public const string StatusHistory = $"{JobDescriptionBase}/status";
         public const string Get = $"{JobDescriptionBase}/{{jobDescriptionId:guid}}";
-        public const string Update = $"{JobDescriptionBase}/{{jobDescriptionId}}";
+        public const string Update = $"{JobDescriptionBase}/{{jobDescriptionId:guid}}";
         public const string UpdateStatus =
             $"{JobDescriptionBase}/{{jobDescriptionId:guid}}/{{status}}";
         public const string AssignRecruiter =
@@ -176,8 +176,8 @@ internal static class ApiEndpoints
             public const string Create = JobPostBase;
             public const string Slice = JobPostBase;
             public const string Get = $"{JobPostBase}/{{jobPostId:guid}}";
-            public const string Update = $"{JobPostBase}/{{jobPostId}}";
-            public const string ChangeStatus = $"{JobPostBase}/{{jobPostId}}/status";
+            public const string Update = $"{JobPostBase}/{{jobPostId:guid}}";
+            public const string ChangeStatus = $"{JobPostBase}/{{jobPostId:guid}}/status";
             public const string ChangeRecruiter =
                 $"{JobPostBase}/{{jobPostId:guid}}/change-recruiter";
             public const string PostToChannel = $"{JobPostBase}/{{jobPostId:guid}}/channel";
@@ -207,7 +207,8 @@ internal static class ApiEndpoints
             public const string Slice = JobApplicationBase;
             public const string Get = $"{JobApplicationBase}/{{jobApplicationId:guid}}";
             public const string Update = $"{JobApplicationBase}/{{jobApplicationId:guid}}";
-            public const string ChangeStatus = $"{JobApplicationBase}/{{jobApplicationId}}/status";
+            public const string ChangeStatus =
+                $"{JobApplicationBase}/{{jobApplicationId:guid}}/status";
             public const string Notes = $"{JobApplicationBase}/{{jobApplicationId:guid}}/notes";
             public const string Timeline =
                 $"{JobApplicationBase}/{{jobApplicationId:guid}}/timeline";
@@ -230,11 +231,11 @@ internal static class ApiEndpoints
         public const string Schedule = $"{InterviewBase}/schedule";
         public const string Slice = InterviewBase;
         public const string Range = $"{InterviewBase}/range";
-        public const string Get = $"{InterviewBase}/{{interviewId}}";
-        public const string Reschedule = $"{InterviewBase}/{{interviewId}}/reschedule";
-        public const string ChangeStatus = $"{InterviewBase}/{{interviewId}}/status";
-        public const string ChangeFormat = $"{InterviewBase}/{{interviewId}}/format";
-        public const string ChangeInterviewer = $"{InterviewBase}/{{interviewId}}/interviewer";
+        public const string Get = $"{InterviewBase}/{{interviewId:guid}}";
+        public const string Reschedule = $"{InterviewBase}/{{interviewId:guid}}/reschedule";
+        public const string ChangeStatus = $"{InterviewBase}/{{interviewId:guid}}/status";
+        public const string ChangeFormat = $"{InterviewBase}/{{interviewId:guid}}/format";
+        public const string ChangeInterviewer = $"{InterviewBase}/{{interviewId:guid}}/interviewer";
     }
 
     internal static class LegalEntities
